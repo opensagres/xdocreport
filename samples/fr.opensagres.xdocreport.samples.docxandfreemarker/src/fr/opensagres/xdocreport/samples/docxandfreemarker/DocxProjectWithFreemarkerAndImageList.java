@@ -84,7 +84,7 @@ public class DocxProjectWithFreemarkerAndImageList {
 			developers.add(new DeveloperWithImage("Leclercq", "Pascal",
 					"pascal.leclercq@gmail.com", new ClassPathImageProvider(
 							DocxProjectWithFreemarkerAndImageList.class,
-							"logo.png")));
+							"PascalLeclercq.jpg")));
 			context.put("developers", developers);
 
 			// 4) Generate report by merging Java model with the Docx

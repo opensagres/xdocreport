@@ -205,8 +205,8 @@
 		</developer>
 	</developers>
 	<scm>
-		<connection>scm:svn:http://xdocreport.googlecode.com/svn/trunk</connection>
-		<developerConnection>scm:svn:https://xdocreport.googlecode.com/svn/trunk</developerConnection>
+		<connection>scm:git:https://code.google.com/p/xdocreport</connection>
+		<developerConnection>scm:git:https://code.google.com/p/xdocreport</developerConnection>
 		<url>http://xdocreport.googlecode.com/</url>
 	</scm>
 	<modules>

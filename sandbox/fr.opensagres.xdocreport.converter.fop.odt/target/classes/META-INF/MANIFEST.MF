@@ -1,0 +1,41 @@
+Manifest-Version: 1.0
+Built-By: pascal
+Build-Jdk: 1.6.0_22
+Created-By: Apache Maven Bundle Plugin
+Export-Package: fr.opensagres.xdocreport.converter.odt.xslfo;uses:="fr
+ .opensagres.xdocreport.converter.internal.xslfo,javax.xml.transform,f
+ r.opensagres.xdocreport.converter.internal.xslt",fr.opensagres.xdocre
+ port.converter.odt.xslfo.discovery;uses:="fr.opensagres.xdocreport.co
+ nverter.discovery,fr.opensagres.xdocreport.converter.odt.xslfo,fr.ope
+ nsagres.xdocreport.core.document,fr.opensagres.xdocreport.converter",
+ fr.opensagres.xdocreport.converter.odt.pdf.fop.discovery;uses:="fr.op
+ ensagres.xdocreport.converter.discovery,fr.opensagres.xdocreport.core
+ .document,fr.opensagres.xdocreport.converter.odt.pdf.fop,fr.opensagre
+ s.xdocreport.converter",fr.opensagres.xdocreport.converter.odt.pdf.fo
+ p;uses:="fr.opensagres.xdocreport.converter.odt.xslfo,javax.xml.trans
+ form,fr.opensagres.xdocreport.converter.internal.pdf.fop",fr.opensagr
+ es.xdocreport.converter.odt.xhtml.discovery;uses:="fr.opensagres.xdoc
+ report.converter.discovery,fr.opensagres.xdocreport.converter.odt.xht
+ ml,fr.opensagres.xdocreport.core.document,fr.opensagres.xdocreport.co
+ nverter",fr.opensagres.xdocreport.converter.odt.xhtml;uses:="javax.xm
+ l.transform,fr.opensagres.xdocreport.converter.internal.xhtml,fr.open
+ sagres.xdocreport.converter.internal.xslt"
+Tool: Bnd-1.15.0
+Bundle-Name: fr.opensagres.xdocreport.converter.fop.odt
+Bundle-RequiredExecutionEnvironment: J2SE-1.5, JavaSE-1.6
+Bundle-Version: 0.9.1.SNAPSHOTvmavenbuildtimestamp
+Bnd-LastModified: 1315221319092
+Bundle-ManifestVersion: 2
+Bundle-License: http://www.opensource.org/licenses/mit-license.php
+Bundle-Description: XDocReport means XML Document reporting. It's Java
+  API to merge XML document created with MS Office (docx) or OpenOffic
+ e (odt), LibreOffice (odt) with a Java model to generate report and c
+ onvert it if you need to another format (PDF, XHTML...).
+Import-Package: fr.opensagres.xdocreport.converter,fr.opensagres.xdocr
+ eport.converter.discovery,fr.opensagres.xdocreport.converter.internal
+ .pdf.fop,fr.opensagres.xdocreport.converter.internal.xhtml,fr.opensag
+ res.xdocreport.converter.internal.xslfo,fr.opensagres.xdocreport.conv
+ erter.internal.xslt,fr.opensagres.xdocreport.core.document,javax.xml.
+ transform
+Bundle-SymbolicName: fr.opensagres.xdocreport.converter.fop.odt
+

@@ -1,0 +1,1752 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<office:document-content
+	xmlns:office="urn:oasis:names:tc:opendocument:xmlns:office:1.0"
+	xmlns:style="urn:oasis:names:tc:opendocument:xmlns:style:1.0"
+	xmlns:text="urn:oasis:names:tc:opendocument:xmlns:text:1.0"
+	xmlns:table="urn:oasis:names:tc:opendocument:xmlns:table:1.0"
+	xmlns:draw="urn:oasis:names:tc:opendocument:xmlns:drawing:1.0"
+	xmlns:fo="urn:oasis:names:tc:opendocument:xmlns:xsl-fo-compatible:1.0"
+	xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:dc="http://purl.org/dc/elements/1.1/"
+	xmlns:meta="urn:oasis:names:tc:opendocument:xmlns:meta:1.0"
+	xmlns:number="urn:oasis:names:tc:opendocument:xmlns:datastyle:1.0"
+	xmlns:svg="urn:oasis:names:tc:opendocument:xmlns:svg-compatible:1.0"
+	xmlns:chart="urn:oasis:names:tc:opendocument:xmlns:chart:1.0"
+	xmlns:dr3d="urn:oasis:names:tc:opendocument:xmlns:dr3d:1.0" xmlns:math="http://www.w3.org/1998/Math/MathML"
+	xmlns:form="urn:oasis:names:tc:opendocument:xmlns:form:1.0"
+	xmlns:script="urn:oasis:names:tc:opendocument:xmlns:script:1.0"
+	xmlns:ooo="http://openoffice.org/2004/office" xmlns:ooow="http://openoffice.org/2004/writer"
+	xmlns:oooc="http://openoffice.org/2004/calc" xmlns:dom="http://www.w3.org/2001/xml-events"
+	xmlns:xforms="http://www.w3.org/2002/xforms" xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:rpt="http://openoffice.org/2005/report"
+	xmlns:of="urn:oasis:names:tc:opendocument:xmlns:of:1.2" xmlns:xhtml="http://www.w3.org/1999/xhtml"
+	xmlns:grddl="http://www.w3.org/2003/g/data-view#" xmlns:tableooo="http://openoffice.org/2009/table"
+	xmlns:field="urn:openoffice:names:experimental:ooo-ms-interop:xmlns:field:1.0"
+	xmlns:formx="urn:openoffice:names:experimental:ooxml-odf-interop:xmlns:form:1.0"
+	xmlns:css3t="http://www.w3.org/TR/css3-text/" office:version="1.2"
+	grddl:transformation="http://docs.oasis-open.org/office/1.2/xslt/odf2rdf.xsl">
+	<office:scripts />
+	<office:font-face-decls>
+		<style:font-face style:name="Wingdings"
+			svg:font-family="Wingdings" style:font-pitch="variable"
+			style:font-charset="x-symbol" />
+		<style:font-face style:name="Symbol" svg:font-family="Symbol"
+			style:font-family-generic="roman" style:font-pitch="variable"
+			style:font-charset="x-symbol" />
+		<style:font-face style:name="OpenSymbol"
+			svg:font-family="OpenSymbol" />
+		<style:font-face style:name="StarSymbol"
+			svg:font-family="StarSymbol" />
+		<style:font-face style:name="Tahoma2" svg:font-family="Tahoma" />
+		<style:font-face style:name="Courier New2"
+			svg:font-family="&apos;Courier New&apos;" style:font-family-generic="modern" />
+		<style:font-face style:name="Courier New"
+			svg:font-family="&apos;Courier New&apos;" style:font-family-generic="modern"
+			style:font-pitch="fixed" />
+		<style:font-face style:name="Courier New1"
+			svg:font-family="&apos;Courier New&apos;" style:font-adornments="Normal"
+			style:font-family-generic="modern" style:font-pitch="fixed" />
+		<style:font-face style:name="Lucida Sans Unicode"
+			svg:font-family="&apos;Lucida Sans Unicode&apos;" style:font-pitch="variable" />
+		<style:font-face style:name="One Stroke Script LET"
+			svg:font-family="&apos;One Stroke Script LET&apos;" style:font-pitch="variable" />
+		<style:font-face style:name="Tahoma1" svg:font-family="Tahoma"
+			style:font-pitch="variable" />
+		<style:font-face style:name="Times New Roman"
+			svg:font-family="&apos;Times New Roman&apos;"
+			style:font-family-generic="roman" style:font-pitch="variable" />
+		<style:font-face style:name="Arial" svg:font-family="Arial"
+			style:font-family-generic="swiss" style:font-pitch="variable" />
+		<style:font-face style:name="Arial1" svg:font-family="Arial"
+			style:font-adornments="Gras" style:font-family-generic="swiss"
+			style:font-pitch="variable" />
+		<style:font-face style:name="Tahoma" svg:font-family="Tahoma"
+			style:font-family-generic="swiss" style:font-pitch="variable" />
+		<style:font-face style:name="Verdana1"
+			svg:font-family="Verdana" style:font-family-generic="swiss"
+			style:font-pitch="variable" />
+		<style:font-face style:name="Verdana" svg:font-family="Verdana"
+			style:font-adornments="Normal" style:font-family-generic="swiss"
+			style:font-pitch="variable" />
+	</office:font-face-decls>
+	<office:automatic-styles>
+		<style:style style:name="P1" style:family="paragraph"
+			style:parent-style-name="Header">
+			<style:paragraph-properties fo:text-align="center"
+				style:justify-single-word="false" fo:padding-left="0cm"
+				fo:padding-right="0cm" fo:padding-top="0cm" fo:padding-bottom="0.035cm"
+				fo:border-left="none" fo:border-right="none" fo:border-top="none"
+				fo:border-bottom="0.002cm solid #ff0000" />
+			<style:text-properties style:font-name="Tahoma"
+				fo:font-weight="bold" style:font-weight-asian="bold" />
+		</style:style>
+		<style:style style:name="P2" style:family="paragraph"
+			style:parent-style-name="Footer">
+			<style:paragraph-properties>
+				<style:tab-stops>
+					<style:tab-stop style:position="16.002cm"
+						style:type="right" />
+				</style:tab-stops>
+			</style:paragraph-properties>
+		</style:style>
+		<style:style style:name="P3" style:family="paragraph"
+			style:parent-style-name="Footer">
+			<style:paragraph-properties fo:text-align="center"
+				style:justify-single-word="false">
+				<style:tab-stops>
+					<style:tab-stop style:position="16.002cm"
+						style:type="right" />
+				</style:tab-stops>
+			</style:paragraph-properties>
+			<style:text-properties style:font-name="Arial"
+				fo:font-size="7pt" style:font-size-asian="7pt"
+				style:font-size-complex="7pt" />
+		</style:style>
+		<style:style style:name="P4" style:family="paragraph"
+			style:parent-style-name="Footer">
+			<style:paragraph-properties fo:text-align="end"
+				style:justify-single-word="false">
+				<style:tab-stops>
+					<style:tab-stop style:position="16.002cm"
+						style:type="right" />
+				</style:tab-stops>
+			</style:paragraph-properties>
+		</style:style>
+		<style:style style:name="P5" style:family="paragraph"
+			style:parent-style-name="Standard">
+			<style:paragraph-properties fo:text-align="center"
+				style:justify-single-word="false" />
+			<style:text-properties style:font-name="Tahoma"
+				fo:font-size="16pt" fo:font-weight="bold" style:font-size-asian="16pt"
+				style:font-weight-asian="bold" style:font-name-complex="Tahoma"
+				style:font-size-complex="16pt" />
+		</style:style>
+		<style:style style:name="P6" style:family="paragraph"
+			style:parent-style-name="Standard">
+			<style:text-properties fo:color="#008000"
+				style:font-name="Courier New" fo:font-size="10pt"
+				style:font-name-asian="Courier New" style:font-size-asian="10pt"
+				style:font-name-complex="Courier New" style:font-size-complex="10pt" />
+		</style:style>
+		<style:style style:name="P7" style:family="paragraph"
+			style:parent-style-name="Standard">
+			<style:text-properties fo:font-weight="bold"
+				style:font-weight-asian="bold" style:font-weight-complex="bold" />
+		</style:style>
+		<style:style style:name="P8" style:family="paragraph"
+			style:parent-style-name="Standard">
+			<style:text-properties fo:color="#000000"
+				style:font-name="Verdana1" fo:font-size="10pt"
+				style:font-name-asian="Courier New" style:font-size-asian="10pt"
+				style:font-name-complex="Courier New" style:font-size-complex="10pt" />
+		</style:style>
+		<style:style style:name="P9" style:family="paragraph"
+			style:parent-style-name="Standard">
+			<style:paragraph-properties
+				fo:break-before="page" />
+		</style:style>
+		<style:style style:name="P10" style:family="paragraph"
+			style:parent-style-name="Standard">
+			<style:paragraph-properties
+				fo:break-before="page" />
+			<style:text-properties fo:color="#000000"
+				style:font-name="Verdana1" fo:font-size="10pt"
+				style:font-name-asian="Courier New" style:font-size-asian="10pt"
+				style:font-name-complex="Courier New" style:font-size-complex="10pt" />
+		</style:style>
+		<style:style style:name="P11" style:family="paragraph"
+			style:parent-style-name="Contents_20_2">
+			<style:paragraph-properties>
+				<style:tab-stops>
+					<style:tab-stop style:position="15.498cm"
+						style:type="right" style:leader-style="dotted" style:leader-text="." />
+				</style:tab-stops>
+			</style:paragraph-properties>
+		</style:style>
+		<style:style style:name="P12" style:family="paragraph"
+			style:parent-style-name="Contents_20_3">
+			<style:paragraph-properties>
+				<style:tab-stops>
+					<style:tab-stop style:position="14.998cm"
+						style:type="right" style:leader-style="dotted" style:leader-text="." />
+				</style:tab-stops>
+			</style:paragraph-properties>
+		</style:style>
+		<style:style style:name="P13" style:family="paragraph"
+			style:parent-style-name="Contents_20_1">
+			<style:paragraph-properties>
+				<style:tab-stops>
+					<style:tab-stop style:position="15.997cm"
+						style:type="right" style:leader-style="dotted" style:leader-text="." />
+				</style:tab-stops>
+			</style:paragraph-properties>
+		</style:style>
+		<style:style style:name="P14" style:family="paragraph"
+			style:parent-style-name="Heading_20_2">
+			<style:text-properties fo:color="#000000"
+				style:font-name="Verdana1" fo:font-size="10pt"
+				style:font-name-asian="Courier New" style:font-size-asian="10pt"
+				style:font-name-complex="Courier New" style:font-size-complex="10pt" />
+		</style:style>
+		<style:style style:name="P15" style:family="paragraph"
+			style:parent-style-name="Heading_20_2">
+			<style:paragraph-properties
+				fo:break-before="page" />
+		</style:style>
+		<style:style style:name="P16" style:family="paragraph"
+			style:parent-style-name="Heading_20_2">
+			<style:paragraph-properties
+				fo:break-before="page" />
+			<style:text-properties fo:color="#000000"
+				style:font-name="Verdana1" fo:font-size="10pt"
+				style:font-name-asian="Courier New" style:font-size-asian="10pt"
+				style:font-name-complex="Courier New" style:font-size-complex="10pt" />
+		</style:style>
+		<style:style style:name="P17" style:family="paragraph"
+			style:parent-style-name="Standard" style:list-style-name="L1" />
+		<style:style style:name="P18" style:family="paragraph"
+			style:parent-style-name="Standard" style:list-style-name="L1">
+			<style:text-properties fo:font-weight="bold"
+				style:font-weight-asian="bold" style:font-weight-complex="bold" />
+		</style:style>
+		<style:style style:name="P19" style:family="paragraph"
+			style:parent-style-name="Standard" style:list-style-name="L2" />
+		<style:style style:name="P20" style:family="paragraph"
+			style:parent-style-name="Standard" style:list-style-name="L3" />
+		<style:style style:name="P21" style:family="paragraph"
+			style:parent-style-name="TitreDoc" style:master-page-name="Standard">
+			<style:paragraph-properties
+				style:page-number="auto" />
+		</style:style>
+		<style:style style:name="P22" style:family="paragraph"
+			style:parent-style-name="Heading_20_1">
+			<style:paragraph-properties
+				fo:break-before="page" />
+		</style:style>
+		<style:style style:name="T1" style:family="text">
+			<style:text-properties style:font-name="One Stroke Script LET" />
+		</style:style>
+		<style:style style:name="T2" style:family="text">
+			<style:text-properties style:font-name="Arial" />
+		</style:style>
+		<style:style style:name="T3" style:family="text">
+			<style:text-properties style:font-name="Arial"
+				fo:font-size="7pt" style:font-size-asian="7pt"
+				style:font-size-complex="7pt" />
+		</style:style>
+		<style:style style:name="T4" style:family="text">
+			<style:text-properties style:font-name="Arial"
+				fo:font-weight="bold" style:font-weight-asian="bold"
+				style:font-weight-complex="bold" />
+		</style:style>
+		<style:style style:name="T5" style:family="text">
+			<style:text-properties style:font-name="Arial"
+				fo:font-size="2pt" fo:font-weight="bold" style:font-size-asian="2pt"
+				style:font-weight-asian="bold" style:font-size-complex="2pt"
+				style:font-weight-complex="bold" />
+		</style:style>
+		<style:style style:name="T6" style:family="text">
+			<style:text-properties fo:font-weight="bold"
+				style:font-weight-asian="bold" style:font-weight-complex="bold" />
+		</style:style>
+		<style:style style:name="T7" style:family="text">
+			<style:text-properties fo:color="#000000"
+				style:font-name="Courier New" fo:font-size="10pt" fo:font-weight="normal"
+				style:font-name-asian="Courier New" style:font-size-asian="10pt"
+				style:font-weight-asian="normal" style:font-name-complex="Courier New"
+				style:font-size-complex="10pt" style:font-weight-complex="normal" />
+		</style:style>
+		<style:style style:name="T8" style:family="text">
+			<style:text-properties fo:color="#008000"
+				style:font-name="Courier New" fo:font-size="10pt"
+				style:font-name-asian="Courier New" style:font-size-asian="10pt"
+				style:font-name-complex="Courier New" style:font-size-complex="10pt" />
+		</style:style>
+		<style:style style:name="T9" style:family="text">
+			<style:text-properties fo:color="#008000"
+				style:font-name="Courier New" fo:font-size="10pt" fo:font-weight="normal"
+				style:font-name-asian="Courier New" style:font-size-asian="10pt"
+				style:font-weight-asian="normal" style:font-name-complex="Courier New"
+				style:font-size-complex="10pt" style:font-weight-complex="normal" />
+		</style:style>
+		<style:style style:name="T10" style:family="text">
+			<style:text-properties fo:font-weight="normal"
+				style:font-weight-asian="normal" style:font-weight-complex="normal" />
+		</style:style>
+		<style:style style:name="fr1" style:family="graphic"
+			style:parent-style-name="Graphics">
+			<style:graphic-properties
+				style:horizontal-pos="center" style:horizontal-rel="paragraph"
+				style:mirror="none" fo:clip="rect(0cm, 0cm, 0cm, 0cm)"
+				draw:luminance="0%" draw:contrast="0%" draw:red="0%" draw:green="0%"
+				draw:blue="0%" draw:gamma="100%" draw:color-inversion="false"
+				draw:image-opacity="100%" draw:color-mode="standard" />
+		</style:style>
+		<style:style style:name="fr2" style:family="graphic"
+			style:parent-style-name="Graphics">
+			<style:graphic-properties style:mirror="none"
+				fo:clip="rect(0cm, 0cm, 0cm, 0cm)" draw:luminance="0%"
+				draw:contrast="0%" draw:red="0%" draw:green="0%" draw:blue="0%"
+				draw:gamma="100%" draw:color-inversion="false" draw:image-opacity="100%"
+				draw:color-mode="standard" />
+		</style:style>
+		<style:style style:name="fr3" style:family="graphic"
+			style:parent-style-name="Graphics">
+			<style:graphic-properties
+				style:vertical-pos="from-top" style:vertical-rel="paragraph"
+				style:horizontal-pos="from-left" style:horizontal-rel="paragraph"
+				style:mirror="none" fo:clip="rect(0cm, 0cm, 0cm, 0cm)"
+				draw:luminance="0%" draw:contrast="0%" draw:red="0%" draw:green="0%"
+				draw:blue="0%" draw:gamma="100%" draw:color-inversion="false"
+				draw:image-opacity="100%" draw:color-mode="standard" />
+		</style:style>
+		<style:style style:name="Sect1" style:family="section">
+			<style:section-properties
+				fo:background-color="transparent" style:editable="false">
+				<style:columns fo:column-count="1" fo:column-gap="0cm" />
+				<style:background-image />
+			</style:section-properties>
+		</style:style>
+		<style:style style:name="Sect2" style:family="section">
+			<style:section-properties style:editable="false">
+				<style:columns fo:column-count="1" fo:column-gap="0cm" />
+			</style:section-properties>
+		</style:style>
+		<text:list-style style:name="L1">
+			<text:list-level-style-bullet
+				text:level="1" text:style-name="Bullet_20_Symbols" style:num-suffix="."
+				text:bullet-char="•">
+				<style:list-level-properties
+					text:list-level-position-and-space-mode="label-alignment">
+					<style:list-level-label-alignment
+						text:label-followed-by="listtab" text:list-tab-stop-position="1.27cm"
+						fo:text-indent="-0.635cm" fo:margin-left="1.27cm" />
+				</style:list-level-properties>
+			</text:list-level-style-bullet>
+			<text:list-level-style-bullet
+				text:level="2" text:style-name="Bullet_20_Symbols" style:num-suffix="."
+				text:bullet-char="◦">
+				<style:list-level-properties
+					text:list-level-position-and-space-mode="label-alignment">
+					<style:list-level-label-alignment
+						text:label-followed-by="listtab" text:list-tab-stop-position="1.905cm"
+						fo:text-indent="-0.635cm" fo:margin-left="1.905cm" />
+				</style:list-level-properties>
+			</text:list-level-style-bullet>
+			<text:list-level-style-bullet
+				text:level="3" text:style-name="Bullet_20_Symbols" style:num-suffix="."
+				text:bullet-char="▪">
+				<style:list-level-properties
+					text:list-level-position-and-space-mode="label-alignment">
+					<style:list-level-label-alignment
+						text:label-followed-by="listtab" text:list-tab-stop-position="2.54cm"
+						fo:text-indent="-0.635cm" fo:margin-left="2.54cm" />
+				</style:list-level-properties>
+			</text:list-level-style-bullet>
+			<text:list-level-style-bullet
+				text:level="4" text:style-name="Bullet_20_Symbols" style:num-suffix="."
+				text:bullet-char="•">
+				<style:list-level-properties
+					text:list-level-position-and-space-mode="label-alignment">
+					<style:list-level-label-alignment
+						text:label-followed-by="listtab" text:list-tab-stop-position="3.175cm"
+						fo:text-indent="-0.635cm" fo:margin-left="3.175cm" />
+				</style:list-level-properties>
+			</text:list-level-style-bullet>
+			<text:list-level-style-bullet
+				text:level="5" text:style-name="Bullet_20_Symbols" style:num-suffix="."
+				text:bullet-char="◦">
+				<style:list-level-properties
+					text:list-level-position-and-space-mode="label-alignment">
+					<style:list-level-label-alignment
+						text:label-followed-by="listtab" text:list-tab-stop-position="3.81cm"
+						fo:text-indent="-0.635cm" fo:margin-left="3.81cm" />
+				</style:list-level-properties>
+			</text:list-level-style-bullet>
+			<text:list-level-style-bullet
+				text:level="6" text:style-name="Bullet_20_Symbols" style:num-suffix="."
+				text:bullet-char="▪">
+				<style:list-level-properties
+					text:list-level-position-and-space-mode="label-alignment">
+					<style:list-level-label-alignment
+						text:label-followed-by="listtab" text:list-tab-stop-position="4.445cm"
+						fo:text-indent="-0.635cm" fo:margin-left="4.445cm" />
+				</style:list-level-properties>
+			</text:list-level-style-bullet>
+			<text:list-level-style-bullet
+				text:level="7" text:style-name="Bullet_20_Symbols" style:num-suffix="."
+				text:bullet-char="•">
+				<style:list-level-properties
+					text:list-level-position-and-space-mode="label-alignment">
+					<style:list-level-label-alignment
+						text:label-followed-by="listtab" text:list-tab-stop-position="5.08cm"
+						fo:text-indent="-0.635cm" fo:margin-left="5.08cm" />
+				</style:list-level-properties>
+			</text:list-level-style-bullet>
+			<text:list-level-style-bullet
+				text:level="8" text:style-name="Bullet_20_Symbols" style:num-suffix="."
+				text:bullet-char="◦">
+				<style:list-level-properties
+					text:list-level-position-and-space-mode="label-alignment">
+					<style:list-level-label-alignment
+						text:label-followed-by="listtab" text:list-tab-stop-position="5.715cm"
+						fo:text-indent="-0.635cm" fo:margin-left="5.715cm" />
+				</style:list-level-properties>
+			</text:list-level-style-bullet>
+			<text:list-level-style-bullet
+				text:level="9" text:style-name="Bullet_20_Symbols" style:num-suffix="."
+				text:bullet-char="▪">
+				<style:list-level-properties
+					text:list-level-position-and-space-mode="label-alignment">
+					<style:list-level-label-alignment
+						text:label-followed-by="listtab" text:list-tab-stop-position="6.35cm"
+						fo:text-indent="-0.635cm" fo:margin-left="6.35cm" />
+				</style:list-level-properties>
+			</text:list-level-style-bullet>
+			<text:list-level-style-bullet
+				text:level="10" text:style-name="Bullet_20_Symbols"
+				style:num-suffix="." text:bullet-char="•">
+				<style:list-level-properties
+					text:list-level-position-and-space-mode="label-alignment">
+					<style:list-level-label-alignment
+						text:label-followed-by="listtab" text:list-tab-stop-position="6.985cm"
+						fo:text-indent="-0.635cm" fo:margin-left="6.985cm" />
+				</style:list-level-properties>
+			</text:list-level-style-bullet>
+		</text:list-style>
+		<text:list-style style:name="L2">
+			<text:list-level-style-bullet
+				text:level="1" text:style-name="Bullet_20_Symbols" style:num-suffix="."
+				text:bullet-char="•">
+				<style:list-level-properties
+					text:list-level-position-and-space-mode="label-alignment">
+					<style:list-level-label-alignment
+						text:label-followed-by="listtab" text:list-tab-stop-position="1.27cm"
+						fo:text-indent="-0.635cm" fo:margin-left="1.27cm" />
+				</style:list-level-properties>
+			</text:list-level-style-bullet>
+			<text:list-level-style-bullet
+				text:level="2" text:style-name="Bullet_20_Symbols" style:num-suffix="."
+				text:bullet-char="◦">
+				<style:list-level-properties
+					text:list-level-position-and-space-mode="label-alignment">
+					<style:list-level-label-alignment
+						text:label-followed-by="listtab" text:list-tab-stop-position="1.905cm"
+						fo:text-indent="-0.635cm" fo:margin-left="1.905cm" />
+				</style:list-level-properties>
+			</text:list-level-style-bullet>
+			<text:list-level-style-bullet
+				text:level="3" text:style-name="Bullet_20_Symbols" style:num-suffix="."
+				text:bullet-char="▪">
+				<style:list-level-properties
+					text:list-level-position-and-space-mode="label-alignment">
+					<style:list-level-label-alignment
+						text:label-followed-by="listtab" text:list-tab-stop-position="2.54cm"
+						fo:text-indent="-0.635cm" fo:margin-left="2.54cm" />
+				</style:list-level-properties>
+			</text:list-level-style-bullet>
+			<text:list-level-style-bullet
+				text:level="4" text:style-name="Bullet_20_Symbols" style:num-suffix="."
+				text:bullet-char="•">
+				<style:list-level-properties
+					text:list-level-position-and-space-mode="label-alignment">
+					<style:list-level-label-alignment
+						text:label-followed-by="listtab" text:list-tab-stop-position="3.175cm"
+						fo:text-indent="-0.635cm" fo:margin-left="3.175cm" />
+				</style:list-level-properties>
+			</text:list-level-style-bullet>
+			<text:list-level-style-bullet
+				text:level="5" text:style-name="Bullet_20_Symbols" style:num-suffix="."
+				text:bullet-char="◦">
+				<style:list-level-properties
+					text:list-level-position-and-space-mode="label-alignment">
+					<style:list-level-label-alignment
+						text:label-followed-by="listtab" text:list-tab-stop-position="3.81cm"
+						fo:text-indent="-0.635cm" fo:margin-left="3.81cm" />
+				</style:list-level-properties>
+			</text:list-level-style-bullet>
+			<text:list-level-style-bullet
+				text:level="6" text:style-name="Bullet_20_Symbols" style:num-suffix="."
+				text:bullet-char="▪">
+				<style:list-level-properties
+					text:list-level-position-and-space-mode="label-alignment">
+					<style:list-level-label-alignment
+						text:label-followed-by="listtab" text:list-tab-stop-position="4.445cm"
+						fo:text-indent="-0.635cm" fo:margin-left="4.445cm" />
+				</style:list-level-properties>
+			</text:list-level-style-bullet>
+			<text:list-level-style-bullet
+				text:level="7" text:style-name="Bullet_20_Symbols" style:num-suffix="."
+				text:bullet-char="•">
+				<style:list-level-properties
+					text:list-level-position-and-space-mode="label-alignment">
+					<style:list-level-label-alignment
+						text:label-followed-by="listtab" text:list-tab-stop-position="5.08cm"
+						fo:text-indent="-0.635cm" fo:margin-left="5.08cm" />
+				</style:list-level-properties>
+			</text:list-level-style-bullet>
+			<text:list-level-style-bullet
+				text:level="8" text:style-name="Bullet_20_Symbols" style:num-suffix="."
+				text:bullet-char="◦">
+				<style:list-level-properties
+					text:list-level-position-and-space-mode="label-alignment">
+					<style:list-level-label-alignment
+						text:label-followed-by="listtab" text:list-tab-stop-position="5.715cm"
+						fo:text-indent="-0.635cm" fo:margin-left="5.715cm" />
+				</style:list-level-properties>
+			</text:list-level-style-bullet>
+			<text:list-level-style-bullet
+				text:level="9" text:style-name="Bullet_20_Symbols" style:num-suffix="."
+				text:bullet-char="▪">
+				<style:list-level-properties
+					text:list-level-position-and-space-mode="label-alignment">
+					<style:list-level-label-alignment
+						text:label-followed-by="listtab" text:list-tab-stop-position="6.35cm"
+						fo:text-indent="-0.635cm" fo:margin-left="6.35cm" />
+				</style:list-level-properties>
+			</text:list-level-style-bullet>
+			<text:list-level-style-bullet
+				text:level="10" text:style-name="Bullet_20_Symbols"
+				style:num-suffix="." text:bullet-char="•">
+				<style:list-level-properties
+					text:list-level-position-and-space-mode="label-alignment">
+					<style:list-level-label-alignment
+						text:label-followed-by="listtab" text:list-tab-stop-position="6.985cm"
+						fo:text-indent="-0.635cm" fo:margin-left="6.985cm" />
+				</style:list-level-properties>
+			</text:list-level-style-bullet>
+		</text:list-style>
+		<text:list-style style:name="L3">
+			<text:list-level-style-bullet
+				text:level="1" text:style-name="Bullet_20_Symbols" style:num-suffix="."
+				text:bullet-char="•">
+				<style:list-level-properties
+					text:list-level-position-and-space-mode="label-alignment">
+					<style:list-level-label-alignment
+						text:label-followed-by="listtab" text:list-tab-stop-position="1.27cm"
+						fo:text-indent="-0.635cm" fo:margin-left="1.27cm" />
+				</style:list-level-properties>
+			</text:list-level-style-bullet>
+			<text:list-level-style-bullet
+				text:level="2" text:style-name="Bullet_20_Symbols" style:num-suffix="."
+				text:bullet-char="◦">
+				<style:list-level-properties
+					text:list-level-position-and-space-mode="label-alignment">
+					<style:list-level-label-alignment
+						text:label-followed-by="listtab" text:list-tab-stop-position="1.905cm"
+						fo:text-indent="-0.635cm" fo:margin-left="1.905cm" />
+				</style:list-level-properties>
+			</text:list-level-style-bullet>
+			<text:list-level-style-bullet
+				text:level="3" text:style-name="Bullet_20_Symbols" style:num-suffix="."
+				text:bullet-char="▪">
+				<style:list-level-properties
+					text:list-level-position-and-space-mode="label-alignment">
+					<style:list-level-label-alignment
+						text:label-followed-by="listtab" text:list-tab-stop-position="2.54cm"
+						fo:text-indent="-0.635cm" fo:margin-left="2.54cm" />
+				</style:list-level-properties>
+			</text:list-level-style-bullet>
+			<text:list-level-style-bullet
+				text:level="4" text:style-name="Bullet_20_Symbols" style:num-suffix="."
+				text:bullet-char="•">
+				<style:list-level-properties
+					text:list-level-position-and-space-mode="label-alignment">
+					<style:list-level-label-alignment
+						text:label-followed-by="listtab" text:list-tab-stop-position="3.175cm"
+						fo:text-indent="-0.635cm" fo:margin-left="3.175cm" />
+				</style:list-level-properties>
+			</text:list-level-style-bullet>
+			<text:list-level-style-bullet
+				text:level="5" text:style-name="Bullet_20_Symbols" style:num-suffix="."
+				text:bullet-char="◦">
+				<style:list-level-properties
+					text:list-level-position-and-space-mode="label-alignment">
+					<style:list-level-label-alignment
+						text:label-followed-by="listtab" text:list-tab-stop-position="3.81cm"
+						fo:text-indent="-0.635cm" fo:margin-left="3.81cm" />
+				</style:list-level-properties>
+			</text:list-level-style-bullet>
+			<text:list-level-style-bullet
+				text:level="6" text:style-name="Bullet_20_Symbols" style:num-suffix="."
+				text:bullet-char="▪">
+				<style:list-level-properties
+					text:list-level-position-and-space-mode="label-alignment">
+					<style:list-level-label-alignment
+						text:label-followed-by="listtab" text:list-tab-stop-position="4.445cm"
+						fo:text-indent="-0.635cm" fo:margin-left="4.445cm" />
+				</style:list-level-properties>
+			</text:list-level-style-bullet>
+			<text:list-level-style-bullet
+				text:level="7" text:style-name="Bullet_20_Symbols" style:num-suffix="."
+				text:bullet-char="•">
+				<style:list-level-properties
+					text:list-level-position-and-space-mode="label-alignment">
+					<style:list-level-label-alignment
+						text:label-followed-by="listtab" text:list-tab-stop-position="5.08cm"
+						fo:text-indent="-0.635cm" fo:margin-left="5.08cm" />
+				</style:list-level-properties>
+			</text:list-level-style-bullet>
+			<text:list-level-style-bullet
+				text:level="8" text:style-name="Bullet_20_Symbols" style:num-suffix="."
+				text:bullet-char="◦">
+				<style:list-level-properties
+					text:list-level-position-and-space-mode="label-alignment">
+					<style:list-level-label-alignment
+						text:label-followed-by="listtab" text:list-tab-stop-position="5.715cm"
+						fo:text-indent="-0.635cm" fo:margin-left="5.715cm" />
+				</style:list-level-properties>
+			</text:list-level-style-bullet>
+			<text:list-level-style-bullet
+				text:level="9" text:style-name="Bullet_20_Symbols" style:num-suffix="."
+				text:bullet-char="▪">
+				<style:list-level-properties
+					text:list-level-position-and-space-mode="label-alignment">
+					<style:list-level-label-alignment
+						text:label-followed-by="listtab" text:list-tab-stop-position="6.35cm"
+						fo:text-indent="-0.635cm" fo:margin-left="6.35cm" />
+				</style:list-level-properties>
+			</text:list-level-style-bullet>
+			<text:list-level-style-bullet
+				text:level="10" text:style-name="Bullet_20_Symbols"
+				style:num-suffix="." text:bullet-char="•">
+				<style:list-level-properties
+					text:list-level-position-and-space-mode="label-alignment">
+					<style:list-level-label-alignment
+						text:label-followed-by="listtab" text:list-tab-stop-position="6.985cm"
+						fo:text-indent="-0.635cm" fo:margin-left="6.985cm" />
+				</style:list-level-properties>
+			</text:list-level-style-bullet>
+		</text:list-style>
+	</office:automatic-styles>
+	<office:body>
+		<office:text text:use-soft-page-breaks="true">
+			<office:forms form:automatic-focus="false"
+				form:apply-design-mode="false" />
+			<text:sequence-decls>
+				<text:sequence-decl text:display-outline-level="0"
+					text:name="Illustration" />
+				<text:sequence-decl text:display-outline-level="0"
+					text:name="Table" />
+				<text:sequence-decl text:display-outline-level="0"
+					text:name="Text" />
+				<text:sequence-decl text:display-outline-level="0"
+					text:name="Drawing" />
+			</text:sequence-decls>
+			<text:p text:style-name="P21">
+				<text:title>Struts2 IDE - WTP XML Search Engine</text:title>
+			</text:p>
+			<text:p text:style-name="TitreDoc" />
+			<text:p text:style-name="P5" />
+			<text:table-of-content text:style-name="Sect1"
+				text:protected="true" text:name="Table des matières1">
+				<text:table-of-content-source
+					text:outline-level="10">
+					<text:index-title-template
+						text:style-name="Contents_20_Heading">Sommaire</text:index-title-template>
+					<text:table-of-content-entry-template
+						text:outline-level="1" text:style-name="Contents_20_1">
+						<text:index-entry-chapter />
+						<text:index-entry-link-start
+							text:style-name="Internet_20_link" />
+						<text:index-entry-text />
+						<text:index-entry-link-end />
+						<text:index-entry-tab-stop style:type="right"
+							style:leader-char="." />
+						<text:index-entry-page-number />
+					</text:table-of-content-entry-template>
+					<text:table-of-content-entry-template
+						text:outline-level="2" text:style-name="Contents_20_2">
+						<text:index-entry-chapter />
+						<text:index-entry-link-start
+							text:style-name="Internet_20_link" />
+						<text:index-entry-text />
+						<text:index-entry-link-end />
+						<text:index-entry-tab-stop style:type="right"
+							style:leader-char="." />
+						<text:index-entry-page-number />
+					</text:table-of-content-entry-template>
+					<text:table-of-content-entry-template
+						text:outline-level="3" text:style-name="Contents_20_3">
+						<text:index-entry-chapter />
+						<text:index-entry-link-start
+							text:style-name="Internet_20_link" />
+						<text:index-entry-text />
+						<text:index-entry-link-end />
+						<text:index-entry-tab-stop style:type="right"
+							style:leader-char="." />
+						<text:index-entry-page-number />
+					</text:table-of-content-entry-template>
+					<text:table-of-content-entry-template
+						text:outline-level="4" text:style-name="Contents_20_4">
+						<text:index-entry-chapter />
+						<text:index-entry-link-start
+							text:style-name="Internet_20_link" />
+						<text:index-entry-text />
+						<text:index-entry-link-end />
+						<text:index-entry-tab-stop style:type="right"
+							style:leader-char="." />
+						<text:index-entry-page-number />
+					</text:table-of-content-entry-template>
+					<text:table-of-content-entry-template
+						text:outline-level="5" text:style-name="Contents_20_5">
+						<text:index-entry-chapter />
+						<text:index-entry-link-start
+							text:style-name="Internet_20_link" />
+						<text:index-entry-text />
+						<text:index-entry-link-end />
+						<text:index-entry-tab-stop style:type="right"
+							style:leader-char="." />
+						<text:index-entry-page-number />
+					</text:table-of-content-entry-template>
+					<text:table-of-content-entry-template
+						text:outline-level="6" text:style-name="Contents_20_6">
+						<text:index-entry-chapter />
+						<text:index-entry-link-start
+							text:style-name="Internet_20_link" />
+						<text:index-entry-text />
+						<text:index-entry-link-end />
+						<text:index-entry-tab-stop style:type="right"
+							style:leader-char="." />
+						<text:index-entry-page-number />
+					</text:table-of-content-entry-template>
+					<text:table-of-content-entry-template
+						text:outline-level="7" text:style-name="Contents_20_7">
+						<text:index-entry-chapter />
+						<text:index-entry-link-start
+							text:style-name="Internet_20_link" />
+						<text:index-entry-text />
+						<text:index-entry-link-end />
+						<text:index-entry-tab-stop style:type="right"
+							style:leader-char="." />
+						<text:index-entry-page-number />
+					</text:table-of-content-entry-template>
+					<text:table-of-content-entry-template
+						text:outline-level="8" text:style-name="Contents_20_8">
+						<text:index-entry-chapter />
+						<text:index-entry-link-start
+							text:style-name="Internet_20_link" />
+						<text:index-entry-text />
+						<text:index-entry-link-end />
+						<text:index-entry-tab-stop style:type="right"
+							style:leader-char="." />
+						<text:index-entry-page-number />
+					</text:table-of-content-entry-template>
+					<text:table-of-content-entry-template
+						text:outline-level="9" text:style-name="Contents_20_9">
+						<text:index-entry-chapter />
+						<text:index-entry-link-start
+							text:style-name="Internet_20_link" />
+						<text:index-entry-text />
+						<text:index-entry-link-end />
+						<text:index-entry-tab-stop style:type="right"
+							style:leader-char="." />
+						<text:index-entry-page-number />
+					</text:table-of-content-entry-template>
+					<text:table-of-content-entry-template
+						text:outline-level="10" text:style-name="Contents_20_10">
+						<text:index-entry-chapter />
+						<text:index-entry-link-start
+							text:style-name="Internet_20_link" />
+						<text:index-entry-text />
+						<text:index-entry-link-end />
+						<text:index-entry-tab-stop style:type="right"
+							style:leader-char="." />
+						<text:index-entry-page-number />
+					</text:table-of-content-entry-template>
+				</text:table-of-content-source>
+				<text:index-body>
+					<text:index-title text:style-name="Sect2"
+						text:name="Table des matières1_Head">
+						<text:p text:style-name="Contents_20_Heading">Sommaire</text:p>
+					</text:index-title>
+					<text:p text:style-name="P13">
+						1.
+						<text:a xlink:type="simple"
+							xlink:href="#1.Struts2 IDE - WTP XML Search Engine|outline"
+							text:style-name="Internet_20_link" text:visited-style-name="Internet_20_link">Struts2
+							IDE - WTP XML Search Engine</text:a>
+						<text:tab />
+						2
+					</text:p>
+					<text:p text:style-name="P13">
+						2.
+						<text:a xlink:type="simple" xlink:href="#2.Struts2 IDE – Struts.xml|outline"
+							text:style-name="Internet_20_link" text:visited-style-name="Internet_20_link">Struts2
+							IDE – Struts.xml</text:a>
+						<text:tab />
+						4
+					</text:p>
+					<text:p text:style-name="P11">
+						2.1.
+						<text:a xlink:type="simple" xlink:href="#2.1.Struts2 icons|outline"
+							text:style-name="Internet_20_link" text:visited-style-name="Internet_20_link">Struts2
+							icons</text:a>
+						<text:tab />
+						4
+					</text:p>
+					<text:p text:style-name="P11">
+						2.2.
+						<text:a xlink:type="simple"
+							xlink:href="#2.2.Syntax coloring for referenced Nodes|outline"
+							text:style-name="Internet_20_link" text:visited-style-name="Internet_20_link">Syntax
+							coloring for referenced Nodes</text:a>
+						<text:tab />
+						4
+					</text:p>
+					<text:p text:style-name="P11">
+						2.3.
+						<text:a xlink:type="simple"
+							xlink:href="#2.3.Java completion for @class attribute|outline"
+							text:style-name="Internet_20_link" text:visited-style-name="Internet_20_link">Java
+							completion for @class attribute</text:a>
+						<text:tab />
+						6
+					</text:p>
+					<text:p text:style-name="P11">
+						2.4.
+						<text:a xlink:type="simple"
+							xlink:href="#2.4.Java validation for @class attribute|outline"
+							text:style-name="Internet_20_link" text:visited-style-name="Internet_20_link">Java
+							validation for @class attribute</text:a>
+						<text:tab />
+						7
+					</text:p>
+					<text:p text:style-name="P11">
+						2.5.
+						<text:a xlink:type="simple"
+							xlink:href="#2.5.Java hyperlink for @class attribute : |outline"
+							text:style-name="Internet_20_link" text:visited-style-name="Internet_20_link">Java
+							hyperlink for @class attribute : </text:a>
+						<text:tab />
+						7
+					</text:p>
+					<text:p text:style-name="P11">
+						2.6.
+						<text:a xlink:type="simple" xlink:href="#2.6.Java Text Hover|outline"
+							text:style-name="Internet_20_link" text:visited-style-name="Internet_20_link">Java
+							Text Hover</text:a>
+						<text:tab />
+						8
+					</text:p>
+					<text:p text:style-name="P11">
+						2.7.
+						<text:a xlink:type="simple"
+							xlink:href="#2.7.Java method completion for action/@method|outline"
+							text:style-name="Internet_20_link" text:visited-style-name="Internet_20_link">Java
+							method completion for action/@method</text:a>
+						<text:tab />
+						8
+					</text:p>
+					<text:p text:style-name="P11">
+						2.8.
+						<text:a xlink:type="simple"
+							xlink:href="#2.8.Java method validation for action/@method|outline"
+							text:style-name="Internet_20_link" text:visited-style-name="Internet_20_link">Java
+							method validation for action/@method</text:a>
+						<text:tab />
+						8
+					</text:p>
+					<text:p text:style-name="P11">
+						2.9.
+						<text:a xlink:type="simple"
+							xlink:href="#2.9.Java hyperlink for action@method attribute : |outline"
+							text:style-name="Internet_20_link" text:visited-style-name="Internet_20_link">Java
+							hyperlink for action@method attribute : </text:a>
+						<text:tab />
+						9
+					</text:p>
+					<text:p text:style-name="P11">
+						2.10.
+						<text:a xlink:type="simple"
+							xlink:href="#2.10.interceptor-ref completion|outline"
+							text:style-name="Internet_20_link" text:visited-style-name="Internet_20_link">interceptor-ref
+							completion</text:a>
+						<text:tab />
+						10
+					</text:p>
+					<text:p text:style-name="P11">
+						2.11.
+						<text:a xlink:type="simple"
+							xlink:href="#2.11.interceptor-ref validation|outline"
+							text:style-name="Internet_20_link" text:visited-style-name="Internet_20_link">interceptor-ref
+							validation</text:a>
+						<text:tab />
+						10
+					</text:p>
+					<text:p text:style-name="P11">
+						2.12.
+						<text:a xlink:type="simple"
+							xlink:href="#2.12.interceptor-ref hyperlink|outline"
+							text:style-name="Internet_20_link" text:visited-style-name="Internet_20_link">interceptor-ref
+							hyperlink</text:a>
+						<text:tab />
+						10
+					</text:p>
+					<text:p text:style-name="P11">
+						2.13.
+						<text:a xlink:type="simple"
+							xlink:href="#2.13.interceptor-ref Text hover|outline"
+							text:style-name="Internet_20_link" text:visited-style-name="Internet_20_link">interceptor-ref
+							Text hover</text:a>
+						<text:tab />
+						11
+					</text:p>
+					<text:p text:style-name="P11">
+						2.14.
+						<text:a xlink:type="simple"
+							xlink:href="#2.14.interceptor/interceptor-statck with Ctrl+Shift+G|outline"
+							text:style-name="Internet_20_link" text:visited-style-name="Internet_20_link">interceptor/interceptor-statck
+							with Ctrl+Shift+G</text:a>
+						<text:tab />
+						12
+					</text:p>
+					<text:p text:style-name="P11">
+						2.15.
+						<text:a xlink:type="simple" xlink:href="#2.15.result-type features|outline"
+							text:style-name="Internet_20_link" text:visited-style-name="Internet_20_link">result-type
+							features</text:a>
+						<text:tab />
+						13
+					</text:p>
+					<text:p text:style-name="P13">
+						3.
+						<text:a xlink:type="simple" xlink:href="#3.Struts2 IDE – JSP Taglib |outline"
+							text:style-name="Internet_20_link" text:visited-style-name="Internet_20_link">Struts2
+							IDE – JSP Taglib </text:a>
+						<text:tab />
+						14
+					</text:p>
+					<text:p text:style-name="P11">
+						3.1.
+						<text:a xlink:type="simple" xlink:href="#3.1.JSP Taglib @action|outline"
+							text:style-name="Internet_20_link" text:visited-style-name="Internet_20_link">JSP
+							Taglib @action</text:a>
+						<text:tab />
+						14
+					</text:p>
+					<text:p text:style-name="P12">
+						3.1.1.
+						<text:a xlink:type="simple" xlink:href="#3.1.1.Ctrl+Shift+G for action|outline"
+							text:style-name="Internet_20_link" text:visited-style-name="Internet_20_link">Ctrl+Shift+G
+							for action</text:a>
+						<text:tab />
+						15
+					</text:p>
+					<text:p text:style-name="P12">
+						3.1.2.
+						<text:a xlink:type="simple" xlink:href="#3.1.2.Limitation|outline"
+							text:style-name="Internet_20_link" text:visited-style-name="Internet_20_link">Limitation
+						</text:a>
+						<text:tab />
+						15
+					</text:p>
+					<text:p text:style-name="P11">
+						3.2.
+						<text:a xlink:type="simple" xlink:href="#3.2.JSP Taglib @key|outline"
+							text:style-name="Internet_20_link" text:visited-style-name="Internet_20_link">JSP
+							Taglib @key</text:a>
+						<text:tab />
+						16
+					</text:p>
+					<text:p text:style-name="P13">
+						4.
+						<text:a xlink:type="simple"
+							xlink:href="#4.Struts2 IDE – XML XWork validator|outline"
+							text:style-name="Internet_20_link" text:visited-style-name="Internet_20_link">Struts2
+							IDE – XML XWork validator</text:a>
+						<text:tab />
+						17
+					</text:p>
+					<text:p text:style-name="P13">
+						5.
+						<text:a xlink:type="simple"
+							xlink:href="#5.XML Search engine – UI Dialog|outline"
+							text:style-name="Internet_20_link" text:visited-style-name="Internet_20_link">XML
+							Search engine – UI Dialog</text:a>
+						<text:tab />
+						18
+					</text:p>
+					<text:p text:style-name="P11">
+						5.1.
+						<text:a xlink:type="simple" xlink:href="#5.1.Search Xpath manual|outline"
+							text:style-name="Internet_20_link" text:visited-style-name="Internet_20_link">Search
+							Xpath manual</text:a>
+						<text:tab />
+						18
+					</text:p>
+					<text:p text:style-name="P11">
+						5.2.
+						<text:a xlink:type="simple" xlink:href="#5.2.Search Xpath automaticly|outline"
+							text:style-name="Internet_20_link" text:visited-style-name="Internet_20_link">Search
+							Xpath automaticly</text:a>
+						<text:tab />
+						19
+					</text:p>
+				</text:index-body>
+			</text:table-of-content>
+			<text:p text:style-name="Standard" />
+			<text:h text:style-name="P22" text:outline-level="1">Struts2 IDE -
+				WTP XML Search Engine</text:h>
+			<text:p text:style-name="Standard">This documentation show you Struts2
+				IDE which is Eclipse plugins to manage </text:p>
+			<text:p text:style-name="Standard" />
+			<text:list xml:id="list39113279" text:style-name="L1">
+				<text:list-item>
+					<text:p text:style-name="P17">
+						<text:a xlink:type="simple" xlink:href="#2.Struts2 IDE – Struts.xml|outline">
+							<text:span text:style-name="T6">XML struts.xml</text:span>
+						</text:a>
+						<text:span text:style-name="T10"> : It provides completion,
+							hyperlink, validation, text hover and Ctrl+Shift+G for Struts2
+							XML elements (ex : having completion for class attribute with
+							Java class, having completion for interceptor-ref to display the
+							whole of intercator and interceptor-stack...)</text:span>
+					</text:p>
+				</text:list-item>
+				<text:list-item>
+					<text:p text:style-name="P18">
+						<text:a xlink:type="simple" xlink:href="#3.Struts2 IDE – JSP Taglib |outline">JSP taglib
+							(s:form,...)</text:a>
+						<text:span text:style-name="T10"> : It provides completion,
+							hyperlink, validation, text hover and Ctrl+Shift+G for Struts2
+							XML elements (ex : having completion for action attribute
+							declared in the struts.xml (&lt;s:form action=), for messages key
+							coming from files properties.</text:span>
+					</text:p>
+				</text:list-item>
+				<text:list-item>
+					<text:p text:style-name="P18">
+						XML XWork validator
+						<text:span text:style-name="T10"> : It provides completion,
+							hyperlink, validation and Ctrl+Shift+G for XWOrk validators XML
+							elements (ex : having completion for messages key, for field name
+							based on Java class...)</text:span>
+					</text:p>
+				</text:list-item>
+			</text:list>
+			<text:p text:style-name="Standard" />
+			<text:p text:style-name="Standard" />
+			<text:p text:style-name="Standard">
+				Struts IDE is based on WTP XML Search engine that I wish contribute
+				to Eclipse WTP (see bug
+				<text:a xlink:type="simple"
+					xlink:href="https://bugs.eclipse.org/bugs/show_bug.cgi?id=330576"
+					office:target-frame-name="_blank" xlink:show="new">https://bugs.eclipse.org/bugs/show_bug.cgi?id=330576
+				</text:a>
+				).
+			</text:p>
+			<text:p text:style-name="Standard" />
+			<text:p text:style-name="Standard">The goal of this XML Search engine is
+				: </text:p>
+			<text:p text:style-name="Standard" />
+			<text:list xml:id="list39143890" text:style-name="L2">
+				<text:list-item>
+					<text:p text:style-name="P19">provides a search dialog (like
+						Search/File..., Search/Java...) the capability to search XML files
+						from workspace with Xpath. This dialog is available with the
+						Search/XML... menu.</text:p>
+				</text:list-item>
+				<text:list-item>
+					<text:p text:style-name="P19">
+						using the
+						<text:s />XML
+						search engine into custom Eclipse plugins to manage completion,
+						hyperlink, validation (and Ctrl+Shift+G to retrieve referenced
+						nodes) with some XML files. The XML Jetty plugin that I&apos;m
+						developping is the sample which use XML Search engine. In short,
+						XML you can declare with Extension Point
+						<text:span text:style-name="T8">org.eclipse.wst.xml.search.core.references
+						</text:span>
+						the references between XML Nodes in your plugins and you benefit
+						automaticly completion, hyperlink, validation (and Ctrl+Shift+G to
+						retrieve referenced nodes). I will explain more that
+						<text:s />
+						step by step how developping Jetty plugins to manage XML Jetty
+						files.
+					</text:p>
+					<text:p text:style-name="P19" />
+				</text:list-item>
+			</text:list>
+			<text:p text:style-name="Standard">XML Search egine is splitted into 3
+				projects (links are SVN projects) : </text:p>
+			<text:list xml:id="list39128667" text:continue-numbering="true"
+				text:style-name="L2">
+				<text:list-item>
+					<text:p text:style-name="P19">
+						<text:a xlink:type="simple"
+							xlink:href="https://tk-ui.svn.sourceforge.net/svnroot/tk-ui/cnaf.sidoc.ide/org.eclipse.wst.xml.search.core">
+							<text:span text:style-name="T6">org.eclipse.wst.xml.search.core
+							</text:span>
+						</text:a>
+						: the XML Search engine Core which provides XMLSearchEngine which
+						can collect Nodes with Xpath. It use DOM SSE to load DOM Document
+						to query with Xpath. This plugisn provides too the
+						<text:s />
+						Extension Point
+						<text:s />
+						<text:span text:style-name="T8">org.eclipse.wst.xml.search.core.references.
+						</text:span>
+					</text:p>
+				</text:list-item>
+				<text:list-item>
+					<text:p text:style-name="P19">
+						<text:a xlink:type="simple"
+							xlink:href="https://tk-ui.svn.sourceforge.net/svnroot/tk-ui/cnaf.sidoc.ide/org.eclipse.wst.xml.search.ui/">
+							<text:span text:style-name="T6">org.eclipse.wst.xml.search.ui
+							</text:span>
+						</text:a>
+						<text:span text:style-name="T10"> : the XML Search engine UI
+							which provides the Search UI Dialog to query XML files from
+							workspace with Xpath. It provides too the Handler which is enable
+							to </text:span>
+						<text:span text:style-name="T10">
+							manage Ctrl+Shift+G which use information about the
+							<text:s />
+							Extension Point
+							<text:s />
+						</text:span>
+						<text:span text:style-name="T9">org.eclipse.wst.xml
+						</text:span>
+						<text:span text:style-name="T9">.search.core.references.
+						</text:span>
+					</text:p>
+				</text:list-item>
+				<text:list-item>
+					<text:p text:style-name="P19">
+						<text:a xlink:type="simple"
+							xlink:href="https://tk-ui.svn.sourceforge.net/svnroot/tk-ui/cnaf.sidoc.ide/org.eclipse.wst.xml.search.editor/">
+							<text:span text:style-name="T6">org.eclipse.wst.xml.search.editor
+							</text:span>
+						</text:a>
+						<text:span text:style-name="T10"> : this plugins is used when
+							you wish write your own plugins which must manage completion,
+							hyperlink, validation (and Ctrl+Shift+G to retrieve referenced
+							nodes) with some XML files. It use </text:span>
+						<text:span text:style-name="T9">org.eclipse.wst.xml.search.core.references
+						</text:span>
+						<text:span text:style-name="T10">to manage thoses features.
+						</text:span>
+					</text:p>
+				</text:list-item>
+				<text:list-item>
+					<text:p text:style-name="P19">
+						<text:a xlink:type="simple"
+							xlink:href="https://tk-ui.svn.sourceforge.net/svnroot/tk-ui/cnaf.sidoc.ide/org.eclipse.jst.jsp.search.editor/">
+							<text:span text:style-name="T6">org.eclipse.jst.jsp.search.editor
+							</text:span>
+						</text:a>
+						<text:span text:style-name="T10"> : this plugins is used when
+							you wish write your own plugins which must manage completion,
+							hyperlink, validation (and Ctrl+Shift+G to retrieve referenced
+							nodes) with some Taglib used in JSP files. It use </text:span>
+						<text:span text:style-name="T9">org.eclipse.wst.xml.search.core.references
+						</text:span>
+						<text:span text:style-name="T10">to manage thoses features.
+						</text:span>
+					</text:p>
+				</text:list-item>
+				<text:list-item>
+					<text:p text:style-name="P19">
+						<text:a xlink:type="simple"
+							xlink:href="https://tk-ui.svn.sourceforge.net/svnroot/tk-ui/cnaf.sidoc.ide/org.eclipse.wst.xml.search.xpath.processors">
+							<text:span text:style-name="T6">org.eclipse.wst.xml.search.xpath.processors
+							</text:span>
+						</text:a>
+						<text:span text:style-name="T10"> : this plugin is used to
+							provides XPath Evaluator with WST Xpath2.0 (</text:span>
+						<text:span text:style-name="T7">JFlexCupParser). Please read
+						</text:span>
+						<text:a xlink:type="simple" xlink:href="#2.3.XPath evaluator|outline">XPath processor
+							section</text:a>
+					</text:p>
+					<text:p text:style-name="P19">
+						<text:s />
+					</text:p>
+				</text:list-item>
+			</text:list>
+			<text:p text:style-name="Standard">
+				<text:soft-page-break />
+			</text:p>
+			<text:p text:style-name="P9">If you wish test Struts2 IDE (no
+				distibuable for the moment), you must get the below plugins and :
+			</text:p>
+			<text:p text:style-name="Standard" />
+			<text:list xml:id="list39118661" text:style-name="L3">
+				<text:list-item>
+					<text:p text:style-name="P20">
+						<text:a xlink:type="simple"
+							xlink:href="https://tk-ui.svn.sourceforge.net/svnroot/tk-ui/org.apache.struts2.ide/org.apache.struts2.ide.core">org.apache.struts2.ide.core</text:a>
+					</text:p>
+				</text:list-item>
+				<text:list-item>
+					<text:p text:style-name="P20">
+						<text:a xlink:type="simple"
+							xlink:href="https://tk-ui.svn.sourceforge.net/svnroot/tk-ui/org.apache.struts2.ide/org.apache.struts2.ide.ui">org.apache.struts2.ide.ui</text:a>
+					</text:p>
+				</text:list-item>
+				<text:list-item>
+					<text:p text:style-name="P20">
+						<text:a xlink:type="simple"
+							xlink:href="https://tk-ui.svn.sourceforge.net/svnroot/tk-ui/org.apache.struts2.ide/org.apache.struts2.ide.jsp.core">org.apache.struts2.ide.jsp.core</text:a>
+					</text:p>
+				</text:list-item>
+			</text:list>
+			<text:p text:style-name="Standard" />
+			<text:p text:style-name="Standard" />
+			<text:p text:style-name="Standard" />
+			<text:p text:style-name="Standard" />
+			<text:h text:style-name="P22" text:outline-level="1">Struts2 IDE –
+				Struts.xml</text:h>
+			<text:p text:style-name="Standard">This section will describe the
+				features of XML Struts2 IDE Plugins based on XML Search Engine.
+			</text:p>
+			<text:p text:style-name="P8" />
+			<text:h text:style-name="P14" text:outline-level="2">Struts2 icons
+			</text:h>
+			<text:p text:style-name="P8">Struts IDE customize the icons of XML
+				Struts file (with S blue) : </text:p>
+			<text:p text:style-name="P8" />
+			<text:p text:style-name="P8">
+				<draw:frame draw:style-name="fr1" draw:name="images1"
+					text:anchor-type="paragraph" svg:width="9.474cm" svg:height="3.23cm"
+					draw:z-index="0">
+					<draw:image xlink:href="Pictures/200000070000250100000C9D28846C14.svm"
+						xlink:type="simple" xlink:show="embed" xlink:actuate="onLoad" />
+				</draw:frame>
+			</text:p>
+			<text:p text:style-name="P8" />
+			<text:h text:style-name="Heading_20_2" text:outline-level="2">Syntax
+				coloring for referenced Nodes</text:h>
+			<text:p text:style-name="P8">When you have completion, validation,
+				hyperlink, text hover available in the XML file, bold color is used
+				: </text:p>
+			<text:p text:style-name="P8" />
+			<text:p text:style-name="P8">
+				<draw:frame draw:style-name="fr1" draw:name="images22"
+					text:anchor-type="paragraph" svg:width="15.61cm" svg:height="3.627cm"
+					draw:z-index="18">
+					<draw:image xlink:href="Pictures/2000000700003CFB00000E2A436F6742.svm"
+						xlink:type="simple" xlink:show="embed" xlink:actuate="onLoad" />
+				</draw:frame>
+			</text:p>
+			<text:p text:style-name="P8" />
+			<text:p text:style-name="P10">You can customize this color with
+				Preferences : </text:p>
+			<text:p text:style-name="P8" />
+			<text:p text:style-name="P8">
+				<draw:frame draw:style-name="fr2" draw:name="images23"
+					text:anchor-type="paragraph" svg:width="15.997cm" svg:height="17.427cm"
+					draw:z-index="19">
+					<draw:image xlink:href="Pictures/1000000000000272000002AAC60E6EE1.png"
+						xlink:type="simple" xlink:show="embed" xlink:actuate="onLoad" />
+				</draw:frame>
+			</text:p>
+			<text:h text:style-name="P16" text:outline-level="2">Java
+				completion for @class attribute</text:h>
+			<text:p text:style-name="P8">The whole @class attribute can manage
+				Java completion : </text:p>
+			<text:p text:style-name="P8" />
+			<text:p text:style-name="P8">
+				<draw:frame draw:style-name="fr1" draw:name="images2"
+					text:anchor-type="paragraph" svg:width="16.589cm" svg:height="6.481cm"
+					draw:z-index="20">
+					<draw:image xlink:href="Pictures/20000007000040CE000019539DEBF935.svm"
+						xlink:type="simple" xlink:show="embed" xlink:actuate="onLoad" />
+				</draw:frame>
+			</text:p>
+			<text:p text:style-name="P8">When Javadoc is available, it is
+				displayed in the second popup : </text:p>
+			<text:p text:style-name="P8" />
+			<text:p text:style-name="P8">
+				<draw:frame draw:style-name="fr1" draw:name="images24"
+					text:anchor-type="paragraph" svg:width="17.221cm" svg:height="5.74cm"
+					draw:z-index="23">
+					<draw:image xlink:href="Pictures/20000007000043490000166E367DDFE9.svm"
+						xlink:type="simple" xlink:show="embed" xlink:actuate="onLoad" />
+				</draw:frame>
+			</text:p>
+			<text:h text:style-name="P16" text:outline-level="2">Java
+				validation for @class attribute</text:h>
+			<text:p text:style-name="P8">If class doens&apos;t exists, it
+				appears with red marker : </text:p>
+			<text:p text:style-name="P8" />
+			<text:p text:style-name="P8">
+				<draw:frame draw:style-name="fr1" draw:name="images3"
+					text:anchor-type="paragraph" svg:width="16.619cm" svg:height="3.02cm"
+					draw:z-index="21">
+					<draw:image xlink:href="Pictures/20000007000040E900000BC9E068CE46.svm"
+						xlink:type="simple" xlink:show="embed" xlink:actuate="onLoad" />
+				</draw:frame>
+			</text:p>
+			<text:h text:style-name="P14" text:outline-level="2">Java
+				hyperlink for @class attribute : </text:h>
+			<text:p text:style-name="P8">You can open the declared Java
+				class.To do that select the class attribute and do Ctrl : </text:p>
+			<text:p text:style-name="P8" />
+			<text:p text:style-name="P8">
+				<draw:frame draw:style-name="fr1" draw:name="images4"
+					text:anchor-type="paragraph" svg:width="14.34cm" svg:height="2.013cm"
+					draw:z-index="22">
+					<draw:image xlink:href="Pictures/2000000700003805000007DC08C13A42.svm"
+						xlink:type="simple" xlink:show="embed" xlink:actuate="onLoad" />
+				</draw:frame>
+			</text:p>
+			<text:p text:style-name="P8">Hyperlink is activated, if you click
+				on mouse, it opens Java class (in this demo, I have not
+				ActionChainResult source): </text:p>
+			<text:p text:style-name="P8" />
+			<text:p text:style-name="P8">
+				<draw:frame draw:style-name="fr1" draw:name="images5"
+					text:anchor-type="paragraph" svg:width="14.263cm" svg:height="6.429cm"
+					draw:z-index="1">
+					<draw:image xlink:href="Pictures/20000007000037B60000191E131A5397.svm"
+						xlink:type="simple" xlink:show="embed" xlink:actuate="onLoad" />
+				</draw:frame>
+			</text:p>
+			<text:h text:style-name="P15" text:outline-level="2">Java Text
+				Hover</text:h>
+			<text:p text:style-name="P8" />
+			<text:p text:style-name="P8">When you hover the mouse to the class
+				attribute, Java doc display : </text:p>
+			<text:p text:style-name="P8" />
+			<text:p text:style-name="P8">
+				<draw:frame draw:style-name="fr1" draw:name="images25"
+					text:anchor-type="paragraph" svg:width="15.425cm" svg:height="3.097cm"
+					draw:z-index="24">
+					<draw:image xlink:href="Pictures/2000000700003C4200000C193390B98B.svm"
+						xlink:type="simple" xlink:show="embed" xlink:actuate="onLoad" />
+				</draw:frame>
+			</text:p>
+			<text:h text:style-name="Heading_20_2" text:outline-level="2">
+				Java method completion for
+				<text:a xlink:type="simple" xlink:href="mailto:action/@method">action/@method
+				</text:a>
+			</text:h>
+			<text:p text:style-name="P8">The action/@method attribute can
+				manage Java method completion : </text:p>
+			<text:p text:style-name="P8" />
+			<text:p text:style-name="Standard">
+				<draw:frame draw:style-name="fr1" draw:name="images13"
+					text:anchor-type="paragraph" svg:width="13.919cm" svg:height="7.223cm"
+					draw:z-index="14">
+					<draw:image xlink:href="Pictures/200000070000365E00001C38D0095AAF.svm"
+						xlink:type="simple" xlink:show="embed" xlink:actuate="onLoad" />
+				</draw:frame>
+			</text:p>
+			<text:h text:style-name="Heading_20_2" text:outline-level="2">
+				Java method validation for
+				<text:a xlink:type="simple" xlink:href="mailto:action/@method">action/@method
+				</text:a>
+			</text:h>
+			<text:p text:style-name="P8">If method doens&apos;t exists, it
+				appears with red marker : </text:p>
+			<text:p text:style-name="P8" />
+			<text:p text:style-name="P8">
+				<draw:frame draw:style-name="fr1" draw:name="images19"
+					text:anchor-type="paragraph" svg:width="14.078cm" svg:height="3.413cm"
+					draw:z-index="15">
+					<draw:image xlink:href="Pictures/20000007000036FD00000D565AF50FE5.svm"
+						xlink:type="simple" xlink:show="embed" xlink:actuate="onLoad" />
+				</draw:frame>
+			</text:p>
+			<text:p text:style-name="P8" />
+			<text:p text:style-name="P8" />
+			<text:h text:style-name="P16" text:outline-level="2">Java
+				hyperlink for action@method attribute : </text:h>
+			<text:p text:style-name="P8">You can open the declared Java method
+				.To do that select the method attribute and do Ctrl : </text:p>
+			<text:p text:style-name="P8" />
+			<text:p text:style-name="P8">
+				<draw:frame draw:style-name="fr1" draw:name="images20"
+					text:anchor-type="paragraph" svg:width="13.945cm" svg:height="2.462cm"
+					draw:z-index="16">
+					<draw:image xlink:href="Pictures/20000007000036790000099EB48EDB3E.svm"
+						xlink:type="simple" xlink:show="embed" xlink:actuate="onLoad" />
+				</draw:frame>
+			</text:p>
+			<text:p text:style-name="P8">Hyperlink is activated, if you click
+				on mouse, it opens Java class and select the method : </text:p>
+			<text:p text:style-name="P8" />
+			<text:p text:style-name="P8">
+				<draw:frame draw:style-name="fr1" draw:name="images21"
+					text:anchor-type="paragraph" svg:width="13.573cm" svg:height="16.379cm"
+					draw:z-index="17">
+					<draw:image xlink:href="Pictures/200000070000350600003FFB505D7B1E.svm"
+						xlink:type="simple" xlink:show="embed" xlink:actuate="onLoad" />
+				</draw:frame>
+			</text:p>
+			<text:p text:style-name="P8" />
+			<text:h text:style-name="P16" text:outline-level="2">interceptor-ref
+				completion</text:h>
+			<text:p text:style-name="P8">
+				You can benefit for interceptor-ref completion for @name attribute.
+				It display interceptor and interceptor-stack that you have declared
+				<text:s />
+				:
+			</text:p>
+			<text:p text:style-name="P8" />
+			<text:p text:style-name="P8" />
+			<text:p text:style-name="Standard">
+				<draw:frame draw:style-name="fr1" draw:name="images6"
+					text:anchor-type="paragraph" svg:width="19.92cm" svg:height="6.01cm"
+					draw:z-index="3">
+					<draw:image xlink:href="Pictures/2000000700004DD400001777F577F81B.svm"
+						xlink:type="simple" xlink:show="embed" xlink:actuate="onLoad" />
+				</draw:frame>
+			</text:p>
+			<text:h text:style-name="P14" text:outline-level="2">interceptor-ref
+				validation</text:h>
+			<text:p text:style-name="P8">If
+				referenced interceptor doesn&apos;t exists, it appears as red marker
+				<text:s />
+				:
+			</text:p>
+			<text:p text:style-name="P8" />
+			<text:p text:style-name="Standard">
+				<draw:frame draw:style-name="fr1" draw:name="images7"
+					text:anchor-type="paragraph" svg:width="8.998cm" svg:height="2.462cm"
+					draw:z-index="4">
+					<draw:image xlink:href="Pictures/20000007000023250000099E4D3B76DE.svm"
+						xlink:type="simple" xlink:show="embed" xlink:actuate="onLoad" />
+				</draw:frame>
+			</text:p>
+			<text:h text:style-name="P14" text:outline-level="2">interceptor-ref
+				hyperlink</text:h>
+			<text:p text:style-name="P8">You can open the referenced
+				interceptor.To do that select the name attribute and do Ctrl :
+			</text:p>
+			<text:p text:style-name="P8" />
+			<text:p text:style-name="P8">
+				<draw:frame draw:style-name="fr1" draw:name="images14"
+					text:anchor-type="paragraph" svg:width="8.865cm" svg:height="2.251cm"
+					draw:z-index="5">
+					<draw:image xlink:href="Pictures/20000007000022A1000008CA4DE93E46.svm"
+						xlink:type="simple" xlink:show="embed" xlink:actuate="onLoad" />
+				</draw:frame>
+			</text:p>
+			<text:p text:style-name="P8">Hyperlink is activated, if you click
+				on mouse, it select the interceptor declared : </text:p>
+			<text:p text:style-name="P8" />
+			<text:p text:style-name="P8">
+				<draw:frame draw:style-name="fr1" draw:name="images15"
+					text:anchor-type="paragraph" svg:width="16.91cm" svg:height="3.15cm"
+					draw:z-index="6">
+					<draw:image xlink:href="Pictures/200000070000420C00000C4EE2F00D22.svm"
+						xlink:type="simple" xlink:show="embed" xlink:actuate="onLoad" />
+				</draw:frame>
+			</text:p>
+			<text:p text:style-name="P8" />
+			<text:h text:style-name="P15" text:outline-level="2">interceptor-ref
+				Text hover</text:h>
+			<text:p text:style-name="P8">When you hover the mouse to the name
+				attribute of the interceptor-ref, information about referenced
+				interceptor display (here basicStatck): </text:p>
+			<text:p text:style-name="Standard" />
+			<text:p text:style-name="Standard">
+				<draw:frame draw:style-name="fr3" draw:name="images26"
+					text:anchor-type="paragraph" svg:x="2.177cm" svg:y="0cm" svg:width="11.643cm"
+					svg:height="6.299cm" draw:z-index="25">
+					<draw:image xlink:href="Pictures/2000000700002D7B0000189AAE0D55AC.svm"
+						xlink:type="simple" xlink:show="embed" xlink:actuate="onLoad" />
+				</draw:frame>
+			</text:p>
+			<text:p text:style-name="Standard" />
+			<text:h text:style-name="P16" text:outline-level="2">interceptor/interceptor-statck
+				with Ctrl+Shift+G</text:h>
+			<text:p text:style-name="P8">You can retrieve the list of
+				interceptor-ref which reference an interceptor or interceptor-stack
+			</text:p>
+			<text:p text:style-name="P8" />
+			<text:p text:style-name="P8">To do that, select @name attribute of
+				the interceptor or interceptor-stack, and do Ctrl+Shift+G. XML
+				search is launched and display interceptor-ref which are linked to :
+			</text:p>
+			<text:p text:style-name="P8" />
+			<text:p text:style-name="P8">
+				<draw:frame draw:style-name="fr1" draw:name="images16"
+					text:anchor-type="paragraph" svg:width="17.281cm" svg:height="6.96cm"
+					draw:z-index="7">
+					<draw:image xlink:href="Pictures/200000070000437E00001B303A3C2377.svm"
+						xlink:type="simple" xlink:show="embed" xlink:actuate="onLoad" />
+				</draw:frame>
+			</text:p>
+			<text:p text:style-name="P8">After you can double click on node of
+				Search result to open and select the result node : </text:p>
+			<text:p text:style-name="P8" />
+			<text:p text:style-name="P8">
+				<draw:frame draw:style-name="fr1" draw:name="images17"
+					text:anchor-type="paragraph" svg:width="15.744cm" svg:height="9.763cm"
+					draw:z-index="8">
+					<draw:image xlink:href="Pictures/2000000700003D800000262489070D58.svm"
+						xlink:type="simple" xlink:show="embed" xlink:actuate="onLoad" />
+				</draw:frame>
+			</text:p>
+			<text:h text:style-name="P16" text:outline-level="2">result-type
+				features</text:h>
+			<text:p text:style-name="P8">You have the same features for
+				result-type (compeltion, validation, hyperlink and Ctrl+Shift+G)
+				than interceptor : </text:p>
+			<text:p text:style-name="P8" />
+			<text:p text:style-name="P8">
+				<draw:frame draw:style-name="fr1" draw:name="images18"
+					text:anchor-type="paragraph" svg:width="14.049cm" svg:height="6.244cm"
+					draw:z-index="9">
+					<draw:image xlink:href="Pictures/20000007000036E200001865F5D713BA.svm"
+						xlink:type="simple" xlink:show="embed" xlink:actuate="onLoad" />
+				</draw:frame>
+			</text:p>
+			<text:p text:style-name="P8" />
+			<text:p text:style-name="P8" />
+			<text:h text:style-name="P22" text:outline-level="1">Struts2 IDE –
+				JSP Taglib </text:h>
+			<text:p text:style-name="P8">This section will describe the
+				features of XML Struts2 IDE Plugins based on XML Search Engine.
+			</text:p>
+			<text:p text:style-name="P8" />
+			<text:h text:style-name="Heading_20_2" text:outline-level="2">JSP
+				Taglib @action</text:h>
+			<text:p text:style-name="Standard">Struts2 mailer sample declare thoses
+				actions : </text:p>
+			<text:p text:style-name="Standard" />
+			<text:p text:style-name="Standard">
+				<draw:frame draw:style-name="fr1" draw:name="images27"
+					text:anchor-type="paragraph" svg:width="17.619cm" svg:height="2.96cm"
+					draw:z-index="26">
+					<draw:image xlink:href="Pictures/20000007000044D600000B9442FD4860.svm"
+						xlink:type="simple" xlink:show="embed" xlink:actuate="onLoad" />
+				</draw:frame>
+			</text:p>
+			<text:p text:style-name="Standard">When you write JSP files, you can
+				access to the action declared : </text:p>
+			<text:p text:style-name="Standard" />
+			<text:p text:style-name="Standard">
+				<draw:frame draw:style-name="fr1" draw:name="images28"
+					text:anchor-type="paragraph" svg:width="17.701cm" svg:height="5.579cm"
+					draw:z-index="27">
+					<draw:image xlink:href="Pictures/2000000700004526000015D099C353C1.svm"
+						xlink:type="simple" xlink:show="embed" xlink:actuate="onLoad" />
+				</draw:frame>
+			</text:p>
+			<text:p text:style-name="Standard">TODO : manage wildcard!!!</text:p>
+			<text:p text:style-name="Standard" />
+			<text:p text:style-name="Standard">Hyperlink is managed to go the XML
+				struts.xml : </text:p>
+			<text:p text:style-name="Standard" />
+			<text:p text:style-name="Standard">
+				<draw:frame draw:style-name="fr1" draw:name="images29"
+					text:anchor-type="paragraph" svg:width="11.405cm" svg:height="1.378cm"
+					draw:z-index="35">
+					<draw:image xlink:href="Pictures/2000000700002C8D000005616B1C5567.svm"
+						xlink:type="simple" xlink:show="embed" xlink:actuate="onLoad" />
+				</draw:frame>
+			</text:p>
+			<text:p text:style-name="Standard">Validation is managed : </text:p>
+			<text:p text:style-name="Standard" />
+			<text:p text:style-name="Standard">
+				<draw:frame draw:style-name="fr1" draw:name="images30"
+					text:anchor-type="paragraph" svg:width="11.906cm" svg:height="0.743cm"
+					draw:z-index="28">
+					<draw:image xlink:href="Pictures/2000000700002E83000002E61C00AA60.svm"
+						xlink:type="simple" xlink:show="embed" xlink:actuate="onLoad" />
+				</draw:frame>
+			</text:p>
+			<text:p text:style-name="P9" />
+			<text:h text:style-name="Heading_20_3" text:outline-level="3">Ctrl+Shift+G
+				for action</text:h>
+			<text:p text:style-name="Standard">You can do Ctrl+Shift+G for action
+				declared in </text:p>
+			<text:p text:style-name="Standard" />
+			<text:p text:style-name="Standard">
+				<draw:frame draw:style-name="fr1" draw:name="images33"
+					text:anchor-type="paragraph" svg:width="16.33cm" svg:height="7.811cm"
+					draw:z-index="31">
+					<draw:image xlink:href="Pictures/2000000700003FC600001E7E7EAE4965.svm"
+						xlink:type="simple" xlink:show="embed" xlink:actuate="onLoad" />
+				</draw:frame>
+			</text:p>
+			<text:p text:style-name="Standard" />
+			<text:h text:style-name="Heading_20_3" text:outline-level="3">Limitation
+			</text:h>
+			<text:p text:style-name="Standard">Welcome.jsp from Struts2 mailer
+				declare s:url like this : </text:p>
+			<text:p text:style-name="Standard" />
+			<text:p text:style-name="Standard">
+				<draw:frame draw:style-name="fr1" draw:name="images32"
+					text:anchor-type="paragraph" svg:width="13.654cm" svg:height="0.954cm"
+					draw:z-index="30">
+					<draw:image xlink:href="Pictures/2000000700003556000003BA42B1A472.svm"
+						xlink:type="simple" xlink:show="embed" xlink:actuate="onLoad" />
+				</draw:frame>
+			</text:p>
+			<text:p text:style-name="Standard">PAY ATTENTION!!! It&apos;s not a well
+				XML (s:url element is included in the href attribute), so DTD
+				completion doesn&apos;t works and WTP/XML search doesn&apos;t works
+				(no completion available, validation....)</text:p>
+			<text:h text:style-name="P15" text:outline-level="2">JSP Taglib
+				@key</text:h>
+			<text:p text:style-name="Standard" />
+			<text:p text:style-name="Standard">You can having comletion, hyperlink,
+				validation with key of properties files. In Struts2 mailer sample
+				you have this properties files : </text:p>
+			<text:p text:style-name="Standard" />
+			<text:p text:style-name="Standard">
+				<draw:frame draw:style-name="fr1" draw:name="images31"
+					text:anchor-type="paragraph" svg:width="13.496cm" svg:height="5.741cm"
+					draw:z-index="29">
+					<draw:image xlink:href="Pictures/20000007000034B70000166E17D6A6A0.svm"
+						xlink:type="simple" xlink:show="embed" xlink:actuate="onLoad" />
+				</draw:frame>
+			</text:p>
+			<text:p text:style-name="Standard">For any Struts2 taglib which have
+				« key » attribute, you can use completion : </text:p>
+			<text:p text:style-name="Standard" />
+			<text:p text:style-name="Standard">
+				<draw:frame draw:style-name="fr1" draw:name="images34"
+					text:anchor-type="paragraph" svg:width="18.44cm" svg:height="5.53cm"
+					draw:z-index="32">
+					<draw:image xlink:href="Pictures/200000070000480A0000159B88A97357.svm"
+						xlink:type="simple" xlink:show="embed" xlink:actuate="onLoad" />
+				</draw:frame>
+			</text:p>
+			<text:p text:style-name="Standard">TODO : manage search of file
+				properties by following logic of Struts2 (name action = file
+				properties name...)!!!</text:p>
+			<text:p text:style-name="Standard" />
+			<text:p text:style-name="Standard">Hyperlink is managed to go the
+				Properties file : </text:p>
+			<text:p text:style-name="Standard" />
+			<text:p text:style-name="Standard">
+				<draw:frame draw:style-name="fr1" draw:name="images35"
+					text:anchor-type="paragraph" svg:width="12.144cm" svg:height="2.143cm"
+					draw:z-index="33">
+					<draw:image xlink:href="Pictures/2000000700002F7100000860788B2D00.svm"
+						xlink:type="simple" xlink:show="embed" xlink:actuate="onLoad" />
+				</draw:frame>
+			</text:p>
+			<text:p text:style-name="Standard">Validation is managed : </text:p>
+			<text:p text:style-name="Standard" />
+			<text:p text:style-name="Standard">
+				<draw:frame draw:style-name="fr1" draw:name="images36"
+					text:anchor-type="paragraph" svg:width="11.538cm" svg:height="1.827cm"
+					draw:z-index="34">
+					<draw:image xlink:href="Pictures/2000000700002D1100000723BB9DEF58.svm"
+						xlink:type="simple" xlink:show="embed" xlink:actuate="onLoad" />
+				</draw:frame>
+			</text:p>
+			<text:h text:style-name="P22" text:outline-level="1">Struts2 IDE –
+				XML XWork validator</text:h>
+			<text:p text:style-name="Standard">Coming soon...</text:p>
+			<text:h text:style-name="P22" text:outline-level="1">XML Search
+				engine – UI Dialog</text:h>
+			<text:p text:style-name="Standard">
+				XML Search engine (see bug
+				<text:a xlink:type="simple"
+					xlink:href="https://bugs.eclipse.org/bugs/show_bug.cgi?id=330576"
+					office:target-frame-name="_blank" xlink:show="new">https://bugs.eclipse.org/bugs/show_bug.cgi?id=330576
+				</text:a>
+				) give you the capability to search XML nodes in your
+				<text:span text:style-name="T6">XML ANY files</text:span>
+				<text:span text:style-name="T10"> (here screen are based on XML
+					Jerrty plugins but you can use it with any XML files)</text:span>
+				with Xpath like Search/File...which is used to search some text in
+				your files. XML Search engine is available with Search/XML... menu :
+			</text:p>
+			<text:p text:style-name="Standard" />
+			<text:p text:style-name="Standard">
+				<draw:frame draw:style-name="fr1" draw:name="images8"
+					text:anchor-type="paragraph" svg:width="8.31cm" svg:height="3.918cm"
+					draw:z-index="2">
+					<draw:image xlink:href="Pictures/200000070000207500000F4D365944B2.svm"
+						xlink:type="simple" xlink:show="embed" xlink:actuate="onLoad" />
+				</draw:frame>
+			</text:p>
+			<text:p text:style-name="Standard" />
+			<text:h text:style-name="Heading_20_2" text:outline-level="2">Search
+				Xpath manual</text:h>
+			<text:p text:style-name="Standard" />
+			<text:p text:style-name="Standard">Imagine you wish find every Nodes
+				result-type which declare httphearder. The Xpath to use is :
+			</text:p>
+			<text:p text:style-name="Standard" />
+			<text:p text:style-name="P7">/struts/package/result-types/result-type[@name=&quot;httpheader&quot;]/@name
+			</text:p>
+			<text:p text:style-name="Standard" />
+			<text:p text:style-name="Standard">You can fill this Xpath in the Xpath
+				field : </text:p>
+			<text:p text:style-name="Standard" />
+			<text:p text:style-name="Standard" />
+			<text:p text:style-name="Standard">
+				<draw:frame draw:style-name="fr1" draw:name="images9"
+					text:anchor-type="paragraph" svg:width="19.791cm" svg:height="10.321cm"
+					draw:z-index="10">
+					<draw:image xlink:href="Pictures/10000000000002EC00000186AEA22D93.png"
+						xlink:type="simple" xlink:show="embed" xlink:actuate="onLoad" />
+				</draw:frame>
+			</text:p>
+			<text:p text:style-name="Standard">
+				<text:soft-page-break />
+				After clicking on Search button, the Search view display the result
+				of the search :
+			</text:p>
+			<text:p text:style-name="Standard" />
+			<text:p text:style-name="Standard">
+				<draw:frame draw:style-name="fr1" draw:name="images10"
+					text:anchor-type="paragraph" svg:width="15.266cm" svg:height="2.725cm"
+					draw:z-index="11">
+					<draw:image xlink:href="Pictures/2000000700003BA300000AA6472FCA13.svm"
+						xlink:type="simple" xlink:show="embed" xlink:actuate="onLoad" />
+				</draw:frame>
+			</text:p>
+			<text:p text:style-name="Standard" />
+			<text:h text:style-name="Heading_20_2" text:outline-level="2">Search
+				Xpath automaticly</text:h>
+			<text:p text:style-name="Standard">
+				Fill the Xpath in the Xpath field can be boring. To do the same
+				search that below, you can
+				<text:s text:c="2" />
+				select a Node. In this sample we wish search
+			</text:p>
+			<text:p text:style-name="Standard" />
+			<text:p text:style-name="Standard">
+				<text:span text:style-name="T6">/</text:span>
+				<text:a xlink:type="simple"
+					xlink:href="../../../../../../../../../../../../../../../../../@name">
+					<text:span text:style-name="T6">/struts/package/result-types/result-type[@name=&quot;chain&quot;]/@name
+					</text:span>
+				</text:a>
+			</text:p>
+			<text:p text:style-name="Standard" />
+			<text:p text:style-name="Standard">to do that open an XML file which
+				follow this Xpath and select the attribute name in the XML editor :
+			</text:p>
+			<text:p text:style-name="Standard" />
+			<text:p text:style-name="P6">
+				<draw:frame draw:style-name="fr1" draw:name="images11"
+					text:anchor-type="paragraph" svg:width="15.162cm" svg:height="4.286cm"
+					draw:z-index="12">
+					<draw:image xlink:href="Pictures/2000000700003B3A000010BF2453F580.svm"
+						xlink:type="simple" xlink:show="embed" xlink:actuate="onLoad" />
+				</draw:frame>
+			</text:p>
+			<text:p text:style-name="Standard" />
+			<text:p text:style-name="Standard" />
+			<text:p text:style-name="Standard" />
+			<text:p text:style-name="P9">Open the XML Search (Search/XML...),
+				the UI dialog opens and Xpath field is automaticly filled: </text:p>
+			<text:p text:style-name="Standard" />
+			<text:p text:style-name="Standard">
+				<draw:frame draw:style-name="fr1" draw:name="images12"
+					text:anchor-type="paragraph" svg:width="19.791cm" svg:height="10.321cm"
+					draw:z-index="13">
+					<draw:image xlink:href="Pictures/10000000000002EC00000186FE070186.png"
+						xlink:type="simple" xlink:show="embed" xlink:actuate="onLoad" />
+				</draw:frame>
+			</text:p>
+			<text:p text:style-name="P6" />
+			<text:p text:style-name="P6" />
+			<text:p text:style-name="P6" />
+			<text:p text:style-name="P6" />
+			<text:p text:style-name="P8" />
+		</office:text>
+	</office:body>
+</office:document-content>

@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<office:document-meta xmlns:office="urn:oasis:names:tc:opendocument:xmlns:office:1.0"
+	xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:dc="http://purl.org/dc/elements/1.1/"
+	xmlns:meta="urn:oasis:names:tc:opendocument:xmlns:meta:1.0" xmlns:ooo="http://openoffice.org/2004/office"
+	xmlns:grddl="http://www.w3.org/2003/g/data-view#" office:version="1.2"
+	grddl:transformation="http://docs.oasis-open.org/office/1.2/xslt/odf2rdf.xsl">
+	<office:meta>
+		<meta:creation-date>2009-04-16T11:32:02.64</meta:creation-date>
+		<meta:editing-duration>PT12M58S</meta:editing-duration>
+		<meta:editing-cycles>11</meta:editing-cycles>
+		<meta:generator>LibreOffice/3.3$Win32
+			LibreOffice_project/330m19$Build-6</meta:generator>
+		<dc:date>2011-03-01T10:23:23.28</dc:date>
+		<dc:creator>Angelo ZERR</dc:creator>
+		<meta:document-statistic meta:table-count="0"
+			meta:image-count="0" meta:object-count="0" meta:page-count="1"
+			meta:paragraph-count="10" meta:word-count="40" meta:character-count="185" />
+		<meta:user-defined meta:name="Info 1" />
+		<meta:user-defined meta:name="Info 2" />
+		<meta:user-defined meta:name="Info 3" />
+		<meta:user-defined meta:name="Info 4" />
+	</office:meta>
+</office:document-meta>

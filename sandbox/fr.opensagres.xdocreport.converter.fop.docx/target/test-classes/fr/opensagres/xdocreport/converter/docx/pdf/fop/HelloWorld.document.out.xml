@@ -1,0 +1,57 @@
+<!--
+
+    Copyright (C) 2011 Angelo Zerr <angelo.zerr@gmail.com>, Pascal Leclercq <pascal.leclercq@gmail.com>
+
+    Licensed under the Apache License, Version 2.0 (the "License");
+    you may not use this file except in compliance with the License.
+    You may obtain a copy of the License at
+
+            http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing, software
+    distributed under the License is distributed on an "AS IS" BASIS,
+    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+    See the License for the specific language governing permissions and
+    limitations under the License.
+
+-->
+<fo:root xmlns:fo="http://www.w3.org/1999/XSL/Format"
+	xmlns:w="http://schemas.openxmlformats.org/wordprocessingml/2006/main">
+	<fo:layout-master-set>
+		<fo:simple-page-master master-name="section1-first-page"
+			page-width="8.268055555555556in" page-height="11.693055555555556in"
+			margin-top="35.4pt" margin-bottom="35.4pt" margin-right="70.85pt"
+			margin-left="70.85pt">
+			<fo:region-body margin-top="35.45pt" margin-bottom="35.45pt" />
+			<fo:region-before extent="11in" region-name="first-page-header" />
+			<fo:region-after display-align="after" extent="11in"
+				region-name="first-page-footer" />
+		</fo:simple-page-master>
+		<fo:simple-page-master master-name="section1-odd-page"
+			page-width="8.268055555555556in" page-height="11.693055555555556in"
+			margin-top="35.4pt" margin-bottom="35.4pt" margin-right="70.85pt"
+			margin-left="70.85pt">
+			<fo:region-body margin-top="35.45pt" margin-bottom="35.45pt" />
+			<fo:region-before extent="11in" region-name="odd-page-header" />
+			<fo:region-after display-align="after" extent="11in"
+				region-name="odd-page-footer" />
+		</fo:simple-page-master>
+		<fo:simple-page-master master-name="section1-even-page"
+			page-width="8.268055555555556in" page-height="11.693055555555556in"
+			margin-top="35.4pt" margin-bottom="35.4pt" margin-right="70.85pt"
+			margin-left="70.85pt">
+			<fo:region-body margin-top="35.45pt" margin-bottom="35.45pt" />
+			<fo:region-before extent="11in" region-name="even-page-header" />
+			<fo:region-after display-align="after" extent="11in"
+				region-name="even-page-footer" />
+		</fo:simple-page-master>
+		<fo:page-sequence-master master-name="section1-page-sequence-master">
+			<fo:repeatable-page-master-alternatives>
+				<fo:conditional-page-master-reference
+					master-reference="section1-odd-page" odd-or-even="odd" />
+				<fo:conditional-page-master-reference
+					master-reference="section1-even-page" odd-or-even="even" />
+			</fo:repeatable-page-master-alternatives>
+		</fo:page-sequence-master>
+</fo:layout-master-set>
+</fo:root>		

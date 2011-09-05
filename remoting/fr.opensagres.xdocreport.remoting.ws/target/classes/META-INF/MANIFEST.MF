@@ -1,0 +1,22 @@
+Manifest-Version: 1.0
+Built-By: pascal
+Build-Jdk: 1.6.0_22
+Created-By: Apache Maven Bundle Plugin
+Export-Package: fr.opensagres.xdocreport.service.ws;uses:="javax.jws,f
+ r.opensagres.xdocreport.document.service,javax.servlet,javax.xml.ws,j
+ avax.servlet.http"
+Tool: Bnd-1.15.0
+Bundle-Name: fr.opensagres.xdocreport.remoting.ws
+Bundle-RequiredExecutionEnvironment: J2SE-1.5, JavaSE-1.6
+Bundle-Version: 0.9.1.SNAPSHOTvmavenbuildtimestamp
+Bnd-LastModified: 1315221320991
+Bundle-ManifestVersion: 2
+Bundle-License: http://www.opensource.org/licenses/mit-license.php
+Bundle-Description: XDocReport means XML Document reporting. It's Java
+  API to merge XML document created with MS Office (docx) or OpenOffic
+ e (odt), LibreOffice (odt) with a Java model to generate report and c
+ onvert it if you need to another format (PDF, XHTML...).
+Import-Package: fr.opensagres.xdocreport.document.service,javax.jws;ve
+ rsion="[2.0,3)",javax.servlet,javax.servlet.http,javax.xml.ws
+Bundle-SymbolicName: fr.opensagres.xdocreport.remoting.ws
+

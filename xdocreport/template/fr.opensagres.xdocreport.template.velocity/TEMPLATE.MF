@@ -1,0 +1,5 @@
+Fragment-Host: fr.opensagres.xdocreport.template
+Import-Package: fr.opensagres.xdocreport.core.*,
+ org.apache.commons.collections,
+ org.apache.velocity.*
+ 

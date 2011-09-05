@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project-modules id="moduleCoreId" project-version="1.5.0">
+    <wb-module deploy-name="xdocreport-webapp">
+        <wb-resource deploy-path="/" source-path="/WebContent"/>
+        <wb-resource deploy-path="/WEB-INF/classes" source-path="/src/main/resources"/>
+        <wb-resource deploy-path="/" source-path="/src/main/java"/>
+        <wb-resource deploy-path="/" source-path="/src/main/webapp"/>
+        <wb-resource deploy-path="/WEB-INF/classes" source-path="/src/main/java"/>
+        <dependent-module archiveName="fr.opensagres.xdocreport.document.docx.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/fr.opensagres.xdocreport.document.docx/fr.opensagres.xdocreport.document.docx">
+            <dependency-type>uses</dependency-type>
+        </dependent-module>
+        <dependent-module archiveName="fr.opensagres.xdocreport.template.freemarker.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/fr.opensagres.xdocreport.template.freemarker/fr.opensagres.xdocreport.template.freemarker">
+            <dependency-type>uses</dependency-type>
+        </dependent-module>
+        <dependent-module archiveName="fr.opensagres.xdocreport.template.velocity.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/fr.opensagres.xdocreport.template.velocity/fr.opensagres.xdocreport.template.velocity">
+            <dependency-type>uses</dependency-type>
+        </dependent-module>
+        <dependent-module archiveName="fr.opensagres.xdocreport.converter.docx.poi.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/fr.opensagres.xdocreport.converter.docx.poi/fr.opensagres.xdocreport.converter.docx.poi">
+            <dependency-type>uses</dependency-type>
+        </dependent-module>
+        <dependent-module archiveName="fr.opensagres.xdocreport.document.odt.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/fr.opensagres.xdocreport.document.odt/fr.opensagres.xdocreport.document.odt">
+            <dependency-type>uses</dependency-type>
+        </dependent-module>
+        <dependent-module archiveName="fr.opensagres.xdocreport.converter.odt.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/fr.opensagres.xdocreport.converter.odt/fr.opensagres.xdocreport.converter.odt">
+            <dependency-type>uses</dependency-type>
+        </dependent-module>
+        <dependent-module archiveName="fr.opensagres.xdocreport.core.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/fr.opensagres.xdocreport.core/fr.opensagres.xdocreport.core">
+            <dependency-type>uses</dependency-type>
+        </dependent-module>
+        <dependent-module archiveName="fr.opensagres.xdocreport.converter.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/fr.opensagres.xdocreport.converter/fr.opensagres.xdocreport.converter">
+            <dependency-type>uses</dependency-type>
+        </dependent-module>
+        <dependent-module archiveName="fr.opensagres.xdocreport.converter.docx.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/fr.opensagres.xdocreport.converter.docx/fr.opensagres.xdocreport.converter.docx">
+            <dependency-type>uses</dependency-type>
+        </dependent-module>
+        <dependent-module archiveName="org.odftoolkit.odfdom.converter.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/org.odftoolkit.odfdom.converter/org.odftoolkit.odfdom.converter">
+            <dependency-type>uses</dependency-type>
+        </dependent-module>
+        <dependent-module archiveName="fr.opensagres.xdocreport.converter.odt.odfdom.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/fr.opensagres.xdocreport.converter.odt.odfdom/fr.opensagres.xdocreport.converter.odt.odfdom">
+            <dependency-type>uses</dependency-type>
+        </dependent-module>
+        <dependent-module archiveName="org.apache.poi.xwpf.converter.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/org.apache.poi.xwpf.converter/org.apache.poi.xwpf.converter">
+            <dependency-type>uses</dependency-type>
+        </dependent-module>
+        <dependent-module archiveName="fr.opensagres.xdocreport.converter.docx.xwpf.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/fr.opensagres.xdocreport.converter.docx.xwpf/fr.opensagres.xdocreport.converter.docx.xwpf">
+            <dependency-type>uses</dependency-type>
+        </dependent-module>
+        <dependent-module archiveName="fr.opensagres.xdocreport.document.ods.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/fr.opensagres.xdocreport.document.ods/fr.opensagres.xdocreport.document.ods">
+            <dependency-type>uses</dependency-type>
+        </dependent-module>
+        <dependent-module archiveName="fr.opensagres.xdocreport.document.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/fr.opensagres.xdocreport.document/fr.opensagres.xdocreport.document">
+            <dependency-type>uses</dependency-type>
+        </dependent-module>
+        <dependent-module archiveName="fr.opensagres.xdocreport.template.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/fr.opensagres.xdocreport.template/fr.opensagres.xdocreport.template">
+            <dependency-type>uses</dependency-type>
+        </dependent-module>
+        <dependent-module archiveName="fr.opensagres.xdocreport.itext.extension.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/fr.opensagres.xdocreport.itext.extension/fr.opensagres.xdocreport.itext.extension">
+            <dependency-type>uses</dependency-type>
+        </dependent-module>
+        <property name="context-root" value="xdocreport-webapp"/>
+        <property name="java-output-path"/>
+    </wb-module>
+</project-modules>

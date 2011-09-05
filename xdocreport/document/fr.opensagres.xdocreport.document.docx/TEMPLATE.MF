@@ -1,0 +1,5 @@
+Fragment-Host: fr.opensagres.xdocreport.document
+Import-Package: fr.opensagres.xdocreport.converter,
+ fr.opensagres.xdocreport.core.document,
+ fr.opensagres.xdocreport.document,
+ fr.opensagres.xdocreport.template.config

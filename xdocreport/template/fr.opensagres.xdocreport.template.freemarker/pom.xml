@@ -1,0 +1,33 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<artifactId>fr.opensagres.xdocreport.template.freemarker</artifactId>
+	<parent>
+		<groupId>fr.opensagres</groupId>
+		<artifactId>template</artifactId>
+		<version>0.9.2-SNAPSHOT</version>
+	</parent>
+	<build>
+		<!-- src/test/java must be declared as testResource Otherwise, resources 
+			file must be placed under Its corresponding package under src/test/resources 
+			which is not fun in our case... -->
+		<testResources>
+			<testResource>
+				<directory>src/test/java </directory>
+			</testResource>
+		</testResources>
+	</build>
+	<dependencies>
+		<dependency>
+			<groupId>fr.opensagres</groupId>
+			<artifactId>fr.opensagres.xdocreport.template</artifactId>
+			<version>0.9.2-SNAPSHOT</version>
+		</dependency>
+		<!-- cf. http://freemarker.sourceforge.net/freemarkerdownload.html -->
+		<dependency>
+			<groupId>org.freemarker</groupId>
+			<artifactId>freemarker</artifactId>
+			<!-- Latest 2.3.x (not 2.4.x), at least 2.3.16 -->
+			<version>[2.3.16,2.4)</version>
+		</dependency>
+	</dependencies>
+</project>

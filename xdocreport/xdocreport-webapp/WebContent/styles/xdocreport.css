@@ -1,0 +1,401 @@
+/**
+ * Copyright (C) 2011 Angelo Zerr <angelo.zerr@gmail.com>, Pascal Leclercq <pascal.leclercq@gmail.com>
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *         http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+body{ 
+	background-color: #ffffff; 
+	text-align: left;
+	vertical-align: top;
+}
+body, input, select, td, textarea{ 
+	font-family: Arial, Helvetica, sans-serif; 
+	font-size: 11px;
+}
+
+input {
+	font-size:12px;
+	font-weight:none;
+}
+
+h1, h2, h3, h4, h5, h6, p, strong, div, form, acronym, label, table, td, th, span, a, hr, code, pre, hr {
+	margin:0;
+	padding:0;
+	font-size: 14px;
+	background-repeat:no-repeat;
+	list-style-type:none;
+}
+a, a:visited, a:hover { 
+	 text-decoration:none; 
+}
+a:hover {
+	text-decoration: underline;
+}
+img{ 
+	border:none;
+}
+hr {
+	height: 1px;
+	color: #000;
+	clear:both;
+}
+textarea {
+	width:100%;
+	height:20px;
+}
+dt {
+	font-weight: bold;
+}
+.clear {
+	clear: both;
+}
+h1 {
+	font-size: 2em;
+}
+h1 a{
+	color: #000;
+}
+div#header {
+	background-color: #fea;
+	border-top: 1px solid #000;
+	border-bottom: 1px solid #000;
+	padding: 20px 10px 30px 15px;
+	margin: 10px 5% 20px 5%;
+}
+div#header ul{
+	margin: 10px 0 0 0;
+}
+div#header ul li{
+	list-style-type: none;
+	float: left;
+	padding: 0 10px 0 0;
+	font-weight: bold;
+}
+div#header ul li a{
+	display: block;
+	color: #f00;
+	border-left: 1px solid red;
+	padding-left: 5px;
+}
+div#header ul li a:hover{
+	border-left: 1px solid #000;
+}
+
+h2 {
+	font-size: 1.2em;
+	margin: 10px 0 10px 0;
+}
+
+h2 {
+	font-size: 1.1em;
+	margin: 10px 0 5px 0;
+}
+
+p {
+	margin: 0 0 10px 0;
+}
+
+acronym {
+	border-bottom: 1px dashed #000;
+	cursor: help;
+}
+
+div#body {
+	margin: 0 5% 20px 5%;
+	padding: 20px 20px 20px 20px;
+	border: 1px dashed #666;
+}
+
+div#validxhtml {
+	float: right;
+	background-color: #eee;
+	border: 1px dotted #999;
+	padding: 2px;
+	margin: 5px;
+	width:100px;
+	text-align: center;
+}
+div#footer {
+	border-top: 1px solid #666;
+	padding: 5px 5px 5px 5px;
+	text-align:right;
+}
+
+div#footer span {
+	float: left;
+}
+
+/*.changed {
+	background-color: #ee0;
+	border: 1px solid #ccc;
+	padding: 10px;
+	margin: 10px;
+}*/
+ul#stylelist {
+	margin:0 0 30px 0;
+}
+
+ul#stylelist li {
+	list-style-type: none;
+	float:left;
+	width:100px;
+	border: 1px solid #ccc;
+	background-color: #eee;
+	padding:2px;
+	margin-right: 2px;
+}
+table.border {
+	border: 1px solid #666;
+	width: 100%;
+	margin: 20px 0 20px 0;
+}
+
+th td.top {
+	padding: 2px 4px 2px 4px;
+	text-align: left;
+	vertical-align: top;
+}
+thead tr {
+  background-color: #b1b7d9;
+}
+th.sorted {
+    background-color: #8b8fa9;
+}
+th a, th a:visited {
+  color: black;
+}
+th a:hover {
+  text-decoration: underline;
+  color: black;
+}
+th.sorted a, th.sortable a {
+	background-position: right;
+	display: block;
+	width: 100%;
+}
+th.sortable a {
+	background-image: url(../img/arrow_off.png);
+}
+th.order1 a {
+	background-image: url(../img/arrow_down.png);
+}
+th.order2 a {
+	background-image: url(../img/arrow_up.png);
+}
+tr.odd {
+  background-color: #fff
+}
+tr.tableRowEven, tr.even {
+  background-color: #e5e9ff
+}
+
+ul#showsource {
+	float: right;
+	background-color: #eee;
+	border: 1px dotted #999;
+	padding: 2px 4px 2px 4px;
+	margin: 5px;
+	width:100px;
+	list-style-type: none;
+}
+
+
+/* test styles */
+table.its thead tr {
+  background-color: #69c;
+}
+table.its tr.even {
+  background-color: #def;
+}
+
+table.mars thead tr {
+  background-color: #9c9;
+}
+table.mars tr.even {
+  background-color: #ccb;
+}
+table.mars tr.odd {
+  background-color: #eec;
+}
+
+
+table.simple thead tr {
+  background-color: #eee;
+}
+table.simple tr.even {
+  background-color: #fff;
+}
+table.simple {
+	border: 1px solid #ccc;
+	border-collapse: collapse;
+}
+table.simple td,table.simple th{
+	border: 1px solid #ccc;
+}
+
+table.nocol tbody td,table.nocol tbody th{
+	border-left: none;
+	border-right: none;
+}
+
+
+
+
+table.report td, table.report th{
+	font:         menu;
+}
+table.report th{
+	background:   buttonface;
+	border-width: 1px;
+	border-style: solid;
+	border-color: threedhighlight threedshadow threedshadow threedhighlight;
+	cursor:       hand;
+}
+table.report idcol {
+	background: buttonface;
+}
+
+table.report tr.even{
+	background-color: #399;
+}
+table.report tbody {
+	height: 100px;
+	overflow: auto;
+}
+
+table.report {
+	height: 120px;
+	overflow: auto;
+}
+
+table.report tbody tr{
+	height: 10px;
+}
+
+
+
+
+
+table.mark td.tableCellError {
+	background-color: #d00;
+	color: #fff;
+}
+
+table.sublist {
+	margin: 0 0 0 0;
+	width: 100%;
+}
+table.sublist td, table.sublist th {
+	width: 50%;
+}
+
+div.exportlinks {
+	background-color: #eee;
+	border: 1px dotted #999;
+	padding: 2px 4px 2px 4px;
+	margin: -10px 0 10px 0;
+	width: 79%;
+}
+
+span.export {
+	padding: 0 4px 1px 20px;
+	display:inline; display:inline-block;
+	cursor: pointer;
+}
+
+span.excel {
+	background-image: url(../img/ico_file_excel.png);
+}
+span.csv {
+	background-image: url(../img/ico_file_csv.png);
+}
+span.xml {
+	background-image: url(../img/ico_file_xml.png);
+}
+span.pdf {
+	background-image: url(../img/ico_file_pdf.png);
+}
+
+span.pagebanner {
+	background-color: #eee;
+	border: 1px dotted #999;
+	padding: 2px 4px 2px 4px;
+	width: 97%;
+	margin-top: 10px;
+	display:block;
+	border-bottom: none;
+}
+
+span.pagelinks {
+	background-color: #eee;
+	border: 1px dotted #999;
+	padding: 2px 4px 2px 4px;
+	width: 97%;
+	display:block;
+	border-top: none;
+	margin-bottom: -5px;
+}
+
+table.simple td.textRed {color: #b11;}
+
+
+
+legend {
+	color:#32316a;
+	font-weight:bold;
+}
+
+table.body {
+	background: #e8edd3;
+	margin:2;
+	padding:2;
+}
+
+table.layoutBody {
+	background: #e7e7ef;
+	border: 1px solid #d4d4e1;
+	
+	vertical-align: top;
+	
+}
+
+label {
+	font-family: Arial, Helvetica, sans-serif; 
+	font-size: 11px; 
+	color: #4B4B69; 
+	text-decoration: none
+}
+
+input.button {
+	border: 1px solid black;
+	color: white;
+	background: #c1c99a;
+	font-weight:none;
+	font-family: Arial, Helvetica, sans-serif; 
+	font-size: 11px; 
+}
+
+div.messageAjax {
+   color: black;
+   width            : 400px;		
+   padding-top      : 5px;
+   padding-bottom   : 5px;
+   background-color : #c9dfff;
+   font-family: Arial, Helvetica, sans-serif; 
+   font-size: 11px;
+   text-align       : center;
+   opacity:0;
+   filter: alpha(opacity=0);
+   -moz-opacity: 0;
+   border:solid 1px #0066ff;
+} 

@@ -1,0 +1,1377 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<w:document
+	xmlns:ve="http://schemas.openxmlformats.org/markup-compatibility/2006"
+	xmlns:o="urn:schemas-microsoft-com:office:office"
+	xmlns:r="http://schemas.openxmlformats.org/officeDocument/2006/relationships"
+	xmlns:m="http://schemas.openxmlformats.org/officeDocument/2006/math"
+	xmlns:v="urn:schemas-microsoft-com:vml"
+	xmlns:wp="http://schemas.openxmlformats.org/drawingml/2006/wordprocessingDrawing"
+	xmlns:w10="urn:schemas-microsoft-com:office:word"
+	xmlns:w="http://schemas.openxmlformats.org/wordprocessingml/2006/main"
+	xmlns:wne="http://schemas.microsoft.com/office/word/2006/wordml">
+	<w:body>
+		<w:p w:rsidR="00F00136" w:rsidRPr="00F00136" w:rsidRDefault="00745B4E"
+			w:rsidP="00745B4E">
+			<w:pPr>
+				<w:widowControl w:val="0" />
+				<w:autoSpaceDE w:val="0" />
+				<w:autoSpaceDN w:val="0" />
+				<w:adjustRightInd w:val="0" />
+				<w:spacing w:line="200" w:lineRule="exact" />
+				<w:ind w:firstLine="2268" />
+				<w:rPr>
+					<w:rFonts w:ascii="Tahoma" w:hAnsi="Tahoma" w:cs="Tahoma" />
+					<w:b />
+					<w:sz w:val="20" />
+					<w:szCs w:val="20" />
+					<w:lang w:val="fr-FR" />
+				</w:rPr>
+			</w:pPr>
+			<w:r w:rsidRPr="00745B4E">
+				<w:rPr>
+					<w:rFonts w:ascii="Tahoma" w:hAnsi="Tahoma" w:cs="Tahoma" />
+					<w:noProof />
+					<w:sz w:val="20" />
+					<w:szCs w:val="20" />
+					<w:lang w:val="fr-FR" w:eastAsia="en-US" />
+				</w:rPr>
+				<w:pict>
+					<v:shapetype id="_x0000_t202" coordsize="21600,21600"
+						o:spt="202" path="m,l,21600r21600,l21600,xe">
+						<v:stroke joinstyle="miter" />
+						<v:path gradientshapeok="t" o:connecttype="rect" />
+					</v:shapetype>
+					<v:shape id="_x0000_s1035" type="#_x0000_t202"
+						style="position:absolute;left:0;text-align:left;margin-left:-.2pt;margin-top:.2pt;width:73.5pt;height:62.9pt;z-index:251661312;mso-height-percent:200;mso-height-percent:200;mso-width-relative:margin;mso-height-relative:margin"
+						stroked="f">
+						<v:textbox style="mso-fit-shape-to-text:t">
+							<w:txbxContent>
+								<w:p w:rsidR="00745B4E" w:rsidRDefault="00745B4E">
+									<w:pPr>
+										<w:rPr>
+											<w:lang w:val="fr-FR" />
+										</w:rPr>
+									</w:pPr>
+									<w:r w:rsidRPr="00745B4E">
+										<w:rPr>
+											<w:lang w:val="fr-FR" />
+										</w:rPr>
+										<w:drawing>
+											<wp:inline distT="0" distB="0" distL="0" distR="0">
+												<wp:extent cx="777121" cy="707666" />
+												<wp:effectExtent l="19050" t="0" r="0" b="0" />
+												<wp:docPr id="15" name="Image 7" descr="logo_opensagres_v3.png" />
+												<wp:cNvGraphicFramePr>
+													<a:graphicFrameLocks
+														xmlns:a="http://schemas.openxmlformats.org/drawingml/2006/main"
+														noChangeAspect="1" />
+												</wp:cNvGraphicFramePr>
+												<a:graphic
+													xmlns:a="http://schemas.openxmlformats.org/drawingml/2006/main">
+													<a:graphicData
+														uri="http://schemas.openxmlformats.org/drawingml/2006/picture">
+														<pic:pic
+															xmlns:pic="http://schemas.openxmlformats.org/drawingml/2006/picture">
+															<pic:nvPicPr>
+																<pic:cNvPr id="0" name="logo_opensagres_v3.png" />
+																<pic:cNvPicPr />
+															</pic:nvPicPr>
+															<pic:blipFill>
+																<a:blip r:embed="rId8" />
+																<a:stretch>
+																	<a:fillRect />
+																</a:stretch>
+															</pic:blipFill>
+															<pic:spPr>
+																<a:xfrm>
+																	<a:off x="0" y="0" />
+																	<a:ext cx="779323" cy="709671" />
+																</a:xfrm>
+																<a:prstGeom prst="rect">
+																	<a:avLst />
+																</a:prstGeom>
+															</pic:spPr>
+														</pic:pic>
+													</a:graphicData>
+												</a:graphic>
+											</wp:inline>
+										</w:drawing>
+									</w:r>
+								</w:p>
+							</w:txbxContent>
+						</v:textbox>
+					</v:shape>
+				</w:pict>
+			</w:r>
+			<w:r w:rsidR="00F00136" w:rsidRPr="00F00136">
+				<w:rPr>
+					<w:rFonts w:ascii="Tahoma" w:hAnsi="Tahoma" w:cs="Tahoma" />
+					<w:b />
+					<w:sz w:val="20" />
+					<w:szCs w:val="20" />
+					<w:lang w:val="fr-FR" />
+				</w:rPr>
+				<w:t>OpenSagres</w:t>
+			</w:r>
+		</w:p>
+		<w:p w:rsidR="00F00136" w:rsidRPr="00F00136" w:rsidRDefault="00F00136"
+			w:rsidP="00745B4E">
+			<w:pPr>
+				<w:widowControl w:val="0" />
+				<w:autoSpaceDE w:val="0" />
+				<w:autoSpaceDN w:val="0" />
+				<w:adjustRightInd w:val="0" />
+				<w:spacing w:line="200" w:lineRule="exact" />
+				<w:ind w:firstLine="2268" />
+				<w:rPr>
+					<w:rFonts w:ascii="Tahoma" w:hAnsi="Tahoma" w:cs="Tahoma" />
+					<w:sz w:val="20" />
+					<w:szCs w:val="20" />
+					<w:lang w:val="fr-FR" />
+				</w:rPr>
+			</w:pPr>
+			<w:r w:rsidRPr="00F00136">
+				<w:rPr>
+					<w:rFonts w:ascii="Tahoma" w:hAnsi="Tahoma" w:cs="Tahoma" />
+					<w:sz w:val="20" />
+					<w:szCs w:val="20" />
+					<w:lang w:val="fr-FR" />
+				</w:rPr>
+				<w:t>4 rue de la liberté</w:t>
+			</w:r>
+		</w:p>
+		<w:p w:rsidR="00F00136" w:rsidRPr="00F00136" w:rsidRDefault="00F00136"
+			w:rsidP="00745B4E">
+			<w:pPr>
+				<w:widowControl w:val="0" />
+				<w:autoSpaceDE w:val="0" />
+				<w:autoSpaceDN w:val="0" />
+				<w:adjustRightInd w:val="0" />
+				<w:spacing w:line="200" w:lineRule="exact" />
+				<w:ind w:firstLine="2268" />
+				<w:rPr>
+					<w:rFonts w:ascii="Tahoma" w:hAnsi="Tahoma" w:cs="Tahoma" />
+					<w:sz w:val="20" />
+					<w:szCs w:val="20" />
+					<w:lang w:val="fr-FR" />
+				</w:rPr>
+			</w:pPr>
+			<w:r w:rsidRPr="00F00136">
+				<w:rPr>
+					<w:rFonts w:ascii="Tahoma" w:hAnsi="Tahoma" w:cs="Tahoma" />
+					<w:sz w:val="20" />
+					<w:szCs w:val="20" />
+					<w:lang w:val="fr-FR" />
+				</w:rPr>
+				<w:t>59000 Lille</w:t>
+			</w:r>
+		</w:p>
+		<w:p w:rsidR="00407A66" w:rsidRPr="00407A66" w:rsidRDefault="00F00136"
+			w:rsidP="00745B4E">
+			<w:pPr>
+				<w:widowControl w:val="0" />
+				<w:autoSpaceDE w:val="0" />
+				<w:autoSpaceDN w:val="0" />
+				<w:adjustRightInd w:val="0" />
+				<w:spacing w:line="200" w:lineRule="exact" />
+				<w:ind w:firstLine="2268" />
+				<w:rPr>
+					<w:rFonts w:ascii="Tahoma" w:hAnsi="Tahoma" w:cs="Tahoma" />
+					<w:sz w:val="20" />
+					<w:szCs w:val="20" />
+					<w:lang w:val="fr-FR" />
+				</w:rPr>
+			</w:pPr>
+			<w:r w:rsidRPr="00F00136">
+				<w:rPr>
+					<w:rFonts w:ascii="Tahoma" w:hAnsi="Tahoma" w:cs="Tahoma" />
+					<w:sz w:val="20" />
+					<w:szCs w:val="20" />
+					<w:lang w:val="fr-FR" />
+				</w:rPr>
+				<w:t>0123456789</w:t>
+			</w:r>
+		</w:p>
+		<w:p w:rsidR="00407A66" w:rsidRPr="00407A66" w:rsidRDefault="005C0361"
+			w:rsidP="00407A66">
+			<w:pPr>
+				<w:widowControl w:val="0" />
+				<w:autoSpaceDE w:val="0" />
+				<w:autoSpaceDN w:val="0" />
+				<w:adjustRightInd w:val="0" />
+				<w:spacing w:line="200" w:lineRule="exact" />
+				<w:rPr>
+					<w:rFonts w:ascii="Tahoma" w:hAnsi="Tahoma" w:cs="Tahoma" />
+					<w:sz w:val="20" />
+					<w:szCs w:val="20" />
+					<w:lang w:val="fr-FR" />
+				</w:rPr>
+			</w:pPr>
+			<w:r w:rsidRPr="005C0361">
+				<w:rPr>
+					<w:noProof />
+					<w:lang w:val="fr-FR" w:eastAsia="fr-FR" />
+				</w:rPr>
+				<w:pict>
+					<v:polyline id="_x0000_s1029"
+						style="position:absolute;z-index:-251657216;mso-position-horizontal-relative:page;mso-position-vertical-relative:text"
+						points="270pt,19.95pt,270pt,18.8pt,270.15pt,17.65pt,270.4pt,16.55pt,270.7pt,15.45pt,271.1pt,14.45pt,271.55pt,13.45pt,272.1pt,12.5pt,272.7pt,11.6pt,273.4pt,10.75pt,274.15pt,9.95pt,274.95pt,9.2pt,275.8pt,8.5pt,276.7pt,7.9pt,277.65pt,7.35pt,278.65pt,6.9pt,279.65pt,6.5pt,280.75pt,6.2pt,281.85pt,5.95pt,283pt,5.8pt,284.15pt,5.8pt,539.25pt,5.8pt,540.45pt,5.8pt,541.55pt,5.95pt,542.65pt,6.2pt,543.75pt,6.5pt,544.8pt,6.9pt,545.8pt,7.35pt,546.75pt,7.9pt,547.65pt,8.5pt,548.5pt,9.2pt,549.3pt,9.95pt,550.05pt,10.75pt,550.7pt,11.6pt,551.3pt,12.5pt,551.85pt,13.45pt,552.3pt,14.45pt,552.7pt,15.45pt,553pt,16.55pt,553.25pt,17.65pt,553.4pt,18.8pt,553.45pt,19.95pt,553.45pt,119.15pt,553.4pt,120.35pt,553.25pt,121.45pt,553pt,122.55pt,552.7pt,123.65pt,552.3pt,124.7pt,551.85pt,125.7pt,551.3pt,126.65pt,550.7pt,127.55pt,550.05pt,128.4pt,549.3pt,129.2pt,548.5pt,129.95pt,547.65pt,130.6pt,546.75pt,131.2pt,545.8pt,131.75pt,544.8pt,132.2pt,543.75pt,132.6pt,542.65pt,132.9pt,541.55pt,133.15pt,540.45pt,133.3pt,539.25pt,133.35pt,284.15pt,133.35pt,283pt,133.3pt,281.85pt,133.15pt,280.75pt,132.9pt,279.65pt,132.6pt,278.65pt,132.2pt,277.65pt,131.75pt,276.7pt,131.2pt,275.8pt,130.6pt,274.95pt,129.95pt,274.15pt,129.2pt,273.4pt,128.4pt,272.7pt,127.55pt,272.1pt,126.65pt,271.55pt,125.7pt,271.1pt,124.7pt,270.7pt,123.65pt,270.4pt,122.55pt,270.15pt,121.45pt,270pt,120.35pt,270pt,119.15pt,270pt,19.95pt"
+						coordsize="5669,2551" o:allowincell="f" filled="f" strokecolor="#efefef"
+						strokeweight=".85pt">
+						<v:path arrowok="t" />
+						<w10:wrap anchorx="page" />
+					</v:polyline>
+				</w:pict>
+			</w:r>
+		</w:p>
+		<w:p w:rsidR="00407A66" w:rsidRPr="00407A66" w:rsidRDefault="00407A66"
+			w:rsidP="00407A66">
+			<w:pPr>
+				<w:widowControl w:val="0" />
+				<w:autoSpaceDE w:val="0" />
+				<w:autoSpaceDN w:val="0" />
+				<w:adjustRightInd w:val="0" />
+				<w:spacing w:line="200" w:lineRule="exact" />
+				<w:rPr>
+					<w:rFonts w:ascii="Tahoma" w:hAnsi="Tahoma" w:cs="Tahoma" />
+					<w:sz w:val="20" />
+					<w:szCs w:val="20" />
+					<w:lang w:val="fr-FR" />
+				</w:rPr>
+			</w:pPr>
+		</w:p>
+		<w:p w:rsidR="00407A66" w:rsidRPr="00407A66" w:rsidRDefault="00407A66"
+			w:rsidP="00407A66">
+			<w:pPr>
+				<w:widowControl w:val="0" />
+				<w:autoSpaceDE w:val="0" />
+				<w:autoSpaceDN w:val="0" />
+				<w:adjustRightInd w:val="0" />
+				<w:spacing w:line="200" w:lineRule="exact" />
+				<w:rPr>
+					<w:rFonts w:ascii="Tahoma" w:hAnsi="Tahoma" w:cs="Tahoma" />
+					<w:sz w:val="20" />
+					<w:szCs w:val="20" />
+					<w:lang w:val="fr-FR" />
+				</w:rPr>
+			</w:pPr>
+		</w:p>
+		<w:p w:rsidR="00F81C40" w:rsidRDefault="00F81C40" w:rsidP="00F81C40">
+			<w:pPr>
+				<w:widowControl w:val="0" />
+				<w:autoSpaceDE w:val="0" />
+				<w:autoSpaceDN w:val="0" />
+				<w:adjustRightInd w:val="0" />
+				<w:spacing w:before="60" />
+				<w:ind w:left="1919" w:firstLine="3326" />
+				<w:rPr>
+					<w:noProof />
+					<w:lang w:val="fr-FR" />
+				</w:rPr>
+			</w:pPr>
+			<w:r>
+				<w:rPr>
+					<w:noProof />
+					<w:lang w:val="fr-FR" />
+				</w:rPr>
+				<w:t>M. Pascal Leclerq</w:t>
+			</w:r>
+		</w:p>
+		<w:p w:rsidR="00F81C40" w:rsidRDefault="00F81C40" w:rsidP="00F81C40">
+			<w:pPr>
+				<w:widowControl w:val="0" />
+				<w:autoSpaceDE w:val="0" />
+				<w:autoSpaceDN w:val="0" />
+				<w:adjustRightInd w:val="0" />
+				<w:spacing w:before="60" />
+				<w:ind w:left="1919" w:firstLine="3326" />
+				<w:rPr>
+					<w:noProof />
+					<w:lang w:val="fr-FR" />
+				</w:rPr>
+			</w:pPr>
+			<w:r>
+				<w:rPr>
+					<w:noProof />
+					<w:lang w:val="fr-FR" />
+				</w:rPr>
+				<w:t>9 rue des chevillards</w:t>
+			</w:r>
+		</w:p>
+		<w:p w:rsidR="00F81C40" w:rsidRDefault="00F81C40" w:rsidP="00F81C40">
+			<w:pPr>
+				<w:widowControl w:val="0" />
+				<w:autoSpaceDE w:val="0" />
+				<w:autoSpaceDN w:val="0" />
+				<w:adjustRightInd w:val="0" />
+				<w:spacing w:before="60" />
+				<w:ind w:left="1919" w:firstLine="3326" />
+				<w:rPr>
+					<w:noProof />
+					<w:lang w:val="fr-FR" />
+				</w:rPr>
+			</w:pPr>
+			<w:r>
+				<w:rPr>
+					<w:noProof />
+					<w:lang w:val="fr-FR" />
+				</w:rPr>
+				<w:t>59800 Lille</w:t>
+			</w:r>
+		</w:p>
+		<w:p w:rsidR="00F81C40" w:rsidRDefault="00F81C40" w:rsidP="00F81C40">
+			<w:pPr>
+				<w:widowControl w:val="0" />
+				<w:autoSpaceDE w:val="0" />
+				<w:autoSpaceDN w:val="0" />
+				<w:adjustRightInd w:val="0" />
+				<w:spacing w:before="60" />
+				<w:ind w:left="1919" w:firstLine="3326" />
+				<w:rPr>
+					<w:noProof />
+					<w:lang w:val="fr-FR" />
+				</w:rPr>
+			</w:pPr>
+			<w:r>
+				<w:rPr>
+					<w:noProof />
+					<w:lang w:val="fr-FR" />
+				</w:rPr>
+				<w:t>France</w:t>
+			</w:r>
+			<w:r>
+				<w:rPr>
+					<w:noProof />
+					<w:lang w:val="fr-FR" />
+				</w:rPr>
+				<w:br />
+			</w:r>
+		</w:p>
+		<w:p w:rsidR="00F81C40" w:rsidRDefault="00F81C40" w:rsidP="00407A66">
+			<w:pPr>
+				<w:widowControl w:val="0" />
+				<w:autoSpaceDE w:val="0" />
+				<w:autoSpaceDN w:val="0" />
+				<w:adjustRightInd w:val="0" />
+				<w:spacing w:before="60" />
+				<w:ind w:left="1919" />
+				<w:rPr>
+					<w:noProof />
+					<w:lang w:val="fr-FR" />
+				</w:rPr>
+			</w:pPr>
+		</w:p>
+		<w:p w:rsidR="00407A66" w:rsidRPr="00407A66" w:rsidRDefault="00407A66"
+			w:rsidP="00407A66">
+			<w:pPr>
+				<w:widowControl w:val="0" />
+				<w:autoSpaceDE w:val="0" />
+				<w:autoSpaceDN w:val="0" />
+				<w:adjustRightInd w:val="0" />
+				<w:spacing w:line="200" w:lineRule="exact" />
+				<w:rPr>
+					<w:rFonts w:ascii="Lucida Console" w:hAnsi="Lucida Console"
+						w:cs="Lucida Console" />
+					<w:sz w:val="20" />
+					<w:szCs w:val="20" />
+					<w:lang w:val="fr-FR" />
+				</w:rPr>
+			</w:pPr>
+		</w:p>
+		<w:p w:rsidR="00407A66" w:rsidRPr="00407A66" w:rsidRDefault="00407A66"
+			w:rsidP="00407A66">
+			<w:pPr>
+				<w:widowControl w:val="0" />
+				<w:autoSpaceDE w:val="0" />
+				<w:autoSpaceDN w:val="0" />
+				<w:adjustRightInd w:val="0" />
+				<w:spacing w:line="200" w:lineRule="exact" />
+				<w:rPr>
+					<w:rFonts w:ascii="Lucida Console" w:hAnsi="Lucida Console"
+						w:cs="Lucida Console" />
+					<w:sz w:val="20" />
+					<w:szCs w:val="20" />
+					<w:lang w:val="fr-FR" />
+				</w:rPr>
+			</w:pPr>
+		</w:p>
+		<w:p w:rsidR="00407A66" w:rsidRPr="00407A66" w:rsidRDefault="00407A66"
+			w:rsidP="00407A66">
+			<w:pPr>
+				<w:widowControl w:val="0" />
+				<w:autoSpaceDE w:val="0" />
+				<w:autoSpaceDN w:val="0" />
+				<w:adjustRightInd w:val="0" />
+				<w:spacing w:line="200" w:lineRule="exact" />
+				<w:rPr>
+					<w:rFonts w:ascii="Lucida Console" w:hAnsi="Lucida Console"
+						w:cs="Lucida Console" />
+					<w:sz w:val="20" />
+					<w:szCs w:val="20" />
+					<w:lang w:val="fr-FR" />
+				</w:rPr>
+			</w:pPr>
+		</w:p>
+		<w:p w:rsidR="00407A66" w:rsidRPr="00407A66" w:rsidRDefault="00407A66"
+			w:rsidP="00407A66">
+			<w:pPr>
+				<w:widowControl w:val="0" />
+				<w:autoSpaceDE w:val="0" />
+				<w:autoSpaceDN w:val="0" />
+				<w:adjustRightInd w:val="0" />
+				<w:spacing w:line="200" w:lineRule="exact" />
+				<w:rPr>
+					<w:rFonts w:ascii="Lucida Console" w:hAnsi="Lucida Console"
+						w:cs="Lucida Console" />
+					<w:sz w:val="20" />
+					<w:szCs w:val="20" />
+					<w:lang w:val="fr-FR" />
+				</w:rPr>
+			</w:pPr>
+		</w:p>
+		<w:p w:rsidR="00407A66" w:rsidRPr="00407A66" w:rsidRDefault="00407A66"
+			w:rsidP="00407A66">
+			<w:pPr>
+				<w:widowControl w:val="0" />
+				<w:autoSpaceDE w:val="0" />
+				<w:autoSpaceDN w:val="0" />
+				<w:adjustRightInd w:val="0" />
+				<w:spacing w:line="200" w:lineRule="exact" />
+				<w:rPr>
+					<w:rFonts w:ascii="Lucida Console" w:hAnsi="Lucida Console"
+						w:cs="Lucida Console" />
+					<w:sz w:val="20" />
+					<w:szCs w:val="20" />
+					<w:lang w:val="fr-FR" />
+				</w:rPr>
+			</w:pPr>
+		</w:p>
+		<w:p w:rsidR="00407A66" w:rsidRPr="00407A66" w:rsidRDefault="00F81C40"
+			w:rsidP="00407A66">
+			<w:pPr>
+				<w:widowControl w:val="0" />
+				<w:autoSpaceDE w:val="0" />
+				<w:autoSpaceDN w:val="0" />
+				<w:adjustRightInd w:val="0" />
+				<w:spacing w:before="25" w:line="234" w:lineRule="exact" />
+				<w:ind w:right="982" />
+				<w:jc w:val="right" />
+				<w:rPr>
+					<w:rFonts w:ascii="Tahoma" w:hAnsi="Tahoma" w:cs="Tahoma" />
+					<w:sz w:val="20" />
+					<w:szCs w:val="20" />
+					<w:lang w:val="fr-FR" />
+				</w:rPr>
+			</w:pPr>
+			<w:r>
+				<w:rPr>
+					<w:rFonts w:ascii="Tahoma" w:hAnsi="Tahoma" w:cs="Tahoma" />
+					<w:position w:val="-1" />
+					<w:sz w:val="20" />
+					<w:szCs w:val="20" />
+					<w:lang w:val="fr-FR" />
+				</w:rPr>
+				<w:t>OpenSagres, le 01/02/2011</w:t>
+			</w:r>
+		</w:p>
+		<w:p w:rsidR="00407A66" w:rsidRPr="00407A66" w:rsidRDefault="00407A66"
+			w:rsidP="00407A66">
+			<w:pPr>
+				<w:widowControl w:val="0" />
+				<w:autoSpaceDE w:val="0" />
+				<w:autoSpaceDN w:val="0" />
+				<w:adjustRightInd w:val="0" />
+				<w:spacing w:line="150" w:lineRule="exact" />
+				<w:rPr>
+					<w:rFonts w:ascii="Tahoma" w:hAnsi="Tahoma" w:cs="Tahoma" />
+					<w:sz w:val="15" />
+					<w:szCs w:val="15" />
+					<w:lang w:val="fr-FR" />
+				</w:rPr>
+			</w:pPr>
+		</w:p>
+		<w:p w:rsidR="00407A66" w:rsidRPr="00407A66" w:rsidRDefault="00407A66"
+			w:rsidP="00407A66">
+			<w:pPr>
+				<w:widowControl w:val="0" />
+				<w:autoSpaceDE w:val="0" />
+				<w:autoSpaceDN w:val="0" />
+				<w:adjustRightInd w:val="0" />
+				<w:spacing w:before="25" />
+				<w:ind w:left="404" />
+				<w:rPr>
+					<w:rFonts w:ascii="Tahoma" w:hAnsi="Tahoma" w:cs="Tahoma" />
+					<w:sz w:val="20" />
+					<w:szCs w:val="20" />
+					<w:lang w:val="fr-FR" />
+				</w:rPr>
+			</w:pPr>
+			<w:r w:rsidRPr="00407A66">
+				<w:rPr>
+					<w:rFonts w:ascii="Tahoma" w:hAnsi="Tahoma" w:cs="Tahoma" />
+					<w:sz w:val="20" />
+					<w:szCs w:val="20" />
+					<w:lang w:val="fr-FR" />
+				</w:rPr>
+				<w:t>Objet : Confirmation de l'arrivée de la commande client</w:t>
+			</w:r>
+		</w:p>
+		<w:p w:rsidR="00407A66" w:rsidRPr="00407A66" w:rsidRDefault="00407A66"
+			w:rsidP="00407A66">
+			<w:pPr>
+				<w:widowControl w:val="0" />
+				<w:autoSpaceDE w:val="0" />
+				<w:autoSpaceDN w:val="0" />
+				<w:adjustRightInd w:val="0" />
+				<w:spacing w:line="200" w:lineRule="exact" />
+				<w:rPr>
+					<w:rFonts w:ascii="Tahoma" w:hAnsi="Tahoma" w:cs="Tahoma" />
+					<w:sz w:val="20" />
+					<w:szCs w:val="20" />
+					<w:lang w:val="fr-FR" />
+				</w:rPr>
+			</w:pPr>
+		</w:p>
+		<w:p w:rsidR="00407A66" w:rsidRPr="00407A66" w:rsidRDefault="00407A66"
+			w:rsidP="00407A66">
+			<w:pPr>
+				<w:widowControl w:val="0" />
+				<w:autoSpaceDE w:val="0" />
+				<w:autoSpaceDN w:val="0" />
+				<w:adjustRightInd w:val="0" />
+				<w:spacing w:before="12" w:line="200" w:lineRule="exact" />
+				<w:rPr>
+					<w:rFonts w:ascii="Tahoma" w:hAnsi="Tahoma" w:cs="Tahoma" />
+					<w:sz w:val="20" />
+					<w:szCs w:val="20" />
+					<w:lang w:val="fr-FR" />
+				</w:rPr>
+			</w:pPr>
+		</w:p>
+		<w:p w:rsidR="00407A66" w:rsidRPr="00407A66" w:rsidRDefault="00407A66"
+			w:rsidP="00407A66">
+			<w:pPr>
+				<w:widowControl w:val="0" />
+				<w:autoSpaceDE w:val="0" />
+				<w:autoSpaceDN w:val="0" />
+				<w:adjustRightInd w:val="0" />
+				<w:ind w:left="404" />
+				<w:rPr>
+					<w:rFonts w:ascii="Tahoma" w:hAnsi="Tahoma" w:cs="Tahoma" />
+					<w:sz w:val="20" />
+					<w:szCs w:val="20" />
+					<w:lang w:val="fr-FR" />
+				</w:rPr>
+			</w:pPr>
+			<w:r w:rsidRPr="00407A66">
+				<w:rPr>
+					<w:rFonts w:ascii="Tahoma" w:hAnsi="Tahoma" w:cs="Tahoma" />
+					<w:sz w:val="20" />
+					<w:szCs w:val="20" />
+					<w:lang w:val="fr-FR" />
+				</w:rPr>
+				<w:t>Cher Client,</w:t>
+			</w:r>
+			<w:r w:rsidR="005E27E4">
+				<w:rPr>
+					<w:rFonts w:ascii="Tahoma" w:hAnsi="Tahoma" w:cs="Tahoma" />
+					<w:sz w:val="20" />
+					<w:szCs w:val="20" />
+					<w:lang w:val="fr-FR" />
+				</w:rPr>
+				<w:t xml:space="preserve"> </w:t>
+			</w:r>
+		</w:p>
+		<w:p w:rsidR="00407A66" w:rsidRPr="00407A66" w:rsidRDefault="00407A66"
+			w:rsidP="00407A66">
+			<w:pPr>
+				<w:widowControl w:val="0" />
+				<w:autoSpaceDE w:val="0" />
+				<w:autoSpaceDN w:val="0" />
+				<w:adjustRightInd w:val="0" />
+				<w:spacing w:before="4" w:line="160" w:lineRule="exact" />
+				<w:rPr>
+					<w:rFonts w:ascii="Tahoma" w:hAnsi="Tahoma" w:cs="Tahoma" />
+					<w:sz w:val="16" />
+					<w:szCs w:val="16" />
+					<w:lang w:val="fr-FR" />
+				</w:rPr>
+			</w:pPr>
+		</w:p>
+		<w:p w:rsidR="00407A66" w:rsidRPr="00407A66" w:rsidRDefault="00407A66"
+			w:rsidP="00407A66">
+			<w:pPr>
+				<w:widowControl w:val="0" />
+				<w:autoSpaceDE w:val="0" />
+				<w:autoSpaceDN w:val="0" />
+				<w:adjustRightInd w:val="0" />
+				<w:spacing w:line="200" w:lineRule="exact" />
+				<w:rPr>
+					<w:rFonts w:ascii="Tahoma" w:hAnsi="Tahoma" w:cs="Tahoma" />
+					<w:sz w:val="20" />
+					<w:szCs w:val="20" />
+					<w:lang w:val="fr-FR" />
+				</w:rPr>
+			</w:pPr>
+		</w:p>
+		<w:p w:rsidR="00407A66" w:rsidRPr="00407A66" w:rsidRDefault="00407A66"
+			w:rsidP="000C6B25">
+			<w:pPr>
+				<w:widowControl w:val="0" />
+				<w:autoSpaceDE w:val="0" />
+				<w:autoSpaceDN w:val="0" />
+				<w:adjustRightInd w:val="0" />
+				<w:spacing w:line="290" w:lineRule="atLeast" />
+				<w:ind w:left="104" w:right="455" w:firstLine="300" />
+				<w:jc w:val="both" />
+				<w:rPr>
+					<w:rFonts w:ascii="Tahoma" w:hAnsi="Tahoma" w:cs="Tahoma" />
+					<w:sz w:val="20" />
+					<w:szCs w:val="20" />
+					<w:lang w:val="fr-FR" />
+				</w:rPr>
+			</w:pPr>
+			<w:r w:rsidRPr="00407A66">
+				<w:rPr>
+					<w:rFonts w:ascii="Tahoma" w:hAnsi="Tahoma" w:cs="Tahoma" />
+					<w:sz w:val="20" />
+					<w:szCs w:val="20" />
+					<w:lang w:val="fr-FR" />
+				</w:rPr>
+				<w:t xml:space="preserve">Nous avons le plaisir de vous informer que votre commande numéro </w:t>
+			</w:r>
+			<w:r w:rsidR="00F410AD" w:rsidRPr="00F410AD">
+				<w:rPr>
+					<w:lang w:val="fr-FR" />
+				</w:rPr>
+				<w:t>1952</w:t>
+			</w:r>
+			<w:r w:rsidRPr="00407A66">
+				<w:rPr>
+					<w:rFonts w:ascii="Tahoma" w:hAnsi="Tahoma" w:cs="Tahoma" />
+					<w:sz w:val="20" />
+					<w:szCs w:val="20" />
+					<w:lang w:val="fr-FR" />
+				</w:rPr>
+				<w:t xml:space="preserve"> du </w:t>
+			</w:r>
+			<w:r w:rsidR="00F410AD" w:rsidRPr="00F410AD">
+				<w:rPr>
+					<w:lang w:val="fr-FR" />
+				</w:rPr>
+				<w:t>02/03/2011</w:t>
+			</w:r>
+			<w:r w:rsidRPr="00407A66">
+				<w:rPr>
+					<w:rFonts w:ascii="Tahoma" w:hAnsi="Tahoma" w:cs="Tahoma" />
+					<w:sz w:val="20" />
+					<w:szCs w:val="20" />
+					<w:lang w:val="fr-FR" />
+				</w:rPr>
+				<w:t xml:space="preserve"> est à votre disposition dans notre magasin, au service retrait marchandises.</w:t>
+			</w:r>
+		</w:p>
+		<w:p w:rsidR="00407A66" w:rsidRPr="00407A66" w:rsidRDefault="00407A66"
+			w:rsidP="00407A66">
+			<w:pPr>
+				<w:widowControl w:val="0" />
+				<w:autoSpaceDE w:val="0" />
+				<w:autoSpaceDN w:val="0" />
+				<w:adjustRightInd w:val="0" />
+				<w:spacing w:before="7" w:line="180" w:lineRule="exact" />
+				<w:rPr>
+					<w:rFonts w:ascii="Tahoma" w:hAnsi="Tahoma" w:cs="Tahoma" />
+					<w:sz w:val="18" />
+					<w:szCs w:val="18" />
+					<w:lang w:val="fr-FR" />
+				</w:rPr>
+			</w:pPr>
+		</w:p>
+		<w:p w:rsidR="00407A66" w:rsidRPr="00407A66" w:rsidRDefault="00407A66"
+			w:rsidP="00407A66">
+			<w:pPr>
+				<w:widowControl w:val="0" />
+				<w:autoSpaceDE w:val="0" />
+				<w:autoSpaceDN w:val="0" />
+				<w:adjustRightInd w:val="0" />
+				<w:spacing w:before="25" w:line="234" w:lineRule="exact" />
+				<w:ind w:left="218" />
+				<w:rPr>
+					<w:rFonts w:ascii="Tahoma" w:hAnsi="Tahoma" w:cs="Tahoma" />
+					<w:sz w:val="20" />
+					<w:szCs w:val="20" />
+					<w:lang w:val="fr-FR" />
+				</w:rPr>
+			</w:pPr>
+			<w:r w:rsidRPr="00407A66">
+				<w:rPr>
+					<w:rFonts w:ascii="Tahoma" w:hAnsi="Tahoma" w:cs="Tahoma" />
+					<w:position w:val="-1" />
+					<w:sz w:val="20" />
+					<w:szCs w:val="20" />
+					<w:lang w:val="fr-FR" />
+				</w:rPr>
+				<w:t>Cette commande client est composée des articles suivants:</w:t>
+			</w:r>
+		</w:p>
+		<w:p w:rsidR="00407A66" w:rsidRPr="00407A66" w:rsidRDefault="00407A66"
+			w:rsidP="00407A66">
+			<w:pPr>
+				<w:widowControl w:val="0" />
+				<w:autoSpaceDE w:val="0" />
+				<w:autoSpaceDN w:val="0" />
+				<w:adjustRightInd w:val="0" />
+				<w:spacing w:before="2" w:line="120" w:lineRule="exact" />
+				<w:rPr>
+					<w:rFonts w:ascii="Tahoma" w:hAnsi="Tahoma" w:cs="Tahoma" />
+					<w:sz w:val="12" />
+					<w:szCs w:val="12" />
+					<w:lang w:val="fr-FR" />
+				</w:rPr>
+			</w:pPr>
+		</w:p>
+		<w:tbl>
+			<w:tblPr>
+				<w:tblW w:w="0" w:type="auto" />
+				<w:jc w:val="center" />
+				<w:tblLayout w:type="fixed" />
+				<w:tblCellMar>
+					<w:left w:w="0" w:type="dxa" />
+					<w:right w:w="0" w:type="dxa" />
+				</w:tblCellMar>
+				<w:tblLook w:val="0000" />
+			</w:tblPr>
+			<w:tblGrid>
+				<w:gridCol w:w="1474" />
+				<w:gridCol w:w="3515" />
+				<w:gridCol w:w="1927" />
+				<w:gridCol w:w="1928" />
+				<w:gridCol w:w="1927" />
+			</w:tblGrid>
+			<w:tr w:rsidR="00407A66">
+				<w:trPr>
+					<w:trHeight w:hRule="exact" w:val="340" />
+					<w:jc w:val="center" />
+				</w:trPr>
+				<w:tc>
+					<w:tcPr>
+						<w:tcW w:w="1474" w:type="dxa" />
+						<w:tcBorders>
+							<w:top w:val="single" w:sz="2" w:space="0" w:color="000000" />
+							<w:left w:val="single" w:sz="2" w:space="0" w:color="000000" />
+							<w:bottom w:val="single" w:sz="2" w:space="0" w:color="000000" />
+							<w:right w:val="single" w:sz="2" w:space="0" w:color="000000" />
+						</w:tcBorders>
+						<w:shd w:val="clear" w:color="auto" w:fill="CCCCCC" />
+					</w:tcPr>
+					<w:p w:rsidR="00407A66" w:rsidRDefault="00407A66" w:rsidP="004B2950">
+						<w:pPr>
+							<w:widowControl w:val="0" />
+							<w:autoSpaceDE w:val="0" />
+							<w:autoSpaceDN w:val="0" />
+							<w:adjustRightInd w:val="0" />
+							<w:spacing w:before="35" />
+							<w:ind w:left="318" />
+						</w:pPr>
+						<w:r>
+							<w:rPr>
+								<w:rFonts w:ascii="Tahoma" w:hAnsi="Tahoma" w:cs="Tahoma" />
+								<w:sz w:val="20" />
+								<w:szCs w:val="20" />
+							</w:rPr>
+							<w:t>référence</w:t>
+						</w:r>
+					</w:p>
+				</w:tc>
+				<w:tc>
+					<w:tcPr>
+						<w:tcW w:w="3515" w:type="dxa" />
+						<w:tcBorders>
+							<w:top w:val="single" w:sz="2" w:space="0" w:color="000000" />
+							<w:left w:val="single" w:sz="2" w:space="0" w:color="000000" />
+							<w:bottom w:val="single" w:sz="2" w:space="0" w:color="000000" />
+							<w:right w:val="single" w:sz="2" w:space="0" w:color="000000" />
+						</w:tcBorders>
+						<w:shd w:val="clear" w:color="auto" w:fill="CCCCCC" />
+					</w:tcPr>
+					<w:p w:rsidR="00407A66" w:rsidRDefault="00407A66" w:rsidP="004B2950">
+						<w:pPr>
+							<w:widowControl w:val="0" />
+							<w:autoSpaceDE w:val="0" />
+							<w:autoSpaceDN w:val="0" />
+							<w:adjustRightInd w:val="0" />
+							<w:spacing w:before="35" />
+							<w:ind w:left="1223" w:right="1258" />
+							<w:jc w:val="center" />
+						</w:pPr>
+						<w:r>
+							<w:rPr>
+								<w:rFonts w:ascii="Tahoma" w:hAnsi="Tahoma" w:cs="Tahoma" />
+								<w:sz w:val="20" />
+								<w:szCs w:val="20" />
+							</w:rPr>
+							<w:t>description</w:t>
+						</w:r>
+					</w:p>
+				</w:tc>
+				<w:tc>
+					<w:tcPr>
+						<w:tcW w:w="1927" w:type="dxa" />
+						<w:tcBorders>
+							<w:top w:val="single" w:sz="2" w:space="0" w:color="000000" />
+							<w:left w:val="single" w:sz="2" w:space="0" w:color="000000" />
+							<w:bottom w:val="single" w:sz="2" w:space="0" w:color="000000" />
+							<w:right w:val="single" w:sz="2" w:space="0" w:color="000000" />
+						</w:tcBorders>
+						<w:shd w:val="clear" w:color="auto" w:fill="CCCCCC" />
+					</w:tcPr>
+					<w:p w:rsidR="00407A66" w:rsidRDefault="00407A66" w:rsidP="004B2950">
+						<w:pPr>
+							<w:widowControl w:val="0" />
+							<w:autoSpaceDE w:val="0" />
+							<w:autoSpaceDN w:val="0" />
+							<w:adjustRightInd w:val="0" />
+							<w:spacing w:before="35" />
+							<w:ind w:left="434" />
+						</w:pPr>
+						<w:r>
+							<w:rPr>
+								<w:rFonts w:ascii="Tahoma" w:hAnsi="Tahoma" w:cs="Tahoma" />
+								<w:sz w:val="20" />
+								<w:szCs w:val="20" />
+							</w:rPr>
+							<w:t>Prix unitaire</w:t>
+						</w:r>
+					</w:p>
+				</w:tc>
+				<w:tc>
+					<w:tcPr>
+						<w:tcW w:w="1928" w:type="dxa" />
+						<w:tcBorders>
+							<w:top w:val="single" w:sz="2" w:space="0" w:color="000000" />
+							<w:left w:val="single" w:sz="2" w:space="0" w:color="000000" />
+							<w:bottom w:val="single" w:sz="2" w:space="0" w:color="000000" />
+							<w:right w:val="single" w:sz="2" w:space="0" w:color="000000" />
+						</w:tcBorders>
+						<w:shd w:val="clear" w:color="auto" w:fill="CCCCCC" />
+					</w:tcPr>
+					<w:p w:rsidR="00407A66" w:rsidRDefault="00407A66" w:rsidP="004B2950">
+						<w:pPr>
+							<w:widowControl w:val="0" />
+							<w:autoSpaceDE w:val="0" />
+							<w:autoSpaceDN w:val="0" />
+							<w:adjustRightInd w:val="0" />
+							<w:spacing w:before="35" />
+							<w:ind w:left="555" />
+						</w:pPr>
+						<w:r>
+							<w:rPr>
+								<w:rFonts w:ascii="Tahoma" w:hAnsi="Tahoma" w:cs="Tahoma" />
+								<w:sz w:val="20" />
+								<w:szCs w:val="20" />
+							</w:rPr>
+							<w:t>Quantité</w:t>
+						</w:r>
+					</w:p>
+				</w:tc>
+				<w:tc>
+					<w:tcPr>
+						<w:tcW w:w="1927" w:type="dxa" />
+						<w:tcBorders>
+							<w:top w:val="single" w:sz="2" w:space="0" w:color="000000" />
+							<w:left w:val="single" w:sz="2" w:space="0" w:color="000000" />
+							<w:bottom w:val="single" w:sz="2" w:space="0" w:color="000000" />
+							<w:right w:val="single" w:sz="2" w:space="0" w:color="000000" />
+						</w:tcBorders>
+						<w:shd w:val="clear" w:color="auto" w:fill="CCCCCC" />
+					</w:tcPr>
+					<w:p w:rsidR="00407A66" w:rsidRDefault="00407A66" w:rsidP="004B2950">
+						<w:pPr>
+							<w:widowControl w:val="0" />
+							<w:autoSpaceDE w:val="0" />
+							<w:autoSpaceDN w:val="0" />
+							<w:adjustRightInd w:val="0" />
+							<w:spacing w:before="35" />
+							<w:ind w:left="579" />
+						</w:pPr>
+						<w:r>
+							<w:rPr>
+								<w:rFonts w:ascii="Tahoma" w:hAnsi="Tahoma" w:cs="Tahoma" />
+								<w:sz w:val="20" />
+								<w:szCs w:val="20" />
+							</w:rPr>
+							<w:t>Prix total</w:t>
+						</w:r>
+					</w:p>
+				</w:tc>
+			</w:tr>
+			<w:tr w:rsidR="00407A66">
+				<w:trPr>
+					<w:trHeight w:hRule="exact" w:val="387" />
+					<w:jc w:val="center" />
+				</w:trPr>
+				<w:tc>
+					<w:tcPr>
+						<w:tcW w:w="1474" w:type="dxa" />
+						<w:tcBorders>
+							<w:top w:val="single" w:sz="2" w:space="0" w:color="000000" />
+							<w:left w:val="single" w:sz="4" w:space="0" w:color="000000" />
+							<w:bottom w:val="single" w:sz="4" w:space="0" w:color="000000" />
+							<w:right w:val="single" w:sz="4" w:space="0" w:color="000000" />
+						</w:tcBorders>
+					</w:tcPr>
+					<w:p w:rsidR="00407A66" w:rsidRDefault="00AA523B" w:rsidP="004B2950">
+						<w:pPr>
+							<w:widowControl w:val="0" />
+							<w:autoSpaceDE w:val="0" />
+							<w:autoSpaceDN w:val="0" />
+							<w:adjustRightInd w:val="0" />
+							<w:spacing w:before="38" />
+							<w:ind w:left="51" />
+							<w:jc w:val="center" />
+						</w:pPr>
+						<w:r>
+							<w:t>999985</w:t>
+						</w:r>
+					</w:p>
+				</w:tc>
+				<w:tc>
+					<w:tcPr>
+						<w:tcW w:w="3515" w:type="dxa" />
+						<w:tcBorders>
+							<w:top w:val="single" w:sz="2" w:space="0" w:color="000000" />
+							<w:left w:val="single" w:sz="4" w:space="0" w:color="000000" />
+							<w:bottom w:val="single" w:sz="4" w:space="0" w:color="000000" />
+							<w:right w:val="single" w:sz="4" w:space="0" w:color="000000" />
+						</w:tcBorders>
+					</w:tcPr>
+					<w:p w:rsidR="00407A66" w:rsidRDefault="00AA523B" w:rsidP="004B2950">
+						<w:pPr>
+							<w:widowControl w:val="0" />
+							<w:autoSpaceDE w:val="0" />
+							<w:autoSpaceDN w:val="0" />
+							<w:adjustRightInd w:val="0" />
+							<w:spacing w:before="38" />
+							<w:ind w:left="51" />
+							<w:jc w:val="center" />
+						</w:pPr>
+						<w:r>
+							<w:t>Tournevis</w:t>
+						</w:r>
+					</w:p>
+				</w:tc>
+				<w:tc>
+					<w:tcPr>
+						<w:tcW w:w="1927" w:type="dxa" />
+						<w:tcBorders>
+							<w:top w:val="single" w:sz="2" w:space="0" w:color="000000" />
+							<w:left w:val="single" w:sz="4" w:space="0" w:color="000000" />
+							<w:bottom w:val="single" w:sz="4" w:space="0" w:color="000000" />
+							<w:right w:val="single" w:sz="4" w:space="0" w:color="000000" />
+						</w:tcBorders>
+					</w:tcPr>
+					<w:p w:rsidR="00407A66" w:rsidRDefault="00AA523B" w:rsidP="00AA523B">
+						<w:pPr>
+							<w:pStyle w:val="Sansinterligne" />
+							<w:jc w:val="center" />
+							<w:rPr>
+								<w:rFonts w:ascii="Times New Roman" w:hAnsi="Times New Roman"
+									w:cs="Times New Roman" />
+								<w:sz w:val="24" />
+								<w:szCs w:val="24" />
+							</w:rPr>
+						</w:pPr>
+						<w:r>
+							<w:t>20</w:t>
+						</w:r>
+					</w:p>
+				</w:tc>
+				<w:tc>
+					<w:tcPr>
+						<w:tcW w:w="1928" w:type="dxa" />
+						<w:tcBorders>
+							<w:top w:val="single" w:sz="2" w:space="0" w:color="000000" />
+							<w:left w:val="single" w:sz="4" w:space="0" w:color="000000" />
+							<w:bottom w:val="single" w:sz="4" w:space="0" w:color="000000" />
+							<w:right w:val="single" w:sz="4" w:space="0" w:color="000000" />
+						</w:tcBorders>
+					</w:tcPr>
+					<w:p w:rsidR="00407A66" w:rsidRDefault="00AA523B" w:rsidP="004B2950">
+						<w:pPr>
+							<w:pStyle w:val="Sansinterligne" />
+							<w:jc w:val="center" />
+							<w:rPr>
+								<w:rFonts w:ascii="Times New Roman" w:hAnsi="Times New Roman"
+									w:cs="Times New Roman" />
+								<w:sz w:val="24" />
+								<w:szCs w:val="24" />
+							</w:rPr>
+						</w:pPr>
+						<w:r>
+							<w:t>1</w:t>
+						</w:r>
+					</w:p>
+				</w:tc>
+				<w:tc>
+					<w:tcPr>
+						<w:tcW w:w="1927" w:type="dxa" />
+						<w:tcBorders>
+							<w:top w:val="single" w:sz="2" w:space="0" w:color="000000" />
+							<w:left w:val="single" w:sz="4" w:space="0" w:color="000000" />
+							<w:bottom w:val="single" w:sz="4" w:space="0" w:color="000000" />
+							<w:right w:val="single" w:sz="4" w:space="0" w:color="000000" />
+						</w:tcBorders>
+					</w:tcPr>
+					<w:p w:rsidR="00407A66" w:rsidRDefault="00AA523B" w:rsidP="004B2950">
+						<w:pPr>
+							<w:pStyle w:val="Sansinterligne" />
+							<w:jc w:val="center" />
+							<w:rPr>
+								<w:rFonts w:ascii="Times New Roman" w:hAnsi="Times New Roman"
+									w:cs="Times New Roman" />
+								<w:sz w:val="24" />
+								<w:szCs w:val="24" />
+							</w:rPr>
+						</w:pPr>
+						<w:r>
+							<w:t>20</w:t>
+						</w:r>
+					</w:p>
+				</w:tc>
+			</w:tr>
+		</w:tbl>
+		<w:p w:rsidR="00407A66" w:rsidRDefault="00407A66" w:rsidP="00407A66">
+			<w:pPr>
+				<w:widowControl w:val="0" />
+				<w:autoSpaceDE w:val="0" />
+				<w:autoSpaceDN w:val="0" />
+				<w:adjustRightInd w:val="0" />
+				<w:spacing w:line="200" w:lineRule="exact" />
+				<w:rPr>
+					<w:sz w:val="20" />
+					<w:szCs w:val="20" />
+				</w:rPr>
+			</w:pPr>
+		</w:p>
+		<w:p w:rsidR="00407A66" w:rsidRDefault="00407A66" w:rsidP="00407A66">
+			<w:pPr>
+				<w:widowControl w:val="0" />
+				<w:autoSpaceDE w:val="0" />
+				<w:autoSpaceDN w:val="0" />
+				<w:adjustRightInd w:val="0" />
+				<w:spacing w:before="2" w:line="220" w:lineRule="exact" />
+			</w:pPr>
+		</w:p>
+		<w:p w:rsidR="00407A66" w:rsidRPr="00407A66" w:rsidRDefault="00407A66"
+			w:rsidP="00407A66">
+			<w:pPr>
+				<w:widowControl w:val="0" />
+				<w:autoSpaceDE w:val="0" />
+				<w:autoSpaceDN w:val="0" />
+				<w:adjustRightInd w:val="0" />
+				<w:spacing w:before="25" />
+				<w:ind w:left="404" />
+				<w:rPr>
+					<w:rFonts w:ascii="Tahoma" w:hAnsi="Tahoma" w:cs="Tahoma" />
+					<w:sz w:val="20" />
+					<w:szCs w:val="20" />
+					<w:lang w:val="fr-FR" />
+				</w:rPr>
+			</w:pPr>
+			<w:r w:rsidRPr="00407A66">
+				<w:rPr>
+					<w:rFonts w:ascii="Tahoma" w:hAnsi="Tahoma" w:cs="Tahoma" />
+					<w:sz w:val="20" />
+					<w:szCs w:val="20" />
+					<w:lang w:val="fr-FR" />
+				</w:rPr>
+				<w:t>Notre magasin est ouvert de 9h00 à 20h00 du lundi au samedi. Il
+					vous suffit de présenter votre bon de commande client initial.
+				</w:t>
+			</w:r>
+		</w:p>
+		<w:p w:rsidR="00407A66" w:rsidRPr="00407A66" w:rsidRDefault="00407A66"
+			w:rsidP="00407A66">
+			<w:pPr>
+				<w:widowControl w:val="0" />
+				<w:autoSpaceDE w:val="0" />
+				<w:autoSpaceDN w:val="0" />
+				<w:adjustRightInd w:val="0" />
+				<w:spacing w:line="200" w:lineRule="exact" />
+				<w:rPr>
+					<w:rFonts w:ascii="Tahoma" w:hAnsi="Tahoma" w:cs="Tahoma" />
+					<w:sz w:val="20" />
+					<w:szCs w:val="20" />
+					<w:lang w:val="fr-FR" />
+				</w:rPr>
+			</w:pPr>
+		</w:p>
+		<w:p w:rsidR="00407A66" w:rsidRPr="00407A66" w:rsidRDefault="00407A66"
+			w:rsidP="00407A66">
+			<w:pPr>
+				<w:widowControl w:val="0" />
+				<w:autoSpaceDE w:val="0" />
+				<w:autoSpaceDN w:val="0" />
+				<w:adjustRightInd w:val="0" />
+				<w:spacing w:before="12" w:line="200" w:lineRule="exact" />
+				<w:rPr>
+					<w:rFonts w:ascii="Tahoma" w:hAnsi="Tahoma" w:cs="Tahoma" />
+					<w:sz w:val="20" />
+					<w:szCs w:val="20" />
+					<w:lang w:val="fr-FR" />
+				</w:rPr>
+			</w:pPr>
+		</w:p>
+		<w:p w:rsidR="00407A66" w:rsidRPr="00407A66" w:rsidRDefault="00407A66"
+			w:rsidP="00FA71F7">
+			<w:pPr>
+				<w:keepLines />
+				<w:widowControl w:val="0" />
+				<w:autoSpaceDE w:val="0" />
+				<w:autoSpaceDN w:val="0" />
+				<w:adjustRightInd w:val="0" />
+				<w:spacing w:line="288" w:lineRule="auto" />
+				<w:ind w:left="102" w:right="266" w:firstLine="301" />
+				<w:jc w:val="both" />
+				<w:rPr>
+					<w:rFonts w:ascii="Tahoma" w:hAnsi="Tahoma" w:cs="Tahoma" />
+					<w:sz w:val="32" />
+					<w:szCs w:val="32" />
+					<w:lang w:val="fr-FR" />
+				</w:rPr>
+			</w:pPr>
+			<w:r w:rsidRPr="00407A66">
+				<w:rPr>
+					<w:rFonts w:ascii="Tahoma" w:hAnsi="Tahoma" w:cs="Tahoma" />
+					<w:b />
+					<w:bCs />
+					<w:sz w:val="32" />
+					<w:szCs w:val="32" />
+					<w:lang w:val="fr-FR" />
+				</w:rPr>
+				<w:t xml:space="preserve">Dans le cas ou vous rencontreriez des difficultés d'enlèvement, notre service commande client est disponible au </w:t>
+			</w:r>
+			<w:r w:rsidR="00AA523B" w:rsidRPr="00AA523B">
+				<w:rPr>
+					<w:rFonts w:ascii="Tahoma" w:hAnsi="Tahoma" w:cs="Tahoma" />
+					<w:b />
+					<w:bCs />
+					<w:sz w:val="32" />
+					<w:szCs w:val="32" />
+					<w:lang w:val="fr-FR" />
+				</w:rPr>
+				<w:t>0125698752</w:t>
+			</w:r>
+			<w:r w:rsidRPr="00407A66">
+				<w:rPr>
+					<w:rFonts w:ascii="Tahoma" w:hAnsi="Tahoma" w:cs="Tahoma" />
+					<w:b />
+					<w:bCs />
+					<w:sz w:val="32" />
+					<w:szCs w:val="32" />
+					<w:lang w:val="fr-FR" />
+				</w:rPr>
+				<w:t xml:space="preserve"> se met à votre disposition pour vous aider à résoudre tout problème qui pourrait se poser à vous (location de camionnette, livraison.)</w:t>
+			</w:r>
+		</w:p>
+		<w:p w:rsidR="00407A66" w:rsidRPr="00407A66" w:rsidRDefault="00407A66"
+			w:rsidP="00407A66">
+			<w:pPr>
+				<w:widowControl w:val="0" />
+				<w:autoSpaceDE w:val="0" />
+				<w:autoSpaceDN w:val="0" />
+				<w:adjustRightInd w:val="0" />
+				<w:spacing w:line="110" w:lineRule="exact" />
+				<w:rPr>
+					<w:rFonts w:ascii="Tahoma" w:hAnsi="Tahoma" w:cs="Tahoma" />
+					<w:sz w:val="11" />
+					<w:szCs w:val="11" />
+					<w:lang w:val="fr-FR" />
+				</w:rPr>
+			</w:pPr>
+		</w:p>
+		<w:p w:rsidR="00407A66" w:rsidRPr="00407A66" w:rsidRDefault="00407A66"
+			w:rsidP="00407A66">
+			<w:pPr>
+				<w:widowControl w:val="0" />
+				<w:autoSpaceDE w:val="0" />
+				<w:autoSpaceDN w:val="0" />
+				<w:adjustRightInd w:val="0" />
+				<w:spacing w:line="200" w:lineRule="exact" />
+				<w:rPr>
+					<w:rFonts w:ascii="Tahoma" w:hAnsi="Tahoma" w:cs="Tahoma" />
+					<w:sz w:val="20" />
+					<w:szCs w:val="20" />
+					<w:lang w:val="fr-FR" />
+				</w:rPr>
+			</w:pPr>
+		</w:p>
+		<w:p w:rsidR="00407A66" w:rsidRPr="00407A66" w:rsidRDefault="00407A66"
+			w:rsidP="00407A66">
+			<w:pPr>
+				<w:widowControl w:val="0" />
+				<w:autoSpaceDE w:val="0" />
+				<w:autoSpaceDN w:val="0" />
+				<w:adjustRightInd w:val="0" />
+				<w:spacing w:line="288" w:lineRule="auto" />
+				<w:ind w:left="104" w:right="103" w:firstLine="300" />
+				<w:rPr>
+					<w:rFonts w:ascii="Tahoma" w:hAnsi="Tahoma" w:cs="Tahoma" />
+					<w:sz w:val="20" />
+					<w:szCs w:val="20" />
+					<w:lang w:val="fr-FR" />
+				</w:rPr>
+			</w:pPr>
+			<w:r w:rsidRPr="00407A66">
+				<w:rPr>
+					<w:rFonts w:ascii="Tahoma" w:hAnsi="Tahoma" w:cs="Tahoma" />
+					<w:sz w:val="20" />
+					<w:szCs w:val="20" />
+					<w:lang w:val="fr-FR" />
+				</w:rPr>
+				<w:t>De plus, notre magasin vous offre de nombreuses possibilités de
+					financement grâce à la carte maison Leroy Merlin. Pour plus de
+					renseignements rendez-vous à l'espace financement.</w:t>
+			</w:r>
+		</w:p>
+		<w:p w:rsidR="00407A66" w:rsidRPr="00407A66" w:rsidRDefault="00407A66"
+			w:rsidP="00407A66">
+			<w:pPr>
+				<w:widowControl w:val="0" />
+				<w:autoSpaceDE w:val="0" />
+				<w:autoSpaceDN w:val="0" />
+				<w:adjustRightInd w:val="0" />
+				<w:spacing w:before="4" w:line="160" w:lineRule="exact" />
+				<w:rPr>
+					<w:rFonts w:ascii="Tahoma" w:hAnsi="Tahoma" w:cs="Tahoma" />
+					<w:sz w:val="16" />
+					<w:szCs w:val="16" />
+					<w:lang w:val="fr-FR" />
+				</w:rPr>
+			</w:pPr>
+		</w:p>
+		<w:p w:rsidR="00407A66" w:rsidRPr="00407A66" w:rsidRDefault="00407A66"
+			w:rsidP="00407A66">
+			<w:pPr>
+				<w:widowControl w:val="0" />
+				<w:autoSpaceDE w:val="0" />
+				<w:autoSpaceDN w:val="0" />
+				<w:adjustRightInd w:val="0" />
+				<w:spacing w:line="200" w:lineRule="exact" />
+				<w:rPr>
+					<w:rFonts w:ascii="Tahoma" w:hAnsi="Tahoma" w:cs="Tahoma" />
+					<w:sz w:val="20" />
+					<w:szCs w:val="20" />
+					<w:lang w:val="fr-FR" />
+				</w:rPr>
+			</w:pPr>
+		</w:p>
+		<w:p w:rsidR="00407A66" w:rsidRPr="00407A66" w:rsidRDefault="00407A66"
+			w:rsidP="00407A66">
+			<w:pPr>
+				<w:widowControl w:val="0" />
+				<w:autoSpaceDE w:val="0" />
+				<w:autoSpaceDN w:val="0" />
+				<w:adjustRightInd w:val="0" />
+				<w:spacing w:line="288" w:lineRule="auto" />
+				<w:ind w:left="104" w:right="796" w:firstLine="300" />
+				<w:rPr>
+					<w:rFonts w:ascii="Tahoma" w:hAnsi="Tahoma" w:cs="Tahoma" />
+					<w:sz w:val="20" />
+					<w:szCs w:val="20" />
+					<w:lang w:val="fr-FR" />
+				</w:rPr>
+			</w:pPr>
+			<w:r w:rsidRPr="00407A66">
+				<w:rPr>
+					<w:rFonts w:ascii="Tahoma" w:hAnsi="Tahoma" w:cs="Tahoma" />
+					<w:sz w:val="20" />
+					<w:szCs w:val="20" />
+					<w:lang w:val="fr-FR" />
+				</w:rPr>
+				<w:t>Dans l'attente de votre prochaine visite, nous vous prions
+					d'agréer, cher client, l'expression de nos sentiments les
+					meilleurs.</w:t>
+			</w:r>
+		</w:p>
+		<w:p w:rsidR="00407A66" w:rsidRPr="00407A66" w:rsidRDefault="00407A66"
+			w:rsidP="00407A66">
+			<w:pPr>
+				<w:widowControl w:val="0" />
+				<w:autoSpaceDE w:val="0" />
+				<w:autoSpaceDN w:val="0" />
+				<w:adjustRightInd w:val="0" />
+				<w:spacing w:before="1" w:line="190" w:lineRule="exact" />
+				<w:rPr>
+					<w:rFonts w:ascii="Tahoma" w:hAnsi="Tahoma" w:cs="Tahoma" />
+					<w:sz w:val="19" />
+					<w:szCs w:val="19" />
+					<w:lang w:val="fr-FR" />
+				</w:rPr>
+			</w:pPr>
+		</w:p>
+		<w:p w:rsidR="00407A66" w:rsidRPr="00407A66" w:rsidRDefault="00407A66"
+			w:rsidP="00407A66">
+			<w:pPr>
+				<w:widowControl w:val="0" />
+				<w:autoSpaceDE w:val="0" />
+				<w:autoSpaceDN w:val="0" />
+				<w:adjustRightInd w:val="0" />
+				<w:spacing w:line="200" w:lineRule="exact" />
+				<w:rPr>
+					<w:rFonts w:ascii="Tahoma" w:hAnsi="Tahoma" w:cs="Tahoma" />
+					<w:sz w:val="20" />
+					<w:szCs w:val="20" />
+					<w:lang w:val="fr-FR" />
+				</w:rPr>
+			</w:pPr>
+		</w:p>
+		<w:p w:rsidR="00407A66" w:rsidRDefault="00407A66" w:rsidP="00407A66">
+			<w:pPr>
+				<w:widowControl w:val="0" />
+				<w:autoSpaceDE w:val="0" />
+				<w:autoSpaceDN w:val="0" />
+				<w:adjustRightInd w:val="0" />
+				<w:ind w:left="404" />
+				<w:rPr>
+					<w:rFonts w:ascii="Tahoma" w:hAnsi="Tahoma" w:cs="Tahoma" />
+					<w:sz w:val="20" />
+					<w:szCs w:val="20" />
+				</w:rPr>
+			</w:pPr>
+			<w:r>
+				<w:rPr>
+					<w:rFonts w:ascii="Tahoma" w:hAnsi="Tahoma" w:cs="Tahoma" />
+					<w:sz w:val="20" />
+					<w:szCs w:val="20" />
+				</w:rPr>
+				<w:t>Service commande client.</w:t>
+			</w:r>
+		</w:p>
+		<w:p w:rsidR="00745B4E" w:rsidRDefault="00745B4E" w:rsidP="00407A66">
+			<w:pPr>
+				<w:widowControl w:val="0" />
+				<w:autoSpaceDE w:val="0" />
+				<w:autoSpaceDN w:val="0" />
+				<w:adjustRightInd w:val="0" />
+				<w:ind w:left="404" />
+				<w:rPr>
+					<w:rFonts w:ascii="Tahoma" w:hAnsi="Tahoma" w:cs="Tahoma" />
+					<w:sz w:val="20" />
+					<w:szCs w:val="20" />
+				</w:rPr>
+			</w:pPr>
+		</w:p>
+		<w:p w:rsidR="00092753" w:rsidRPr="003A5579" w:rsidRDefault="00092753"
+			w:rsidP="003A5579" />
+		<w:sectPr w:rsidR="00092753" w:rsidRPr="003A5579" w:rsidSect="00407A66">
+			<w:headerReference w:type="default" r:id="rId9" />
+			<w:pgSz w:w="11920" w:h="16840" />
+			<w:pgMar w:top="1000" w:right="300" w:bottom="280" w:left="420"
+				w:header="720" w:footer="720" w:gutter="0" />
+			<w:cols w:space="720" />
+			<w:noEndnote />
+			<w:docGrid w:linePitch="360" />
+		</w:sectPr>
+	</w:body>
+</w:document>

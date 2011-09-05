@@ -1,0 +1,3 @@
+Fragment-Host: fr.opensagres.xdocreport.template
+Import-Package: fr.opensagres.xdocreport.core.*,
+ freemarker.*,

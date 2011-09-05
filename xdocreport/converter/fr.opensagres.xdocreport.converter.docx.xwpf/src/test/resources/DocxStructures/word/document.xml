@@ -1,0 +1,685 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<w:document xmlns:o="urn:schemas-microsoft-com:office:office"
+	xmlns:r="http://schemas.openxmlformats.org/officeDocument/2006/relationships"
+	xmlns:v="urn:schemas-microsoft-com:vml" xmlns:w="http://schemas.openxmlformats.org/wordprocessingml/2006/main"
+	xmlns:w10="urn:schemas-microsoft-com:office:word"
+	xmlns:wp="http://schemas.openxmlformats.org/drawingml/2006/wordprocessingDrawing">
+	<w:body>
+		<w:p>
+			<w:pPr>
+				<w:pStyle w:val="style0" />
+			</w:pPr>
+			<w:r>
+				<w:rPr></w:rPr>
+				<w:drawing>
+					<wp:inline distB="0" distL="0" distR="0" distT="0">
+						<wp:extent cx="1529715" cy="1463040" />
+						<wp:effectExtent b="0" l="0" r="0" t="0" />
+						<wp:docPr descr="A description..." id="1" name="Picture"></wp:docPr>
+						<wp:cNvGraphicFramePr>
+							<a:graphicFrameLocks noChangeAspect="1"
+								xmlns:a="http://schemas.openxmlformats.org/drawingml/2006/main" />
+						</wp:cNvGraphicFramePr>
+						<a:graphic xmlns:a="http://schemas.openxmlformats.org/drawingml/2006/main">
+							<a:graphicData
+								uri="http://schemas.openxmlformats.org/drawingml/2006/picture">
+								<pic:pic
+									xmlns:pic="http://schemas.openxmlformats.org/drawingml/2006/picture">
+									<pic:nvPicPr>
+										<pic:cNvPr descr="A description..." id="0" name="Picture"></pic:cNvPr>
+										<pic:cNvPicPr>
+											<a:picLocks noChangeArrowheads="1" noChangeAspect="1" />
+										</pic:cNvPicPr>
+									</pic:nvPicPr>
+									<pic:blipFill>
+										<a:blip r:embed="rId2" />
+										<a:srcRect />
+										<a:stretch>
+											<a:fillRect />
+										</a:stretch>
+									</pic:blipFill>
+									<pic:spPr bwMode="auto">
+										<a:xfrm>
+											<a:off x="0" y="0" />
+											<a:ext cx="1529715" cy="1463040" />
+										</a:xfrm>
+										<a:prstGeom prst="rect">
+											<a:avLst />
+										</a:prstGeom>
+										<a:noFill />
+										<a:ln w="9525">
+											<a:noFill />
+											<a:miter lim="800000" />
+											<a:headEnd />
+											<a:tailEnd />
+										</a:ln>
+									</pic:spPr>
+								</pic:pic>
+							</a:graphicData>
+						</a:graphic>
+					</wp:inline>
+				</w:drawing>
+			</w:r>
+		</w:p>
+		<w:p>
+			<w:pPr>
+				<w:pStyle w:val="style0" />
+			</w:pPr>
+			<w:r>
+				<w:rPr>
+					<w:b />
+					<w:bCs />
+				</w:rPr>
+				<w:t>Project:</w:t>
+			</w:r>
+			<w:r>
+				<w:rPr></w:rPr>
+				<w:t xml:space="preserve"> ${project.name}</w:t>
+			</w:r>
+		</w:p>
+		<w:p>
+			<w:pPr>
+				<w:pStyle w:val="style0" />
+			</w:pPr>
+			<w:r>
+				<w:rPr></w:rPr>
+			</w:r>
+		</w:p>
+		<w:p>
+			<w:pPr>
+				<w:pStyle w:val="style0" />
+			</w:pPr>
+			<w:r>
+				<w:rPr></w:rPr>
+				<w:t xml:space="preserve">It&apos;s a document </w:t>
+			</w:r>
+			<w:r>
+				<w:rPr>
+					<w:b w:val="off" />
+					<w:bCs w:val="off" />
+				</w:rPr>
+				<w:t>to test</w:t>
+			</w:r>
+			<w:r>
+				<w:rPr></w:rPr>
+				<w:t xml:space="preserve"> conversion like </w:t>
+			</w:r>
+			<w:r>
+				<w:rPr>
+					<w:b />
+					<w:bCs />
+				</w:rPr>
+				<w:t xml:space="preserve">bold font, </w:t>
+			</w:r>
+			<w:r>
+				<w:rPr>
+					<w:color w:val="FF0000" />
+					<w:b />
+					<w:bCs />
+				</w:rPr>
+				<w:t>red bold font</w:t>
+			</w:r>
+			<w:r>
+				<w:rPr></w:rPr>
+				<w:t xml:space="preserve">. Here some list : </w:t>
+			</w:r>
+		</w:p>
+		<w:p>
+			<w:pPr>
+				<w:pStyle w:val="style0" />
+			</w:pPr>
+			<w:r>
+				<w:rPr></w:rPr>
+			</w:r>
+		</w:p>
+		<w:p>
+			<w:pPr>
+				<w:pStyle w:val="style0" />
+				<w:numPr>
+					<w:ilvl w:val="0" />
+					<w:numId w:val="2" />
+				</w:numPr>
+			</w:pPr>
+			<w:r>
+				<w:rPr></w:rPr>
+				<w:t>one item</w:t>
+			</w:r>
+		</w:p>
+		<w:p>
+			<w:pPr>
+				<w:pStyle w:val="style0" />
+				<w:numPr>
+					<w:ilvl w:val="1" />
+					<w:numId w:val="2" />
+				</w:numPr>
+			</w:pPr>
+			<w:r>
+				<w:rPr></w:rPr>
+				<w:t>one/one item</w:t>
+			</w:r>
+		</w:p>
+		<w:p>
+			<w:pPr>
+				<w:pStyle w:val="style0" />
+				<w:numPr>
+					<w:ilvl w:val="1" />
+					<w:numId w:val="2" />
+				</w:numPr>
+			</w:pPr>
+			<w:r>
+				<w:rPr></w:rPr>
+				<w:t>one/two item</w:t>
+			</w:r>
+		</w:p>
+		<w:p>
+			<w:pPr>
+				<w:pStyle w:val="style0" />
+				<w:numPr>
+					<w:ilvl w:val="0" />
+					<w:numId w:val="2" />
+				</w:numPr>
+			</w:pPr>
+			<w:r>
+				<w:rPr></w:rPr>
+				<w:t>2 item</w:t>
+			</w:r>
+		</w:p>
+		<w:p>
+			<w:pPr>
+				<w:pStyle w:val="style0" />
+				<w:numPr>
+					<w:ilvl w:val="1" />
+					<w:numId w:val="2" />
+				</w:numPr>
+			</w:pPr>
+			<w:r>
+				<w:rPr></w:rPr>
+				<w:t>2/one item</w:t>
+			</w:r>
+		</w:p>
+		<w:p>
+			<w:pPr>
+				<w:pStyle w:val="style0" />
+				<w:numPr>
+					<w:ilvl w:val="1" />
+					<w:numId w:val="2" />
+				</w:numPr>
+			</w:pPr>
+			<w:r>
+				<w:rPr></w:rPr>
+				<w:t>2/two item</w:t>
+			</w:r>
+		</w:p>
+		<w:p>
+			<w:pPr>
+				<w:pStyle w:val="style0" />
+			</w:pPr>
+			<w:r>
+				<w:rPr></w:rPr>
+			</w:r>
+		</w:p>
+		<w:p>
+			<w:pPr>
+				<w:pStyle w:val="style0" />
+			</w:pPr>
+			<w:r>
+				<w:rPr></w:rPr>
+				<w:tab />
+				<w:t>And second list</w:t>
+			</w:r>
+		</w:p>
+		<w:p>
+			<w:pPr>
+				<w:pStyle w:val="style0" />
+				<w:numPr>
+					<w:ilvl w:val="0" />
+					<w:numId w:val="3" />
+				</w:numPr>
+			</w:pPr>
+			<w:r>
+				<w:rPr></w:rPr>
+				<w:t>one item</w:t>
+			</w:r>
+		</w:p>
+		<w:p>
+			<w:pPr>
+				<w:pStyle w:val="style0" />
+				<w:numPr>
+					<w:ilvl w:val="1" />
+					<w:numId w:val="3" />
+				</w:numPr>
+			</w:pPr>
+			<w:r>
+				<w:rPr></w:rPr>
+				<w:t>one/one item</w:t>
+			</w:r>
+		</w:p>
+		<w:p>
+			<w:pPr>
+				<w:pStyle w:val="style0" />
+				<w:numPr>
+					<w:ilvl w:val="1" />
+					<w:numId w:val="3" />
+				</w:numPr>
+			</w:pPr>
+			<w:r>
+				<w:rPr></w:rPr>
+				<w:t>one/two item</w:t>
+			</w:r>
+		</w:p>
+		<w:p>
+			<w:pPr>
+				<w:pStyle w:val="style0" />
+				<w:numPr>
+					<w:ilvl w:val="0" />
+					<w:numId w:val="3" />
+				</w:numPr>
+			</w:pPr>
+			<w:r>
+				<w:rPr></w:rPr>
+				<w:t>Two item</w:t>
+			</w:r>
+		</w:p>
+		<w:p>
+			<w:pPr>
+				<w:pStyle w:val="style0" />
+				<w:numPr>
+					<w:ilvl w:val="1" />
+					<w:numId w:val="3" />
+				</w:numPr>
+			</w:pPr>
+			<w:r>
+				<w:rPr></w:rPr>
+				<w:t>2/one item</w:t>
+			</w:r>
+		</w:p>
+		<w:p>
+			<w:pPr>
+				<w:pStyle w:val="style0" />
+				<w:numPr>
+					<w:ilvl w:val="1" />
+					<w:numId w:val="3" />
+				</w:numPr>
+			</w:pPr>
+			<w:r>
+				<w:rPr></w:rPr>
+				<w:t>2/two item</w:t>
+			</w:r>
+		</w:p>
+		<w:p>
+			<w:pPr>
+				<w:pStyle w:val="style0" />
+				<w:numPr>
+					<w:ilvl w:val="2" />
+					<w:numId w:val="3" />
+				</w:numPr>
+			</w:pPr>
+			<w:r>
+				<w:rPr></w:rPr>
+				<w:t>3 items</w:t>
+			</w:r>
+		</w:p>
+		<w:p>
+			<w:pPr>
+				<w:pStyle w:val="style0" />
+				<w:numPr>
+					<w:ilvl w:val="3" />
+					<w:numId w:val="3" />
+				</w:numPr>
+			</w:pPr>
+			<w:r>
+				<w:rPr></w:rPr>
+				<w:t>4 items</w:t>
+			</w:r>
+		</w:p>
+		<w:p>
+			<w:pPr>
+				<w:pStyle w:val="style0" />
+				<w:numPr>
+					<w:ilvl w:val="4" />
+					<w:numId w:val="3" />
+				</w:numPr>
+			</w:pPr>
+			<w:r>
+				<w:rPr></w:rPr>
+				<w:t>5 items</w:t>
+			</w:r>
+		</w:p>
+		<w:p>
+			<w:pPr>
+				<w:pStyle w:val="style0" />
+			</w:pPr>
+			<w:r>
+				<w:rPr></w:rPr>
+			</w:r>
+		</w:p>
+		<w:p>
+			<w:pPr>
+				<w:pStyle w:val="style1" />
+				<w:numPr>
+					<w:ilvl w:val="0" />
+					<w:numId w:val="1" />
+				</w:numPr>
+			</w:pPr>
+			<w:r>
+				<w:rPr></w:rPr>
+				<w:t>Here titre 1</w:t>
+			</w:r>
+		</w:p>
+		<w:tbl>
+			<w:tblPr>
+				<w:tblW w:type="dxa" w:w="9637" />
+				<w:tblBorders>
+					<w:top w:color="000000" w:space="0" w:sz="2" w:val="single" />
+					<w:left w:color="000000" w:space="0" w:sz="2" w:val="single" />
+					<w:bottom w:color="000000" w:space="0" w:sz="2" w:val="single" />
+				</w:tblBorders>
+				<w:jc w:val="left" />
+			</w:tblPr>
+			<w:tblGrid>
+				<w:gridCol w:w="4818" />
+				<w:gridCol w:w="9637" />
+			</w:tblGrid>
+			<w:tr>
+				<w:trPr>
+					<w:cantSplit w:val="off" />
+				</w:trPr>
+				<w:tc>
+					<w:tcPr>
+						<w:tcBorders>
+							<w:top w:color="000000" w:space="0" w:sz="2" w:val="single" />
+							<w:left w:color="000000" w:space="0" w:sz="2" w:val="single" />
+							<w:bottom w:color="000000" w:space="0" w:sz="2" w:val="single" />
+						</w:tcBorders>
+						<w:shd w:fill="CCCCFF" />
+						<w:tcW w:type="dxa" w:w="4818" />
+						<w:tcMar>
+							<w:top w:type="dxa" w:w="55" />
+							<w:left w:type="dxa" w:w="55" />
+							<w:bottom w:type="dxa" w:w="55" />
+							<w:right w:type="dxa" w:w="55" />
+						</w:tcMar>
+					</w:tcPr>
+					<w:p>
+						<w:pPr>
+							<w:pStyle w:val="style22" />
+						</w:pPr>
+						<w:r>
+							<w:rPr>
+								<w:color w:val="993366" />
+								<w:b />
+								<w:bCs />
+							</w:rPr>
+							<w:t>Header1</w:t>
+						</w:r>
+					</w:p>
+				</w:tc>
+				<w:tc>
+					<w:tcPr>
+						<w:tcBorders>
+							<w:top w:color="000000" w:space="0" w:sz="2" w:val="single" />
+							<w:left w:color="000000" w:space="0" w:sz="2" w:val="single" />
+							<w:bottom w:color="000000" w:space="0" w:sz="2" w:val="single" />
+							<w:right w:color="000000" w:space="0" w:sz="2" w:val="single" />
+						</w:tcBorders>
+						<w:shd w:fill="CCCCFF" />
+						<w:tcW w:type="dxa" w:w="9637" />
+						<w:tcMar>
+							<w:top w:type="dxa" w:w="55" />
+							<w:left w:type="dxa" w:w="55" />
+							<w:bottom w:type="dxa" w:w="55" />
+							<w:right w:type="dxa" w:w="55" />
+						</w:tcMar>
+					</w:tcPr>
+					<w:p>
+						<w:pPr>
+							<w:pStyle w:val="style22" />
+						</w:pPr>
+						<w:r>
+							<w:rPr>
+								<w:color w:val="993366" />
+								<w:b />
+								<w:bCs />
+							</w:rPr>
+							<w:t>Header2</w:t>
+						</w:r>
+					</w:p>
+				</w:tc>
+			</w:tr>
+			<w:tr>
+				<w:trPr>
+					<w:cantSplit w:val="off" />
+				</w:trPr>
+				<w:tc>
+					<w:tcPr>
+						<w:tcBorders>
+							<w:left w:color="000000" w:space="0" w:sz="2" w:val="single" />
+							<w:bottom w:color="000000" w:space="0" w:sz="2" w:val="single" />
+						</w:tcBorders>
+						<w:shd w:fill="auto" />
+						<w:tcW w:type="dxa" w:w="4818" />
+						<w:tcMar>
+							<w:top w:type="dxa" w:w="55" />
+							<w:left w:type="dxa" w:w="55" />
+							<w:bottom w:type="dxa" w:w="55" />
+							<w:right w:type="dxa" w:w="55" />
+						</w:tcMar>
+					</w:tcPr>
+					<w:p>
+						<w:pPr>
+							<w:pStyle w:val="style22" />
+						</w:pPr>
+						<w:r>
+							<w:rPr></w:rPr>
+							<w:t>Cell 1/1</w:t>
+						</w:r>
+					</w:p>
+				</w:tc>
+				<w:tc>
+					<w:tcPr>
+						<w:tcBorders>
+							<w:left w:color="000000" w:space="0" w:sz="2" w:val="single" />
+							<w:bottom w:color="000000" w:space="0" w:sz="2" w:val="single" />
+							<w:right w:color="000000" w:space="0" w:sz="2" w:val="single" />
+						</w:tcBorders>
+						<w:shd w:fill="auto" />
+						<w:tcW w:type="dxa" w:w="9637" />
+						<w:tcMar>
+							<w:top w:type="dxa" w:w="55" />
+							<w:left w:type="dxa" w:w="55" />
+							<w:bottom w:type="dxa" w:w="55" />
+							<w:right w:type="dxa" w:w="55" />
+						</w:tcMar>
+					</w:tcPr>
+					<w:p>
+						<w:pPr>
+							<w:pStyle w:val="style22" />
+						</w:pPr>
+						<w:r>
+							<w:rPr></w:rPr>
+							<w:t>Cell 1/2</w:t>
+						</w:r>
+					</w:p>
+				</w:tc>
+			</w:tr>
+			<w:tr>
+				<w:trPr>
+					<w:cantSplit w:val="off" />
+				</w:trPr>
+				<w:tc>
+					<w:tcPr>
+						<w:tcBorders>
+							<w:left w:color="000000" w:space="0" w:sz="2" w:val="single" />
+							<w:bottom w:color="000000" w:space="0" w:sz="2" w:val="single" />
+						</w:tcBorders>
+						<w:shd w:fill="FFFFCC" />
+						<w:tcW w:type="dxa" w:w="4818" />
+						<w:tcMar>
+							<w:top w:type="dxa" w:w="55" />
+							<w:left w:type="dxa" w:w="55" />
+							<w:bottom w:type="dxa" w:w="55" />
+							<w:right w:type="dxa" w:w="55" />
+						</w:tcMar>
+					</w:tcPr>
+					<w:p>
+						<w:pPr>
+							<w:pStyle w:val="style22" />
+						</w:pPr>
+						<w:r>
+							<w:rPr></w:rPr>
+							<w:t>Cell 2/1</w:t>
+						</w:r>
+					</w:p>
+				</w:tc>
+				<w:tc>
+					<w:tcPr>
+						<w:tcBorders>
+							<w:left w:color="000000" w:space="0" w:sz="2" w:val="single" />
+							<w:bottom w:color="000000" w:space="0" w:sz="2" w:val="single" />
+							<w:right w:color="000000" w:space="0" w:sz="2" w:val="single" />
+						</w:tcBorders>
+						<w:shd w:fill="FFFFCC" />
+						<w:tcW w:type="dxa" w:w="9637" />
+						<w:tcMar>
+							<w:top w:type="dxa" w:w="55" />
+							<w:left w:type="dxa" w:w="55" />
+							<w:bottom w:type="dxa" w:w="55" />
+							<w:right w:type="dxa" w:w="55" />
+						</w:tcMar>
+					</w:tcPr>
+					<w:p>
+						<w:pPr>
+							<w:pStyle w:val="style22" />
+						</w:pPr>
+						<w:r>
+							<w:rPr></w:rPr>
+							<w:t>Cell 2/2</w:t>
+						</w:r>
+					</w:p>
+				</w:tc>
+			</w:tr>
+			<w:tr>
+				<w:trPr>
+					<w:cantSplit w:val="off" />
+				</w:trPr>
+				<w:tc>
+					<w:tcPr>
+						<w:tcBorders>
+							<w:left w:color="000000" w:space="0" w:sz="2" w:val="single" />
+							<w:bottom w:color="000000" w:space="0" w:sz="2" w:val="single" />
+						</w:tcBorders>
+						<w:shd w:fill="auto" />
+						<w:tcW w:type="dxa" w:w="4818" />
+						<w:tcMar>
+							<w:top w:type="dxa" w:w="55" />
+							<w:left w:type="dxa" w:w="55" />
+							<w:bottom w:type="dxa" w:w="55" />
+							<w:right w:type="dxa" w:w="55" />
+						</w:tcMar>
+					</w:tcPr>
+					<w:p>
+						<w:pPr>
+							<w:pStyle w:val="style22" />
+						</w:pPr>
+						<w:r>
+							<w:rPr></w:rPr>
+							<w:t>Cell 3/1</w:t>
+						</w:r>
+					</w:p>
+				</w:tc>
+				<w:tc>
+					<w:tcPr>
+						<w:tcBorders>
+							<w:left w:color="000000" w:space="0" w:sz="2" w:val="single" />
+							<w:bottom w:color="000000" w:space="0" w:sz="2" w:val="single" />
+							<w:right w:color="000000" w:space="0" w:sz="2" w:val="single" />
+						</w:tcBorders>
+						<w:shd w:fill="auto" />
+						<w:tcW w:type="dxa" w:w="9637" />
+						<w:tcMar>
+							<w:top w:type="dxa" w:w="55" />
+							<w:left w:type="dxa" w:w="55" />
+							<w:bottom w:type="dxa" w:w="55" />
+							<w:right w:type="dxa" w:w="55" />
+						</w:tcMar>
+					</w:tcPr>
+					<w:p>
+						<w:pPr>
+							<w:pStyle w:val="style22" />
+						</w:pPr>
+						<w:r>
+							<w:rPr></w:rPr>
+							<w:t>Cell 3/2</w:t>
+						</w:r>
+					</w:p>
+				</w:tc>
+			</w:tr>
+		</w:tbl>
+		<w:p>
+			<w:pPr>
+				<w:pStyle w:val="style18" />
+			</w:pPr>
+			<w:r>
+				<w:rPr></w:rPr>
+			</w:r>
+		</w:p>
+		<w:p>
+			<w:pPr>
+				<w:pStyle w:val="style2" />
+				<w:numPr>
+					<w:ilvl w:val="1" />
+					<w:numId w:val="1" />
+				</w:numPr>
+			</w:pPr>
+			<w:r>
+				<w:rPr></w:rPr>
+				<w:t>Titre 2</w:t>
+			</w:r>
+		</w:p>
+		<w:p>
+			<w:pPr>
+				<w:pStyle w:val="style3" />
+				<w:numPr>
+					<w:ilvl w:val="2" />
+					<w:numId w:val="1" />
+				</w:numPr>
+			</w:pPr>
+			<w:r>
+				<w:rPr></w:rPr>
+				<w:t>Titre 3</w:t>
+			</w:r>
+		</w:p>
+		<w:p>
+			<w:pPr>
+				<w:pStyle w:val="style0" />
+			</w:pPr>
+			<w:r>
+				<w:rPr></w:rPr>
+			</w:r>
+		</w:p>
+		<w:p>
+			<w:pPr>
+				<w:pStyle w:val="style0" />
+			</w:pPr>
+			<w:r>
+				<w:rPr></w:rPr>
+			</w:r>
+		</w:p>
+		<w:p>
+			<w:pPr>
+				<w:pStyle w:val="style0" />
+			</w:pPr>
+			<w:r>
+				<w:rPr></w:rPr>
+			</w:r>
+		</w:p>
+		<w:sectPr>
+			<w:formProt w:val="off" />
+			<w:pgSz w:h="16837" w:w="11905" />
+			<w:textDirection w:val="lrTb" />
+			<w:pgNumType w:fmt="decimal" />
+			<w:type w:val="nextPage" />
+			<w:headerReference r:id="rId3" w:type="default" />
+		</w:sectPr>
+	</w:body>
+</w:document>

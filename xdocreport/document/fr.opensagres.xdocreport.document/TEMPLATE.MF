@@ -1,0 +1,2 @@
+Import-Package: org.osgi.framework,*
+Bundle-Activator: fr.opensagres.xdocreport.document.internal.osgi.Activator

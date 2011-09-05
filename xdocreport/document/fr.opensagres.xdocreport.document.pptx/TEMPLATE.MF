@@ -1,0 +1,4 @@
+Fragment-Host: fr.opensagres.xdocreport.document
+Export-Package: fr.opensagres.xdocreport.document.pptx.discovery
+Import-Package: fr.opensagres.xdocreport.converter,
+ fr.opensagres.xdocreport.document

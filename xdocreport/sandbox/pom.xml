@@ -1,0 +1,28 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<artifactId>sandbox</artifactId>
+	<name>XDocReport Core Component</name>
+	<parent>
+		<groupId>fr.opensagres</groupId>
+		<artifactId>xdocreport</artifactId>
+		<version>0.9.1-SNAPSHOT</version>
+	</parent>
+	<packaging>pom</packaging>
+	<build>
+		<plugins>
+			<plugin>
+				<artifactId>maven-deploy-plugin</artifactId>
+				<configuration>
+					<skip>true</skip>
+				</configuration>
+			</plugin>
+		</plugins>
+	</build>
+	<modules>
+		<module>fr.opensagres.xdocreport.converter.fop</module>
+		<module>fr.opensagres.xdocreport.converter.fop.docx</module>
+		<module>fr.opensagres.xdocreport.converter.fop.odt</module>
+		
+	</modules>
+</project>

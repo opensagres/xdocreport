@@ -1,0 +1,189 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<w:styles xmlns:w="http://schemas.openxmlformats.org/wordprocessingml/2006/main">
+	<w:style w:styleId="style0" w:type="paragraph">
+		<w:name w:val="Standard" />
+		<w:next w:val="style0" />
+		<w:pPr>
+			<w:widowControl w:val="off" />
+			<w:tabs>
+				<w:tab w:leader="none" w:pos="706" w:val="left" />
+			</w:tabs>
+			<w:suppressAutoHyphens w:val="true" />
+			<w:autoSpaceDE w:val="true" />
+			<w:overflowPunct w:val="true" />
+			<w:kinsoku w:val="true" />
+		</w:pPr>
+		<w:rPr>
+			<w:color w:val="auto" />
+			<w:sz w:val="24" />
+			<w:szCs w:val="24" />
+			<w:rFonts w:ascii="Times New Roman" w:cs="Tahoma"
+				w:eastAsia="Andale Sans UI" w:hAnsi="Times New Roman" />
+			<w:lang w:bidi="fr-FR" w:eastAsia="fr-FR" w:val="fr-FR" />
+		</w:rPr>
+	</w:style>
+	<w:style w:styleId="style1" w:type="paragraph">
+		<w:name w:val="Titre 1" />
+		<w:basedOn w:val="style17" />
+		<w:next w:val="style18" />
+		<w:pPr>
+			<w:outlineLvl w:val="0" />
+			<w:numPr>
+				<w:ilvl w:val="0" />
+				<w:numId w:val="1" />
+			</w:numPr>
+		</w:pPr>
+		<w:rPr>
+			<w:sz w:val="32" />
+			<w:b />
+			<w:szCs w:val="32" />
+			<w:bCs />
+		</w:rPr>
+	</w:style>
+	<w:style w:styleId="style2" w:type="paragraph">
+		<w:name w:val="Titre 2" />
+		<w:basedOn w:val="style17" />
+		<w:next w:val="style18" />
+		<w:pPr>
+			<w:outlineLvl w:val="1" />
+			<w:numPr>
+				<w:ilvl w:val="1" />
+				<w:numId w:val="1" />
+			</w:numPr>
+		</w:pPr>
+		<w:rPr>
+			<w:sz w:val="28" />
+			<w:i />
+			<w:b />
+			<w:szCs w:val="28" />
+			<w:iCs />
+			<w:bCs />
+		</w:rPr>
+	</w:style>
+	<w:style w:styleId="style3" w:type="paragraph">
+		<w:name w:val="Titre 3" />
+		<w:basedOn w:val="style17" />
+		<w:next w:val="style18" />
+		<w:pPr>
+			<w:outlineLvl w:val="2" />
+			<w:numPr>
+				<w:ilvl w:val="2" />
+				<w:numId w:val="1" />
+			</w:numPr>
+		</w:pPr>
+		<w:rPr>
+			<w:sz w:val="28" />
+			<w:b />
+			<w:szCs w:val="28" />
+			<w:bCs />
+		</w:rPr>
+	</w:style>
+	<w:style w:styleId="style15" w:type="character">
+		<w:name w:val="Caractères de numérotation" />
+		<w:next w:val="style15" />
+		<w:rPr></w:rPr>
+	</w:style>
+	<w:style w:styleId="style16" w:type="character">
+		<w:name w:val="Puces" />
+		<w:next w:val="style16" />
+		<w:rPr>
+			<w:rFonts w:ascii="OpenSymbol" w:cs="OpenSymbol" w:eastAsia="OpenSymbol"
+				w:hAnsi="OpenSymbol" />
+		</w:rPr>
+	</w:style>
+	<w:style w:styleId="style17" w:type="paragraph">
+		<w:name w:val="Titre" />
+		<w:basedOn w:val="style0" />
+		<w:next w:val="style18" />
+		<w:pPr>
+			<w:keepNext />
+			<w:spacing w:after="120" w:before="240" />
+		</w:pPr>
+		<w:rPr>
+			<w:sz w:val="28" />
+			<w:szCs w:val="28" />
+			<w:rFonts w:ascii="Arial" w:cs="Tahoma" w:eastAsia="Andale Sans UI"
+				w:hAnsi="Arial" />
+		</w:rPr>
+	</w:style>
+	<w:style w:styleId="style18" w:type="paragraph">
+		<w:name w:val="Corps de texte" />
+		<w:basedOn w:val="style0" />
+		<w:next w:val="style18" />
+		<w:pPr>
+			<w:spacing w:after="120" w:before="0" />
+		</w:pPr>
+		<w:rPr></w:rPr>
+	</w:style>
+	<w:style w:styleId="style19" w:type="paragraph">
+		<w:name w:val="Liste" />
+		<w:basedOn w:val="style18" />
+		<w:next w:val="style19" />
+		<w:pPr></w:pPr>
+		<w:rPr>
+			<w:rFonts w:cs="Tahoma" />
+		</w:rPr>
+	</w:style>
+	<w:style w:styleId="style20" w:type="paragraph">
+		<w:name w:val="Légende" />
+		<w:basedOn w:val="style0" />
+		<w:next w:val="style20" />
+		<w:pPr>
+			<w:suppressLineNumbers />
+			<w:spacing w:after="120" w:before="120" />
+		</w:pPr>
+		<w:rPr>
+			<w:sz w:val="24" />
+			<w:i />
+			<w:szCs w:val="24" />
+			<w:iCs />
+			<w:rFonts w:cs="Tahoma" />
+		</w:rPr>
+	</w:style>
+	<w:style w:styleId="style21" w:type="paragraph">
+		<w:name w:val="Index" />
+		<w:basedOn w:val="style0" />
+		<w:next w:val="style21" />
+		<w:pPr>
+			<w:suppressLineNumbers />
+		</w:pPr>
+		<w:rPr>
+			<w:rFonts w:cs="Tahoma" />
+		</w:rPr>
+	</w:style>
+	<w:style w:styleId="style22" w:type="paragraph">
+		<w:name w:val="Contenu de tableau" />
+		<w:basedOn w:val="style0" />
+		<w:next w:val="style22" />
+		<w:pPr>
+			<w:suppressLineNumbers />
+		</w:pPr>
+		<w:rPr></w:rPr>
+	</w:style>
+	<w:style w:styleId="style23" w:type="paragraph">
+		<w:name w:val="Titre de tableau" />
+		<w:basedOn w:val="style22" />
+		<w:next w:val="style23" />
+		<w:pPr>
+			<w:jc w:val="center" />
+			<w:suppressLineNumbers />
+		</w:pPr>
+		<w:rPr>
+			<w:b />
+			<w:bCs />
+		</w:rPr>
+	</w:style>
+	<w:style w:styleId="style24" w:type="paragraph">
+		<w:name w:val="En-tête" />
+		<w:basedOn w:val="style0" />
+		<w:next w:val="style24" />
+		<w:pPr>
+			<w:tabs>
+				<w:tab w:leader="none" w:pos="4818" w:val="center" />
+				<w:tab w:leader="none" w:pos="9637" w:val="right" />
+			</w:tabs>
+			<w:suppressLineNumbers />
+		</w:pPr>
+		<w:rPr></w:rPr>
+	</w:style>
+</w:styles>

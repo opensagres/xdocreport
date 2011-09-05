@@ -1,0 +1,24 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+  <artifactId>fr.opensagres.xdocreport.converter.fop.odt</artifactId>
+  <parent>
+		<groupId>fr.opensagres</groupId>
+		<artifactId>sandbox</artifactId>
+		<version>0.9.1-SNAPSHOT</version>
+	</parent>
+	
+	<dependencies>
+		<dependency>
+			<groupId>fr.opensagres</groupId>
+			<artifactId>fr.opensagres.xdocreport.converter.fop</artifactId>
+			<version>0.9.1-SNAPSHOT</version>
+
+		</dependency>
+		<dependency>
+			<groupId>xerces</groupId>
+			<artifactId>xercesImpl</artifactId>
+			<version>2.9.1</version>
+			<scope>test</scope>
+		</dependency>
+	</dependencies>
+</project>

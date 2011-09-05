@@ -1,0 +1,18 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<artifactId>thirdparties-extension</artifactId>
+	<name>XDocReport Integration Tests</name>
+	<parent>
+		<groupId>fr.opensagres</groupId>
+		<artifactId>xdocreport</artifactId>
+		<version>0.9.2-SNAPSHOT</version>
+	</parent>
+	<packaging>pom</packaging>
+	<modules>
+		<module>org.apache.poi.xwpf.converter</module>
+		<module>org.odftoolkit.odfdom.converter</module>
+		<module>fr.opensagres.xdocreport.itext.extension</module>
+		<module>org.apache.struts2.views.xdocreport</module>
+	</modules>
+	
+</project>

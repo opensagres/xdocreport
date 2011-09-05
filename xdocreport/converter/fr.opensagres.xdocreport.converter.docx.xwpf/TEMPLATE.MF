@@ -1,0 +1,4 @@
+Fragment-Host: fr.opensagres.xdocreport.converter
+Import-Package: org.apache.poi.xwpf.converter,
+ org.apache.poi.xwpf.converter.xhtml
+

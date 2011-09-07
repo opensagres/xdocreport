@@ -239,8 +239,27 @@ public class DocXBufferedDocumentContentHandler extends
 
 		if (isFldSimple(uri, localName, name) && currentFldSimpleRegion != null) {
 			// it's end of fldSimple and it's Mergefield; ignore the element
-			if (currentFldSimpleRegion.getFieldName() == null) {
+			String fieldName = currentFldSimpleRegion.getFieldName();
+			if (fieldName == null) {
 				super.doEndElement(uri, localName, name);
+			} else {
+				if (currentRow != null) {
+					if (fieldName.startsWith(START_ROW_TOKEN)) {
+						// @start-row
+						String startLoopDirective = fieldName.substring(
+								START_ROW_TOKEN.length(), fieldName.length());
+						currentRow.setStartLoopDirective(startLoopDirective);
+						currentFldSimpleRegion.reset();
+					} else {
+						if (fieldName.startsWith(END_ROW_TOKEN)) {
+							// @end-row
+							String endLoopDirective = fieldName.substring(
+									END_ROW_TOKEN.length(), fieldName.length());
+							currentRow.setEndLoopDirective(endLoopDirective);
+							currentFldSimpleRegion.reset();
+						}
+					}
+				}
 			}
 			currentRegion = currentFldSimpleRegion.getParent();
 			currentFldSimpleRegion = null;

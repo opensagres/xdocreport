@@ -53,5 +53,5 @@ public interface IDocumentFormatter {
 	
 	String getImageDirective(String fieldName);
 
-
+	boolean containsInterpolation(String content);
 }

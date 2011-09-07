@@ -192,4 +192,16 @@ public class FreemarkerDocumentFormatter extends AbstractDocumentFormatter {
 		directive.append('}');
 		return directive.toString();
 	}
+	
+	public boolean containsInterpolation(String content) {
+		if (StringUtils.isEmpty(content)) {
+			return false;
+		}
+		int dollarIndex = content.indexOf(DOLLAR_TOTKEN);
+		if (dollarIndex == -1) {
+			// Not included to FM directive
+			return false;
+		}
+		return true;
+	}
 }

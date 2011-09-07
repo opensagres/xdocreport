@@ -34,7 +34,6 @@ import fr.opensagres.xdocreport.document.preprocessor.sax.BufferedRegion;
 import fr.opensagres.xdocreport.document.preprocessor.sax.IBufferedRegion;
 import fr.opensagres.xdocreport.document.preprocessor.sax.ProcessRowResult;
 import fr.opensagres.xdocreport.document.preprocessor.sax.TransformedBufferedDocumentContentHandler;
-import fr.opensagres.xdocreport.template.formatter.FieldsMetadata;
 import fr.opensagres.xdocreport.template.formatter.IDocumentFormatter;
 
 /**
@@ -83,9 +82,9 @@ public class HyperlinkBufferedRegion extends BufferedRegion {
 	}
 
 	public void process() {
-		FieldsMetadata fieldsMetadata = handler.getFieldsMetadata();
+		// FieldsMetadata fieldsMetadata = handler.getFieldsMetadata();
 		IDocumentFormatter formatter = handler.getFormatter();
-		if (fieldsMetadata == null || formatter == null) {
+		if (/* fieldsMetadata == null || */formatter == null) {
 			return;
 		}
 		StringBuilder t = new StringBuilder();
@@ -101,39 +100,52 @@ public class HyperlinkBufferedRegion extends BufferedRegion {
 		// FieldsMetadata), transform it.
 		ProcessRowResult result = handler.getProcessRowResult(content, false);
 		String newContent = result.getContent();
-		if (newContent != null && result.getFieldName() != null) {
+		if (newContent != null) {
+			
+			
+			if (result.getFieldName() != null) {
 
-			// Modify w:t
-			for (int i = 0; i < rBufferedRegions.size(); i++) {
-				if (i == rBufferedRegions.size() - 1) {
-					rBufferedRegions.get(i).setTContent(newContent);
-				} else {
-					rBufferedRegions.get(i).setTContent("");
+				// Modify w:t
+				modifyTContents(newContent);
+				
+				// Modify id attribute
+				if (hasContext) {
+					String loopCount = formatter.getLoopCountDirective(result
+							.getItemNameList());
+					String hyperlinkId = idAttribute.getValue();
+					String scriptHyperlinkId = hyperlinkId + "_" + loopCount;
+					idAttribute.setValue(scriptHyperlinkId);
+
+					// Add hyperlink info in the shared context
+					HyperlinkInfo hyperlink = new HyperlinkInfo(hyperlinkId,
+							scriptHyperlinkId, result.getStartLoopDirective(),
+							result.getEndLoopDirective());
+					Map<String, HyperlinkInfo> hyperlinks = (Map<String, HyperlinkInfo>) handler
+							.getSharedContext().get(HyperlinkInfo.KEY);
+					if (hyperlinks == null) {
+						hyperlinks = new HashMap<String, HyperlinkInfo>();
+						handler.getSharedContext().put(HyperlinkInfo.KEY,
+								hyperlinks);
+					}
+					hyperlinks.put(hyperlinkId, hyperlink);
 				}
-			}
-
-			// Modify id attribute
-			if (hasContext) {
-				String loopCount = formatter.getLoopCountDirective(result
-						.getItemNameList());
-				String hyperlinkId = idAttribute.getValue();
-				String scriptHyperlinkId = hyperlinkId + "_" + loopCount;
-				idAttribute.setValue(scriptHyperlinkId);
-
-				// Add hyperlink info in the shared context
-				HyperlinkInfo hyperlink = new HyperlinkInfo(hyperlinkId,
-						scriptHyperlinkId, result.getStartLoopDirective(),
-						result.getEndLoopDirective());
-				Map<String, HyperlinkInfo> hyperlinks = (Map<String, HyperlinkInfo>) handler
-						.getSharedContext().get(HyperlinkInfo.KEY);
-				if (hyperlinks == null) {
-					hyperlinks = new HashMap<String, HyperlinkInfo>();
-					handler.getSharedContext().put(HyperlinkInfo.KEY, hyperlinks);
+			} else {
+				if (formatter.containsInterpolation(newContent)) {
+					modifyTContents(newContent);
 				}
-				hyperlinks.put(hyperlinkId, hyperlink);
 			}
 		}
 
+	}
+
+	private void modifyTContents(String newContent) {
+		for (int i = 0; i < rBufferedRegions.size(); i++) {
+			if (i == rBufferedRegions.size() - 1) {
+				rBufferedRegions.get(i).setTContent(newContent);
+			} else {
+				rBufferedRegions.get(i).setTContent("");
+			}
+		}
 	}
 
 	public void setId(String name, String value) {

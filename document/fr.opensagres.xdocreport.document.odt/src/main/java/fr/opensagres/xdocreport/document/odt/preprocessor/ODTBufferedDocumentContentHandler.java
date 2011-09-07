@@ -50,6 +50,7 @@ public class ODTBufferedDocumentContentHandler extends
 		TransformedBufferedDocumentContentHandler implements ODTConstants {
 
 	private String dynamicImageName;
+	private boolean textInputParsing = false;
 
 	protected ODTBufferedDocumentContentHandler(FieldsMetadata fieldsMetadata,
 			IDocumentFormatter formatter, Map<String, Object> sharedContext) {
@@ -63,6 +64,7 @@ public class ODTBufferedDocumentContentHandler extends
 		IDocumentFormatter formatter = super.getFormatter();
 		if (isTextInput(uri, localName, name)) {
 			// Ignore element start text:text-input
+			this.textInputParsing = true;
 			return false;
 		}
 		if (isTextA(uri, localName, name)) {
@@ -120,6 +122,7 @@ public class ODTBufferedDocumentContentHandler extends
 			throws SAXException {
 		if (isTextInput(uri, localName, name)) {
 			// Ignore element end text:text-input
+			this.textInputParsing = false;
 		} else {
 			if (isDrawFrame(uri, localName, name)) {
 				dynamicImageName = null;
@@ -136,6 +139,29 @@ public class ODTBufferedDocumentContentHandler extends
 	@Override
 	protected boolean isRow(String uri, String localName, String name) {
 		return ODTUtils.isTableRow(uri, localName, name);
+	}
+
+	@Override
+	protected void flushCharacters(String characters) {
+		if (textInputParsing && currentRow != null) {
+			String fieldName = characters;
+			if (fieldName.startsWith(START_ROW_TOKEN)) {
+				// @start-row
+				String startLoopDirective = fieldName.substring(
+						START_ROW_TOKEN.length(), fieldName.length());
+				currentRow.setStartLoopDirective(startLoopDirective);
+				return;
+			} else {
+				if (fieldName.startsWith(END_ROW_TOKEN)) {
+					// @end-row
+					String endLoopDirective = fieldName.substring(
+							END_ROW_TOKEN.length(), fieldName.length());
+					currentRow.setEndLoopDirective(endLoopDirective);
+					return;
+				}
+			}
+		}
+		super.flushCharacters(characters);
 	}
 
 }

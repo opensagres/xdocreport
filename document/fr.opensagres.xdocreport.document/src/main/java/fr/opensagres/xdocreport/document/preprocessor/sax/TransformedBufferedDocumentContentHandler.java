@@ -42,13 +42,16 @@ import fr.opensagres.xdocreport.template.formatter.IDocumentFormatter;
 public abstract class TransformedBufferedDocumentContentHandler extends
 		BufferedDocumentContentHandler {
 
+	protected static final String START_ROW_TOKEN = "@start-row";
+	protected static final String END_ROW_TOKEN = "@end-row";
+
 	private final FieldsMetadata fieldsMetadata;
 	private final IDocumentFormatter formatter;
 	private final Map<String, Object> sharedContext;
 
 	// Table stack
 	private final Stack<TableBufferedRegion> tableStack = new Stack<TableBufferedRegion>();
-	private RowBufferedRegion currentRow;
+	protected RowBufferedRegion currentRow;
 
 	protected TransformedBufferedDocumentContentHandler(
 			FieldsMetadata fieldsMetadata, IDocumentFormatter formater,

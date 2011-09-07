@@ -43,7 +43,9 @@ public class ExtendedPdfPTable extends PdfPTable implements IITextContainer {
 	}
 
 	public void addElement(Element element) {
-		super.addCell((PdfPCell) element);
+		if (element instanceof PdfPCell) {
+			super.addCell((PdfPCell) element);
+		}
 	}
 
 	public IITextContainer getITextContainer() {

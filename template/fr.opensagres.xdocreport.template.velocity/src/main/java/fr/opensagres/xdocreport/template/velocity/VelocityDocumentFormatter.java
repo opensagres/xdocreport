@@ -179,4 +179,16 @@ public class VelocityDocumentFormatter extends AbstractDocumentFormatter {
 	public String getLoopCountDirective(String fieldName) {		
 		return "$velocityCount";
 	}
+	
+	public boolean containsInterpolation(String content) {
+		if (StringUtils.isEmpty(content)) {
+			return false;
+		}
+		int dollarIndex = content.indexOf(DOLLAR_TOTKEN);
+		if (dollarIndex == -1) {
+			// Not included to FM directive
+			return false;
+		}
+		return true;
+	}
 }

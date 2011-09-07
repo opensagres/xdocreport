@@ -104,4 +104,8 @@ public class BufferedRegion implements IBufferedRegion {
 	public IBufferedRegion getParent() {
 		return parent;
 	}
+	
+	public void reset() {
+		regions.clear();
+	}
 }

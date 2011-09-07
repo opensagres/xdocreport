@@ -50,6 +50,14 @@ public class RowBufferedRegion extends BufferedRegion {
 		this.endLoopDirective = endLoopDirective;
 	}
 
+	public void setStartLoopDirective(String startLoopDirective) {
+		this.startLoopDirective = startLoopDirective;
+	}
+
+	public void setEndLoopDirective(String endLoopDirective) {
+		this.endLoopDirective = endLoopDirective;
+	}
+
 	public boolean isLoopTemplateDirectiveInitilalized() {
 		return StringUtils.isNotEmpty(startLoopDirective)
 				&& StringUtils.isNotEmpty(endLoopDirective);

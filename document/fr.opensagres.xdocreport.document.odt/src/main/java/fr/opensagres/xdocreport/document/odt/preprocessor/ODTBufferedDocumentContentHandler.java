@@ -145,17 +145,19 @@ public class ODTBufferedDocumentContentHandler extends
 	protected void flushCharacters(String characters) {
 		if (textInputParsing && currentRow != null) {
 			String fieldName = characters;
-			if (fieldName.startsWith(START_ROW_TOKEN)) {
+			String beforeRowToken = getBeforeRowToken();
+			if (fieldName.startsWith(beforeRowToken)) {
 				// @start-row
 				String startLoopDirective = fieldName.substring(
-						START_ROW_TOKEN.length(), fieldName.length());
+						beforeRowToken.length(), fieldName.length());
 				currentRow.setStartLoopDirective(startLoopDirective);
 				return;
 			} else {
-				if (fieldName.startsWith(END_ROW_TOKEN)) {
+				String afterRowToken = getAfterRowToken();
+				if (fieldName.startsWith(afterRowToken)) {
 					// @end-row
 					String endLoopDirective = fieldName.substring(
-							END_ROW_TOKEN.length(), fieldName.length());
+							afterRowToken.length(), fieldName.length());
 					currentRow.setEndLoopDirective(endLoopDirective);
 					return;
 				}

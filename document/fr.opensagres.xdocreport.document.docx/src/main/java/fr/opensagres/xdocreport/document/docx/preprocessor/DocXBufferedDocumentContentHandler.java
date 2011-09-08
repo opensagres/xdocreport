@@ -244,17 +244,19 @@ public class DocXBufferedDocumentContentHandler extends
 				super.doEndElement(uri, localName, name);
 			} else {
 				if (currentRow != null) {
-					if (fieldName.startsWith(START_ROW_TOKEN)) {
-						// @start-row
+					String beforeRowToken = getBeforeRowToken();
+					if (fieldName.startsWith(beforeRowToken)) {
+						// @before-row
 						String startLoopDirective = fieldName.substring(
-								START_ROW_TOKEN.length(), fieldName.length());
+								beforeRowToken.length(), fieldName.length());
 						currentRow.setStartLoopDirective(startLoopDirective);
 						currentFldSimpleRegion.reset();
 					} else {
-						if (fieldName.startsWith(END_ROW_TOKEN)) {
-							// @end-row
+						String afterRowToken = getAfterRowToken();
+						if (fieldName.startsWith(afterRowToken)) {
+							// @after-row
 							String endLoopDirective = fieldName.substring(
-									END_ROW_TOKEN.length(), fieldName.length());
+									afterRowToken.length(), fieldName.length());
 							currentRow.setEndLoopDirective(endLoopDirective);
 							currentFldSimpleRegion.reset();
 						}

@@ -42,13 +42,19 @@ import fr.opensagres.xdocreport.core.utils.StringUtils;
 public class FieldsMetadata {
 
 	public static final FieldsMetadata EMPTY = new FieldsMetadata();
+	public static final String DEFAULT_BEFORE_ROW_TOKEN = "@before-row";
+	public static final String DEFAULT_AFTER_ROW_TOKEN = "@after-row";
 
 	private final List<String> fieldsAsList;
 	private final List<FieldMetadataImage> fieldsAsImage;
+	private String beforeRowToken;
+	private String afterRowToken;
 
 	public FieldsMetadata() {
-		fieldsAsList = new ArrayList<String>();
-		fieldsAsImage = new ArrayList<FieldMetadataImage>();
+		this.fieldsAsList = new ArrayList<String>();
+		this.fieldsAsImage = new ArrayList<FieldMetadataImage>();
+		this.beforeRowToken = DEFAULT_BEFORE_ROW_TOKEN;
+		this.afterRowToken = DEFAULT_AFTER_ROW_TOKEN;
 	}
 
 	/**
@@ -117,7 +123,7 @@ public class FieldsMetadata {
 		}
 		return false;
 	}
-	
+
 	public String getImageFieldName(String fieldName) {
 		if (StringUtils.isEmpty(fieldName)) {
 			return null;
@@ -129,4 +135,21 @@ public class FieldsMetadata {
 		}
 		return null;
 	}
+
+	public String getBeforeRowToken() {
+		return beforeRowToken;
+	}
+
+	public void setBeforeRowToken(String beforeRowToken) {
+		this.beforeRowToken = beforeRowToken;
+	}
+
+	public String getAfterRowToken() {
+		return afterRowToken;
+	}
+
+	public void setAfterRowToken(String afterRowToken) {
+		this.afterRowToken = afterRowToken;
+	}
+
 }

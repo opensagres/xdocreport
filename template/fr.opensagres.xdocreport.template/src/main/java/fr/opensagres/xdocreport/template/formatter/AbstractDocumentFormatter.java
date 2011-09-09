@@ -64,6 +64,11 @@ public abstract class AbstractDocumentFormatter implements IDocumentFormatter {
 				itemNameList.substring(getItemToken().length()));
 	}
 
+	public int extractListDirectiveInfo(String content,
+			Stack<LoopDirective> directives) {
+		return extractListDirectiveInfo(content, directives, true);
+	}
+
 	protected abstract String getItemToken();
 
 	protected abstract boolean isModelField(String content, String fieldName);

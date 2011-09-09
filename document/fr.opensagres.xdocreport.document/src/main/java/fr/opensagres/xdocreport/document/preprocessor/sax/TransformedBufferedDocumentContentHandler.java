@@ -233,11 +233,11 @@ public abstract class TransformedBufferedDocumentContentHandler extends
 		return fieldsMetadata.getAfterRowToken();
 	}
 
-	public void extractListDirectiveInfo(String characters) {
+	public int extractListDirectiveInfo(String characters, boolean dontRemoveListDirectiveInfo) {
 		if (formatter == null || characters == null) {
-			return;
+			return 0;
 		}
-		formatter.extractListDirectiveInfo(characters, getDirectives());
+		return formatter.extractListDirectiveInfo(characters, getDirectives());
 	}
 
 	/**

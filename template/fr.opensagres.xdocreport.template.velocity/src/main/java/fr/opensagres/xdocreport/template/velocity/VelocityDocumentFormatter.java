@@ -198,7 +198,7 @@ public class VelocityDocumentFormatter extends AbstractDocumentFormatter {
 	}
 
 	public int extractListDirectiveInfo(String content,
-			Stack<LoopDirective> directives) {
+			Stack<LoopDirective> directives, boolean dontRemoveListDirectiveInfo) {
 		// content='xxxx#foreach($d in $developers)yyy'
 		int startOfEndListDirectiveIndex = content
 				.indexOf(END_FOREACH_DIRECTIVE);
@@ -212,7 +212,7 @@ public class VelocityDocumentFormatter extends AbstractDocumentFormatter {
 		if (startOfStartListDirectiveIndex == -1
 				|| (startOfEndListDirectiveIndex != -1 && startOfStartListDirectiveIndex > startOfEndListDirectiveIndex)) {
 			// content contains (at first #end)
-			if (!directives.isEmpty()) {
+			if (!dontRemoveListDirectiveInfo && !directives.isEmpty()) {
 				// remove the LoopDirective from the stack
 				directives.pop();
 			}

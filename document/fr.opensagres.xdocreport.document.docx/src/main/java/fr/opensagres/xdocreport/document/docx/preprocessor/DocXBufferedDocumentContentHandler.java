@@ -61,6 +61,7 @@ public class DocXBufferedDocumentContentHandler extends
 	private FldSimpleBufferedRegion currentFldSimpleRegion = null;
 	private boolean instrTextParsing;
 	private boolean tParsing = false;
+	private int nbLoopDirectiveToRemove = 0;
 
 	private BookmarkBufferedRegion currentBookmark;
 
@@ -128,7 +129,8 @@ public class DocXBufferedDocumentContentHandler extends
 			// and ignore element
 			String instrText = processRowIfNeeded(attributes.getValue(W_NS,
 					INSTR_ATTR));
-			currentFldSimpleRegion = new FldSimpleBufferedRegion(this, currentRegion);
+			currentFldSimpleRegion = new FldSimpleBufferedRegion(this,
+					currentRegion);
 			currentFldSimpleRegion.setInstrText(instrText);
 			boolean addElement = false;
 			if (currentFldSimpleRegion.getFieldName() == null) {
@@ -276,15 +278,27 @@ public class DocXBufferedDocumentContentHandler extends
 			currentRegion = hyperlink.getParent();
 			return;
 		}
+		if (isRow(uri, localName, name)) {
+			// remove list directive if needed
+			if (nbLoopDirectiveToRemove > 0) {
+				for (int i = 0; i < nbLoopDirectiveToRemove; i++) {
+					if (!getDirectives().isEmpty()) {
+						getDirectives().pop();
+
+					}
+				}
+				nbLoopDirectiveToRemove = 0;
+			}
+		}
 		super.doEndElement(uri, localName, name);
 	}
 
 	@Override
-	protected void flushCharacters(String characters) {			
+	protected void flushCharacters(String characters) {
 		if (tParsing && currentFldSimpleRegion != null) {
 			// fldSimple mergefield is parsing, replace with field name.
 			currentFldSimpleRegion.setTContent(characters);
-			super.extractListDirectiveInfo(characters);
+			extractListDirectiveInfo(currentFldSimpleRegion);			
 			resetCharacters();
 			return;
 		}
@@ -293,7 +307,7 @@ public class DocXBufferedDocumentContentHandler extends
 			if (instrTextParsing) {
 				characters = processRowIfNeeded(characters);
 				currentRRegion.setInstrText(characters);
-				super.extractListDirectiveInfo(characters);
+				extractListDirectiveInfo(currentRRegion);
 				resetCharacters();
 				return;
 			} else {
@@ -306,5 +320,14 @@ public class DocXBufferedDocumentContentHandler extends
 		}
 
 		super.flushCharacters(characters);
+	}
+
+	private void extractListDirectiveInfo(MergefieldBufferedRegion mergefield) {
+		int i = super.extractListDirectiveInfo(
+				mergefield.getFieldName(),
+				currentRow != null);
+		if (i < 0) {
+			nbLoopDirectiveToRemove += -i;
+		}
 	}
 }

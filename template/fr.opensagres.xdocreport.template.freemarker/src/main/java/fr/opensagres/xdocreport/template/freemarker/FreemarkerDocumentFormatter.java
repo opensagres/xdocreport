@@ -208,7 +208,7 @@ public class FreemarkerDocumentFormatter extends AbstractDocumentFormatter {
 	}
 
 	public int extractListDirectiveInfo(String content,
-			Stack<LoopDirective> directives) {
+			Stack<LoopDirective> directives, boolean dontRemoveListDirectiveInfo) {
 		// content='xxxx[#list developers as d]yyy'
 		int startOfEndListDirectiveIndex = content.indexOf(END_LIST_DIRECTIVE);
 		int startOfStartListDirectiveIndex = content
@@ -221,7 +221,7 @@ public class FreemarkerDocumentFormatter extends AbstractDocumentFormatter {
 		if (startOfStartListDirectiveIndex == -1
 				|| (startOfEndListDirectiveIndex != -1 && startOfStartListDirectiveIndex > startOfEndListDirectiveIndex)) {
 			// content contains (at first [/#list])
-			if (!directives.isEmpty()) {
+			if (!dontRemoveListDirectiveInfo && !directives.isEmpty()) {
 				// remove the LoopDirective from the stack
 				directives.pop();
 			}

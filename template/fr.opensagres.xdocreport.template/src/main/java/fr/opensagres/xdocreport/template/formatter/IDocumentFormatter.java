@@ -60,6 +60,9 @@ public interface IDocumentFormatter {
 
 	int extractListDirectiveInfo(String content,
 			Stack<LoopDirective> directives);
+	
+	int extractListDirectiveInfo(String content,
+			Stack<LoopDirective> directives, boolean dontRemoveListDirectiveInfo);
 
 	String extractModelTokenPrefix(String newContent);
 }

@@ -31,38 +31,37 @@ import java.io.Writer;
  * String buffered region.
  * 
  */
-public class StringBufferedRegion implements IBufferedRegion {
+public class StringBufferedRegion extends BufferedRegionAdpater {
 
 	private final StringBuilder buffer = new StringBuilder();
-	private final IBufferedRegion parent;
 
 	public StringBufferedRegion(IBufferedRegion parent) {
-		this.parent = parent;
-		parent.addRegion(this);
+		super(parent);
 	}
 
+	@Override
 	public boolean isString() {
 		return true;
 	}
 
+	@Override
 	public void save(Writer writer) throws IOException {
 		writer.write(buffer.toString());
 	}
 
+	@Override
 	public void append(String content) {
 		buffer.append(content);
 	}
 
+	@Override
 	public void append(char[] ch, int start, int length) {
 		buffer.append(ch, start, length);
 	}
 
+	@Override
 	public void append(char c) {
 		buffer.append(c);
-	}
-
-	public void addRegion(IBufferedRegion region) {
-		// Do noting
 	}
 
 	@Override
@@ -74,7 +73,4 @@ public class StringBufferedRegion implements IBufferedRegion {
 		buffer.setLength(0);
 	}
 
-	public IBufferedRegion getParent() {
-		return parent;
-	}
 }

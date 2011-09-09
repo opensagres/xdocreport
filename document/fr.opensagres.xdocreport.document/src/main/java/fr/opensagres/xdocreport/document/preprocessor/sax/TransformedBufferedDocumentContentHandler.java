@@ -234,7 +234,7 @@ public abstract class TransformedBufferedDocumentContentHandler extends
 	}
 
 	public void extractListDirectiveInfo(String characters) {
-		if (formatter == null) {
+		if (formatter == null || characters == null) {
 			return;
 		}
 		formatter.extractListDirectiveInfo(characters, getDirectives());

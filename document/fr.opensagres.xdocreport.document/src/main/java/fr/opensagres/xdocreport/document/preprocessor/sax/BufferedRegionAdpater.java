@@ -28,40 +28,47 @@ import java.io.IOException;
 import java.io.Writer;
 
 /**
- * Attribute buffered region used to manage XML dynamic attribute.
+ * Base buffered region.
+ * 
  * 
  */
-public class AttributeBufferedRegion extends BufferedRegionAdpater {
+public class BufferedRegionAdpater implements IBufferedRegion {
 
-	private final String name;
-	private String value;
+	private final IBufferedRegion parent;
 
-	public AttributeBufferedRegion(IBufferedRegion parent, String name,
-			String value) {
-		super(parent);
-		this.name = name;
-		this.value = value;
+	public BufferedRegionAdpater(IBufferedRegion parent) {
+		this.parent = parent;
+		if (parent != null) {
+			parent.addRegion(this);
+		}
 	}
 
-	public void setValue(String value) {
-		this.value = value;
-	}
-
-	public String getName() {
-		return name;
-	}
-
-	public String getValue() {
-		return value;
-	}
-
-	@Override
 	public void save(Writer writer) throws IOException {
-		writer.write(' ');
-		writer.write(name);
-		writer.write("=\"");
-		writer.write(value);
-		writer.write("\"");
+
+	}
+
+	public boolean isString() {
+		return false;
+	}
+
+	public void append(String content) {
+
+	}
+
+	public void append(char[] ch, int start, int length) {
+
+	}
+
+	public void append(char c) {
+
+	}
+
+	public void addRegion(IBufferedRegion region) {
+
+	}
+
+	public IBufferedRegion getParent() {
+		return parent;
 	}
 
 }

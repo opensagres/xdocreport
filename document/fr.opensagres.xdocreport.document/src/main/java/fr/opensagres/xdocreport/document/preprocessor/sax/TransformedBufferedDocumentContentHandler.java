@@ -34,6 +34,7 @@ import org.xml.sax.SAXException;
 import fr.opensagres.xdocreport.core.utils.StringUtils;
 import fr.opensagres.xdocreport.template.formatter.FieldsMetadata;
 import fr.opensagres.xdocreport.template.formatter.IDocumentFormatter;
+import fr.opensagres.xdocreport.template.formatter.LoopDirective;
 
 /**
  * Document transformed to manage lazy loop for row table and dynamic image.
@@ -45,6 +46,7 @@ public abstract class TransformedBufferedDocumentContentHandler extends
 	private final FieldsMetadata fieldsMetadata;
 	private final IDocumentFormatter formatter;
 	private final Map<String, Object> sharedContext;
+	private final Stack<LoopDirective> directives;
 
 	// Table stack
 	private final Stack<TableBufferedRegion> tableStack = new Stack<TableBufferedRegion>();
@@ -56,6 +58,7 @@ public abstract class TransformedBufferedDocumentContentHandler extends
 		this.fieldsMetadata = fieldsMetadata;
 		this.formatter = formater;
 		this.sharedContext = sharedContext;
+		this.directives = new Stack<LoopDirective>();
 	}
 
 	@Override
@@ -189,6 +192,10 @@ public abstract class TransformedBufferedDocumentContentHandler extends
 	public Map<String, Object> getSharedContext() {
 		return sharedContext;
 	}
+	
+	public boolean hasSharedContext() {
+		return sharedContext != null;
+	}
 
 	public FieldsMetadata getFieldsMetadata() {
 		return fieldsMetadata;
@@ -196,6 +203,10 @@ public abstract class TransformedBufferedDocumentContentHandler extends
 
 	public IDocumentFormatter getFormatter() {
 		return formatter;
+	}
+
+	public Stack<LoopDirective> getDirectives() {
+		return directives;
 	}
 
 	/**
@@ -220,6 +231,13 @@ public abstract class TransformedBufferedDocumentContentHandler extends
 			return FieldsMetadata.DEFAULT_AFTER_ROW_TOKEN;
 		}
 		return fieldsMetadata.getAfterRowToken();
+	}
+
+	public void extractListDirectiveInfo(String characters) {
+		if (formatter == null) {
+			return;
+		}
+		formatter.extractListDirectiveInfo(characters, getDirectives());
 	}
 
 	/**

@@ -261,7 +261,7 @@ public class DocxPreprocessorHyperlinkWithVelocityTestCase extends TestCase {
 					+ "</w:tc>"
 				+ "</w:tr>"
 				
-				+ "#foreach( $item_developers in $developers)"
+				+ "#foreach($item_developers in $developers)"
 				
 				+ "<w:tr w:rsidR=\"005D6D71\" w:rsidTr=\"005D6D71\">"
 					+ "<w:tc>"

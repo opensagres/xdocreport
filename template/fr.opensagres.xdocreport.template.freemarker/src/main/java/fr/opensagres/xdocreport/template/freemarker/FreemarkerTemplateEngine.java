@@ -176,7 +176,6 @@ public class FreemarkerTemplateEngine extends AbstractTemplateEngine implements
 		} catch (TemplateModelException e) {
 			throw new XDocReportException(e);
 		}
-
 	}
 
 	private void extractVariables(TemplateElement templateElement,

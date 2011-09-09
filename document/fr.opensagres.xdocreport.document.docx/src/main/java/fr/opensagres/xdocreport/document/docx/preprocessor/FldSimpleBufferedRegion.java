@@ -25,6 +25,7 @@
 package fr.opensagres.xdocreport.document.docx.preprocessor;
 
 import fr.opensagres.xdocreport.document.preprocessor.sax.IBufferedRegion;
+import fr.opensagres.xdocreport.document.preprocessor.sax.TransformedBufferedDocumentContentHandler;
 
 /**
  * w:fldSimple with MERGEFIELD type and false otherwise.
@@ -56,8 +57,10 @@ import fr.opensagres.xdocreport.document.preprocessor.sax.IBufferedRegion;
  */
 public class FldSimpleBufferedRegion extends MergefieldBufferedRegion {
 
-	public FldSimpleBufferedRegion(IBufferedRegion parent) {
-		super(parent);
+	public FldSimpleBufferedRegion(
+			TransformedBufferedDocumentContentHandler handler,
+			IBufferedRegion parent) {
+		super(handler, parent);
 	}
 
 	public void setTContent(String tContent) {

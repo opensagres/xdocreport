@@ -22,26 +22,47 @@
  * OF CONTRACT, TORT OR OTHERWISE,  ARISING FROM, OUT OF OR IN CONNECTION
  * WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
-package fr.opensagres.xdocreport.samples.docxandvelocity.model;
+package fr.opensagres.xdocreport.template.freemarker;
 
-public class Project {
+import junit.framework.TestCase;
 
-	private final String name;
-	private String url;
+public class FreemarkerTemplateEngineDocumentFormatterExtractModelTokenPrefixTestCase
+		extends TestCase {
 
-	public Project(String name) {
-		this.name = name;
+	public void test1() throws Exception {
+		FreemarkerDocumentFormatter formatter = new FreemarkerDocumentFormatter();
+		String fieldName = "${developers.name}";
+
+		String token = formatter.extractModelTokenPrefix(fieldName);
+
+		assertEquals("developers", token);
 	}
 
-	public String getName() {
-		return name;
+	public void test2() throws Exception {
+		FreemarkerDocumentFormatter formatter = new FreemarkerDocumentFormatter();
+		String fieldName = "${developers.name";
+
+		String token = formatter.extractModelTokenPrefix(fieldName);
+
+		assertEquals(null, token);
 	}
 	
-	public void setURL(String url) {
-		this.url = url;
+	public void test3() throws Exception {
+		FreemarkerDocumentFormatter formatter = new FreemarkerDocumentFormatter();
+		String fieldName = "${name}";
+
+		String token = formatter.extractModelTokenPrefix(fieldName);
+
+		assertEquals("name", token);
 	}
 
-	public String getURL() {
-		return url;
+	public void test4() throws Exception {
+		FreemarkerDocumentFormatter formatter = new FreemarkerDocumentFormatter();
+		String fieldName = "${developers.roles.name}";
+
+		String token = formatter.extractModelTokenPrefix(fieldName);
+
+		assertEquals("developers.roles", token);
 	}
+
 }

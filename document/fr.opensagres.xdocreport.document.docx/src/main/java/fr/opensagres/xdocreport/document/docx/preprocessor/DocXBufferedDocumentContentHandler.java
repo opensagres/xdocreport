@@ -98,7 +98,7 @@ public class DocXBufferedDocumentContentHandler extends
 
 		if (isR(uri, localName, name) && currentFldSimpleRegion == null) {
 			// w:r element
-			currentRRegion = new RBufferedRegion(currentRegion);
+			currentRRegion = new RBufferedRegion(this, currentRegion);
 			currentRegion = currentRRegion;
 			return super.doStartElement(uri, localName, name, attributes);
 		}
@@ -128,7 +128,7 @@ public class DocXBufferedDocumentContentHandler extends
 			// and ignore element
 			String instrText = processRowIfNeeded(attributes.getValue(W_NS,
 					INSTR_ATTR));
-			currentFldSimpleRegion = new FldSimpleBufferedRegion(currentRegion);
+			currentFldSimpleRegion = new FldSimpleBufferedRegion(this, currentRegion);
 			currentFldSimpleRegion.setInstrText(instrText);
 			boolean addElement = false;
 			if (currentFldSimpleRegion.getFieldName() == null) {
@@ -280,17 +280,20 @@ public class DocXBufferedDocumentContentHandler extends
 	}
 
 	@Override
-	protected void flushCharacters(String characters) {
+	protected void flushCharacters(String characters) {			
 		if (tParsing && currentFldSimpleRegion != null) {
 			// fldSimple mergefield is parsing, replace with field name.
 			currentFldSimpleRegion.setTContent(characters);
+			super.extractListDirectiveInfo(characters);
 			resetCharacters();
 			return;
 		}
 
 		if (currentRRegion != null) {
 			if (instrTextParsing) {
-				currentRRegion.setInstrText(processRowIfNeeded(characters));
+				characters = processRowIfNeeded(characters);
+				currentRRegion.setInstrText(characters);
+				super.extractListDirectiveInfo(characters);
 				resetCharacters();
 				return;
 			} else {

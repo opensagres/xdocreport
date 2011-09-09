@@ -523,7 +523,7 @@ public class DocxPreprocessorImageWithVelocityTestCase extends TestCase {
 						+ "</w:tc>"
 						+ "</w:tr>"
 
-						+ "#foreach( $item_developers in $developers)"
+						+ "#foreach($item_developers in $developers)"
 
 						+ "<w:tr w:rsidR=\"00855D40\" w:rsidTr=\"00855D40\">"
 						+ "<w:tc>"

@@ -26,14 +26,16 @@ package fr.opensagres.xdocreport.document.docx.preprocessor;
 
 import fr.opensagres.xdocreport.document.preprocessor.sax.IBufferedRegion;
 import fr.opensagres.xdocreport.document.preprocessor.sax.StringBufferedRegion;
+import fr.opensagres.xdocreport.document.preprocessor.sax.TransformedBufferedDocumentContentHandler;
 
 public class RBufferedRegion extends MergefieldBufferedRegion {
 
 	private String fldCharType;
 	private StringBufferedRegion tContentRegion = null;
 
-	public RBufferedRegion(IBufferedRegion parent) {
-		super(parent);
+	public RBufferedRegion(TransformedBufferedDocumentContentHandler handler,
+			IBufferedRegion parent) {
+		super(handler, parent);
 	}
 
 	public void setFldCharType(String fldCharType) {
@@ -54,9 +56,10 @@ public class RBufferedRegion extends MergefieldBufferedRegion {
 	}
 
 	@Override
-	public void setInstrText(String instrText) {
-		super.setInstrText(instrText);
+	public String setInstrText(String instrText) {
+		instrText = super.setInstrText(instrText);
 		super.append(instrText);
+		return instrText;
 	}
 
 	public String getTContent() {
@@ -64,6 +67,6 @@ public class RBufferedRegion extends MergefieldBufferedRegion {
 			return null;
 		}
 		return tContentRegion.toString();
-		
+
 	}
 }

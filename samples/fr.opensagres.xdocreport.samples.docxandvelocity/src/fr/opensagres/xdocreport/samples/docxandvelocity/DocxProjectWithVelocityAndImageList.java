@@ -70,6 +70,7 @@ public class DocxProjectWithVelocityAndImageList {
 			// 3) Create context Java model
 			IContext context = report.createContext();
 			Project project = new Project("XDocReport");
+			project.setURL("http://code.google.com/p/xdocreport/");
 			context.put("project", project);
 			IImageProvider logo = new ClassPathImageProvider("logo.png");
 			context.put("logo", logo);

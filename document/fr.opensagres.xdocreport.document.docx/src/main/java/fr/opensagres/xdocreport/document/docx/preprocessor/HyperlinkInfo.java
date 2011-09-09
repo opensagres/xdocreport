@@ -24,6 +24,10 @@
  */
 package fr.opensagres.xdocreport.document.docx.preprocessor;
 
+/**
+ * Information about Hyperlink
+ *
+ */
 public class HyperlinkInfo {
 
 	public static final String KEY = HyperlinkInfo.class.getName();

@@ -192,7 +192,7 @@ public abstract class TransformedBufferedDocumentContentHandler extends
 	public Map<String, Object> getSharedContext() {
 		return sharedContext;
 	}
-	
+
 	public boolean hasSharedContext() {
 		return sharedContext != null;
 	}
@@ -233,11 +233,13 @@ public abstract class TransformedBufferedDocumentContentHandler extends
 		return fieldsMetadata.getAfterRowToken();
 	}
 
-	public int extractListDirectiveInfo(String characters, boolean dontRemoveListDirectiveInfo) {
+	public int extractListDirectiveInfo(String characters,
+			boolean dontRemoveListDirectiveInfo) {
 		if (formatter == null || characters == null) {
 			return 0;
 		}
-		return formatter.extractListDirectiveInfo(characters, getDirectives());
+		return formatter.extractListDirectiveInfo(characters, getDirectives(),
+				dontRemoveListDirectiveInfo);
 	}
 
 	/**

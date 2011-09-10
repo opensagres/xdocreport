@@ -66,7 +66,7 @@ public abstract class AbstractDocumentFormatter implements IDocumentFormatter {
 
 	public int extractListDirectiveInfo(String content,
 			Stack<LoopDirective> directives) {
-		return extractListDirectiveInfo(content, directives, true);
+		return extractListDirectiveInfo(content, directives, false);
 	}
 
 	protected abstract String getItemToken();

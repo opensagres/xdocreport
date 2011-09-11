@@ -24,12 +24,15 @@
  */
 package fr.opensagres.xdocreport.template.formatter;
 
+import java.util.Stack;
+
 public abstract class AbstractDocumentFormatter implements IDocumentFormatter {
 
 	private String startDocumentDirective;
 	private String endDocumentDirective;
 
-	public String extractItemNameList(String content, String fieldName, boolean forceAsField) {
+	public String extractItemNameList(String content, String fieldName,
+			boolean forceAsField) {
 		if (!forceAsField && !isModelField(content, fieldName)) {
 			return null;
 		}
@@ -60,8 +63,14 @@ public abstract class AbstractDocumentFormatter implements IDocumentFormatter {
 		return getStartLoopDirective(itemNameList,
 				itemNameList.substring(getItemToken().length()));
 	}
-	
+
+	public int extractListDirectiveInfo(String content,
+			Stack<LoopDirective> directives) {
+		return extractListDirectiveInfo(content, directives, false);
+	}
+
 	protected abstract String getItemToken();
 
 	protected abstract boolean isModelField(String content, String fieldName);
+
 }

@@ -200,7 +200,7 @@ public class ODTPreprocessorImageWithVelocityTestCase extends TestCase {
 						+ "</table:table-cell>"
 						+ "</table:table-row>"
 
-						+ "#foreach( $item_developers in $developers)"
+						+ "#foreach($item_developers in $developers)"
 												
 						+ "<table:table-row table:style-name=\"Tableau1.1\">"
 						+ "<table:table-cell table:style-name=\"Tableau1.A2\" office:value-type=\"string\">"

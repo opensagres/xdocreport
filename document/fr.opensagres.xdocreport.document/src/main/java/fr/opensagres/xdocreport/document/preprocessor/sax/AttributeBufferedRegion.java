@@ -31,18 +31,16 @@ import java.io.Writer;
  * Attribute buffered region used to manage XML dynamic attribute.
  * 
  */
-public class AttributeBufferedRegion implements IBufferedRegion {
+public class AttributeBufferedRegion extends BufferedRegionAdpater {
 
-	private final IBufferedRegion parent;
 	private final String name;
 	private String value;
 
 	public AttributeBufferedRegion(IBufferedRegion parent, String name,
 			String value) {
-		this.parent = parent;
+		super(parent);
 		this.name = name;
 		this.value = value;
-		parent.addRegion(this);
 	}
 
 	public void setValue(String value) {
@@ -57,10 +55,7 @@ public class AttributeBufferedRegion implements IBufferedRegion {
 		return value;
 	}
 
-	public boolean isString() {
-		return false;
-	}
-
+	@Override
 	public void save(Writer writer) throws IOException {
 		writer.write(' ');
 		writer.write(name);
@@ -69,23 +64,4 @@ public class AttributeBufferedRegion implements IBufferedRegion {
 		writer.write("\"");
 	}
 
-	public void append(String content) {
-		// Do Nothing
-	}
-
-	public void append(char[] ch, int start, int length) {
-		// Do Nothing
-	}
-
-	public void append(char c) {
-		// Do Nothing
-	}
-
-	public void addRegion(IBufferedRegion region) {
-		// Do Nothing
-	}
-
-	public IBufferedRegion getParent() {
-		return parent;
-	}
 }

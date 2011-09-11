@@ -24,6 +24,8 @@
  */
 package fr.opensagres.xdocreport.template.formatter;
 
+import java.util.Stack;
+
 public interface IDocumentFormatter {
 
 	String IMAGE_REGISTRY_KEY = "imageRegistry";
@@ -32,26 +34,35 @@ public interface IDocumentFormatter {
 
 	String getEndDocumentDirective();
 
-	String formatAsFieldItemList(String content, String fieldName, boolean forceAsField);
+	String formatAsFieldItemList(String content, String fieldName,
+			boolean forceAsField);
 
-	String extractItemNameList(String content, String fieldName, boolean forceAsField);
+	String extractItemNameList(String content, String fieldName,
+			boolean forceAsField);
 
 	String getStartLoopDirective(String itemNameList);
 
-	String getStartLoopDirective(String itemNameList,
-			String listName);
-	
+	String getStartLoopDirective(String itemNameList, String listName);
+
 	String getEndLoopDirective(String itemNameList);
 
 	String getLoopCountDirective(String fieldName);
-	
+
 	String getStartIfDirective(String fieldName);
-	
+
 	String getEndIfDirective(String fieldName);
-	
+
 	String formatAsSimpleField(boolean encloseInDirective, String... fields);
-	
+
 	String getImageDirective(String fieldName);
 
+	boolean containsInterpolation(String content);
 
+	int extractListDirectiveInfo(String content,
+			Stack<LoopDirective> directives);
+	
+	int extractListDirectiveInfo(String content,
+			Stack<LoopDirective> directives, boolean dontRemoveListDirectiveInfo);
+
+	String extractModelTokenPrefix(String newContent);
 }

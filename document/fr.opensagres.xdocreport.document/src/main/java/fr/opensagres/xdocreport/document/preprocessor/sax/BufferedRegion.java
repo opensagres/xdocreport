@@ -31,29 +31,27 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Base Buffered region.
+ * Buffered region.
  * 
  */
-public class BufferedRegion implements IBufferedRegion {
+public class BufferedRegion extends BufferedRegionAdpater {
 
 	protected final List<IBufferedRegion> regions = new ArrayList<IBufferedRegion>();
 
 	private IBufferedRegion currentRegion;
-	private final IBufferedRegion parent;
 
 	public BufferedRegion(IBufferedRegion parent) {
-		this.parent = parent;
-		if (parent != null) {
-			parent.addRegion(this);
-		}
+		super(parent);
 	}
 
+	@Override
 	public void save(Writer writer) throws IOException {
 		for (IBufferedRegion region : regions) {
 			region.save(writer);
 		}
 	}
 
+	@Override
 	public void addRegion(IBufferedRegion region) {
 		currentRegion = region;
 		regions.add(region);
@@ -67,18 +65,22 @@ public class BufferedRegion implements IBufferedRegion {
 		return currentRegion;
 	}
 
+	@Override
 	public void append(String content) {
 		getStringBufferedRegion().append(content);
 	}
 
+	@Override
 	public void append(char c) {
 		getStringBufferedRegion().append(c);
 	}
 
+	@Override
 	public boolean isString() {
 		return false;
 	}
 
+	@Override
 	public void append(char[] ch, int start, int length) {
 		getStringBufferedRegion().append(ch, start, length);
 	}
@@ -101,7 +103,7 @@ public class BufferedRegion implements IBufferedRegion {
 		return writer.toString();
 	}
 
-	public IBufferedRegion getParent() {
-		return parent;
+	public void reset() {
+		regions.clear();
 	}
 }

@@ -34,6 +34,7 @@ import org.xml.sax.SAXException;
 import fr.opensagres.xdocreport.core.utils.StringUtils;
 import fr.opensagres.xdocreport.template.formatter.FieldsMetadata;
 import fr.opensagres.xdocreport.template.formatter.IDocumentFormatter;
+import fr.opensagres.xdocreport.template.formatter.LoopDirective;
 
 /**
  * Document transformed to manage lazy loop for row table and dynamic image.
@@ -45,10 +46,11 @@ public abstract class TransformedBufferedDocumentContentHandler extends
 	private final FieldsMetadata fieldsMetadata;
 	private final IDocumentFormatter formatter;
 	private final Map<String, Object> sharedContext;
+	private final Stack<LoopDirective> directives;
 
 	// Table stack
 	private final Stack<TableBufferedRegion> tableStack = new Stack<TableBufferedRegion>();
-	private RowBufferedRegion currentRow;
+	protected RowBufferedRegion currentRow;
 
 	protected TransformedBufferedDocumentContentHandler(
 			FieldsMetadata fieldsMetadata, IDocumentFormatter formater,
@@ -56,6 +58,7 @@ public abstract class TransformedBufferedDocumentContentHandler extends
 		this.fieldsMetadata = fieldsMetadata;
 		this.formatter = formater;
 		this.sharedContext = sharedContext;
+		this.directives = new Stack<LoopDirective>();
 	}
 
 	@Override
@@ -190,12 +193,53 @@ public abstract class TransformedBufferedDocumentContentHandler extends
 		return sharedContext;
 	}
 
+	public boolean hasSharedContext() {
+		return sharedContext != null;
+	}
+
 	public FieldsMetadata getFieldsMetadata() {
 		return fieldsMetadata;
 	}
 
 	public IDocumentFormatter getFormatter() {
 		return formatter;
+	}
+
+	public Stack<LoopDirective> getDirectives() {
+		return directives;
+	}
+
+	/**
+	 * Returns the before row token.
+	 * 
+	 * @return
+	 */
+	protected String getBeforeRowToken() {
+		if (fieldsMetadata == null) {
+			return FieldsMetadata.DEFAULT_BEFORE_ROW_TOKEN;
+		}
+		return fieldsMetadata.getBeforeRowToken();
+	}
+
+	/**
+	 * Returns the after row token.
+	 * 
+	 * @return
+	 */
+	protected String getAfterRowToken() {
+		if (fieldsMetadata == null) {
+			return FieldsMetadata.DEFAULT_AFTER_ROW_TOKEN;
+		}
+		return fieldsMetadata.getAfterRowToken();
+	}
+
+	public int extractListDirectiveInfo(String characters,
+			boolean dontRemoveListDirectiveInfo) {
+		if (formatter == null || characters == null) {
+			return 0;
+		}
+		return formatter.extractListDirectiveInfo(characters, getDirectives(),
+				dontRemoveListDirectiveInfo);
 	}
 
 	/**

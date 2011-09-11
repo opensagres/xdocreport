@@ -24,8 +24,11 @@
  */
 package fr.opensagres.xdocreport.template.velocity;
 
+import java.util.Stack;
+
 import fr.opensagres.xdocreport.core.utils.StringUtils;
 import fr.opensagres.xdocreport.template.formatter.AbstractDocumentFormatter;
+import fr.opensagres.xdocreport.template.formatter.LoopDirective;
 
 /**
  * Velocity document formatter used to format fields list with Velocity syntax.
@@ -36,7 +39,7 @@ public class VelocityDocumentFormatter extends AbstractDocumentFormatter {
 	protected static final String ITEM_TOKEN = "$item_";
 	protected static final String ITEM_TOKEN_OPEN_BRACKET = "${item_";
 
-	private static final String START_FOREACH_DIRECTIVE = "#foreach( ";
+	private static final String START_FOREACH_DIRECTIVE = "#foreach(";
 	private static final String IN_DIRECTIVE = " in ";
 	private static final String END_FOREACH_DIRECTIVE = "#end";
 	private static final String DOLLAR_TOTKEN = "$";
@@ -52,6 +55,8 @@ public class VelocityDocumentFormatter extends AbstractDocumentFormatter {
 
 	private static final String START_IF = "#if( ";
 	private static final String END_IF = "#end";
+
+	private static final String VELOCITY_COUNT = "$velocityCount";
 
 	public String formatAsFieldItemList(String content, String fieldName,
 			boolean forceAsField) {
@@ -175,8 +180,140 @@ public class VelocityDocumentFormatter extends AbstractDocumentFormatter {
 	public String getEndIfDirective(String fieldName) {
 		return END_IF;
 	}
-	
-	public String getLoopCountDirective(String fieldName) {		
-		return "$velocityCount";
+
+	public String getLoopCountDirective(String fieldName) {
+		return VELOCITY_COUNT;
+	}
+
+	public boolean containsInterpolation(String content) {
+		if (StringUtils.isEmpty(content)) {
+			return false;
+		}
+		int dollarIndex = content.indexOf(DOLLAR_TOTKEN);
+		if (dollarIndex == -1) {
+			// Not included to FM directive
+			return false;
+		}
+		return true;
+	}
+
+	public int extractListDirectiveInfo(String content,
+			Stack<LoopDirective> directives, boolean dontRemoveListDirectiveInfo) {
+		// content='xxxx#foreach($d in $developers)yyy'
+		int startOfEndListDirectiveIndex = content
+				.indexOf(END_FOREACH_DIRECTIVE);
+		int startOfStartListDirectiveIndex = content
+				.indexOf(START_FOREACH_DIRECTIVE);
+		if (startOfStartListDirectiveIndex == -1
+				&& startOfEndListDirectiveIndex == -1) {
+			return 0;
+		}
+
+		if (startOfStartListDirectiveIndex == -1
+				|| (startOfEndListDirectiveIndex != -1 && startOfStartListDirectiveIndex > startOfEndListDirectiveIndex)) {
+			// content contains (at first #end)
+			if (!dontRemoveListDirectiveInfo && !directives.isEmpty()) {
+				// remove the LoopDirective from the stack
+				directives.pop();
+			}
+			// get content after the #end
+			String afterEndList = content.substring(
+					END_FOREACH_DIRECTIVE.length()
+							+ startOfEndListDirectiveIndex, content.length());
+			int nbLoop = -1;
+			// parse the content after the #end
+			nbLoop += extractListDirectiveInfo(afterEndList, directives);
+			return nbLoop;
+		}
+
+		// contentWichStartsWithList='#foreach($d in $developers)yyy'
+		String contentWhichStartsWithList = content.substring(
+				startOfStartListDirectiveIndex, content.length());
+		int endOfStartListDirectiveIndex = contentWhichStartsWithList
+				.indexOf(')');
+		if (endOfStartListDirectiveIndex == -1) {
+			// [#list not closed with ')'
+			return 0;
+		}
+		// startLoopDirective='#foreach($d in $developers)'
+		String startLoopDirective = contentWhichStartsWithList.substring(0,
+				endOfStartListDirectiveIndex + 1);
+		// insideLoop='developers as d]'
+		String insideLoop = startLoopDirective.substring(
+				START_FOREACH_DIRECTIVE.length(), startLoopDirective.length());
+		int indexBeforeIn = insideLoop.indexOf(" ");
+		if (indexBeforeIn == -1) {
+			return 0;
+		}
+
+		// afterItem=' in $developers]'
+		String afterItem = insideLoop.substring(indexBeforeIn,
+				insideLoop.length());
+		int indexAfterIn = afterItem.indexOf(IN_DIRECTIVE);
+		if (indexAfterIn == -1) {
+			return 0;
+		}
+
+		// item='$d'
+		String item = insideLoop.substring(0, indexBeforeIn).trim();
+		// remove $
+		// item='d'
+		if (item.startsWith(DOLLAR_TOTKEN)) {
+			item = item.substring(1, item.length());
+		}
+		if (StringUtils.isEmpty(item)) {
+			return 0;
+		}
+		// afterIn='$developers)'
+		String afterIn = afterItem.substring(IN_DIRECTIVE.length(),
+				afterItem.length());
+		int endListIndex = afterIn.indexOf(')');
+		if (endListIndex == -1) {
+			return 0;
+		}
+		// sequence='$developers'
+		String sequence = afterIn.substring(0, endListIndex).trim();
+		// remove $
+		// item='d'
+		if (sequence.startsWith(DOLLAR_TOTKEN)) {
+			sequence = sequence.substring(1, sequence.length());
+		}
+		if (StringUtils.isEmpty(sequence)) {
+			return 0;
+		}
+
+		int nbLoop = 1;
+		directives.push(new LoopDirective(startLoopDirective,
+				getEndLoopDirective(null), sequence, item));
+
+		// afterList = 'yyy'
+		String afterList = content.substring(startOfStartListDirectiveIndex
+				+ startLoopDirective.length(), content.length());
+		nbLoop += extractListDirectiveInfo(afterList, directives);
+		return nbLoop;
+	}
+
+	public String extractModelTokenPrefix(String fieldName) {
+		// fieldName = '$developers.Name'
+		if (fieldName == null) {
+			return null;
+		}
+		int dollarIndex = fieldName.indexOf(DOLLAR_TOTKEN);
+		if (dollarIndex == -1) {
+			return null;
+		}
+		int endIndex = fieldName.indexOf(' ');
+		if (endIndex != -1) {
+			fieldName = fieldName.substring(0, fieldName.length());
+		}
+		// fieldNameWithoutDollar='developers.Name'
+		String fieldNameWithoutDollar = fieldName.substring(dollarIndex
+				+ DOLLAR_TOTKEN.length(), fieldName.length());
+		int lastDotIndex = fieldNameWithoutDollar.lastIndexOf('.');
+		if (lastDotIndex == -1) {
+			return fieldNameWithoutDollar;
+		}
+		// fieldNameWithoutDollar='developers'
+		return fieldNameWithoutDollar.substring(0, lastDotIndex);
 	}
 }

@@ -28,14 +28,15 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Stack;
 
 import fr.opensagres.xdocreport.document.preprocessor.sax.AttributeBufferedRegion;
 import fr.opensagres.xdocreport.document.preprocessor.sax.BufferedRegion;
 import fr.opensagres.xdocreport.document.preprocessor.sax.IBufferedRegion;
 import fr.opensagres.xdocreport.document.preprocessor.sax.ProcessRowResult;
 import fr.opensagres.xdocreport.document.preprocessor.sax.TransformedBufferedDocumentContentHandler;
-import fr.opensagres.xdocreport.template.formatter.FieldsMetadata;
 import fr.opensagres.xdocreport.template.formatter.IDocumentFormatter;
+import fr.opensagres.xdocreport.template.formatter.LoopDirective;
 
 /**
  * <pre>
@@ -64,14 +65,12 @@ public class HyperlinkBufferedRegion extends BufferedRegion {
 	private final TransformedBufferedDocumentContentHandler handler;
 	private List<RBufferedRegion> rBufferedRegions = new ArrayList<RBufferedRegion>();
 	private AttributeBufferedRegion idAttribute;
-	private final boolean hasContext;
 
 	public HyperlinkBufferedRegion(
 			TransformedBufferedDocumentContentHandler handler,
 			IBufferedRegion parent) {
 		super(parent);
 		this.handler = handler;
-		hasContext = handler.getSharedContext() != null;
 	}
 
 	@Override
@@ -83,11 +82,62 @@ public class HyperlinkBufferedRegion extends BufferedRegion {
 	}
 
 	public void process() {
-		FieldsMetadata fieldsMetadata = handler.getFieldsMetadata();
 		IDocumentFormatter formatter = handler.getFormatter();
-		if (fieldsMetadata == null || formatter == null) {
+		if (formatter == null) {
 			return;
 		}
+		// Concat all w:t text node
+		String content = getAllTContent();
+		ProcessRowResult result = handler.getProcessRowResult(content, false);
+		String newContent = result.getContent();
+		if (newContent != null) {
+			if (result.getFieldName() != null) {
+				// Hyperlink is in a Table and hyperlink is a list (see
+				// FieldsMetadata), transform it.
+
+				// 1) Modify w:t
+				modifyTContents(newContent);
+				// 2) Populate HyperlinkInfo if needed
+				if (handler.hasSharedContext()) {
+					String item = result.getItemNameList();
+					populateHyperlinkInfo(formatter, item,
+							result.getStartLoopDirective(),
+							result.getEndLoopDirective());
+				}
+			} else {
+				if (formatter.containsInterpolation(newContent)) {
+					// the new content contains fields which are interpolation
+					// (ex:${developer.name}
+
+					// 1) Modify w:t
+					modifyTContents(newContent);
+					if (handler.hasSharedContext()) {
+
+						// 2) Populate HyperlinkInfo if needed
+						Stack<LoopDirective> directives = handler
+								.getDirectives();
+						if (!directives.isEmpty()) {
+							LoopDirective directive = directives.peek();
+
+							String item = formatter
+									.extractModelTokenPrefix(newContent);
+							if (item.equals(directive.getItem())) {
+								String startLoopDirective = directive
+										.getStartLoopDirective();
+								String endLoopDirective = directive
+										.getEndLoopDirective();
+								populateHyperlinkInfo(formatter, item,
+										startLoopDirective, endLoopDirective);
+							}
+						}
+					}
+				}
+			}
+		}
+
+	}
+
+	private String getAllTContent() {
 		StringBuilder t = new StringBuilder();
 		for (RBufferedRegion r : rBufferedRegions) {
 			String c = r.getTContent();
@@ -95,45 +145,37 @@ public class HyperlinkBufferedRegion extends BufferedRegion {
 				t.append(c);
 			}
 		}
-		String content = t.toString();
+		return t.toString();
+	}
 
-		// If hyperlink is in a Table and hyperlink is a list (see
-		// FieldsMetadata), transform it.
-		ProcessRowResult result = handler.getProcessRowResult(content, false);
-		String newContent = result.getContent();
-		if (newContent != null && result.getFieldName() != null) {
+	private void populateHyperlinkInfo(IDocumentFormatter formatter,
+			String item, String startLoopDirective, String endLoopDirective) {
 
-			// Modify w:t
-			for (int i = 0; i < rBufferedRegions.size(); i++) {
-				if (i == rBufferedRegions.size() - 1) {
-					rBufferedRegions.get(i).setTContent(newContent);
-				} else {
-					rBufferedRegions.get(i).setTContent("");
-				}
-			}
+		String loopCount = formatter.getLoopCountDirective(item);
+		String hyperlinkId = idAttribute.getValue();
+		String scriptHyperlinkId = hyperlinkId + "_" + loopCount;
+		idAttribute.setValue(scriptHyperlinkId);
 
-			// Modify id attribute
-			if (hasContext) {
-				String loopCount = formatter.getLoopCountDirective(result
-						.getItemNameList());
-				String hyperlinkId = idAttribute.getValue();
-				String scriptHyperlinkId = hyperlinkId + "_" + loopCount;
-				idAttribute.setValue(scriptHyperlinkId);
+		// Add hyperlink info in the shared context
+		HyperlinkInfo hyperlink = new HyperlinkInfo(hyperlinkId,
+				scriptHyperlinkId, startLoopDirective, endLoopDirective);
+		Map<String, HyperlinkInfo> hyperlinks = (Map<String, HyperlinkInfo>) handler
+				.getSharedContext().get(HyperlinkInfo.KEY);
+		if (hyperlinks == null) {
+			hyperlinks = new HashMap<String, HyperlinkInfo>();
+			handler.getSharedContext().put(HyperlinkInfo.KEY, hyperlinks);
+		}
+		hyperlinks.put(hyperlinkId, hyperlink);
+	}
 
-				// Add hyperlink info in the shared context
-				HyperlinkInfo hyperlink = new HyperlinkInfo(hyperlinkId,
-						scriptHyperlinkId, result.getStartLoopDirective(),
-						result.getEndLoopDirective());
-				Map<String, HyperlinkInfo> hyperlinks = (Map<String, HyperlinkInfo>) handler
-						.getSharedContext().get(HyperlinkInfo.KEY);
-				if (hyperlinks == null) {
-					hyperlinks = new HashMap<String, HyperlinkInfo>();
-					handler.getSharedContext().put(HyperlinkInfo.KEY, hyperlinks);
-				}
-				hyperlinks.put(hyperlinkId, hyperlink);
+	private void modifyTContents(String newContent) {
+		for (int i = 0; i < rBufferedRegions.size(); i++) {
+			if (i == rBufferedRegions.size() - 1) {
+				rBufferedRegions.get(i).setTContent(newContent);
+			} else {
+				rBufferedRegions.get(i).setTContent("");
 			}
 		}
-
 	}
 
 	public void setId(String name, String value) {

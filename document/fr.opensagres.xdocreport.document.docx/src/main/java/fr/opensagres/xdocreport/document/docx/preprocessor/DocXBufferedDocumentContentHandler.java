@@ -61,6 +61,7 @@ public class DocXBufferedDocumentContentHandler extends
 	private FldSimpleBufferedRegion currentFldSimpleRegion = null;
 	private boolean instrTextParsing;
 	private boolean tParsing = false;
+	private int nbLoopDirectiveToRemove = 0;
 
 	private BookmarkBufferedRegion currentBookmark;
 
@@ -98,7 +99,7 @@ public class DocXBufferedDocumentContentHandler extends
 
 		if (isR(uri, localName, name) && currentFldSimpleRegion == null) {
 			// w:r element
-			currentRRegion = new RBufferedRegion(currentRegion);
+			currentRRegion = new RBufferedRegion(this, currentRegion);
 			currentRegion = currentRRegion;
 			return super.doStartElement(uri, localName, name, attributes);
 		}
@@ -128,7 +129,8 @@ public class DocXBufferedDocumentContentHandler extends
 			// and ignore element
 			String instrText = processRowIfNeeded(attributes.getValue(W_NS,
 					INSTR_ATTR));
-			currentFldSimpleRegion = new FldSimpleBufferedRegion(currentRegion);
+			currentFldSimpleRegion = new FldSimpleBufferedRegion(this,
+					currentRegion);
 			currentFldSimpleRegion.setInstrText(instrText);
 			boolean addElement = false;
 			if (currentFldSimpleRegion.getFieldName() == null) {
@@ -239,8 +241,29 @@ public class DocXBufferedDocumentContentHandler extends
 
 		if (isFldSimple(uri, localName, name) && currentFldSimpleRegion != null) {
 			// it's end of fldSimple and it's Mergefield; ignore the element
-			if (currentFldSimpleRegion.getFieldName() == null) {
+			String fieldName = currentFldSimpleRegion.getFieldName();
+			if (fieldName == null) {
 				super.doEndElement(uri, localName, name);
+			} else {
+				if (currentRow != null) {
+					String beforeRowToken = getBeforeRowToken();
+					if (fieldName.startsWith(beforeRowToken)) {
+						// @before-row
+						String startLoopDirective = fieldName.substring(
+								beforeRowToken.length(), fieldName.length());
+						currentRow.setStartLoopDirective(startLoopDirective);
+						currentFldSimpleRegion.reset();
+					} else {
+						String afterRowToken = getAfterRowToken();
+						if (fieldName.startsWith(afterRowToken)) {
+							// @after-row
+							String endLoopDirective = fieldName.substring(
+									afterRowToken.length(), fieldName.length());
+							currentRow.setEndLoopDirective(endLoopDirective);
+							currentFldSimpleRegion.reset();
+						}
+					}
+				}
 			}
 			currentRegion = currentFldSimpleRegion.getParent();
 			currentFldSimpleRegion = null;
@@ -255,6 +278,18 @@ public class DocXBufferedDocumentContentHandler extends
 			currentRegion = hyperlink.getParent();
 			return;
 		}
+		if (isRow(uri, localName, name)) {
+			// remove list directive if needed
+			if (nbLoopDirectiveToRemove > 0) {
+				for (int i = 0; i < nbLoopDirectiveToRemove; i++) {
+					if (!getDirectives().isEmpty()) {
+						getDirectives().pop();
+
+					}
+				}
+				nbLoopDirectiveToRemove = 0;
+			}
+		}
 		super.doEndElement(uri, localName, name);
 	}
 
@@ -263,13 +298,16 @@ public class DocXBufferedDocumentContentHandler extends
 		if (tParsing && currentFldSimpleRegion != null) {
 			// fldSimple mergefield is parsing, replace with field name.
 			currentFldSimpleRegion.setTContent(characters);
+			extractListDirectiveInfo(currentFldSimpleRegion);			
 			resetCharacters();
 			return;
 		}
 
 		if (currentRRegion != null) {
 			if (instrTextParsing) {
-				currentRRegion.setInstrText(processRowIfNeeded(characters));
+				characters = processRowIfNeeded(characters);
+				currentRRegion.setInstrText(characters);
+				extractListDirectiveInfo(currentRRegion);
 				resetCharacters();
 				return;
 			} else {
@@ -282,5 +320,14 @@ public class DocXBufferedDocumentContentHandler extends
 		}
 
 		super.flushCharacters(characters);
+	}
+
+	private void extractListDirectiveInfo(MergefieldBufferedRegion mergefield) {
+		int i = super.extractListDirectiveInfo(
+				mergefield.getFieldName(),
+				currentRow != null);
+		if (i < 0) {
+			nbLoopDirectiveToRemove += -i;
+		}
 	}
 }

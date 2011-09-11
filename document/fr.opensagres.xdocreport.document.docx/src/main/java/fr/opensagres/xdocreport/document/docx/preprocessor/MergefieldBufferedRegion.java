@@ -28,25 +28,76 @@ import fr.opensagres.xdocreport.core.EncodingConstants;
 import fr.opensagres.xdocreport.core.utils.StringUtils;
 import fr.opensagres.xdocreport.document.preprocessor.sax.BufferedRegion;
 import fr.opensagres.xdocreport.document.preprocessor.sax.IBufferedRegion;
+import fr.opensagres.xdocreport.document.preprocessor.sax.TransformedBufferedDocumentContentHandler;
+import fr.opensagres.xdocreport.template.formatter.IDocumentFormatter;
 
-public abstract class MergefieldBufferedRegion extends BufferedRegion implements EncodingConstants {
+public abstract class MergefieldBufferedRegion extends BufferedRegion implements
+		EncodingConstants {
 
 	private static final String MERGEFORMAT = "\\* MERGEFORMAT";
 
 	private static final String MERGEFIELD_FIELD_TYPE = "MERGEFIELD";
+	private static final String HYPERLINK_FIELD_TYPE = "HYPERLINK";
 
+	private final TransformedBufferedDocumentContentHandler handler;
 	private String fieldName;
 
-	public MergefieldBufferedRegion(IBufferedRegion parent) {
+	public MergefieldBufferedRegion(
+			TransformedBufferedDocumentContentHandler handler,
+			IBufferedRegion parent) {
 		super(parent);
+		this.handler = handler;
 	}
 
 	public String getFieldName() {
 		return fieldName;
 	}
 
-	public void setInstrText(String instrText) {
+	public String setInstrText(String instrText) {
+		// compute field name if it's MERGEFIELD
 		this.fieldName = getFieldName(instrText);
+		if (fieldName == null) {
+			// Not a MERGEFIELD, instrText must be decoded if it's an HYPERLINK
+			// and field is an interpolation
+			// ex : HYPERLINK "mailto:$%7bdeveloper.mail%7d"
+			// must be modified to
+			// ex : HYPERLINK "mailto:${developer.mail}"
+			return decodeInstrTextIfNeeded(instrText);
+		}
+		return instrText;
+	}
+
+	private String decodeInstrTextIfNeeded(String instrText) {
+		// It's not a mergefield.
+		IDocumentFormatter formatter = handler.getFormatter();
+		if (formatter == null) {
+			return instrText;
+		}
+		// Test if it's HYPERLINK
+		// ex : HYPERLINK "mailto:$%7bdeveloper.mail%7d"
+		int index = instrText.indexOf(HYPERLINK_FIELD_TYPE);
+		if (index != -1) {
+			// It's HYPERLINK, remove HYPERLINK prefix
+			// ex : "mailto:$%7bdeveloper.mail%7d"
+			String fieldName = instrText.substring(
+					index + HYPERLINK_FIELD_TYPE.length(), instrText.length())
+					.trim();
+			if (StringUtils.isNotEmpty(fieldName)) {
+				// remove double quote
+				// ex : mailto:$%7bdeveloper.mail%7d
+				if (fieldName.startsWith("\"") && fieldName.endsWith("\"")) {
+					fieldName = fieldName.substring(1, fieldName.length() - 1);
+				}
+				// decode it
+				// ex : mailto:${developer.mail}
+				fieldName = StringUtils.decode(fieldName);
+				if (formatter.containsInterpolation(fieldName)) {
+					// It's an interpolation, returns the decoded field
+					return StringUtils.decode(instrText);
+				}
+			}
+		}
+		return instrText;
 	}
 
 	public static String getFieldName(String instrText) {
@@ -75,12 +126,14 @@ public abstract class MergefieldBufferedRegion extends BufferedRegion implements
 						fieldName = fieldName.substring(1,
 								fieldName.length() - 1);
 					}
-					// Fix bug http://code.google.com/p/xdocreport/issues/detail?id=29
+					// Fix bug
+					// http://code.google.com/p/xdocreport/issues/detail?id=29
 					// Replace \" with "
 					// ex : remplace [#if \"a\" = \"one\"]1[#else]not 1[/#if]
 					// to have [#if "a" = "one"]1[#else]not 1[/#if]
 					fieldName = StringUtils.replaceAll(fieldName, "\\\"", "\"");
-					// ex : remplace [#if &apos;a&apos; = \"one\"]1[#else]not 1[/#if]
+					// ex : remplace [#if &apos;a&apos; = \"one\"]1[#else]not
+					// 1[/#if]
 					// to have [#if 'a' = "one"]1[#else]not 1[/#if]
 					fieldName = StringUtils.replaceAll(fieldName, APOS, "'");
 					return fieldName;

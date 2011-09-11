@@ -29,6 +29,7 @@ import java.util.Map;
 
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
+import org.xml.sax.helpers.AttributesImpl;
 
 import fr.opensagres.xdocreport.core.utils.StringUtils;
 import fr.opensagres.xdocreport.document.docx.DocXConstants;
@@ -114,37 +115,70 @@ public class DocxDocumentXMLRelsDocumentContentHandler extends
 		if (RELATIONSHIP_ELT.equals(name)) {
 			String type = attributes.getValue(RELATIONSHIP_TYPE_ATTR);
 			if (RELATIONSHIPS_HYPERLINK_NS.equals(type)) {
-				Map<String, HyperlinkInfo> hyperlinks = (Map<String, HyperlinkInfo>) context
-						.get(HyperlinkInfo.KEY);
-				if (hyperlinks != null) {
-					String target = StringUtils.decode(attributes
-							.getValue(RELATIONSHIP_TARGET_ATTR));
-
-					Collection<String> fieldsAsList = fieldsMetadata
-							.getFieldsAsList();
-					for (final String fieldName : fieldsAsList) {
-						if (target.contains(fieldName)) {
-							String newContent = formatter
-									.formatAsFieldItemList(target, fieldName,
-											false);
-							if (newContent != null) {
-								target = newContent;
-								break;
-							}
-						}
-					}
-
-					String hyperlinkId = attributes
-							.getValue(RELATIONSHIP_ID_ATTR);
-					HyperlinkInfo info = hyperlinks.get(hyperlinkId);
-					if (info != null) {
-						generateScriptsForDynamicHyperlink(info, target);
-					}
+				// try process hyperlink as list field
+				if (!processHyperlinkFromHyperlinkInfo(attributes)) {
+					// process hyperlink as simple field
+					// Hyperlink attribute is encoded, decode it and check if
+					// there is interpolation.
+					attributes = processHyperlinkFieldsFromInterpolation(attributes);
 				}
 			}
 
 		}
 		return super.doStartElement(uri, localName, name, attributes);
+	}
+
+	private boolean processHyperlinkFromHyperlinkInfo(Attributes attributes) {
+		Map<String, HyperlinkInfo> hyperlinks = (Map<String, HyperlinkInfo>) context
+				.get(HyperlinkInfo.KEY);
+		if (hyperlinks != null) {
+			String target = StringUtils.decode(attributes
+					.getValue(RELATIONSHIP_TARGET_ATTR));
+			target = formatIfNeeded(target);
+			String hyperlinkId = attributes.getValue(RELATIONSHIP_ID_ATTR);
+			HyperlinkInfo info = hyperlinks.get(hyperlinkId);
+			if (info != null) {
+				generateScriptsForDynamicHyperlink(info, target);
+				return true;
+			}
+		}
+		return false;
+	}
+
+	private String formatIfNeeded(String target) {
+		if (fieldsMetadata == null) {
+			return target;
+		}
+		Collection<String> fieldsAsList = fieldsMetadata.getFieldsAsList();
+		for (final String fieldName : fieldsAsList) {
+			if (target.contains(fieldName)) {
+				String newContent = formatter.formatAsFieldItemList(target,
+						fieldName, false);
+				if (newContent != null) {
+					target = newContent;
+					break;
+				}
+			}
+		}
+		return target;
+	}
+
+	private Attributes processHyperlinkFieldsFromInterpolation(
+			Attributes attributes) {
+		String newTarget = StringUtils.decode(attributes
+				.getValue(RELATIONSHIP_TARGET_ATTR));
+		if (formatter.containsInterpolation(newTarget)) {
+			newTarget = formatIfNeeded(newTarget);
+			// attribute contains interpolation (ex:
+			// Target="mailto:$%7bdeveloper.mail%7d" )
+			// this attribute must be decoded (ex:
+			// Target="mailto:${developer.mail}" )
+			AttributesImpl attr = toAttributesImpl(attributes);
+			int index = attr.getIndex(RELATIONSHIP_TARGET_ATTR);
+			attr.setValue(index, newTarget);
+			return attr;
+		}
+		return attributes;
 	}
 
 	@Override
@@ -210,34 +244,6 @@ public class DocxDocumentXMLRelsDocumentContentHandler extends
 		// 3) end loop
 		script.append(formatter.getEndLoopDirective(itemListInfos));
 	}
-
-	// private void generateScriptsForDynamicHyperlinks(StringBuilder script) {
-	//
-	// String hyperlinkList = formatter.formatAsSimpleField(false,
-	// IDocumentFormatter.IMAGE_REGISTRY_KEY, "Hyperlinks");
-	// String hyperlinkListItem = formatter.formatAsSimpleField(false,
-	// ITEM_HYPERLINK);
-	//
-	// String startLoop = formatter.getStartLoopDirective(hyperlinkListItem,
-	// hyperlinkList);
-	//
-	// // 1) Start loop
-	// script.append(startLoop);
-	//
-	// // <Relationship Id="rId4"
-	// //
-	// Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/image"
-	// // Target="media/image1.png"/>
-	// String relationId = formatter.formatAsSimpleField(true, ITEM_HYPERLINK,
-	// "Id");
-	// String target = formatter.formatAsSimpleField(true, ITEM_HYPERLINK,
-	// "Value");
-	// generateRelationship(script, relationId, HYPERLINK_NS, target);
-	//
-	// // 3) end loop
-	// script.append(formatter.getEndLoopDirective(hyperlinkListItem));
-	//
-	// }
 
 	protected void generateRelationship(StringBuilder script,
 			String relationId, String type, String target, String targetMode) {

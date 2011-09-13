@@ -11,6 +11,13 @@
 			<groupId>org.apache.poi</groupId>
 			<artifactId>poi-ooxml</artifactId>
 			<version>3.7</version>
+			<exclusions>
+			<!-- surprisingly this artifect contains a subset of org.apache.poi:ooxml-schemas:1.1  -->
+				<exclusion>
+					<artifactId>poi-ooxml-schemas</artifactId>
+					<groupId>org.apache.poi</groupId>
+				</exclusion>
+			</exclusions>
 		</dependency>
 		<dependency>
 			<groupId>org.apache.poi</groupId>

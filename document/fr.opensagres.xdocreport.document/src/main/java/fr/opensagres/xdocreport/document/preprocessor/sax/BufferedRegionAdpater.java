@@ -25,6 +25,7 @@
 package fr.opensagres.xdocreport.document.preprocessor.sax;
 
 import java.io.IOException;
+import java.io.StringWriter;
 import java.io.Writer;
 
 /**
@@ -34,9 +35,12 @@ import java.io.Writer;
  */
 public class BufferedRegionAdpater implements IBufferedRegion {
 
+	private final BufferedElement ownerElement;
 	private final IBufferedRegion parent;
 
-	public BufferedRegionAdpater(IBufferedRegion parent) {
+	public BufferedRegionAdpater(BufferedElement ownerElement,
+			IBufferedRegion parent) {
+		this.ownerElement = ownerElement;
 		this.parent = parent;
 		if (parent != null) {
 			parent.addRegion(this);
@@ -63,12 +67,27 @@ public class BufferedRegionAdpater implements IBufferedRegion {
 
 	}
 
-	public void addRegion(IBufferedRegion region) {
+	public void addRegion(ISavable region) {
 
 	}
 
 	public IBufferedRegion getParent() {
 		return parent;
+	}
+
+	public BufferedElement getOwnerElement() {
+		return ownerElement;
+	}
+	
+	@Override
+	public String toString() {
+		StringWriter writer = new StringWriter();
+		try {
+			save(writer);
+		} catch (IOException e) {
+			// Do nothing
+		}
+		return writer.toString();
 	}
 
 }

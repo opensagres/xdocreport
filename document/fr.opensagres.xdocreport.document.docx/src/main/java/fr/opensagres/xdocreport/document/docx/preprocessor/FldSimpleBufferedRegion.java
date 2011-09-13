@@ -24,7 +24,9 @@
  */
 package fr.opensagres.xdocreport.document.docx.preprocessor;
 
-import fr.opensagres.xdocreport.document.preprocessor.sax.IBufferedRegion;
+import org.xml.sax.Attributes;
+
+import fr.opensagres.xdocreport.document.preprocessor.sax.BufferedElement;
 import fr.opensagres.xdocreport.document.preprocessor.sax.TransformedBufferedDocumentContentHandler;
 
 /**
@@ -37,13 +39,13 @@ import fr.opensagres.xdocreport.document.preprocessor.sax.TransformedBufferedDoc
  * 		<w:r w:rsidR="00396432">
  * 			<w:rPr>
  * 				<w:noProof/>
- * 				</w:rPr>
- * 				<w:t>«${name}»</w:t>
+ * 			</w:rPr>
+ * 			<w:t>«${name}»</w:t>
  * 		</w:r>
  * 	</w:fldSimple>
  * </pre>
  * 
- * it is transformed with
+ * it is transformed to this content :
  * 
  * <pre>
  * <w:r w:rsidR="00396432">
@@ -59,16 +61,18 @@ public class FldSimpleBufferedRegion extends MergefieldBufferedRegion {
 
 	public FldSimpleBufferedRegion(
 			TransformedBufferedDocumentContentHandler handler,
-			IBufferedRegion parent) {
-		super(handler, parent);
+			BufferedElement parent, String uri, String localName, String name,
+			Attributes attributes) {
+		super(handler, parent, uri, localName, name, attributes);
 	}
 
 	public void setTContent(String tContent) {
 		String fieldName = getFieldName();
 		if (fieldName != null) {
-			super.append(fieldName);
+			getTRegion().append(fieldName);
 		} else {
-			super.append(tContent);
+			getTRegion().append(tContent);
 		}
 	}
+
 }

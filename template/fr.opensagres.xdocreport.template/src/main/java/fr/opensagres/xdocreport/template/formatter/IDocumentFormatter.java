@@ -24,8 +24,6 @@
  */
 package fr.opensagres.xdocreport.template.formatter;
 
-import java.util.Stack;
-
 public interface IDocumentFormatter {
 
 	String IMAGE_REGISTRY_KEY = "imageRegistry";
@@ -58,11 +56,12 @@ public interface IDocumentFormatter {
 
 	boolean containsInterpolation(String content);
 
-	int extractListDirectiveInfo(String content,
-			Stack<LoopDirective> directives);
-	
-	int extractListDirectiveInfo(String content,
-			Stack<LoopDirective> directives, boolean dontRemoveListDirectiveInfo);
+	int extractListDirectiveInfo(String content, DirectivesStack directives);
+
+	int extractListDirectiveInfo(String content, DirectivesStack directives,
+			boolean dontRemoveListDirectiveInfo);
 
 	String extractModelTokenPrefix(String newContent);
+
+	int getIndexOfScript(String fieldName);
 }

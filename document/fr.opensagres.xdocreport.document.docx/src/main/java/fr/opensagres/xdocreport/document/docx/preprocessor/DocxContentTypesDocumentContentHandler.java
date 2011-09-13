@@ -32,6 +32,7 @@ import org.xml.sax.SAXException;
 
 import fr.opensagres.xdocreport.core.document.ImageFormat;
 import fr.opensagres.xdocreport.document.preprocessor.sax.BufferedDocumentContentHandler;
+import fr.opensagres.xdocreport.document.preprocessor.sax.IBufferedRegion;
 
 public class DocxContentTypesDocumentContentHandler extends
 		BufferedDocumentContentHandler {
@@ -66,7 +67,7 @@ public class DocxContentTypesDocumentContentHandler extends
 			throws SAXException {
 		if ("Types".equals(name)) {
 			for (ImageFormat format : missingFormats) {
-
+				IBufferedRegion currentRegion = getCurrentElement();
 				currentRegion.append("<Default Extension=\"");
 				currentRegion.append(format.name());
 				currentRegion.append("\" ContentType=\"image/");

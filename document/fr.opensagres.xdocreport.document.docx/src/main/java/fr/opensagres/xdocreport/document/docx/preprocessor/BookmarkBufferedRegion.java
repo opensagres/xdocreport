@@ -24,8 +24,9 @@
  */
 package fr.opensagres.xdocreport.document.docx.preprocessor;
 
-import fr.opensagres.xdocreport.document.preprocessor.sax.BufferedRegion;
-import fr.opensagres.xdocreport.document.preprocessor.sax.IBufferedRegion;
+import org.xml.sax.Attributes;
+
+import fr.opensagres.xdocreport.document.preprocessor.sax.BufferedElement;
 
 /**
  * <pre>
@@ -78,14 +79,15 @@ import fr.opensagres.xdocreport.document.preprocessor.sax.IBufferedRegion;
  * </pre>
  * 
  */
-public class BookmarkBufferedRegion extends BufferedRegion {
+public class BookmarkBufferedRegion extends BufferedElement {
 
 	private final String bookmarkName;
 	private final String imageFieldName;
 
 	public BookmarkBufferedRegion(String bookmarkName, String imageFieldName,
-			IBufferedRegion parent) {
-		super(parent);
+			BufferedElement parent, String uri, String localName, String name,
+			Attributes attributes) {
+		super(parent, uri, localName, name, attributes);
 		this.bookmarkName = bookmarkName;
 		this.imageFieldName = imageFieldName;
 	}

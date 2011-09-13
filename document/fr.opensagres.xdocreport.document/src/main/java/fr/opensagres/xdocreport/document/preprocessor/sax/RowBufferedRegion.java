@@ -24,8 +24,7 @@
  */
 package fr.opensagres.xdocreport.document.preprocessor.sax;
 
-import java.io.IOException;
-import java.io.Writer;
+import org.xml.sax.Attributes;
 
 import fr.opensagres.xdocreport.core.utils.StringUtils;
 import fr.opensagres.xdocreport.template.formatter.IDocumentFormatter;
@@ -34,40 +33,39 @@ import fr.opensagres.xdocreport.template.formatter.IDocumentFormatter;
  * Table row buffered region.
  * 
  */
-public class RowBufferedRegion extends BufferedRegion {
+public class RowBufferedRegion extends BufferedElement {
 
 	private String itemNameList;
-	private String startLoopDirective;
-	private String endLoopDirective;
 
-	public RowBufferedRegion(IBufferedRegion parent) {
-		super(parent);
+	public RowBufferedRegion(BufferedElement parent, String uri,
+			String localName, String name, Attributes attributes) {
+		super(parent, uri, localName, name, attributes);
 	}
 
 	public void setLoopTemplateDirective(String startLoopDirective,
 			String endLoopDirective) {
-		this.startLoopDirective = startLoopDirective;
-		this.endLoopDirective = endLoopDirective;
+		setStartLoopDirective(startLoopDirective);
+		setEndLoopDirective(endLoopDirective);
 	}
 
 	public void setStartLoopDirective(String startLoopDirective) {
-		this.startLoopDirective = startLoopDirective;
+		this.startTagElement.setBefore(startLoopDirective);
 	}
 
 	public void setEndLoopDirective(String endLoopDirective) {
-		this.endLoopDirective = endLoopDirective;
+		this.endElement.setAfter(endLoopDirective);
 	}
 
 	public boolean isLoopTemplateDirectiveInitilalized() {
-		return StringUtils.isNotEmpty(startLoopDirective)
-				&& StringUtils.isNotEmpty(endLoopDirective);
+		return StringUtils.isNotEmpty(getStartLoopDirective())
+				&& StringUtils.isNotEmpty(getEndLoopDirective());
 	}
 
 	public void initializeLoopTemplateDirective(String itemNameList,
 			IDocumentFormatter formatter) {
 		this.itemNameList = itemNameList;
-		this.startLoopDirective = formatter.getStartLoopDirective(itemNameList);
-		this.endLoopDirective = formatter.getEndLoopDirective(itemNameList);
+		setStartLoopDirective(formatter.getStartLoopDirective(itemNameList));
+		setEndLoopDirective(formatter.getEndLoopDirective(itemNameList));
 	}
 
 	public String getItemNameList() {
@@ -75,22 +73,11 @@ public class RowBufferedRegion extends BufferedRegion {
 	}
 
 	public String getStartLoopDirective() {
-		return startLoopDirective;
+		return this.startTagElement.getBefore();
 	}
 
 	public String getEndLoopDirective() {
-		return endLoopDirective;
-	}
-
-	@Override
-	public void save(Writer writer) throws IOException {
-		if (StringUtils.isNotEmpty(startLoopDirective)) {
-			writer.write(startLoopDirective);
-		}
-		super.save(writer);
-		if (StringUtils.isNotEmpty(endLoopDirective)) {
-			writer.write(endLoopDirective);
-		}
+		return this.endElement.getAfter();
 	}
 
 }

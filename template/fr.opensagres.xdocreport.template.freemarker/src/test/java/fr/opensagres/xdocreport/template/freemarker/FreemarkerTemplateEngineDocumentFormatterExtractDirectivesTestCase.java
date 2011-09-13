@@ -24,25 +24,26 @@
  */
 package fr.opensagres.xdocreport.template.freemarker;
 
-import java.util.Stack;
-
 import junit.framework.TestCase;
+import fr.opensagres.xdocreport.template.formatter.Directive.DirectiveType;
+import fr.opensagres.xdocreport.template.formatter.DirectivesStack;
+import fr.opensagres.xdocreport.template.formatter.IfDirective;
 import fr.opensagres.xdocreport.template.formatter.LoopDirective;
 
-public class FreemarkerTemplateEngineDocumentFormatterExtractLoopDirectiveTestCase
+public class FreemarkerTemplateEngineDocumentFormatterExtractDirectivesTestCase
 		extends TestCase {
 
 	public void testFormatAsFieldItemList() throws Exception {
 		FreemarkerDocumentFormatter formatter = new FreemarkerDocumentFormatter();
 		String content = "xxxx[#list developers as d]yyy";
 
-		Stack<LoopDirective> directives = new Stack<LoopDirective>();
+		DirectivesStack directives = new DirectivesStack();
 		int nbDirective = formatter.extractListDirectiveInfo(content,
 				directives);
 
 		assertEquals(1, nbDirective);
 		assertEquals(1, directives.size());
-		LoopDirective directive = directives.get(0);
+		LoopDirective directive = (LoopDirective)directives.get(0);
 		assertEquals("developers", directive.getSequence());
 		assertEquals("d", directive.getItem());
 	}
@@ -51,17 +52,17 @@ public class FreemarkerTemplateEngineDocumentFormatterExtractLoopDirectiveTestCa
 		FreemarkerDocumentFormatter formatter = new FreemarkerDocumentFormatter();
 		String content = "xxxx[#list developers as d]yyy[#list roles as r]";
 
-		Stack<LoopDirective> directives = new Stack<LoopDirective>();
+		DirectivesStack directives = new DirectivesStack();
 		int nbDirective = formatter.extractListDirectiveInfo(content,
 				directives);
 
 		assertEquals(2, nbDirective);
 		assertEquals(2, directives.size());
-		LoopDirective directive = directives.get(0);
+		LoopDirective directive = (LoopDirective)directives.get(0);
 		assertEquals("developers", directive.getSequence());
 		assertEquals("d", directive.getItem());
 
-		directive = directives.get(1);
+		directive = (LoopDirective)directives.get(1);
 		assertEquals("roles", directive.getSequence());
 		assertEquals("r", directive.getItem());
 	}
@@ -70,7 +71,7 @@ public class FreemarkerTemplateEngineDocumentFormatterExtractLoopDirectiveTestCa
 		FreemarkerDocumentFormatter formatter = new FreemarkerDocumentFormatter();
 		String content = "xxxx[#list developers as d]yyy[/#list]";
 
-		Stack<LoopDirective> directives = new Stack<LoopDirective>();
+		DirectivesStack directives = new DirectivesStack();
 		int nbDirective = formatter.extractListDirectiveInfo(content,
 				directives);
 
@@ -82,13 +83,13 @@ public class FreemarkerTemplateEngineDocumentFormatterExtractLoopDirectiveTestCa
 		FreemarkerDocumentFormatter formatter = new FreemarkerDocumentFormatter();
 		String content = "xxxx[#list developers as d]";
 
-		Stack<LoopDirective> directives = new Stack<LoopDirective>();
+		DirectivesStack directives = new DirectivesStack();
 		int nbDirective = formatter.extractListDirectiveInfo(content,
 				directives);
 
 		assertEquals(1, nbDirective);
 		assertEquals(1, directives.size());
-		LoopDirective directive = directives.get(0);
+		LoopDirective directive = (LoopDirective)directives.get(0);
 		assertEquals("developers", directive.getSequence());
 		assertEquals("d", directive.getItem());
 		
@@ -98,6 +99,67 @@ public class FreemarkerTemplateEngineDocumentFormatterExtractLoopDirectiveTestCa
 
 		assertEquals(-1, nbDirective);
 		assertEquals(0, directives.size());
+	}
+	
+	public void testIf1() throws Exception {
+		FreemarkerDocumentFormatter formatter = new FreemarkerDocumentFormatter();
+		String content = "xxx[#if d]yyy";
+
+		DirectivesStack directives = new DirectivesStack();
+		int nbDirective = formatter.extractListDirectiveInfo(content,
+				directives);
+
+		assertEquals(1, nbDirective);
+		assertEquals(1, directives.size());
+		assertEquals(DirectiveType.IF, directives.get(0).getType());
+		IfDirective directive = (IfDirective) directives.get(0);
+		assertEquals("[#if d]", directive.getStartDirective());
+		assertEquals("[/#if]", directive.getEndDirective());
+	}
+
+	public void testLoopAndIf1() throws Exception {
+		FreemarkerDocumentFormatter formatter = new FreemarkerDocumentFormatter();
+		String content = "xxxx[#list developers as d]xxx[#if d]yyy";
+
+		DirectivesStack directives = new DirectivesStack();
+		int nbDirective = formatter.extractListDirectiveInfo(content,
+				directives);
+
+		assertEquals(2, nbDirective);
+		assertEquals(2, directives.size());
+
+		assertEquals(DirectiveType.LOOP, directives.get(0).getType());
+		LoopDirective loopDirective = (LoopDirective) directives.get(0);
+		assertEquals("developers", loopDirective.getSequence());
+		assertEquals("d", loopDirective.getItem());
+
+		assertEquals(DirectiveType.IF, directives.get(1).getType());
+		IfDirective ifDirective = (IfDirective) directives.get(1);
+		assertEquals("[#if d]", ifDirective.getStartDirective());
+		assertEquals("[/#if]", ifDirective.getEndDirective());
+	}
+
+	public void testIfAndLoop1() throws Exception {
+		FreemarkerDocumentFormatter formatter = new FreemarkerDocumentFormatter();
+		String content = "xxx[#if d]yyy[#list developers as d]";
+
+		DirectivesStack directives = new DirectivesStack();
+		int nbDirective = formatter.extractListDirectiveInfo(content,
+				directives);
+
+		assertEquals(2, nbDirective);
+		assertEquals(2, directives.size());
+
+		assertEquals(DirectiveType.IF, directives.get(0).getType());
+		IfDirective ifDirective = (IfDirective) directives.get(0);
+		assertEquals("[#if d]", ifDirective.getStartDirective());
+		assertEquals("[/#if]", ifDirective.getEndDirective());
+
+		assertEquals(DirectiveType.LOOP, directives.get(1).getType());
+		LoopDirective loopDirective = (LoopDirective) directives.get(1);
+		assertEquals("developers", loopDirective.getSequence());
+		assertEquals("d", loopDirective.getItem());
+
 	}
 
 }

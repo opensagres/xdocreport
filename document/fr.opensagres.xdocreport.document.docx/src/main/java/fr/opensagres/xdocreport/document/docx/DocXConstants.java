@@ -83,6 +83,8 @@ public interface DocXConstants {
 	String WORDPROCESSINGML_DOCUMENT = "application/vnd.openxmlformats-officedocument.wordprocessingml.document.main+xml";
 	String DOCX_EXTENSION = "docx";
 
+	String NAME_ATTR = "name";
+	
 	// word/_rels/document.xml.rels
 	String RELATIONSHIPS_ELT = "Relationships";
 	String RELATIONSHIP_ELT = "Relationship";

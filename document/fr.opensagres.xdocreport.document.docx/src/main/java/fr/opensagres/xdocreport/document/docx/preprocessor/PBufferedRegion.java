@@ -25,10 +25,13 @@
 package fr.opensagres.xdocreport.document.docx.preprocessor;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
-import fr.opensagres.xdocreport.document.preprocessor.sax.BufferedRegion;
-import fr.opensagres.xdocreport.document.preprocessor.sax.IBufferedRegion;
+import org.xml.sax.Attributes;
+
+import fr.opensagres.xdocreport.document.preprocessor.sax.BufferedElement;
+import fr.opensagres.xdocreport.document.preprocessor.sax.ISavable;
 
 /**
  * <pre>
@@ -74,24 +77,27 @@ import fr.opensagres.xdocreport.document.preprocessor.sax.IBufferedRegion;
  * </pre>
  * 
  */
-public class PBufferedRegion extends BufferedRegion {
+public class PBufferedRegion extends BufferedElement {
 
 	private List<RBufferedRegion> rBufferedRegions = new ArrayList<RBufferedRegion>();
 
-	public PBufferedRegion(IBufferedRegion parent) {
-		super(parent);
+	public PBufferedRegion(BufferedElement parent, String uri, String localName,
+			String name, Attributes attributes) {
+		super(parent, uri, localName, name, attributes);
+		// this
 	}
 
 	@Override
-	public void addRegion(IBufferedRegion region) {
+	public void addRegion(ISavable region) {
 		if (region instanceof RBufferedRegion) {
 			rBufferedRegions.add((RBufferedRegion) region);
+		} else {
+			super.addRegion(region);
 		}
-		super.addRegion(region);
 	}
 
 	public void process() {
-		List<RBufferedRegion> toRemove = new ArrayList<RBufferedRegion>();
+		Collection<BufferedElement> toRemove = new ArrayList<BufferedElement>();
 		boolean remove = false;
 		boolean fieldNameSetted = false;
 		String fieldName = null;
@@ -125,7 +131,7 @@ public class PBufferedRegion extends BufferedRegion {
 			}
 		}
 		rBufferedRegions.removeAll(toRemove);
-		regions.removeAll(toRemove);
+		super.removeAll(toRemove);
 	}
 
 }

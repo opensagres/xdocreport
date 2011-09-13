@@ -35,6 +35,9 @@ import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.stream.StreamResult;
 import javax.xml.transform.stream.StreamSource;
 
+import org.xml.sax.Attributes;
+import org.xml.sax.helpers.AttributesImpl;
+
 import fr.opensagres.xdocreport.core.logging.LogUtils;
 
 public class XMLUtils {
@@ -69,4 +72,25 @@ public class XMLUtils {
 		return in;
 	}
 
+	/**
+	 * Get the SAX {@link AttributesImpl} of teh given attributes to modify
+	 * attribute values.
+	 * 
+	 * @param attributes
+	 * @return
+	 */
+	public static AttributesImpl toAttributesImpl(Attributes attributes) {
+		if (attributes instanceof AttributesImpl) {
+			return (AttributesImpl) attributes;
+		}
+		// Another SAX Implementation, create a new instance.
+		AttributesImpl attributesImpl = new AttributesImpl();
+		int length = attributes.getLength();
+		for (int i = 0; i < length; i++) {
+			attributesImpl.addAttribute(attributes.getURI(i),
+					attributes.getLocalName(i), attributes.getQName(i),
+					attributes.getType(i), attributes.getValue(i));
+		}
+		return attributesImpl;
+	}
 }

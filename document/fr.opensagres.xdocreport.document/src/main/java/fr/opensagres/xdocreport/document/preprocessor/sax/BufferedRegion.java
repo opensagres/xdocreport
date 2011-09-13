@@ -25,7 +25,6 @@
 package fr.opensagres.xdocreport.document.preprocessor.sax;
 
 import java.io.IOException;
-import java.io.StringWriter;
 import java.io.Writer;
 import java.util.ArrayList;
 import java.util.List;
@@ -36,33 +35,26 @@ import java.util.List;
  */
 public class BufferedRegion extends BufferedRegionAdpater {
 
-	protected final List<IBufferedRegion> regions = new ArrayList<IBufferedRegion>();
+	protected final List<ISavable> regions = new ArrayList<ISavable>();
 
 	private IBufferedRegion currentRegion;
 
-	public BufferedRegion(IBufferedRegion parent) {
-		super(parent);
+	public BufferedRegion(BufferedElement ownerElement, IBufferedRegion parent) {
+		super(ownerElement, parent);
 	}
 
 	@Override
 	public void save(Writer writer) throws IOException {
-		for (IBufferedRegion region : regions) {
+		for (ISavable region : regions) {
 			region.save(writer);
 		}
 	}
 
 	@Override
-	public void addRegion(IBufferedRegion region) {
-		currentRegion = region;
+	public void addRegion(ISavable region) {
+		currentRegion = ((region instanceof IBufferedRegion) ? (IBufferedRegion) region
+				: currentRegion);
 		regions.add(region);
-	}
-
-	public void setCurrentRegion(IBufferedRegion currentRegion) {
-		this.currentRegion = currentRegion;
-	}
-
-	public IBufferedRegion getCurrentRegion() {
-		return currentRegion;
 	}
 
 	@Override
@@ -87,23 +79,13 @@ public class BufferedRegion extends BufferedRegionAdpater {
 
 	private StringBufferedRegion getStringBufferedRegion() {
 		if (currentRegion == null || !currentRegion.isString()) {
-			currentRegion = new StringBufferedRegion(this);
+			currentRegion = new StringBufferedRegion(getOwnerElement(), this);
 		}
 		return (StringBufferedRegion) currentRegion;
 	}
 
-	@Override
-	public String toString() {
-		StringWriter writer = new StringWriter();
-		try {
-			save(writer);
-		} catch (IOException e) {
-			// Do nothing
-		}
-		return writer.toString();
-	}
-
 	public void reset() {
 		regions.clear();
+		currentRegion = null;
 	}
 }

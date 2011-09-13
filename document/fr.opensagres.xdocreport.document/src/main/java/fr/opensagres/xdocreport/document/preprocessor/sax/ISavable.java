@@ -28,40 +28,24 @@ import java.io.IOException;
 import java.io.Writer;
 
 /**
- * Attribute buffered region used to manage XML dynamic attribute.
+ * Save content in a given writer.
  * 
  */
-public class AttributeBufferedRegion extends BufferedRegionAdpater {
+public interface ISavable {
 
-	private final String name;
-	private String value;
+	/**
+	 * Write the content of the buffer in the given writer.
+	 * 
+	 * @param writer
+	 * @throws IOException
+	 */
+	void save(Writer writer) throws IOException;
 
-	public AttributeBufferedRegion(IBufferedRegion parent, String name,
-			String value) {
-		super(parent);
-		this.name = name;
-		this.value = value;
-	}
-
-	public void setValue(String value) {
-		this.value = value;
-	}
-
-	public String getName() {
-		return name;
-	}
-
-	public String getValue() {
-		return value;
-	}
-
-	@Override
-	public void save(Writer writer) throws IOException {
-		writer.write(' ');
-		writer.write(name);
-		writer.write("=\"");
-		writer.write(value);
-		writer.write("\"");
-	}
-
+	/**
+	 * Returns the owner element.
+	 * 
+	 * @return
+	 */
+	BufferedElement getOwnerElement();
+	// void save(Writer writer) throws IOException;
 }

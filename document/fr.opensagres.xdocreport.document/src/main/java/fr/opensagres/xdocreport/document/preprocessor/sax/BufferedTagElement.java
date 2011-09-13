@@ -24,54 +24,49 @@
  */
 package fr.opensagres.xdocreport.document.preprocessor.sax;
 
+import java.io.IOException;
+import java.io.Writer;
+
 /**
- * Interface for buffered region.
+ * Base class for start/end tag element. This buffer stores content of the
+ * start/end tag element and is enable to add some content (ex: template engine
+ * script) on before/after the content of the start/end tag element.
  * 
  */
-public interface IBufferedRegion extends ISavable {
+public class BufferedTagElement extends BufferedRegion {
 
-	/**
-	 * Returns true if buffered region is a String and false otherwise.
-	 * 
-	 * @return
-	 */
-	boolean isString();
+	private String before;
+	private String after;
 
-	/**
-	 * Append the given content to the buffer.
-	 * 
-	 * @param content
-	 */
-	void append(String content);
+	public BufferedTagElement(BufferedElement ownerElement) {
+		super(ownerElement, null);
+	}
 
-	/**
-	 * Append the given char array to the buffer.
-	 * 
-	 * @param ch
-	 * @param start
-	 * @param length
-	 */
-	void append(char[] ch, int start, int length);
+	@Override
+	public void save(Writer writer) throws IOException {
+		if (before != null) {
+			writer.write(before);
+		}
+		super.save(writer);
+		if (after != null) {
+			writer.write(after);
+		}
+	}
 
-	/**
-	 * Append the given content to the buffer.
-	 * 
-	 * @param content
-	 */
-	void append(char c);
+	public void setBefore(String before) {
+		this.before = before;
+	}
 
-	/**
-	 * Add a the given buffered region to the buffer.
-	 * 
-	 * @param region
-	 */
-	void addRegion(ISavable region);
+	public String getBefore() {
+		return before;
+	}
 
-	/**
-	 * Returns the parent buffered region.
-	 * 
-	 * @return
-	 */
-	IBufferedRegion getParent();
+	public void setAfter(String after) {
+		this.after = after;
+	}
+
+	public String getAfter() {
+		return after;
+	}
 
 }

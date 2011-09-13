@@ -28,13 +28,16 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Stack;
 
-import fr.opensagres.xdocreport.document.preprocessor.sax.AttributeBufferedRegion;
-import fr.opensagres.xdocreport.document.preprocessor.sax.BufferedRegion;
-import fr.opensagres.xdocreport.document.preprocessor.sax.IBufferedRegion;
+import org.xml.sax.Attributes;
+
+import fr.opensagres.xdocreport.document.preprocessor.sax.BufferedAttribute;
+import fr.opensagres.xdocreport.document.preprocessor.sax.BufferedElement;
+import fr.opensagres.xdocreport.document.preprocessor.sax.ISavable;
 import fr.opensagres.xdocreport.document.preprocessor.sax.ProcessRowResult;
 import fr.opensagres.xdocreport.document.preprocessor.sax.TransformedBufferedDocumentContentHandler;
+import fr.opensagres.xdocreport.template.formatter.Directive.DirectiveType;
+import fr.opensagres.xdocreport.template.formatter.DirectivesStack;
 import fr.opensagres.xdocreport.template.formatter.IDocumentFormatter;
 import fr.opensagres.xdocreport.template.formatter.LoopDirective;
 
@@ -60,25 +63,27 @@ import fr.opensagres.xdocreport.template.formatter.LoopDirective;
  * </pre>
  * 
  */
-public class HyperlinkBufferedRegion extends BufferedRegion {
+public class HyperlinkBufferedRegion extends BufferedElement {
 
 	private final TransformedBufferedDocumentContentHandler handler;
 	private List<RBufferedRegion> rBufferedRegions = new ArrayList<RBufferedRegion>();
-	private AttributeBufferedRegion idAttribute;
+	private BufferedAttribute idAttribute;
 
 	public HyperlinkBufferedRegion(
 			TransformedBufferedDocumentContentHandler handler,
-			IBufferedRegion parent) {
-		super(parent);
+			BufferedElement parent, String uri, String localName, String name,
+			Attributes attributes) {
+		super(parent, uri, localName, name, attributes);
 		this.handler = handler;
 	}
 
 	@Override
-	public void addRegion(IBufferedRegion region) {
+	public void addRegion(ISavable region) {
 		if (region instanceof RBufferedRegion) {
 			rBufferedRegions.add((RBufferedRegion) region);
+		} else {
+			super.addRegion(region);
 		}
-		super.addRegion(region);
 	}
 
 	public void process() {
@@ -114,22 +119,23 @@ public class HyperlinkBufferedRegion extends BufferedRegion {
 					if (handler.hasSharedContext()) {
 
 						// 2) Populate HyperlinkInfo if needed
-						Stack<LoopDirective> directives = handler
-								.getDirectives();
-						if (!directives.isEmpty()) {
-							LoopDirective directive = directives.peek();
+						DirectivesStack directives = handler.getDirectives();
 
+						LoopDirective directive = (LoopDirective) directives
+								.peekDirective(DirectiveType.LOOP);
+						if (directive != null) {
 							String item = formatter
 									.extractModelTokenPrefix(newContent);
 							if (item.equals(directive.getItem())) {
 								String startLoopDirective = directive
-										.getStartLoopDirective();
+										.getStartDirective();
 								String endLoopDirective = directive
-										.getEndLoopDirective();
+										.getEndDirective();
 								populateHyperlinkInfo(formatter, item,
 										startLoopDirective, endLoopDirective);
 							}
 						}
+
 					}
 				}
 			}
@@ -180,8 +186,9 @@ public class HyperlinkBufferedRegion extends BufferedRegion {
 
 	public void setId(String name, String value) {
 		if (idAttribute == null) {
-			idAttribute = new AttributeBufferedRegion(this, name, value);
+			idAttribute = super.setAttribute(name, value);
 		}
 		idAttribute.setValue(value);
 	}
+
 }

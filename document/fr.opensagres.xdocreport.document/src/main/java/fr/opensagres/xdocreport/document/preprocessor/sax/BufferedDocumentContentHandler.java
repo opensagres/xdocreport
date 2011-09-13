@@ -40,32 +40,36 @@ import fr.opensagres.xdocreport.core.utils.StringUtils;
  * source stream.
  * 
  */
-public class BufferedDocumentContentHandler extends DefaultHandler implements
-		EncodingConstants {
+public class BufferedDocumentContentHandler<Document extends BufferedDocument>
+		extends DefaultHandler implements EncodingConstants {
 
 	private static final String XML_DECLARATION = "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>";
 	public static final String CDATA_TYPE = "CDATA";
 
 	private final List<PrefixMapping> prefixs;
 
-	protected final BufferedDocument bufferedDocument;
-	protected IBufferedRegion currentRegion;
+	protected final Document bufferedDocument;
+	// protected IBufferedRegion currentRegion;
 	private final StringBuilder currentCharacters = new StringBuilder();
 	private boolean startingElement = false;
 
 	public BufferedDocumentContentHandler() {
-		this.bufferedDocument = new BufferedDocument();
+		this.bufferedDocument = createDocument();
 		this.prefixs = new ArrayList<PrefixMapping>();
 	}
 
-	public BufferedDocument getBufferedDocument() {
+	@SuppressWarnings("unchecked")
+	protected Document createDocument() {
+		return (Document) new BufferedDocument();
+	}
+
+	public Document getBufferedDocument() {
 		return bufferedDocument;
 	}
 
 	@Override
 	public void startDocument() throws SAXException {
-		this.currentRegion = this.bufferedDocument;
-		this.currentRegion.append(XML_DECLARATION);
+		this.bufferedDocument.append(XML_DECLARATION);
 	}
 
 	@Override
@@ -80,17 +84,49 @@ public class BufferedDocumentContentHandler extends DefaultHandler implements
 	public final void startElement(String uri, String localName, String name,
 			Attributes attributes) throws SAXException {
 		if (startingElement) {
-			currentRegion.append(">");
+			getCurrentElement().append(">");
 		}
 		if (currentCharacters.length() > 0) {
 			flushCharacters(currentCharacters.toString());
 			resetCharacters();
 		}
-		startingElement = doStartElement(uri, localName, name, attributes);
+		BufferedElement element = null;
+		try {
+			// Start of start element to create element
+			element = bufferedDocument.onStartStartElement(uri, localName,
+					name, attributes);
+			// Generate content of the start element
+			startingElement = doStartElement(uri, localName, name,
+					element.getAttributes());
+		} finally {
+			// End of start element
+			bufferedDocument.onEndStartElement(element, uri, localName, name,
+					attributes);
+		}
+	}
+
+	protected BufferedElement getCurrentElement() {
+		return bufferedDocument.getCurrentElement();
+	}
+
+	protected BufferedElement findParentElementInfo(String name) {
+		return findParentElementInfo(getCurrentElement(), name);
+	}
+
+	protected BufferedElement findParentElementInfo(
+			BufferedElement elementInfo, String name) {
+		if (elementInfo == null) {
+			return null;
+		}
+		if (elementInfo.match(name)) {
+			return elementInfo;
+		}
+		return findParentElementInfo(elementInfo.getParent(), name);
 	}
 
 	public boolean doStartElement(String uri, String localName, String name,
 			Attributes attributes) throws SAXException {
+		BufferedElement currentRegion = getCurrentElement();
 		currentRegion.append("<");
 		currentRegion.append(name);
 		String attrName = null;
@@ -108,7 +144,7 @@ public class BufferedDocumentContentHandler extends DefaultHandler implements
 			}
 			prefixs.clear();
 		}
-		// attributes
+		// static attributes
 		int length = attributes.getLength();
 		if (length > 0) {
 			for (int i = 0; i < length; i++) {
@@ -121,6 +157,8 @@ public class BufferedDocumentContentHandler extends DefaultHandler implements
 				currentRegion.append("\"");
 			}
 		}
+		// register dynamic attributes region if needed.
+		currentRegion.registerDynamicAttributes();
 		return true;
 	}
 
@@ -128,20 +166,29 @@ public class BufferedDocumentContentHandler extends DefaultHandler implements
 	public final void endElement(String uri, String localName, String name)
 			throws SAXException {
 		if (currentCharacters.length() > 0) {
+			// Flush caracters
 			flushCharacters(currentCharacters.toString());
 			resetCharacters();
 		}
-		if (startingElement) {
-			currentRegion.append("/>");
-			startingElement = false;
-		} else {
-			doEndElement(uri, localName, name);
+		try {
+			// Start of end element
+			bufferedDocument.onStartEndElement(uri, localName, name);
+			if (startingElement) {
+				IBufferedRegion currentRegion = getCurrentElement();
+				currentRegion.append("/>");
+				startingElement = false;
+			} else {
+				doEndElement(uri, localName, name);
+			}
+		} finally {
+			// End of end element
+			bufferedDocument.onEndEndElement(uri, localName, name);
 		}
 	}
 
 	public void doEndElement(String uri, String localName, String name)
 			throws SAXException {
-
+		IBufferedRegion currentRegion = getCurrentElement();
 		currentRegion.append("</");
 		currentRegion.append(name);
 		currentRegion.append(">");
@@ -151,6 +198,7 @@ public class BufferedDocumentContentHandler extends DefaultHandler implements
 	public final void characters(char[] ch, int start, int length)
 			throws SAXException {
 		if (startingElement) {
+			IBufferedRegion currentRegion = getCurrentElement();
 			currentRegion.append(">");
 		}
 		startingElement = false;
@@ -170,6 +218,7 @@ public class BufferedDocumentContentHandler extends DefaultHandler implements
 	}
 
 	protected void flushCharacters(String characters) {
+		IBufferedRegion currentRegion = getCurrentElement();
 		currentRegion.append(characters);
 	}
 

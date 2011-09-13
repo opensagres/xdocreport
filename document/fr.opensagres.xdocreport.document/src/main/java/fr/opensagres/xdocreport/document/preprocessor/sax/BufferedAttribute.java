@@ -24,54 +24,44 @@
  */
 package fr.opensagres.xdocreport.document.preprocessor.sax;
 
+import java.io.IOException;
+import java.io.Writer;
+
 /**
- * Interface for buffered region.
+ * Attribute buffered region used to manage XML dynamic attribute.
  * 
  */
-public interface IBufferedRegion extends ISavable {
+public class BufferedAttribute extends BufferedRegionAdpater {
 
-	/**
-	 * Returns true if buffered region is a String and false otherwise.
-	 * 
-	 * @return
-	 */
-	boolean isString();
+	private final String name;
+	private String value;
 
-	/**
-	 * Append the given content to the buffer.
-	 * 
-	 * @param content
-	 */
-	void append(String content);
+	public BufferedAttribute(BufferedElement ownerElement, String name,
+			String value) {
+		super(ownerElement, null);
+		this.name = name;
+		this.value = value;
+	}
 
-	/**
-	 * Append the given char array to the buffer.
-	 * 
-	 * @param ch
-	 * @param start
-	 * @param length
-	 */
-	void append(char[] ch, int start, int length);
+	public void setValue(String value) {
+		this.value = value;
+	}
 
-	/**
-	 * Append the given content to the buffer.
-	 * 
-	 * @param content
-	 */
-	void append(char c);
+	public String getName() {
+		return name;
+	}
 
-	/**
-	 * Add a the given buffered region to the buffer.
-	 * 
-	 * @param region
-	 */
-	void addRegion(ISavable region);
+	public String getValue() {
+		return value;
+	}
 
-	/**
-	 * Returns the parent buffered region.
-	 * 
-	 * @return
-	 */
-	IBufferedRegion getParent();
+	@Override
+	public void save(Writer writer) throws IOException {
+		writer.write(' ');
+		writer.write(name);
+		writer.write("=\"");
+		writer.write(value);
+		writer.write("\"");
+	}
 
 }

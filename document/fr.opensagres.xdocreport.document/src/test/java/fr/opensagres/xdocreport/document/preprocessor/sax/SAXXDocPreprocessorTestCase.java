@@ -85,4 +85,15 @@ public class SAXXDocPreprocessorTestCase extends TestCase {
 				"<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?><root><a><b/></a><c>vvvvv<d/>jjjj</c></root>",
 				writer.toString());
 	}
+	
+	public void testSeveralElements2() throws Exception {
+		MockSAXXDocPreprocessor preprocessor = new MockSAXXDocPreprocessor();
+		StringReader reader = new StringReader(
+				"<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?><root><p><span>Name</span>:<span>$d.Name</span></p></root>");
+		StringWriter writer = new StringWriter();
+		preprocessor.preprocess("test", reader, writer, null, null, null, null);
+		assertEquals(
+				"<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?><root><p><span>Name</span>:<span>$d.Name</span></p></root>",
+				writer.toString());
+	}
 }

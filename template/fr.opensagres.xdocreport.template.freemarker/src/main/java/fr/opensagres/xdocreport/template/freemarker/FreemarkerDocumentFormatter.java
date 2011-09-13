@@ -25,12 +25,13 @@
 package fr.opensagres.xdocreport.template.freemarker;
 
 import java.util.Collection;
-import java.util.Stack;
 
 import fr.opensagres.xdocreport.core.utils.StringUtils;
 import fr.opensagres.xdocreport.template.config.ITemplateEngineConfiguration;
 import fr.opensagres.xdocreport.template.config.ReplaceText;
 import fr.opensagres.xdocreport.template.formatter.AbstractDocumentFormatter;
+import fr.opensagres.xdocreport.template.formatter.DirectivesStack;
+import fr.opensagres.xdocreport.template.formatter.IfDirective;
 import fr.opensagres.xdocreport.template.formatter.LoopDirective;
 
 /**
@@ -55,8 +56,8 @@ public class FreemarkerDocumentFormatter extends AbstractDocumentFormatter {
 	private static final String CLOSE_ESCAPE = "]\n";
 	private static final String END_ESCAPE = "[/#escape]";
 
-	private static final String START_IF = "[#if ";
-	private static final String END_IF = "[/#if]";
+	private static final String START_IF_DIRECTIVE = "[#if ";
+	private static final String END_IF_DIRECTIVE = "[/#if]";
 
 	private static final String START_IMAGE_DIRECTIVE = DOLLAR_TOTKEN
 			+ IMAGE_REGISTRY_KEY + ".registerImage(";
@@ -176,7 +177,7 @@ public class FreemarkerDocumentFormatter extends AbstractDocumentFormatter {
 	}
 
 	public String getStartIfDirective(String fieldName) {
-		StringBuilder directive = new StringBuilder(START_IF);
+		StringBuilder directive = new StringBuilder(START_IF_DIRECTIVE);
 		directive.append(fieldName);
 		directive.append("??");
 		directive.append(']');
@@ -184,7 +185,7 @@ public class FreemarkerDocumentFormatter extends AbstractDocumentFormatter {
 	}
 
 	public String getEndIfDirective(String fieldName) {
-		return END_IF;
+		return END_IF_DIRECTIVE;
 	}
 
 	public String getLoopCountDirective(String fieldName) {
@@ -208,32 +209,40 @@ public class FreemarkerDocumentFormatter extends AbstractDocumentFormatter {
 	}
 
 	public int extractListDirectiveInfo(String content,
-			Stack<LoopDirective> directives, boolean dontRemoveListDirectiveInfo) {
+			DirectivesStack directives, boolean dontRemoveListDirectiveInfo) {
 		// content='xxxx[#list developers as d]yyy'
-		int startOfEndListDirectiveIndex = content.indexOf(END_LIST_DIRECTIVE);
 		int startOfStartListDirectiveIndex = content
 				.indexOf(START_LIST_DIRECTIVE);
-		if (startOfStartListDirectiveIndex == -1
-				&& startOfEndListDirectiveIndex == -1) {
+		int startOfEndListDirectiveIndex = content.indexOf(END_LIST_DIRECTIVE);
+		int startOfStartIfDirectiveIndex = content.indexOf(START_IF_DIRECTIVE);
+		int startOfEndIfDirectiveIndex = content.indexOf(END_IF_DIRECTIVE);
+		DirectiveToParse directiveToParse = getDirectiveToParse(
+				startOfStartListDirectiveIndex, startOfEndListDirectiveIndex,
+				startOfStartIfDirectiveIndex, startOfEndIfDirectiveIndex);
+		if (directiveToParse == null) {
 			return 0;
 		}
 
-		if (startOfStartListDirectiveIndex == -1
-				|| (startOfEndListDirectiveIndex != -1 && startOfStartListDirectiveIndex > startOfEndListDirectiveIndex)) {
-			// content contains (at first [/#list])
-			if (!dontRemoveListDirectiveInfo && !directives.isEmpty()) {
-				// remove the LoopDirective from the stack
-				directives.pop();
-			}
-			// get content after the [/#list]
-			String afterEndList = content.substring(END_LIST_DIRECTIVE.length()
-					+ startOfEndListDirectiveIndex, content.length());
-			int nbLoop = -1;
-			// parse the content after the [/#list]
-			nbLoop += extractListDirectiveInfo(afterEndList, directives);
-			return nbLoop;
+		switch (directiveToParse) {
+		case START_LOOP:
+			return parseStartLoop(content, directives,
+					startOfStartListDirectiveIndex);
+		case END_LOOP:
+			return parseEndLoop(content, directives,
+					dontRemoveListDirectiveInfo, startOfEndListDirectiveIndex);
+		case START_IF:
+			return parseStartIf(content, directives,
+					startOfStartIfDirectiveIndex);
+		case END_IF:
+			return parseEndIf(content, directives, dontRemoveListDirectiveInfo,
+					startOfEndIfDirectiveIndex);
 		}
 
+		return 0;
+	}
+
+	public int parseStartLoop(String content, DirectivesStack directives,
+			int startOfStartListDirectiveIndex) {
 		// contentWichStartsWithList='[#list developers as d]yyy'
 		String contentWhichStartsWithList = content.substring(
 				startOfStartListDirectiveIndex, content.length());
@@ -291,6 +300,61 @@ public class FreemarkerDocumentFormatter extends AbstractDocumentFormatter {
 		return nbLoop;
 	}
 
+	public int parseEndLoop(String content, DirectivesStack directives,
+			boolean dontRemoveListDirectiveInfo,
+			int startOfEndListDirectiveIndex) {
+		if (!dontRemoveListDirectiveInfo && !directives.isEmpty()) {
+			// remove the LoopDirective from the stack
+			directives.pop();
+		}
+		// get content after the [/#list]
+		String afterEndList = content.substring(END_LIST_DIRECTIVE.length()
+				+ startOfEndListDirectiveIndex, content.length());
+		int nbLoop = -1;
+		// parse the content after the [/#list]
+		nbLoop += extractListDirectiveInfo(afterEndList, directives);
+		return nbLoop;
+	}
+
+	private int parseStartIf(String content, DirectivesStack directives,
+			int startOfStartIfDirectiveIndex) {
+		// contentWichStartsWithList='[#if d]yyy'
+		String contentWhichStartsWithIf = content.substring(
+				startOfStartIfDirectiveIndex, content.length());
+		int endOfStartIfDirectiveIndex = contentWhichStartsWithIf.indexOf(']');
+		if (endOfStartIfDirectiveIndex == -1) {
+			// [#if not closed with ']'
+			return 0;
+		}
+		// startIfDirective='#if($d)'
+		String startIfDirective = contentWhichStartsWithIf.substring(0,
+				endOfStartIfDirectiveIndex + 1);
+		// // contentWichStartsWithList='xxx#if($d)yyy'
+		int nbIf = 1;
+		directives.push(new IfDirective(startIfDirective,
+				getEndIfDirective(null)));
+		// afterIf = 'yyy'
+		String afterIf = content.substring(startOfStartIfDirectiveIndex
+				+ startIfDirective.length(), content.length());
+		nbIf += extractListDirectiveInfo(afterIf, directives);
+		return nbIf;
+	}
+
+	private int parseEndIf(String content, DirectivesStack directives,
+			boolean dontRemoveListDirectiveInfo, int startOfEndIfDirectiveIndex) {
+		if (!dontRemoveListDirectiveInfo && !directives.isEmpty()) {
+			// remove the LoopDirective from the stack
+			directives.pop();
+		}
+		// get content after the [/#if]
+		String afterEndList = content.substring(END_IF_DIRECTIVE.length()
+				+ startOfEndIfDirectiveIndex, content.length());
+		int nbLoop = -1;
+		// parse the content after the [/#if]
+		nbLoop += extractListDirectiveInfo(afterEndList, directives);
+		return nbLoop;
+	}
+
 	public String extractModelTokenPrefix(String fieldName) {
 		if (fieldName == null) {
 			return null;
@@ -310,5 +374,20 @@ public class FreemarkerDocumentFormatter extends AbstractDocumentFormatter {
 			return fieldNameWithoutDollar;
 		}
 		return fieldNameWithoutDollar.substring(0, lastDotIndex);
+	}
+
+	public int getIndexOfScript(String fieldName) {
+		if (fieldName == null) {
+			return -1;
+		}
+		int startIndex = fieldName.indexOf("[#");
+		int endIndex = fieldName.indexOf("[/#");
+		if (endIndex == -1) {
+			return startIndex;
+		}
+		if (startIndex == -1) {
+			return endIndex;
+		}
+		return startIndex < endIndex ? startIndex : endIndex;
 	}
 }

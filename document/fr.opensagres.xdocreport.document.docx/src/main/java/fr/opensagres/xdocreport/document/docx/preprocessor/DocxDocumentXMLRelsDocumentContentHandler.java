@@ -35,6 +35,7 @@ import fr.opensagres.xdocreport.core.utils.StringUtils;
 import fr.opensagres.xdocreport.document.docx.DocXConstants;
 import fr.opensagres.xdocreport.document.docx.images.DocxImageRegistry;
 import fr.opensagres.xdocreport.document.preprocessor.sax.BufferedDocumentContentHandler;
+import fr.opensagres.xdocreport.document.preprocessor.sax.IBufferedRegion;
 import fr.opensagres.xdocreport.template.formatter.FieldsMetadata;
 import fr.opensagres.xdocreport.template.formatter.IDocumentFormatter;
 
@@ -196,7 +197,7 @@ public class DocxDocumentXMLRelsDocumentContentHandler extends
 
 			script.append(formatter
 					.getEndIfDirective(IDocumentFormatter.IMAGE_REGISTRY_KEY));
-
+			IBufferedRegion currentRegion = getCurrentElement();
 			currentRegion.append(script.toString());
 		}
 		super.doEndElement(uri, localName, name);
@@ -214,7 +215,7 @@ public class DocxDocumentXMLRelsDocumentContentHandler extends
 
 		// 3) end loop
 		script.append(info.getEndLoopDirective());
-
+		IBufferedRegion currentRegion = getCurrentElement();
 		currentRegion.append(script.toString());
 
 	}

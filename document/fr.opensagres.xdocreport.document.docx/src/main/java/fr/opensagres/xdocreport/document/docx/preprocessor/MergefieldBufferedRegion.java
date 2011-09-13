@@ -24,15 +24,16 @@
  */
 package fr.opensagres.xdocreport.document.docx.preprocessor;
 
+import org.xml.sax.Attributes;
+
 import fr.opensagres.xdocreport.core.EncodingConstants;
 import fr.opensagres.xdocreport.core.utils.StringUtils;
-import fr.opensagres.xdocreport.document.preprocessor.sax.BufferedRegion;
-import fr.opensagres.xdocreport.document.preprocessor.sax.IBufferedRegion;
+import fr.opensagres.xdocreport.document.preprocessor.sax.BufferedElement;
 import fr.opensagres.xdocreport.document.preprocessor.sax.TransformedBufferedDocumentContentHandler;
 import fr.opensagres.xdocreport.template.formatter.IDocumentFormatter;
 
-public abstract class MergefieldBufferedRegion extends BufferedRegion implements
-		EncodingConstants {
+public abstract class MergefieldBufferedRegion extends BufferedElement
+		implements EncodingConstants {
 
 	private static final String MERGEFORMAT = "\\* MERGEFORMAT";
 
@@ -42,10 +43,13 @@ public abstract class MergefieldBufferedRegion extends BufferedRegion implements
 	private final TransformedBufferedDocumentContentHandler handler;
 	private String fieldName;
 
+	private BufferedElement tRegion;
+
 	public MergefieldBufferedRegion(
 			TransformedBufferedDocumentContentHandler handler,
-			IBufferedRegion parent) {
-		super(parent);
+			BufferedElement parent, String uri, String localName, String name,
+			Attributes attributes) {
+		super(parent, uri, localName, name, attributes);
 		this.handler = handler;
 	}
 
@@ -141,6 +145,13 @@ public abstract class MergefieldBufferedRegion extends BufferedRegion implements
 			}
 		}
 		return null;
+	}
+
+	public BufferedElement getTRegion() {
+		if (tRegion == null) {
+			tRegion = super.findFirstChild("w:t");
+		}
+		return tRegion;
 	}
 
 }

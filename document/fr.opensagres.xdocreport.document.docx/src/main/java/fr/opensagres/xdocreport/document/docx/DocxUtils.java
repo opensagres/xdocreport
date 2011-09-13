@@ -50,6 +50,14 @@ public class DocxUtils implements DocXConstants {
 		return documentArchive.getEntryNames(DocXReport.WORD_REGEXP).size() > 0;
 	}
 
+	public static boolean isTable(String uri, String localName, String name) {
+		return W_NS.equals(uri) && TBL_ELT.equals(localName);
+	}
+
+	public static boolean isTableRow(String uri, String localName, String name) {
+		return W_NS.equals(uri) && TR_ELT.equals(localName);
+	}
+	
 	/**
 	 * Returns true if current element is w:fldSimple and false otherwise.
 	 * 
@@ -97,6 +105,8 @@ public class DocxUtils implements DocXConstants {
 	 * @return
 	 */
 
+
+	
 	public static boolean isP(String uri, String localName, String name) {
 		return (W_NS.equals(uri) && P_ELT.equals(localName));
 	}

@@ -24,12 +24,18 @@
  */
 package fr.opensagres.xdocreport.template.formatter;
 
-import java.util.Stack;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
 public abstract class AbstractDocumentFormatter implements IDocumentFormatter {
 
 	private String startDocumentDirective;
 	private String endDocumentDirective;
+
+	protected enum DirectiveToParse {
+		START_LOOP, END_LOOP, START_IF, END_IF
+	}
 
 	public String extractItemNameList(String content, String fieldName,
 			boolean forceAsField) {
@@ -65,7 +71,7 @@ public abstract class AbstractDocumentFormatter implements IDocumentFormatter {
 	}
 
 	public int extractListDirectiveInfo(String content,
-			Stack<LoopDirective> directives) {
+			DirectivesStack directives) {
 		return extractListDirectiveInfo(content, directives, false);
 	}
 
@@ -73,4 +79,49 @@ public abstract class AbstractDocumentFormatter implements IDocumentFormatter {
 
 	protected abstract boolean isModelField(String content, String fieldName);
 
+	protected DirectiveToParse getDirectiveToParse(int startLoopIndex,
+			int endLoopIndex, int startIfIndex, int endIfIndex) {
+		int minIndex = getMinIndex(startLoopIndex, endLoopIndex, startIfIndex,
+				endIfIndex);
+		if (minIndex == -1) {
+			return null;
+		}
+		if (minIndex == startLoopIndex) {
+			return DirectiveToParse.START_LOOP;
+		}
+		if (minIndex == endLoopIndex) {
+			return DirectiveToParse.END_LOOP;
+		}
+		if (minIndex == startIfIndex) {
+			return DirectiveToParse.START_IF;
+		}
+		if (minIndex == endIfIndex) {
+			return DirectiveToParse.END_IF;
+		}
+		return null;
+	}
+
+	public int getMinIndex(int startLoopIndex, int endLoopIndex,
+			int startIfIndex, int endIfIndex) {
+		List<Integer> coll = new ArrayList<Integer>();
+		if (startLoopIndex != -1) {
+			coll.add(startLoopIndex);
+		}
+		if (endLoopIndex != -1) {
+			coll.add(endLoopIndex);
+		}
+		if (startIfIndex != -1) {
+			coll.add(startIfIndex);
+		}
+		if (endIfIndex != -1) {
+			coll.add(endIfIndex);
+		}
+		if (coll.size() == 0) {
+			return -1;
+		}
+		if (coll.size() == 1) {
+			return coll.get(0);
+		}
+		return Collections.min(coll);
+	}
 }

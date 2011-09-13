@@ -44,17 +44,23 @@ public class FieldsMetadata {
 	public static final FieldsMetadata EMPTY = new FieldsMetadata();
 	public static final String DEFAULT_BEFORE_ROW_TOKEN = "@before-row";
 	public static final String DEFAULT_AFTER_ROW_TOKEN = "@after-row";
-
+	public static final String DEFAULT_BEFORE_TABLE_CELL_TOKEN = "@before-cell";
+	public static final String DEFAULT_AFTER_TABLE_CELL_TOKEN = "@after-cell";
+	
 	private final List<String> fieldsAsList;
 	private final List<FieldMetadataImage> fieldsAsImage;
 	private String beforeRowToken;
 	private String afterRowToken;
-
+	private String beforeTableCellToken;
+	private String afterTableCellToken;
+	
 	public FieldsMetadata() {
 		this.fieldsAsList = new ArrayList<String>();
 		this.fieldsAsImage = new ArrayList<FieldMetadataImage>();
 		this.beforeRowToken = DEFAULT_BEFORE_ROW_TOKEN;
 		this.afterRowToken = DEFAULT_AFTER_ROW_TOKEN;
+		this.beforeTableCellToken = DEFAULT_BEFORE_TABLE_CELL_TOKEN;
+		this.afterTableCellToken = DEFAULT_AFTER_TABLE_CELL_TOKEN;
 	}
 
 	/**
@@ -151,5 +157,23 @@ public class FieldsMetadata {
 	public void setAfterRowToken(String afterRowToken) {
 		this.afterRowToken = afterRowToken;
 	}
+
+	public String getBeforeTableCellToken() {
+		return beforeTableCellToken;
+	}
+
+	public void setBeforeTableCellToken(String beforeTableCellToken) {
+		this.beforeTableCellToken = beforeTableCellToken;
+	}
+
+	public String getAfterTableCellToken() {
+		return afterTableCellToken;
+	}
+
+	public void setAfterTableCellToken(String afterTableCellToken) {
+		this.afterTableCellToken = afterTableCellToken;
+	}
+	
+	
 
 }

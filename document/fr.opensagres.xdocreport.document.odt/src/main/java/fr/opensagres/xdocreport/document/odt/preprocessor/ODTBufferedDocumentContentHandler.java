@@ -37,7 +37,6 @@ import org.xml.sax.helpers.AttributesImpl;
 
 import fr.opensagres.xdocreport.core.utils.StringUtils;
 import fr.opensagres.xdocreport.document.odt.ODTConstants;
-import fr.opensagres.xdocreport.document.odt.ODTUtils;
 import fr.opensagres.xdocreport.document.preprocessor.sax.TransformedBufferedDocumentContentHandler;
 import fr.opensagres.xdocreport.template.formatter.FieldsMetadata;
 import fr.opensagres.xdocreport.template.formatter.IDocumentFormatter;
@@ -47,7 +46,8 @@ import fr.opensagres.xdocreport.template.formatter.IDocumentFormatter;
  * the table row which contains a list fields.
  */
 public class ODTBufferedDocumentContentHandler extends
-		TransformedBufferedDocumentContentHandler implements ODTConstants {
+		TransformedBufferedDocumentContentHandler<ODTBufferedDocument>
+		implements ODTConstants {
 
 	private String dynamicImageName;
 	private boolean textInputParsing = false;
@@ -55,6 +55,11 @@ public class ODTBufferedDocumentContentHandler extends
 	protected ODTBufferedDocumentContentHandler(FieldsMetadata fieldsMetadata,
 			IDocumentFormatter formatter, Map<String, Object> sharedContext) {
 		super(fieldsMetadata, formatter, sharedContext);
+	}
+
+	@Override
+	protected ODTBufferedDocument createDocument() {
+		return new ODTBufferedDocument();
 	}
 
 	@Override
@@ -132,36 +137,43 @@ public class ODTBufferedDocumentContentHandler extends
 	}
 
 	@Override
-	protected boolean isTable(String uri, String localName, String name) {
-		return ODTUtils.isTable(uri, localName, name);
+	protected String getTableRowName() {
+		return "table:table-row";
 	}
 
 	@Override
-	protected boolean isRow(String uri, String localName, String name) {
-		return ODTUtils.isTableRow(uri, localName, name);
+	protected String getTableCellName() {
+		return "table:table-cell";
 	}
 
 	@Override
 	protected void flushCharacters(String characters) {
-		if (textInputParsing && currentRow != null) {
+		if (textInputParsing) {
 			String fieldName = characters;
-			String beforeRowToken = getBeforeRowToken();
-			if (fieldName.startsWith(beforeRowToken)) {
-				// @start-row
-				String startLoopDirective = fieldName.substring(
-						beforeRowToken.length(), fieldName.length());
-				currentRow.setStartLoopDirective(startLoopDirective);
+			if (processScriptBefore(fieldName)) {
 				return;
-			} else {
-				String afterRowToken = getAfterRowToken();
-				if (fieldName.startsWith(afterRowToken)) {
-					// @end-row
-					String endLoopDirective = fieldName.substring(
-							afterRowToken.length(), fieldName.length());
-					currentRow.setEndLoopDirective(endLoopDirective);
-					return;
-				}
 			}
+			if (processScriptAfter(fieldName)) {
+				return;
+			}
+
+			// String beforeRowToken = getBeforeRowToken();
+			// if (fieldName.startsWith(beforeRowToken)) {
+			// // @start-row
+			// String startLoopDirective = fieldName.substring(
+			// beforeRowToken.length(), fieldName.length());
+			// currentRow.setStartLoopDirective(startLoopDirective);
+			// return;
+			// } else {
+			// String afterRowToken = getAfterRowToken();
+			// if (fieldName.startsWith(afterRowToken)) {
+			// // @end-row
+			// String endLoopDirective = fieldName.substring(
+			// afterRowToken.length(), fieldName.length());
+			// currentRow.setEndLoopDirective(endLoopDirective);
+			// return;
+			// }
+			// }
 		}
 		super.flushCharacters(characters);
 	}

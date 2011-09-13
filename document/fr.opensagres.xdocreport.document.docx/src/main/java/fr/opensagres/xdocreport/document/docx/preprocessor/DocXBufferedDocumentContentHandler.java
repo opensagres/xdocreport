@@ -25,14 +25,9 @@
 package fr.opensagres.xdocreport.document.docx.preprocessor;
 
 import static fr.opensagres.xdocreport.document.docx.DocxUtils.isBlip;
-import static fr.opensagres.xdocreport.document.docx.DocxUtils.isBookmarkEnd;
-import static fr.opensagres.xdocreport.document.docx.DocxUtils.isBookmarkStart;
 import static fr.opensagres.xdocreport.document.docx.DocxUtils.isFldChar;
 import static fr.opensagres.xdocreport.document.docx.DocxUtils.isFldSimple;
-import static fr.opensagres.xdocreport.document.docx.DocxUtils.isHyperlink;
 import static fr.opensagres.xdocreport.document.docx.DocxUtils.isInstrText;
-import static fr.opensagres.xdocreport.document.docx.DocxUtils.isP;
-import static fr.opensagres.xdocreport.document.docx.DocxUtils.isR;
 import static fr.opensagres.xdocreport.document.docx.DocxUtils.isT;
 
 import java.util.Map;
@@ -43,6 +38,8 @@ import org.xml.sax.helpers.AttributesImpl;
 
 import fr.opensagres.xdocreport.core.utils.StringUtils;
 import fr.opensagres.xdocreport.document.docx.DocXConstants;
+import fr.opensagres.xdocreport.document.preprocessor.sax.BufferedElement;
+import fr.opensagres.xdocreport.document.preprocessor.sax.IBufferedRegion;
 import fr.opensagres.xdocreport.document.preprocessor.sax.TransformedBufferedDocumentContentHandler;
 import fr.opensagres.xdocreport.template.formatter.FieldsMetadata;
 import fr.opensagres.xdocreport.template.formatter.IDocumentFormatter;
@@ -52,58 +49,44 @@ import fr.opensagres.xdocreport.template.formatter.IDocumentFormatter;
  * the table row which contains a list fields.
  */
 public class DocXBufferedDocumentContentHandler extends
-		TransformedBufferedDocumentContentHandler implements DocXConstants {
+		TransformedBufferedDocumentContentHandler<DocxBufferedDocument>
+		implements DocXConstants {
 
-	private static final String NAME_ATTR = "name";
-
-	private RBufferedRegion currentRRegion = null;
-	private PBufferedRegion currentPRegion = null;
-	private FldSimpleBufferedRegion currentFldSimpleRegion = null;
 	private boolean instrTextParsing;
 	private boolean tParsing = false;
-	private int nbLoopDirectiveToRemove = 0;
-
-	private BookmarkBufferedRegion currentBookmark;
-
+	
 	protected DocXBufferedDocumentContentHandler(FieldsMetadata fieldsMetadata,
 			IDocumentFormatter formater, Map<String, Object> context) {
 		super(fieldsMetadata, formater, context);
 	}
 
 	@Override
-	protected boolean isTable(String uri, String localName, String name) {
-		return W_NS.equals(uri) && TBL_ELT.equals(localName);
+	protected DocxBufferedDocument createDocument() {
+		return new DocxBufferedDocument(this);
 	}
 
 	@Override
-	protected boolean isRow(String uri, String localName, String name) {
-		return W_NS.equals(uri) && TR_ELT.equals(localName);
+	protected String getTableRowName() {
+		return "w:tr";
+	}
+
+	@Override
+	protected String getTableCellName() {
+		return "w:tc";
 	}
 
 	@Override
 	public boolean doStartElement(String uri, String localName, String name,
 			Attributes attributes) throws SAXException {
-		FieldsMetadata fieldsMetadata = super.getFieldsMetadata();
+		
 		IDocumentFormatter formatter = super.getFormatter();
+		
 		// Transform mergefield name WordML code with just name of name
 		// Merge field is represent with w:fldSimple or w:instrText (complex
 		// field). See
 		// http://www.documentinteropinitiative.org/implnotes/ecma-376/812d4aca-3071-4352-872a-ca21d65ec913.aspx
-
-		if (isP(uri, localName, name)) {
-			// w:p element
-			currentPRegion = new PBufferedRegion(currentRegion);
-			currentRegion = currentPRegion;
-			return super.doStartElement(uri, localName, name, attributes);
-		}
-
-		if (isR(uri, localName, name) && currentFldSimpleRegion == null) {
-			// w:r element
-			currentRRegion = new RBufferedRegion(this, currentRegion);
-			currentRegion = currentRRegion;
-			return super.doStartElement(uri, localName, name, attributes);
-		}
-
+		
+		RBufferedRegion currentRRegion = bufferedDocument.getCurrentRRegion();
 		if (isFldChar(uri, localName, name) && currentRRegion != null) {
 			// w:fdlChar element
 			String fldCharType = attributes.getValue(W_NS, FLDCHARTYPE_ATTR);
@@ -119,7 +102,7 @@ public class DocXBufferedDocumentContentHandler extends
 
 		if (isT(uri, localName, name)) {
 			// w:t element
-			tParsing = true;
+			tParsing = true;			
 			return super.doStartElement(uri, localName, name, attributes);
 		}
 
@@ -127,47 +110,18 @@ public class DocXBufferedDocumentContentHandler extends
 			// w:fldSimple element
 			// start of fldSimple mergefield, add the fieldName of mergefield
 			// and ignore element
-			String instrText = processRowIfNeeded(attributes.getValue(W_NS,
-					INSTR_ATTR));
-			currentFldSimpleRegion = new FldSimpleBufferedRegion(this,
-					currentRegion);
-			currentFldSimpleRegion.setInstrText(instrText);
-			boolean addElement = false;
+			FldSimpleBufferedRegion currentFldSimpleRegion = bufferedDocument
+					.getCurrentFldSimpleRegion();
 			if (currentFldSimpleRegion.getFieldName() == null) {
 				super.doStartElement(uri, localName, name, attributes);
-				addElement = true;
+				return true;
 			}
-			currentRegion = currentFldSimpleRegion;
-			return addElement;
-		}
-
-		if (isBookmarkStart(uri, localName, name)) {
-			// <w:bookmarkStart w:id="0" w:name="logo" />
-			String bookmarkName = attributes.getValue(W_NS, NAME_ATTR);
-			if (fieldsMetadata != null) {
-				String imageFieldName = fieldsMetadata
-						.getImageFieldName(bookmarkName);
-				if (imageFieldName != null) {
-					currentBookmark = new BookmarkBufferedRegion(bookmarkName,
-							imageFieldName, currentRegion);
-					currentRegion = currentBookmark;
-				}
-			}
-			return super.doStartElement(uri, localName, name, attributes);
-		}
-
-		if (isBookmarkEnd(uri, localName, name)) {
-			// w:bookmarkEnd
-			boolean result = super.doStartElement(uri, localName, name,
-					attributes);
-			if (currentBookmark != null) {
-				currentRegion = currentBookmark.getParent();
-			}
-			currentBookmark = null;
-			return result;
+			return false;
 		}
 
 		if (isBlip(uri, localName, name)) {
+			BookmarkBufferedRegion currentBookmark = bufferedDocument
+					.getCurrentBookmark();
 			// <a:blip r:embed="rId5" />
 			if (currentBookmark != null && formatter != null) {
 				// modify "embed" attribute with image script (Velocity,
@@ -184,24 +138,7 @@ public class DocXBufferedDocumentContentHandler extends
 					attributes = attr;
 				}
 			}
-		} else if (isHyperlink(uri, localName, name)) {
-			// <w:hyperlink r:id="rId5" w:history="1">
-			HyperlinkBufferedRegion hyperlink = new HyperlinkBufferedRegion(
-					this, currentRegion);
-			currentRegion = hyperlink;
-			int idIndex = attributes.getIndex(R_NS, ID_ATTR);
-			if (idIndex != -1) {
-				String attrName = attributes.getQName(idIndex);
-				AttributesImpl attributesImpl = toAttributesImpl(attributes);
-				attributesImpl.removeAttribute(idIndex);
-				super.doStartElement(uri, localName, name, attributesImpl);
-				String id = attributes.getValue(idIndex);
-				hyperlink.setId(attrName, id);
-				return true;
-			}
-			return super.doStartElement(uri, localName, name, attributes);
 		}
-
 		// Another element
 		return super.doStartElement(uri, localName, name, attributes);
 
@@ -210,23 +147,24 @@ public class DocXBufferedDocumentContentHandler extends
 	@Override
 	public void doEndElement(String uri, String localName, String name)
 			throws SAXException {
+		IBufferedRegion currentRegion = getCurrentElement();
+		// if (isP(uri, localName, name) && currentPRegion != null) {
+		// super.doEndElement(uri, localName, name);
+		// currentPRegion.process();
+		// currentRegion = currentPRegion.getParent();
+		// currentPRegion = null;
+		// return;
+		// }
+		//
+		// if (isR(uri, localName, name) && currentRRegion != null
+		// && currentFldSimpleRegion == null) {
+		// super.doEndElement(uri, localName, name);
+		// currentRegion = currentRRegion.getParent();
+		// currentRRegion = null;
+		// return;
+		// }
 
-		if (isP(uri, localName, name) && currentPRegion != null) {
-			super.doEndElement(uri, localName, name);
-			currentPRegion.process();
-			currentRegion = currentPRegion.getParent();
-			currentPRegion = null;
-			return;
-		}
-
-		if (isR(uri, localName, name) && currentRRegion != null
-				&& currentFldSimpleRegion == null) {
-			super.doEndElement(uri, localName, name);
-			currentRegion = currentRRegion.getParent();
-			currentRRegion = null;
-			return;
-		}
-
+		RBufferedRegion currentRRegion = bufferedDocument.getCurrentRRegion();
 		if (isInstrText(uri, localName, name) && currentRRegion != null) {
 			super.doEndElement(uri, localName, name);
 			instrTextParsing = false;
@@ -239,70 +177,54 @@ public class DocXBufferedDocumentContentHandler extends
 			return;
 		}
 
+		FldSimpleBufferedRegion currentFldSimpleRegion = bufferedDocument
+				.getCurrentFldSimpleRegion();
 		if (isFldSimple(uri, localName, name) && currentFldSimpleRegion != null) {
 			// it's end of fldSimple and it's Mergefield; ignore the element
 			String fieldName = currentFldSimpleRegion.getFieldName();
 			if (fieldName == null) {
 				super.doEndElement(uri, localName, name);
-			} else {
-				if (currentRow != null) {
-					String beforeRowToken = getBeforeRowToken();
-					if (fieldName.startsWith(beforeRowToken)) {
-						// @before-row
-						String startLoopDirective = fieldName.substring(
-								beforeRowToken.length(), fieldName.length());
-						currentRow.setStartLoopDirective(startLoopDirective);
-						currentFldSimpleRegion.reset();
-					} else {
-						String afterRowToken = getAfterRowToken();
-						if (fieldName.startsWith(afterRowToken)) {
-							// @after-row
-							String endLoopDirective = fieldName.substring(
-									afterRowToken.length(), fieldName.length());
-							currentRow.setEndLoopDirective(endLoopDirective);
-							currentFldSimpleRegion.reset();
-						}
-					}
-				}
 			}
-			currentRegion = currentFldSimpleRegion.getParent();
-			currentFldSimpleRegion = null;
 			return;
 		}
-
-		if (isHyperlink(uri, localName, name)) {
-			// </w:hyperlink>
-			HyperlinkBufferedRegion hyperlink = (HyperlinkBufferedRegion) currentRegion;
-			super.doEndElement(uri, localName, name);
-			hyperlink.process();
-			currentRegion = hyperlink.getParent();
-			return;
-		}
-		if (isRow(uri, localName, name)) {
-			// remove list directive if needed
-			if (nbLoopDirectiveToRemove > 0) {
-				for (int i = 0; i < nbLoopDirectiveToRemove; i++) {
-					if (!getDirectives().isEmpty()) {
-						getDirectives().pop();
-
-					}
-				}
-				nbLoopDirectiveToRemove = 0;
-			}
-		}
+		//
+		// if (isHyperlink(uri, localName, name)) {
+		// // </w:hyperlink>
+		// HyperlinkBufferedRegion hyperlink = (HyperlinkBufferedRegion)
+		// currentRegion;
+		// super.doEndElement(uri, localName, name);
+		// hyperlink.process();
+		// currentRegion = hyperlink.getParent();
+		// return;
+		// }
+//		if (isTableRow(uri, localName, name)) {
+//			// remove list directive if needed
+//			if (nbLoopDirectiveToRemove > 0) {
+//				for (int i = 0; i < nbLoopDirectiveToRemove; i++) {
+//					if (!getDirectives().isEmpty()) {
+//						getDirectives().pop();
+//
+//					}
+//				}
+//				nbLoopDirectiveToRemove = 0;
+//			}
+//		}
 		super.doEndElement(uri, localName, name);
 	}
 
 	@Override
 	protected void flushCharacters(String characters) {
+		FldSimpleBufferedRegion currentFldSimpleRegion = bufferedDocument
+				.getCurrentFldSimpleRegion();
 		if (tParsing && currentFldSimpleRegion != null) {
 			// fldSimple mergefield is parsing, replace with field name.
 			currentFldSimpleRegion.setTContent(characters);
-			extractListDirectiveInfo(currentFldSimpleRegion);			
+			extractListDirectiveInfo(currentFldSimpleRegion);
 			resetCharacters();
 			return;
 		}
 
+		RBufferedRegion currentRRegion = bufferedDocument.getCurrentRRegion();
 		if (currentRRegion != null) {
 			if (instrTextParsing) {
 				characters = processRowIfNeeded(characters);
@@ -323,11 +245,6 @@ public class DocXBufferedDocumentContentHandler extends
 	}
 
 	private void extractListDirectiveInfo(MergefieldBufferedRegion mergefield) {
-		int i = super.extractListDirectiveInfo(
-				mergefield.getFieldName(),
-				currentRow != null);
-		if (i < 0) {
-			nbLoopDirectiveToRemove += -i;
-		}
+		super.extractListDirectiveInfo(mergefield.getFieldName());
 	}
 }

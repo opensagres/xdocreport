@@ -27,12 +27,13 @@ package fr.opensagres.xdocreport.document.odt.preprocessor;
 import org.xml.sax.SAXException;
 
 import fr.opensagres.xdocreport.document.odt.ODTConstants;
+import fr.opensagres.xdocreport.document.preprocessor.sax.BufferedDocument;
 import fr.opensagres.xdocreport.document.preprocessor.sax.BufferedDocumentContentHandler;
 import fr.opensagres.xdocreport.template.formatter.FieldsMetadata;
 import fr.opensagres.xdocreport.template.formatter.IDocumentFormatter;
 
 public class ODTManifestXMLDocumentContentHandler extends
-		BufferedDocumentContentHandler implements ODTConstants {
+		BufferedDocumentContentHandler<BufferedDocument> implements ODTConstants {
 
 	private static final String ITEM_INFO = "___info";
 
@@ -57,7 +58,7 @@ public class ODTManifestXMLDocumentContentHandler extends
 			
 			script.append(formatter.getEndIfDirective(IDocumentFormatter.IMAGE_REGISTRY_KEY));
 			
-			currentRegion.append(script.toString());
+			getCurrentElement().append(script.toString());
 			
 			
 		}

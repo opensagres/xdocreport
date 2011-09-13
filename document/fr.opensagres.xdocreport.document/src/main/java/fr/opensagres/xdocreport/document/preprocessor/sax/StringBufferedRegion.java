@@ -35,8 +35,8 @@ public class StringBufferedRegion extends BufferedRegionAdpater {
 
 	private final StringBuilder buffer = new StringBuilder();
 
-	public StringBufferedRegion(IBufferedRegion parent) {
-		super(parent);
+	public StringBufferedRegion(BufferedElement ownerElement, IBufferedRegion parent) {
+		super(ownerElement, parent);
 	}
 
 	@Override
@@ -66,6 +66,9 @@ public class StringBufferedRegion extends BufferedRegionAdpater {
 
 	@Override
 	public String toString() {
+		if (buffer == null) {
+			return null;
+		}
 		return buffer.toString();
 	}
 

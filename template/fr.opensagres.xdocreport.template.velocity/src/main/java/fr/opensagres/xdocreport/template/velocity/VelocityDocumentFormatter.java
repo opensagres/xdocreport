@@ -24,10 +24,10 @@
  */
 package fr.opensagres.xdocreport.template.velocity;
 
-import java.util.Stack;
-
 import fr.opensagres.xdocreport.core.utils.StringUtils;
 import fr.opensagres.xdocreport.template.formatter.AbstractDocumentFormatter;
+import fr.opensagres.xdocreport.template.formatter.DirectivesStack;
+import fr.opensagres.xdocreport.template.formatter.IfDirective;
 import fr.opensagres.xdocreport.template.formatter.LoopDirective;
 
 /**
@@ -53,8 +53,8 @@ public class VelocityDocumentFormatter extends AbstractDocumentFormatter {
 			+ IMAGE_REGISTRY_KEY + ".registerImage(";
 	private static final String END_IMAGE_DIRECTIVE = ")}";
 
-	private static final String START_IF = "#if( ";
-	private static final String END_IF = "#end";
+	private static final String START_IF_DIRECTIVE = "#if(";
+	private static final String END_IF_DIRECTIVE = "#end";
 
 	private static final String VELOCITY_COUNT = "$velocityCount";
 
@@ -168,7 +168,7 @@ public class VelocityDocumentFormatter extends AbstractDocumentFormatter {
 	}
 
 	public String getStartIfDirective(String fieldName) {
-		StringBuilder directive = new StringBuilder(START_IF);
+		StringBuilder directive = new StringBuilder(START_IF_DIRECTIVE);
 		if (!fieldName.startsWith(DOLLAR_TOTKEN)) {
 			directive.append(DOLLAR_TOTKEN);
 		}
@@ -178,7 +178,7 @@ public class VelocityDocumentFormatter extends AbstractDocumentFormatter {
 	}
 
 	public String getEndIfDirective(String fieldName) {
-		return END_IF;
+		return END_IF_DIRECTIVE;
 	}
 
 	public String getLoopCountDirective(String fieldName) {
@@ -198,34 +198,77 @@ public class VelocityDocumentFormatter extends AbstractDocumentFormatter {
 	}
 
 	public int extractListDirectiveInfo(String content,
-			Stack<LoopDirective> directives, boolean dontRemoveListDirectiveInfo) {
+			DirectivesStack directives, boolean dontRemoveListDirectiveInfo) {
 		// content='xxxx#foreach($d in $developers)yyy'
 		int startOfEndListDirectiveIndex = content
 				.indexOf(END_FOREACH_DIRECTIVE);
 		int startOfStartListDirectiveIndex = content
 				.indexOf(START_FOREACH_DIRECTIVE);
-		if (startOfStartListDirectiveIndex == -1
-				&& startOfEndListDirectiveIndex == -1) {
+		int startOfStartIfDirectiveIndex = content.indexOf(START_IF_DIRECTIVE);
+		DirectiveToParse directiveToParse = getDirectiveToParse(
+				startOfStartListDirectiveIndex, startOfEndListDirectiveIndex, 
+				startOfStartIfDirectiveIndex, startOfEndListDirectiveIndex);
+		if (directiveToParse == null) {
 			return 0;
 		}
 
-		if (startOfStartListDirectiveIndex == -1
-				|| (startOfEndListDirectiveIndex != -1 && startOfStartListDirectiveIndex > startOfEndListDirectiveIndex)) {
-			// content contains (at first #end)
-			if (!dontRemoveListDirectiveInfo && !directives.isEmpty()) {
-				// remove the LoopDirective from the stack
-				directives.pop();
-			}
-			// get content after the #end
-			String afterEndList = content.substring(
-					END_FOREACH_DIRECTIVE.length()
-							+ startOfEndListDirectiveIndex, content.length());
-			int nbLoop = -1;
-			// parse the content after the #end
-			nbLoop += extractListDirectiveInfo(afterEndList, directives);
-			return nbLoop;
+		switch (directiveToParse) {
+		case START_LOOP:
+			return parseStartLoop(content, directives,
+					startOfStartListDirectiveIndex);
+		case START_IF:
+			return parseStartIf(content, directives,
+					startOfStartIfDirectiveIndex);
+		case END_IF:
+		case END_LOOP:
+			return parseEndDirective(content, directives,
+					dontRemoveListDirectiveInfo, startOfEndListDirectiveIndex);
 		}
+		return 0;
+	}
 
+	public int parseEndDirective(String content, DirectivesStack directives,
+			boolean dontRemoveListDirectiveInfo,
+			int startOfEndListDirectiveIndex) {
+		// content contains (at first #end)
+		if (!dontRemoveListDirectiveInfo && !directives.isEmpty()) {
+			// remove the LoopDirective from the stack
+			directives.pop();
+		}
+		// get content after the #end
+		String afterEndList = content.substring(END_FOREACH_DIRECTIVE.length()
+				+ startOfEndListDirectiveIndex, content.length());
+		int nbLoop = -1;
+		// parse the content after the #end
+		nbLoop += extractListDirectiveInfo(afterEndList, directives);
+		return nbLoop;
+	}
+
+	public int parseStartIf(String content, DirectivesStack directives,
+			int startOfStartIfDirectiveIndex) {
+		String contentWhichStartsWithIf = content.substring(
+				startOfStartIfDirectiveIndex, content.length());
+		int endOfStartIfDirectiveIndex = contentWhichStartsWithIf.indexOf(')');
+		if (endOfStartIfDirectiveIndex == -1) {
+			// #if( not closed with ')'
+			return 0;
+		}
+		// startIfDirective='#if($d)'
+		String startIfDirective = contentWhichStartsWithIf.substring(0,
+				endOfStartIfDirectiveIndex + 1);
+		// // contentWichStartsWithList='xxx#if($d)yyy'
+		int nbIf = 1;
+		directives.push(new IfDirective(startIfDirective,
+				getEndIfDirective(null)));
+		// afterIf = 'yyy'
+		String afterIf = content.substring(startOfStartIfDirectiveIndex
+				+ startIfDirective.length(), content.length());
+		nbIf += extractListDirectiveInfo(afterIf, directives);
+		return nbIf;
+	}
+
+	public int parseStartLoop(String content, DirectivesStack directives,
+			int startOfStartListDirectiveIndex) {
 		// contentWichStartsWithList='#foreach($d in $developers)yyy'
 		String contentWhichStartsWithList = content.substring(
 				startOfStartListDirectiveIndex, content.length());
@@ -315,5 +358,12 @@ public class VelocityDocumentFormatter extends AbstractDocumentFormatter {
 		}
 		// fieldNameWithoutDollar='developers'
 		return fieldNameWithoutDollar.substring(0, lastDotIndex);
+	}
+
+	public int getIndexOfScript(String fieldName) {
+		if (fieldName == null) {
+			return -1;
+		}
+		return fieldName.indexOf("#");
 	}
 }

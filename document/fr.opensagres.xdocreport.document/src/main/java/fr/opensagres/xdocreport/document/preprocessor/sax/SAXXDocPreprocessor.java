@@ -39,6 +39,10 @@ import fr.opensagres.xdocreport.document.preprocessor.AbstractXDocPreprocessor;
 import fr.opensagres.xdocreport.template.formatter.FieldsMetadata;
 import fr.opensagres.xdocreport.template.formatter.IDocumentFormatter;
 
+/**
+ * SAX preprocessor to modify XML entry with SAX.
+ * 
+ */
 public abstract class SAXXDocPreprocessor extends AbstractXDocPreprocessor {
 
 	@Override
@@ -48,7 +52,7 @@ public abstract class SAXXDocPreprocessor extends AbstractXDocPreprocessor {
 			throws XDocReportException, IOException {
 		try {
 			XMLReader xmlReader = XMLReaderFactory.createXMLReader();
-			BufferedDocumentContentHandler contentHandler = createBufferedDocumentContentHandler(
+			BufferedDocumentContentHandler<?> contentHandler = createBufferedDocumentContentHandler(
 					fieldsMetadata, formater, sharedContext);
 			xmlReader.setContentHandler(contentHandler);
 			xmlReader.parse(new InputSource(reader));
@@ -57,16 +61,20 @@ public abstract class SAXXDocPreprocessor extends AbstractXDocPreprocessor {
 				document.save(writer);
 				if (debugWriter != null) {
 					document.save(debugWriter);
-				}
+				}				
+//				StringWriter s=new StringWriter();
+//				document.save(s);
+//				System.err.println(s);
 				return true;
 			}
+
 			return false;
 		} catch (SAXException e) {
 			throw new XDocReportException(e);
 		}
 	}
 
-	protected abstract BufferedDocumentContentHandler createBufferedDocumentContentHandler(
+	protected abstract BufferedDocumentContentHandler<?> createBufferedDocumentContentHandler(
 			FieldsMetadata fieldsMetadata, IDocumentFormatter formatter,
 			Map<String, Object> sharedContext);
 

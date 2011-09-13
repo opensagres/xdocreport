@@ -24,6 +24,9 @@
  */
 package fr.opensagres.xdocreport.document.docx.preprocessor;
 
+import org.xml.sax.Attributes;
+
+import fr.opensagres.xdocreport.document.preprocessor.sax.BufferedElement;
 import fr.opensagres.xdocreport.document.preprocessor.sax.IBufferedRegion;
 import fr.opensagres.xdocreport.document.preprocessor.sax.StringBufferedRegion;
 import fr.opensagres.xdocreport.document.preprocessor.sax.TransformedBufferedDocumentContentHandler;
@@ -32,10 +35,11 @@ public class RBufferedRegion extends MergefieldBufferedRegion {
 
 	private String fldCharType;
 	private StringBufferedRegion tContentRegion = null;
-
+	
 	public RBufferedRegion(TransformedBufferedDocumentContentHandler handler,
-			IBufferedRegion parent) {
-		super(handler, parent);
+			BufferedElement parent, String uri,
+			String localName, String name, Attributes attributes) {
+		super(handler, parent, uri, localName, name, attributes);
 	}
 
 	public void setFldCharType(String fldCharType) {
@@ -47,12 +51,7 @@ public class RBufferedRegion extends MergefieldBufferedRegion {
 	}
 
 	public void setTContent(String tContent) {
-		if (tContentRegion == null) {
-			tContentRegion = new StringBufferedRegion(this);
-			super.setCurrentRegion(new StringBufferedRegion(this));
-		}
-		tContentRegion.clear();
-		tContentRegion.append(tContent);
+		getTRegion().setTextContent(tContent);		
 	}
 
 	@Override
@@ -63,10 +62,7 @@ public class RBufferedRegion extends MergefieldBufferedRegion {
 	}
 
 	public String getTContent() {
-		if (tContentRegion == null) {
-			return null;
-		}
-		return tContentRegion.toString();
+		return getTRegion().getTextContent();
 
 	}
 }

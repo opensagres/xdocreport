@@ -1,18 +1,15 @@
 package fr.opensagres.xdocreport.template.formatter;
 
-public class LoopDirective {
+public class LoopDirective extends Directive {
 
-	private final String startLoopDirective;
-	private final String endLoopDirective;
 	private final String sequence;
 	private final String item;
 
 	public LoopDirective(String startLoopDirective, String endLoopDirective,
 			String sequence, String item) {
+		super(startLoopDirective, endLoopDirective);
 		this.sequence = sequence;
 		this.item = item;
-		this.startLoopDirective = startLoopDirective;
-		this.endLoopDirective = endLoopDirective;
 	}
 
 	public String getSequence() {
@@ -23,11 +20,8 @@ public class LoopDirective {
 		return item;
 	}
 
-	public String getStartLoopDirective() {
-		return startLoopDirective;
-	}
-
-	public String getEndLoopDirective() {
-		return endLoopDirective;
+	@Override
+	public DirectiveType getType() {
+		return DirectiveType.LOOP;
 	}
 }

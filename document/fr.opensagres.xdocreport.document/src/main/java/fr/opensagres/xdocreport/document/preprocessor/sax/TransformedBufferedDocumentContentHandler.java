@@ -26,31 +26,28 @@ package fr.opensagres.xdocreport.document.preprocessor.sax;
 
 import java.util.Collection;
 import java.util.Map;
-import java.util.Stack;
 
-import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
 
 import fr.opensagres.xdocreport.core.utils.StringUtils;
+import fr.opensagres.xdocreport.template.formatter.DirectivesStack;
 import fr.opensagres.xdocreport.template.formatter.FieldsMetadata;
 import fr.opensagres.xdocreport.template.formatter.IDocumentFormatter;
-import fr.opensagres.xdocreport.template.formatter.LoopDirective;
 
 /**
  * Document transformed to manage lazy loop for row table and dynamic image.
  * 
  */
-public abstract class TransformedBufferedDocumentContentHandler extends
-		BufferedDocumentContentHandler {
+public abstract class TransformedBufferedDocumentContentHandler<Document extends TransformedBufferedDocument>
+		extends BufferedDocumentContentHandler<Document> {
 
+	private static final String AFTER_TOKEN = "@/";
+	private static final String BEFORE_TOKEN = "@";
 	private final FieldsMetadata fieldsMetadata;
 	private final IDocumentFormatter formatter;
 	private final Map<String, Object> sharedContext;
-	private final Stack<LoopDirective> directives;
-
-	// Table stack
-	private final Stack<TableBufferedRegion> tableStack = new Stack<TableBufferedRegion>();
-	protected RowBufferedRegion currentRow;
+	private final DirectivesStack directives;
+	private int nbLoopDirectiveToRemove = 0;
 
 	protected TransformedBufferedDocumentContentHandler(
 			FieldsMetadata fieldsMetadata, IDocumentFormatter formater,
@@ -58,7 +55,7 @@ public abstract class TransformedBufferedDocumentContentHandler extends
 		this.fieldsMetadata = fieldsMetadata;
 		this.formatter = formater;
 		this.sharedContext = sharedContext;
-		this.directives = new Stack<LoopDirective>();
+		this.directives = new DirectivesStack();
 	}
 
 	@Override
@@ -79,48 +76,6 @@ public abstract class TransformedBufferedDocumentContentHandler extends
 			this.bufferedDocument.append(directive);
 		}
 		super.endDocument();
-	}
-
-	@Override
-	public boolean doStartElement(String uri, String localName, String name,
-			Attributes attributes) throws SAXException {
-		if (isTable(uri, localName, name)) {
-			TableBufferedRegion currentTable = new TableBufferedRegion(
-					currentRegion);
-			currentRegion = currentTable;
-			// Add table in the stack
-			tableStack.add(currentTable);
-
-		} else if (isRow(uri, localName, name)) {
-			// Check if currentRow belong to a table
-			if (tableStack.size() < 1) {
-				throw new SAXException(
-						"XML mal formatted. XML Row must be included in a XML Table");
-			}
-			currentRow = new RowBufferedRegion(currentRegion);
-			currentRegion = currentRow;
-		}
-		return super.doStartElement(uri, localName, name, attributes);
-	}
-
-	@Override
-	public void doEndElement(String uri, String localName, String name)
-			throws SAXException {
-		super.doEndElement(uri, localName, name);
-		if (isTable(uri, localName, name)) {
-			// end of table, remove the last table which was added
-			TableBufferedRegion table = tableStack.pop();
-			currentRegion = table.getParent();
-			if (currentRegion instanceof RowBufferedRegion) {
-				// Table was included in a row
-				currentRow = (RowBufferedRegion) currentRegion;
-			}
-		} else if (isRow(uri, localName, name)) {
-			// end of row, current region is the last table which was added.
-			TableBufferedRegion table = tableStack.peek();
-			currentRegion = table;
-			currentRow = null;
-		}
 	}
 
 	@Override
@@ -153,6 +108,7 @@ public abstract class TransformedBufferedDocumentContentHandler extends
 	 */
 	public ProcessRowResult getProcessRowResult(String content,
 			boolean forceAsField) {
+		RowBufferedRegion currentRow = bufferedDocument.getCurrentTableRow();
 		if (currentRow != null && formatter != null) {
 			// characters parsing belong to a row
 			// search if it contains fields list from metadata
@@ -205,7 +161,7 @@ public abstract class TransformedBufferedDocumentContentHandler extends
 		return formatter;
 	}
 
-	public Stack<LoopDirective> getDirectives() {
+	public DirectivesStack getDirectives() {
 		return directives;
 	}
 
@@ -233,6 +189,30 @@ public abstract class TransformedBufferedDocumentContentHandler extends
 		return fieldsMetadata.getAfterRowToken();
 	}
 
+	/**
+	 * Returns the before row token.
+	 * 
+	 * @return
+	 */
+	protected String getBeforeTableCellToken() {
+		if (fieldsMetadata == null) {
+			return FieldsMetadata.DEFAULT_BEFORE_TABLE_CELL_TOKEN;
+		}
+		return fieldsMetadata.getBeforeTableCellToken();
+	}
+
+	/**
+	 * Returns the after row token.
+	 * 
+	 * @return
+	 */
+	protected String getAfterTableCellToken() {
+		if (fieldsMetadata == null) {
+			return FieldsMetadata.DEFAULT_AFTER_TABLE_CELL_TOKEN;
+		}
+		return fieldsMetadata.getAfterTableCellToken();
+	}
+
 	public int extractListDirectiveInfo(String characters,
 			boolean dontRemoveListDirectiveInfo) {
 		if (formatter == null || characters == null) {
@@ -240,6 +220,15 @@ public abstract class TransformedBufferedDocumentContentHandler extends
 		}
 		return formatter.extractListDirectiveInfo(characters, getDirectives(),
 				dontRemoveListDirectiveInfo);
+	}
+
+	public int extractListDirectiveInfo(String characters) {
+		int i = extractListDirectiveInfo(characters,
+				bufferedDocument.getCurrentTableRow() != null);
+		if (i < 0) {
+			nbLoopDirectiveToRemove += -i;
+		}
+		return i;
 	}
 
 	/**
@@ -250,7 +239,13 @@ public abstract class TransformedBufferedDocumentContentHandler extends
 	 * @param name
 	 * @return
 	 */
-	protected abstract boolean isTable(String uri, String localName, String name);
+	protected boolean isTable(String uri, String localName, String name) {
+		return bufferedDocument.isTable(uri, localName, name);
+	}
+
+	protected abstract String getTableRowName();
+
+	protected abstract String getTableCellName();
 
 	/**
 	 * Returns true if current element is a table row and false otherwise.
@@ -260,6 +255,114 @@ public abstract class TransformedBufferedDocumentContentHandler extends
 	 * @param name
 	 * @return
 	 */
-	protected abstract boolean isRow(String uri, String localName, String name);
+	protected boolean isTableRow(String uri, String localName, String name) {
+		return bufferedDocument.isTableRow(uri, localName, name);
+	}
 
+	public boolean processScriptBefore(String fieldName) {
+		int index = getIndexOfScript(fieldName, true);
+		if (index == -1) {
+			return false;
+		}
+		String beforeElementName = fieldName.substring(0, index);
+		if (StringUtils.isNotEmpty(beforeElementName)) {
+			if (beforeElementName.equals(getBeforeRowToken())) {
+				beforeElementName = getTableRowName();
+			} else if (beforeElementName.equals(getBeforeTableCellToken())) {
+				beforeElementName = getTableCellName();
+			}
+			BufferedElement elementInfo = super
+					.findParentElementInfo(beforeElementName);
+			if (elementInfo == null) {
+				return false;
+			}
+			String before = fieldName.substring(index, fieldName.length());
+			elementInfo.setContentBeforeStartTagElement(before);
+			return true;
+		}
+		return false;
+	}
+
+	private int getIndexOfScript(String fieldName, boolean before) {
+		if (fieldName == null) {
+			return -1;
+		}
+		if (before) {
+			if (formatter == null) {
+				if (fieldName.startsWith(getBeforeRowToken())) {
+					return getBeforeRowToken().length();
+				}
+				if (fieldName.startsWith(getBeforeTableCellToken())) {
+					return getBeforeTableCellToken().length();
+				}
+				return -1;
+			}
+			if (!(fieldName.startsWith(BEFORE_TOKEN)
+					|| fieldName.startsWith(getBeforeRowToken()) || fieldName
+						.startsWith(getBeforeTableCellToken()))) {
+				return -1;
+			}
+
+		} else {
+			if (formatter == null) {
+				if (fieldName.startsWith(getAfterRowToken())) {
+					return getAfterRowToken().length();
+				}
+				if (fieldName.startsWith(getAfterTableCellToken())) {
+					return getAfterTableCellToken().length();
+				}
+				return -1;
+			}
+			if (!(fieldName.startsWith(AFTER_TOKEN)
+					|| fieldName.startsWith(getAfterRowToken()) || fieldName
+						.startsWith(getAfterTableCellToken()))) {
+				return -1;
+			}
+		}
+		return formatter.getIndexOfScript(fieldName);
+	}
+
+	public boolean processScriptAfter(String fieldName) {
+		int index = getIndexOfScript(fieldName, false);
+		if (index == -1) {
+			return false;
+		}
+		String afterElementName = fieldName.substring(0, index);
+		if (StringUtils.isNotEmpty(afterElementName)) {
+			if (afterElementName.equals(getAfterRowToken())) {
+				afterElementName = getTableRowName();
+			} else if (afterElementName.equals(getAfterTableCellToken())) {
+				afterElementName = getTableCellName();
+			}
+			BufferedElement elementInfo = super
+					.findParentElementInfo(afterElementName);
+			if (elementInfo == null) {
+				return false;
+			}
+			String after = fieldName.substring(index, fieldName.length());
+			elementInfo.setContentAfterEndTagElement(after);
+			return true;
+		}
+		return false;
+	}
+
+	@Override
+	public void doEndElement(String uri, String localName, String name)
+			throws SAXException {
+		// remove list directive if needed
+		if (isTable(uri, localName, name)) {
+			if (nbLoopDirectiveToRemove > 0) {
+				for (int i = 0; i < nbLoopDirectiveToRemove; i++) {
+					if (!getDirectives().isEmpty()) {
+						getDirectives().pop();
+
+					}
+				}
+				nbLoopDirectiveToRemove = 0;
+			}
+		}
+		super.doEndElement(uri, localName, name);
+	}
+
+	protected abstract Document createDocument();
 }

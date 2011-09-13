@@ -24,14 +24,17 @@
  */
 package fr.opensagres.xdocreport.document.preprocessor.sax;
 
+import org.xml.sax.Attributes;
+
 /**
  * Table buffered region.
  * 
  */
-public class TableBufferedRegion extends BufferedRegion {
+public class TableBufferedRegion extends BufferedElement {
 
-	public TableBufferedRegion(IBufferedRegion parent) {
-		super(parent);
+	public TableBufferedRegion(BufferedElement parent, String uri, String localName,
+			String name, Attributes attributes) {
+		super(parent, uri, localName, name, attributes);
 	}
 
 }

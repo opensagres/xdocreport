@@ -117,8 +117,8 @@ public class DocumentTest {
 			Collection<IXDocReportFactoryDiscovery> discoveries = XDocReportRegistry
 					.getRegistry().getReportFactoryDiscoveries();
 			assertNotNull(discoveries);
-		//FIXME : PLQ should be 5 or 10 ?	
-			assertEquals(10, discoveries.size());
+		
+			assertEquals(5, discoveries.size());
 		
 		
 	}

@@ -117,10 +117,10 @@ public class TemplateEngineRegistry extends AbstractRegistry<ITemplateEngineDisc
 
 	
 
-//	public Collection<ITemplateEngine> getTemplateEngines() {
-//		initializeIfNeeded();
-//		return templateEnginesCache.values();
-//	}
+	public Collection<ITemplateEngine> getTemplateEngines() {
+		initializeIfNeeded();
+		return templateEnginesCache.values();
+	}
 
 	public Collection<String> getTemplateEngineKinds() {
 		initializeIfNeeded();

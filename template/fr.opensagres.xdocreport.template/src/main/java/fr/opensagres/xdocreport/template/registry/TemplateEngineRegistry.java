@@ -44,12 +44,12 @@ public class TemplateEngineRegistry extends AbstractRegistry<ITemplateEngineDisc
 {
 
     private static final long serialVersionUID = -7686229087661483932L;
-    private static final String TEMPLATE_DISCOVERY_PROPERTIES = "template-discovery.properties";
+
     private static final TemplateEngineRegistry INSTANCE = new TemplateEngineRegistry();
 
     //
 
-    private final Map<String, ITemplateEngine> templateEnginesyCache = new HashMap<String, ITemplateEngine>();
+    private final Map<String, ITemplateEngine> templateEnginesCache = new HashMap<String, ITemplateEngine>();
     private final Map<String, ITemplateEngineDiscovery> templateEnginesDiscoveryCache = new HashMap<String, ITemplateEngineDiscovery>();
     private ITemplateEngine defaultTemplateEngine;
     private final Collection<String> templateEngineKinds = new ArrayList<String>();
@@ -90,7 +90,7 @@ public class TemplateEngineRegistry extends AbstractRegistry<ITemplateEngineDisc
     }*/
     private void register(ITemplateEngine templateEngine) {
         // templateEnginesCache.put(templateEngine.getId(), templateEngine);
-        templateEnginesyCache.put(templateEngine.getKind(), templateEngine);
+        templateEnginesCache.put(templateEngine.getKind(), templateEngine);
         // register(templateEngine, (String) null);
     }
 
@@ -113,12 +113,12 @@ public class TemplateEngineRegistry extends AbstractRegistry<ITemplateEngineDisc
 
     public Collection<ITemplateEngine> getTemplateEngines() {
         initializeIfNeeded();
-        return templateEnginesyCache.values();
+        return templateEnginesCache.values();
     }
 
     public Collection<String> getTemplateEngineKinds() {
         initializeIfNeeded();
-        return templateEnginesyCache.keySet();
+        return templateEnginesCache.keySet();
         // return templateEngineKinds;
     }
 

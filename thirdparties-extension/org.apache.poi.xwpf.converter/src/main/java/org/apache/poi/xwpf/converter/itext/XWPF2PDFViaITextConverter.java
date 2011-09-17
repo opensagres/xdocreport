@@ -43,6 +43,24 @@ public class XWPF2PDFViaITextConverter extends
 		return INSTANCE;
 	}
 	
+	
+	// redefining method here  might solve classloading issues 
+	@Override
+	public void convert(XWPFDocument XWPFDocument, OutputStream out,
+			PDFViaITextOptions options) throws XWPFConverterException,
+			IOException {
+		// TODO Auto-generated method stub
+		super.convert(XWPFDocument, out, options);
+	}
+	
+	// redefining method here  might solve classloading issues
+	@Override
+	public void convert(XWPFDocument XWPFDocument, Writer writer,
+			PDFViaITextOptions options) throws XWPFConverterException,
+			IOException {
+		// TODO Auto-generated method stub
+		super.convert(XWPFDocument, writer, options);
+	}
 	@Override
 	protected void doConvert(XWPFDocument document, OutputStream out,
 			Writer writer, PDFViaITextOptions options)

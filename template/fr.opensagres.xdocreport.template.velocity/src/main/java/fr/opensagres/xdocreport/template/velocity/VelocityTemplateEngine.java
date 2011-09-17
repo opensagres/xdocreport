@@ -113,12 +113,16 @@ public class VelocityTemplateEngine extends AbstractTemplateEngine implements
 				p.setProperty("eventhandler.referenceinsertion.class",
 						XDocReportEscapeReference.class.getName());
 			}
+			
+			ClassLoader backupCL =Thread.currentThread().getContextClassLoader();
+			Thread.currentThread().setContextClassLoader(VelocityTemplateEngine.class.getClassLoader());
 			try {
 				velocityEngine.setProperty(VELOCITY_TEMPLATE_ENGINE_KEY, this);
 				velocityEngine.init(p);
 			} catch (Exception e) {
 				throw new XDocReportException(e);
 			}
+			Thread.currentThread().setContextClassLoader(backupCL);
 		}
 		return velocityEngine;
 	}

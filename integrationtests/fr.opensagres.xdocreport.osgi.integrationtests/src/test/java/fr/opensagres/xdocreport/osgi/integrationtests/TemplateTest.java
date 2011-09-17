@@ -24,12 +24,15 @@
  */
 package fr.opensagres.xdocreport.osgi.integrationtests;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 import static org.ops4j.pax.exam.CoreOptions.mavenBundle;
 import static org.ops4j.pax.exam.CoreOptions.options;
 import static org.ops4j.pax.exam.CoreOptions.systemProperty;
 import static org.ops4j.pax.exam.CoreOptions.wrappedBundle;
 
 import java.io.File;
+import java.util.Collection;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -39,6 +42,9 @@ import org.ops4j.pax.exam.Option;
 import org.ops4j.pax.exam.junit.Configuration;
 import org.ops4j.pax.exam.junit.JUnit4TestRunner;
 import org.osgi.framework.BundleContext;
+
+import fr.opensagres.xdocreport.template.ITemplateEngine;
+import fr.opensagres.xdocreport.template.registry.TemplateEngineRegistry;
 
 @RunWith(JUnit4TestRunner.class)
 public class TemplateTest {
@@ -51,9 +57,9 @@ public class TemplateTest {
 		// XXX pass -Dproject.version=XXX int the IDE, otherwise maven will
 		// inject Its version
 		final String projectVersion = System.getProperty("project.version");
-		
+
 		return options(
-				
+
 				//
 				// PaxRunnerOptions.vmOption("-Xrunjdwp:transport=dt_socket,server=y,suspend=y,address=5006"),
 				// equinox(),
@@ -92,34 +98,30 @@ public class TemplateTest {
 						.artifactId("velocity").version("1.7"),
 				new Customizer() {
 
-					
-					
 					@Override
 					public void customizeEnvironment(File workingFolder) {
-						
+
 						System.out.println("Hello World: "
 								+ workingFolder.getAbsolutePath());
 					}
 				});
 	}
 
-
 	@Test
 	public void templateEngineRegistry() throws Exception {
-//FIXME PLQ
-//		// Test if converter is not null
-//		Collection<ITemplateEngine> templateEngines = TemplateEngineInitializerRegistry
-//				.getRegistry().getTemplateEngines();
-//
-//		assertNotNull(templateEngines);
-//		assertEquals(2, templateEngines.size());
-//
-//		Collection<String> kinds = TemplateEngineRegistry.getRegistry()
-//				.getTemplateEngineKinds();
-//		assertNotNull(kinds);
-//		assertEquals(2, kinds.size());
+		// FIXME PLQ
+		// // Test if converter is not null
+		Collection<ITemplateEngine> templateEngines = TemplateEngineRegistry
+				.getRegistry().getTemplateEngines();
+
+		assertNotNull(templateEngines);
+		assertEquals(2, templateEngines.size());
+
+		Collection<String> kinds = TemplateEngineRegistry.getRegistry()
+				.getTemplateEngineKinds();
+		assertNotNull(kinds);
+		assertEquals(2, kinds.size());
 
 	}
 
-	
 }

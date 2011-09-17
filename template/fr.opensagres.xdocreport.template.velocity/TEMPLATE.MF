@@ -1,5 +1,5 @@
 Fragment-Host: fr.opensagres.xdocreport.template
-Import-Package: fr.opensagres.xdocreport.core.*,
+Import-Package:  org.apache.oro.text.perl,org.apache.velocity.context.*,fr.opensagres.xdocreport.core.*,
  org.apache.commons.collections,
  org.apache.velocity.*
  

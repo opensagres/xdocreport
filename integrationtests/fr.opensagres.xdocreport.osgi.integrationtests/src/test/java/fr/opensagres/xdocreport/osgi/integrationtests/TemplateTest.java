@@ -96,6 +96,8 @@ public class TemplateTest {
 						.artifactId("commons-lang").version("2.4"),
 				mavenBundle().groupId("org.apache.velocity")
 						.artifactId("velocity").version("1.7"),
+						wrappedBundle(mavenBundle().groupId("oro")
+						.artifactId("oro").version("2.0.8")),		
 				new Customizer() {
 
 					@Override

@@ -49,8 +49,6 @@ import fr.opensagres.xdocreport.core.document.DocumentKind;
 @RunWith(JUnit4TestRunner.class)
 public class ConverterTest {
 
-	
-
 	/*
 	 * You can configure all kinds of stuff. You will learn about most of it on
 	 * the project wiki. Here's a typical example: - add a log service to your
@@ -60,19 +58,20 @@ public class ConverterTest {
 	@Configuration
 	public static Option[] configure() {
 
-		//XXX pass -Dproject.version=XXX int the IDE, otherwise maven will inject Its version
-		final String projectVersion =System.getProperty("project.version");
-		
+		// XXX pass -Dproject.version=XXX int the IDE, otherwise maven will
+		// inject Its version
+		final String projectVersion = System.getProperty("project.version");
+
 		return options(
-				
-				//uncomment for "remote debugging"
-				//PaxRunnerOptions.vmOption("-Xrunjdwp:transport=dt_socket,server=y,suspend=y,address=5006"),
+
+				// uncomment for "remote debugging"
+				// PaxRunnerOptions.vmOption("-Xrunjdwp:transport=dt_socket,server=y,suspend=y,address=5006"),
 				// equinox(),
 
 				systemProperty("org.ops4j.pax.logging.DefaultServiceLog.level")
 						.value("DEBUG"),
 
-					mavenBundle().groupId("fr.opensagres")
+				mavenBundle().groupId("fr.opensagres")
 						.artifactId("fr.opensagres.xdocreport.core")
 						.version(projectVersion),
 				// converter API
@@ -121,6 +120,9 @@ public class ConverterTest {
 				wrappedBundle(mavenBundle().groupId("com.lowagie")
 						.artifactId("itext").version("2.1.7")),
 
+				wrappedBundle(mavenBundle().groupId("stax")
+						.artifactId("stax-api").version("1.0.1")),
+
 				new Customizer() {
 
 					@Override
@@ -133,35 +135,36 @@ public class ConverterTest {
 
 	@Test
 	public void findFromODTToPDFViaITextConverter() throws Exception {
-		try{
-			
-		
-		Options o = Options.getFrom(DocumentKind.ODT).to(ConverterTypeTo.PDF)
-				.via(ConverterTypeVia.ITEXT);
+		try {
 
-		// Test if converter is not null
-		IConverter converter = ConverterRegistry.getRegistry().getConverter(o);
+			Options o = Options.getFrom(DocumentKind.ODT)
+					.to(ConverterTypeTo.PDF).via(ConverterTypeVia.ITEXT);
 
-		assertNotNull(converter);
+			// Test if converter is not null
+			IConverter converter = ConverterRegistry.getRegistry()
+					.getConverter(o);
 
-		} catch (Exception e){
+			assertNotNull(converter);
+
+		} catch (Exception e) {
 			e.printStackTrace();
 		}
 	}
 
 	@Test
 	public void findFromDOCXToPDFViaITextConverter() throws Exception {
-		try{
-		Options o = Options.getFrom(DocumentKind.DOCX).to(ConverterTypeTo.PDF)
-				.via(ConverterTypeVia.ITEXT);
+		try {
+			Options o = Options.getFrom(DocumentKind.DOCX)
+					.to(ConverterTypeTo.PDF).via(ConverterTypeVia.ITEXT);
 
-		// Test if converter is not null
-		IConverter converter = ConverterRegistry.getRegistry().getConverter(o);
+			// Test if converter is not null
+			IConverter converter = ConverterRegistry.getRegistry()
+					.getConverter(o);
 
-		assertNotNull(converter);
-	} catch (Exception e){
-		e.printStackTrace();
-	}
+			assertNotNull(converter);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 
 	}
 

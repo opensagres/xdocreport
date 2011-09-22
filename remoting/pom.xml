@@ -4,7 +4,7 @@
 	<artifactId>remoting</artifactId>
 	<name>XDocReport Remoting Component</name>
 	<parent>
-		<groupId>fr.opensagres</groupId>
+		<groupId>fr.opensagres.xdocreport</groupId>
 		<artifactId>xdocreport</artifactId>
 		<version>0.9.1-SNAPSHOT</version>
 	</parent>

@@ -3,7 +3,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<parent>
 		<artifactId>sandbox</artifactId>
-		<groupId>fr.opensagres</groupId>
+		<groupId>fr.opensagres.xdocreport</groupId>
 		<version>0.9.1-SNAPSHOT</version>
 	</parent>
 	<artifactId>fr.opensagres.xdocreport.converter.fop</artifactId>
@@ -11,7 +11,7 @@
 	<dependencies>
 		<dependency>
 			<artifactId>fr.opensagres.xdocreport.converter</artifactId>
-			<groupId>fr.opensagres</groupId>
+			<groupId>fr.opensagres.xdocreport</groupId>
 			<version>0.9.1-SNAPSHOT</version>
 		</dependency>
 		<dependency>

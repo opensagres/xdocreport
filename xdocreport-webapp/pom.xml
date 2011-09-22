@@ -3,7 +3,7 @@
 	<modelVersion>4.0.0</modelVersion>
 
 	<parent>
-		<groupId>fr.opensagres</groupId>
+		<groupId>fr.opensagres.xdocreport</groupId>
 		<artifactId>xdocreport</artifactId>
 		<version>0.9.0-SNAPSHOT</version>
 	</parent>
@@ -53,40 +53,40 @@
 		</dependency>
 
 		<dependency>
-			<groupId>fr.opensagres</groupId>
+			<groupId>fr.opensagres.xdocreport</groupId>
 			<artifactId>fr.opensagres.xdocreport.document.odt</artifactId>
 			<version>0.9.0-SNAPSHOT</version>
 		</dependency>
 
 		<dependency>
-			<groupId>fr.opensagres</groupId>
+			<groupId>fr.opensagres.xdocreport</groupId>
 			<artifactId>fr.opensagres.xdocreport.template.velocity</artifactId>
 			<version>0.9.0-SNAPSHOT</version>
 		</dependency>
 
 		<dependency>
-			<groupId>fr.opensagres</groupId>
+			<groupId>fr.opensagres.xdocreport</groupId>
 			<artifactId>fr.opensagres.xdocreport.converter.docx.xwpf</artifactId>
 			<version>0.9.0-SNAPSHOT</version>
 		</dependency>
 		<dependency>
-			<groupId>fr.opensagres</groupId>
+			<groupId>fr.opensagres.xdocreport</groupId>
 			<artifactId>fr.opensagres.xdocreport.document.docx</artifactId>
 			<version>0.9.0-SNAPSHOT</version>
 		</dependency>
 
 		<dependency>
-			<groupId>fr.opensagres</groupId>
+			<groupId>fr.opensagres.xdocreport</groupId>
 			<artifactId>fr.opensagres.xdocreport.template.freemarker</artifactId>
 			<version>0.9.0-SNAPSHOT</version>
 		</dependency>
 		<dependency>
-			<groupId>fr.opensagres</groupId>
+			<groupId>fr.opensagres.xdocreport</groupId>
 			<artifactId>fr.opensagres.xdocreport.document.ods</artifactId>
 			<version>0.9.0-SNAPSHOT</version>
 		</dependency>
 		<dependency>
-			<groupId>fr.opensagres</groupId>
+			<groupId>fr.opensagres.xdocreport</groupId>
 			<artifactId>fr.opensagres.xdocreport.converter.odt.odfdom</artifactId>
 			<version>0.9.0-SNAPSHOT</version>
 		</dependency>

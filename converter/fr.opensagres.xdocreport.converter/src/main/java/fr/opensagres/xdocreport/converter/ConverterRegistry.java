@@ -95,19 +95,19 @@ public class ConverterRegistry extends AbstractRegistry<IConverterDiscovery> {
 	private IConverter internalFindConverter(String from, String to, String via, boolean throwError) throws XDocConverterException {
 		initializeIfNeeded();
 		ConverterFrom fromConverters = getConverterFrom(from);
-		if (fromConverters == null) {
-			String msg = String.format("Cannot find converters from=%s", from);
-			LOGGER.severe(msg);
+		if (fromConverters == null) {			
 			if(throwError){
+				String msg = String.format("Cannot find converters from=%s", from);
+				LOGGER.severe(msg);
 				throw new XDocConverterException(msg);	
 			}
 			return null;
 		}
 		ConverterTo toConverters = fromConverters.getConverterTo(to);
 		if (toConverters == null) {
-			String msg = String.format("Cannot find converters for to=%s for from=%s", to, from);
-			LOGGER.severe(msg);
 			if(throwError){
+				String msg = String.format("Cannot find converters for to=%s for from=%s", to, from);
+				LOGGER.severe(msg);
 				throw new XDocConverterException(msg);	
 			}
 			return null;
@@ -115,9 +115,9 @@ public class ConverterRegistry extends AbstractRegistry<IConverterDiscovery> {
 		if (via == null) {
 			IConverter converter = toConverters.getFirstConverter();
 			if (throwError && converter == null) {
-				String msg = String.format("Cannot find converters for to=%s for from=%s", to, from);
-				LOGGER.severe(msg);
 				if(throwError){
+					String msg = String.format("Cannot find converters for to=%s for from=%s", to, from);
+					LOGGER.severe(msg);
 					throw new XDocConverterException(msg);	
 				}
 			}
@@ -126,9 +126,9 @@ public class ConverterRegistry extends AbstractRegistry<IConverterDiscovery> {
 
 		IConverter converter = toConverters.getConverter(via);
 		if (converter == null) {
-			String msg = String.format("Cannot find converters via %s for to=%s for from=%s", via, to, from);
-			LOGGER.severe(msg);
 			if(throwError){
+				String msg = String.format("Cannot find converters via %s for to=%s for from=%s", via, to, from);
+				LOGGER.severe(msg);
 				throw new XDocConverterException(msg);	
 			}
 		}

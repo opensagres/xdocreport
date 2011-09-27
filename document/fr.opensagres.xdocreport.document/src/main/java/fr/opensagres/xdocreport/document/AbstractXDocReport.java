@@ -64,7 +64,8 @@ import fr.opensagres.xdocreport.template.formatter.IDocumentFormatter;
  */
 public abstract class AbstractXDocReport implements IXDocReport,
 		EncodingConstants {
-	private static final Logger LOGGER = LogUtils.getLogger(AbstractXDocReport.class.getName());
+	private static final Logger LOGGER = LogUtils
+			.getLogger(AbstractXDocReport.class.getName());
 	private static final long serialVersionUID = -6632379345569386476L;
 
 	/**
@@ -230,8 +231,6 @@ public abstract class AbstractXDocReport implements IXDocReport,
 		this.templateEngine = templateEngine;
 	}
 
-	
-
 	/**
 	 * Register a processor for the entry name.
 	 * 
@@ -296,8 +295,9 @@ public abstract class AbstractXDocReport implements IXDocReport,
 			return;
 		}
 		Map<String, Object> sharedContext = new HashMap<String, Object>();
+		onBeforePreprocessing(sharedContext, preprocessedArchive);
 		try {
-			
+
 			// Preprocessor
 			String entryName = null;
 			IXDocPreprocessor preprocessor = null;
@@ -312,7 +312,7 @@ public abstract class AbstractXDocReport implements IXDocReport,
 					// preprocessed
 					preprocessor.preprocess(entryName, preprocessedArchive,
 							fieldsMetadata, internalGetTemplateEngine()
-									.getDocumentFormatter(),  sharedContext);
+									.getDocumentFormatter(), sharedContext);
 				} else {
 					// Test if it's wilcard?
 					Set<String> entriesNameFromWilcard = preprocessedArchive
@@ -321,16 +321,39 @@ public abstract class AbstractXDocReport implements IXDocReport,
 						preprocessor.preprocess(entryNameFromWilcard,
 								preprocessedArchive, fieldsMetadata,
 								internalGetTemplateEngine()
-										.getDocumentFormatter(),  sharedContext);
+										.getDocumentFormatter(), sharedContext);
 					}
 				}
 			}
 		} finally {
+			onAfterPreprocessing(sharedContext, preprocessedArchive);
 			// Preprocessing is done
 			preprocessed = true;
 			sharedContext.clear();
 			sharedContext = null;
 		}
+	}
+
+	/**
+	 * On before preprocessing.
+	 * 
+	 * @param sharedContext
+	 * @param preprocessedArchive
+	 */
+	protected void onBeforePreprocessing(Map<String, Object> sharedContext,
+			XDocArchive preprocessedArchive) throws XDocReportException {
+		// Do nothing
+	}
+
+	/**
+	 * On after preprocessing.
+	 * 
+	 * @param sharedContext
+	 * @param preprocessedArchive
+	 */
+	protected void onAfterPreprocessing(Map<String, Object> sharedContext,
+			XDocArchive preprocessedArchive) throws XDocReportException {
+		// Do nothing
 	}
 
 	/**
@@ -365,7 +388,6 @@ public abstract class AbstractXDocReport implements IXDocReport,
 		process(context, null, out);
 	}
 
-	 
 	/**
 	 * Generate report by merging Java model frm the context with XML Document
 	 * (odt, docx...) preprocessed and store the result into output stream.
@@ -409,14 +431,16 @@ public abstract class AbstractXDocReport implements IXDocReport,
 			}
 			// 7) End process report generation
 			if (LOGGER.isLoggable(Level.FINE)) {
-				
-				LOGGER.fine("End process report with error done with " + (System.currentTimeMillis()- startTime) + "(ms).");
+
+				LOGGER.fine("End process report with error done with "
+						+ (System.currentTimeMillis() - startTime) + "(ms).");
 			}
 
 		} catch (Throwable e) {
 			// Error while report generation
 			if (LOGGER.isLoggable(Level.FINE)) {
-				LOGGER.fine("End process report with error done with " + (System.currentTimeMillis()- startTime) + "(ms).");
+				LOGGER.fine("End process report with error done with "
+						+ (System.currentTimeMillis() - startTime) + "(ms).");
 				LOGGER.throwing(getClass().getName(), "process", e);
 			}
 			if (e instanceof RuntimeException) {
@@ -547,12 +571,14 @@ public abstract class AbstractXDocReport implements IXDocReport,
 
 			// 7) End process report generation
 			if (LOGGER.isLoggable(Level.FINE)) {
-				LOGGER.fine("End convert report with error done with " + (System.currentTimeMillis()- startTime) + "(ms).");
+				LOGGER.fine("End convert report with error done with "
+						+ (System.currentTimeMillis() - startTime) + "(ms).");
 			}
 		} catch (Throwable e) {
 			// Error while report generation
 			if (LOGGER.isLoggable(Level.FINE)) {
-				LOGGER.fine("End process report with error done with " + (System.currentTimeMillis()- startTime) + "(ms).");
+				LOGGER.fine("End process report with error done with "
+						+ (System.currentTimeMillis() - startTime) + "(ms).");
 				LOGGER.throwing(getClass().getName(), "convert", e);
 			}
 			if (e instanceof RuntimeException) {
@@ -582,15 +608,7 @@ public abstract class AbstractXDocReport implements IXDocReport,
 		String[] xmlEntries = internalGetXMLEntries();
 
 		// Add ImageRegistry if needed
-		IImageRegistry imageRegistry = null;
-		if (fieldsMetadata != null && fieldsMetadata.hasFieldsAsImage()) {
-			imageRegistry = createImageRegistry(outputArchive, outputArchive,
-					outputArchive);
-			if (imageRegistry != null) {
-				context.put(IDocumentFormatter.IMAGE_REGISTRY_KEY, imageRegistry);
-				imageRegistry.preProcess();
-			}
-		}
+		onBeforeProcessTemplateEngine(context, outputArchive);
 		String entryName = null;
 		for (int i = 0; i < xmlEntries.length; i++) {
 			entryName = xmlEntries[i];
@@ -611,12 +629,45 @@ public abstract class AbstractXDocReport implements IXDocReport,
 				}
 			}
 		}
+		onAfterProcessTemplateEngine(context, outputArchive);
+	}
 
+	/**
+	 * On before process template engine.
+	 * 
+	 * @param context
+	 * @param outputArchive
+	 * @throws XDocReportException
+	 */
+	protected void onBeforeProcessTemplateEngine(final IContext context,
+			XDocArchive outputArchive) throws XDocReportException {
+		IImageRegistry imageRegistry = null;
+		if (fieldsMetadata != null && fieldsMetadata.hasFieldsAsImage()) {
+			imageRegistry = createImageRegistry(outputArchive, outputArchive,
+					outputArchive);
+			if (imageRegistry != null) {
+				context.put(IDocumentFormatter.IMAGE_REGISTRY_KEY,
+						imageRegistry);
+				imageRegistry.preProcess();
+			}
+		}
+	}
+
+	/**
+	 * On after process template engine.
+	 * 
+	 * @param context
+	 * @param outputArchive
+	 * @throws XDocReportException
+	 */
+	protected void onAfterProcessTemplateEngine(IContext context,
+			XDocArchive outputArchive) throws XDocReportException {
+		IImageRegistry imageRegistry = (IImageRegistry) context
+				.get(IDocumentFormatter.IMAGE_REGISTRY_KEY);
 		if (imageRegistry != null) {
 			imageRegistry.postProcess();
 		}
 	}
-
 
 	/**
 	 * Returns template engine (freemarker, velocity...) to use for the report

@@ -38,6 +38,7 @@ import java.io.Reader;
 import java.io.StringWriter;
 
 import org.junit.Assert;
+import org.junit.Before;
 import org.junit.Test;
 
 import fr.opensagres.xdocreport.core.XDocReportException;
@@ -58,6 +59,12 @@ import fr.opensagres.xdocreport.template.TemplateEngineKind;
  */
 public class ODTHelloWordWithVelocityTestCase {
 
+	@Before
+	public void onBefore() {
+		// Clear report cached in the registry before execute a test.
+		XDocReportRegistry.getRegistry().clear();
+	}
+	
 	@Test
 	public void testOne() {
 		try {

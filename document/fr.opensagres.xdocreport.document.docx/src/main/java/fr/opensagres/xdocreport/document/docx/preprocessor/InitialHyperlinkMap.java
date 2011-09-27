@@ -22,49 +22,33 @@
  * OF CONTRACT, TORT OR OTHERWISE,  ARISING FROM, OUT OF OR IN CONNECTION
  * WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
-package fr.opensagres.xdocreport.template.formatter;
+package fr.opensagres.xdocreport.document.docx.preprocessor;
 
-public interface IDocumentFormatter {
+import java.util.HashMap;
 
-	String IMAGE_REGISTRY_KEY = "imageRegistry";
+/**
+ * Map which stores the initial Relationship type of Hyperlink declared in the
+ * "word/_rels/document.xml.rels".
+ * 
+ * <pre>
+ * 	<Relationship Id="rId1" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/hyperlink" 
+ * 				  Target="mailto:$mail" 
+ * 				  TargetMode="External" />
+ * </pre>
+ * 
+ * 
+ */
+public class InitialHyperlinkMap extends HashMap<String, HyperlinkInfo> {
 
-	String getStartDocumentDirective();
+	private boolean modified = false;
 
-	String getEndDocumentDirective();
+	@Override
+	public HyperlinkInfo remove(Object key) {
+		this.modified = true;
+		return super.remove(key);
+	}
 
-	String formatAsFieldItemList(String content, String fieldName,
-			boolean forceAsField);
-
-	String extractItemNameList(String content, String fieldName,
-			boolean forceAsField);
-
-	String getStartLoopDirective(String itemNameList);
-
-	String getStartLoopDirective(String itemNameList, String listName);
-
-	String getEndLoopDirective(String itemNameList);
-
-	String getLoopCountDirective(String fieldName);
-
-	String getStartIfDirective(String fieldName);
-
-	String getEndIfDirective(String fieldName);
-
-	String formatAsSimpleField(boolean encloseInDirective, String... fields);
-
-	String getImageDirective(String fieldName);
-
-	boolean containsInterpolation(String content);
-
-	int extractListDirectiveInfo(String content, DirectivesStack directives);
-
-	int extractListDirectiveInfo(String content, DirectivesStack directives,
-			boolean dontRemoveListDirectiveInfo);
-
-	String extractModelTokenPrefix(String newContent);
-
-	int getIndexOfScript(String fieldName);
-	
-	String getFunctionDirective(String key, String methodName,
-			String... parameters);
+	public boolean isModified() {
+		return modified;
+	}
 }

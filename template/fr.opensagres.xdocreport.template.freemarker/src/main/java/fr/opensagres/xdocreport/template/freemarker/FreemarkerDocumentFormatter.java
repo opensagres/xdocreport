@@ -154,6 +154,25 @@ public class FreemarkerDocumentFormatter extends AbstractDocumentFormatter {
 		return directive.toString();
 	}
 
+	public String getFunctionDirective(String key, String methodName,
+			String... parameters) {
+		StringBuilder directive = new StringBuilder(DOLLAR_TOTKEN);
+		directive.append(key);
+		directive.append('.');
+		directive.append(methodName);
+		directive.append('(');
+		if (parameters != null) {
+			for (int i = 0; i < parameters.length; i++) {
+				if (i > 0) {
+					directive.append(',');
+				}
+				directive.append(parameters[i]);
+			}
+		}
+		directive.append(END_IMAGE_DIRECTIVE);
+		return directive.toString();
+	}
+
 	public String formatAsSimpleField(boolean encloseInDirective,
 			String... fields) {
 		StringBuilder field = new StringBuilder();
@@ -290,8 +309,8 @@ public class FreemarkerDocumentFormatter extends AbstractDocumentFormatter {
 		}
 
 		int nbLoop = 1;
-		directives.push(new LoopDirective(startLoopDirective,
-				getEndLoopDirective(null), sequence, item));
+		directives.push(new LoopDirective(directives.peekOrNull(),
+				startLoopDirective, getEndLoopDirective(null), sequence, item));
 
 		// afterList = 'yyy'
 		String afterList = content.substring(startOfStartListDirectiveIndex
@@ -331,8 +350,8 @@ public class FreemarkerDocumentFormatter extends AbstractDocumentFormatter {
 				endOfStartIfDirectiveIndex + 1);
 		// // contentWichStartsWithList='xxx#if($d)yyy'
 		int nbIf = 1;
-		directives.push(new IfDirective(startIfDirective,
-				getEndIfDirective(null)));
+		directives.push(new IfDirective(directives.peekOrNull(),
+				startIfDirective, getEndIfDirective(null)));
 		// afterIf = 'yyy'
 		String afterIf = content.substring(startOfStartIfDirectiveIndex
 				+ startIfDirective.length(), content.length());

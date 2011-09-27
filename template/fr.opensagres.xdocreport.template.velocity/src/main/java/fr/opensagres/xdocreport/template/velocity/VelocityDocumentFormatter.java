@@ -36,6 +36,7 @@ import fr.opensagres.xdocreport.template.formatter.LoopDirective;
  */
 public class VelocityDocumentFormatter extends AbstractDocumentFormatter {
 
+	private static final String DOLLAR_START_BRACKET = "${";
 	protected static final String ITEM_TOKEN = "$item_";
 	protected static final String ITEM_TOKEN_OPEN_BRACKET = "${item_";
 
@@ -49,7 +50,7 @@ public class VelocityDocumentFormatter extends AbstractDocumentFormatter {
 	private final static int START_WITH_DOLLAR_AND_BRACKET = 2;
 	private final static int NO_VELOCITY_FIELD = 3;
 
-	private static final String START_IMAGE_DIRECTIVE = "${"
+	private static final String START_IMAGE_DIRECTIVE = DOLLAR_START_BRACKET
 			+ IMAGE_REGISTRY_KEY + ".registerImage(";
 	private static final String END_IMAGE_DIRECTIVE = ")}";
 
@@ -147,6 +148,26 @@ public class VelocityDocumentFormatter extends AbstractDocumentFormatter {
 		directive.append(END_IMAGE_DIRECTIVE);
 		return directive.toString();
 	}
+	
+	public String getFunctionDirective(String key, String methodName,
+			String... parameters) {		
+		StringBuilder directive = new StringBuilder();	
+		directive.append(DOLLAR_START_BRACKET);
+		directive.append(key);
+		directive.append('.');
+		directive.append(methodName);
+		directive.append('(');
+		if (parameters != null) {
+			for (int i = 0; i < parameters.length; i++) {
+				if (i > 0) {
+					directive.append(',');
+				}
+				directive.append(parameters[i]);
+			}
+		}
+		directive.append(END_IMAGE_DIRECTIVE);
+		return directive.toString();
+	}
 
 	public String formatAsSimpleField(boolean encloseInDirective,
 			String... fields) {
@@ -206,7 +227,7 @@ public class VelocityDocumentFormatter extends AbstractDocumentFormatter {
 				.indexOf(START_FOREACH_DIRECTIVE);
 		int startOfStartIfDirectiveIndex = content.indexOf(START_IF_DIRECTIVE);
 		DirectiveToParse directiveToParse = getDirectiveToParse(
-				startOfStartListDirectiveIndex, startOfEndListDirectiveIndex, 
+				startOfStartListDirectiveIndex, startOfEndListDirectiveIndex,
 				startOfStartIfDirectiveIndex, startOfEndListDirectiveIndex);
 		if (directiveToParse == null) {
 			return 0;
@@ -258,8 +279,8 @@ public class VelocityDocumentFormatter extends AbstractDocumentFormatter {
 				endOfStartIfDirectiveIndex + 1);
 		// // contentWichStartsWithList='xxx#if($d)yyy'
 		int nbIf = 1;
-		directives.push(new IfDirective(startIfDirective,
-				getEndIfDirective(null)));
+		directives.push(new IfDirective(directives.peekOrNull(),
+				startIfDirective, getEndIfDirective(null)));
 		// afterIf = 'yyy'
 		String afterIf = content.substring(startOfStartIfDirectiveIndex
 				+ startIfDirective.length(), content.length());
@@ -326,8 +347,8 @@ public class VelocityDocumentFormatter extends AbstractDocumentFormatter {
 		}
 
 		int nbLoop = 1;
-		directives.push(new LoopDirective(startLoopDirective,
-				getEndLoopDirective(null), sequence, item));
+		directives.push(new LoopDirective(directives.peekOrNull(),
+				startLoopDirective, getEndLoopDirective(null), sequence, item));
 
 		// afterList = 'yyy'
 		String afterList = content.substring(startOfStartListDirectiveIndex

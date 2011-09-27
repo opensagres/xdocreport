@@ -27,8 +27,10 @@ package fr.opensagres.xdocreport.document.docx.preprocessor;
 import java.io.StringReader;
 import java.io.StringWriter;
 import java.util.HashMap;
+import java.util.Map;
 
 import junit.framework.TestCase;
+import fr.opensagres.xdocreport.document.docx.DocXConstants;
 import fr.opensagres.xdocreport.template.formatter.FieldsMetadata;
 import fr.opensagres.xdocreport.template.formatter.IDocumentFormatter;
 import fr.opensagres.xdocreport.template.velocity.VelocityDocumentFormatter;
@@ -213,8 +215,14 @@ public class DocxPreprocessorHyperlinkWithVelocityTestCase extends TestCase {
 		metadata.addFieldAsList("developers.Mail");
 		IDocumentFormatter formatter = new VelocityDocumentFormatter();
 
+		Map<String, Object> sharedContext = new HashMap<String, Object>();
+		// Emulate document.rels.xml with hyperlink
+		InitialHyperlinkMap hyperlinkMap = new InitialHyperlinkMap();
+		hyperlinkMap.put("rId5", new HyperlinkInfo("rId5", "$x", "External"));
+		sharedContext.put(DocXConstants.HYPERLINKS_SHARED_CONTEXT, hyperlinkMap);
+		
 		preprocessor.preprocess("test", reader, writer, null, metadata,
-				formatter, new HashMap<String, Object>());
+				formatter, sharedContext);
 
 	assertEquals(
 		"<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>"
@@ -275,7 +283,7 @@ public class DocxPreprocessorHyperlinkWithVelocityTestCase extends TestCase {
 								+ "</w:rPr>"
 							+ "</w:pPr>"
 							// + "<w:hyperlink w:history=\"1\ r:id=\"rId5\"">"" 
-							+ "<w:hyperlink w:history=\"1\" r:id=\"rId5_$velocityCount\">"							
+							+ "<w:hyperlink w:history=\"1\" r:id=\"${" + HyperlinkRegistry.KEY + ".registerHyperlink(\"rId5\",\"$x\",\"External\")}\">"						
 								+ "<w:r w:rsidRPr=\"000F2653\">"
 									+ "<w:rPr>"
 										+ "<w:rStyle w:val=\"Lienhypertexte\"/>"

@@ -2,8 +2,9 @@ package fr.opensagres.xdocreport.template.formatter;
 
 public class IfDirective extends Directive {
 
-	public IfDirective(String startDirective, String endDirective) {
-		super(startDirective, endDirective);
+	public IfDirective(Directive parent, String startDirective,
+			String endDirective) {
+		super(parent, startDirective, endDirective);
 	}
 
 	@Override

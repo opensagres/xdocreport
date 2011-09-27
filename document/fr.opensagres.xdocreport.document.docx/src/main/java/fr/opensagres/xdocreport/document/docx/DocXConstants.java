@@ -101,4 +101,7 @@ public interface DocXConstants {
 	// Meta data for discovery
 	String ID_DISCOVERY = "docx";
 	String DESCRIPTION_DISCOVERY = "Manage Microsoft Office docx document.";
+	
+	String HYPERLINKS_SHARED_CONTEXT = "___Hyperlinks";
+
 }

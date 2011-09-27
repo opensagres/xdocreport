@@ -9,10 +9,10 @@ public class DirectivesStack extends Stack<Directive> {
 	private static final long serialVersionUID = -11427919871179717L;
 
 	public Directive peekDirective(DirectiveType type) {
-		if (isEmpty()) {
+		Directive directive = peekOrNull();
+		if (directive == null) {
 			return null;
 		}
-		Directive directive = super.peek();
 		if (directive.getType().equals(type)) {
 			return directive;
 		}
@@ -26,4 +26,12 @@ public class DirectivesStack extends Stack<Directive> {
 		}
 		return null;
 	}
+
+	public Directive peekOrNull() {
+		if (isEmpty()) {
+			return null;
+		}
+		return super.peek();
+	}
+
 }

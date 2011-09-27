@@ -25,21 +25,18 @@
 package fr.opensagres.xdocreport.document.docx.preprocessor;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import org.xml.sax.Attributes;
 
+import fr.opensagres.xdocreport.core.utils.StringUtils;
+import fr.opensagres.xdocreport.document.docx.DocXConstants;
 import fr.opensagres.xdocreport.document.preprocessor.sax.BufferedAttribute;
 import fr.opensagres.xdocreport.document.preprocessor.sax.BufferedElement;
 import fr.opensagres.xdocreport.document.preprocessor.sax.ISavable;
 import fr.opensagres.xdocreport.document.preprocessor.sax.ProcessRowResult;
 import fr.opensagres.xdocreport.document.preprocessor.sax.TransformedBufferedDocumentContentHandler;
-import fr.opensagres.xdocreport.template.formatter.Directive.DirectiveType;
-import fr.opensagres.xdocreport.template.formatter.DirectivesStack;
 import fr.opensagres.xdocreport.template.formatter.IDocumentFormatter;
-import fr.opensagres.xdocreport.template.formatter.LoopDirective;
 
 /**
  * <pre>
@@ -102,13 +99,6 @@ public class HyperlinkBufferedRegion extends BufferedElement {
 
 				// 1) Modify w:t
 				modifyTContents(newContent);
-				// 2) Populate HyperlinkInfo if needed
-				if (handler.hasSharedContext()) {
-					String item = result.getItemNameList();
-					populateHyperlinkInfo(formatter, item,
-							result.getStartLoopDirective(),
-							result.getEndLoopDirective());
-				}
 			} else {
 				if (formatter.containsInterpolation(newContent)) {
 					// the new content contains fields which are interpolation
@@ -116,26 +106,51 @@ public class HyperlinkBufferedRegion extends BufferedElement {
 
 					// 1) Modify w:t
 					modifyTContents(newContent);
-					if (handler.hasSharedContext()) {
+				}
+			}
 
-						// 2) Populate HyperlinkInfo if needed
-						DirectivesStack directives = handler.getDirectives();
-
-						LoopDirective directive = (LoopDirective) directives
-								.peekDirective(DirectiveType.LOOP);
-						if (directive != null) {
-							String item = formatter
-									.extractModelTokenPrefix(newContent);
-							if (item.equals(directive.getItem())) {
-								String startLoopDirective = directive
-										.getStartDirective();
-								String endLoopDirective = directive
-										.getEndDirective();
-								populateHyperlinkInfo(formatter, item,
-										startLoopDirective, endLoopDirective);
-							}
+			if (handler.hasSharedContext()) {
+				// There is shared context, search if it exists Map with initial
+				// Hyperlink.
+				InitialHyperlinkMap hyperlinksMap = (InitialHyperlinkMap) handler
+						.getSharedContext().get(
+								DocXConstants.HYPERLINKS_SHARED_CONTEXT);
+				if (hyperlinksMap != null) {
+					// Map with Initial Hyperlink exists.
+					String relationId = idAttribute.getValue();
+					// Search if the current hyperlink exists
+					HyperlinkInfo hyperlink = hyperlinksMap.get(relationId);
+					if (hyperlink != null) {
+						// Current hyperlink exsists
+						// Try to modify it to generate
+						// <w:hyperlink w:history="1"
+						// r:id="${___HyperlinkRegistry.registerHyperlink("rId5","mailto:${d.mail}","External")}">
+						String target = StringUtils.decode(hyperlink
+								.getTarget());
+						String targetMode = hyperlink.getTargetMode();
+						ProcessRowResult hyperlinkResult = handler
+								.getProcessRowResult(target, false);
+						boolean dynamicHyperlink = false;
+						if (hyperlinkResult != null
+								&& hyperlinkResult.getFieldName() != null) {
+							target = hyperlinkResult.getContent();
+							dynamicHyperlink = true;
+						} else if (formatter.containsInterpolation(target)) {
+							dynamicHyperlink = true;
 						}
 
+						if (dynamicHyperlink) {
+							// Hyperlink is dynamic, modify the id attribute to
+							// generate
+							// <w:hyperlink w:history="1"
+							// r:id="${___HyperlinkRegistry.registerHyperlink("rId5","mailto:${d.mail}","External")}">
+							String id = formatter.getFunctionDirective(
+									HyperlinkRegistry.KEY, "registerHyperlink",
+									"\"" + relationId + "\"", "\"" + target
+											+ "\"", "\"" + targetMode + "\"");
+							idAttribute.setValue(id);
+							hyperlinksMap.remove(hyperlink.getId());
+						}
 					}
 				}
 			}
@@ -152,26 +167,6 @@ public class HyperlinkBufferedRegion extends BufferedElement {
 			}
 		}
 		return t.toString();
-	}
-
-	private void populateHyperlinkInfo(IDocumentFormatter formatter,
-			String item, String startLoopDirective, String endLoopDirective) {
-
-		String loopCount = formatter.getLoopCountDirective(item);
-		String hyperlinkId = idAttribute.getValue();
-		String scriptHyperlinkId = hyperlinkId + "_" + loopCount;
-		idAttribute.setValue(scriptHyperlinkId);
-
-		// Add hyperlink info in the shared context
-		HyperlinkInfo hyperlink = new HyperlinkInfo(hyperlinkId,
-				scriptHyperlinkId, startLoopDirective, endLoopDirective);
-		Map<String, HyperlinkInfo> hyperlinks = (Map<String, HyperlinkInfo>) handler
-				.getSharedContext().get(HyperlinkInfo.KEY);
-		if (hyperlinks == null) {
-			hyperlinks = new HashMap<String, HyperlinkInfo>();
-			handler.getSharedContext().put(HyperlinkInfo.KEY, hyperlinks);
-		}
-		hyperlinks.put(hyperlinkId, hyperlink);
 	}
 
 	private void modifyTContents(String newContent) {

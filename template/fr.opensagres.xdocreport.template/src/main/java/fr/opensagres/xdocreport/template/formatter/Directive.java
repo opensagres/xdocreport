@@ -6,10 +6,12 @@ public abstract class Directive {
 		LOOP, IF
 	}
 
+	private final Directive parent;
 	private final String startDirective;
 	private final String endDirective;
 
-	public Directive(String startDirective, String endDirective) {
+	public Directive(Directive parent, String startDirective, String endDirective) {
+		this.parent=parent;
 		this.startDirective = startDirective;
 		this.endDirective = endDirective;
 	}
@@ -24,6 +26,10 @@ public abstract class Directive {
 
 	public abstract DirectiveType getType();
 
+	public Directive getParent() {
+		return parent;
+	}
+	
 	@Override
 	public String toString() {
 		StringBuilder s = new StringBuilder();

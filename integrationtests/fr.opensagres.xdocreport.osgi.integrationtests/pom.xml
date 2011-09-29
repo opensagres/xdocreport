@@ -3,7 +3,7 @@
 	<parent>
 		<artifactId>integrationtests</artifactId>
 		<groupId>fr.opensagres.xdocreport</groupId>
-		<version>0.9.2-SNAPSHOT</version>
+		<version>0.9.2</version>
 	</parent>
 	<artifactId>fr.opensagres.xdocreport.osgi.integrationtests</artifactId>
 
@@ -54,18 +54,18 @@
 		<dependency>
 			<groupId>fr.opensagres.xdocreport</groupId>
 			<artifactId>fr.opensagres.xdocreport.core</artifactId>
-			<version>0.9.2-SNAPSHOT</version>
+			<version>0.9.2</version>
 		</dependency>
 		<dependency>
 			<groupId>fr.opensagres.xdocreport</groupId>
 			<artifactId>fr.opensagres.xdocreport.template</artifactId>
-			<version>0.9.2-SNAPSHOT</version>
+			<version>0.9.2</version>
 		</dependency>
 		
 		<dependency>
 			<groupId>fr.opensagres.xdocreport</groupId>
 			<artifactId>fr.opensagres.xdocreport.converter</artifactId>
-			<version>0.9.2-SNAPSHOT</version>
+			<version>0.9.2</version>
 		</dependency>
 
 
@@ -73,7 +73,7 @@
 		<dependency>
 			<groupId>fr.opensagres.xdocreport</groupId>
 			<artifactId>fr.opensagres.xdocreport.document</artifactId>
-			<version>0.9.2-SNAPSHOT</version>
+			<version>0.9.2</version>
 		</dependency>
 
 

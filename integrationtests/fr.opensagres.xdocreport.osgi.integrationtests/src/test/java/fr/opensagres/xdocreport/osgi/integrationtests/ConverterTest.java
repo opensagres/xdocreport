@@ -71,36 +71,36 @@ public class ConverterTest {
 				systemProperty("org.ops4j.pax.logging.DefaultServiceLog.level")
 						.value("DEBUG"),
 
-				mavenBundle().groupId("fr.opensagres")
+				mavenBundle().groupId("fr.opensagres.xdocreport")
 						.artifactId("fr.opensagres.xdocreport.core")
 						.version(projectVersion),
 				// converter API
-				mavenBundle().groupId("fr.opensagres")
+				mavenBundle().groupId("fr.opensagres.xdocreport")
 						.artifactId("fr.opensagres.xdocreport.converter")
 						.version(projectVersion),
 				// converter Iml
 				mavenBundle()
-						.groupId("fr.opensagres")
+						.groupId("fr.opensagres.xdocreport")
 						.artifactId(
 								"fr.opensagres.xdocreport.converter.odt.odfdom")
 						.version(projectVersion).noStart(),
 
 				mavenBundle()
-						.groupId("fr.opensagres")
+						.groupId("fr.opensagres.xdocreport")
 						.artifactId(
 								"fr.opensagres.xdocreport.converter.docx.xwpf")
 						.version(projectVersion).noStart(),
 
 				// 3rd parties extensions...
 
-				mavenBundle().groupId("fr.opensagres")
+				mavenBundle().groupId("fr.opensagres.xdocreport")
 						.artifactId("org.odftoolkit.odfdom.converter")
 						.version(projectVersion),
-				mavenBundle().groupId("fr.opensagres")
+				mavenBundle().groupId("fr.opensagres.xdocreport")
 						.artifactId("fr.opensagres.xdocreport.itext.extension")
 						.version(projectVersion),
 
-				mavenBundle().groupId("fr.opensagres")
+				mavenBundle().groupId("fr.opensagres.xdocreport")
 						.artifactId("org.apache.poi.xwpf.converter")
 						.version(projectVersion),
 				// 3rd parties modules...

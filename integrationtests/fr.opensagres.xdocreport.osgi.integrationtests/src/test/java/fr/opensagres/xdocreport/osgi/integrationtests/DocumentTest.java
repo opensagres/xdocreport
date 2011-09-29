@@ -67,38 +67,38 @@ public class DocumentTest {
 				// logging (logProfile)
 				systemProperty("org.ops4j.pax.logging.DefaultServiceLog.level")
 						.value("WARN"),
-				mavenBundle().groupId("fr.opensagres")
+				mavenBundle().groupId("fr.opensagres.xdocreport")
 						.artifactId("fr.opensagres.xdocreport.core")
 						.version(projectVersion),
 				// converter api
-				mavenBundle().groupId("fr.opensagres")
+				mavenBundle().groupId("fr.opensagres.xdocreport")
 						.artifactId("fr.opensagres.xdocreport.converter")
 						.version(projectVersion),
 
 				// template API
-				mavenBundle().groupId("fr.opensagres")
+				mavenBundle().groupId("fr.opensagres.xdocreport")
 						.artifactId("fr.opensagres.xdocreport.template")
 						.version(projectVersion),
 				// document API
-				mavenBundle().groupId("fr.opensagres")
+				mavenBundle().groupId("fr.opensagres.xdocreport")
 						.artifactId("fr.opensagres.xdocreport.document")
 						.version(projectVersion),
 
 				// document Impl
-				mavenBundle().groupId("fr.opensagres")
+				mavenBundle().groupId("fr.opensagres.xdocreport")
 						.artifactId("fr.opensagres.xdocreport.document.docx")
 						.version(projectVersion).noStart(),
 				// document Impl
-				mavenBundle().groupId("fr.opensagres")
+				mavenBundle().groupId("fr.opensagres.xdocreport")
 						.artifactId("fr.opensagres.xdocreport.document.odt")
 						.version(projectVersion).noStart(),
-				mavenBundle().groupId("fr.opensagres")
+				mavenBundle().groupId("fr.opensagres.xdocreport")
 						.artifactId("fr.opensagres.xdocreport.document.odp")
 						.version(projectVersion).noStart(),
-				mavenBundle().groupId("fr.opensagres")
+				mavenBundle().groupId("fr.opensagres.xdocreport")
 						.artifactId("fr.opensagres.xdocreport.document.ods")
 						.version(projectVersion).noStart(),
-				mavenBundle().groupId("fr.opensagres")
+				mavenBundle().groupId("fr.opensagres.xdocreport")
 						.artifactId("fr.opensagres.xdocreport.document.pptx")
 						.version(projectVersion).noStart(), new Customizer() {
 

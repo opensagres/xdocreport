@@ -69,22 +69,22 @@ public class TemplateTest {
 				// logging (logProfile)
 				systemProperty("org.ops4j.pax.logging.DefaultServiceLog.level")
 						.value("WARN"),
-				mavenBundle().groupId("fr.opensagres")
+				mavenBundle().groupId("fr.opensagres.xdocreport")
 						.artifactId("fr.opensagres.xdocreport.core")
 						.version(projectVersion),
 				// template API
-				mavenBundle().groupId("fr.opensagres")
+				mavenBundle().groupId("fr.opensagres.xdocreport")
 						.artifactId("fr.opensagres.xdocreport.template")
 						.version(projectVersion),
 
 				// template fragments
 				mavenBundle()
-						.groupId("fr.opensagres")
+						.groupId("fr.opensagres.xdocreport")
 						.artifactId(
 								"fr.opensagres.xdocreport.template.freemarker")
 						.version(projectVersion).noStart(),
 				mavenBundle()
-						.groupId("fr.opensagres")
+						.groupId("fr.opensagres.xdocreport")
 						.artifactId(
 								"fr.opensagres.xdocreport.template.velocity")
 						.version(projectVersion).noStart(),

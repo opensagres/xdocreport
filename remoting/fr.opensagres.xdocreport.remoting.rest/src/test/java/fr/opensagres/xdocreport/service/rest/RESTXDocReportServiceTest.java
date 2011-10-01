@@ -33,7 +33,6 @@ import java.util.Collection;
 
 import javax.ws.rs.core.Application;
 
-import org.apache.commons.io.IOUtils;
 import org.apache.cxf.jaxrs.client.WebClient;
 import org.apache.cxf.jaxrs.ext.form.Form;
 import org.apache.cxf.jaxrs.servlet.CXFNonSpringJaxrsServlet;
@@ -84,7 +83,7 @@ public class RESTXDocReportServiceTest {
 		
 		InputStream in=RESTXDocReportServiceTest.class.getClassLoader().getResourceAsStream("bo.docx");
 		report.setReportID("reportID1");
-		report.setDocument(IOUtils.toByteArray(in));
+		report.setDocument(fr.opensagres.xdocreport.core.io.IOUtils.toByteArray(in));
 		report.setTemplateEngine("Velocity");
 		report.getFieldsMetaData().add("test");
 		report.setTemplateEngine("Velocity");
@@ -122,7 +121,7 @@ public class RESTXDocReportServiceTest {
 	//	client=client.accept("multipart/form-data");
 		InputStream in=RESTXDocReportServiceTest.class.getClassLoader().getResourceAsStream("bo.docx");
 		report.setReportID("reportID1");
-		report.setDocument(IOUtils.toByteArray(in));
+		report.setDocument(fr.opensagres.xdocreport.core.io.IOUtils.toByteArray(in));
 		report.setTemplateEngine("Velocity");
 		report.getFieldsMetaData().add("test");
 		report.setTemplateEngine("Velocity");

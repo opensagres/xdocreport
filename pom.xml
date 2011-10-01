@@ -270,6 +270,8 @@
 		<module>template</module>
 		<module>converter</module>
 		<module>integrationtests</module>
+		<module>sandbox</module>
+		<module>remoting</module>
 	</modules>
 	<dependencies>
 		<dependency>
@@ -292,7 +294,7 @@
 		</dependency>
 	</dependencies>
 
-	<profiles>
+	<!-- <profiles>
 		<profile>
 			<id>sandbox</id>
 			<activation>
@@ -304,5 +306,5 @@
 			</modules>
 		</profile>
 
-	</profiles>
+	</profiles> -->
 </project>

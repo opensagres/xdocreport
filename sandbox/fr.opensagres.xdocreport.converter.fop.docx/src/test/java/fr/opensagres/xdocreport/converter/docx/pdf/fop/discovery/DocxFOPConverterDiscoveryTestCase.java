@@ -24,7 +24,11 @@
  */
 package fr.opensagres.xdocreport.converter.docx.pdf.fop.discovery;
 
-import junit.framework.TestCase;
+import static org.junit.Assert.*;
+
+import org.junit.Ignore;
+import org.junit.Test;
+
 import fr.opensagres.xdocreport.converter.ConverterRegistry;
 import fr.opensagres.xdocreport.converter.ConverterTypeTo;
 import fr.opensagres.xdocreport.converter.ConverterTypeVia;
@@ -33,7 +37,7 @@ import fr.opensagres.xdocreport.converter.Options;
 import fr.opensagres.xdocreport.converter.docx.pdf.fop.DocxFOPConverter;
 import fr.opensagres.xdocreport.core.document.DocumentKind;
 
-public class DocxFOPConverterDiscoveryTestCase extends TestCase {
+public class DocxFOPConverterDiscoveryTestCase  {
 
 	/**
 	 * Test converter is well registered in the ConverterRegistry by using
@@ -41,6 +45,8 @@ public class DocxFOPConverterDiscoveryTestCase extends TestCase {
 	 * 
 	 * @throws Exception
 	 */
+	@Ignore
+	@Test
 	public void testDiscovery() throws Exception {
 		Options o = Options.getFrom(DocumentKind.DOCX).to(ConverterTypeTo.PDF)
 				.via(ConverterTypeVia.FOP);

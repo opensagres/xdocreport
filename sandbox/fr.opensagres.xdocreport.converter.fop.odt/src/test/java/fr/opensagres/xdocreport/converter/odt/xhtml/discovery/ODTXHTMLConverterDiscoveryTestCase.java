@@ -24,6 +24,11 @@
  */
 package fr.opensagres.xdocreport.converter.odt.xhtml.discovery;
 
+import static org.junit.Assert.*;
+
+import org.junit.Ignore;
+import org.junit.Test;
+
 import junit.framework.TestCase;
 import fr.opensagres.xdocreport.converter.ConverterRegistry;
 import fr.opensagres.xdocreport.converter.ConverterTypeTo;
@@ -33,7 +38,7 @@ import fr.opensagres.xdocreport.converter.Options;
 import fr.opensagres.xdocreport.converter.odt.xhtml.ODTXHTMLConverter;
 import fr.opensagres.xdocreport.core.document.DocumentKind;
 
-public class ODTXHTMLConverterDiscoveryTestCase extends TestCase {
+public class ODTXHTMLConverterDiscoveryTestCase  {
 
 	/**
 	 * Test converter is well registered in the ConverterRegistry by using
@@ -41,6 +46,8 @@ public class ODTXHTMLConverterDiscoveryTestCase extends TestCase {
 	 * 
 	 * @throws Exception
 	 */
+	@Ignore("sandbox")
+	@Test
 	public void testDiscovery() throws Exception {
 		Options o = Options.getFrom(DocumentKind.ODT).to(ConverterTypeTo.XHTML)
 				.via(ConverterTypeVia.XSL);

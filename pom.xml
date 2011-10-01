@@ -1,4 +1,5 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>fr.opensagres.xdocreport</groupId>
 	<artifactId>xdocreport</artifactId>
@@ -24,6 +25,14 @@
 	<build>
 		<!-- compatibility with existing project structure -->
 		<defaultGoal>install</defaultGoal>
+		<extensions>
+			<!-- Enabling the use of FTP -->
+			<extension>
+				<groupId>org.apache.maven.wagon</groupId>
+				<artifactId>wagon-ftp</artifactId>
+				<version>1.0</version>
+			</extension>
+		</extensions>
 
 		<plugins>
 			<plugin>
@@ -129,7 +138,7 @@
 					</execution>
 				</executions>
 			</plugin>
-			<plugin>
+			<!-- <plugin>
 				<groupId>com.github.github</groupId>
 				<artifactId>site-maven-plugin</artifactId>
 				<version>0.1</version>
@@ -145,7 +154,7 @@
 						<phase>site</phase>
 					</execution>
 				</executions>
-			</plugin>
+			</plugin> -->
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-site-plugin</artifactId>
@@ -170,7 +179,7 @@
 							<groupId>org.apache.maven.plugins</groupId>
 							<artifactId>maven-surefire-report-plugin</artifactId>
 							<version>2.6</version>
-						</plugin>						
+						</plugin>
 					</reportPlugins>
 				</configuration>
 			</plugin>

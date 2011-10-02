@@ -59,9 +59,8 @@
 				<artifactId>maven-surefire-plugin</artifactId>
 				<configuration>
 					<forkMode>always</forkMode>
-					<!-- It's better to use "target" folder as basedir for tests... 
-					<basedir>${project.build.directory}</basedir>
-					-->
+					<!-- It's better to use "target" folder as basedir for tests...-->
+					 <basedir>${project.build.directory}</basedir> 
 				</configuration>
 			</plugin>
 			<plugin>
@@ -141,23 +140,11 @@
 					</execution>
 				</executions>
 			</plugin>
-			<!-- <plugin>
-				<groupId>com.github.github</groupId>
-				<artifactId>site-maven-plugin</artifactId>
-				<version>0.1</version>
-				<inherited>true</inherited>
-				<configuration>
-					<message>Building site for ${project.version}</message>
-				</configuration>
-				<executions>
-					<execution>
-						<goals>
-							<goal>site</goal>
-						</goals>
-						<phase>site</phase>
-					</execution>
-				</executions>
-			</plugin> -->
+			<!-- <plugin> <groupId>com.github.github</groupId> <artifactId>site-maven-plugin</artifactId> 
+				<version>0.1</version> <inherited>true</inherited> <configuration> <message>Building 
+				site for ${project.version}</message> </configuration> <executions> <execution> 
+				<goals> <goal>site</goal> </goals> <phase>site</phase> </execution> </executions> 
+				</plugin> -->
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-site-plugin</artifactId>
@@ -305,5 +292,13 @@
 	<ciManagement>
 		<system>Jenkins</system>
 		<url>https://opensagres.ci.cloudbees.com/job/xdocreport/</url>
+		<notifiers>
+			<notifier>
+				<address>pascal.leclercq@gmail.com</address>
+			</notifier>
+			<notifier>
+				<address>angelo.zerr@gmail.com</address>
+			</notifier>
+		</notifiers>
 	</ciManagement>
 </project>

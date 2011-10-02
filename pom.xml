@@ -59,6 +59,9 @@
 				<artifactId>maven-surefire-plugin</artifactId>
 				<configuration>
 					<forkMode>always</forkMode>
+					<!-- It's better to use "target" folder as basedir for tests... 
+					<basedir>${project.build.directory}</basedir>
+					-->
 				</configuration>
 			</plugin>
 			<plugin>
@@ -259,9 +262,9 @@
 		</developer>
 	</developers>
 	<scm>
-		<connection>scm:git:https://code.google.com/p/xdocreport</connection>
+		<connection>scm:git:http://code.google.com/p/xdocreport</connection>
 		<developerConnection>scm:git:https://code.google.com/p/xdocreport</developerConnection>
-		<url>http://xdocreport.googlecode.com/</url>
+		<url>http://code.google.com/p/xdocreport/source/checkout/</url>
 	</scm>
 	<modules>
 		<module>thirdparties-extension</module>
@@ -293,18 +296,14 @@
 			<scope>test</scope>
 		</dependency>
 	</dependencies>
-
-	<!-- <profiles>
-		<profile>
-			<id>sandbox</id>
-			<activation>
-				<activeByDefault>false</activeByDefault>
-			</activation>
-			<modules>
-				<module>sandbox</module>
-				<module>remoting</module>
-			</modules>
-		</profile>
-
-	</profiles> -->
+	<issueManagement>
+		<system>Google Code</system>
+		<url>http://code.google.com/p/xdocreport/issues/list</url>
+	</issueManagement>
+	<url>http://code.google.com/p/xdocreport/</url>
+	<name>XDocReport</name>
+	<ciManagement>
+		<system>Jenkins</system>
+		<url>https://opensagres.ci.cloudbees.com/job/xdocreport/</url>
+	</ciManagement>
 </project>

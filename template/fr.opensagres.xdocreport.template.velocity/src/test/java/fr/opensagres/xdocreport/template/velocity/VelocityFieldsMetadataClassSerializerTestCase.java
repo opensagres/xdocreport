@@ -31,6 +31,7 @@ import org.junit.Assert;
 import org.junit.Test;
 
 import fr.opensagres.xdocreport.template.formatter.FieldsMetadata;
+import fr.opensagres.xdocreport.template.velocity.VelocityFieldsMetadataClassSerializer;
 
 public class VelocityFieldsMetadataClassSerializerTestCase {
 

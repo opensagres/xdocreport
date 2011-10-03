@@ -247,6 +247,15 @@
 			</roles>
 			<timezone>+1</timezone>
 		</developer>
+		<developer>
+			<id>aminebousta</id>
+			<name>Amine Bousta</name>
+			<email>abousta@gmail.com</email>
+			<roles>
+				<role>developper</role>
+			</roles>
+			<timezone>+1</timezone>
+		</developer>
 	</developers>
 	<scm>
 		<connection>scm:git:http://code.google.com/p/xdocreport</connection>

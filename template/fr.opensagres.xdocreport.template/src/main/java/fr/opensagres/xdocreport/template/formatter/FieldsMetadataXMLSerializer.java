@@ -25,6 +25,8 @@
 package fr.opensagres.xdocreport.template.formatter;
 
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.io.Reader;
 import java.io.Writer;
 import java.util.Collection;
@@ -73,6 +75,28 @@ public class FieldsMetadataXMLSerializer {
 		// TODO, implement SAX Parser to load fields and call
 		// fieldsMetadata.addField(fieldMetadata);
 	}
+	
+	/**
+	 * Load fields metadata in the given {@link FieldsMetadata} from the given
+	 * XML reader.
+	 * 
+	 * Here a sample of XML reader :
+	 * 
+	 * <pre>
+	 * <fields>
+	 * 	<field name="project.Name" imageName="" listType="false" />
+	 * 	<field name="developers.Name" imageName="" listType="true" />
+	 * <field name="project.Logo" imageName="Logo" listType="false" />
+	 * </fields>
+	 * </pre>
+	 * 
+	 * @param fieldsMetadata
+	 * @param inputStream
+	 */
+	public void load(FieldsMetadata fieldsMetadata, InputStream inputStream) {
+		// TODO, implement SAX Parser to load fields and call
+		// fieldsMetadata.addField(fieldMetadata);
+	}
 
 	/**
 	 * 
@@ -97,22 +121,76 @@ public class FieldsMetadataXMLSerializer {
 	 */
 	public void save(FieldsMetadata fieldsMetadata, Writer writer,
 			boolean indent) throws IOException {
-		Collection<FieldMetadata> fields = fieldsMetadata.getFields();
-		writer.write(FIELDS_START_ELT);
-		for (FieldMetadata field : fields) {
-			save(field, writer, indent);
-		}
-		writer.write(FIELDS_END_ELT);
+		save(fieldsMetadata, writer, null, indent);
 	}
 
-	private void save(FieldMetadata field, Writer writer, boolean indent)
-			throws IOException {
-		if (indent) {
-			writer.write(LF);
-			writer.write(TAB);
+	/**
+	 * 
+	 * Serialize as XML the given {@link FieldsMetadata} to the given XML output
+	 * stream.
+	 * 
+	 * Here a sample of XML writer :
+	 * 
+	 * <pre>
+	 * <fields>
+	 * 	<field name="project.Name" imageName="" listType="false" />
+	 * 	<field name="developers.Name" imageName="" listType="true" />
+	 * <field name="project.Logo" imageName="Logo" listType="false" />
+	 * </fields>
+	 * </pre>
+	 * 
+	 * @param fieldsMetadata
+	 * @param writer
+	 * @param indent
+	 *            true if indent must be managed and false otherwise.
+	 * @throws IOException
+	 */
+	public void save(FieldsMetadata fieldsMetadata, OutputStream out,
+			boolean indent) throws IOException {
+		save(fieldsMetadata, null, out, indent);
+	}
+
+	private void save(FieldsMetadata fieldsMetadata, Writer writer,
+			OutputStream out, boolean indent) throws IOException {
+		Collection<FieldMetadata> fields = fieldsMetadata.getFields();
+		write(FIELDS_START_ELT, writer, out);
+		for (FieldMetadata field : fields) {
+			save(field, writer, out, indent);
 		}
-		// TODO : generate
+		if (indent) {
+			write(LF, writer, out);
+		}
+		write(FIELDS_END_ELT, writer, out);
+	}
+
+	private void save(FieldMetadata field, Writer writer, OutputStream out,
+			boolean indent) throws IOException {
+		if (indent) {
+			write(LF, writer, out);
+			write(TAB, writer, out);
+		}
 		// <field name="" imageName="" listType="true" >
+		write("<field", writer, out);
+		writeAttr("name", field.getFieldName(), writer, out);
+		write("/>", writer, out);
+	}
+
+	private void write(String s, Writer writer, OutputStream out)
+			throws IOException {
+		if (writer == null) {
+			out.write(s.getBytes());
+		} else {
+			writer.write(s);
+		}
+	}
+
+	private void writeAttr(String attrName, String attrValue, Writer writer,
+			OutputStream out) throws IOException {
+		write(" ", writer, out);
+		write(attrName, writer, out);
+		write("=\"", writer, out);
+		write(attrValue, writer, out);
+		write("\"", writer, out);
 
 	}
 }

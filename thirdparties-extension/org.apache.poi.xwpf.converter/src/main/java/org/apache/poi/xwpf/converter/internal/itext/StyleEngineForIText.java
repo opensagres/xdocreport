@@ -33,11 +33,13 @@ import java.util.Map;
 import java.util.logging.Logger;
 
 import org.apache.poi.xwpf.converter.internal.AbstractStyleEngine;
+import org.apache.poi.xwpf.converter.internal.DxaUtil;
 import org.apache.poi.xwpf.converter.internal.itext.stylable.StylableParagraph;
 import org.apache.poi.xwpf.converter.internal.itext.styles.FontInfos;
 import org.apache.poi.xwpf.converter.internal.itext.styles.Style;
 import org.apache.poi.xwpf.converter.internal.itext.styles.StyleBorder;
 import org.apache.poi.xwpf.converter.internal.itext.styles.StyleParagraphProperties;
+import org.apache.poi.xwpf.converter.internal.itext.styles.StyleTableProperties;
 import org.apache.poi.xwpf.usermodel.XWPFDocument;
 import org.apache.poi.xwpf.usermodel.XWPFParagraph;
 import org.apache.poi.xwpf.usermodel.XWPFPicture;
@@ -59,6 +61,10 @@ import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTRPr;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTSpacing;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTString;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTStyles;
+import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTTblBorders;
+import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTTblPPr;
+import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTTblPrBase;
+import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTTblWidth;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTTextAlignment;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTUnderline;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.STHexColor;
@@ -83,8 +89,8 @@ public class StyleEngineForIText extends AbstractStyleEngine {
 	/**
 	 * Logger for this class
 	 */
-	private static final Logger LOGGER = Logger.getLogger(StyleEngineForIText.class.getName());
-
+	private static final Logger LOGGER = Logger
+			.getLogger(StyleEngineForIText.class.getName());
 
 	public StyleEngineForIText(XWPFDocument document) {
 		super(document);
@@ -97,9 +103,11 @@ public class StyleEngineForIText extends AbstractStyleEngine {
 			Style aStyle = new Style(DEFAULT_STYLE);
 			if (defaults != null) {
 				if (defaults.getPPrDefault().getPPr() != null) {
-					StyleParagraphProperties paragraphProperties = mapStyleParagraphProperties(defaults.getPPrDefault().getPPr());
+					StyleParagraphProperties paragraphProperties = mapStyleParagraphProperties(defaults
+							.getPPrDefault().getPPr());
 					aStyle.setParagraphProperties(paragraphProperties);
-					FontInfos fontInfos = processRPR(defaults.getRPrDefault().getRPr());
+					FontInfos fontInfos = processRPR(defaults.getRPrDefault()
+							.getRPr());
 					paragraphProperties.setFontInfos(fontInfos);
 				}
 			}
@@ -121,7 +129,8 @@ public class StyleEngineForIText extends AbstractStyleEngine {
 
 	}
 
-	private StyleParagraphProperties mapStyleParagraphProperties(CTPPr xwpfParagraphProperties) {
+	private StyleParagraphProperties mapStyleParagraphProperties(
+			CTPPr xwpfParagraphProperties) {
 		StyleParagraphProperties paragraphProperties = new StyleParagraphProperties();
 		CTSpacing spacing = xwpfParagraphProperties.getSpacing();
 		if (spacing != null) {
@@ -178,8 +187,10 @@ public class StyleEngineForIText extends AbstractStyleEngine {
 			fontInfos.setFontFamilly(fonts.getAscii());
 		}
 
-		boolean bold = ctParaRPr.getB() != null && STOnOff.TRUE.equals(ctParaRPr.getB().xgetVal());
-		boolean italic = ctParaRPr.getI() != null && STOnOff.TRUE.equals(ctParaRPr.getI().xgetVal());
+		boolean bold = ctParaRPr.getB() != null
+				&& STOnOff.TRUE.equals(ctParaRPr.getB().xgetVal());
+		boolean italic = ctParaRPr.getI() != null
+				&& STOnOff.TRUE.equals(ctParaRPr.getI().xgetVal());
 
 		if (bold && italic) {
 			fontInfos.setFontStyle(Font.BOLDITALIC);
@@ -221,14 +232,16 @@ public class StyleEngineForIText extends AbstractStyleEngine {
 
 			if (!"auto".equals(strText)) {
 
-				Color color = ColorRegistry.getInstance().getColor("0x" + strText);
+				Color color = ColorRegistry.getInstance().getColor(
+						"0x" + strText);
 				fontInfos.setFontColor(color);
 			}
 		}
 		return fontInfos;
 	}
 
-	private void processIndent(StyleParagraphProperties paragraphProperties, CTInd ctInd) {
+	private void processIndent(StyleParagraphProperties paragraphProperties,
+			CTInd ctInd) {
 		BigInteger firstLine = ctInd.getFirstLine();
 		if (firstLine != null)
 			paragraphProperties.setIndentationFirstLine(firstLine.intValue());
@@ -245,11 +258,13 @@ public class StyleEngineForIText extends AbstractStyleEngine {
 		if (docxBorder == null) {
 			return null;
 		}
-		StyleBorder styleBorder = new StyleBorder(docxBorder.getVal().toString(), borderType);
+		StyleBorder styleBorder = new StyleBorder(docxBorder.getVal()
+				.toString(), borderType);
 		// XXX semi point ?
-		styleBorder.setWidth(docxBorder.getSz().floatValue() / 2);
+		styleBorder.setWidth(docxBorder.getSz());
 		STHexColor hexColor = docxBorder.xgetColor();
-		Color bc = ColorRegistry.getInstance().getColor("0x"+hexColor.getStringValue());
+		Color bc = ColorRegistry.getInstance().getColor(
+				"0x" + hexColor.getStringValue());
 		styleBorder.setColor(bc);
 		return styleBorder;
 	}
@@ -271,28 +286,70 @@ public class StyleEngineForIText extends AbstractStyleEngine {
 				StyleParagraphProperties paragraphProperties = mapStyleParagraphProperties(xwpfParagraphProperties);
 				aStyle.setParagraphProperties(paragraphProperties);
 				if (style.getCTStyle().getRPr() != null) {
-					FontInfos fontInfos = processRPR(style.getCTStyle().getRPr());
+					FontInfos fontInfos = processRPR(style.getCTStyle()
+							.getRPr());
 					paragraphProperties.setFontInfos(fontInfos);
 				}
 
 				// borders...
 				CTPBdr borders = xwpfParagraphProperties.getPBdr();
 				if (borders != null) {
-					paragraphProperties.setBorderBottom(createBorder(borders.getBottom(), BorderType.BOTTOM));
-					paragraphProperties.setBorderLeft(createBorder(borders.getLeft(), BorderType.LEFT));
-					paragraphProperties.setBorderRight(createBorder(borders.getRight(), BorderType.RIGHT));
-					paragraphProperties.setBorderTop(createBorder(borders.getTop(), BorderType.TOP));
+					paragraphProperties.setBorderBottom(createBorder(
+							borders.getBottom(), BorderType.BOTTOM));
+					paragraphProperties.setBorderLeft(createBorder(
+							borders.getLeft(), BorderType.LEFT));
+					paragraphProperties.setBorderRight(createBorder(
+							borders.getRight(), BorderType.RIGHT));
+					paragraphProperties.setBorderTop(createBorder(
+							borders.getTop(), BorderType.TOP));
 					// XXX:
 					// paragraphProperties.setBorderBetween(createBorder(borders.getBetween()));
 				}
 			}
+			// TODO :
+			CTTblPrBase xwpfTableProperties = style.getCTStyle().getTblPr();
+			if (xwpfTableProperties != null) {
+				StyleTableProperties tableProperties = mapStyleTableProperties(xwpfTableProperties);
+
+			}
+
 			stylesMap.put(styleID, aStyle);
 		}
 		return aStyle;
 	}
 
+	private StyleTableProperties mapStyleTableProperties(
+			CTTblPrBase xwpfTablePropertiesBase) {
+		StyleTableProperties tableProperties = new StyleTableProperties();
+		// CTSpacing spacing = xwpfParagraphProperties.getSpacing();
+		CTTblWidth width = xwpfTablePropertiesBase.getTblW();
+		if(width!=null){
+			tableProperties.setWidth(width.getW().floatValue());	
+		}
+		
+		CTTblBorders xwpfBorders = xwpfTablePropertiesBase.getTblBorders();
+		// TODO:
+		// xwpfBorders.getBottom();
+		
+		if (xwpfBorders != null) {
+			tableProperties.setBorderBottom(createBorder(
+					xwpfBorders.getBottom(), BorderType.BOTTOM));
+			tableProperties.setBorderLeft(createBorder(
+					xwpfBorders.getLeft(), BorderType.LEFT));
+			tableProperties.setBorderRight(createBorder(
+					xwpfBorders.getRight(), BorderType.RIGHT));
+			tableProperties.setBorderTop(createBorder(
+					xwpfBorders.getTop(), BorderType.TOP));
+			// XXX:
+			// paragraphProperties.setBorderBetween(createBorder(borders.getBetween()));
+		}
+
+		return tableProperties;
+	}
+
 	@Override
-	protected IITextContainer startVisitDocument(OutputStream out) throws Exception {
+	protected IITextContainer startVisitDocument(OutputStream out)
+			throws Exception {
 		// TODO parse default style here ?
 		CTStyles styles = document.getStyle();
 		styles.getDocDefaults().getPPrDefault().getPPr();
@@ -300,7 +357,8 @@ public class StyleEngineForIText extends AbstractStyleEngine {
 	}
 
 	@Override
-	protected IITextContainer startVisitPargraph(XWPFParagraph xwpfParagraph, IITextContainer pdfParagraph) throws Exception {
+	protected IITextContainer startVisitPargraph(XWPFParagraph xwpfParagraph,
+			IITextContainer pdfParagraph) throws Exception {
 		String styleID = xwpfParagraph.getStyleID();
 		if (styleID != null) {
 			Style style = stylesMap.get(styleID);
@@ -312,23 +370,28 @@ public class StyleEngineForIText extends AbstractStyleEngine {
 	}
 
 	@Override
-	protected void endVisitPargraph(XWPFParagraph paragraph, IITextContainer parentContainer, IITextContainer paragraphContainer) throws Exception {
+	protected void endVisitPargraph(XWPFParagraph paragraph,
+			IITextContainer parentContainer, IITextContainer paragraphContainer)
+			throws Exception {
 
 	}
 
 	@Override
-	protected void visitEmptyRun(IITextContainer paragraphContainer) throws Exception {
+	protected void visitEmptyRun(IITextContainer paragraphContainer)
+			throws Exception {
 		// TODO Auto-generated method stub
 
 	}
 
 	@Override
-	protected void visitRun(XWPFRun run, IITextContainer paragraphContainer) throws Exception {
+	protected void visitRun(XWPFRun run, IITextContainer paragraphContainer)
+			throws Exception {
 
 	}
 
 	@Override
-	protected IITextContainer startVisitTable(XWPFTable table, IITextContainer tableContainer) throws Exception {
+	protected IITextContainer startVisitTable(XWPFTable table,
+			IITextContainer tableContainer) throws Exception {
 
 		CTString str = table.getCTTbl().getTblPr().getTblStyle();
 		if (str != null) {
@@ -344,25 +407,30 @@ public class StyleEngineForIText extends AbstractStyleEngine {
 	}
 
 	@Override
-	protected void endVisitTable(XWPFTable table, IITextContainer parentContainer, IITextContainer tableContainer) throws Exception {
+	protected void endVisitTable(XWPFTable table,
+			IITextContainer parentContainer, IITextContainer tableContainer)
+			throws Exception {
 		// TODO Auto-generated method stub
 
 	}
 
 	@Override
-	protected IITextContainer startVisitTableCell(XWPFTableCell cell, IITextContainer tableContainer) {
+	protected IITextContainer startVisitTableCell(XWPFTableCell cell,
+			IITextContainer tableContainer) {
 
 		return null;
 	}
 
 	@Override
-	protected void endVisitTableCell(XWPFTableCell cell, IITextContainer tableContainer, IITextContainer tableCellContainer) {
+	protected void endVisitTableCell(XWPFTableCell cell,
+			IITextContainer tableContainer, IITextContainer tableCellContainer) {
 		System.out.println(cell);
 
 	}
 
 	@Override
-	protected void visitPicture(XWPFPicture picture, IITextContainer parentContainer) throws Exception {
+	protected void visitPicture(XWPFPicture picture,
+			IITextContainer parentContainer) throws Exception {
 
 	}
 

@@ -46,6 +46,7 @@ import org.apache.poi.xwpf.converter.internal.itext.stylable.StylableDocument;
 import org.apache.poi.xwpf.converter.internal.itext.stylable.StylableParagraph;
 import org.apache.poi.xwpf.converter.internal.itext.stylable.StylableTable;
 import org.apache.poi.xwpf.converter.internal.itext.styles.Style;
+import org.apache.poi.xwpf.converter.internal.itext.styles.StyleBorder;
 import org.apache.poi.xwpf.usermodel.BodyElementType;
 import org.apache.poi.xwpf.usermodel.IBodyElement;
 import org.apache.poi.xwpf.usermodel.UnderlinePatterns;
@@ -62,6 +63,8 @@ import org.apache.poi.xwpf.usermodel.XWPFTableCell;
 import org.apache.poi.xwpf.usermodel.XWPFTableRow;
 import org.openxmlformats.schemas.drawingml.x2006.main.CTPositiveSize2D;
 import org.openxmlformats.schemas.drawingml.x2006.picture.CTPicture;
+
+import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTBorder;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTBr;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTDecimalNumber;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTEmpty;
@@ -79,6 +82,7 @@ import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTTcBorders;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTTcPr;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTText;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.STHdrFtr;
+import org.openxmlformats.schemas.wordprocessingml.x2006.main.STHexColor;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.STOnOff;
 
 import com.lowagie.text.Chunk;
@@ -95,6 +99,7 @@ import fr.opensagres.xdocreport.itext.extension.IITextContainer;
 import fr.opensagres.xdocreport.itext.extension.MasterPage;
 import fr.opensagres.xdocreport.itext.extension.MasterPageHeaderFooter;
 import fr.opensagres.xdocreport.itext.extension.PageOrientation;
+import fr.opensagres.xdocreport.utils.BorderType;
 import fr.opensagres.xdocreport.utils.StringUtils;
 
 public class PDFMapper extends XWPFElementVisitor<IITextContainer> {
@@ -368,12 +373,52 @@ public class PDFMapper extends XWPFElementVisitor<IITextContainer> {
 				pdfPTable.setTotalWidth(tableWidth.width);
 			}
 		}
+		
+		
+		if(table.getCTTbl()!=null){
+			if(table.getCTTbl().getTblPr().getTblBorders()!=null){
+				CTBorder bottom=	table.getCTTbl().getTblPr().getTblBorders().getBottom();
+				if(bottom!=null){
+					pdfPTable.setBorderBottom(createBorder(bottom, BorderType.BOTTOM));	
+				}
+				CTBorder left=	table.getCTTbl().getTblPr().getTblBorders().getLeft();
+				if(left!=null){
+					pdfPTable.setBorderLeft(createBorder(left, BorderType.LEFT));	
+				}
+				CTBorder top=	table.getCTTbl().getTblPr().getTblBorders().getTop();
+				if(top!=null){
+					pdfPTable.setBorderTop(createBorder(top, BorderType.TOP));	
+				}
+				CTBorder right=	table.getCTTbl().getTblPr().getTblBorders().getRight();
+				if(right!=null){
+					pdfPTable.setBorderRight(createBorder(right, BorderType.RIGHT));	
+				}		
+			}
+		}
+		
+		
+		
+		
 		pdfPTable.setLockedWidth(true);
 		// finally apply the style to the iText paragraph....
 		applyStyles(table, pdfPTable);
 		return pdfPTable;
 	}
 
+	private StyleBorder createBorder(CTBorder docxBorder, BorderType borderType) {
+		if (docxBorder == null) {
+			return null;
+		}
+		StyleBorder styleBorder = new StyleBorder(docxBorder.getVal()
+				.toString(), borderType);
+		// XXX semi point ?
+		styleBorder.setWidth(docxBorder.getSz());
+		STHexColor hexColor = docxBorder.xgetColor();
+		Color bc = ColorRegistry.getInstance().getColor(
+				"0x" + hexColor.getStringValue());
+		styleBorder.setColor(bc);
+		return styleBorder;
+	}
 	@Override
 	protected void endVisitTable(XWPFTable table, IITextContainer parentContainer, IITextContainer tableContainer) throws Exception {
 		parentContainer.addElement((Element) tableContainer);
@@ -381,14 +426,15 @@ public class PDFMapper extends XWPFElementVisitor<IITextContainer> {
 
 	@Override
 	protected IITextContainer startVisitTableCell(XWPFTableCell cell, IITextContainer tableContainer) {
-		ExtendedPdfPTable pdfPTable = (ExtendedPdfPTable) tableContainer;
-
+		StylableTable pdfPTable = (StylableTable) tableContainer;
+		
 		XWPFTableRow row = cell.getTableRow();
 		ExtendedPdfPCell pdfPCell = new ExtendedPdfPCell();
 		pdfPCell.setITextContainer(pdfPTable);
 
 		CTTcPr tcPr = cell.getCTTc().getTcPr();
 
+	
 		// Colspan
 		Integer colspan = null;
 		CTDecimalNumber gridSpan = tcPr.getGridSpan();
@@ -408,8 +454,13 @@ public class PDFMapper extends XWPFElementVisitor<IITextContainer> {
 		if (hexColor != null && !"auto".equals(hexColor)) {
 			pdfPCell.setBackgroundColor(ColorRegistry.getInstance().getColor("0x" + hexColor));
 		}
-
-		// Border
+		
+		
+		
+		// Borders
+		// Table Properties on cells
+		
+		// overridden locally
 		CTTcBorders borders = tcPr.getTcBorders();
 		if (borders != null) {
 			// border-left
@@ -424,7 +475,10 @@ public class PDFMapper extends XWPFElementVisitor<IITextContainer> {
 
 		int height = row.getHeight();
 		pdfPCell.setMinimumHeight(dxa2points(height));
-
+		
+		
+		
+		
 		return pdfPCell;
 	}
 

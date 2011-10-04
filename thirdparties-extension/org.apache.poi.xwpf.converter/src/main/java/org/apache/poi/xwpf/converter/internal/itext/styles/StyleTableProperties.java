@@ -29,6 +29,11 @@ import java.awt.Color;
 
 public class StyleTableProperties {
 
+	private StyleBorder borderTop;
+	private StyleBorder borderBottom;
+	private StyleBorder borderLeft;
+	private StyleBorder borderRight;
+
 	private Color backgroundColor;
 	private Float width;
 
@@ -60,6 +65,40 @@ public class StyleTableProperties {
 		if (tableProperties.getBackgroundColor() != null) {
 			backgroundColor = tableProperties.getBackgroundColor();
 		}
+	}
+
+	public void setBorderBottom(StyleBorder borderBottom) {
+		this.borderBottom=borderBottom;
+	}
+
+	public void setBorderLeft(StyleBorder borderLeft) {
+		this.borderLeft=borderLeft;
+	}
+
+	public void setBorderRight(StyleBorder borderRight) {
+		this.borderRight=borderRight;
+		
+	}
+
+	public void setBorderTop(StyleBorder borderTop) {
+		this.borderTop=borderTop;
+		
+	}
+
+	public StyleBorder getBorderTop() {
+		return borderTop;
+	}
+
+	public StyleBorder getBorderBottom() {
+		return borderBottom;
+	}
+
+	public StyleBorder getBorderLeft() {
+		return borderLeft;
+	}
+
+	public StyleBorder getBorderRight() {
+		return borderRight;
 	}
 
 }

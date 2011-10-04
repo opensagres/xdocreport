@@ -26,15 +26,20 @@ package org.apache.poi.xwpf.converter.internal.itext.stylable;
 
 
 import org.apache.poi.xwpf.converter.internal.itext.styles.Style;
+import org.apache.poi.xwpf.converter.internal.itext.styles.StyleBorder;
 import org.apache.poi.xwpf.converter.internal.itext.styles.StyleTableProperties;
+import org.apache.poi.xwpf.usermodel.XWPFTable;
 
 import com.lowagie.text.Element;
 
 import fr.opensagres.xdocreport.itext.extension.ExtendedPdfPTable;
 
-public class StylableTable extends ExtendedPdfPTable implements IStylableContainer {
+public class StylableTable extends ExtendedPdfPTable implements IStylableContainer<XWPFTable>  {
 
-	private static final long serialVersionUID = 664309269352903329L;
+	private StyleBorder borderTop;
+	private StyleBorder borderBottom;
+	private StyleBorder borderLeft;
+	private StyleBorder borderRight;
 
 	private final StylableDocument ownerDocument;
 	private IStylableContainer parent;
@@ -47,16 +52,18 @@ public class StylableTable extends ExtendedPdfPTable implements IStylableContain
 		this.parent = parent;
 	}
 
-	public void applyStyles(Object ele,Style style) {
+	public void applyStyles(XWPFTable ele,Style style) {
 		this.lastStyleApplied = style;
-
-		StyleTableProperties tableProperties = style.getTableProperties();
-		if (tableProperties != null) {
-			if (tableProperties.getWidth() != null) {
-				super.setTotalWidth(tableProperties.getWidth());
-				super.setLockedWidth(true);
+		if (style != null) {
+			StyleTableProperties tableProperties = style.getTableProperties();
+			if (tableProperties != null) {
+				if (tableProperties.getWidth() != null) {
+					super.setTotalWidth(tableProperties.getWidth());
+					super.setLockedWidth(true);
+				}
 			}
 		}
+		
 	}
 
 	public Style getLastStyleApplied() {
@@ -73,5 +80,37 @@ public class StylableTable extends ExtendedPdfPTable implements IStylableContain
 
 	public Element getElement() {
 		return this;
+	}
+
+	public StyleBorder getBorderTop() {
+		return borderTop;
+	}
+
+	public void setBorderTop(StyleBorder borderTop) {
+		this.borderTop = borderTop;
+	}
+
+	public StyleBorder getBorderBottom() {
+		return borderBottom;
+	}
+
+	public void setBorderBottom(StyleBorder borderBottom) {
+		this.borderBottom = borderBottom;
+	}
+
+	public StyleBorder getBorderLeft() {
+		return borderLeft;
+	}
+
+	public void setBorderLeft(StyleBorder borderLeft) {
+		this.borderLeft = borderLeft;
+	}
+
+	public StyleBorder getBorderRight() {
+		return borderRight;
+	}
+
+	public void setBorderRight(StyleBorder borderRight) {
+		this.borderRight = borderRight;
 	}
 }

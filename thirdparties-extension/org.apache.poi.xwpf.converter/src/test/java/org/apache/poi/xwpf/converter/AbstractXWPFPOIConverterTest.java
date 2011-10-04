@@ -30,6 +30,8 @@ import org.junit.Test;
 
 public abstract class AbstractXWPFPOIConverterTest {
 
+	
+	
 	@Test
 	public void convertCV() throws IOException {
 		doGenerate("CV.docx");
@@ -90,7 +92,10 @@ public abstract class AbstractXWPFPOIConverterTest {
 		doGenerate("TestTitle.docx");
 	}
 
-	
+	@Test
+	public void convertPersAngaben() throws IOException {
+		doGenerate("PersAngaben.docx");
+	}
 
 	protected abstract void doGenerate(String fileName) throws IOException;
 

@@ -26,6 +26,7 @@ package org.apache.poi.xwpf.converter.internal.itext.styles;
 
 
 import java.awt.Color;
+import java.math.BigInteger;
 
 import fr.opensagres.xdocreport.utils.BorderType;
 
@@ -35,7 +36,7 @@ public class StyleBorder {
 	private boolean noBorder = false;
 	//default...
 	private Color color=Color.BLACK;
-	private float width=0f;
+	private BigInteger width=BigInteger.valueOf(0);
 
 	public StyleBorder(String border, BorderType borderType) {
 		this.borderType = borderType;
@@ -66,11 +67,11 @@ public class StyleBorder {
 		this.color = color;
 	}
 
-	public float getWidth() {
+	public BigInteger getWidth() {
 		return width;
 	}
 
-	public void setWidth(float width) {
+	public void setWidth(BigInteger width) {
 		this.width = width;
 	}
 

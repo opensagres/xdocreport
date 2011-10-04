@@ -38,8 +38,8 @@ public class ColorRegistry extends AbstractColorRegistry {
 
 	@Override
 	protected Color createColor(String hexColor) {
-		if (hexColor != null && !"auto".equals(hexColor)
-				&& !"transparent".equals(hexColor)) {
+		if (hexColor != null && !"0xauto".equals(hexColor)
+				&& !"0xtransparent".equals(hexColor)) {
 			return Color.decode(hexColor);
 		}
 		return null;

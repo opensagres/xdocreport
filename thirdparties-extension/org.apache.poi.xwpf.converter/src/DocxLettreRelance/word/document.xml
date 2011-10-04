@@ -1,0 +1,749 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<w:document
+	xmlns:ve="http://schemas.openxmlformats.org/markup-compatibility/2006"
+	xmlns:o="urn:schemas-microsoft-com:office:office"
+	xmlns:r="http://schemas.openxmlformats.org/officeDocument/2006/relationships"
+	xmlns:m="http://schemas.openxmlformats.org/officeDocument/2006/math"
+	xmlns:v="urn:schemas-microsoft-com:vml"
+	xmlns:wp="http://schemas.openxmlformats.org/drawingml/2006/wordprocessingDrawing"
+	xmlns:w10="urn:schemas-microsoft-com:office:word"
+	xmlns:w="http://schemas.openxmlformats.org/wordprocessingml/2006/main"
+	xmlns:wne="http://schemas.microsoft.com/office/word/2006/wordml">
+	<w:body>
+		<w:tbl>
+			<w:tblPr>
+				<w:tblStyle w:val="Grilledutableau" />
+				<w:tblW w:w="0" w:type="auto" />
+				<w:tblBorders>
+					<w:top w:val="none" w:sz="0" w:space="0" w:color="auto" />
+					<w:left w:val="none" w:sz="0" w:space="0" w:color="auto" />
+					<w:bottom w:val="none" w:sz="0" w:space="0" w:color="auto" />
+					<w:right w:val="none" w:sz="0" w:space="0" w:color="auto" />
+					<w:insideH w:val="none" w:sz="0" w:space="0" w:color="auto" />
+					<w:insideV w:val="none" w:sz="0" w:space="0" w:color="auto" />
+				</w:tblBorders>
+				<w:tblLook w:val="04A0" />
+			</w:tblPr>
+			<w:tblGrid>
+				<w:gridCol w:w="1686" />
+				<w:gridCol w:w="8912" />
+			</w:tblGrid>
+			<w:tr w:rsidR="00A52BB9" w:rsidRPr="00385975" w:rsidTr="007A5139">
+				<w:tc>
+					<w:tcPr>
+						<w:tcW w:w="1686" w:type="dxa" />
+					</w:tcPr>
+					<w:p w:rsidR="00A52BB9" w:rsidRPr="00385975" w:rsidRDefault="00A52BB9">
+						<w:pPr>
+							<w:rPr>
+								<w:rFonts w:ascii="Arial" w:hAnsi="Arial" w:cs="Arial" />
+							</w:rPr>
+						</w:pPr>
+						<w:r w:rsidRPr="00385975">
+							<w:rPr>
+								<w:rFonts w:ascii="Arial" w:hAnsi="Arial" w:cs="Arial" />
+							</w:rPr>
+							<w:drawing>
+								<wp:inline distT="0" distB="0" distL="0" distR="0">
+									<wp:extent cx="914400" cy="832757" />
+									<wp:effectExtent l="19050" t="0" r="0" b="0" />
+									<wp:docPr id="3" name="Image 1" descr="logo_opensagres_v3.png" />
+									<wp:cNvGraphicFramePr>
+										<a:graphicFrameLocks
+											xmlns:a="http://schemas.openxmlformats.org/drawingml/2006/main"
+											noChangeAspect="1" />
+									</wp:cNvGraphicFramePr>
+									<a:graphic
+										xmlns:a="http://schemas.openxmlformats.org/drawingml/2006/main">
+										<a:graphicData
+											uri="http://schemas.openxmlformats.org/drawingml/2006/picture">
+											<pic:pic
+												xmlns:pic="http://schemas.openxmlformats.org/drawingml/2006/picture">
+												<pic:nvPicPr>
+													<pic:cNvPr id="0" name="logo_opensagres_v3.png" />
+													<pic:cNvPicPr />
+												</pic:nvPicPr>
+												<pic:blipFill>
+													<a:blip r:embed="rId4" cstate="print" />
+													<a:stretch>
+														<a:fillRect />
+													</a:stretch>
+												</pic:blipFill>
+												<pic:spPr>
+													<a:xfrm>
+														<a:off x="0" y="0" />
+														<a:ext cx="914098" cy="832482" />
+													</a:xfrm>
+													<a:prstGeom prst="rect">
+														<a:avLst />
+													</a:prstGeom>
+												</pic:spPr>
+											</pic:pic>
+										</a:graphicData>
+									</a:graphic>
+								</wp:inline>
+							</w:drawing>
+						</w:r>
+					</w:p>
+				</w:tc>
+				<w:tc>
+					<w:tcPr>
+						<w:tcW w:w="8912" w:type="dxa" />
+					</w:tcPr>
+					<w:p w:rsidR="00A52BB9" w:rsidRPr="00772C97" w:rsidRDefault="00A52BB9"
+						w:rsidP="00772C97">
+						<w:pPr>
+							<w:spacing w:line="360" w:lineRule="auto" />
+							<w:rPr>
+								<w:rFonts w:ascii="Arial" w:hAnsi="Arial" w:cs="Arial" />
+								<w:b />
+								<w:sz w:val="24" />
+								<w:szCs w:val="24" />
+							</w:rPr>
+						</w:pPr>
+						<w:proofErr w:type="spellStart" />
+						<w:r w:rsidRPr="00772C97">
+							<w:rPr>
+								<w:rFonts w:ascii="Arial" w:hAnsi="Arial" w:cs="Arial" />
+								<w:b />
+								<w:sz w:val="24" />
+								<w:szCs w:val="24" />
+							</w:rPr>
+							<w:t>OpenSag</w:t>
+						</w:r>
+						<w:r w:rsidRPr="00772C97">
+							<w:rPr>
+								<w:rFonts w:ascii="Arial" w:hAnsi="Arial" w:cs="Arial" />
+								<w:b />
+								<w:sz w:val="24" />
+								<w:szCs w:val="24" />
+							</w:rPr>
+							<w:t>r</w:t>
+						</w:r>
+						<w:r w:rsidRPr="00772C97">
+							<w:rPr>
+								<w:rFonts w:ascii="Arial" w:hAnsi="Arial" w:cs="Arial" />
+								<w:b />
+								<w:sz w:val="24" />
+								<w:szCs w:val="24" />
+							</w:rPr>
+							<w:t>es</w:t>
+						</w:r>
+						<w:proofErr w:type="spellEnd" />
+					</w:p>
+					<w:p w:rsidR="00A52BB9" w:rsidRPr="00772C97" w:rsidRDefault="00A52BB9"
+						w:rsidP="00772C97">
+						<w:pPr>
+							<w:spacing w:line="360" w:lineRule="auto" />
+							<w:rPr>
+								<w:rFonts w:ascii="Arial" w:hAnsi="Arial" w:cs="Arial" />
+								<w:sz w:val="24" />
+								<w:szCs w:val="24" />
+							</w:rPr>
+						</w:pPr>
+						<w:r w:rsidRPr="00772C97">
+							<w:rPr>
+								<w:rFonts w:ascii="Arial" w:hAnsi="Arial" w:cs="Arial" />
+								<w:sz w:val="24" />
+								<w:szCs w:val="24" />
+							</w:rPr>
+							<w:t xml:space="preserve">4 </w:t>
+						</w:r>
+						<w:proofErr w:type="gramStart" />
+						<w:r w:rsidRPr="00772C97">
+							<w:rPr>
+								<w:rFonts w:ascii="Arial" w:hAnsi="Arial" w:cs="Arial" />
+								<w:sz w:val="24" />
+								<w:szCs w:val="24" />
+							</w:rPr>
+							<w:t>rue</w:t>
+						</w:r>
+						<w:proofErr w:type="gramEnd" />
+						<w:r w:rsidRPr="00772C97">
+							<w:rPr>
+								<w:rFonts w:ascii="Arial" w:hAnsi="Arial" w:cs="Arial" />
+								<w:sz w:val="24" />
+								<w:szCs w:val="24" />
+							</w:rPr>
+							<w:t xml:space="preserve"> de la liberté</w:t>
+						</w:r>
+					</w:p>
+					<w:p w:rsidR="00A52BB9" w:rsidRPr="00385975" w:rsidRDefault="00A52BB9"
+						w:rsidP="00772C97">
+						<w:pPr>
+							<w:spacing w:line="360" w:lineRule="auto" />
+							<w:rPr>
+								<w:rFonts w:ascii="Arial" w:hAnsi="Arial" w:cs="Arial" />
+							</w:rPr>
+						</w:pPr>
+						<w:r w:rsidRPr="00772C97">
+							<w:rPr>
+								<w:rFonts w:ascii="Arial" w:hAnsi="Arial" w:cs="Arial" />
+								<w:sz w:val="24" />
+								<w:szCs w:val="24" />
+							</w:rPr>
+							<w:t>59800 Lille</w:t>
+						</w:r>
+					</w:p>
+				</w:tc>
+			</w:tr>
+		</w:tbl>
+		<w:p w:rsidR="00A52BB9" w:rsidRPr="00385975" w:rsidRDefault="00A52BB9">
+			<w:pPr>
+				<w:rPr>
+					<w:rFonts w:ascii="Arial" w:hAnsi="Arial" w:cs="Arial" />
+				</w:rPr>
+			</w:pPr>
+		</w:p>
+		<w:p w:rsidR="00A52BB9" w:rsidRPr="00385975" w:rsidRDefault="00A52BB9"
+			w:rsidP="00A52BB9">
+			<w:pPr>
+				<w:ind w:firstLine="4536" />
+				<w:rPr>
+					<w:rFonts w:ascii="Arial" w:hAnsi="Arial" w:cs="Arial" />
+				</w:rPr>
+			</w:pPr>
+			<w:r w:rsidRPr="00385975">
+				<w:rPr>
+					<w:rFonts w:ascii="Arial" w:hAnsi="Arial" w:cs="Arial" />
+					<w:noProof />
+					<w:lang w:eastAsia="fr-FR" />
+				</w:rPr>
+				<w:pict>
+					<v:roundrect id="_x0000_s1026"
+						style="position:absolute;left:0;text-align:left;margin-left:283.15pt;margin-top:9.15pt;width:235.5pt;height:90pt;z-index:251658240"
+						arcsize="10923f" filled="f" strokecolor="#d8d8d8 [2732]" />
+				</w:pict>
+			</w:r>
+		</w:p>
+		<w:p w:rsidR="00A52BB9" w:rsidRPr="00385975" w:rsidRDefault="00A52BB9"
+			w:rsidP="007A5139">
+			<w:pPr>
+				<w:ind w:firstLine="6096" />
+				<w:rPr>
+					<w:rFonts w:ascii="Arial" w:hAnsi="Arial" w:cs="Arial" />
+				</w:rPr>
+			</w:pPr>
+			<w:r w:rsidRPr="00385975">
+				<w:rPr>
+					<w:rFonts w:ascii="Arial" w:hAnsi="Arial" w:cs="Arial" />
+				</w:rPr>
+				<w:t>M. Pascal Leclercq</w:t>
+			</w:r>
+		</w:p>
+		<w:p w:rsidR="00A52BB9" w:rsidRPr="00385975" w:rsidRDefault="00A52BB9"
+			w:rsidP="007A5139">
+			<w:pPr>
+				<w:ind w:firstLine="6096" />
+				<w:rPr>
+					<w:rFonts w:ascii="Arial" w:hAnsi="Arial" w:cs="Arial" />
+				</w:rPr>
+			</w:pPr>
+			<w:r w:rsidRPr="00385975">
+				<w:rPr>
+					<w:rFonts w:ascii="Arial" w:hAnsi="Arial" w:cs="Arial" />
+				</w:rPr>
+				<w:t xml:space="preserve">6 </w:t>
+			</w:r>
+			<w:proofErr w:type="gramStart" />
+			<w:r w:rsidRPr="00385975">
+				<w:rPr>
+					<w:rFonts w:ascii="Arial" w:hAnsi="Arial" w:cs="Arial" />
+				</w:rPr>
+				<w:t>rue</w:t>
+			</w:r>
+			<w:proofErr w:type="gramEnd" />
+			<w:r w:rsidRPr="00385975">
+				<w:rPr>
+					<w:rFonts w:ascii="Arial" w:hAnsi="Arial" w:cs="Arial" />
+				</w:rPr>
+				<w:t xml:space="preserve"> de l’espace</w:t>
+			</w:r>
+		</w:p>
+		<w:p w:rsidR="00A52BB9" w:rsidRPr="00385975" w:rsidRDefault="00A52BB9"
+			w:rsidP="007A5139">
+			<w:pPr>
+				<w:ind w:firstLine="6096" />
+				<w:rPr>
+					<w:rFonts w:ascii="Arial" w:hAnsi="Arial" w:cs="Arial" />
+				</w:rPr>
+			</w:pPr>
+			<w:r w:rsidRPr="00385975">
+				<w:rPr>
+					<w:rFonts w:ascii="Arial" w:hAnsi="Arial" w:cs="Arial" />
+				</w:rPr>
+				<w:t>59000 Villeneuve d’Ascq</w:t>
+			</w:r>
+		</w:p>
+		<w:p w:rsidR="006B68DD" w:rsidRDefault="006B68DD" w:rsidP="006B68DD">
+			<w:pPr>
+				<w:rPr>
+					<w:rFonts w:ascii="Arial" w:hAnsi="Arial" w:cs="Arial" />
+				</w:rPr>
+			</w:pPr>
+		</w:p>
+		<w:p w:rsidR="006B68DD" w:rsidRPr="006B68DD" w:rsidRDefault="006B68DD"
+			w:rsidP="006B68DD">
+			<w:pPr>
+				<w:jc w:val="right" />
+				<w:rPr>
+					<w:rFonts w:ascii="Arial" w:hAnsi="Arial" w:cs="Arial" />
+				</w:rPr>
+			</w:pPr>
+			<w:proofErr w:type="spellStart" />
+			<w:r w:rsidRPr="006B68DD">
+				<w:rPr>
+					<w:rFonts w:ascii="Arial" w:hAnsi="Arial" w:cs="Arial" />
+				</w:rPr>
+				<w:t>OpenSagres</w:t>
+			</w:r>
+			<w:proofErr w:type="spellEnd" />
+			<w:r w:rsidRPr="006B68DD">
+				<w:rPr>
+					<w:rFonts w:ascii="Arial" w:hAnsi="Arial" w:cs="Arial" />
+				</w:rPr>
+				<w:t>, le 02/02/2011</w:t>
+			</w:r>
+		</w:p>
+		<w:p w:rsidR="006B68DD" w:rsidRPr="006B68DD" w:rsidRDefault="006B68DD"
+			w:rsidP="006B68DD">
+			<w:pPr>
+				<w:rPr>
+					<w:rFonts w:ascii="Arial" w:hAnsi="Arial" w:cs="Arial" />
+				</w:rPr>
+			</w:pPr>
+			<w:r w:rsidRPr="006B68DD">
+				<w:rPr>
+					<w:rFonts w:ascii="Arial" w:hAnsi="Arial" w:cs="Arial" />
+					<w:u w:val="single" />
+				</w:rPr>
+				<w:t>Objet :</w:t>
+			</w:r>
+			<w:r w:rsidRPr="006B68DD">
+				<w:rPr>
+					<w:rFonts w:ascii="Arial" w:hAnsi="Arial" w:cs="Arial" />
+				</w:rPr>
+				<w:t xml:space="preserve"> Confirmation de l'arrivée de la commande client</w:t>
+			</w:r>
+		</w:p>
+		<w:p w:rsidR="006B68DD" w:rsidRPr="006B68DD" w:rsidRDefault="006B68DD"
+			w:rsidP="006B68DD">
+			<w:pPr>
+				<w:rPr>
+					<w:rFonts w:ascii="Arial" w:hAnsi="Arial" w:cs="Arial" />
+				</w:rPr>
+			</w:pPr>
+			<w:r>
+				<w:rPr>
+					<w:rFonts w:ascii="Arial" w:hAnsi="Arial" w:cs="Arial" />
+				</w:rPr>
+				<w:t>Cher Client,</w:t>
+			</w:r>
+		</w:p>
+		<w:p w:rsidR="006B68DD" w:rsidRPr="006B68DD" w:rsidRDefault="006B68DD"
+			w:rsidP="006B68DD">
+			<w:pPr>
+				<w:spacing w:line="360" w:lineRule="auto" />
+				<w:ind w:firstLine="708" />
+				<w:rPr>
+					<w:rFonts w:ascii="Arial" w:hAnsi="Arial" w:cs="Arial" />
+				</w:rPr>
+			</w:pPr>
+			<w:r w:rsidRPr="006B68DD">
+				<w:rPr>
+					<w:rFonts w:ascii="Arial" w:hAnsi="Arial" w:cs="Arial" />
+				</w:rPr>
+				<w:t>Nous avons le plaisir de vous informer que votre commande
+					numéro 1952 du 02/03/2011 est à votre disposition dans notre
+					magasin, a</w:t>
+			</w:r>
+			<w:r>
+				<w:rPr>
+					<w:rFonts w:ascii="Arial" w:hAnsi="Arial" w:cs="Arial" />
+				</w:rPr>
+				<w:t>u service retrait marchandises.</w:t>
+			</w:r>
+		</w:p>
+		<w:p w:rsidR="006B68DD" w:rsidRDefault="006B68DD" w:rsidP="006B68DD">
+			<w:pPr>
+				<w:spacing w:line="360" w:lineRule="auto" />
+				<w:rPr>
+					<w:rFonts w:ascii="Arial" w:hAnsi="Arial" w:cs="Arial" />
+				</w:rPr>
+			</w:pPr>
+			<w:r w:rsidRPr="006B68DD">
+				<w:rPr>
+					<w:rFonts w:ascii="Arial" w:hAnsi="Arial" w:cs="Arial" />
+				</w:rPr>
+				<w:t>Cette commande client est composée des articles suivants:</w:t>
+			</w:r>
+		</w:p>
+		<w:tbl>
+			<w:tblPr>
+				<w:tblStyle w:val="Grilledutableau" />
+				<w:tblW w:w="5000" w:type="pct" />
+				<w:tblLook w:val="04A0" />
+			</w:tblPr>
+			<w:tblGrid>
+				<w:gridCol w:w="2137" />
+				<w:gridCol w:w="2137" />
+				<w:gridCol w:w="2136" />
+				<w:gridCol w:w="2136" />
+				<w:gridCol w:w="2136" />
+			</w:tblGrid>
+			<w:tr w:rsidR="00D70B38" w:rsidTr="007A5139">
+				<w:trPr>
+					<w:trHeight w:val="655" />
+				</w:trPr>
+				<w:tc>
+					<w:tcPr>
+						<w:tcW w:w="1000" w:type="pct" />
+						<w:shd w:val="clear" w:color="auto" w:fill="D9D9D9"
+							w:themeFill="background1" w:themeFillShade="D9" />
+						<w:vAlign w:val="center" />
+					</w:tcPr>
+					<w:p w:rsidR="00D70B38" w:rsidRPr="00D70B38" w:rsidRDefault="00D70B38"
+						w:rsidP="00D70B38">
+						<w:pPr>
+							<w:spacing w:line="360" w:lineRule="auto" />
+							<w:jc w:val="center" />
+							<w:rPr>
+								<w:rFonts w:ascii="Arial" w:hAnsi="Arial" w:cs="Arial" />
+								<w:b />
+							</w:rPr>
+						</w:pPr>
+						<w:r w:rsidRPr="00D70B38">
+							<w:rPr>
+								<w:rFonts w:ascii="Arial" w:hAnsi="Arial" w:cs="Arial" />
+								<w:b />
+							</w:rPr>
+							<w:t>Référence</w:t>
+						</w:r>
+					</w:p>
+				</w:tc>
+				<w:tc>
+					<w:tcPr>
+						<w:tcW w:w="1000" w:type="pct" />
+						<w:shd w:val="clear" w:color="auto" w:fill="D9D9D9"
+							w:themeFill="background1" w:themeFillShade="D9" />
+						<w:vAlign w:val="center" />
+					</w:tcPr>
+					<w:p w:rsidR="00D70B38" w:rsidRPr="00D70B38" w:rsidRDefault="00D70B38"
+						w:rsidP="00D70B38">
+						<w:pPr>
+							<w:spacing w:line="360" w:lineRule="auto" />
+							<w:jc w:val="center" />
+							<w:rPr>
+								<w:rFonts w:ascii="Arial" w:hAnsi="Arial" w:cs="Arial" />
+								<w:b />
+							</w:rPr>
+						</w:pPr>
+						<w:r w:rsidRPr="00D70B38">
+							<w:rPr>
+								<w:rFonts w:ascii="Arial" w:hAnsi="Arial" w:cs="Arial" />
+								<w:b />
+							</w:rPr>
+							<w:t>Description</w:t>
+						</w:r>
+					</w:p>
+				</w:tc>
+				<w:tc>
+					<w:tcPr>
+						<w:tcW w:w="1000" w:type="pct" />
+						<w:shd w:val="clear" w:color="auto" w:fill="D9D9D9"
+							w:themeFill="background1" w:themeFillShade="D9" />
+						<w:vAlign w:val="center" />
+					</w:tcPr>
+					<w:p w:rsidR="00D70B38" w:rsidRPr="00D70B38" w:rsidRDefault="00D70B38"
+						w:rsidP="00D70B38">
+						<w:pPr>
+							<w:spacing w:line="360" w:lineRule="auto" />
+							<w:jc w:val="center" />
+							<w:rPr>
+								<w:rFonts w:ascii="Arial" w:hAnsi="Arial" w:cs="Arial" />
+								<w:b />
+							</w:rPr>
+						</w:pPr>
+						<w:r w:rsidRPr="00D70B38">
+							<w:rPr>
+								<w:rFonts w:ascii="Arial" w:hAnsi="Arial" w:cs="Arial" />
+								<w:b />
+							</w:rPr>
+							<w:t>Prix unitaire</w:t>
+						</w:r>
+					</w:p>
+				</w:tc>
+				<w:tc>
+					<w:tcPr>
+						<w:tcW w:w="1000" w:type="pct" />
+						<w:shd w:val="clear" w:color="auto" w:fill="D9D9D9"
+							w:themeFill="background1" w:themeFillShade="D9" />
+						<w:vAlign w:val="center" />
+					</w:tcPr>
+					<w:p w:rsidR="00D70B38" w:rsidRPr="00D70B38" w:rsidRDefault="00D70B38"
+						w:rsidP="00D70B38">
+						<w:pPr>
+							<w:spacing w:line="360" w:lineRule="auto" />
+							<w:jc w:val="center" />
+							<w:rPr>
+								<w:rFonts w:ascii="Arial" w:hAnsi="Arial" w:cs="Arial" />
+								<w:b />
+							</w:rPr>
+						</w:pPr>
+						<w:r w:rsidRPr="00D70B38">
+							<w:rPr>
+								<w:rFonts w:ascii="Arial" w:hAnsi="Arial" w:cs="Arial" />
+								<w:b />
+							</w:rPr>
+							<w:t>Quantité</w:t>
+						</w:r>
+					</w:p>
+				</w:tc>
+				<w:tc>
+					<w:tcPr>
+						<w:tcW w:w="1000" w:type="pct" />
+						<w:shd w:val="clear" w:color="auto" w:fill="D9D9D9"
+							w:themeFill="background1" w:themeFillShade="D9" />
+						<w:vAlign w:val="center" />
+					</w:tcPr>
+					<w:p w:rsidR="00D70B38" w:rsidRPr="00D70B38" w:rsidRDefault="00D70B38"
+						w:rsidP="00D70B38">
+						<w:pPr>
+							<w:spacing w:line="360" w:lineRule="auto" />
+							<w:jc w:val="center" />
+							<w:rPr>
+								<w:rFonts w:ascii="Arial" w:hAnsi="Arial" w:cs="Arial" />
+								<w:b />
+							</w:rPr>
+						</w:pPr>
+						<w:r w:rsidRPr="00D70B38">
+							<w:rPr>
+								<w:rFonts w:ascii="Arial" w:hAnsi="Arial" w:cs="Arial" />
+								<w:b />
+							</w:rPr>
+							<w:t>Prix total</w:t>
+						</w:r>
+					</w:p>
+				</w:tc>
+			</w:tr>
+			<w:tr w:rsidR="00D70B38" w:rsidTr="00227747">
+				<w:tc>
+					<w:tcPr>
+						<w:tcW w:w="1000" w:type="pct" />
+						<w:vAlign w:val="center" />
+					</w:tcPr>
+					<w:p w:rsidR="00D70B38" w:rsidRDefault="00D70B38" w:rsidP="00227747">
+						<w:pPr>
+							<w:spacing w:line="360" w:lineRule="auto" />
+							<w:jc w:val="center" />
+							<w:rPr>
+								<w:rFonts w:ascii="Arial" w:hAnsi="Arial" w:cs="Arial" />
+							</w:rPr>
+						</w:pPr>
+						<w:r>
+							<w:rPr>
+								<w:rFonts w:ascii="Arial" w:hAnsi="Arial" w:cs="Arial" />
+							</w:rPr>
+							<w:t>95856512568</w:t>
+						</w:r>
+					</w:p>
+				</w:tc>
+				<w:tc>
+					<w:tcPr>
+						<w:tcW w:w="1000" w:type="pct" />
+						<w:vAlign w:val="center" />
+					</w:tcPr>
+					<w:p w:rsidR="00D70B38" w:rsidRDefault="00D70B38" w:rsidP="00227747">
+						<w:pPr>
+							<w:spacing w:line="360" w:lineRule="auto" />
+							<w:jc w:val="center" />
+							<w:rPr>
+								<w:rFonts w:ascii="Arial" w:hAnsi="Arial" w:cs="Arial" />
+							</w:rPr>
+						</w:pPr>
+						<w:r>
+							<w:rPr>
+								<w:rFonts w:ascii="Arial" w:hAnsi="Arial" w:cs="Arial" />
+							</w:rPr>
+							<w:t>Tournevis</w:t>
+						</w:r>
+					</w:p>
+				</w:tc>
+				<w:tc>
+					<w:tcPr>
+						<w:tcW w:w="1000" w:type="pct" />
+						<w:vAlign w:val="center" />
+					</w:tcPr>
+					<w:p w:rsidR="00D70B38" w:rsidRDefault="00D70B38" w:rsidP="00227747">
+						<w:pPr>
+							<w:spacing w:line="360" w:lineRule="auto" />
+							<w:jc w:val="right" />
+							<w:rPr>
+								<w:rFonts w:ascii="Arial" w:hAnsi="Arial" w:cs="Arial" />
+							</w:rPr>
+						</w:pPr>
+						<w:r>
+							<w:rPr>
+								<w:rFonts w:ascii="Arial" w:hAnsi="Arial" w:cs="Arial" />
+							</w:rPr>
+							<w:t>20.15 €</w:t>
+						</w:r>
+					</w:p>
+				</w:tc>
+				<w:tc>
+					<w:tcPr>
+						<w:tcW w:w="1000" w:type="pct" />
+						<w:vAlign w:val="center" />
+					</w:tcPr>
+					<w:p w:rsidR="00D70B38" w:rsidRDefault="00D70B38" w:rsidP="00227747">
+						<w:pPr>
+							<w:spacing w:line="360" w:lineRule="auto" />
+							<w:jc w:val="right" />
+							<w:rPr>
+								<w:rFonts w:ascii="Arial" w:hAnsi="Arial" w:cs="Arial" />
+							</w:rPr>
+						</w:pPr>
+						<w:r>
+							<w:rPr>
+								<w:rFonts w:ascii="Arial" w:hAnsi="Arial" w:cs="Arial" />
+							</w:rPr>
+							<w:t>2</w:t>
+						</w:r>
+					</w:p>
+				</w:tc>
+				<w:tc>
+					<w:tcPr>
+						<w:tcW w:w="1000" w:type="pct" />
+						<w:vAlign w:val="center" />
+					</w:tcPr>
+					<w:p w:rsidR="00D70B38" w:rsidRDefault="00D70B38" w:rsidP="00227747">
+						<w:pPr>
+							<w:spacing w:line="360" w:lineRule="auto" />
+							<w:jc w:val="right" />
+							<w:rPr>
+								<w:rFonts w:ascii="Arial" w:hAnsi="Arial" w:cs="Arial" />
+							</w:rPr>
+						</w:pPr>
+						<w:r>
+							<w:rPr>
+								<w:rFonts w:ascii="Arial" w:hAnsi="Arial" w:cs="Arial" />
+							</w:rPr>
+							<w:t>40.30 €</w:t>
+						</w:r>
+					</w:p>
+				</w:tc>
+			</w:tr>
+		</w:tbl>
+		<w:p w:rsidR="00D70B38" w:rsidRPr="00D70B38" w:rsidRDefault="00D70B38"
+			w:rsidP="00D70B38">
+			<w:pPr>
+				<w:spacing w:before="240" w:line="360" w:lineRule="auto" />
+				<w:jc w:val="both" />
+				<w:rPr>
+					<w:rFonts w:ascii="Arial" w:hAnsi="Arial" w:cs="Arial" />
+				</w:rPr>
+			</w:pPr>
+			<w:r w:rsidRPr="00D70B38">
+				<w:rPr>
+					<w:rFonts w:ascii="Arial" w:hAnsi="Arial" w:cs="Arial" />
+				</w:rPr>
+				<w:t>Notre magasin est ouvert de 9h00 à 20h00 du lundi au samedi. Il
+					vous suffit de présenter votre bon de commande client initial.
+				</w:t>
+			</w:r>
+		</w:p>
+		<w:p w:rsidR="00D70B38" w:rsidRPr="00D70B38" w:rsidRDefault="00D70B38"
+			w:rsidP="00D70B38">
+			<w:pPr>
+				<w:spacing w:line="240" w:lineRule="auto" />
+				<w:jc w:val="both" />
+				<w:rPr>
+					<w:rFonts w:ascii="Arial" w:hAnsi="Arial" w:cs="Arial" />
+					<w:b />
+					<w:sz w:val="32" />
+					<w:szCs w:val="32" />
+				</w:rPr>
+			</w:pPr>
+			<w:r w:rsidRPr="00D70B38">
+				<w:rPr>
+					<w:rFonts w:ascii="Arial" w:hAnsi="Arial" w:cs="Arial" />
+					<w:b />
+					<w:sz w:val="32" />
+					<w:szCs w:val="32" />
+				</w:rPr>
+				<w:t>Dans le cas ou vous rencontreriez des difficultés d'enlèvement,
+					notre service commande client est disponible au 0125698752 se met à
+					votre disposition pour vous aider à résoudre tout problème qui
+					pourrait se poser à vous (location de camionnette, livraison.)
+				</w:t>
+			</w:r>
+		</w:p>
+		<w:p w:rsidR="00D70B38" w:rsidRPr="00D70B38" w:rsidRDefault="00D70B38"
+			w:rsidP="00D70B38">
+			<w:pPr>
+				<w:spacing w:line="360" w:lineRule="auto" />
+				<w:jc w:val="both" />
+				<w:rPr>
+					<w:rFonts w:ascii="Arial" w:hAnsi="Arial" w:cs="Arial" />
+				</w:rPr>
+			</w:pPr>
+			<w:r w:rsidRPr="00D70B38">
+				<w:rPr>
+					<w:rFonts w:ascii="Arial" w:hAnsi="Arial" w:cs="Arial" />
+				</w:rPr>
+				<w:t>De plus, notre magasin vous offre de nombreuses possibilités de
+					financement grâce à la carte maison Leroy Merlin. Pour plus de
+					renseignements rendez-vous à l'espace financement.</w:t>
+			</w:r>
+		</w:p>
+		<w:p w:rsidR="00D70B38" w:rsidRPr="00D70B38" w:rsidRDefault="00D70B38"
+			w:rsidP="00D70B38">
+			<w:pPr>
+				<w:spacing w:line="360" w:lineRule="auto" />
+				<w:jc w:val="both" />
+				<w:rPr>
+					<w:rFonts w:ascii="Arial" w:hAnsi="Arial" w:cs="Arial" />
+				</w:rPr>
+			</w:pPr>
+			<w:r w:rsidRPr="00D70B38">
+				<w:rPr>
+					<w:rFonts w:ascii="Arial" w:hAnsi="Arial" w:cs="Arial" />
+				</w:rPr>
+				<w:t>Dans l'attente de votre prochaine visite, nous vous prions
+					d'agréer, cher client, l'expression de nos sentiments les
+					meilleurs.</w:t>
+			</w:r>
+		</w:p>
+		<w:p w:rsidR="00D70B38" w:rsidRPr="00D70B38" w:rsidRDefault="00D70B38"
+			w:rsidP="00D70B38">
+			<w:pPr>
+				<w:spacing w:line="360" w:lineRule="auto" />
+				<w:rPr>
+					<w:rFonts w:ascii="Arial" w:hAnsi="Arial" w:cs="Arial" />
+				</w:rPr>
+			</w:pPr>
+		</w:p>
+		<w:p w:rsidR="006B68DD" w:rsidRPr="006B68DD" w:rsidRDefault="00D70B38"
+			w:rsidP="006B68DD">
+			<w:pPr>
+				<w:spacing w:line="360" w:lineRule="auto" />
+				<w:rPr>
+					<w:rFonts w:ascii="Arial" w:hAnsi="Arial" w:cs="Arial" />
+				</w:rPr>
+			</w:pPr>
+			<w:r w:rsidRPr="00D70B38">
+				<w:rPr>
+					<w:rFonts w:ascii="Arial" w:hAnsi="Arial" w:cs="Arial" />
+				</w:rPr>
+				<w:t>Service commande client</w:t>
+			</w:r>
+		</w:p>
+		<w:sectPr w:rsidR="006B68DD" w:rsidRPr="006B68DD" w:rsidSect="00D70B38">
+			<w:pgSz w:w="11906" w:h="16838" />
+			<w:pgMar w:top="720" w:right="720" w:bottom="720" w:left="720"
+				w:header="708" w:footer="708" w:gutter="0" />
+			<w:cols w:space="708" />
+			<w:docGrid w:linePitch="360" />
+		</w:sectPr>
+	</w:body>
+</w:document>

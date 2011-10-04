@@ -25,7 +25,10 @@
 package org.apache.poi.xwpf.converter.internal.itext.stylable;
 
 
+import static org.apache.poi.xwpf.converter.internal.DxaUtil.dxa2points;
+
 import java.awt.Color;
+import java.math.BigInteger;
 
 import org.apache.poi.xwpf.converter.internal.itext.styles.StyleBorder;
 
@@ -55,9 +58,9 @@ public class StyleUtils {
 					cell.setBorderColor(color);
 				}
 				// border-width
-				Float width = border.getWidth();
+				BigInteger width = border.getWidth();
 				if (width != null) {
-					cell.setBorderWidth(width);
+					cell.setBorderWidth(dxa2points(width));
 				}
 			}
 			break;
@@ -73,9 +76,9 @@ public class StyleUtils {
 					cell.setBorderColorBottom(color);
 				}
 				// border-bottom-width
-				Float width = border.getWidth();
+				BigInteger width = border.getWidth();
 				if (width != null) {
-					cell.setBorderWidthBottom(width);
+					cell.setBorderWidthBottom(dxa2points(width));
 				}
 			}
 			break;
@@ -91,9 +94,9 @@ public class StyleUtils {
 					cell.setBorderColorLeft(color);
 				}
 				// border-left-width
-				Float width = border.getWidth();
+				BigInteger width = border.getWidth();
 				if (width != null) {
-					cell.setBorderWidthLeft(width);
+					cell.setBorderWidthLeft(dxa2points(width));
 				}
 			}
 			break;
@@ -109,9 +112,9 @@ public class StyleUtils {
 					cell.setBorderColorRight(color);
 				}
 				// border-right-width
-				Float width = border.getWidth();
+				BigInteger width = border.getWidth();
 				if (width != null) {
-					cell.setBorderWidthRight(width);
+					cell.setBorderWidthRight(dxa2points(width));
 				}
 			}
 			break;
@@ -127,9 +130,9 @@ public class StyleUtils {
 					cell.setBorderColorTop(color);
 				}
 				// border-top-width
-				Float width = border.getWidth();
+				BigInteger width = border.getWidth();
 				if (width != null) {
-					cell.setBorderWidthTop(width);
+					cell.setBorderWidthTop(dxa2points(width));
 				}
 			}
 			break;

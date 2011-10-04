@@ -34,6 +34,10 @@ public class ExtendedPdfPCell extends PdfPCell implements IITextContainer {
 
 	private IITextContainer container;
 
+	public ExtendedPdfPCell() {
+		
+		//disableBorderSide(BOTTOM|TOP|LEFT|RIGHT);
+	}
 	@Override
 	public void addElement(Element element) {
 		if (element instanceof ListItem) {

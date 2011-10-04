@@ -32,6 +32,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
+import org.apache.poi.xwpf.converter.internal.itext.styles.StyleBorder;
 import org.apache.poi.xwpf.usermodel.XWPFTable;
 import org.apache.poi.xwpf.usermodel.XWPFTableCell;
 import org.apache.poi.xwpf.usermodel.XWPFTableRow;
@@ -268,6 +269,62 @@ public class XWPFTableUtil {
 		}
 	}
 
+	
+	public static void setBorder(StyleBorder border, PdfPCell pdfPCell,
+			int borderSide) {
+		if (border == null) {
+			return;
+		}
+//		boolean noBorder = (STBorder.NONE == border.getVal());
+
+		// No border
+		
+			float size = -1;
+			BigInteger borderSize = border.getWidth();
+			if (borderSize != null) {
+				size = dxa2points(borderSize);
+			}
+
+			Color borderColor = border.getColor();
+			
+
+			switch (borderSide) {
+			case Rectangle.TOP:
+				if (size != -1) {
+					pdfPCell.setBorderWidthTop(size);
+				}
+				if (borderColor != null) {
+					
+					pdfPCell.setBorderColorTop(borderColor);
+				}
+				break;
+			case Rectangle.BOTTOM:
+				if (size != -1) {
+					pdfPCell.setBorderWidthBottom(size);
+				}
+				if (borderColor != null) {
+					pdfPCell.setBorderColorBottom(borderColor);
+				}
+				break;
+			case Rectangle.LEFT:
+				if (size != -1) {
+					pdfPCell.setBorderWidthLeft(size);
+				}
+				if (borderColor != null) {
+					pdfPCell.setBorderColorLeft(borderColor);
+				}
+				break;
+			case Rectangle.RIGHT:
+				if (size != -1) {
+					pdfPCell.setBorderWidthRight(size);
+				}
+				if (borderColor != null) {
+					pdfPCell.setBorderColorRight(borderColor);
+				}
+				break;
+			}
+		
+	}
 	public static String getBorderColor(CTBorder border) {
 		if (border == null) {
 			return null;

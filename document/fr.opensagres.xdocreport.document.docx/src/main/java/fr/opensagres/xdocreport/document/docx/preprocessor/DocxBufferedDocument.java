@@ -198,26 +198,19 @@ public class DocxBufferedDocument extends TransformedBufferedDocument implements
 		if (isR(uri, localName, name) && currentRRegion != null
 				&& currentFldSimpleRegion == null) {
 			super.onEndEndElement(uri, localName, name);
-			// currentRegion = currentRRegion.getParent();
+			boolean hasScript = processScirptBeforeAfter(currentRRegion);
+			if (hasScript) {
+				currentRRegion.reset();
+			}
 			currentRRegion = null;
 			return;
 		}
 
 		if (isFldSimple(uri, localName, name) && currentFldSimpleRegion != null) {
 			// it's end of fldSimple and it's Mergefield; ignore the element
-			String fieldName = currentFldSimpleRegion.getFieldName();
-			if (fieldName == null) {
-
-			} else {
-				boolean hasScript = handler.processScriptBefore(fieldName);
-				if (hasScript) {
-
-				} else {
-					hasScript = handler.processScriptAfter(fieldName);
-				}
-				if (hasScript) {
-					currentFldSimpleRegion.reset();
-				}
+			boolean hasScript = processScirptBeforeAfter(currentFldSimpleRegion);
+			if (hasScript) {
+				currentFldSimpleRegion.reset();
 			}
 			super.onEndEndElement(uri, localName, name);
 			// currentRegion = currentFldSimpleRegion.getParent();
@@ -234,6 +227,20 @@ public class DocxBufferedDocument extends TransformedBufferedDocument implements
 		}
 
 		super.onEndEndElement(uri, localName, name);
+	}
+
+	private boolean processScirptBeforeAfter(MergefieldBufferedRegion mergefield) {
+		String fieldName = mergefield.getFieldName();
+		if (fieldName == null) {
+			return false;
+		} else {
+			boolean hasScript = handler.processScriptBefore(fieldName);
+			if (hasScript) {
+				return hasScript;
+			} else {
+				return handler.processScriptAfter(fieldName);
+			}			
+		}
 	}
 
 	@Override

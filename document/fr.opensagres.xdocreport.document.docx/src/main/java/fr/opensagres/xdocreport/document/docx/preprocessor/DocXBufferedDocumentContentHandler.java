@@ -38,8 +38,6 @@ import org.xml.sax.helpers.AttributesImpl;
 
 import fr.opensagres.xdocreport.core.utils.StringUtils;
 import fr.opensagres.xdocreport.document.docx.DocXConstants;
-import fr.opensagres.xdocreport.document.preprocessor.sax.BufferedElement;
-import fr.opensagres.xdocreport.document.preprocessor.sax.IBufferedRegion;
 import fr.opensagres.xdocreport.document.preprocessor.sax.TransformedBufferedDocumentContentHandler;
 import fr.opensagres.xdocreport.template.formatter.FieldsMetadata;
 import fr.opensagres.xdocreport.template.formatter.IDocumentFormatter;
@@ -54,7 +52,7 @@ public class DocXBufferedDocumentContentHandler extends
 
 	private boolean instrTextParsing;
 	private boolean tParsing = false;
-	
+
 	protected DocXBufferedDocumentContentHandler(FieldsMetadata fieldsMetadata,
 			IDocumentFormatter formater, Map<String, Object> context) {
 		super(fieldsMetadata, formater, context);
@@ -78,14 +76,14 @@ public class DocXBufferedDocumentContentHandler extends
 	@Override
 	public boolean doStartElement(String uri, String localName, String name,
 			Attributes attributes) throws SAXException {
-		
+
 		IDocumentFormatter formatter = super.getFormatter();
-		
+
 		// Transform mergefield name WordML code with just name of name
 		// Merge field is represent with w:fldSimple or w:instrText (complex
 		// field). See
 		// http://www.documentinteropinitiative.org/implnotes/ecma-376/812d4aca-3071-4352-872a-ca21d65ec913.aspx
-		
+
 		RBufferedRegion currentRRegion = bufferedDocument.getCurrentRRegion();
 		if (isFldChar(uri, localName, name) && currentRRegion != null) {
 			// w:fdlChar element
@@ -102,7 +100,7 @@ public class DocXBufferedDocumentContentHandler extends
 
 		if (isT(uri, localName, name)) {
 			// w:t element
-			tParsing = true;			
+			tParsing = true;
 			return super.doStartElement(uri, localName, name, attributes);
 		}
 
@@ -147,22 +145,6 @@ public class DocXBufferedDocumentContentHandler extends
 	@Override
 	public void doEndElement(String uri, String localName, String name)
 			throws SAXException {
-		IBufferedRegion currentRegion = getCurrentElement();
-		// if (isP(uri, localName, name) && currentPRegion != null) {
-		// super.doEndElement(uri, localName, name);
-		// currentPRegion.process();
-		// currentRegion = currentPRegion.getParent();
-		// currentPRegion = null;
-		// return;
-		// }
-		//
-		// if (isR(uri, localName, name) && currentRRegion != null
-		// && currentFldSimpleRegion == null) {
-		// super.doEndElement(uri, localName, name);
-		// currentRegion = currentRRegion.getParent();
-		// currentRRegion = null;
-		// return;
-		// }
 
 		RBufferedRegion currentRRegion = bufferedDocument.getCurrentRRegion();
 		if (isInstrText(uri, localName, name) && currentRRegion != null) {
@@ -187,28 +169,6 @@ public class DocXBufferedDocumentContentHandler extends
 			}
 			return;
 		}
-		//
-		// if (isHyperlink(uri, localName, name)) {
-		// // </w:hyperlink>
-		// HyperlinkBufferedRegion hyperlink = (HyperlinkBufferedRegion)
-		// currentRegion;
-		// super.doEndElement(uri, localName, name);
-		// hyperlink.process();
-		// currentRegion = hyperlink.getParent();
-		// return;
-		// }
-//		if (isTableRow(uri, localName, name)) {
-//			// remove list directive if needed
-//			if (nbLoopDirectiveToRemove > 0) {
-//				for (int i = 0; i < nbLoopDirectiveToRemove; i++) {
-//					if (!getDirectives().isEmpty()) {
-//						getDirectives().pop();
-//
-//					}
-//				}
-//				nbLoopDirectiveToRemove = 0;
-//			}
-//		}
 		super.doEndElement(uri, localName, name);
 	}
 

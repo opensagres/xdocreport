@@ -79,10 +79,15 @@ import fr.opensagres.xdocreport.document.preprocessor.sax.ISavable;
  */
 public class PBufferedRegion extends BufferedElement {
 
+	
+	private static final String BEGIN = "begin";	
+	private static final String SEPARATE = "separate";
+	private static final String END = "end";
+	
 	private List<RBufferedRegion> rBufferedRegions = new ArrayList<RBufferedRegion>();
 
-	public PBufferedRegion(BufferedElement parent, String uri, String localName,
-			String name, Attributes attributes) {
+	public PBufferedRegion(BufferedElement parent, String uri,
+			String localName, String name, Attributes attributes) {
 		super(parent, uri, localName, name, attributes);
 		// this
 	}
@@ -101,27 +106,41 @@ public class PBufferedRegion extends BufferedElement {
 		boolean remove = false;
 		boolean fieldNameSetted = false;
 		String fieldName = null;
+		boolean rReseted = false;
 		for (int i = 0; i < rBufferedRegions.size(); i++) {
 			RBufferedRegion rBufferedRegion = rBufferedRegions.get(i);
-			if ("begin".equals(rBufferedRegion.getFldCharType())) {
+			if (BEGIN.equals(rBufferedRegion.getFldCharType())) {
 				i++;
 				RBufferedRegion nextR = rBufferedRegions.get(i);
 				fieldName = nextR.getFieldName();
-				if (fieldName != null) {
+				rReseted = nextR.isReseted();
+				// Remove the begin w:r Next w:r
+				// 1) has fieldName : <w:r w:rsidR="000050F2"
+				// w:rsidRPr="00CE3A74"><w:rPr><w:color w:val="FF0000"
+				// /></w:rPr><w:instrText xml:space="preserve">MERGEFIELD
+				// Titre</w:instrText>
+				// 2) was reseted (if @before-row, @after-row ... if the the
+				// MERGEFIELD name starts with thoses tokens.
+				if (fieldName != null || rReseted) {
 					toRemove.add(rBufferedRegion);
 					toRemove.add(nextR);
 					remove = true;
 				}
-			} else if ("separate".equals(rBufferedRegion.getFldCharType())
+			} else if (SEPARATE.equals(rBufferedRegion.getFldCharType())
 					&& remove) {
+				// begin w:r was removed, remove the separate w:r.
 				toRemove.add(rBufferedRegion);
-			} else if ("end".equals(rBufferedRegion.getFldCharType()) && remove) {
+			} else if (END.equals(rBufferedRegion.getFldCharType()) && remove) {
+				// begin w:r was removed, remove the end w:r.
 				toRemove.add(rBufferedRegion);
 				remove = false;
 				fieldName = null;
 				fieldNameSetted = false;
-			} else if (fieldName != null) {
-				if (!fieldNameSetted) {
+			} else if (fieldName != null || rReseted) {
+				// other w:r
+				if (!fieldNameSetted && !rReseted) {
+					// fieldName was not setted and w:r was not rested, modify
+					// the t content with fieldName
 					rBufferedRegion.setTContent(fieldName);
 					fieldNameSetted = true;
 				} else {

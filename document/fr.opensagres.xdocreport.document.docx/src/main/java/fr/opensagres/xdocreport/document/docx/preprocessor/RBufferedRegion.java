@@ -63,6 +63,5 @@ public class RBufferedRegion extends MergefieldBufferedRegion {
 
 	public String getTContent() {
 		return getTRegion().getTextContent();
-
 	}
 }

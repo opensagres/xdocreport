@@ -24,19 +24,24 @@
  */
 package fr.opensagres.xdocreport.template.formatter;
 
+import java.io.IOException;
+import java.io.Reader;
+import java.io.StringWriter;
+import java.io.Writer;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import fr.opensagres.xdocreport.core.utils.StringUtils;
+import fr.opensagres.xdocreport.template.registry.TemplateEngineRegistry;
 
 /**
  * Fields Metadata is used in the preprocessing step to modify some XML entries
  * like generate script (Freemarker, Velocity...) for loop for Table row,
  * generate script for Image...
- * 
- * @author Angelo ZERR
  * 
  */
 public class FieldsMetadata {
@@ -46,17 +51,30 @@ public class FieldsMetadata {
 	public static final String DEFAULT_AFTER_ROW_TOKEN = "@after-row";
 	public static final String DEFAULT_BEFORE_TABLE_CELL_TOKEN = "@before-cell";
 	public static final String DEFAULT_AFTER_TABLE_CELL_TOKEN = "@after-cell";
-	
-	private final List<String> fieldsAsList;
-	private final List<FieldMetadataImage> fieldsAsImage;
+
+	private final IFieldsMetadataClassSerializer serializer;
+	private final List<FieldMetadata> fields;
+	private final Map<String, FieldMetadata> fieldsAsList;
+	private final Map<String, FieldMetadata> fieldsAsImage;
 	private String beforeRowToken;
 	private String afterRowToken;
 	private String beforeTableCellToken;
 	private String afterTableCellToken;
-	
+
 	public FieldsMetadata() {
-		this.fieldsAsList = new ArrayList<String>();
-		this.fieldsAsImage = new ArrayList<FieldMetadataImage>();
+		this((IFieldsMetadataClassSerializer) null);
+	}
+
+	public FieldsMetadata(String templateEngineKind) {
+		this(TemplateEngineRegistry.getRegistry()
+				.getFieldsMetadataClassSerializer());
+	}
+
+	public FieldsMetadata(IFieldsMetadataClassSerializer serializer) {
+		this.serializer = serializer;
+		this.fields = new ArrayList<FieldMetadata>();
+		this.fieldsAsList = new HashMap<String, FieldMetadata>();
+		this.fieldsAsImage = new HashMap<String, FieldMetadata>();
 		this.beforeRowToken = DEFAULT_BEFORE_ROW_TOKEN;
 		this.afterRowToken = DEFAULT_AFTER_ROW_TOKEN;
 		this.beforeTableCellToken = DEFAULT_BEFORE_TABLE_CELL_TOKEN;
@@ -79,7 +97,7 @@ public class FieldsMetadata {
 	 * @param fieldName
 	 */
 	public void addFieldAsImage(String imageName, String fieldName) {
-		fieldsAsImage.add(new FieldMetadataImage(imageName, fieldName));
+		addField(new FieldMetadata(fieldName, false, imageName));
 	}
 
 	/**
@@ -88,7 +106,42 @@ public class FieldsMetadata {
 	 * @param fieldName
 	 */
 	public void addFieldAsList(String fieldName) {
-		fieldsAsList.add(fieldName);
+		addField(new FieldMetadata(fieldName, true, null));
+	}
+
+	public void addField(String fieldName, boolean listType, String imageName) {
+		addField(new FieldMetadata(fieldName, listType, imageName));
+	}
+
+	public void addField(FieldMetadata fieldMetadata) {
+		// Test if it exists fields with the given name
+		FieldMetadata exsitingField = fieldsAsImage.get(fieldMetadata
+				.getFieldName());
+		if (exsitingField == null) {
+			exsitingField = fieldsAsList.get(fieldMetadata.getFieldName());
+		}
+
+		if (exsitingField == null) {
+			fields.add(fieldMetadata);
+			if (fieldMetadata.isImageType()) {
+				fieldsAsImage.put(fieldMetadata.getImageName(), fieldMetadata);
+			}
+			if (fieldMetadata.isListType()) {
+				fieldsAsList.put(fieldMetadata.getFieldName(), fieldMetadata);
+			}
+		} else {
+			if (fieldMetadata.isListType() == true
+					&& fieldMetadata.isListType() != exsitingField.isListType()) {
+				exsitingField.setListType(true);
+				fieldsAsList.put(exsitingField.getFieldName(), exsitingField);
+			}
+			if (fieldMetadata.isImageType() == true
+					&& fieldMetadata.isImageType() != exsitingField
+							.isImageType()) {
+				exsitingField.setImageName(fieldMetadata.getImageName());
+				fieldsAsImage.put(fieldMetadata.getImageName(), exsitingField);
+			}
+		}
 	}
 
 	/**
@@ -97,7 +150,7 @@ public class FieldsMetadata {
 	 * @return
 	 */
 	public Collection<String> getFieldsAsList() {
-		return Collections.unmodifiableCollection(fieldsAsList);
+		return Collections.unmodifiableCollection(fieldsAsList.keySet());
 	}
 
 	/**
@@ -105,8 +158,8 @@ public class FieldsMetadata {
 	 * 
 	 * @return
 	 */
-	public Collection<FieldMetadataImage> getFieldsAsImage() {
-		return Collections.unmodifiableCollection(fieldsAsImage);
+	public Collection<FieldMetadata> getFieldsAsImage() {
+		return Collections.unmodifiableCollection(fieldsAsImage.values());
 	}
 
 	/**
@@ -122,22 +175,16 @@ public class FieldsMetadata {
 		if (StringUtils.isEmpty(fieldName)) {
 			return false;
 		}
-		for (FieldMetadataImage metadata : fieldsAsImage) {
-			if (metadata.getImageName().equals(fieldName)) {
-				return true;
-			}
-		}
-		return false;
+		return fieldsAsImage.containsKey(fieldName);
 	}
 
 	public String getImageFieldName(String fieldName) {
 		if (StringUtils.isEmpty(fieldName)) {
 			return null;
 		}
-		for (FieldMetadataImage metadata : fieldsAsImage) {
-			if (metadata.getImageName().equals(fieldName)) {
-				return metadata.getFieldName();
-			}
+		FieldMetadata metadata = fieldsAsImage.get(fieldName);
+		if (metadata != null) {
+			return metadata.getFieldName();
 		}
 		return null;
 	}
@@ -173,7 +220,127 @@ public class FieldsMetadata {
 	public void setAfterTableCellToken(String afterTableCellToken) {
 		this.afterTableCellToken = afterTableCellToken;
 	}
-	
-	
+
+	/**
+	 * Returns list of fields metadata.
+	 * 
+	 * @return
+	 */
+	public List<FieldMetadata> getFields() {
+		return fields;
+	}
+
+	/**
+	 * Load fields metadata from the given XML reader.
+	 * 
+	 * Here a sample of XML reader :
+	 * 
+	 * <pre>
+	 * <fields>
+	 * 	<field name="project.Name" imageName="" listType="false" />
+	 * 	<field name="developers.Name" imageName="" listType="true" />
+	 * <field name="project.Logo" imageName="Logo" listType="false" />
+	 * </fields>
+	 * </pre>
+	 * 
+	 * @param reader
+	 */
+	public void loadXML(Reader reader) {
+		FieldsMetadataXMLSerializer.getInstance().load(this, reader);
+	}
+
+	/**
+	 * Serialize as XML without indentation the fields metadata to the given XML
+	 * writer.
+	 * 
+	 * Here a sample of XML writer :
+	 * 
+	 * <pre>
+	 * <fields>
+	 * 	<field name="project.Name" imageName="" listType="false" />
+	 * 	<field name="developers.Name" imageName="" listType="true" />
+	 * <field name="project.Logo" imageName="Logo" listType="false" />
+	 * </fields>
+	 * </pre>
+	 * 
+	 * @param writer
+	 * @throws IOException
+	 */
+	public void saveXML(Writer writer) throws IOException {
+		saveXML(writer, false);
+	}
+
+	/**
+	 * Serialize as XML the fields metadata to the given XML writer.
+	 * 
+	 * Here a sample of XML writer :
+	 * 
+	 * <pre>
+	 * <fields>
+	 * 	<field name="project.Name" imageName="" listType="false" />
+	 * 	<field name="developers.Name" imageName="" listType="true" />
+	 * <field name="project.Logo" imageName="Logo" listType="false" />
+	 * </fields>
+	 * </pre>
+	 * 
+	 * @param writer
+	 *            XML writer.
+	 * @param indent
+	 *            true if indent must be managed and false otherwise.
+	 * @throws IOException
+	 */
+	public void saveXML(Writer writer, boolean indent) throws IOException {
+		FieldsMetadataXMLSerializer.getInstance().save(this, writer, indent);
+	}
+
+	/**
+	 * Load simple fields metadata in the given fieldsMetadata by using the
+	 * given key and Java Class.
+	 * 
+	 * @param fieldsMetadata
+	 *            the fieldsMetadata where fields metadata must be added.
+	 * @param key
+	 *            the key (first token) to use to generate field name.
+	 * @param clazz
+	 *            the Java class model to use to load fields metadata.
+	 */
+	public void load(FieldsMetadata fieldsMetadata, String key, Class<?> clazz) {
+		if (serializer == null) {
+			// TODO : check that serializer is not null
+		}
+		serializer.load(this, key, clazz);
+	}
+
+	/**
+	 * Load simple/list fields metadata in the given fieldsMetadata by using the
+	 * given key and Java Class.
+	 * 
+	 * @param fieldsMetadata
+	 *            the fieldsMetadata where fields metadata must be added.
+	 * @param key
+	 *            the key (first token) to use to generate field name.
+	 * @param clazz
+	 *            the Java class model to use to load fields metadata.
+	 * @param listType
+	 *            true if it's a list and false otherwise.
+	 */
+	public void load(FieldsMetadata fieldsMetadata, String key, Class<?> clazz,
+			boolean listType) {
+		if (serializer == null) {
+			// TODO : check that serializer is not null
+		}
+		serializer.load(this, key, clazz, listType);
+	}
+
+	@Override
+	public String toString() {
+		StringWriter xml = new StringWriter();
+		try {
+			saveXML(xml, true);
+		} catch (IOException e) {
+			return super.toString();
+		}
+		return xml.toString();
+	}
 
 }

@@ -46,10 +46,11 @@ public class BufferedElement implements IBufferedRegion {
 	private final String startTagElementName;
 	private final String endTagElementName;
 	protected final BufferedStartTagElement startTagElement;
-	protected final BufferedEndTagElement endElement;
+	protected final BufferedEndTagElement endTagElement;
 	private BufferedTagElement currentTagElement;
 	private final Attributes attributes;
 	private Collection<BufferedAttribute> dynamicAttributes = null;
+	private boolean reseted;
 
 	public BufferedElement(BufferedElement parent, String uri,
 			String localName, String name, Attributes attributes) {
@@ -59,8 +60,9 @@ public class BufferedElement implements IBufferedRegion {
 		this.endTagElementName = "</" + name + ">";
 		this.attributes = attributes;
 		this.startTagElement = new BufferedStartTagElement(this);
-		this.endElement = new BufferedEndTagElement(this);
+		this.endTagElement = new BufferedEndTagElement(this);
 		this.currentTagElement = startTagElement;
+		this.reseted = false;
 	}
 
 	/**
@@ -92,7 +94,7 @@ public class BufferedElement implements IBufferedRegion {
 	 * @return
 	 */
 	public BufferedEndTagElement getEndTagElement() {
-		return endElement;
+		return endTagElement;
 	}
 
 	/**
@@ -110,7 +112,7 @@ public class BufferedElement implements IBufferedRegion {
 	 * @param before
 	 */
 	public void setContentAfterEndTagElement(String after) {
-		this.endElement.setAfter(after);
+		this.endTagElement.setAfter(after);
 	}
 
 	/**
@@ -179,7 +181,12 @@ public class BufferedElement implements IBufferedRegion {
 	 */
 	public void reset() {
 		startTagElement.reset();
-		endElement.reset();
+		endTagElement.reset();
+		this.reseted = true;
+	}
+	
+	public boolean isReseted() {
+		return reseted;
 	}
 
 	/**
@@ -335,7 +342,7 @@ public class BufferedElement implements IBufferedRegion {
 	 * Set the current buffer with end tag element.
 	 */
 	public void end() {
-		this.currentTagElement = endElement;
+		this.currentTagElement = endTagElement;
 	}
 
 	/**
@@ -344,7 +351,7 @@ public class BufferedElement implements IBufferedRegion {
 	 * @return
 	 */
 	public boolean isEnded() {
-		return this.currentTagElement == endElement;
+		return this.currentTagElement == endTagElement;
 	}
 
 	/**

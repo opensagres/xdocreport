@@ -53,7 +53,7 @@ public class RowBufferedRegion extends BufferedElement {
 	}
 
 	public void setEndLoopDirective(String endLoopDirective) {
-		this.endElement.setAfter(endLoopDirective);
+		this.endTagElement.setAfter(endLoopDirective);
 	}
 
 	public boolean isLoopTemplateDirectiveInitilalized() {
@@ -77,7 +77,7 @@ public class RowBufferedRegion extends BufferedElement {
 	}
 
 	public String getEndLoopDirective() {
-		return this.endElement.getAfter();
+		return this.endTagElement.getAfter();
 	}
 
 }

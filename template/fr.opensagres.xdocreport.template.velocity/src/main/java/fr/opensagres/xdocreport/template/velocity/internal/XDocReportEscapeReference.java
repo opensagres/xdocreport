@@ -33,6 +33,7 @@ import fr.opensagres.xdocreport.core.utils.StringUtils;
 import fr.opensagres.xdocreport.template.ITemplateEngine;
 import fr.opensagres.xdocreport.template.config.ReplaceText;
 import fr.opensagres.xdocreport.template.velocity.VelocityConstants;
+import fr.opensagres.xdocreport.template.velocity.VelocityDocumentFormatter;
 
 public class XDocReportEscapeReference extends EscapeXmlReference implements
 		VelocityConstants {
@@ -67,6 +68,17 @@ public class XDocReportEscapeReference extends EscapeXmlReference implements
 					replacementList);
 		}
 		return result;
+	}
+
+	@Override
+	public Object referenceInsert(String reference, Object value) {
+		if (reference != null
+				&& reference
+						.startsWith(VelocityDocumentFormatter.START_NOESCAPE)) {
+			// Emulate [#noescape] directive of Freemarker.
+			return value;
+		}
+		return super.referenceInsert(reference, value);
 	}
 
 }

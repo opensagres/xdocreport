@@ -39,6 +39,7 @@ import org.xml.sax.helpers.AttributesImpl;
 import fr.opensagres.xdocreport.core.utils.StringUtils;
 import fr.opensagres.xdocreport.document.docx.DocXConstants;
 import fr.opensagres.xdocreport.document.preprocessor.sax.TransformedBufferedDocumentContentHandler;
+import fr.opensagres.xdocreport.template.formatter.FieldMetadata;
 import fr.opensagres.xdocreport.template.formatter.FieldsMetadata;
 import fr.opensagres.xdocreport.template.formatter.IDocumentFormatter;
 
@@ -187,8 +188,10 @@ public class DocXBufferedDocumentContentHandler extends
 		RBufferedRegion currentRRegion = bufferedDocument.getCurrentRRegion();
 		if (currentRRegion != null) {
 			if (instrTextParsing) {
+				FieldMetadata fieldAsTextStyling = super
+						.getFieldAsTextStyling(characters);
 				characters = processRowIfNeeded(characters);
-				currentRRegion.setInstrText(characters);
+				currentRRegion.setInstrText(characters, fieldAsTextStyling);
 				extractListDirectiveInfo(currentRRegion);
 				resetCharacters();
 				return;

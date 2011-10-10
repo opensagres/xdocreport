@@ -31,7 +31,6 @@ import org.junit.Assert;
 import org.junit.Test;
 
 import fr.opensagres.xdocreport.template.formatter.FieldsMetadata;
-import fr.opensagres.xdocreport.template.velocity.VelocityFieldsMetadataClassSerializer;
 
 public class VelocityFieldsMetadataClassSerializerTestCase {
 
@@ -105,7 +104,7 @@ public class VelocityFieldsMetadataClassSerializerTestCase {
 		serializer.load(fieldsMetadata, "project", Project.class);
 
 		// START remove that once it's implemented
-		fieldsMetadata.addField("project.Name", false, "");
+		fieldsMetadata.addField("project.Name", false, "", null);
 		// END remove that once it's implemented
 
 		Assert.assertEquals(1, fieldsMetadata.getFields().size());
@@ -120,8 +119,8 @@ public class VelocityFieldsMetadataClassSerializerTestCase {
 		serializer.load(fieldsMetadata, "developers", Developer.class, true);
 
 		// START remove that once it's implemented
-		fieldsMetadata.addField("developers.Name", true, "");
-		fieldsMetadata.addField("developers.LastName", true, "");
+		fieldsMetadata.addField("developers.Name", true, "", null);
+		fieldsMetadata.addField("developers.LastName", true, "", null);
 		// END remove that once it's implemented
 
 		Assert.assertEquals(2, fieldsMetadata.getFields().size());

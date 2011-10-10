@@ -35,6 +35,10 @@ import fr.opensagres.xdocreport.template.utils.TemplateUtils;
  */
 public class XDocVelocityContext extends VelocityContext implements IContext {
 
+	public XDocVelocityContext() {
+		super.put(NoEscape.NOESCAPE_KEY, NoEscape.INSTANCE);
+	}
+
 	/**
 	 * Overridden so that the <code>null</code> values are accepted.
 	 * 

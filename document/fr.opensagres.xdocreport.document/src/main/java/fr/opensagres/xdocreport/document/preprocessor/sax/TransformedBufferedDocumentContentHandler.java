@@ -31,6 +31,7 @@ import org.xml.sax.SAXException;
 
 import fr.opensagres.xdocreport.core.utils.StringUtils;
 import fr.opensagres.xdocreport.template.formatter.DirectivesStack;
+import fr.opensagres.xdocreport.template.formatter.FieldMetadata;
 import fr.opensagres.xdocreport.template.formatter.FieldsMetadata;
 import fr.opensagres.xdocreport.template.formatter.IDocumentFormatter;
 
@@ -362,6 +363,19 @@ public abstract class TransformedBufferedDocumentContentHandler<Document extends
 			}
 		}
 		super.doEndElement(uri, localName, name);
+	}
+
+	public FieldMetadata getFieldAsTextStyling(String content) {
+		if (formatter != null) {
+			Collection<FieldMetadata> fieldsAsTextStyling = fieldsMetadata
+					.getFieldsAsTextStyling();
+			for (FieldMetadata field : fieldsAsTextStyling) {
+				if (content.contains(field.getFieldName())) {
+					return field;
+				}
+			}
+		}
+		return null;
 	}
 
 	protected abstract Document createDocument();

@@ -41,6 +41,7 @@ import fr.opensagres.xdocreport.document.docx.DocXConstants;
 import fr.opensagres.xdocreport.document.docx.DocxUtils;
 import fr.opensagres.xdocreport.document.preprocessor.sax.BufferedElement;
 import fr.opensagres.xdocreport.document.preprocessor.sax.TransformedBufferedDocument;
+import fr.opensagres.xdocreport.template.formatter.FieldMetadata;
 import fr.opensagres.xdocreport.template.formatter.FieldsMetadata;
 
 public class DocxBufferedDocument extends TransformedBufferedDocument implements
@@ -52,7 +53,7 @@ public class DocxBufferedDocument extends TransformedBufferedDocument implements
 	private RBufferedRegion currentRRegion;
 	private BookmarkBufferedRegion currentBookmark;
 	private HyperlinkBufferedRegion currentHyperlink;
-	
+
 	public DocxBufferedDocument(DocXBufferedDocumentContentHandler handler) {
 		this.handler = handler;
 	}
@@ -97,16 +98,19 @@ public class DocxBufferedDocument extends TransformedBufferedDocument implements
 			// w:fldSimple element
 			// start of fldSimple mergefield, add the fieldName of mergefield
 			// and ignore element
-			String instrText = handler.processRowIfNeeded(attributes.getValue(
-					W_NS, INSTR_ATTR));
+			String instrText = attributes.getValue(W_NS, INSTR_ATTR);
+			FieldMetadata fieldAsTextStyling = handler
+					.getFieldAsTextStyling(instrText);
+			instrText = handler.processRowIfNeeded(attributes.getValue(W_NS,
+					INSTR_ATTR));
 			currentFldSimpleRegion = new FldSimpleBufferedRegion(handler,
 					parent, uri, localName, name, attributes);
-			currentFldSimpleRegion.setInstrText(instrText);
+			currentFldSimpleRegion.setInstrText(instrText, fieldAsTextStyling);
 			// boolean addElement = false;
 			if (currentFldSimpleRegion.getFieldName() == null) {
 				// super.doStartElement(uri, localName, name, attributes);
 				// addElement = true;
-			}
+			} 
 			// currentRegion = currentFldSimpleRegion;
 			return currentFldSimpleRegion;
 		}
@@ -198,7 +202,7 @@ public class DocxBufferedDocument extends TransformedBufferedDocument implements
 		if (isR(uri, localName, name) && currentRRegion != null
 				&& currentFldSimpleRegion == null) {
 			super.onEndEndElement(uri, localName, name);
-			boolean hasScript = processScirptBeforeAfter(currentRRegion);
+			boolean hasScript = processScriptBeforeAfter(currentRRegion);
 			if (hasScript) {
 				currentRRegion.reset();
 			}
@@ -208,7 +212,7 @@ public class DocxBufferedDocument extends TransformedBufferedDocument implements
 
 		if (isFldSimple(uri, localName, name) && currentFldSimpleRegion != null) {
 			// it's end of fldSimple and it's Mergefield; ignore the element
-			boolean hasScript = processScirptBeforeAfter(currentFldSimpleRegion);
+			boolean hasScript = processScriptBeforeAfter(currentFldSimpleRegion);
 			if (hasScript) {
 				currentFldSimpleRegion.reset();
 			}
@@ -229,7 +233,7 @@ public class DocxBufferedDocument extends TransformedBufferedDocument implements
 		super.onEndEndElement(uri, localName, name);
 	}
 
-	private boolean processScirptBeforeAfter(MergefieldBufferedRegion mergefield) {
+	private boolean processScriptBeforeAfter(MergefieldBufferedRegion mergefield) {
 		String fieldName = mergefield.getFieldName();
 		if (fieldName == null) {
 			return false;
@@ -239,7 +243,7 @@ public class DocxBufferedDocument extends TransformedBufferedDocument implements
 				return hasScript;
 			} else {
 				return handler.processScriptAfter(fieldName);
-			}			
+			}
 		}
 	}
 

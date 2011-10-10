@@ -30,6 +30,7 @@ import fr.opensagres.xdocreport.core.EncodingConstants;
 import fr.opensagres.xdocreport.core.utils.StringUtils;
 import fr.opensagres.xdocreport.document.preprocessor.sax.BufferedElement;
 import fr.opensagres.xdocreport.document.preprocessor.sax.TransformedBufferedDocumentContentHandler;
+import fr.opensagres.xdocreport.template.formatter.FieldMetadata;
 import fr.opensagres.xdocreport.template.formatter.IDocumentFormatter;
 
 public abstract class MergefieldBufferedRegion extends BufferedElement
@@ -57,9 +58,11 @@ public abstract class MergefieldBufferedRegion extends BufferedElement
 		return fieldName;
 	}
 
-	public String setInstrText(String instrText) {
+	public String setInstrText(String instrText,
+			FieldMetadata fieldAsTextStyling) {
 		// compute field name if it's MERGEFIELD
-		this.fieldName = getFieldName(instrText);
+		this.fieldName = getFieldName(instrText, fieldAsTextStyling,
+				handler.getFormatter());
 		if (fieldName == null) {
 			// Not a MERGEFIELD, instrText must be decoded if it's an HYPERLINK
 			// and field is an interpolation
@@ -104,7 +107,8 @@ public abstract class MergefieldBufferedRegion extends BufferedElement
 		return instrText;
 	}
 
-	public static String getFieldName(String instrText) {
+	private static String getFieldName(String instrText,
+			FieldMetadata fieldAsTextStyling, IDocumentFormatter formatter) {
 		if (StringUtils.isEmpty(instrText)) {
 			return null;
 		}
@@ -140,6 +144,10 @@ public abstract class MergefieldBufferedRegion extends BufferedElement
 					// 1[/#if]
 					// to have [#if 'a' = "one"]1[#else]not 1[/#if]
 					fieldName = StringUtils.replaceAll(fieldName, APOS, "'");
+
+					if (fieldAsTextStyling != null) {
+						fieldName = formatter.noEscape(fieldName);
+					}
 					return fieldName;
 				}
 			}

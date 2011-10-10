@@ -36,6 +36,7 @@ import java.util.List;
 import java.util.Map;
 
 import fr.opensagres.xdocreport.core.utils.StringUtils;
+import fr.opensagres.xdocreport.template.TextStylingKind;
 import fr.opensagres.xdocreport.template.registry.TemplateEngineRegistry;
 
 /**
@@ -56,6 +57,7 @@ public class FieldsMetadata {
 	private final List<FieldMetadata> fields;
 	private final Map<String, FieldMetadata> fieldsAsList;
 	private final Map<String, FieldMetadata> fieldsAsImage;
+	private final Map<String, FieldMetadata> fieldsAsTextStyling;
 	private String beforeRowToken;
 	private String afterRowToken;
 	private String beforeTableCellToken;
@@ -75,6 +77,7 @@ public class FieldsMetadata {
 		this.fields = new ArrayList<FieldMetadata>();
 		this.fieldsAsList = new HashMap<String, FieldMetadata>();
 		this.fieldsAsImage = new HashMap<String, FieldMetadata>();
+		this.fieldsAsTextStyling = new HashMap<String, FieldMetadata>();
 		this.beforeRowToken = DEFAULT_BEFORE_ROW_TOKEN;
 		this.afterRowToken = DEFAULT_AFTER_ROW_TOKEN;
 		this.beforeTableCellToken = DEFAULT_BEFORE_TABLE_CELL_TOKEN;
@@ -97,7 +100,31 @@ public class FieldsMetadata {
 	 * @param fieldName
 	 */
 	public void addFieldAsImage(String imageName, String fieldName) {
-		addField(new FieldMetadata(fieldName, false, imageName));
+		addField(fieldName, false, imageName, null);
+	}
+
+	/**
+	 * Add a field name which can contains text stylink (Html, Wikipedia,
+	 * etc..).
+	 * 
+	 * @param fieldName
+	 * @param textStylingKind
+	 */
+	public void addFieldAsTextStyling(String fieldName,
+			TextStylingKind textStylingKind) {
+		addFieldAsTextStyling(fieldName, textStylingKind.name());
+	}
+
+	/**
+	 * Add a field name which can contains text stylink (Html, Wikipedia,
+	 * etc..).
+	 * 
+	 * @param fieldName
+	 * @param textStylingKind
+	 */
+	public void addFieldAsTextStyling(String fieldName, String textStylingKind) {
+		// Test if it exists fields with the given name
+		addField(fieldName, false, null, textStylingKind);
 	}
 
 	/**
@@ -106,22 +133,23 @@ public class FieldsMetadata {
 	 * @param fieldName
 	 */
 	public void addFieldAsList(String fieldName) {
-		addField(new FieldMetadata(fieldName, true, null));
+		addField(fieldName, true, null, null);
 	}
 
-	public void addField(String fieldName, boolean listType, String imageName) {
-		addField(new FieldMetadata(fieldName, listType, imageName));
-	}
-
-	public void addField(FieldMetadata fieldMetadata) {
+	public void addField(String fieldName, boolean listType, String imageName,
+			String textStylingKind) {
 		// Test if it exists fields with the given name
-		FieldMetadata exsitingField = fieldsAsImage.get(fieldMetadata
-				.getFieldName());
+		FieldMetadata exsitingField = fieldsAsImage.get(fieldName);
 		if (exsitingField == null) {
-			exsitingField = fieldsAsList.get(fieldMetadata.getFieldName());
+			exsitingField = fieldsAsList.get(fieldName);
+		}
+		if (exsitingField == null) {
+			exsitingField = fieldsAsTextStyling.get(fieldName);
 		}
 
 		if (exsitingField == null) {
+			FieldMetadata fieldMetadata = new FieldMetadata(fieldName,
+					listType, imageName, textStylingKind);
 			fields.add(fieldMetadata);
 			if (fieldMetadata.isImageType()) {
 				fieldsAsImage.put(fieldMetadata.getImageName(), fieldMetadata);
@@ -129,17 +157,23 @@ public class FieldsMetadata {
 			if (fieldMetadata.isListType()) {
 				fieldsAsList.put(fieldMetadata.getFieldName(), fieldMetadata);
 			}
+			if (fieldMetadata.getTextStylingKind() != null) {
+				fieldsAsTextStyling.put(fieldMetadata.getFieldName(),
+						fieldMetadata);
+			}
 		} else {
-			if (fieldMetadata.isListType() == true
-					&& fieldMetadata.isListType() != exsitingField.isListType()) {
+			if (listType == true && listType != exsitingField.isListType()) {
 				exsitingField.setListType(true);
 				fieldsAsList.put(exsitingField.getFieldName(), exsitingField);
 			}
-			if (fieldMetadata.isImageType() == true
-					&& fieldMetadata.isImageType() != exsitingField
-							.isImageType()) {
-				exsitingField.setImageName(fieldMetadata.getImageName());
-				fieldsAsImage.put(fieldMetadata.getImageName(), exsitingField);
+			if (imageName != null
+					&& !imageName.equals(exsitingField.getImageName())) {
+				exsitingField.setImageName(imageName);
+				fieldsAsImage.put(imageName, exsitingField);
+			}
+			if (textStylingKind != null) {
+				exsitingField.setTextStylingKind(textStylingKind);
+				fieldsAsTextStyling.put(imageName, exsitingField);
 			}
 		}
 	}
@@ -160,6 +194,15 @@ public class FieldsMetadata {
 	 */
 	public Collection<FieldMetadata> getFieldsAsImage() {
 		return Collections.unmodifiableCollection(fieldsAsImage.values());
+	}
+
+	/**
+	 * Returns list of fields name which can contains text styling.
+	 * 
+	 * @return
+	 */
+	public Collection<FieldMetadata> getFieldsAsTextStyling() {
+		return Collections.unmodifiableCollection(fieldsAsTextStyling.values());
 	}
 
 	/**

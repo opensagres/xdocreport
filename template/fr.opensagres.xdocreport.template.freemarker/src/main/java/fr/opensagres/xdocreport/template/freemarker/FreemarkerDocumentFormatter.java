@@ -63,6 +63,9 @@ public class FreemarkerDocumentFormatter extends AbstractDocumentFormatter {
 			+ IMAGE_REGISTRY_KEY + ".registerImage(";
 	private static final String END_IMAGE_DIRECTIVE = ")}";
 
+	private static final String START_NOESCAPE = "[#noescape]";
+	private static final String END_NOESCAPE = "[/#noescape]";
+
 	public String formatAsFieldItemList(String content, String fieldName,
 			boolean forceAsField) {
 		if (forceAsField) {
@@ -408,5 +411,12 @@ public class FreemarkerDocumentFormatter extends AbstractDocumentFormatter {
 			return endIndex;
 		}
 		return startIndex < endIndex ? startIndex : endIndex;
+	}
+
+	public String noEscape(String content) {
+		StringBuilder newContent = new StringBuilder(START_NOESCAPE);
+		newContent.append(content);
+		newContent.append(END_NOESCAPE);
+		return newContent.toString();
 	}
 }

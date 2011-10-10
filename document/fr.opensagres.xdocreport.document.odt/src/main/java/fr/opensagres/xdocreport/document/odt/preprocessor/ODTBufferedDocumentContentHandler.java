@@ -38,6 +38,7 @@ import org.xml.sax.helpers.AttributesImpl;
 import fr.opensagres.xdocreport.core.utils.StringUtils;
 import fr.opensagres.xdocreport.document.odt.ODTConstants;
 import fr.opensagres.xdocreport.document.preprocessor.sax.TransformedBufferedDocumentContentHandler;
+import fr.opensagres.xdocreport.template.formatter.FieldMetadata;
 import fr.opensagres.xdocreport.template.formatter.FieldsMetadata;
 import fr.opensagres.xdocreport.template.formatter.IDocumentFormatter;
 
@@ -156,24 +157,10 @@ public class ODTBufferedDocumentContentHandler extends
 			if (processScriptAfter(fieldName)) {
 				return;
 			}
-
-			// String beforeRowToken = getBeforeRowToken();
-			// if (fieldName.startsWith(beforeRowToken)) {
-			// // @start-row
-			// String startLoopDirective = fieldName.substring(
-			// beforeRowToken.length(), fieldName.length());
-			// currentRow.setStartLoopDirective(startLoopDirective);
-			// return;
-			// } else {
-			// String afterRowToken = getAfterRowToken();
-			// if (fieldName.startsWith(afterRowToken)) {
-			// // @end-row
-			// String endLoopDirective = fieldName.substring(
-			// afterRowToken.length(), fieldName.length());
-			// currentRow.setEndLoopDirective(endLoopDirective);
-			// return;
-			// }
-			// }
+			FieldMetadata metadata = getFieldAsTextStyling(fieldName);
+			if (metadata != null && getFormatter() != null) {
+				characters = getFormatter().noEscape(characters);
+			}
 		}
 		super.flushCharacters(characters);
 	}

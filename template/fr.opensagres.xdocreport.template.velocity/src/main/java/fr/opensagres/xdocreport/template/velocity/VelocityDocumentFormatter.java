@@ -29,6 +29,7 @@ import fr.opensagres.xdocreport.template.formatter.AbstractDocumentFormatter;
 import fr.opensagres.xdocreport.template.formatter.DirectivesStack;
 import fr.opensagres.xdocreport.template.formatter.IfDirective;
 import fr.opensagres.xdocreport.template.formatter.LoopDirective;
+import fr.opensagres.xdocreport.template.velocity.internal.NoEscape;
 
 /**
  * Velocity document formatter used to format fields list with Velocity syntax.
@@ -58,6 +59,10 @@ public class VelocityDocumentFormatter extends AbstractDocumentFormatter {
 	private static final String END_IF_DIRECTIVE = "#end";
 
 	private static final String VELOCITY_COUNT = "$velocityCount";
+
+	public static final String START_NOESCAPE = "$" + NoEscape.NOESCAPE_KEY
+			+ ".s(";
+	public static final String END_NOESCAPE = ")";
 
 	public String formatAsFieldItemList(String content, String fieldName,
 			boolean forceAsField) {
@@ -148,10 +153,10 @@ public class VelocityDocumentFormatter extends AbstractDocumentFormatter {
 		directive.append(END_IMAGE_DIRECTIVE);
 		return directive.toString();
 	}
-	
+
 	public String getFunctionDirective(String key, String methodName,
-			String... parameters) {		
-		StringBuilder directive = new StringBuilder();	
+			String... parameters) {
+		StringBuilder directive = new StringBuilder();
 		directive.append(DOLLAR_START_BRACKET);
 		directive.append(key);
 		directive.append('.');
@@ -386,5 +391,12 @@ public class VelocityDocumentFormatter extends AbstractDocumentFormatter {
 			return -1;
 		}
 		return fieldName.indexOf("#");
+	}
+
+	public String noEscape(String content) {
+		StringBuilder newContent = new StringBuilder(START_NOESCAPE);
+		newContent.append(content);
+		newContent.append(END_NOESCAPE);
+		return newContent.toString();
 	}
 }

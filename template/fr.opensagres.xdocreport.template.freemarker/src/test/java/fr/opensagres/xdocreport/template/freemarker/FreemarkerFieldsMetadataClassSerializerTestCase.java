@@ -104,7 +104,7 @@ public class FreemarkerFieldsMetadataClassSerializerTestCase {
 		serializer.load(fieldsMetadata, "project", Project.class);
 
 		// START remove that once it's implemented
-		fieldsMetadata.addField("project.name", false, "");
+		fieldsMetadata.addField("project.name", false, "", null);
 		// END remove that once it's implemented
 
 		Assert.assertEquals(1, fieldsMetadata.getFields().size());
@@ -119,8 +119,8 @@ public class FreemarkerFieldsMetadataClassSerializerTestCase {
 		serializer.load(fieldsMetadata, "developers", Developer.class, true);
 
 		// START remove that once it's implemented
-		fieldsMetadata.addField("developers.name", true, "");
-		fieldsMetadata.addField("developers.lastName", true, "");
+		fieldsMetadata.addField("developers.name", true, "", null);
+		fieldsMetadata.addField("developers.lastName", true, "", null);
 		// END remove that once it's implemented
 
 		Assert.assertEquals(2, fieldsMetadata.getFields().size());

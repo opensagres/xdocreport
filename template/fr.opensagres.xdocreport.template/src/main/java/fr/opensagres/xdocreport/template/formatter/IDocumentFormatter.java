@@ -67,4 +67,6 @@ public interface IDocumentFormatter {
 	
 	String getFunctionDirective(String key, String methodName,
 			String... parameters);
+
+	String noEscape(String content);
 }

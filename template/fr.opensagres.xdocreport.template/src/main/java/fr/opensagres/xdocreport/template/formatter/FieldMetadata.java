@@ -34,12 +34,15 @@ public class FieldMetadata {
 	private String imageName;
 	private boolean listType;
 	private boolean imageType;
+	private String textStylingKind;
 
-	public FieldMetadata(String fieldName, boolean listType, String imageName) {
+	public FieldMetadata(String fieldName, boolean listType, String imageName,
+			String textStylingKind) {
 		this.fieldName = fieldName;
 		this.listType = listType;
 		setImageName(imageName);
 		this.imageType = imageName != null;
+		this.textStylingKind = textStylingKind;
 	}
 
 	/**
@@ -95,5 +98,13 @@ public class FieldMetadata {
 	public void setImageName(String imageName) {
 		this.imageName = imageName;
 		this.imageType = true;
+	}
+
+	public String getTextStylingKind() {
+		return textStylingKind;
+	}
+
+	public void setTextStylingKind(String textStylingKind) {
+		this.textStylingKind = textStylingKind;
 	}
 }

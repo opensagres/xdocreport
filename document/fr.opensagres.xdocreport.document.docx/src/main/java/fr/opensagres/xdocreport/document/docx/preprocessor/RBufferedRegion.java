@@ -27,18 +27,18 @@ package fr.opensagres.xdocreport.document.docx.preprocessor;
 import org.xml.sax.Attributes;
 
 import fr.opensagres.xdocreport.document.preprocessor.sax.BufferedElement;
-import fr.opensagres.xdocreport.document.preprocessor.sax.IBufferedRegion;
 import fr.opensagres.xdocreport.document.preprocessor.sax.StringBufferedRegion;
 import fr.opensagres.xdocreport.document.preprocessor.sax.TransformedBufferedDocumentContentHandler;
+import fr.opensagres.xdocreport.template.formatter.FieldMetadata;
 
 public class RBufferedRegion extends MergefieldBufferedRegion {
 
 	private String fldCharType;
 	private StringBufferedRegion tContentRegion = null;
-	
+
 	public RBufferedRegion(TransformedBufferedDocumentContentHandler handler,
-			BufferedElement parent, String uri,
-			String localName, String name, Attributes attributes) {
+			BufferedElement parent, String uri, String localName, String name,
+			Attributes attributes) {
 		super(handler, parent, uri, localName, name, attributes);
 	}
 
@@ -51,12 +51,13 @@ public class RBufferedRegion extends MergefieldBufferedRegion {
 	}
 
 	public void setTContent(String tContent) {
-		getTRegion().setTextContent(tContent);		
+		getTRegion().setTextContent(tContent);
 	}
 
 	@Override
-	public String setInstrText(String instrText) {
-		instrText = super.setInstrText(instrText);
+	public String setInstrText(String instrText,
+			FieldMetadata fieldAsTextStyling) {
+		instrText = super.setInstrText(instrText, fieldAsTextStyling);
 		super.append(instrText);
 		return instrText;
 	}

@@ -3,7 +3,6 @@ package fr.opensagres.xdocreport.template.textstyling;
 import java.util.HashMap;
 import java.util.Map;
 
-import fr.opensagres.xdocreport.core.document.DocumentKind;
 import fr.opensagres.xdocreport.core.registry.AbstractRegistry;
 import fr.opensagres.xdocreport.template.TextStylingKind;
 import fr.opensagres.xdocreport.template.discovery.ITextStylingFormatterDiscovery;
@@ -11,9 +10,8 @@ import fr.opensagres.xdocreport.template.discovery.ITextStylingFormatterDiscover
 public class TextStylingFormatterRegistry extends
 		AbstractRegistry<ITextStylingFormatterDiscovery> {
 
-	public static final String KEY = "___TextStylingFormatterRegistry";
-
 	private static final TextStylingFormatterRegistry INSTANCE = new TextStylingFormatterRegistry();
+	public static final String KEY = "___TextStylingRegistry";
 	private final Map<String, ITextStylingFormatter> formatters = new HashMap<String, ITextStylingFormatter>();
 
 	public TextStylingFormatterRegistry() {
@@ -26,8 +24,10 @@ public class TextStylingFormatterRegistry extends
 
 	@Override
 	protected boolean registerInstance(ITextStylingFormatterDiscovery discovery) {
+		// formatter
 		formatters.put(discovery.getId(), discovery.getFormatter());
 		return true;
+
 	}
 
 	@Override
@@ -36,34 +36,13 @@ public class TextStylingFormatterRegistry extends
 	}
 
 	public ITextStylingFormatter getTextStylingFormatter(
-			DocumentKind documentKind, TextStylingKind textStylingKind) {
-		return getTextStylingFormatter(documentKind.name(),
-				textStylingKind.name());
+			TextStylingKind textStylingKind) {
+		return getTextStylingFormatter(textStylingKind.name());
 	}
 
-	public ITextStylingFormatter getTextStylingFormatter(String documentKind,
-			String textStylingKind) {
-		String key = getKey(documentKind, textStylingKind);
-		return getTextStylingFormatter(key);
-	}
-
-	public ITextStylingFormatter getTextStylingFormatter(String key) {
+	public ITextStylingFormatter getTextStylingFormatter(String textStylingKind) {
 		super.initializeIfNeeded();
-		return formatters.get(key);
+		return formatters.get(textStylingKind);
 	}
 
-	public static String getKey(String documentKind, String textStylingKind) {
-		StringBuilder key = new StringBuilder(documentKind);
-		key.append("_");
-		key.append(textStylingKind);
-		return key.toString();
-	}
-
-	public String format(String content, String formatterKey) {
-		ITextStylingFormatter formatter = getTextStylingFormatter(formatterKey);
-		if (formatter != null) {
-			return formatter.format(content);
-		}
-		return content;
-	}
 }

@@ -419,12 +419,9 @@ public class FreemarkerDocumentFormatter extends AbstractDocumentFormatter {
 			String textStylingKind) {
 		StringBuilder newContent = new StringBuilder(START_NOESCAPE);
 		newContent.append(getFunctionDirective(
-				TextStylingFormatterRegistry.KEY,
-				"format",
-				removeInterpolation(fieldName),
-				"\""
-						+ TextStylingFormatterRegistry.getKey(documentKind,
-								textStylingKind) + "\""));
+				TextStylingFormatterRegistry.KEY, "format",
+				removeInterpolation(fieldName), "\"" + documentKind + "\"",
+				"\"" + textStylingKind + "\""));
 		newContent.append(END_NOESCAPE);
 		return newContent.toString();
 	}

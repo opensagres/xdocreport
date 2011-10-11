@@ -2,5 +2,5 @@ package fr.opensagres.xdocreport.template;
 
 public enum TextStylingKind {
 
-	NoEscape, Html, Wikipedia, GoogleWiki
+	NoEscape, Html, GWiki, MediaWiki
 }

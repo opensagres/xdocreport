@@ -394,12 +394,8 @@ public class VelocityDocumentFormatter extends AbstractDocumentFormatter {
 			String textStylingKind) {
 		StringBuilder newContent = new StringBuilder();
 		newContent.append(getFunctionDirective(
-				TextStylingFormatterRegistry.KEY,
-				"format",
-				fieldName,
-				"\""
-						+ TextStylingFormatterRegistry.getKey(documentKind,
-								textStylingKind) + "\""));
+				TextStylingFormatterRegistry.KEY, "format", fieldName, "\""
+						+ documentKind + "\"", "\"" + textStylingKind + "\""));
 		return newContent.toString();
 	}
 }

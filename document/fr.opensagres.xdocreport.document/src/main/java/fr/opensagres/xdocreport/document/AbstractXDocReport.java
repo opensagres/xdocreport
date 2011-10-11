@@ -51,13 +51,13 @@ import fr.opensagres.xdocreport.core.logging.LogUtils;
 import fr.opensagres.xdocreport.core.utils.StringUtils;
 import fr.opensagres.xdocreport.document.images.IImageRegistry;
 import fr.opensagres.xdocreport.document.preprocessor.IXDocPreprocessor;
+import fr.opensagres.xdocreport.document.registry.TextStylingRegistry;
 import fr.opensagres.xdocreport.document.registry.XDocReportRegistry;
 import fr.opensagres.xdocreport.template.FieldsExtractor;
 import fr.opensagres.xdocreport.template.IContext;
 import fr.opensagres.xdocreport.template.ITemplateEngine;
 import fr.opensagres.xdocreport.template.formatter.FieldsMetadata;
 import fr.opensagres.xdocreport.template.formatter.IDocumentFormatter;
-import fr.opensagres.xdocreport.template.textstyling.TextStylingFormatterRegistry;
 
 /**
  * Abstract class for {@link IXDocReport} to implement to manage docx, odt...
@@ -643,8 +643,7 @@ public abstract class AbstractXDocReport implements IXDocReport,
 			XDocArchive outputArchive) throws XDocReportException {
 
 		// 1) Add text styling registry
-		context.put(TextStylingFormatterRegistry.KEY,
-				TextStylingFormatterRegistry.getRegistry());
+		context.put(TextStylingRegistry.KEY, TextStylingRegistry.getRegistry());
 
 		// 2) Add ImageRegistry if needed
 		IImageRegistry imageRegistry = null;

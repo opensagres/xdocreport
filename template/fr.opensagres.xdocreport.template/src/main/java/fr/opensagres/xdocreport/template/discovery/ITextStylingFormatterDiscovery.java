@@ -6,5 +6,5 @@ import fr.opensagres.xdocreport.template.textstyling.ITextStylingFormatter;
 public interface ITextStylingFormatterDiscovery extends IBaseDiscovery {
 
 	ITextStylingFormatter getFormatter();
-	
+
 }

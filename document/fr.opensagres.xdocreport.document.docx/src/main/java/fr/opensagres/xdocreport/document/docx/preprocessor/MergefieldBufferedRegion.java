@@ -27,6 +27,7 @@ package fr.opensagres.xdocreport.document.docx.preprocessor;
 import org.xml.sax.Attributes;
 
 import fr.opensagres.xdocreport.core.EncodingConstants;
+import fr.opensagres.xdocreport.core.document.DocumentKind;
 import fr.opensagres.xdocreport.core.utils.StringUtils;
 import fr.opensagres.xdocreport.document.preprocessor.sax.BufferedElement;
 import fr.opensagres.xdocreport.document.preprocessor.sax.TransformedBufferedDocumentContentHandler;
@@ -146,7 +147,10 @@ public abstract class MergefieldBufferedRegion extends BufferedElement
 					fieldName = StringUtils.replaceAll(fieldName, APOS, "'");
 
 					if (fieldAsTextStyling != null) {
-						fieldName = formatter.noEscape(fieldName);
+						fieldName = formatter.formatAsTextStyling(fieldName,
+								fieldAsTextStyling.getFieldName(),
+								DocumentKind.DOCX.name(),
+								fieldAsTextStyling.getTextStylingKind());
 					}
 					return fieldName;
 				}

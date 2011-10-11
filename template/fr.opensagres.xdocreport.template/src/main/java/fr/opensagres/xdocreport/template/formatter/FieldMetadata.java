@@ -42,7 +42,7 @@ public class FieldMetadata {
 		this.listType = listType;
 		setImageName(imageName);
 		this.imageType = imageName != null;
-		this.textStylingKind = textStylingKind;
+		this.setTextStylingKind(textStylingKind);
 	}
 
 	/**

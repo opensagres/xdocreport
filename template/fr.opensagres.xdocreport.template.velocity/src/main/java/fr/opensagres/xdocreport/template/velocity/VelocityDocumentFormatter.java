@@ -29,7 +29,7 @@ import fr.opensagres.xdocreport.template.formatter.AbstractDocumentFormatter;
 import fr.opensagres.xdocreport.template.formatter.DirectivesStack;
 import fr.opensagres.xdocreport.template.formatter.IfDirective;
 import fr.opensagres.xdocreport.template.formatter.LoopDirective;
-import fr.opensagres.xdocreport.template.velocity.internal.NoEscape;
+import fr.opensagres.xdocreport.template.textstyling.TextStylingFormatterRegistry;
 
 /**
  * Velocity document formatter used to format fields list with Velocity syntax.
@@ -59,10 +59,6 @@ public class VelocityDocumentFormatter extends AbstractDocumentFormatter {
 	private static final String END_IF_DIRECTIVE = "#end";
 
 	private static final String VELOCITY_COUNT = "$velocityCount";
-
-	public static final String START_NOESCAPE = "$" + NoEscape.NOESCAPE_KEY
-			+ ".s(";
-	public static final String END_NOESCAPE = ")";
 
 	public String formatAsFieldItemList(String content, String fieldName,
 			boolean forceAsField) {
@@ -393,10 +389,17 @@ public class VelocityDocumentFormatter extends AbstractDocumentFormatter {
 		return fieldName.indexOf("#");
 	}
 
-	public String noEscape(String content) {
-		StringBuilder newContent = new StringBuilder(START_NOESCAPE);
-		newContent.append(content);
-		newContent.append(END_NOESCAPE);
+	public String formatAsTextStyling(String fieldName,
+			String metadataFieldName, String documentKind,
+			String textStylingKind) {
+		StringBuilder newContent = new StringBuilder();
+		newContent.append(getFunctionDirective(
+				TextStylingFormatterRegistry.KEY,
+				"format",
+				fieldName,
+				"\""
+						+ TextStylingFormatterRegistry.getKey(documentKind,
+								textStylingKind) + "\""));
 		return newContent.toString();
 	}
 }

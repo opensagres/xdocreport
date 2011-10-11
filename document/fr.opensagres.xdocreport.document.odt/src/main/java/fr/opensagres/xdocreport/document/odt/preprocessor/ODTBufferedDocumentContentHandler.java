@@ -26,6 +26,7 @@ package fr.opensagres.xdocreport.document.odt.preprocessor;
 
 import static fr.opensagres.xdocreport.document.odt.ODTUtils.isDrawFrame;
 import static fr.opensagres.xdocreport.document.odt.ODTUtils.isDrawImage;
+import static fr.opensagres.xdocreport.document.odt.ODTUtils.isOfficeAutomaticStyles;
 import static fr.opensagres.xdocreport.document.odt.ODTUtils.isTextA;
 import static fr.opensagres.xdocreport.document.odt.ODTUtils.isTextInput;
 
@@ -35,8 +36,10 @@ import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
 import org.xml.sax.helpers.AttributesImpl;
 
+import fr.opensagres.xdocreport.core.document.DocumentKind;
 import fr.opensagres.xdocreport.core.utils.StringUtils;
 import fr.opensagres.xdocreport.document.odt.ODTConstants;
+import fr.opensagres.xdocreport.document.preprocessor.sax.IBufferedRegion;
 import fr.opensagres.xdocreport.document.preprocessor.sax.TransformedBufferedDocumentContentHandler;
 import fr.opensagres.xdocreport.template.formatter.FieldMetadata;
 import fr.opensagres.xdocreport.template.formatter.FieldsMetadata;
@@ -132,9 +135,29 @@ public class ODTBufferedDocumentContentHandler extends
 		} else {
 			if (isDrawFrame(uri, localName, name)) {
 				dynamicImageName = null;
+			} else if (isOfficeAutomaticStyles(uri, localName, name)) {
+				// Add bold, italic, bold+italic styles for text styling.
+				generateStyle("XDocReport_Bold", true, false);
+				generateStyle("XDocReport_Italic", false, true);
+				generateStyle("XDocReport_BoldItalic", true, true);
 			}
 			super.doEndElement(uri, localName, name);
 		}
+	}
+
+	private void generateStyle(String styleName, boolean bold, boolean italic) {
+		IBufferedRegion region = getCurrentElement();
+		region.append("<style:style style:name=\"");
+		region.append(styleName);
+		region.append("\" style:family=\"text\">");
+		region.append("<style:text-properties");
+		if (bold) {
+			region.append(" fo:font-weight=\"bold\"");
+		}
+		if (italic) {
+			region.append(" fo:font-style=\"italic\"");
+		}
+		region.append("/></style:style>");
 	}
 
 	@Override
@@ -157,9 +180,12 @@ public class ODTBufferedDocumentContentHandler extends
 			if (processScriptAfter(fieldName)) {
 				return;
 			}
-			FieldMetadata metadata = getFieldAsTextStyling(fieldName);
-			if (metadata != null && getFormatter() != null) {
-				characters = getFormatter().noEscape(characters);
+			FieldMetadata fieldAsTextStyling = getFieldAsTextStyling(fieldName);
+			if (fieldAsTextStyling != null && getFormatter() != null) {
+				characters = getFormatter().formatAsTextStyling(fieldName,
+						fieldAsTextStyling.getFieldName(),
+						DocumentKind.ODT.name(),
+						fieldAsTextStyling.getTextStylingKind());
 			}
 		}
 		super.flushCharacters(characters);

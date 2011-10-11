@@ -5,4 +5,5 @@ Export-Package: fr.opensagres.xdocreport.document.odt,
 Import-Package: fr.opensagres.xdocreport.converter,
  fr.opensagres.xdocreport.core.io,
  fr.opensagres.xdocreport.document.preprocessor,
- fr.opensagres.xdocreport.template.formatter
+ fr.opensagres.xdocreport.template.formatter,
+ fr.opensagres.xdocreport.template.textstyling

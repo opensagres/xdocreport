@@ -64,9 +64,10 @@ public interface IDocumentFormatter {
 	String extractModelTokenPrefix(String newContent);
 
 	int getIndexOfScript(String fieldName);
-	
+
 	String getFunctionDirective(String key, String methodName,
 			String... parameters);
 
-	String noEscape(String content);
+	String formatAsTextStyling(String fieldName, String metafieldName,
+			String documentKind, String textStylingKind);
 }

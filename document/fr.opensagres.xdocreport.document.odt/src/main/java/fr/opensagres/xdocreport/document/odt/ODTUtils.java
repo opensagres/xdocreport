@@ -126,4 +126,16 @@ public class ODTUtils implements ODTConstants {
 	public static boolean isTextA(String uri, String localName, String name) {
 		return TEXT_NS.equals(uri) && TEXT_A_ELT.equals(localName);
 	}
+	
+	/**
+	 * Returns true if element is office:automatic-styles and false otherwise.
+	 * 
+	 * @param uri
+	 * @param localName
+	 * @param name
+	 * @return
+	 */
+	public static boolean isOfficeAutomaticStyles(String uri, String localName, String name) {
+		return OFFICE_NS.equals(uri) && OFFICE_AUTOMATIC_STYLES_ELT.equals(localName);
+	}	
 }

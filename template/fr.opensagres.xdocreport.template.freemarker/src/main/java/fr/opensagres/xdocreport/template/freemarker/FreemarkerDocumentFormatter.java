@@ -33,6 +33,7 @@ import fr.opensagres.xdocreport.template.formatter.AbstractDocumentFormatter;
 import fr.opensagres.xdocreport.template.formatter.DirectivesStack;
 import fr.opensagres.xdocreport.template.formatter.IfDirective;
 import fr.opensagres.xdocreport.template.formatter.LoopDirective;
+import fr.opensagres.xdocreport.template.textstyling.TextStylingFormatterRegistry;
 
 /**
  * Freemarker document formatter used to format fields list with Freemarker
@@ -413,10 +414,29 @@ public class FreemarkerDocumentFormatter extends AbstractDocumentFormatter {
 		return startIndex < endIndex ? startIndex : endIndex;
 	}
 
-	public String noEscape(String content) {
+	public String formatAsTextStyling(String fieldName,
+			String metadataFieldName, String documentKind,
+			String textStylingKind) {
 		StringBuilder newContent = new StringBuilder(START_NOESCAPE);
-		newContent.append(content);
+		newContent.append(getFunctionDirective(
+				TextStylingFormatterRegistry.KEY,
+				"format",
+				removeInterpolation(fieldName),
+				"\""
+						+ TextStylingFormatterRegistry.getKey(documentKind,
+								textStylingKind) + "\""));
 		newContent.append(END_NOESCAPE);
 		return newContent.toString();
+	}
+
+	private String removeInterpolation(String fieldName) {
+		if (fieldName.startsWith(DOLLAR_TOTKEN)) {
+			fieldName = fieldName.substring(DOLLAR_TOTKEN.length(),
+					fieldName.length());
+		}
+		if (fieldName.endsWith("}")) {
+			fieldName = fieldName.substring(0, fieldName.length() - 1);
+		}
+		return fieldName;
 	}
 }

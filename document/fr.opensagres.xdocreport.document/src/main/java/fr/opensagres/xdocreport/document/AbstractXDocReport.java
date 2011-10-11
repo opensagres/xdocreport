@@ -57,6 +57,7 @@ import fr.opensagres.xdocreport.template.IContext;
 import fr.opensagres.xdocreport.template.ITemplateEngine;
 import fr.opensagres.xdocreport.template.formatter.FieldsMetadata;
 import fr.opensagres.xdocreport.template.formatter.IDocumentFormatter;
+import fr.opensagres.xdocreport.template.textstyling.TextStylingFormatterRegistry;
 
 /**
  * Abstract class for {@link IXDocReport} to implement to manage docx, odt...
@@ -607,7 +608,6 @@ public abstract class AbstractXDocReport implements IXDocReport,
 			XDocArchive outputArchive) throws XDocReportException, IOException {
 		String[] xmlEntries = internalGetXMLEntries();
 
-		// Add ImageRegistry if needed
 		onBeforeProcessTemplateEngine(context, outputArchive);
 		String entryName = null;
 		for (int i = 0; i < xmlEntries.length; i++) {
@@ -641,6 +641,12 @@ public abstract class AbstractXDocReport implements IXDocReport,
 	 */
 	protected void onBeforeProcessTemplateEngine(final IContext context,
 			XDocArchive outputArchive) throws XDocReportException {
+
+		// 1) Add text styling registry
+		context.put(TextStylingFormatterRegistry.KEY,
+				TextStylingFormatterRegistry.getRegistry());
+
+		// 2) Add ImageRegistry if needed
 		IImageRegistry imageRegistry = null;
 		if (fieldsMetadata != null && fieldsMetadata.hasFieldsAsImage()) {
 			imageRegistry = createImageRegistry(outputArchive, outputArchive,

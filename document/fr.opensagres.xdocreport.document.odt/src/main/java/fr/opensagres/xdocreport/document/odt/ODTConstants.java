@@ -52,6 +52,9 @@ public interface ODTConstants {
 	String XLINK_NS = "http://www.w3.org/1999/xlink";
 	String HREF_ATTR = "href";
 
+	String OFFICE_NS = "urn:oasis:names:tc:opendocument:xmlns:office:1.0";	
+	String OFFICE_AUTOMATIC_STYLES_ELT = "automatic-styles";
+	
 	// Mime type
 	String MIMETYPE = "mimetype";
 	String ODT_MIMETYPE = "application/vnd.oasis.opendocument.text";

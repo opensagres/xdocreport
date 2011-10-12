@@ -32,13 +32,13 @@ import org.apache.velocity.runtime.RuntimeServices;
 import fr.opensagres.xdocreport.core.utils.StringUtils;
 import fr.opensagres.xdocreport.template.ITemplateEngine;
 import fr.opensagres.xdocreport.template.config.ReplaceText;
-import fr.opensagres.xdocreport.template.textstyling.TextStylingFormatterRegistry;
+import fr.opensagres.xdocreport.template.textstyling.TextStylingTransformerRegistry;
 import fr.opensagres.xdocreport.template.velocity.VelocityConstants;
 
 public class XDocReportEscapeReference extends EscapeXmlReference implements
 		VelocityConstants {
 
-	private static final String TEXT_STYLING_KEY = "${" + TextStylingFormatterRegistry.KEY;
+	private static final String TEXT_STYLING_KEY = "${" + TextStylingTransformerRegistry.KEY;
 	private String[] searchList;
 	private String[] replacementList;
 

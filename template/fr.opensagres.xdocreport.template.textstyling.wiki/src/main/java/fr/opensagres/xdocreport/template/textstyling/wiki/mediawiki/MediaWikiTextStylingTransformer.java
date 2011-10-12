@@ -22,24 +22,28 @@
  * OF CONTRACT, TORT OR OTHERWISE,  ARISING FROM, OUT OF OR IN CONNECTION
  * WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
-package fr.opensagres.xdocreport.template.discovery;
+package fr.opensagres.xdocreport.template.textstyling.wiki.mediawiki;
 
-import fr.opensagres.xdocreport.core.discovery.IBaseDiscovery;
-import fr.opensagres.xdocreport.template.ITemplateEngine;
+import org.wikimodel.wem.IWikiParser;
+import org.wikimodel.wem.mediawiki.MediaWikiParser;
+
+import fr.opensagres.xdocreport.template.textstyling.IDocumentHandler;
+import fr.opensagres.xdocreport.template.textstyling.ITextStylingTransformer;
+import fr.opensagres.xdocreport.template.textstyling.wiki.AbstractWikiTextStylingTransformer;
 
 /**
- * Discovery used to create template engine instance.
+ * MediaWiki text styling transformer to transform MediaWiki syntax to another
+ * document kind (odt, docx, etc) syntax. The ODT, DOCX is represented with the
+ * given {@link IDocumentHandler}.
  * 
  */
-public interface ITemplateEngineDiscovery extends IBaseDiscovery {
+public class MediaWikiTextStylingTransformer extends
+		AbstractWikiTextStylingTransformer {
 
-	/**
-	 * Returns the default template engine to use for report generation when an
-	 * {@link IXDocReport} is created with
-	 * {@link XDocReportRegistry#loadReport(java.io.InputStream)} without
-	 * specifying the template engine.
-	 * 
-	 * @return
-	 */
-	ITemplateEngine createTemplateEngine();
+	public static final ITextStylingTransformer INSTANCE = new MediaWikiTextStylingTransformer();
+
+	@Override
+	protected IWikiParser createWikiParser() {
+		return new MediaWikiParser();
+	}
 }

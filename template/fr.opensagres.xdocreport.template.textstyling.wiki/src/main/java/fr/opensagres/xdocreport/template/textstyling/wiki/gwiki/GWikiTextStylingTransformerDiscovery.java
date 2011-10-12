@@ -22,24 +22,30 @@
  * OF CONTRACT, TORT OR OTHERWISE,  ARISING FROM, OUT OF OR IN CONNECTION
  * WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
-package fr.opensagres.xdocreport.template.discovery;
+package fr.opensagres.xdocreport.template.textstyling.wiki.gwiki;
 
-import fr.opensagres.xdocreport.core.discovery.IBaseDiscovery;
-import fr.opensagres.xdocreport.template.ITemplateEngine;
+import fr.opensagres.xdocreport.template.discovery.ITextStylingTransformerDiscovery;
+import fr.opensagres.xdocreport.template.textstyling.ITextStylingTransformer;
+import fr.opensagres.xdocreport.template.textstyling.SyntaxKind;
 
 /**
- * Discovery used to create template engine instance.
+ * Discovery to register Google Wiki Text styling transformer
+ * {@link GWikiTextStylingTransformer}.
  * 
  */
-public interface ITemplateEngineDiscovery extends IBaseDiscovery {
+public class GWikiTextStylingTransformerDiscovery implements
+		ITextStylingTransformerDiscovery {
 
-	/**
-	 * Returns the default template engine to use for report generation when an
-	 * {@link IXDocReport} is created with
-	 * {@link XDocReportRegistry#loadReport(java.io.InputStream)} without
-	 * specifying the template engine.
-	 * 
-	 * @return
-	 */
-	ITemplateEngine createTemplateEngine();
+	public String getId() {
+		return SyntaxKind.GWiki.name();
+	}
+
+	public ITextStylingTransformer getTransformer() {
+		return GWikiTextStylingTransformer.INSTANCE;
+	}
+
+	public String getDescription() {
+		return "Google Wiki test styling transformer.";
+	}
+
 }

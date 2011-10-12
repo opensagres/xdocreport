@@ -1,3 +1,27 @@
+/**
+ * Copyright (C) 2011 Angelo Zerr <angelo.zerr@gmail.com> and Pascal Leclercq <pascal.leclercq@gmail.com>
+ *
+ * All rights reserved.
+ *
+ * Permission is hereby granted, free  of charge, to any person obtaining
+ * a  copy  of this  software  and  associated  documentation files  (the
+ * "Software"), to  deal in  the Software without  restriction, including
+ * without limitation  the rights to  use, copy, modify,  merge, publish,
+ * distribute,  sublicense, and/or sell  copies of  the Software,  and to
+ * permit persons to whom the Software  is furnished to do so, subject to
+ * the following conditions:
+ *
+ * The  above  copyright  notice  and  this permission  notice  shall  be
+ * included in all copies or substantial portions of the Software.
+ *
+ * THE  SOFTWARE IS  PROVIDED  "AS  IS", WITHOUT  WARRANTY  OF ANY  KIND,
+ * EXPRESS OR  IMPLIED, INCLUDING  BUT NOT LIMITED  TO THE  WARRANTIES OF
+ * MERCHANTABILITY,    FITNESS    FOR    A   PARTICULAR    PURPOSE    AND
+ * NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE
+ * LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION
+ * OF CONTRACT, TORT OR OTHERWISE,  ARISING FROM, OUT OF OR IN CONNECTION
+ * WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+ */
 package fr.opensagres.xdocreport.template.textstyling.wiki;
 
 import java.util.List;
@@ -8,24 +32,28 @@ import org.wikimodel.wem.WikiFormat;
 import org.wikimodel.wem.WikiParameters;
 import org.wikimodel.wem.WikiStyle;
 
-import fr.opensagres.xdocreport.template.textstyling.IDocumentVisitor;
+import fr.opensagres.xdocreport.template.textstyling.IDocumentHandler;
 
+/**
+ * Wiki Event Model Adaptor to call methods of {@link IDocumentHandler}.
+ * 
+ */
 public class WemListenerAdapter extends EmptyWemListener {
 
-	protected final IDocumentVisitor visitor;
+	protected final IDocumentHandler documentHandler;
 
-	public WemListenerAdapter(IDocumentVisitor visitor) {
-		this.visitor = visitor;
+	public WemListenerAdapter(IDocumentHandler visitor) {
+		this.documentHandler = visitor;
 	}
 
 	@Override
 	public void beginDocument() {
-		visitor.startDocument();
+		documentHandler.startDocument();
 	}
 
 	@Override
 	public void endDocument() {
-		visitor.endDocument();
+		documentHandler.endDocument();
 	}
 
 	@Override
@@ -33,9 +61,9 @@ public class WemListenerAdapter extends EmptyWemListener {
 		List<WikiStyle> styles = format.getStyles();
 		for (WikiStyle style : styles) {
 			if (IWemConstants.STRONG.equals(style)) {
-				visitor.startBold();
+				documentHandler.startBold();
 			} else if (IWemConstants.EM.equals(style)) {
-				visitor.startItalics();
+				documentHandler.startItalics();
 			}
 		}
 	}
@@ -45,9 +73,9 @@ public class WemListenerAdapter extends EmptyWemListener {
 		List<WikiStyle> styles = format.getStyles();
 		for (WikiStyle style : styles) {
 			if (IWemConstants.STRONG.equals(style)) {
-				visitor.endBold();
+				documentHandler.endBold();
 			} else if (IWemConstants.EM.equals(style)) {
-				visitor.endItalics();
+				documentHandler.endItalics();
 			}
 		}
 	}
@@ -55,39 +83,49 @@ public class WemListenerAdapter extends EmptyWemListener {
 	@Override
 	public void beginList(WikiParameters params, boolean ordered) {
 		if (ordered) {
-			visitor.startOrderedList();
+			documentHandler.startOrderedList();
 		} else {
-			visitor.startUnorderedList();
+			documentHandler.startUnorderedList();
 		}
 	}
 
 	@Override
 	public void beginListItem() {
-		visitor.startListItem();
+		documentHandler.startListItem();
 	}
-	
+
 	@Override
 	public void endListItem() {
-		visitor.endListItem();
+		documentHandler.endListItem();
 	}
-	
+
 	@Override
 	public void endList(WikiParameters params, boolean ordered) {
 		if (ordered) {
-			visitor.endOrderedList();
+			documentHandler.endOrderedList();
 		} else {
-			visitor.endUnorderedList();
+			documentHandler.endUnorderedList();
 		}
 	}
 
 	@Override
 	public void onSpace(String str) {
-		visitor.handleString(str);
+		documentHandler.handleString(str);
 	}
 
 	@Override
 	public void onWord(String str) {
-		visitor.handleString(str);
+		documentHandler.handleString(str);
+	}
+
+	@Override
+	public void beginParagraph(WikiParameters params) {
+		documentHandler.startParagraph();
+	}
+
+	@Override
+	public void endParagraph(WikiParameters params) {
+		documentHandler.endParagraph();
 	}
 
 }

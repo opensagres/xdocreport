@@ -29,7 +29,7 @@ import fr.opensagres.xdocreport.template.formatter.AbstractDocumentFormatter;
 import fr.opensagres.xdocreport.template.formatter.DirectivesStack;
 import fr.opensagres.xdocreport.template.formatter.IfDirective;
 import fr.opensagres.xdocreport.template.formatter.LoopDirective;
-import fr.opensagres.xdocreport.template.textstyling.TextStylingFormatterRegistry;
+import fr.opensagres.xdocreport.template.textstyling.TextStylingTransformerRegistry;
 
 /**
  * Velocity document formatter used to format fields list with Velocity syntax.
@@ -394,8 +394,9 @@ public class VelocityDocumentFormatter extends AbstractDocumentFormatter {
 			String textStylingKind) {
 		StringBuilder newContent = new StringBuilder();
 		newContent.append(getFunctionDirective(
-				TextStylingFormatterRegistry.KEY, "format", fieldName, "\""
-						+ documentKind + "\"", "\"" + textStylingKind + "\""));
+				TextStylingTransformerRegistry.KEY,
+				TextStylingTransformerRegistry.TRANSFORM_METHOD, fieldName,
+				"\"" + textStylingKind + "\"", "\"" + documentKind + "\""));
 		return newContent.toString();
 	}
 }

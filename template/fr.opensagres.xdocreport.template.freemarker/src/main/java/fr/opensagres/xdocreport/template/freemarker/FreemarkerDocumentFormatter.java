@@ -33,7 +33,7 @@ import fr.opensagres.xdocreport.template.formatter.AbstractDocumentFormatter;
 import fr.opensagres.xdocreport.template.formatter.DirectivesStack;
 import fr.opensagres.xdocreport.template.formatter.IfDirective;
 import fr.opensagres.xdocreport.template.formatter.LoopDirective;
-import fr.opensagres.xdocreport.template.textstyling.TextStylingFormatterRegistry;
+import fr.opensagres.xdocreport.template.textstyling.TextStylingTransformerRegistry;
 
 /**
  * Freemarker document formatter used to format fields list with Freemarker
@@ -419,9 +419,10 @@ public class FreemarkerDocumentFormatter extends AbstractDocumentFormatter {
 			String textStylingKind) {
 		StringBuilder newContent = new StringBuilder(START_NOESCAPE);
 		newContent.append(getFunctionDirective(
-				TextStylingFormatterRegistry.KEY, "format",
-				removeInterpolation(fieldName), "\"" + documentKind + "\"",
-				"\"" + textStylingKind + "\""));
+				TextStylingTransformerRegistry.KEY,
+				TextStylingTransformerRegistry.TRANSFORM_METHOD,
+				"\"" + textStylingKind + "\"", removeInterpolation(fieldName),
+				"\"" + documentKind + "\""));
 		newContent.append(END_NOESCAPE);
 		return newContent.toString();
 	}

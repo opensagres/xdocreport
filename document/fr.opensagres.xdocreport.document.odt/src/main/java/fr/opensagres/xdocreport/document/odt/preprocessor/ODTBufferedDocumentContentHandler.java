@@ -185,7 +185,7 @@ public class ODTBufferedDocumentContentHandler extends
 				characters = getFormatter().formatAsTextStyling(fieldName,
 						fieldAsTextStyling.getFieldName(),
 						DocumentKind.ODT.name(),
-						fieldAsTextStyling.getTextStylingKind());
+						fieldAsTextStyling.getSyntaxKind());
 			}
 		}
 		super.flushCharacters(characters);

@@ -22,24 +22,13 @@
  * OF CONTRACT, TORT OR OTHERWISE,  ARISING FROM, OUT OF OR IN CONNECTION
  * WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
-package fr.opensagres.xdocreport.template.discovery;
-
-import fr.opensagres.xdocreport.core.discovery.IBaseDiscovery;
-import fr.opensagres.xdocreport.template.ITemplateEngine;
+package fr.opensagres.xdocreport.template.textstyling;
 
 /**
- * Discovery used to create template engine instance.
+ * Kind of syntax used for text styling.
  * 
  */
-public interface ITemplateEngineDiscovery extends IBaseDiscovery {
+public enum SyntaxKind {
 
-	/**
-	 * Returns the default template engine to use for report generation when an
-	 * {@link IXDocReport} is created with
-	 * {@link XDocReportRegistry#loadReport(java.io.InputStream)} without
-	 * specifying the template engine.
-	 * 
-	 * @return
-	 */
-	ITemplateEngine createTemplateEngine();
+	NoEscape, Html, GWiki, MediaWiki
 }

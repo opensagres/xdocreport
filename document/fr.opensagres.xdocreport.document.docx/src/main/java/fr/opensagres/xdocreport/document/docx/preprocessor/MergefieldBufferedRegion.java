@@ -150,7 +150,7 @@ public abstract class MergefieldBufferedRegion extends BufferedElement
 						fieldName = formatter.formatAsTextStyling(fieldName,
 								fieldAsTextStyling.getFieldName(),
 								DocumentKind.DOCX.name(),
-								fieldAsTextStyling.getTextStylingKind());
+								fieldAsTextStyling.getSyntaxKind());
 					}
 					return fieldName;
 				}

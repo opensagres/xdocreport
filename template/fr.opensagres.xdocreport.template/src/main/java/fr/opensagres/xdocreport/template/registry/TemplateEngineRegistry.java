@@ -37,108 +37,87 @@ import fr.opensagres.xdocreport.template.discovery.ITemplateEngineDiscovery;
 import fr.opensagres.xdocreport.template.formatter.IFieldsMetadataClassSerializer;
 
 /**
- * Template engien registry which store instance of {@link ITemplateEngine} for
+ * Template engine registry stores instance of {@link ITemplateEngine} for
  * template engine kind (Freemarker, Velocity) and document kind (odt, docx..)
  * 
  */
-public class TemplateEngineRegistry extends AbstractRegistry<ITemplateEngineDiscovery> implements Serializable
-{
+public class TemplateEngineRegistry extends
+		AbstractRegistry<ITemplateEngineDiscovery> implements Serializable {
 
-    private static final long serialVersionUID = -7686229087661483932L;
+	private static final long serialVersionUID = -7686229087661483932L;
 
-    private static final TemplateEngineRegistry INSTANCE = new TemplateEngineRegistry();
+	private static final TemplateEngineRegistry INSTANCE = new TemplateEngineRegistry();
 
-    //
+	//
 
-    private final Map<String, ITemplateEngine> templateEnginesCache = new HashMap<String, ITemplateEngine>();
-    private final Map<String, ITemplateEngineDiscovery> templateEnginesDiscoveryCache = new HashMap<String, ITemplateEngineDiscovery>();
-    private ITemplateEngine defaultTemplateEngine;
-    private final Collection<String> templateEngineKinds = new ArrayList<String>();
+	private final Map<String, ITemplateEngine> templateEnginesCache = new HashMap<String, ITemplateEngine>();
+	private final Map<String, ITemplateEngineDiscovery> templateEnginesDiscoveryCache = new HashMap<String, ITemplateEngineDiscovery>();
+	private ITemplateEngine defaultTemplateEngine;
+	private final Collection<String> templateEngineKinds = new ArrayList<String>();
 
-    public static TemplateEngineRegistry getRegistry() {
-        return INSTANCE;
-    }
+	public static TemplateEngineRegistry getRegistry() {
+		return INSTANCE;
+	}
 
-    public TemplateEngineRegistry() {
-        super(ITemplateEngineDiscovery.class);
-    }
+	public TemplateEngineRegistry() {
+		super(ITemplateEngineDiscovery.class);
+	}
 
-    @Override
-    protected boolean registerInstance(ITemplateEngineDiscovery instance) {
+	@Override
+	protected boolean registerInstance(ITemplateEngineDiscovery instance) {
 
-        ITemplateEngineDiscovery discovery = instance;
-        templateEnginesDiscoveryCache.put(discovery.getId(), discovery);
-        ITemplateEngine templateEngine = discovery.createTemplateEngine();
-        register(templateEngine);
-        return true;
+		ITemplateEngineDiscovery discovery = instance;
+		templateEnginesDiscoveryCache.put(discovery.getId(), discovery);
+		ITemplateEngine templateEngine = discovery.createTemplateEngine();
+		register(templateEngine);
+		return true;
 
-    }
+	}
 
-    /*@Override
-    protected void initializeIfNeeded() {
-    	// TODO Auto-generated method stub
-    	super.initializeIfNeeded();
-    	
-    	Iterator<ITemplateEngineDiscovery> converterDiscoveries = ServiceRegistry.lookupProviders(ITemplateEngineDiscovery.class,getClass().getClassLoader());
-    	
-    	while (converterDiscoveries.hasNext()) {
-    		ITemplateEngineDiscovery instance =  converterDiscoveries.next();
-    		
-    	boolean result=	registerInstance(instance);
+	private void register(ITemplateEngine templateEngine) {
+		templateEnginesCache.put(templateEngine.getKind(), templateEngine);
+	}
 
-    		
-    	}
-    }*/
-    private void register(ITemplateEngine templateEngine) {
-        // templateEnginesCache.put(templateEngine.getId(), templateEngine);
-        templateEnginesCache.put(templateEngine.getKind(), templateEngine);
-        // register(templateEngine, (String) null);
-    }
+	public boolean isDefault(ITemplateEngine templateEngine) {
+		initializeIfNeeded();
+		if (templateEngine == null) {
+			return false;
+		}
+		return templateEngine.equals(defaultTemplateEngine);
+	}
 
-    public boolean isDefault(ITemplateEngine templateEngine) {
-        initializeIfNeeded();
-        if (templateEngine == null) {
-            return false;
-        }
-        return templateEngine.equals(defaultTemplateEngine);
-    }
+	public ITemplateEngine getDefaultTemplateEngine() {
+		initializeIfNeeded();
+		return defaultTemplateEngine;
+	}
 
-    public ITemplateEngine getDefaultTemplateEngine() {
-        initializeIfNeeded();
-        return defaultTemplateEngine;
-    }
+	public void setDefaultTemplateEngine(ITemplateEngine defaultTemplateEngine) {
+		this.defaultTemplateEngine = defaultTemplateEngine;
+	}
 
-    public void setDefaultTemplateEngine(ITemplateEngine defaultTemplateEngine) {
-        this.defaultTemplateEngine = defaultTemplateEngine;
-    }
+	public Collection<ITemplateEngine> getTemplateEngines() {
+		initializeIfNeeded();
+		return templateEnginesCache.values();
+	}
 
-    public Collection<ITemplateEngine> getTemplateEngines() {
-        initializeIfNeeded();
-        return templateEnginesCache.values();
-    }
+	public Collection<String> getTemplateEngineKinds() {
+		initializeIfNeeded();
+		return templateEnginesCache.keySet();
+	}
 
-    public Collection<String> getTemplateEngineKinds() {
-        initializeIfNeeded();
-        return templateEnginesCache.keySet();
-        // return templateEngineKinds;
-    }
+	public Map<String, ITemplateEngineDiscovery> getTemplateEnginesDiscoveryCache() {
+		return templateEnginesDiscoveryCache;
+	}
 
-    public Map<String, ITemplateEngineDiscovery> getTemplateEnginesDiscoveryCache() {
-        return templateEnginesDiscoveryCache;
-    }
+	@Override
+	protected void doDispose() {
+		this.templateEnginesDiscoveryCache.clear();
+		this.defaultTemplateEngine = null;
+		this.templateEngineKinds.clear();
 
-    @Override
-    protected void doDispose() {
-        // this.templateEnginesCache.clear();
-        // this.templateEnginesInitializerDiscoveryCache.clear();
-        this.templateEnginesDiscoveryCache.clear();
-        this.defaultTemplateEngine = null;
-        this.templateEngineKinds.clear();
+	}
 
-    }
-
-	public IFieldsMetadataClassSerializer getFieldsMetadataClassSerializer() {
-		// TODO Auto-generated method stub
+	public IFieldsMetadataClassSerializer getFieldsMetadataClassSerializer() {		
 		return null;
 	}
 }

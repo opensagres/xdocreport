@@ -1,8 +1,8 @@
 package fr.opensagres.xdocreport.document.odt.textstyling;
 
-import fr.opensagres.xdocreport.template.textstyling.AbstractDocumentVisitor;
+import fr.opensagres.xdocreport.template.textstyling.AbstractDocumentHandler;
 
-public class ODTDocumentVisitor extends AbstractDocumentVisitor {
+public class ODTDocumentHandler extends AbstractDocumentHandler {
 
 	private boolean bolding;
 	private boolean italicsing;
@@ -60,6 +60,16 @@ public class ODTDocumentVisitor extends AbstractDocumentVisitor {
 	public void endListItem() {
 		// TODO Auto-generated method stub
 
+	}
+
+	public void startParagraph() {
+		// TODO Auto-generated method stub
+		
+	}
+
+	public void endParagraph() {
+		// TODO Auto-generated method stub
+		
 	}
 
 }

@@ -24,22 +24,28 @@
  */
 package fr.opensagres.xdocreport.template.discovery;
 
-import fr.opensagres.xdocreport.core.discovery.IBaseDiscovery;
-import fr.opensagres.xdocreport.template.ITemplateEngine;
+import fr.opensagres.xdocreport.template.textstyling.ITextStylingTransformer;
+import fr.opensagres.xdocreport.template.textstyling.SyntaxKind;
+import fr.opensagres.xdocreport.template.textstyling.html.HTMLTextStylingTransformer;
 
 /**
- * Discovery used to create template engine instance.
+ * Discovery to register HTML Text styling transformer
+ * {@link HTMLTextStylingTransformer}.
  * 
  */
-public interface ITemplateEngineDiscovery extends IBaseDiscovery {
+public class HTMLTextStylingTransformerDiscovery implements
+		ITextStylingTransformerDiscovery {
 
-	/**
-	 * Returns the default template engine to use for report generation when an
-	 * {@link IXDocReport} is created with
-	 * {@link XDocReportRegistry#loadReport(java.io.InputStream)} without
-	 * specifying the template engine.
-	 * 
-	 * @return
-	 */
-	ITemplateEngine createTemplateEngine();
+	public String getId() {
+		return SyntaxKind.Html.name();
+	}
+
+	public ITextStylingTransformer getTransformer() {
+		return HTMLTextStylingTransformer.INSTANCE;
+	}
+
+	public String getDescription() {
+		return "HTML test styling transformer.";
+	}
+
 }

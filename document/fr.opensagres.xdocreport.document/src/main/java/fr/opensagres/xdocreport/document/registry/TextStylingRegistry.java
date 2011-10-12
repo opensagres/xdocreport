@@ -3,23 +3,29 @@ package fr.opensagres.xdocreport.document.registry;
 import java.util.HashMap;
 import java.util.Map;
 
-import fr.opensagres.xdocreport.core.XDocReportException;
 import fr.opensagres.xdocreport.core.registry.AbstractRegistry;
-import fr.opensagres.xdocreport.document.discovery.ITextStylingDocumentVisitorFactoryDiscovery;
-import fr.opensagres.xdocreport.template.textstyling.IDocumentVisitor;
-import fr.opensagres.xdocreport.template.textstyling.ITextStylingFormatter;
-import fr.opensagres.xdocreport.template.textstyling.TextStylingFormatterRegistry;
+import fr.opensagres.xdocreport.document.discovery.ITextStylingDocumentHandlerFactoryDiscovery;
+import fr.opensagres.xdocreport.template.textstyling.IDocumentHandler;
+import fr.opensagres.xdocreport.template.textstyling.ITextStylingTransformer;
+import fr.opensagres.xdocreport.template.textstyling.TextStylingTransformerRegistry;
 
+/**
+ * Text styling registry to register {@link IDocumentHandler} and transform some
+ * content from syntax (HTML, MediaWiki, etc) to another syntax (docx, odt, etc)
+ * by using text styling transformer registered in the
+ * {@link TextStylingTransformerRegistry}.
+ * 
+ */
 public class TextStylingRegistry extends
-		AbstractRegistry<ITextStylingDocumentVisitorFactoryDiscovery> {
+		AbstractRegistry<ITextStylingDocumentHandlerFactoryDiscovery> {
 
-	public static final String KEY = TextStylingFormatterRegistry.KEY;
+	public static final String KEY = TextStylingTransformerRegistry.KEY;
 
 	private static final TextStylingRegistry INSTANCE = new TextStylingRegistry();
-	private final Map<String, ITextStylingDocumentVisitorFactoryDiscovery> documentVisitors = new HashMap<String, ITextStylingDocumentVisitorFactoryDiscovery>();
+	private final Map<String, ITextStylingDocumentHandlerFactoryDiscovery> documentHandlers = new HashMap<String, ITextStylingDocumentHandlerFactoryDiscovery>();
 
 	public TextStylingRegistry() {
-		super(ITextStylingDocumentVisitorFactoryDiscovery.class);
+		super(ITextStylingDocumentHandlerFactoryDiscovery.class);
 	}
 
 	public static TextStylingRegistry getRegistry() {
@@ -28,37 +34,64 @@ public class TextStylingRegistry extends
 
 	@Override
 	protected boolean registerInstance(
-			ITextStylingDocumentVisitorFactoryDiscovery discovery) {
-		// document visitor
-		documentVisitors.put(discovery.getId(), discovery);
+			ITextStylingDocumentHandlerFactoryDiscovery discovery) {
+		documentHandlers.put(discovery.getId(), discovery);
 		return true;
 	}
 
 	@Override
 	protected void doDispose() {
-		documentVisitors.clear();
+		documentHandlers.clear();
 	}
 
-	public String format(String content, String documentKind,
-			String textStylingKind) throws XDocReportException {
-		ITextStylingFormatter formatter = TextStylingFormatterRegistry
-				.getRegistry().getTextStylingFormatter(textStylingKind);
-		if (formatter != null) {
-			// Create document visitor
-			IDocumentVisitor visitor = createDocumentVisitor(documentKind);
-			return formatter.format(content, visitor);
+	/**
+	 * Transform the given content written with the given syntaxKind (HTML,
+	 * MediaWiki, etc) to another syntax defined by the document kind (docx,
+	 * odt).
+	 * 
+	 * @param content
+	 *            the content to transform.
+	 * @param syntaxKind
+	 *            the syntax of the content.
+	 * @param documentKind
+	 *            the syntax to obtain after the transformation.
+	 * @return
+	 */
+	public String transform(String content, String syntaxKind,
+			String documentKind) {
+		// 1) Retrieve transformer from th etext styling transformer registry.
+		ITextStylingTransformer transformer = TextStylingTransformerRegistry
+				.getRegistry().getTextStylingTransformer(syntaxKind);
+		if (transformer != null) {
+			try {
+				// 2) Transformer found, create an instance of document handler
+				// (docx, odt, etc).
+				IDocumentHandler visitor = createDocumentHandler(documentKind);
+				// 3) Process the transformation.
+				return transformer.transform(content, visitor);
+			} catch (Throwable e) {
+				// Error while transformation, returns the original content???
+				e.printStackTrace();
+				return content;
+			}
 		}
 		return content;
 	}
 
-	public IDocumentVisitor createDocumentVisitor(String documentKind) {
+	/**
+	 * Create an instance of document handler for the given document kind.
+	 * 
+	 * @param documentKind
+	 * @return
+	 */
+	public IDocumentHandler createDocumentHandler(String documentKind) {
 		super.initializeIfNeeded();
-		ITextStylingDocumentVisitorFactoryDiscovery factory = documentVisitors
+		ITextStylingDocumentHandlerFactoryDiscovery factory = documentHandlers
 				.get(documentKind);
 		if (factory == null) {
 			return null;
 		}
-		return factory.createDocumentVisitor();
+		return factory.createDocumentHandler();
 	}
 
 }

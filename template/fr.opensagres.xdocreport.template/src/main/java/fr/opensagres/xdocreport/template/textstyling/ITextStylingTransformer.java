@@ -22,24 +22,30 @@
  * OF CONTRACT, TORT OR OTHERWISE,  ARISING FROM, OUT OF OR IN CONNECTION
  * WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
-package fr.opensagres.xdocreport.template.discovery;
+package fr.opensagres.xdocreport.template.textstyling;
 
-import fr.opensagres.xdocreport.core.discovery.IBaseDiscovery;
-import fr.opensagres.xdocreport.template.ITemplateEngine;
+import fr.opensagres.xdocreport.core.XDocReportException;
 
 /**
- * Discovery used to create template engine instance.
+ * Text styling transformer is used to transform some syntax (HTML, Mediawiki,
+ * etc) to another syntax (docx, odt, etc).
  * 
  */
-public interface ITemplateEngineDiscovery extends IBaseDiscovery {
+public interface ITextStylingTransformer {
 
 	/**
-	 * Returns the default template engine to use for report generation when an
-	 * {@link IXDocReport} is created with
-	 * {@link XDocReportRegistry#loadReport(java.io.InputStream)} without
-	 * specifying the template engine.
+	 * Transform the given content (with some syntax like HTML, MediaWiki, etc)
+	 * to another syntax (docx, odt, etc). The given visitor can be used to
+	 * process the transformation.
 	 * 
-	 * @return
+	 * @param content
+	 *            the content to transform.
+	 * @param documentHandler
+	 *            the document visitor used for the transformation.
+	 * @return the transformed content.
+	 * @throws XDocReportException
 	 */
-	ITemplateEngine createTemplateEngine();
+	String transform(String content, IDocumentHandler documentHandler)
+			throws XDocReportException;
+
 }

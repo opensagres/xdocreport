@@ -22,24 +22,36 @@
  * OF CONTRACT, TORT OR OTHERWISE,  ARISING FROM, OUT OF OR IN CONNECTION
  * WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
-package fr.opensagres.xdocreport.template.discovery;
+package fr.opensagres.xdocreport.template.textstyling.wiki;
 
-import fr.opensagres.xdocreport.core.discovery.IBaseDiscovery;
-import fr.opensagres.xdocreport.template.ITemplateEngine;
+import java.io.StringReader;
+
+import org.wikimodel.wem.IWikiParser;
+
+import fr.opensagres.xdocreport.template.textstyling.AbstractTextStylingTransformer;
+import fr.opensagres.xdocreport.template.textstyling.IDocumentHandler;
 
 /**
- * Discovery used to create template engine instance.
+ * Abstract class styling transformer for Wiki Syntax.
  * 
  */
-public interface ITemplateEngineDiscovery extends IBaseDiscovery {
+public abstract class AbstractWikiTextStylingTransformer extends
+		AbstractTextStylingTransformer {
+
+	@Override
+	protected void doTransform(String content, IDocumentHandler handler)
+			throws Exception {
+		// 1) Create an instance of {@link IWikiParser}.
+		IWikiParser parser = createWikiParser();
+		// 2) Parser the wiki content and call the well method of the document handler.
+		parser.parse(new StringReader(content), new WemListenerAdapter(handler));
+	}
 
 	/**
-	 * Returns the default template engine to use for report generation when an
-	 * {@link IXDocReport} is created with
-	 * {@link XDocReportRegistry#loadReport(java.io.InputStream)} without
-	 * specifying the template engine.
+	 * Create an instance of {@link IWikiParser}.
 	 * 
 	 * @return
 	 */
-	ITemplateEngine createTemplateEngine();
+	protected abstract IWikiParser createWikiParser();
+
 }

@@ -25,21 +25,25 @@
 package fr.opensagres.xdocreport.template.discovery;
 
 import fr.opensagres.xdocreport.core.discovery.IBaseDiscovery;
-import fr.opensagres.xdocreport.template.ITemplateEngine;
+import fr.opensagres.xdocreport.template.textstyling.ITextStylingTransformer;
 
 /**
- * Discovery used to create template engine instance.
+ * Discovery used to register text styling transformer
+ * {@link ITextStylingTransformer}.
  * 
+ * <p>
+ * Instance of {@link ITextStylingTransformer} must be declared in files
+ * META-INF\services\fr.opensagres.xdocreport.template.discovery.
+ * ITextStylingTransformerDiscovery
+ * </p>
  */
-public interface ITemplateEngineDiscovery extends IBaseDiscovery {
+public interface ITextStylingTransformerDiscovery extends IBaseDiscovery {
 
 	/**
-	 * Returns the default template engine to use for report generation when an
-	 * {@link IXDocReport} is created with
-	 * {@link XDocReportRegistry#loadReport(java.io.InputStream)} without
-	 * specifying the template engine.
+	 * Returns the text styling transformer.
 	 * 
 	 * @return
 	 */
-	ITemplateEngine createTemplateEngine();
+	ITextStylingTransformer getTransformer();
+
 }

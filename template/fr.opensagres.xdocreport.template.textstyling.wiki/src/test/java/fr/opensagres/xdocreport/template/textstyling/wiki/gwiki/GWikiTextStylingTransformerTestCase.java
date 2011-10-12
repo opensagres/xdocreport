@@ -6,7 +6,6 @@ import org.junit.Test;
 
 import fr.opensagres.xdocreport.template.textstyling.IDocumentHandler;
 import fr.opensagres.xdocreport.template.textstyling.ITextStylingTransformer;
-import fr.opensagres.xdocreport.template.textstyling.html.HTMLDocumentHandler;
 
 public class GWikiTextStylingTransformerTestCase {
 

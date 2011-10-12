@@ -17,9 +17,10 @@ public class HTMLTextStylingFormatter extends AbstractTextStylingFormatter {
 	@Override
 	protected void doFormat(String s, IDocumentVisitor visitor)
 			throws Exception {
+		String xml = "<root>" + s + "</root>";
 		XMLReader xmlReader = XMLReaderFactory.createXMLReader();
 		xmlReader.setContentHandler(new HTMLTextStylingContentHandler(visitor));
-		xmlReader.parse(new InputSource(new StringReader(s)));
+		xmlReader.parse(new InputSource(new StringReader(xml)));
 	}
 
 }

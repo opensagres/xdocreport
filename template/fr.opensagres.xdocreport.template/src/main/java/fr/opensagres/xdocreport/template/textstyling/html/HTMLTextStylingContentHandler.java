@@ -33,6 +33,12 @@ public class HTMLTextStylingContentHandler extends DefaultHandler {
 			visitor.startBold();
 		} else if ("em".equals(name) || "i".equals(name)) {
 			visitor.startItalics();
+		} else if ("ul".equals(name)) {
+			startList(false);
+		} else if ("ol".equals(name)) {
+			startList(true);
+		} else if ("li".equals(name)) {
+			visitor.startListItem();
 		}
 		super.startElement(uri, localName, name, attributes);
 	}
@@ -44,6 +50,12 @@ public class HTMLTextStylingContentHandler extends DefaultHandler {
 			visitor.endBold();
 		} else if ("em".equals(name) || "i".equals(name)) {
 			visitor.endItalics();
+		} else if ("ul".equals(name)) {
+			endList(false);
+		} else if ("ol".equals(name)) {
+			endList(true);
+		} else if ("li".equals(name)) {
+			visitor.endListItem();
 		}
 		super.endElement(uri, localName, name);
 	}
@@ -55,4 +67,19 @@ public class HTMLTextStylingContentHandler extends DefaultHandler {
 		super.characters(ch, start, length);
 	}
 
+	private void startList(boolean ordered) {
+		if (ordered) {
+			visitor.startOrderedList();
+		} else {
+			visitor.startUnorderedList();
+		}
+	}
+
+	private void endList(boolean ordered) {
+		if (ordered) {
+			visitor.endOrderedList();
+		} else {
+			visitor.endUnorderedList();
+		}
+	}
 }

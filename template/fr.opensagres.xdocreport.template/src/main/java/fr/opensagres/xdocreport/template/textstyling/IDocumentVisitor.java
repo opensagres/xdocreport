@@ -11,7 +11,17 @@ public interface IDocumentVisitor {
 	void startItalics();
 	void endItalics();
 	
+	void startOrderedList();
+	void endOrderedList();
+	
+	void startUnorderedList();
+	void endUnorderedList();
+	
+	void startListItem();
+	void endListItem();
+	
 	void handleString(String s);
+	
 	
 //	
 //    void endCaption();

@@ -10,11 +10,11 @@ public class ODTDocumentVisitor extends AbstractDocumentVisitor {
 	public void startDocument() {
 		this.bolding = false;
 		this.italicsing = false;
-		//writer.write("<text:p>");
+		// writer.write("<text:p>");
 	}
 
 	public void endDocument() {
-		//writer.write("</text:p>");
+		// writer.write("</text:p>");
 	}
 
 	public void startBold() {
@@ -50,6 +50,16 @@ public class ODTDocumentVisitor extends AbstractDocumentVisitor {
 		writer.write(">");
 		writer.write(content);
 		writer.write("</text:span>");
+	}
+
+	public void startListItem() {
+		// TODO Auto-generated method stub
+
+	}
+
+	public void endListItem() {
+		// TODO Auto-generated method stub
+
 	}
 
 }

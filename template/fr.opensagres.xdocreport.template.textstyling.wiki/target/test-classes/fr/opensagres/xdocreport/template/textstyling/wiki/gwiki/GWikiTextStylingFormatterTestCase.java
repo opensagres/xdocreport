@@ -14,7 +14,8 @@ public class GWikiTextStylingFormatterTestCase {
 	public void testname() throws Exception {
 		ITextStylingFormatter formatter = GWikiTextStylingFormatter.INSTANCE;
 		IDocumentVisitor visitor = new HTMLDocumentVisitor();
-		formatter.format("*XDocReport* means", visitor);
+		formatter.format("Here are severals styles : " +
+				"\n * *Bold* style.", visitor);
 
 		Assert.assertEquals("<strong>XDocReport</strong> means",
 				visitor.toString());

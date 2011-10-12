@@ -9,8 +9,11 @@ public abstract class AbstractTextStylingFormatter implements
 			throws XDocReportException {
 		try {
 			doFormat(s, visitor);
-			return visitor.toString();
+			String result = visitor.toString();
+			System.err.println(result);
+			return result;
 		} catch (Throwable e) {
+			e.printStackTrace();
 			if (e instanceof XDocReportException) {
 				throw (XDocReportException) e;
 			}

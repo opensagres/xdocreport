@@ -27,6 +27,7 @@ package org.apache.poi.xwpf.converter.internal.itext;
 import static org.apache.poi.xwpf.converter.internal.DxaUtil.dxa2points;
 
 import java.awt.Color;
+import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -138,7 +139,10 @@ public class XWPFTableUtil {
 	}
 
 	public static CTDecimalNumber getGridSpan(XWPFTableCell cell) {
-		return cell.getCTTc().getTcPr().getGridSpan();
+		if(cell.getCTTc().getTcPr()!=null)
+			return cell.getCTTc().getTcPr().getGridSpan();
+		
+		return null;
 	}
 
 	public static CTTblWidth getWidth(XWPFTableCell cell) {

@@ -434,6 +434,8 @@ public class PDFMapper extends XWPFElementVisitor<IITextContainer> {
 
 		CTTcPr tcPr = cell.getCTTc().getTcPr();
 
+	if(tcPr!=null){
+		
 	
 		// Colspan
 		Integer colspan = null;
@@ -456,7 +458,7 @@ public class PDFMapper extends XWPFElementVisitor<IITextContainer> {
 		}
 		
 		
-		
+	
 		// Borders
 		// Table Properties on cells
 		
@@ -472,7 +474,7 @@ public class PDFMapper extends XWPFElementVisitor<IITextContainer> {
 			// border-bottom
 			setBorder(borders.getBottom(), pdfPCell, Rectangle.BOTTOM);
 		}
-
+	}
 		int height = row.getHeight();
 		pdfPCell.setMinimumHeight(dxa2points(height));
 		

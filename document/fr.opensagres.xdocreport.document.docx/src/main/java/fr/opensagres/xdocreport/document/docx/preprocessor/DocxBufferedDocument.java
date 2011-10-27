@@ -110,7 +110,7 @@ public class DocxBufferedDocument extends TransformedBufferedDocument implements
 			if (currentFldSimpleRegion.getFieldName() == null) {
 				// super.doStartElement(uri, localName, name, attributes);
 				// addElement = true;
-			} 
+			}
 			// currentRegion = currentFldSimpleRegion;
 			return currentFldSimpleRegion;
 		}
@@ -226,7 +226,9 @@ public class DocxBufferedDocument extends TransformedBufferedDocument implements
 			// </w:hyperlink>
 			HyperlinkBufferedRegion hyperlink = (HyperlinkBufferedRegion) currentHyperlink;
 			super.onEndEndElement(uri, localName, name);
-			hyperlink.process();
+			if (hyperlink != null) {
+				hyperlink.process();
+			}
 			return;
 		}
 

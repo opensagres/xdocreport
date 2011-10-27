@@ -79,11 +79,10 @@ import fr.opensagres.xdocreport.document.preprocessor.sax.ISavable;
  */
 public class PBufferedRegion extends BufferedElement {
 
-	
-	private static final String BEGIN = "begin";	
+	private static final String BEGIN = "begin";
 	private static final String SEPARATE = "separate";
 	private static final String END = "end";
-	
+
 	private List<RBufferedRegion> rBufferedRegions = new ArrayList<RBufferedRegion>();
 
 	public PBufferedRegion(BufferedElement parent, String uri,
@@ -110,21 +109,56 @@ public class PBufferedRegion extends BufferedElement {
 		for (int i = 0; i < rBufferedRegions.size(); i++) {
 			RBufferedRegion rBufferedRegion = rBufferedRegions.get(i);
 			if (BEGIN.equals(rBufferedRegion.getFldCharType())) {
-				i++;
-				RBufferedRegion nextR = rBufferedRegions.get(i);
-				fieldName = nextR.getFieldName();
-				rReseted = nextR.isReseted();
+				int nextIndexAfterBegin = i+1;
+				RBufferedRegion nextR = rBufferedRegions.get(nextIndexAfterBegin);
 				// Remove the begin w:r Next w:r
 				// 1) has fieldName : <w:r w:rsidR="000050F2"
 				// w:rsidRPr="00CE3A74"><w:rPr><w:color w:val="FF0000"
 				// /></w:rPr><w:instrText xml:space="preserve">MERGEFIELD
 				// Titre</w:instrText>
-				// 2) was reseted (if @before-row, @after-row ... if the the
+				// 2) was reseted (if @before-row, @after-row ... if the
 				// MERGEFIELD name starts with thoses tokens.
-				if (fieldName != null || rReseted) {
+				rReseted = nextR.isReseted();
+				if (rReseted) {
 					toRemove.add(rBufferedRegion);
 					toRemove.add(nextR);
 					remove = true;
+				} else {
+					// Test if there are several <w:instrText which splits the
+					// content
+					// ex: <w:r>
+					// <w:instrText xml:space="preserve"> MERGEFIELD
+					// ${ctx.serviceclientdeparture} \* M</w:instrText>
+					// </w:r>
+					// <w:r>
+					// <w:instrText xml:space="preserve">ERGEFORMAT
+					// </w:instrText>
+					// </w:r>
+					List<RBufferedRegion> rMerged = new ArrayList<RBufferedRegion>();
+					StringBuilder mergedInstrText = new StringBuilder();
+					for (int j = nextIndexAfterBegin; j < rBufferedRegions.size(); j++) {
+						RBufferedRegion r = rBufferedRegions.get(j);
+						if (r.hasInstrText()) {
+							rMerged.add(r);
+							mergedInstrText.append(r.getOriginalInstrText());
+						} else {
+							break;
+						}
+					}
+					if (rMerged.size() > 0) {
+						RBufferedRegion firstR = rMerged.get(0);
+						firstR.setInstrText(mergedInstrText.toString(),
+								firstR.getFieldAsTextStyling());
+						fieldName = firstR.getFieldName();
+						if (fieldName != null) {							
+							for (RBufferedRegion r : rMerged) {
+								toRemove.add(r);
+								i++;
+							}
+							toRemove.add(rBufferedRegion);
+							remove = true;
+						}
+					}
 				}
 			} else if (SEPARATE.equals(rBufferedRegion.getFldCharType())
 					&& remove) {

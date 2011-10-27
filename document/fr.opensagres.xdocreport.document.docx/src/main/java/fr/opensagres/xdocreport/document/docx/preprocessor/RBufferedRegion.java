@@ -35,11 +35,14 @@ public class RBufferedRegion extends MergefieldBufferedRegion {
 
 	private String fldCharType;
 	private StringBufferedRegion tContentRegion = null;
+	private String originalInstrText;
+	private FieldMetadata fieldAsTextStyling;
 
 	public RBufferedRegion(TransformedBufferedDocumentContentHandler handler,
 			BufferedElement parent, String uri, String localName, String name,
 			Attributes attributes) {
 		super(handler, parent, uri, localName, name, attributes);
+		this.originalInstrText = null;
 	}
 
 	public void setFldCharType(String fldCharType) {
@@ -57,12 +60,26 @@ public class RBufferedRegion extends MergefieldBufferedRegion {
 	@Override
 	public String setInstrText(String instrText,
 			FieldMetadata fieldAsTextStyling) {
+		this.originalInstrText = instrText;
+		this.fieldAsTextStyling = fieldAsTextStyling;
 		instrText = super.setInstrText(instrText, fieldAsTextStyling);
 		super.append(instrText);
 		return instrText;
 	}
 
+	public String getOriginalInstrText() {
+		return originalInstrText;
+	}
+
+	public boolean hasInstrText() {
+		return originalInstrText != null;
+	}
+
 	public String getTContent() {
 		return getTRegion().getTextContent();
+	}
+
+	public FieldMetadata getFieldAsTextStyling() {
+		return fieldAsTextStyling;
 	}
 }

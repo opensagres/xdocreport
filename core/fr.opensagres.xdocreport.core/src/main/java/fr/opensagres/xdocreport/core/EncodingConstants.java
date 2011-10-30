@@ -36,10 +36,12 @@ public interface EncodingConstants {
 	 * UTF-8 Charset constant.
 	 */
 	Charset UTF_8 = Charset.forName("UTF-8");
-	
+
 	// Special characters
 	String APOS = "&apos;";
 	String GT = "&gt;";
 	String LT = "&lt;";
+	String AMP = "&amp;";
+	String QUOT = "&quot;";
 
 }

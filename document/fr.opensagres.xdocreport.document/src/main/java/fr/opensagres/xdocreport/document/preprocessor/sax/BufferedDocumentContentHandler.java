@@ -153,7 +153,7 @@ public class BufferedDocumentContentHandler<Document extends BufferedDocument>
 				attrValue = attributes.getValue(i);
 				currentRegion.append(attrName);
 				currentRegion.append("=\"");
-				currentRegion.append(attrValue);
+				printEscaped(attrValue, currentRegion);
 				currentRegion.append("\"");
 			}
 		}
@@ -246,5 +246,50 @@ public class BufferedDocumentContentHandler<Document extends BufferedDocument>
 					attributes.getType(i), attributes.getValue(i));
 		}
 		return attributesImpl;
+	}
+
+	//
+	// Printing attribute value
+	//
+	protected void printEscaped(String source, IBufferedRegion region) {
+		int length = source.length();
+		for (int i = 0; i < length; ++i) {
+			int ch = source.charAt(i);
+			// if (!XMLChar.isValid(ch)) {
+			// if (++i < length) {
+			// surrogates(ch, source.charAt(i));
+			// } else {
+			// fatalError("The character '" + (char) ch +
+			// "' is an invalid XML character");
+			// }
+			// continue;
+			// }
+			// escape NL, CR, TAB
+			if (ch == '\n' || ch == '\r' || ch == '\t') {
+				printHex(ch, region);
+			} else if (ch == '<') {
+				region.append(LT);
+			} else if (ch == '&') {
+				region.append(AMP);
+			} else if (ch == '"') {
+				region.append(QUOT);
+			} else {
+				region.append((char)ch);
+			}
+//			else if ((ch >= ' ' && _encodingInfo.isPrintable((char) ch))) {
+//				_printer.printText((char) ch);
+//			} else {
+//				printHex(ch, region);
+//			}
+		}
+	}
+
+	/**
+	 * Escapes chars
+	 */
+	final void printHex(int ch, IBufferedRegion region) {
+		region.append("&#x");
+		region.append(Integer.toHexString(ch));
+		region.append(';');
 	}
 }

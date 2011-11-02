@@ -24,6 +24,7 @@
  */
 package fr.opensagres.xdocreport.document.images;
 
+import java.io.IOException;
 import java.util.List;
 
 import fr.opensagres.xdocreport.core.XDocReportException;
@@ -62,6 +63,17 @@ public interface IImageRegistry {
 	 * @throws XDocReportException
 	 */
 	void postProcess() throws XDocReportException;
-	
+
+	/**
+	 * Returns list of image provider info.
+	 * 
+	 * @return
+	 */
 	List<ImageProviderInfo> getImageProviderInfos();
+
+	String getWidth(IImageProvider imageProvider, String defaultWidth)
+			throws IOException;
+
+	String getHeight(IImageProvider imageProvider, String defaultHeight)
+			throws IOException;
 }

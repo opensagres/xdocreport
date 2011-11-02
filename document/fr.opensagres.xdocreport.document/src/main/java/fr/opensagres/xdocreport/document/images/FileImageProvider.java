@@ -42,6 +42,11 @@ public class FileImageProvider extends AbstractInputStreamImageProvider {
 	private final ImageFormat imageFormat;
 
 	public FileImageProvider(File imageFile) {
+		this(imageFile, true);
+	}
+
+	public FileImageProvider(File imageFile, boolean keepTemplateImageSize) {
+		super(keepTemplateImageSize);
 		this.imageFile = imageFile;
 		this.imageFormat = ImageFormat.getFormatByResourceName(imageFile
 				.getName());

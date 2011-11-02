@@ -51,4 +51,8 @@ public interface IImageProvider {
 	 */
 	ImageFormat getImageFormat();
 
+	Float getWidth() throws IOException;
+
+	Float getHeight() throws IOException;
+
 }

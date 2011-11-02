@@ -87,8 +87,14 @@ public class ImageProviderInfo {
 	public String getImageType() {
 		return getImageProvider().getImageFormat().getType();
 	}
-	
+
+	/**
+	 * Returns the full path of the image.
+	 * 
+	 * @return
+	 */
 	public String getImageFullPath() {
 		return getImageBasePath() + getImageFileName();
 	}
+
 }

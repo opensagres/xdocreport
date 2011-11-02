@@ -30,8 +30,12 @@ import java.io.OutputStream;
 
 import fr.opensagres.xdocreport.core.io.IOUtils;
 
-public abstract class AbstractInputStreamImageProvider implements
-		IImageProvider {
+public abstract class AbstractInputStreamImageProvider extends
+		AbstractImageProvider {
+
+	public AbstractInputStreamImageProvider(boolean keepTemplateImageSize) {
+		super(keepTemplateImageSize);
+	}
 
 	public void write(OutputStream outputStream) throws IOException {
 		InputStream inputStream = null;
@@ -44,4 +48,9 @@ public abstract class AbstractInputStreamImageProvider implements
 	}
 
 	protected abstract InputStream getInputStream() throws IOException;
+
+	@Override
+	protected SimpleImageInfo loadImageInfo() throws IOException {
+		return new SimpleImageInfo(getInputStream());
+	}
 }

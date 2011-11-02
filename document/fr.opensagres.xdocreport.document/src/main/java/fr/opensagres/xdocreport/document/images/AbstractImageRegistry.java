@@ -99,7 +99,7 @@ public abstract class AbstractImageRegistry implements IImageRegistry {
 			// archive and some XML entries must be modified.
 			// 1) Save binary images
 			saveBinaryImages();
-			
+
 			// 3) dispose
 			imageProviderInfos.clear();
 			imageProviderInfos = null;
@@ -111,7 +111,6 @@ public abstract class AbstractImageRegistry implements IImageRegistry {
 			saveBinaryImage(imageProviderInfo);
 		}
 	}
-	
 
 	protected void saveBinaryImage(ImageProviderInfo imageProviderInfo)
 			throws XDocReportException {
@@ -125,7 +124,7 @@ public abstract class AbstractImageRegistry implements IImageRegistry {
 			IOUtils.closeQuietly(out);
 		}
 	}
-	
+
 	protected String getImageEntryName(ImageProviderInfo imageProviderInfo) {
 		return imageProviderInfo.getImageBasePath()
 				+ imageProviderInfo.getImageFileName();
@@ -134,5 +133,25 @@ public abstract class AbstractImageRegistry implements IImageRegistry {
 	protected abstract String getImageBasePath();
 
 	protected abstract String getPath(ImageProviderInfo info);
-	
+
+	public String getWidth(IImageProvider imageProvider, String defaultWidth)
+			throws IOException {
+		Float width = imageProvider.getWidth();
+		if (width != null) {
+			return getSize(width);
+		}
+		return defaultWidth;
+	}
+
+	public String getHeight(IImageProvider imageProvider, String defaultHeight)
+			throws IOException {
+		Float height = imageProvider.getHeight();
+		if (height != null) {
+			return getSize(height);
+		}
+		return defaultHeight;
+	}
+
+	protected abstract String getSize(float sizeAsPixel);
+
 }

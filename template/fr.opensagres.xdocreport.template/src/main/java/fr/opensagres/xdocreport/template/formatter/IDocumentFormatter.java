@@ -54,6 +54,10 @@ public interface IDocumentFormatter {
 
 	String getImageDirective(String fieldName);
 
+	String getImageWidthDirective(String fieldName, String defaultWidth);
+
+	String getImageHeightDirective(String fieldName, String defaultHeight);
+
 	boolean containsInterpolation(String content);
 
 	int extractListDirectiveInfo(String content, DirectivesStack directives);

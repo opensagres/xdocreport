@@ -57,7 +57,7 @@ public class DocxUtils implements DocXConstants {
 	public static boolean isTableRow(String uri, String localName, String name) {
 		return W_NS.equals(uri) && TR_ELT.equals(localName);
 	}
-	
+
 	/**
 	 * Returns true if current element is w:fldSimple and false otherwise.
 	 * 
@@ -105,8 +105,6 @@ public class DocxUtils implements DocXConstants {
 	 * @return
 	 */
 
-
-	
 	public static boolean isP(String uri, String localName, String name) {
 		return (W_NS.equals(uri) && P_ELT.equals(localName));
 	}
@@ -135,7 +133,8 @@ public class DocxUtils implements DocXConstants {
 	 * @param name
 	 * @return
 	 */
-	public static boolean isBookmarkStart(String uri, String localName, String name) {
+	public static boolean isBookmarkStart(String uri, String localName,
+			String name) {
 		return (W_NS.equals(uri) && BOOKMARK_START_ELT.equals(localName));
 	}
 
@@ -147,7 +146,8 @@ public class DocxUtils implements DocXConstants {
 	 * @param name
 	 * @return
 	 */
-	public static boolean isBookmarkEnd(String uri, String localName, String name) {
+	public static boolean isBookmarkEnd(String uri, String localName,
+			String name) {
 		return (W_NS.equals(uri) && BOOKMARK_END_ELT.equals(localName));
 	}
 
@@ -164,6 +164,30 @@ public class DocxUtils implements DocXConstants {
 	}
 
 	/**
+	 * Returns true if current element is wp:extent and false otherwise.
+	 * 
+	 * @param uri
+	 * @param localName
+	 * @param name
+	 * @return
+	 */
+	public static boolean isExtent(String uri, String localName, String name) {
+		return (WP_NS.equals(uri) && EXTENT_ELT.equals(localName));
+	}
+
+	/**
+	 * Returns true if current element is a:ext and false otherwise.
+	 * 
+	 * @param uri
+	 * @param localName
+	 * @param name
+	 * @return
+	 */
+	public static boolean isExt(String uri, String localName, String name) {
+		return (A_NS.equals(uri) && EXT_ELT.equals(localName));
+	}
+	
+	/**
 	 * Returns true if current element is w:hyperlink and false otherwise.
 	 * 
 	 * @param uri
@@ -174,4 +198,5 @@ public class DocxUtils implements DocXConstants {
 	public static boolean isHyperlink(String uri, String localName, String name) {
 		return (W_NS.equals(uri) && HYPERLINK_ELT.equals(localName));
 	}
+
 }

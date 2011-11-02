@@ -55,6 +55,14 @@ public class VelocityDocumentFormatter extends AbstractDocumentFormatter {
 			+ IMAGE_REGISTRY_KEY + ".registerImage(";
 	private static final String END_IMAGE_DIRECTIVE = ")}";
 
+	private static final String START_IMAGE_WIDTH_DIRECTIVE = DOLLAR_START_BRACKET
+			+ IMAGE_REGISTRY_KEY + ".getWidth(";
+	private static final String END_IMAGE_WIDTH_DIRECTIVE = ")}";
+
+	private static final String START_IMAGE_HEIGHT_DIRECTIVE = DOLLAR_START_BRACKET
+			+ IMAGE_REGISTRY_KEY + ".getHeight(";
+	private static final String END_IMAGE_HEIGHT_DIRECTIVE = ")}";
+	
 	private static final String START_IF_DIRECTIVE = "#if(";
 	private static final String END_IF_DIRECTIVE = "#end";
 
@@ -147,6 +155,34 @@ public class VelocityDocumentFormatter extends AbstractDocumentFormatter {
 		}
 		directive.append(fieldName);
 		directive.append(END_IMAGE_DIRECTIVE);
+		return directive.toString();
+	}
+	
+	public String getImageWidthDirective(String fieldName, String defaultWidth) {
+		StringBuilder directive = new StringBuilder(START_IMAGE_WIDTH_DIRECTIVE);
+		if (!fieldName.startsWith("$")) {
+			directive.append("$");
+		}
+		directive.append(fieldName);
+		directive.append(',');
+		directive.append('\'');
+		directive.append(defaultWidth);
+		directive.append('\'');
+		directive.append(END_IMAGE_WIDTH_DIRECTIVE);
+		return directive.toString();
+	}
+	
+	public String getImageHeightDirective(String fieldName, String defaultHeight) {
+		StringBuilder directive = new StringBuilder(START_IMAGE_HEIGHT_DIRECTIVE);
+		if (!fieldName.startsWith("$")) {
+			directive.append("$");
+		}
+		directive.append(fieldName);
+		directive.append(',');
+		directive.append('\'');
+		directive.append(defaultHeight);
+		directive.append('\'');
+		directive.append(END_IMAGE_HEIGHT_DIRECTIVE);
 		return directive.toString();
 	}
 

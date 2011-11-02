@@ -54,4 +54,17 @@ public class DocxImageRegistry extends AbstractImageRegistry {
 		return info.getImageId();
 	}
 
+	@Override
+	protected String getSize(float sizeAsPixel) {		
+		float sizeAsDxa = sizeAsPixel / 96 * 914400;
+		String s = Float.toString(sizeAsDxa);
+		// TODO Use DecimalFormat.getIntegerInstance()to format the float to
+		// String.
+		int dotindex = s.indexOf('.');
+		if (dotindex != -1) {
+			return s.substring(0, dotindex);
+		}
+		return s;
+	}
+
 }

@@ -25,6 +25,8 @@
 package fr.opensagres.xdocreport.document.docx.preprocessor;
 
 import static fr.opensagres.xdocreport.document.docx.DocxUtils.isBlip;
+import static fr.opensagres.xdocreport.document.docx.DocxUtils.isExt;
+import static fr.opensagres.xdocreport.document.docx.DocxUtils.isExtent;
 import static fr.opensagres.xdocreport.document.docx.DocxUtils.isFldChar;
 import static fr.opensagres.xdocreport.document.docx.DocxUtils.isFldSimple;
 import static fr.opensagres.xdocreport.document.docx.DocxUtils.isInstrText;
@@ -134,6 +136,48 @@ public class DocXBufferedDocumentContentHandler extends
 					AttributesImpl attr = toAttributesImpl(attributes);
 					int index = attr.getIndex(R_NS, EMBED_ATTR);
 					attr.setValue(index, newEmbed);
+					attributes = attr;
+				}
+			}
+		} else if (isExtent(uri, localName, name)
+				|| isExt(uri, localName, name)) {
+			// <wp:extent cx="1262380" cy="1352550" />
+			// OR
+			// <a:ext cx="1262380" cy="1352550" />
+			BookmarkBufferedRegion currentBookmark = bufferedDocument
+					.getCurrentBookmark();
+			if (currentBookmark != null && formatter != null) {
+				// modify "cx" and "cy" attribute with image script (Velocity,
+				// Freemarker)
+				// <wp:extent
+				// cx="${imageRegistry.getWidth($bookmarkName, '1262380')}"
+				// cy="${imageRegistry.getHeight($bookmarkName, '1352550')}" />
+				String newCX = null;
+				String newCY = null;
+				int cxIndex = attributes.getIndex(CX_ATTR);
+				if (cxIndex != -1) {
+					String oldCX = attributes.getValue(cxIndex);
+					newCX = formatter.getImageWidthDirective(
+							processRowIfNeeded(
+									currentBookmark.getImageFieldName(), true),
+							oldCX);
+				}
+				int cyIndex = attributes.getIndex(CY_ATTR);
+				if (cyIndex != -1) {
+					String oldCY = attributes.getValue(cyIndex);
+					newCY = formatter.getImageHeightDirective(
+							processRowIfNeeded(
+									currentBookmark.getImageFieldName(), true),
+							oldCY);
+				}
+				if (newCX != null || newCY != null) {
+					AttributesImpl attr = toAttributesImpl(attributes);
+					if (newCX != null) {
+						attr.setValue(cxIndex, newCX);
+					}
+					if (newCY != null) {
+						attr.setValue(cyIndex, newCY);
+					}
 					attributes = attr;
 				}
 			}

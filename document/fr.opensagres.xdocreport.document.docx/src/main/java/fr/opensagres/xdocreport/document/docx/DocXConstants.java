@@ -38,8 +38,9 @@ public interface DocXConstants {
 	String WORD_FOOTER_XML_ENTRY = "word/footer*.xml";
 	String CONTENT_TYPES_XML_ENTRY = "[Content_Types].xml";
 	String WORD_RELS_DOCUMENTXMLRELS_XML_ENTRY = "word/_rels/document.xml.rels";
-	
+
 	String W_NS = "http://schemas.openxmlformats.org/wordprocessingml/2006/main";
+	String WP_NS = "http://schemas.openxmlformats.org/drawingml/2006/wordprocessingDrawing";
 	String A_NS = "http://schemas.openxmlformats.org/drawingml/2006/main";
 	String R_NS = "http://schemas.openxmlformats.org/officeDocument/2006/relationships";
 	String RELATIONSHIPS_IMAGE_NS = "http://schemas.openxmlformats.org/officeDocument/2006/relationships/image";
@@ -73,18 +74,22 @@ public interface DocXConstants {
 	// blip
 	String BLIP_ELT = "blip";
 	String EMBED_ATTR = "embed";
-
+	String EXTENT_ELT = "extent";
+	String EXT_ELT = "ext";
+	String CX_ATTR = "cx";
+	String CY_ATTR = "cy";
+	
 	// hyperlink
 	String HYPERLINK_ELT = "hyperlink";
 	String ID_ATTR = "id";
-	
+
 	// [Content_Types].xml
 	String CONTENT_TYPES_XML = "[Content_Types].xml";
 	String WORDPROCESSINGML_DOCUMENT = "application/vnd.openxmlformats-officedocument.wordprocessingml.document.main+xml";
 	String DOCX_EXTENSION = "docx";
 
 	String NAME_ATTR = "name";
-	
+
 	// word/_rels/document.xml.rels
 	String RELATIONSHIPS_ELT = "Relationships";
 	String RELATIONSHIP_ELT = "Relationship";
@@ -92,8 +97,8 @@ public interface DocXConstants {
 	String RELATIONSHIP_TYPE_ATTR = "Type";
 	String RELATIONSHIP_TARGET_ATTR = "Target";
 	String RELATIONSHIP_TARGET_MODE_ATTR = "TargetMode";
-	String TARGET_MODE_EXTERNAL= "External";
-	
+	String TARGET_MODE_EXTERNAL = "External";
+
 	// Mime mapping
 	MimeMapping MIME_MAPPING = new MimeMapping(DOCX_EXTENSION,
 			WORDPROCESSINGML_DOCUMENT);
@@ -101,7 +106,7 @@ public interface DocXConstants {
 	// Meta data for discovery
 	String ID_DISCOVERY = "docx";
 	String DESCRIPTION_DISCOVERY = "Manage Microsoft Office docx document.";
-	
+
 	String HYPERLINKS_SHARED_CONTEXT = "___Hyperlinks";
 
 }

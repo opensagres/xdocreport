@@ -37,7 +37,7 @@ import fr.opensagres.xdocreport.core.document.ImageFormat;
 public interface IImageProvider {
 
 	/**
-	 * Write the binary data of th eimage in the output stream.
+	 * Write the binary data of the image in the given output stream.
 	 * 
 	 * @param outputStream
 	 * @throws IOException
@@ -45,14 +45,64 @@ public interface IImageProvider {
 	void write(OutputStream outputStream) throws IOException;
 
 	/**
-	 * Returns the image format of the image to insert.
+	 * Returns the image format.
 	 * 
 	 * @return
 	 */
 	ImageFormat getImageFormat();
 
+	/**
+	 * Returns the width image with pixel unit.
+	 * 
+	 * @return
+	 * @throws IOException
+	 */
 	Float getWidth() throws IOException;
 
+	/**
+	 * Set the width image with pixel unit.
+	 * 
+	 * @param width
+	 */
+	void setWidth(Float width);
+
+	/**
+	 * Returns the height image with pixel unit.
+	 * 
+	 * @return
+	 * @throws IOException
+	 */
 	Float getHeight() throws IOException;
+
+	/**
+	 * Set the height image with pixel unit.
+	 * 
+	 * @param height
+	 */
+	void setHeight(Float height);
+
+	/**
+	 * Set the width and height image with pixel unit.
+	 * 
+	 * @param width
+	 * @param height
+	 */
+	void setSize(Float width, Float height);
+
+	/**
+	 * Returns true if image size comes from the image and false otherwise.
+	 * 
+	 * @return
+	 */
+	boolean isUseImageSize();
+
+	/**
+	 * Set true if image size comes from the image and false otherwise.
+	 * 
+	 * @param useImageSize
+	 */
+	void setUseImageSize(boolean useImageSize);
+
+	void setResize(boolean resize);
 
 }

@@ -34,6 +34,8 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 
+import fr.opensagres.xdocreport.core.document.ImageFormat;
+
 /**
  * Code from http://blog.jaimon.co.uk/simpleimageinfo/SimpleImageInfo.java.html
  * 
@@ -42,7 +44,7 @@ import java.io.InputStream;
 public class SimpleImageInfo {
 	private int height;
 	private int width;
-	private String mimeType;
+	private ImageFormat mimeType;
 
 	private SimpleImageInfo() {
 
@@ -82,7 +84,7 @@ public class SimpleImageInfo {
 			is.skip(3);
 			width = readInt(is, 2, false);
 			height = readInt(is, 2, false);
-			mimeType = "image/gif";
+			mimeType = ImageFormat.gif;
 		} else if (c1 == 0xFF && c2 == 0xD8) { // JPG
 			while (c3 == 255) {
 				int marker = is.read();
@@ -91,7 +93,7 @@ public class SimpleImageInfo {
 					is.skip(1);
 					height = readInt(is, 2, true);
 					width = readInt(is, 2, true);
-					mimeType = "image/jpeg";
+					mimeType = ImageFormat.jpeg;
 					break;
 				}
 				is.skip(len - 2);
@@ -102,13 +104,13 @@ public class SimpleImageInfo {
 			width = readInt(is, 2, true);
 			is.skip(2);
 			height = readInt(is, 2, true);
-			mimeType = "image/png";
+			mimeType = ImageFormat.png;
 		} else if (c1 == 66 && c2 == 77) { // BMP
 			is.skip(15);
 			width = readInt(is, 2, false);
 			is.skip(2);
 			height = readInt(is, 2, false);
-			mimeType = "image/bmp";
+			mimeType = ImageFormat.bmp;
 		} else {
 			int c4 = is.read();
 			if ((c1 == 'M' && c2 == 'M' && c3 == 0 && c4 == 42)
@@ -136,7 +138,7 @@ public class SimpleImageInfo {
 						height = valOffset;
 					}
 					if (width != -1 && height != -1) {
-						mimeType = "image/tiff";
+						mimeType = ImageFormat.tiff;
 						break;
 					}
 				}
@@ -175,12 +177,8 @@ public class SimpleImageInfo {
 		this.width = width;
 	}
 
-	public String getMimeType() {
+	public ImageFormat getMimeType() {
 		return mimeType;
-	}
-
-	public void setMimeType(String mimeType) {
-		this.mimeType = mimeType;
 	}
 
 	@Override

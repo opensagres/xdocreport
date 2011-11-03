@@ -40,23 +40,13 @@ public class ClassPathImageProvider extends AbstractInputStreamImageProvider {
 	private final String resourceName;
 	private final ImageFormat imageFormat;
 
-	public ClassPathImageProvider(String resourceName) {
-		this(resourceName, true);
-	}
-
-	public ClassPathImageProvider(String resourceName,
-			boolean keepTemplateImageSize) {
-		this(ClassPathImageProvider.class.getClassLoader(), resourceName,
-				keepTemplateImageSize);
-	}
-
 	public ClassPathImageProvider(ClassLoader classLoader, String resourceName) {
-		this(classLoader, resourceName, true);
+		this(classLoader, resourceName, false);
 	}
 
 	public ClassPathImageProvider(ClassLoader classLoader, String resourceName,
-			boolean keepTemplateImageSize) {
-		super(keepTemplateImageSize);
+			boolean useImageSize) {
+		super(useImageSize);
 		this.classLoader = classLoader;
 		this.resourceName = resourceName;
 		this.clazz = null;
@@ -64,12 +54,12 @@ public class ClassPathImageProvider extends AbstractInputStreamImageProvider {
 	}
 
 	public ClassPathImageProvider(Class<?> clazz, String resourceName) {
-		this(clazz, resourceName, true);
+		this(clazz, resourceName, false);
 	}
 
 	public ClassPathImageProvider(Class<?> clazz, String resourceName,
-			boolean keepTemplateImageSize) {
-		super(keepTemplateImageSize);
+			boolean useImageSize) {
+		super(useImageSize);
 		this.clazz = clazz;
 		this.resourceName = resourceName;
 		this.classLoader = null;

@@ -1,6 +1,8 @@
 package fr.opensagres.xdocreport.document.images;
 
+import java.io.ByteArrayInputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.OutputStream;
 
 import fr.opensagres.xdocreport.core.document.ImageFormat;
@@ -8,57 +10,66 @@ import fr.opensagres.xdocreport.core.io.IOUtils;
 
 public class ByteArrayImageProvider extends AbstractImageProvider {
 
-	private byte[] imageContent;
-	private String resourceName;
-	private ImageFormat imageFormat;
+	private byte[] imageByteArray;
 
-	public ByteArrayImageProvider(byte[] imageContent, String resourceName) {
-		this(imageContent, resourceName, true);
+	public ByteArrayImageProvider(InputStream imageStream) throws IOException {
+		this(imageStream, false);
 	}
 
-	public ByteArrayImageProvider(byte[] imageContent, String resourceName,
-			boolean keepTemplateImageSize) {
-		super(keepTemplateImageSize);
-		setImageContent(imageContent, resourceName);
+	public ByteArrayImageProvider(InputStream imageStream, boolean useImageSize)
+			throws IOException {
+		this(imageStream != null ? IOUtils.toByteArray(imageStream) : null,
+				useImageSize);
 	}
 
-	public void setImageContent(byte[] imageContent, String resourceName) {
-		this.imageContent = imageContent;
-		setResourceName(resourceName);
+	public ByteArrayImageProvider(byte[] imageByteArray) {
+		this(imageByteArray, false);
 	}
 
-	public void setImageContent(byte[] imageContent) {
-		this.imageContent = imageContent;
-		super.setImageInfo(null);
+	public ByteArrayImageProvider(byte[] imageByteArray, boolean useImageSize) {
+		super(useImageSize);
+		setImageByteArray(imageByteArray);
 	}
 
-	public byte[] getImageContent() {
-		return imageContent;
+	public void setImageStream(InputStream imageStream) throws IOException {
+		setImageByteArray(IOUtils.toByteArray(imageStream));
+	}
+
+	public void setImageByteArray(byte[] imageByteArray) {
+		this.imageByteArray = imageByteArray;
+		super.resetImageInfo();
+	}
+
+	public InputStream getImageStream() {
+		return new ByteArrayInputStream(getImageByteArray());
+	}
+
+	public byte[] getImageByteArray() {
+		return imageByteArray;
 	}
 
 	public void write(OutputStream output) throws IOException {
-		IOUtils.write(imageContent, output);
+		IOUtils.write(imageByteArray, output);
 	}
 
 	public ImageFormat getImageFormat() {
-		return imageFormat;
-	}
-
-	public void setImageFormat(ImageFormat imageFormat) {
-		this.imageFormat = imageFormat;
-	}
-
-	public void setResourceName(String resourceName) {
-		this.resourceName = resourceName;
-		this.imageFormat = ImageFormat.getFormatByResourceName(resourceName);
-	}
-
-	public String getResourceName() {
-		return resourceName;
+		try {
+			SimpleImageInfo imageInfo = getImageInfo();
+			if (imageInfo == null) {
+				return null;
+			}
+			return imageInfo.getMimeType();
+		} catch (IOException e) {
+			return null;
+		}
 	}
 
 	@Override
 	protected SimpleImageInfo loadImageInfo() throws IOException {
-		return new SimpleImageInfo(imageContent);
+		if (imageByteArray == null) {
+			return null;
+		}
+		return new SimpleImageInfo(imageByteArray);
 	}
+
 }

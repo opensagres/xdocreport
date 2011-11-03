@@ -109,6 +109,39 @@ public class ODTBufferedDocumentContentHandler extends
 						.getImageFieldName(drawName);
 				if (imageFieldName != null) {
 					dynamicImageName = processRowIfNeeded(imageFieldName, true);
+					if (dynamicImageName != null && formatter != null) {
+						// Modify svg:width="21pt" svg:height="22.51pt" with
+						// Freemarker/Velocity directive
+						//
+						String newWith = null;
+						String newHeight = null;
+						int widthIndex = attributes
+								.getIndex(SWG_NS, WIDTH_ATTR);
+						if (widthIndex != -1) {
+							String defaultWidth = attributes
+									.getValue(widthIndex);
+							newWith = formatter.getImageWidthDirective(
+									dynamicImageName, defaultWidth);
+						}
+						int heightIndex = attributes.getIndex(SWG_NS,
+								HEIGHT_ATTR);
+						if (heightIndex != -1) {
+							String defaultHeight = attributes
+									.getValue(heightIndex);
+							newHeight = formatter.getImageHeightDirective(
+									dynamicImageName, defaultHeight);
+						}
+						if (newWith != null || newHeight!= null) {
+							AttributesImpl attr = toAttributesImpl(attributes);
+							if (newWith!= null) {
+								attr.setValue(widthIndex, newWith);
+							}
+							if (newHeight != null) {
+								attr.setValue(heightIndex, newHeight);
+							}
+							attributes = attr;
+						}
+					}
 				}
 			}
 		} else if (isDrawImage(uri, localName, name)) {

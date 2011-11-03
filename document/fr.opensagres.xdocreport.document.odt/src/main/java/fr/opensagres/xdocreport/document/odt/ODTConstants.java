@@ -55,6 +55,10 @@ public interface ODTConstants {
 	String OFFICE_NS = "urn:oasis:names:tc:opendocument:xmlns:office:1.0";	
 	String OFFICE_AUTOMATIC_STYLES_ELT = "automatic-styles";
 	
+	String SWG_NS = "urn:oasis:names:tc:opendocument:xmlns:svg-compatible:1.0";
+	String WIDTH_ATTR = "width";
+	String HEIGHT_ATTR = "height";
+	
 	// Mime type
 	String MIMETYPE = "mimetype";
 	String ODT_MIMETYPE = "application/vnd.oasis.opendocument.text";

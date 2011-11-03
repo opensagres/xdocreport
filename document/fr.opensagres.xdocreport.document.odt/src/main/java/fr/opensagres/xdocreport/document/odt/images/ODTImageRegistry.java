@@ -38,6 +38,7 @@ import fr.opensagres.xdocreport.document.images.ImageProviderInfo;
  */
 public class ODTImageRegistry extends AbstractImageRegistry {
 
+	private static final String POINT_UNIT = "pt";
 	private static final String IMAGE_BASE_PATH = "Pictures/";
 
 	public ODTImageRegistry(IEntryReaderProvider readerProvider,
@@ -55,18 +56,18 @@ public class ODTImageRegistry extends AbstractImageRegistry {
 	protected String getPath(ImageProviderInfo info) {
 		return info.getImageBasePath() + info.getImageFileName();
 	}
-	
+
 	@Override
-	protected String getSize(float sizeAsPixel) {		
-		float sizeAsDxa = sizeAsPixel / 96 * 914400;
-		String s = Float.toString(sizeAsDxa);
+	protected String getSize(float sizeAsPixel) {
+		float sizeAsPoint = sizeAsPixel * 0.75f;
+		String s = Float.toString(sizeAsPoint);
 		// TODO Use DecimalFormat.getIntegerInstance()to format the float to
 		// String.
 		int dotindex = s.indexOf('.');
 		if (dotindex != -1) {
-			return s.substring(0, dotindex);
+			return s.substring(0, dotindex) + POINT_UNIT;
 		}
-		return s;
+		return s + POINT_UNIT;
 	}
 
 }

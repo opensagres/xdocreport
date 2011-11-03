@@ -103,6 +103,23 @@ public interface IImageProvider {
 	 */
 	void setUseImageSize(boolean useImageSize);
 
+	/**
+	 * Set true if call of {@link IImageProvider#setWidth(Float)} must compute
+	 * image height with ratio or if call of
+	 * {@link IImageProvider#setHeight(Float)} must compute image with with
+	 * ratio and false otherwise.
+	 * 
+	 * @param resize
+	 */
 	void setResize(boolean resize);
 
+	/**
+	 * Returns true if call of {@link IImageProvider#setWidth(Float)} must
+	 * compute image height with ratio or if call of
+	 * {@link IImageProvider#setHeight(Float)} must compute image with with
+	 * ratio and false otherwise.
+	 * 
+	 * @return
+	 */
+	boolean isResize();
 }

@@ -1,7 +1,35 @@
+/**
+ * Copyright (C) 2011 Angelo Zerr <angelo.zerr@gmail.com> and Pascal Leclercq <pascal.leclercq@gmail.com>
+ *
+ * All rights reserved.
+ *
+ * Permission is hereby granted, free  of charge, to any person obtaining
+ * a  copy  of this  software  and  associated  documentation files  (the
+ * "Software"), to  deal in  the Software without  restriction, including
+ * without limitation  the rights to  use, copy, modify,  merge, publish,
+ * distribute,  sublicense, and/or sell  copies of  the Software,  and to
+ * permit persons to whom the Software  is furnished to do so, subject to
+ * the following conditions:
+ *
+ * The  above  copyright  notice  and  this permission  notice  shall  be
+ * included in all copies or substantial portions of the Software.
+ *
+ * THE  SOFTWARE IS  PROVIDED  "AS  IS", WITHOUT  WARRANTY  OF ANY  KIND,
+ * EXPRESS OR  IMPLIED, INCLUDING  BUT NOT LIMITED  TO THE  WARRANTIES OF
+ * MERCHANTABILITY,    FITNESS    FOR    A   PARTICULAR    PURPOSE    AND
+ * NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE
+ * LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION
+ * OF CONTRACT, TORT OR OTHERWISE,  ARISING FROM, OUT OF OR IN CONNECTION
+ * WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+ */
 package fr.opensagres.xdocreport.document.images;
 
 import java.io.IOException;
 
+/**
+ * Base class for image provider.
+ * 
+ */
 public abstract class AbstractImageProvider implements IImageProvider {
 
 	private SimpleImageInfo imageInfo;
@@ -17,15 +45,33 @@ public abstract class AbstractImageProvider implements IImageProvider {
 		this.useImageSize = useImageSize;
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * fr.opensagres.xdocreport.document.images.IImageProvider#isUseImageSize()
+	 */
 	public boolean isUseImageSize() {
 		return useImageSize;
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * fr.opensagres.xdocreport.document.images.IImageProvider#setUseImageSize
+	 * (boolean)
+	 */
 	public void setUseImageSize(boolean useImageSize) {
 		this.useImageSize = useImageSize;
 		resetImageInfo();
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see fr.opensagres.xdocreport.document.images.IImageProvider#getWidth()
+	 */
 	public Float getWidth() throws IOException {
 		if (width != null) {
 			return width;
@@ -48,6 +94,11 @@ public abstract class AbstractImageProvider implements IImageProvider {
 		return widthFromImageInfo = new Float(getImageInfo().getWidth());
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see fr.opensagres.xdocreport.document.images.IImageProvider#getHeight()
+	 */
 	public Float getHeight() throws IOException {
 		if (height != null) {
 			return height;
@@ -70,21 +121,48 @@ public abstract class AbstractImageProvider implements IImageProvider {
 		return heightFromImageInfo = new Float(getImageInfo().getHeight());
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * fr.opensagres.xdocreport.document.images.IImageProvider#setWidth(java
+	 * .lang.Float)
+	 */
 	public void setWidth(Float width) {
 		this.width = width;
 		resetImageInfo();
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * fr.opensagres.xdocreport.document.images.IImageProvider#setHeight(java
+	 * .lang.Float)
+	 */
 	public void setHeight(Float height) {
 		this.height = height;
 		resetImageInfo();
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * fr.opensagres.xdocreport.document.images.IImageProvider#setSize(java.
+	 * lang.Float, java.lang.Float)
+	 */
 	public void setSize(Float width, Float height) {
 		setWidth(width);
 		setHeight(height);
 	}
 
+	/**
+	 * Returns image info of the current image content.
+	 * 
+	 * @return
+	 * @throws IOException
+	 */
 	public SimpleImageInfo getImageInfo() throws IOException {
 		if (imageInfo == null) {
 			imageInfo = loadImageInfo();
@@ -92,20 +170,41 @@ public abstract class AbstractImageProvider implements IImageProvider {
 		return imageInfo;
 	}
 
+	/**
+	 * Reset image info.
+	 */
 	public void resetImageInfo() {
 		this.widthFromImageInfo = null;
 		this.heightFromImageInfo = null;
 		this.imageInfo = null;
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * fr.opensagres.xdocreport.document.images.IImageProvider#setResize(boolean
+	 * )
+	 */
 	public void setResize(boolean resize) {
 		this.resize = resize;
 		resetImageInfo();
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see fr.opensagres.xdocreport.document.images.IImageProvider#isResize()
+	 */
 	public boolean isResize() {
 		return resize;
 	}
 
+	/**
+	 * Load image info.
+	 * 
+	 * @return
+	 * @throws IOException
+	 */
 	protected abstract SimpleImageInfo loadImageInfo() throws IOException;
 }

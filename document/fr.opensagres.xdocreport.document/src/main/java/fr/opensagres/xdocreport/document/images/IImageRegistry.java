@@ -71,9 +71,27 @@ public interface IImageRegistry {
 	 */
 	List<ImageProviderInfo> getImageProviderInfos();
 
+	/**
+	 * Returns the width of the image provider if not null and the given
+	 * defaultWidth otherwise.
+	 * 
+	 * @param imageProvider
+	 * @param defaultWidth
+	 * @return
+	 * @throws IOException
+	 */
 	String getWidth(IImageProvider imageProvider, String defaultWidth)
 			throws IOException;
 
+	/**
+	 * Returns the height of the image provider if not null and the given
+	 * defaultHeight otherwise.
+	 * 
+	 * @param imageProvider
+	 * @param defaultWidth
+	 * @return
+	 * @throws IOException
+	 */
 	String getHeight(IImageProvider imageProvider, String defaultHeight)
 			throws IOException;
 }

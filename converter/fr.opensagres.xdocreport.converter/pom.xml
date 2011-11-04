@@ -4,13 +4,13 @@
 	<parent>
 		<groupId>fr.opensagres.xdocreport</groupId>
 		<artifactId>converter</artifactId>
-		<version>0.9.3-SNAPSHOT</version>
+		<version>0.9.3</version>
 	</parent>
 	<dependencies>
 		<dependency>
 			<groupId>fr.opensagres.xdocreport</groupId>
 			<artifactId>fr.opensagres.xdocreport.core</artifactId>
-			<version>0.9.3-SNAPSHOT</version>
+			<version>0.9.3</version>
 		</dependency>
 	</dependencies>
 </project>

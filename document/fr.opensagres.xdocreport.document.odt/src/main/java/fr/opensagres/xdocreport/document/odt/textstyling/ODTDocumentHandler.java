@@ -24,7 +24,7 @@ public class ODTDocumentHandler extends AbstractDocumentHandler {
 				internalEndParagraph();
 			}
 		}
-		System.err.println(writer.getBuffer().toString());
+		// System.err.println(writer.getBuffer().toString());
 	}
 
 	public void startBold() {

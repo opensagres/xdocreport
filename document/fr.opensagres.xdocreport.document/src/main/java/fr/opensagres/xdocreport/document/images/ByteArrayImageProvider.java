@@ -34,7 +34,7 @@ import fr.opensagres.xdocreport.core.io.IOUtils;
 
 /**
  * Image provider implementation with byte array for image content. This
- * provider ise useful when image content can change by calling
+ * provider is useful when image content can change by calling
  * {@link ByteArrayImageProvider#setImageByteArray(byte[])} or
  * {@link ByteArrayImageProvider#setImageStream(InputStream))}.
  * 

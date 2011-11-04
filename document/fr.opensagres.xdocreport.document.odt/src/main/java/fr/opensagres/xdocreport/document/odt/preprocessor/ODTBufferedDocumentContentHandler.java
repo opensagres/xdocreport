@@ -53,6 +53,10 @@ public class ODTBufferedDocumentContentHandler extends
 		TransformedBufferedDocumentContentHandler<ODTBufferedDocument>
 		implements ODTConstants {
 
+	public static final String BOLD_STYLE_NAME = "XDocReport_Bold";
+	public static final String ITALIC_STYLE_NAME = "XDocReport_Italic";
+	public static final String BOLD_ITALIC_STYLE_NAME = "XDocReport_BoldItalic";
+	
 	private String dynamicImageName;
 	private boolean textInputParsing = false;
 
@@ -170,9 +174,9 @@ public class ODTBufferedDocumentContentHandler extends
 				dynamicImageName = null;
 			} else if (isOfficeAutomaticStyles(uri, localName, name)) {
 				// Add bold, italic, bold+italic styles for text styling.
-				generateStyle("XDocReport_Bold", true, false);
-				generateStyle("XDocReport_Italic", false, true);
-				generateStyle("XDocReport_BoldItalic", true, true);
+				generateStyle(BOLD_STYLE_NAME, true, false);
+				generateStyle(ITALIC_STYLE_NAME, false, true);
+				generateStyle(BOLD_ITALIC_STYLE_NAME, true, true);
 			}
 			super.doEndElement(uri, localName, name);
 		}

@@ -73,5 +73,5 @@ public interface IDocumentFormatter {
 			String... parameters);
 
 	String formatAsTextStyling(String fieldName, String metafieldName,
-			String documentKind, String textStylingKind);
+			String documentKind, String syntaxKind);
 }

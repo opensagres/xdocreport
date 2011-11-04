@@ -59,7 +59,7 @@ public class TextStylingRegistry extends
 	 */
 	public String transform(String content, String syntaxKind,
 			String documentKind) {
-		// 1) Retrieve transformer from th etext styling transformer registry.
+		// 1) Retrieve transformer from the text styling transformer registry.
 		ITextStylingTransformer transformer = TextStylingTransformerRegistry
 				.getRegistry().getTextStylingTransformer(syntaxKind);
 		if (transformer != null) {

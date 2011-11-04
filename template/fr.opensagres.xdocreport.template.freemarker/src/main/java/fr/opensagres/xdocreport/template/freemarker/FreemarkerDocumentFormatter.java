@@ -446,12 +446,13 @@ public class FreemarkerDocumentFormatter extends AbstractDocumentFormatter {
 
 	public String formatAsTextStyling(String fieldName,
 			String metadataFieldName, String documentKind,
-			String textStylingKind) {
+			String syntaxKind) {
 		StringBuilder newContent = new StringBuilder(START_NOESCAPE);
 		newContent.append(getFunctionDirective(
 				TextStylingTransformerRegistry.KEY,
 				TextStylingTransformerRegistry.TRANSFORM_METHOD,
-				"\"" + textStylingKind + "\"", removeInterpolation(fieldName),
+				removeInterpolation(fieldName),
+				"\"" + syntaxKind + "\"", 
 				"\"" + documentKind + "\""));
 		newContent.append(END_NOESCAPE);
 		return newContent.toString();

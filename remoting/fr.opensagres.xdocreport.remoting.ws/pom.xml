@@ -3,14 +3,14 @@
 	<parent>
 		<groupId>fr.opensagres.xdocreport</groupId>
 		<artifactId>remoting</artifactId>
-		<version>0.9.3</version>
+		<version>0.9.4-SNAPSHOT</version>
 	</parent>
 	<artifactId>fr.opensagres.xdocreport.remoting.ws</artifactId>
 	<dependencies>
 		<dependency>
 			<groupId>fr.opensagres.xdocreport</groupId>
 			<artifactId>fr.opensagres.xdocreport.document</artifactId>
-			<version>0.9.3</version>
+			<version>0.9.4-SNAPSHOT</version>
 		</dependency>
 		<dependency>
 			<groupId>javax.servlet</groupId>

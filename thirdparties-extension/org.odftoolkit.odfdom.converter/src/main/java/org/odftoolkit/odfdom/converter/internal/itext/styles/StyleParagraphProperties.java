@@ -28,161 +28,244 @@ import java.awt.Color;
 
 import com.lowagie.text.Element;
 
+/**
+ * fixes for paragraph pdf conversion by Leszek Piotrowicz <leszekp@safe-mail.net>
+ */
 public class StyleParagraphProperties {
 
-	private StyleBorder border;
-	private StyleBorder borderTop;
-	private StyleBorder borderBottom;
-	private StyleBorder borderLeft;
-	private StyleBorder borderRight;
-	private Color backgroundColor;
-	private int alignment = Element.ALIGN_UNDEFINED;
-	private Float indentation;
-	private Float lineHeight;
-	private boolean autoTextIndent = false;
-	private boolean breakBeforePage = false;
-	private boolean breakAfterPage = false;
+    private int alignment = Element.ALIGN_UNDEFINED;
+    private boolean autoTextIndent = false;
+    private Color backgroundColor;
+    private StyleBorder border;
+    private StyleBorder borderBottom;
+    private StyleBorder borderLeft;
+    private StyleBorder borderRight;
+    private StyleBorder borderTop;
+    private boolean breakAfterPage = false;
+    private boolean breakBeforePage = false;
+    private boolean keepTogether = false;
+    private Float lineHeight;
+    private boolean lineHeightProportional = true;
+    private Float margin;
+    private Float marginBottom;
+    private Float marginLeft;
+    private Float marginRight;
+    private Float marginTop;
+    private Float textIndent;
 
-	public StyleParagraphProperties() {
+    public StyleParagraphProperties() {
+    }
 
-	}
+    public StyleParagraphProperties(StyleParagraphProperties paragraphProperties) {
+        if (paragraphProperties == null) {
+            return;
+        }
+        merge(paragraphProperties);
+    }
 
-	public StyleParagraphProperties(StyleParagraphProperties paragraphProperties) {
-		if (paragraphProperties == null) {
-			return;
-		}
-		backgroundColor = paragraphProperties.backgroundColor;
-		alignment = paragraphProperties.alignment;
-		indentation = paragraphProperties.indentation;
-	}
+    public void merge(StyleParagraphProperties paragraphProperties) {
+        if (paragraphProperties.getAlignment() != Element.ALIGN_UNDEFINED) {
+            alignment = paragraphProperties.getAlignment();
+        }
+        if (paragraphProperties.isAutoTextIndent() != autoTextIndent) {
+            autoTextIndent = paragraphProperties.isAutoTextIndent();
+        }
+        if (paragraphProperties.getBackgroundColor() != null) {
+            backgroundColor = paragraphProperties.getBackgroundColor();
+        }
+        if (paragraphProperties.getBorder() != null) {
+            border = paragraphProperties.getBorder();
+        }
+        if (paragraphProperties.getBorderBottom() != null) {
+            borderBottom = paragraphProperties.getBorderBottom();
+        }
+        if (paragraphProperties.getBorderLeft() != null) {
+            borderLeft = paragraphProperties.getBorderLeft();
+        }
+        if (paragraphProperties.getBorderRight() != null) {
+            borderRight = paragraphProperties.getBorderRight();
+        }
+        if (paragraphProperties.getBorderTop() != null) {
+            borderTop = paragraphProperties.getBorderTop();
+        }
+        if (paragraphProperties.isKeepTogether() != keepTogether) {
+            keepTogether = paragraphProperties.isKeepTogether();
+        }
+        if (paragraphProperties.getLineHeight() != null) {
+            lineHeight = paragraphProperties.getLineHeight();
+        }
+        if (paragraphProperties.isLineHeightProportional() != lineHeightProportional) {
+            lineHeightProportional = paragraphProperties.isLineHeightProportional();
+        }
+        if (paragraphProperties.getMargin() != null) {
+            margin = paragraphProperties.getMargin();
+        }
+        if (paragraphProperties.getMarginBottom() != null) {
+            marginBottom = paragraphProperties.getMarginBottom();
+        }
+        if (paragraphProperties.getMarginLeft() != null) {
+            marginLeft = paragraphProperties.getMarginLeft();
+        }
+        if (paragraphProperties.getMarginRight() != null) {
+            marginRight = paragraphProperties.getMarginRight();
+        }
+        if (paragraphProperties.getMarginTop() != null) {
+            marginTop = paragraphProperties.getMarginTop();
+        }
+        if (paragraphProperties.getTextIndent() != null) {
+            textIndent = paragraphProperties.getTextIndent();
+        }
+    }
 
-	public Color getBackgroundColor() {
-		return backgroundColor;
-	}
+    public int getAlignment() {
+        return alignment;
+    }
 
-	public void setBackgroundColor(Color backgroundColor) {
-		this.backgroundColor = backgroundColor;
-	}
+    public void setAlignment(int alignment) {
+        this.alignment = alignment;
+    }
 
-	public int getAlignment() {
-		return alignment;
-	}
+    public boolean isAutoTextIndent() {
+        return autoTextIndent;
+    }
 
-	public void setAlignment(int alignment) {
-		this.alignment = alignment;
-	}
+    public void setAutoTextIndent(boolean autoTextIndent) {
+        this.autoTextIndent = autoTextIndent;
+    }
 
-	public Float getIndentation() {
-		return indentation;
-	}
+    public Color getBackgroundColor() {
+        return backgroundColor;
+    }
 
-	public void setIndentation(Float indentation) {
-		this.indentation = indentation;
-	}
+    public void setBackgroundColor(Color backgroundColor) {
+        this.backgroundColor = backgroundColor;
+    }
 
-	public Float getLineHeight() {
-		return lineHeight;
-	}
+    public StyleBorder getBorder() {
+        return border;
+    }
 
-	public void setLineHeight(Float lineHeight) {
-		this.lineHeight = lineHeight;
-	}
+    public void setBorder(StyleBorder border) {
+        this.border = border;
+    }
 
-	public void merge(StyleParagraphProperties paragraphProperties) {
-		if (paragraphProperties.getBackgroundColor() != null) {
-			backgroundColor = paragraphProperties.getBackgroundColor();
-		}
-		if (paragraphProperties.getAlignment() != Element.ALIGN_UNDEFINED) {
-			alignment = paragraphProperties.getAlignment();
-		}
-		if (paragraphProperties.getIndentation() != null) {
-			indentation = paragraphProperties.getIndentation();
-		}
-		if (paragraphProperties.getLineHeight() != null) {
-			lineHeight = paragraphProperties.getLineHeight();
-		}
-		if (paragraphProperties.getBorder() != null) {
-			border = paragraphProperties.getBorder();
-		}
-		if (paragraphProperties.getBorderBottom() != null) {
-			borderBottom = paragraphProperties.getBorderBottom();
-		}
-		if (paragraphProperties.getBorderLeft() != null) {
-			borderLeft = paragraphProperties.getBorderLeft();
-		}
-		if (paragraphProperties.getBorderRight() != null) {
-			borderRight = paragraphProperties.getBorderRight();
-		}
-		if (paragraphProperties.getBorderTop() != null) {
-			borderTop = paragraphProperties.getBorderTop();
-		}
-		if (paragraphProperties.isAutoTextIndent() != autoTextIndent) {
-			autoTextIndent = paragraphProperties.isAutoTextIndent();
-		}
-	}
+    public StyleBorder getBorderBottom() {
+        return borderBottom;
+    }
 
-	public StyleBorder getBorder() {
-		return border;
-	}
+    public void setBorderBottom(StyleBorder borderBottom) {
+        this.borderBottom = borderBottom;
+    }
 
-	public void setBorder(StyleBorder border) {
-		this.border = border;
-	}
+    public StyleBorder getBorderLeft() {
+        return borderLeft;
+    }
 
-	public StyleBorder getBorderTop() {
-		return borderTop;
-	}
+    public void setBorderLeft(StyleBorder borderLeft) {
+        this.borderLeft = borderLeft;
+    }
 
-	public void setBorderTop(StyleBorder borderTop) {
-		this.borderTop = borderTop;
-	}
+    public StyleBorder getBorderRight() {
+        return borderRight;
+    }
 
-	public StyleBorder getBorderBottom() {
-		return borderBottom;
-	}
+    public void setBorderRight(StyleBorder borderRight) {
+        this.borderRight = borderRight;
+    }
 
-	public void setBorderBottom(StyleBorder borderBottom) {
-		this.borderBottom = borderBottom;
-	}
+    public StyleBorder getBorderTop() {
+        return borderTop;
+    }
 
-	public StyleBorder getBorderLeft() {
-		return borderLeft;
-	}
+    public void setBorderTop(StyleBorder borderTop) {
+        this.borderTop = borderTop;
+    }
 
-	public void setBorderLeft(StyleBorder borderLeft) {
-		this.borderLeft = borderLeft;
-	}
+    public boolean isBreakAfterPage() {
+        return breakAfterPage;
+    }
 
-	public StyleBorder getBorderRight() {
-		return borderRight;
-	}
+    public void setBreakAfterPage(boolean breakAfterPage) {
+        this.breakAfterPage = breakAfterPage;
+    }
 
-	public void setBorderRight(StyleBorder borderRight) {
-		this.borderRight = borderRight;
-	}
+    public boolean isBreakBeforePage() {
+        return breakBeforePage;
+    }
 
-	public void setAutoTextIndent(boolean autoTextIndent) {
-		this.autoTextIndent = autoTextIndent;
-	}
+    public void setBreakBeforePage(boolean breakBeforePage) {
+        this.breakBeforePage = breakBeforePage;
+    }
 
-	public boolean isAutoTextIndent() {
-		return autoTextIndent;
-	}
+    public boolean isKeepTogether() {
+        return keepTogether;
+    }
 
-	public void setBreakAfterPage(boolean breakAfterPage) {
-		this.breakAfterPage = breakAfterPage;
-	}
+    public void setKeepTogether(boolean keepTogether) {
+        this.keepTogether = keepTogether;
+    }
 
-	public boolean isBreakAfterPage() {
-		return breakAfterPage;
-	}
+    public Float getLineHeight() {
+        return lineHeight;
+    }
 
-	public void setBreakBeforePage(boolean breakBeforePage) {
-		this.breakBeforePage = breakBeforePage;
-	}
+    public void setLineHeight(Float lineHeight) {
+        this.lineHeight = lineHeight;
+    }
 
-	public boolean isBreakBeforePage() {
-		return breakBeforePage;
-	}
+    public boolean isLineHeightProportional() {
+        return lineHeightProportional;
+    }
 
+    public void setLineHeightProportional(boolean lineHeightProportional) {
+        this.lineHeightProportional = lineHeightProportional;
+    }
+
+    public Float getMargin() {
+        return margin;
+    }
+
+    public void setMargin(Float margin) {
+        this.margin = margin;
+    }
+
+    public Float getMarginBottom() {
+        return marginBottom;
+    }
+
+    public void setMarginBottom(Float marginBottom) {
+        this.marginBottom = marginBottom;
+    }
+
+    public Float getMarginLeft() {
+        return marginLeft;
+    }
+
+    public void setMarginLeft(Float marginLeft) {
+        this.marginLeft = marginLeft;
+    }
+
+    public Float getMarginRight() {
+        return marginRight;
+    }
+
+    public void setMarginRight(Float marginRight) {
+        this.marginRight = marginRight;
+    }
+
+    public Float getMarginTop() {
+        return marginTop;
+    }
+
+    public void setMarginTop(Float marginTop) {
+        this.marginTop = marginTop;
+    }
+
+    public Float getTextIndent() {
+        return textIndent;
+    }
+
+    public void setTextIndent(Float textIndent) {
+        this.textIndent = textIndent;
+    }
 }

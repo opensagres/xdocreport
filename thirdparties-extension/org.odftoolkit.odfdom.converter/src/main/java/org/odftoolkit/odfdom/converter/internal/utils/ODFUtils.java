@@ -21,6 +21,10 @@
  * LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION
  * OF CONTRACT, TORT OR OTHERWISE,  ARISING FROM, OUT OF OR IN CONNECTION
  * WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+ * 
+ * Contributions: 
+ * 	leszekp@safe-mail.net - bug http://code.google.com/p/xdocreport/issues/detail?id=58
+ * 
  */
 package org.odftoolkit.odfdom.converter.internal.utils;
 
@@ -155,6 +159,16 @@ public class ODFUtils {
 	}
 
 	/**
+	 * Returns true if the given string has percent unit and false otherwise.
+	 * 
+	 * @param s
+	 * @return
+	 */
+	public static boolean hasPercentUnit(String s) {
+		return s.indexOf(PERCENT_UNIT) != -1;
+	}
+
+	/**
 	 * Measurement conversion from millimeters to points.
 	 * 
 	 * @param value
@@ -191,7 +205,7 @@ public class ODFUtils {
 	}
 
 	public static String getDimensionAsPixel(String s) {
-		// px: pixel units — 1px is equal to 0.75pt.
+		// px: pixel units ï¿½ 1px is equal to 0.75pt.
 		if (s != null && s.endsWith("*")) {
 			return s;
 		}

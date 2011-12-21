@@ -38,6 +38,9 @@ import com.lowagie.text.pdf.PdfPCell;
 
 import fr.opensagres.xdocreport.itext.extension.IITextContainer;
 
+/**
+ * fixes for pdf conversion by Leszek Piotrowicz <leszekp@safe-mail.net>
+ */
 public class StylableTableCell extends PdfPCell implements IStylableContainer {
 
 	private static final long serialVersionUID = 664309269352903329L;
@@ -50,6 +53,8 @@ public class StylableTableCell extends PdfPCell implements IStylableContainer {
 			IStylableContainer parent) {
 		this.ownerDocument = ownerDocument;
 		this.parent = parent;
+                // make iText first line alignment compatible with open office
+                getColumn().setAdjustFirstLine(false);
 	}
 
 	public void addElement(Element element) {

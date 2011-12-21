@@ -185,7 +185,10 @@ public class StyleEngineForIText extends AbstractStyleEngine {
 	}
 
 	// visit //style:paragraph-properties
-
+	/**
+	 * fixes for paragraph pdf conversion by Leszek Piotrowicz
+	 * <leszekp@safe-mail.net>
+	 */
 	@Override
 	public void visit(StyleParagraphPropertiesElement ele) {
 
@@ -195,8 +198,6 @@ public class StyleEngineForIText extends AbstractStyleEngine {
 			paragraphProperties = new StyleParagraphProperties();
 			currentStyle.setParagraphProperties(paragraphProperties);
 		}
-
-		Float indentation = null;
 
 		// background-color
 		String backgroundColor = ele.getFoBackgroundColorAttribute();
@@ -244,38 +245,42 @@ public class StyleEngineForIText extends AbstractStyleEngine {
 		if (StringUtils.isNotEmpty(lineHeight)) {
 			paragraphProperties.setLineHeight(ODFUtils
 					.getDimensionAsPoint(lineHeight));
+			paragraphProperties.setLineHeightProportional(ODFUtils
+					.hasPercentUnit(lineHeight));
 		}
 
 		// margin
 		String margin = ele.getFoMarginAttribute();
 		if (StringUtils.isNotEmpty(margin)) {
-			// cssStyleSheet.setCSSProperty("margin", margin);
+			paragraphProperties.setMargin(ODFUtils.getDimensionAsPoint(margin));
 		}
 
 		// margin-bottom
 		String marginBottom = ele.getFoMarginBottomAttribute();
 		if (StringUtils.isNotEmpty(marginBottom)) {
-			// cssStyleSheet.setCSSProperty("margin-bottom", marginBottom);
+			paragraphProperties.setMarginBottom(ODFUtils
+					.getDimensionAsPoint(marginBottom));
 		}
 
 		// margin-left
 		String marginLeft = ele.getFoMarginLeftAttribute();
 		if (StringUtils.isNotEmpty(marginLeft)) {
-			indentation = ODFUtils.getDimensionAsPoint(marginLeft);
-
-			// paragraphProperties.setIndentation(ODFUtils.getDimensionAsPoint(marginLeft));
+			paragraphProperties.setMarginLeft(ODFUtils
+					.getDimensionAsPoint(marginLeft));
 		}
 
-		// margin-bottom
+		// margin-right
 		String marginRight = ele.getFoMarginRightAttribute();
 		if (StringUtils.isNotEmpty(marginRight)) {
-			// cssStyleSheet.setCSSProperty("margin-right", marginRight);
+			paragraphProperties.setMarginRight(ODFUtils
+					.getDimensionAsPoint(marginRight));
 		}
 
 		// margin-top
 		String marginTop = ele.getFoMarginTopAttribute();
 		if (StringUtils.isNotEmpty(marginTop)) {
-			// cssStyleSheet.setCSSProperty("margin-top", marginTop);
+			paragraphProperties.setMarginTop(ODFUtils
+					.getDimensionAsPoint(marginTop));
 		}
 
 		// padding
@@ -328,33 +333,36 @@ public class StyleEngineForIText extends AbstractStyleEngine {
 			paragraphProperties.setAlignment(alignment);
 		}
 
+		// auto-text-indent
 		Boolean autoTextIndent = ele.getStyleAutoTextIndentAttribute();
 		if (autoTextIndent != null) {
 			paragraphProperties.setAutoTextIndent(autoTextIndent);
 		}
-		
+
 		// text-indent
 		String textIndent = ele.getFoTextIndentAttribute();
 		if (StringUtils.isNotEmpty(textIndent)) {
-			Float textIndentAsFloat = ODFUtils.getDimensionAsPoint(textIndent);
-			if (indentation == null || indentation < textIndentAsFloat) {
-				// no margin-left defined
-				indentation = textIndentAsFloat;
-			}
+			paragraphProperties.setTextIndent(ODFUtils
+					.getDimensionAsPoint(textIndent));
 		}
-		paragraphProperties.setIndentation(indentation);
+
+		// keep-together
+		String keepTogether = ele.getFoKeepTogetherAttribute();
+		if ("always".equals(keepTogether)) {
+			paragraphProperties.setKeepTogether(true);
+		}
 
 		// fo:break-before
 		String breakBefore = ele.getFoBreakBeforeAttribute();
 		if (PAGE_BREAK.equals(breakBefore)) {
 			paragraphProperties.setBreakBeforePage(true);
 		}
-		
+
 		String breakAfter = ele.getFoBreakAfterAttribute();
 		if (PAGE_BREAK.equals(breakAfter)) {
 			paragraphProperties.setBreakAfterPage(true);
 		}
-		
+
 		super.visit(ele);
 	}
 
@@ -785,16 +793,16 @@ public class StyleEngineForIText extends AbstractStyleEngine {
 		if (StringUtils.isNotEmpty(width)) {
 			pageLayoutProperties.setWidth(ODFUtils.getDimensionAsPoint(width));
 		}
-		
+
 		// orientation
 		String orientation = ele.getStylePrintOrientationAttribute();
 		if (StringUtils.isNotEmpty(orientation)) {
 			if (LANDSCAPE.equals(orientation)) {
-				pageLayoutProperties.setOrientation(PageOrientation.Landscape);	
+				pageLayoutProperties.setOrientation(PageOrientation.Landscape);
 			} else if (PORTRAIT.equals(orientation)) {
-				pageLayoutProperties.setOrientation(PageOrientation.Portrait);	
+				pageLayoutProperties.setOrientation(PageOrientation.Portrait);
 			}
-			
+
 		}
 		super.visit(ele);
 

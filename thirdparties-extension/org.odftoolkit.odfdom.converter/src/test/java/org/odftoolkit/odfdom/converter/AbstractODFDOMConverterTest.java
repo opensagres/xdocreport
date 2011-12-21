@@ -34,6 +34,11 @@ public abstract class AbstractODFDOMConverterTest {
 	}
 
 	@Test
+	public void convertHeaderFooterTable() throws Exception {
+		doGenerate("HeaderFooterTable.odt");
+	}
+	
+	@Test
 	public void convertODTBig() throws Exception {
 		doGenerate("ODTBig.odt");
 	}
@@ -48,6 +53,11 @@ public abstract class AbstractODFDOMConverterTest {
 		doGenerate("ODTStructures.odt");
 	}
 
+	@Test
+	public void testParagraphFomatting() throws Exception {
+		doGenerate("ParagraphFomatting.odt");
+	}
+	
 	@Test
 	public void testColor() throws Exception {
 		doGenerate("TestColor.odt");
@@ -87,6 +97,6 @@ public abstract class AbstractODFDOMConverterTest {
 	public void testTitle() throws Exception {
 		doGenerate("TestTitle.odt");
 	}
-
+	
 	protected abstract void doGenerate(String fileInName) throws Exception;
 }

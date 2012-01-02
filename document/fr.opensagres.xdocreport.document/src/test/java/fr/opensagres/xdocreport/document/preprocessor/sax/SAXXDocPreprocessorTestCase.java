@@ -31,7 +31,7 @@ import junit.framework.TestCase;
 
 public class SAXXDocPreprocessorTestCase extends TestCase {
 
-	public void testname() throws Exception {
+	public void testLT() throws Exception {
 		MockSAXXDocPreprocessor preprocessor = new MockSAXXDocPreprocessor();
 		StringReader reader = new StringReader(
 				"<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?><p>&lt;</p>");
@@ -42,7 +42,7 @@ public class SAXXDocPreprocessorTestCase extends TestCase {
 				writer.toString());
 	}
 
-	public void testname2() throws Exception {
+	public void testAPOS() throws Exception {
 		MockSAXXDocPreprocessor preprocessor = new MockSAXXDocPreprocessor();
 		StringReader reader = new StringReader(
 				"<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?><p>It&apos;s a document <span>to test</span></p>");
@@ -53,6 +53,17 @@ public class SAXXDocPreprocessorTestCase extends TestCase {
 				writer.toString());
 	}
 
+	public void testAMP() throws Exception {
+		MockSAXXDocPreprocessor preprocessor = new MockSAXXDocPreprocessor();
+		StringReader reader = new StringReader(
+				"<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?><p>a&amp;b</p>");
+		StringWriter writer = new StringWriter();
+		preprocessor.preprocess("test", reader, writer, null, null, null, null);
+		assertEquals(
+				"<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?><p>a&amp;b</p>",
+				writer.toString());
+	}
+	
 	public void testElementWithTextContent() throws Exception {
 		MockSAXXDocPreprocessor preprocessor = new MockSAXXDocPreprocessor();
 		StringReader reader = new StringReader(

@@ -211,7 +211,9 @@ public class BufferedDocumentContentHandler<Document extends BufferedDocument>
 				currentCharacters.append(GT);
 			} else if (c == '\'') {
 				currentCharacters.append(APOS);
-			} else {
+			} else if (c == '&') {
+				currentCharacters.append(AMP);
+			}else {
 				currentCharacters.append(c);
 			}
 		}

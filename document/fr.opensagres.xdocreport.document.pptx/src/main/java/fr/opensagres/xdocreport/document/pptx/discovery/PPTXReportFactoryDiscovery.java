@@ -24,12 +24,14 @@
  */
 package fr.opensagres.xdocreport.document.pptx.discovery;
 
+import static fr.opensagres.xdocreport.document.pptx.PPTXConstants.DESCRIPTION_DISCOVERY;
+import static fr.opensagres.xdocreport.document.pptx.PPTXConstants.ID_DISCOVERY;
+import static fr.opensagres.xdocreport.document.pptx.PPTXConstants.MIME_MAPPING;
 import fr.opensagres.xdocreport.converter.MimeMapping;
 import fr.opensagres.xdocreport.core.io.XDocArchive;
 import fr.opensagres.xdocreport.document.IXDocReport;
 import fr.opensagres.xdocreport.document.discovery.AbstractXDocReportFactoryDiscovery;
 import fr.opensagres.xdocreport.document.discovery.IXDocReportFactoryDiscovery;
-import fr.opensagres.xdocreport.document.pptx.PPTXConstants;
 import fr.opensagres.xdocreport.document.pptx.PPTXReport;
 import fr.opensagres.xdocreport.document.registry.XDocReportRegistry;
 
@@ -41,7 +43,7 @@ import fr.opensagres.xdocreport.document.registry.XDocReportRegistry;
  */
 public class PPTXReportFactoryDiscovery extends
 		AbstractXDocReportFactoryDiscovery implements
-		IXDocReportFactoryDiscovery, PPTXConstants {
+		IXDocReportFactoryDiscovery {
 
 	public boolean isAdaptFor(XDocArchive archive) {
 		return PPTXReport.isPPTX(archive);

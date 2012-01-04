@@ -24,6 +24,10 @@
  */
 package fr.opensagres.xdocreport.document.pptx;
 
+import static fr.opensagres.xdocreport.document.pptx.PPTXConstants.CONTENT_TYPES_XML;
+import static fr.opensagres.xdocreport.document.pptx.PPTXConstants.MIME_MAPPING;
+import static fr.opensagres.xdocreport.document.pptx.PPTXConstants.PRESENTATION_PRESENTATION_XML_ENTRY;
+import static fr.opensagres.xdocreport.document.pptx.PPTXConstants.PRESENTATION_SLIDES_XML_ENTRY;
 import fr.opensagres.xdocreport.converter.MimeMapping;
 import fr.opensagres.xdocreport.core.document.DocumentKind;
 import fr.opensagres.xdocreport.core.io.IEntryOutputStreamProvider;
@@ -33,12 +37,13 @@ import fr.opensagres.xdocreport.core.io.XDocArchive;
 import fr.opensagres.xdocreport.document.AbstractXDocReport;
 import fr.opensagres.xdocreport.document.images.IImageRegistry;
 import fr.opensagres.xdocreport.document.pptx.images.PPTXImageRegistry;
+import fr.opensagres.xdocreport.document.pptx.preprocessor.PPTXSlidePreprocessor;
 
 /**
  * Open Office ODS report.
  * 
  */
-public class PPTXReport extends AbstractXDocReport implements PPTXConstants {
+public class PPTXReport extends AbstractXDocReport {
 
 	private static final String PPT_REGEXP = "ppt*";
 
@@ -53,7 +58,8 @@ public class PPTXReport extends AbstractXDocReport implements PPTXConstants {
 
 	@Override
 	protected void registerPreprocessors() {
-
+		super.addPreprocessor(PRESENTATION_SLIDES_XML_ENTRY,
+				PPTXSlidePreprocessor.INSTANCE);
 	}
 
 	@Override
@@ -80,6 +86,7 @@ public class PPTXReport extends AbstractXDocReport implements PPTXConstants {
 			IEntryReaderProvider readerProvider,
 			IEntryWriterProvider writerProvider,
 			IEntryOutputStreamProvider outputStreamProvider) {
-		return new PPTXImageRegistry(readerProvider, writerProvider, outputStreamProvider);
+		return new PPTXImageRegistry(readerProvider, writerProvider,
+				outputStreamProvider);
 	}
 }

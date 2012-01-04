@@ -19,12 +19,12 @@ public class PPTXSlideContentHandler extends
 	protected PPTXSlideContentHandler(FieldsMetadata fieldsMetadata,
 			IDocumentFormatter formater, Map<String, Object> sharedContext) {
 		super(fieldsMetadata, formater, sharedContext);
-		this.atParsing=false;
+		this.atParsing = false;
 	}
 
 	@Override
 	protected PPTXSlideDocument createDocument() {
-		return new PPTXSlideDocument();
+		return new PPTXSlideDocument(this);
 	}
 
 	@Override
@@ -36,29 +36,30 @@ public class PPTXSlideContentHandler extends
 	protected String getTableRowName() {
 		return null;
 	}
-	
+
 	@Override
 	public boolean doStartElement(String uri, String localName, String name,
 			Attributes attributes) throws SAXException {
 		if (isAT(uri, localName, name)) {
-			atParsing=true;
+			atParsing = true;
 		}
 		return super.doStartElement(uri, localName, name, attributes);
 	}
-	
+
 	@Override
 	public void doEndElement(String uri, String localName, String name)
 			throws SAXException {
 		if (isAT(uri, localName, name)) {
-			atParsing=false;
+			atParsing = false;
 		}
 		super.doEndElement(uri, localName, name);
 	}
-	
+
 	@Override
 	protected void flushCharacters(String characters) {
 		if (atParsing) {
-			ARBufferedRegion arBufferedRegion = bufferedDocument.getCurrentARRegion();
+			ARBufferedRegion arBufferedRegion = bufferedDocument
+					.getCurrentARRegion();
 			if (arBufferedRegion != null) {
 				arBufferedRegion.setTContent(characters);
 				return;

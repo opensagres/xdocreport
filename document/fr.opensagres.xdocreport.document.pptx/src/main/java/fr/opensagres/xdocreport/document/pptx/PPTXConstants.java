@@ -43,12 +43,15 @@ public class PPTXConstants {
 	public static final String PRESENTATIONML_PRESENTATION = "application/vnd.openxmlformats-officedocument.presentationml.presentation.main+xml";
 	public static final String PPTX_EXTENSION = "pptx";
 
+	// Namespaces
+	public static final String P_NS = "http://schemas.openxmlformats.org/presentationml/2006/main";
 	public static final String A_NS = "http://schemas.openxmlformats.org/drawingml/2006/main";
-
+	
 	// Element
 	public static final String P_ELT = "p";
 	public static final String R_ELT = "r";
 	public static final String T_ELT = "t";
+	public static final String TXBODY_ELT = "txBody";
 
 	// Mime mapping
 	public static final MimeMapping MIME_MAPPING = new MimeMapping(

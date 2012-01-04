@@ -41,22 +41,26 @@ public class APBufferedRegion extends BufferedElement {
 		boolean fieldFound = false;
 		ARBufferedRegion currentAR = null;
 		ARBufferedRegion lastAR = null;
+		boolean hasField = false;
+		boolean lastHasField = false;
 		for (int i = 0; i < size; i++) {
 			currentAR = arBufferedRegions.get(i);
 			s = currentAR.getTContent();
+			hasField = s != null && s.indexOf("$") != -1;
 			if (fieldFound) {
 				fieldFound = !(s == null || s.length() == 0 || Character
 						.isWhitespace(s.charAt(0)));
 			} else {
-				fieldFound = s != null && s.indexOf("$") != -1;
+				fieldFound = hasField;
 			}
-			if (fieldFound) {
+			if (fieldFound && (hasField != lastHasField)) {
 				fullContent.append(s);
 				toRemove.add(currentAR);
 			} else {
 				update(toRemove, fullContent, lastAR);
 			}
 			lastAR = currentAR;
+			lastHasField = hasField;
 		}
 		update(toRemove, fullContent, lastAR);
 		super.removeAll(toRemove);

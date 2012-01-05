@@ -273,24 +273,6 @@ public class FieldsMetadata {
 		return fields;
 	}
 
-	/**
-	 * Load fields metadata from the given XML reader.
-	 * 
-	 * Here a sample of XML reader :
-	 * 
-	 * <pre>
-	 * <fields>
-	 * 	<field name="project.Name" imageName="" listType="false" />
-	 * 	<field name="developers.Name" imageName="" listType="true" />
-	 * <field name="project.Logo" imageName="Logo" listType="false" />
-	 * </fields>
-	 * </pre>
-	 * 
-	 * @param reader
-	 */
-	public void loadXML(Reader reader) {
-		FieldsMetadataXMLSerializer.getInstance().load(this, reader);
-	}
 
 	/**
 	 * Serialize as XML without indentation the fields metadata to the given XML

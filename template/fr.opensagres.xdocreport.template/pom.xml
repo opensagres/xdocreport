@@ -6,16 +6,7 @@
 		<version>0.9.4-SNAPSHOT</version>
 	</parent>
 	<artifactId>fr.opensagres.xdocreport.template</artifactId>
-	<build>
-		<!-- src/test/java must be declared as testResource Otherwise, resources 
-			file must be placed under Its corresponding package under src/test/resources 
-			which is not fun in our case... -->
-		<testResources>
-			<testResource>
-				<directory>src/test/java </directory>
-			</testResource>
-		</testResources>
-	</build>	
+		
 	<dependencies>
 		<dependency>
 			<groupId>fr.opensagres.xdocreport</groupId>

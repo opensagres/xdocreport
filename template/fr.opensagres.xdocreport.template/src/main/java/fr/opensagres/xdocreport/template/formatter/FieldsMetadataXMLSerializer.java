@@ -28,8 +28,16 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.Reader;
+import java.io.StringWriter;
 import java.io.Writer;
 import java.util.Collection;
+
+import org.xml.sax.InputSource;
+import org.xml.sax.SAXException;
+import org.xml.sax.XMLReader;
+import org.xml.sax.helpers.XMLReaderFactory;
+
+import fr.opensagres.xdocreport.template.formatter.sax.FieldsMetadataContentHandler;
 
 /**
  * Fields metadata serializer used to load {@link FieldsMetadata} from XML and
@@ -41,7 +49,7 @@ public class FieldsMetadataXMLSerializer {
 	private static final String FIELDS_START_ELT = "<fields>";
 	private static final String FIELDS_END_ELT = "</fields>";
 
-	private static final String LF = "\n";
+	private static final String LF = System.getProperty("line.separator");
 	private static final String TAB = "\t";
 
 	private static final FieldsMetadataXMLSerializer INSTANCE = new FieldsMetadataXMLSerializer();
@@ -70,10 +78,19 @@ public class FieldsMetadataXMLSerializer {
 	 * 
 	 * @param fieldsMetadata
 	 * @param reader
+	 * @throws SAXException 
+	 * @throws IOException 
 	 */
-	public void load(FieldsMetadata fieldsMetadata, Reader reader) {
+	public FieldsMetadata load(Reader input) throws SAXException, IOException {
 		// TODO, implement SAX Parser to load fields and call
 		// fieldsMetadata.addField(fieldMetadata);
+
+		XMLReader saxReader = XMLReaderFactory.createXMLReader();
+		FieldsMetadataContentHandler myContentHandler = new FieldsMetadataContentHandler();
+		myContentHandler.setOutput(new StringWriter());
+		saxReader.setContentHandler(myContentHandler);
+		saxReader.parse(new InputSource(input));
+		return myContentHandler.getFieldsMetadata();
 	}
 	
 	/**
@@ -92,10 +109,20 @@ public class FieldsMetadataXMLSerializer {
 	 * 
 	 * @param fieldsMetadata
 	 * @param inputStream
+	 * @throws SAXException 
+	 * @throws IOException 
 	 */
-	public void load(FieldsMetadata fieldsMetadata, InputStream inputStream) {
+	public FieldsMetadata load( InputStream inputStream) throws SAXException, IOException {
+
 		// TODO, implement SAX Parser to load fields and call
-		// fieldsMetadata.addField(fieldMetadata);
+				// fieldsMetadata.addField(fieldMetadata);
+
+				XMLReader saxReader = XMLReaderFactory.createXMLReader();
+				FieldsMetadataContentHandler myContentHandler = new FieldsMetadataContentHandler();
+				myContentHandler.setOutput(new StringWriter());
+				saxReader.setContentHandler(myContentHandler);
+				saxReader.parse(new InputSource(inputStream));
+				return myContentHandler.getFieldsMetadata();
 	}
 
 	/**

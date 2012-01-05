@@ -14,8 +14,8 @@ public class FieldsMetadataXMLSerializerTestCase {
 		StringReader reader = new StringReader(
 				"<fields><field name='developer.Name' listType='true' /></fields>");
 
-		FieldsMetadata fieldsMetadata = new FieldsMetadata();
-		FieldsMetadataXMLSerializer.getInstance().load(fieldsMetadata, reader);
+		//FieldsMetadata fieldsMetadata = new FieldsMetadata();
+		FieldsMetadata fieldsMetadata = FieldsMetadataXMLSerializer.getInstance().load( reader);
 
 		// START remove that once it's implemented
 		fieldsMetadata.addFieldAsList("developer.Name");
@@ -31,13 +31,10 @@ public class FieldsMetadataXMLSerializerTestCase {
 	@Test
 	public void testLoadXMFromInputStream() throws Exception {
 		InputStream inputStream = FieldsMetadataXMLSerializerTestCase.class.getResourceAsStream("fields.xml");
+System.out.println(inputStream);
+System.out.println(inputStream.available());
+		FieldsMetadata fieldsMetadata =FieldsMetadataXMLSerializer.getInstance().load( inputStream);
 
-		FieldsMetadata fieldsMetadata = new FieldsMetadata();
-		FieldsMetadataXMLSerializer.getInstance().load(fieldsMetadata, inputStream);
-
-		// START remove that once it's implemented
-		fieldsMetadata.addFieldAsList("developer.Name");
-		// START remove that once it's implemented
 
 		Assert.assertEquals(1, fieldsMetadata.getFields().size());
 		Assert.assertEquals("developer.Name", fieldsMetadata.getFields().get(0)

@@ -26,10 +26,46 @@ package org.odftoolkit.odfdom.converter.itext;
 
 import org.odftoolkit.odfdom.converter.Options;
 
+import com.lowagie.text.FontFactory;
+
 public class PDFViaITextOptions extends Options {
 
-	public PDFViaITextOptions() {
+	private String fontEncoding = FontFactory.defaultEncoding;
+	private boolean preserveSoftPageBreaks = false;
 
+	private PDFViaITextOptions() {
 	}
 
+	public static PDFViaITextOptions create() {
+		return new PDFViaITextOptions();
+	}
+
+	public String getFontEncoding() {
+		return fontEncoding;
+	}
+
+	/**
+	 * Set font encoding to use when retrieving fonts. The default value is Cp1252 
+	 * @param fontEncoding font encoding to use
+	 * @return this instance
+	 */
+	public PDFViaITextOptions fontEncoding(String fontEncoding) {
+		this.fontEncoding = fontEncoding;
+		return this;
+	}
+
+	public boolean isPreserveSoftPageBreaks() {
+		return preserveSoftPageBreaks;
+	}
+
+	/**
+	 * Whether to start a new page in a converted pdf upon encountering soft page break in an ODF file.
+	 * The default value is <code>false</code>.
+	 * @param preserveSoftPageBreaks
+	 * @return this instance
+	 */
+	public PDFViaITextOptions preserveSoftPageBreaks(boolean preserveSoftPageBreaks) {
+		this.preserveSoftPageBreaks = preserveSoftPageBreaks;
+		return this;
+	}
 }

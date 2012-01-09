@@ -29,6 +29,7 @@ import java.io.InputStream;
 import java.io.OutputStream;
 
 import org.odftoolkit.odfdom.converter.ODFConverterException;
+import org.odftoolkit.odfdom.converter.itext.PDFViaITextOptions;
 import org.odftoolkit.odfdom.doc.OdfTextDocument;
 
 import fr.opensagres.xdocreport.converter.MimeMapping;
@@ -51,7 +52,7 @@ public class ODF2PDFViaITextConverter extends AbstractConverterNoEntriesSupport
 		try {
 			OdfTextDocument odfDocument = OdfTextDocument.loadDocument(in);
 			org.odftoolkit.odfdom.converter.itext.ODF2PDFViaITextConverter
-					.getInstance().convert(odfDocument, out, null);
+					.getInstance().convert(odfDocument, out, getPDFViaITextOptions(options));
 		} catch (ODFConverterException e) {
 			throw new XDocConverterException(e);
 		} catch (IOException e) {
@@ -59,6 +60,11 @@ public class ODF2PDFViaITextConverter extends AbstractConverterNoEntriesSupport
 		} catch (Exception e) {
 			throw new XDocConverterException(e);
 		}
+	}
+	
+	private PDFViaITextOptions getPDFViaITextOptions(Options options) {
+		Object value = options.getSubOptions(PDFViaITextOptions.class);
+		return value instanceof PDFViaITextOptions ? (PDFViaITextOptions) value : null;
 	}
 
 	public MimeMapping getMimeMapping() {

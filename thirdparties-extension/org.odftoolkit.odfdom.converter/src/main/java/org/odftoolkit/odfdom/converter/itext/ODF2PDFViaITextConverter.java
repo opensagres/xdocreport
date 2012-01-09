@@ -51,7 +51,7 @@ public class ODF2PDFViaITextConverter extends
 	protected void doConvert(OdfDocument odfDocument, OutputStream out,
 			Writer writer, PDFViaITextOptions options)
 			throws ODFConverterException, IOException {
-		StyleEngineForIText styleEngine = new StyleEngineForIText(odfDocument);
+		StyleEngineForIText styleEngine = new StyleEngineForIText(odfDocument, options);
 		try {
 			OdfStylesDom stylesDom = odfDocument.getStylesDom();
 			OdfContentDom contentDom = odfDocument.getContentDom();

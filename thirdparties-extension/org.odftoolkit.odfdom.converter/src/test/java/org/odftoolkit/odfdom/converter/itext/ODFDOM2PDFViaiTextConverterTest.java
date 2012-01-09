@@ -46,7 +46,8 @@ public class ODFDOM2PDFViaiTextConverterTest extends
 				.getResourceAsStream(fileInName));
 
 		OutputStream out = new FileOutputStream(new File(fileOutName));
-		ODF2PDFViaITextConverter.getInstance().convert(document, out, null);
+		PDFViaITextOptions options = PDFViaITextOptions.create().fontEncoding("windows-1250").preserveSoftPageBreaks(true);
+		ODF2PDFViaITextConverter.getInstance().convert(document, out, options);
 
 		System.out.println("Generate " + fileOutName + " with "
 				+ (System.currentTimeMillis() - startTime) + " ms.");

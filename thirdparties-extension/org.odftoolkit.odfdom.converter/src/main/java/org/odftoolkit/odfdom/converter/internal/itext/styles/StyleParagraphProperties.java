@@ -29,7 +29,7 @@ import java.awt.Color;
 import com.lowagie.text.Element;
 
 /**
- * fixes for paragraph pdf conversion by Leszek Piotrowicz <abezif@gmail.com>
+ * fixes for paragraph pdf conversion by Leszek Piotrowicz <leszekp@safe-mail.net>
  */
 public class StyleParagraphProperties {
 

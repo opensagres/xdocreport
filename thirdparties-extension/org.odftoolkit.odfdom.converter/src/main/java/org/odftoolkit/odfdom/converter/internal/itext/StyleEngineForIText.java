@@ -43,6 +43,7 @@ import org.odftoolkit.odfdom.converter.internal.itext.styles.StyleTablePropertie
 import org.odftoolkit.odfdom.converter.internal.itext.styles.StyleTableRowProperties;
 import org.odftoolkit.odfdom.converter.internal.itext.styles.StyleTextProperties;
 import org.odftoolkit.odfdom.converter.internal.utils.ODFUtils;
+import org.odftoolkit.odfdom.converter.itext.PDFViaITextOptions;
 import org.odftoolkit.odfdom.doc.OdfDocument;
 import org.odftoolkit.odfdom.dom.element.OdfStyleBase;
 import org.odftoolkit.odfdom.dom.element.office.OfficeAutomaticStylesElement;
@@ -69,6 +70,9 @@ import fr.opensagres.xdocreport.itext.extension.PageOrientation;
 import fr.opensagres.xdocreport.utils.BorderType;
 import fr.opensagres.xdocreport.utils.StringUtils;
 
+/**
+ * fixes for pdf conversion by Leszek Piotrowicz <leszekp@safe-mail.net>
+ */
 public class StyleEngineForIText extends AbstractStyleEngine {
 
 	private static final String PORTRAIT = "portrait";
@@ -84,10 +88,13 @@ public class StyleEngineForIText extends AbstractStyleEngine {
 
 	private Style currentStyle = null;
 	// private StyleForItext currentStyle;
+	private final PDFViaITextOptions options;
 	private final Map<String, Style> stylesMap = new HashMap<String, Style>();
 
-	public StyleEngineForIText(OdfDocument odfDocument) {
+	public StyleEngineForIText(OdfDocument odfDocument,
+			PDFViaITextOptions options) {
 		super(odfDocument);
+		this.options = options != null ? options : PDFViaITextOptions.create();
 	}
 
 	public void visit(OfficeStylesElement ele) {
@@ -185,10 +192,6 @@ public class StyleEngineForIText extends AbstractStyleEngine {
 	}
 
 	// visit //style:paragraph-properties
-	/**
-	 * fixes for paragraph pdf conversion by Leszek Piotrowicz
-	 * <leszekp@safe-mail.net>
-	 */
 	@Override
 	public void visit(StyleParagraphPropertiesElement ele) {
 
@@ -453,8 +456,8 @@ public class StyleEngineForIText extends AbstractStyleEngine {
 		}
 
 		if (hasFontProperty) {
-			Font font = ODFFontRegistry.getRegistry().getFont(familyName, size,
-					style, fontColor);
+			Font font = ODFFontRegistry.getRegistry().getFont(familyName,
+					options.getFontEncoding(), size, style, fontColor);
 			Font oldFont = textProperties.getFont();
 			if (oldFont == null) {
 				textProperties.setFont(font);

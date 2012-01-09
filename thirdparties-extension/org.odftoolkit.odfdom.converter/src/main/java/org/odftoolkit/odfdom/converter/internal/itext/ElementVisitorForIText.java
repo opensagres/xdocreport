@@ -87,9 +87,13 @@ import com.lowagie.text.pdf.PdfPCell;
 
 import fr.opensagres.xdocreport.utils.StringUtils;
 
+/**
+ * fixes for pdf conversion by Leszek Piotrowicz <leszekp@safe-mail.net>
+ */
 public class ElementVisitorForIText extends ElementVisitorConverter {
 
 	private final StyleEngineForIText styleEngine;
+	private final PDFViaITextOptions options;
 	private IStylableContainer currentContainer;
 
 	private StylableMasterPage currentMasterPage;
@@ -98,12 +102,12 @@ public class ElementVisitorForIText extends ElementVisitorConverter {
 	private boolean parseOfficeTextElement = false;
 	private Style currentRowStyle;
 
-	
 	public ElementVisitorForIText(OdfDocument odfDocument, OutputStream out,
 			Writer writer, StyleEngineForIText styleEngine,
 			PDFViaITextOptions options) {
 		super(odfDocument, out, writer);
 		this.styleEngine = styleEngine;
+		this.options = options != null ? options : PDFViaITextOptions.create();
 		// Create document
 		try {
 			document = new StylableDocument(out, styleEngine);
@@ -153,7 +157,7 @@ public class ElementVisitorForIText extends ElementVisitorConverter {
 	public void visit(StyleHeaderLeftElement ele) {
 		// TODO : implement it.
 	}
-	
+
 	// ---------------------- visit
 	// styles.xml//office:document-styles/office:master-styles/style:master-page/style-footer
 
@@ -175,14 +179,14 @@ public class ElementVisitorForIText extends ElementVisitorConverter {
 
 	@Override
 	public void visit(StyleFooterLeftElement ele) {
-		// TODO : implement it. 
+		// TODO : implement it.
 	}
-	
+
 	// ---------------------- visit root //office-body/office-text
 
 	@Override
 	public void visit(OfficeTextElement ele) {
-		this.parseOfficeTextElement  = true;
+		this.parseOfficeTextElement = true;
 		currentContainer = document;
 		super.visit(ele);
 		addCurrentChapterIfNeeded();
@@ -197,7 +201,8 @@ public class ElementVisitorForIText extends ElementVisitorConverter {
 				.getTextOutlineLevelAttribute() : 1;
 
 		// 1) Create title of the chapter
-		StylableParagraph title = document.createParagraph((IStylableContainer)null);
+		StylableParagraph title = document
+				.createParagraph((IStylableContainer) null);
 		// apply style for the title font, color, bold style...
 		applyStyles(ele, title);
 		// loop for Text node to add text in the title without add the paragraph
@@ -255,24 +260,25 @@ public class ElementVisitorForIText extends ElementVisitorConverter {
 	public void visit(TextPElement ele) {
 		StylableParagraph paragraph = document
 				.createParagraph(currentContainer);
-		applyStyles(ele, paragraph);		
+		applyStyles(ele, paragraph);
 		if (ele.getFirstChild() == null) {
 			// no content in the paragraph
 			// ex : <text:p text:style-name="Standard"></text:p>
 			// add blank Chunk
 			paragraph.add(Chunk.NEWLINE);
-		}		
-		addITextContainer(ele, paragraph);		
-		
+		}
+		addITextContainer(ele, paragraph);
+
 	}
 
 	// ---------------------- visit //text:tab
 
 	@Override
 	public void visit(TextTabElement ele) {
-		//ele.getParentNode();
-		//System.err.println(ele);
+		// ele.getParentNode();
+		// System.err.println(ele);
 	}
+
 	// ---------------------- visit //text:span
 
 	@Override
@@ -293,9 +299,9 @@ public class ElementVisitorForIText extends ElementVisitorConverter {
 	@Override
 	public void visit(TextAElement ele) {
 		StylableAnchor anchor = document.createAnchor(currentContainer);
-		String reference = ele.getXlinkHrefAttribute();		
+		String reference = ele.getXlinkHrefAttribute();
 		applyStyles(ele, anchor);
-		
+
 		if (anchor.getFont().getColor() == null) {
 			// if no color was applied to the link
 			// get the font of the paragraph and set blue color.
@@ -311,12 +317,13 @@ public class ElementVisitorForIText extends ElementVisitorConverter {
 					}
 				}
 			}
-			//Color blueColor = ColorRegistryForIText.getInstance().getColor("#0000CC");
+			// Color blueColor =
+			// ColorRegistryForIText.getInstance().getColor("#0000CC");
 			linkFont.setColor(Color.BLUE);
 		}
-		
+
 		// TODO ; manage internal link
-		// set the link 
+		// set the link
 		anchor.setReference(reference);
 		// Add to current container.
 		addITextContainer(ele, anchor);
@@ -364,7 +371,7 @@ public class ElementVisitorForIText extends ElementVisitorConverter {
 		Integer rowSpan = ele.getTableNumberRowsSpannedAttribute();
 		if (rowSpan != null) {
 			tableCell.setRowspan(rowSpan);
-			
+
 		}
 		// Apply styles coming from table-row
 		if (currentRowStyle != null) {
@@ -422,7 +429,8 @@ public class ElementVisitorForIText extends ElementVisitorConverter {
 						}
 						if (StringUtils.isNotEmpty(x)
 								&& StringUtils.isNotEmpty(y)) {
-							image.setAbsolutePosition(ODFUtils.getDimensionAsPoint(x),
+							image.setAbsolutePosition(
+									ODFUtils.getDimensionAsPoint(x),
 									ODFUtils.getDimensionAsPoint(y));
 						}
 						if (StringUtils.isNotEmpty(width)) {
@@ -459,16 +467,18 @@ public class ElementVisitorForIText extends ElementVisitorConverter {
 
 	@Override
 	public void visit(TextSoftPageBreakElement ele) {
-		document.newPage();
+		if (options.isPreserveSoftPageBreaks()) {
+			document.newPage();
+		}
 	}
-	
+
 	// ---------------------- visit text:line-break
 
 	@Override
 	public void visit(TextLineBreakElement ele) {
 		currentContainer.addElement(Chunk.NEWLINE);
 	}
-	
+
 	@Override
 	protected void processTextNode(Text node) {
 		createChunk(node);
@@ -517,11 +527,12 @@ public class ElementVisitorForIText extends ElementVisitorConverter {
 		currentContainer.addElement(element);
 	}
 
-	private StylableMasterPage applyStyles(OdfStylableElement ele, IStylableElement element) {
+	private StylableMasterPage applyStyles(OdfStylableElement ele,
+			IStylableElement element) {
 		StylableMasterPage newMasterPage = null;
 		Style style = getStyle(ele);
 		if (style != null) {
-			if (parseOfficeTextElement) {				
+			if (parseOfficeTextElement) {
 				String masterPageName = style.getMasterPageName();
 				if (StringUtils.isEmpty(masterPageName)) {
 					if (!defaultMasterPage.equals(currentMasterPage)) {

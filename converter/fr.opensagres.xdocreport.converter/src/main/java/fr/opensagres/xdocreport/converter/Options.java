@@ -37,7 +37,6 @@ public class Options {
 	private Map<String, Object> properties = null;
 
 	private Options() {
-
 	}
 
 	public static Options getFrom(DocumentKind from) {
@@ -60,14 +59,6 @@ public class Options {
 		return options;
 	}
 
-	public String getTo() {
-		return to;
-	}
-
-	public String getVia() {
-		return via;
-	}
-
 	public String getFrom() {
 		return from;
 	}
@@ -81,6 +72,10 @@ public class Options {
 		return from(from.name());
 	}
 
+	public String getTo() {
+		return to;
+	}
+
 	public Options to(String to) {
 		this.to = to;
 		return this;
@@ -90,13 +85,35 @@ public class Options {
 		return to(to.name());
 	}
 
+	public String getVia() {
+		return via;
+	}
+
 	public Options via(String via) {
 		this.via = via;
 		return this;
 	}
 
-	public Options via(ConverterTypeVia via) {		
+	public Options via(ConverterTypeVia via) {
 		return via(via.name());
+	}
+
+	public Object getSubOptions(Class<?> subOptionsClass) {
+		return subOptionsClass != null ? getProperty(subOptionsClass.getName())	: null;
+	}
+
+	/**
+	 * Set sub-options specific to some stage of processing.
+	 * In example to pass options to pdf converter use construction like
+	 * <code>Options.getTo(ConverterTypeTo.PDF).via(ConverterTypeVia.ITEXT).subOptions(PDFViaITextOptions.create().fontEncoding("windows-1250"))</code>
+	 * @param subOptionsValue sub-options to set
+	 * @return this instance
+	 */
+	public Options subOptions(Object subOptionsValue) {
+		if (subOptionsValue != null) {
+			setProperty(subOptionsValue.getClass().getName(), subOptionsValue);
+		}
+		return this;
 	}
 
 	public void setProperty(String name, Object value) {

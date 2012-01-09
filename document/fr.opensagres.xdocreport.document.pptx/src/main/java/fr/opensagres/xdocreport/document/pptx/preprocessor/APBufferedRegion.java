@@ -16,12 +16,17 @@ public class APBufferedRegion extends BufferedElement {
 
 	private final PPTXSlideDocument document;
 	private final List<ARBufferedRegion> arBufferedRegions;
+	private Integer level;
+	private String itemNameList;
+
+	private List<String> ignoreLoopDirective;
 
 	public APBufferedRegion(PPTXSlideDocument document, BufferedElement parent,
 			String uri, String localName, String name, Attributes attributes) {
 		super(parent, uri, localName, name, attributes);
 		this.document = document;
 		this.arBufferedRegions = new ArrayList<ARBufferedRegion>();
+		this.ignoreLoopDirective = null;
 	}
 
 	@Override
@@ -72,7 +77,7 @@ public class APBufferedRegion extends BufferedElement {
 					fullContent.append(s);
 					toRemove.add(currentAR);
 				} else {
-					// Do nothing					
+					// Do nothing
 				}
 			}
 			lastAR = currentAR;
@@ -102,14 +107,13 @@ public class APBufferedRegion extends BufferedElement {
 			Collection<String> fieldsAsList = fieldsMetadata.getFieldsAsList();
 			for (final String fieldName : fieldsAsList) {
 				if (content.contains(fieldName)) {
-					String itemNameList = formatter.extractItemNameList(
-							content, fieldName, true);
+					this.itemNameList = formatter.extractItemNameList(content,
+							fieldName, true);
 					if (StringUtils.isNotEmpty(itemNameList)) {
-						setStartLoopDirective(formatter
-								.getStartLoopDirective(itemNameList));
-						setEndLoopDirective(formatter
-								.getEndLoopDirective(itemNameList));
-
+						if (!isIgnoreLoopDirective(itemNameList)) {
+							setStartLoopDirective(formatter
+									.getStartLoopDirective(itemNameList));
+						}
 						return formatter.formatAsFieldItemList(content,
 								fieldName, true);
 					}
@@ -119,12 +123,41 @@ public class APBufferedRegion extends BufferedElement {
 		return null;
 	}
 
-	private void setEndLoopDirective(String endLoopDirective) {
-		this.endTagElement.setAfter(endLoopDirective);
+	public void addEndLoopDirective(String itemNameList) {
+		IDocumentFormatter formatter = document.getFormatter();
+		this.endTagElement
+				.setAfter(formatter.getEndLoopDirective(itemNameList));
 	}
 
 	private void setStartLoopDirective(String startLoopDirective) {
 		this.startTagElement.setBefore(startLoopDirective);
+	}
+
+	public String getItemNameList() {
+		return itemNameList;
+	}
+
+	public Integer getLevel() {
+		return level;
+	}
+
+	public void setLevel(Integer level) {
+		this.level = level;
+	}
+
+	public void addIgnoreLoopDirective(String itemNameList) {
+		if (ignoreLoopDirective == null) {
+			ignoreLoopDirective = new ArrayList<String>();
+
+		}
+		ignoreLoopDirective.add(itemNameList);
+	}
+
+	public boolean isIgnoreLoopDirective(String itemNameList) {
+		if (ignoreLoopDirective == null) {
+			return false;
+		}
+		return ignoreLoopDirective.contains(itemNameList);
 	}
 
 }

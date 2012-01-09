@@ -39,7 +39,8 @@ public class StringUtils {
 	/**
 	 * Logger for this class
 	 */
-	private static final Logger logger = LogUtils.getLogger(StringUtils.class.getName());
+	private static final Logger logger = LogUtils.getLogger(StringUtils.class
+			.getName());
 
 	public static final String[] EMPTY_STRING_ARRAY = new String[0];
 	public static final String TRUE = "true";
@@ -136,224 +137,255 @@ public class StringUtils {
 	}
 
 	/**
-     * <p>
-     * Replaces all occurrences of Strings within another String.
-     * </p>
-     * 
-     * <p>
-     * A <code>null</code> reference passed to this method is a no-op, or if
-     * any "search string" or "string to replace" is null, that replace will be
-     * ignored. This will not repeat. For repeating replaces, call the
-     * overloaded method.
-     * </p>
-     * 
-     * <pre>
-     *  StringUtils.replaceEach(null, *, *)        = null
-     *  StringUtils.replaceEach("", *, *)          = ""
-     *  StringUtils.replaceEach("aba", null, null) = "aba"
-     *  StringUtils.replaceEach("aba", new String[0], null) = "aba"
-     *  StringUtils.replaceEach("aba", null, new String[0]) = "aba"
-     *  StringUtils.replaceEach("aba", new String[]{"a"}, null)  = "aba"
-     *  StringUtils.replaceEach("aba", new String[]{"a"}, new String[]{""})  = "b"
-     *  StringUtils.replaceEach("aba", new String[]{null}, new String[]{"a"})  = "aba"
-     *  StringUtils.replaceEach("abcde", new String[]{"ab", "d"}, new String[]{"w", "t"})  = "wcte"
-     *  (example of how it does not repeat)
-     *  StringUtils.replaceEach("abcde", new String[]{"ab", "d"}, new String[]{"d", "t"})  = "dcte"
-     * </pre>
-     * 
-     * @param text
-     *            text to search and replace in, no-op if null
-     * @param searchList
-     *            the Strings to search for, no-op if null
-     * @param replacementList
-     *            the Strings to replace them with, no-op if null
-     * @return the text with any replacements processed, <code>null</code> if
-     *         null String input
-     * @throws IndexOutOfBoundsException
-     *             if the lengths of the arrays are not the same (null is ok,
-     *             and/or size 0)
-     * @since 2.4
-     */
-    public static String replaceEach(String text, String[] searchList, String[] replacementList) {
-        return replaceEach(text, searchList, replacementList, false, 0);
-    }
+	 * Returns the given value String as Integer.
+	 * 
+	 * @param value
+	 * @return
+	 */
+	public static Integer asInteger(String value) {
+		return asInteger(value, null);
+	}
 
-    /**
-     * <p>
-     * Replaces all occurrences of Strings within another String.
-     * </p>
-     * 
-     * <p>
-     * A <code>null</code> reference passed to this method is a no-op, or if
-     * any "search string" or "string to replace" is null, that replace will be
-     * ignored. 
-     * </p>
-     * 
-     * <pre>
-     *  StringUtils.replaceEach(null, *, *, *) = null
-     *  StringUtils.replaceEach("", *, *, *) = ""
-     *  StringUtils.replaceEach("aba", null, null, *) = "aba"
-     *  StringUtils.replaceEach("aba", new String[0], null, *) = "aba"
-     *  StringUtils.replaceEach("aba", null, new String[0], *) = "aba"
-     *  StringUtils.replaceEach("aba", new String[]{"a"}, null, *) = "aba"
-     *  StringUtils.replaceEach("aba", new String[]{"a"}, new String[]{""}, *) = "b"
-     *  StringUtils.replaceEach("aba", new String[]{null}, new String[]{"a"}, *) = "aba"
-     *  StringUtils.replaceEach("abcde", new String[]{"ab", "d"}, new String[]{"w", "t"}, *) = "wcte"
-     *  (example of how it repeats)
-     *  StringUtils.replaceEach("abcde", new String[]{"ab", "d"}, new String[]{"d", "t"}, false) = "dcte"
-     *  StringUtils.replaceEach("abcde", new String[]{"ab", "d"}, new String[]{"d", "t"}, true) = "tcte"
-     *  StringUtils.replaceEach("abcde", new String[]{"ab", "d"}, new String[]{"d", "ab"}, *) = IllegalArgumentException
-     * </pre>
-     * 
-     * @param text
-     *            text to search and replace in, no-op if null
-     * @param searchList
-     *            the Strings to search for, no-op if null
-     * @param replacementList
-     *            the Strings to replace them with, no-op if null
-     * @param repeat if true, then replace repeatedly 
-     *       until there are no more possible replacements or timeToLive < 0
-     * @param timeToLive
-     *            if less than 0 then there is a circular reference and endless
-     *            loop
-     * @return the text with any replacements processed, <code>null</code> if
-     *         null String input
-     * @throws IllegalArgumentException
-     *             if the search is repeating and there is an endless loop due
-     *             to outputs of one being inputs to another
-     * @throws IndexOutOfBoundsException
-     *             if the lengths of the arrays are not the same (null is ok,
-     *             and/or size 0)
-     * @since 2.4
-     */
-    private static String replaceEach(String text, String[] searchList, String[] replacementList, 
-                                      boolean repeat, int timeToLive) 
-    {
+	/**
+	 * Returns the given value String as Integer.
+	 * 
+	 * @param value
+	 * @param defaultValue
+	 * @return
+	 */
+	public static Integer asInteger(String value, Integer defaultValue) {
+		try {
+			return Integer.parseInt(value);
+		} catch (Throwable e) {
+			return defaultValue;
+		}
+	}
 
-        // mchyzer Performance note: This creates very few new objects (one major goal)
-        // let me know if there are performance requests, we can create a harness to measure
+	/**
+	 * <p>
+	 * Replaces all occurrences of Strings within another String.
+	 * </p>
+	 * 
+	 * <p>
+	 * A <code>null</code> reference passed to this method is a no-op, or if any
+	 * "search string" or "string to replace" is null, that replace will be
+	 * ignored. This will not repeat. For repeating replaces, call the
+	 * overloaded method.
+	 * </p>
+	 * 
+	 * <pre>
+	 *  StringUtils.replaceEach(null, *, *)        = null
+	 *  StringUtils.replaceEach("", *, *)          = ""
+	 *  StringUtils.replaceEach("aba", null, null) = "aba"
+	 *  StringUtils.replaceEach("aba", new String[0], null) = "aba"
+	 *  StringUtils.replaceEach("aba", null, new String[0]) = "aba"
+	 *  StringUtils.replaceEach("aba", new String[]{"a"}, null)  = "aba"
+	 *  StringUtils.replaceEach("aba", new String[]{"a"}, new String[]{""})  = "b"
+	 *  StringUtils.replaceEach("aba", new String[]{null}, new String[]{"a"})  = "aba"
+	 *  StringUtils.replaceEach("abcde", new String[]{"ab", "d"}, new String[]{"w", "t"})  = "wcte"
+	 *  (example of how it does not repeat)
+	 *  StringUtils.replaceEach("abcde", new String[]{"ab", "d"}, new String[]{"d", "t"})  = "dcte"
+	 * </pre>
+	 * 
+	 * @param text
+	 *            text to search and replace in, no-op if null
+	 * @param searchList
+	 *            the Strings to search for, no-op if null
+	 * @param replacementList
+	 *            the Strings to replace them with, no-op if null
+	 * @return the text with any replacements processed, <code>null</code> if
+	 *         null String input
+	 * @throws IndexOutOfBoundsException
+	 *             if the lengths of the arrays are not the same (null is ok,
+	 *             and/or size 0)
+	 * @since 2.4
+	 */
+	public static String replaceEach(String text, String[] searchList,
+			String[] replacementList) {
+		return replaceEach(text, searchList, replacementList, false, 0);
+	}
 
-        if (text == null || text.length() == 0 || searchList == null || 
-            searchList.length == 0 || replacementList == null || replacementList.length == 0) 
-        {
-            return text;
-        }
+	/**
+	 * <p>
+	 * Replaces all occurrences of Strings within another String.
+	 * </p>
+	 * 
+	 * <p>
+	 * A <code>null</code> reference passed to this method is a no-op, or if any
+	 * "search string" or "string to replace" is null, that replace will be
+	 * ignored.
+	 * </p>
+	 * 
+	 * <pre>
+	 *  StringUtils.replaceEach(null, *, *, *) = null
+	 *  StringUtils.replaceEach("", *, *, *) = ""
+	 *  StringUtils.replaceEach("aba", null, null, *) = "aba"
+	 *  StringUtils.replaceEach("aba", new String[0], null, *) = "aba"
+	 *  StringUtils.replaceEach("aba", null, new String[0], *) = "aba"
+	 *  StringUtils.replaceEach("aba", new String[]{"a"}, null, *) = "aba"
+	 *  StringUtils.replaceEach("aba", new String[]{"a"}, new String[]{""}, *) = "b"
+	 *  StringUtils.replaceEach("aba", new String[]{null}, new String[]{"a"}, *) = "aba"
+	 *  StringUtils.replaceEach("abcde", new String[]{"ab", "d"}, new String[]{"w", "t"}, *) = "wcte"
+	 *  (example of how it repeats)
+	 *  StringUtils.replaceEach("abcde", new String[]{"ab", "d"}, new String[]{"d", "t"}, false) = "dcte"
+	 *  StringUtils.replaceEach("abcde", new String[]{"ab", "d"}, new String[]{"d", "t"}, true) = "tcte"
+	 *  StringUtils.replaceEach("abcde", new String[]{"ab", "d"}, new String[]{"d", "ab"}, *) = IllegalArgumentException
+	 * </pre>
+	 * 
+	 * @param text
+	 *            text to search and replace in, no-op if null
+	 * @param searchList
+	 *            the Strings to search for, no-op if null
+	 * @param replacementList
+	 *            the Strings to replace them with, no-op if null
+	 * @param repeat
+	 *            if true, then replace repeatedly until there are no more
+	 *            possible replacements or timeToLive < 0
+	 * @param timeToLive
+	 *            if less than 0 then there is a circular reference and endless
+	 *            loop
+	 * @return the text with any replacements processed, <code>null</code> if
+	 *         null String input
+	 * @throws IllegalArgumentException
+	 *             if the search is repeating and there is an endless loop due
+	 *             to outputs of one being inputs to another
+	 * @throws IndexOutOfBoundsException
+	 *             if the lengths of the arrays are not the same (null is ok,
+	 *             and/or size 0)
+	 * @since 2.4
+	 */
+	private static String replaceEach(String text, String[] searchList,
+			String[] replacementList, boolean repeat, int timeToLive) {
 
-        // if recursing, this shouldnt be less than 0
-        if (timeToLive < 0) {
-            throw new IllegalStateException("TimeToLive of " + timeToLive + " is less than 0: " + text);
-        }
+		// mchyzer Performance note: This creates very few new objects (one
+		// major goal)
+		// let me know if there are performance requests, we can create a
+		// harness to measure
 
-        int searchLength = searchList.length;
-        int replacementLength = replacementList.length;
+		if (text == null || text.length() == 0 || searchList == null
+				|| searchList.length == 0 || replacementList == null
+				|| replacementList.length == 0) {
+			return text;
+		}
 
-        // make sure lengths are ok, these need to be equal
-        if (searchLength != replacementLength) {
-            throw new IllegalArgumentException("Search and Replace array lengths don't match: "
-                + searchLength
-                + " vs "
-                + replacementLength);
-        }
+		// if recursing, this shouldnt be less than 0
+		if (timeToLive < 0) {
+			throw new IllegalStateException("TimeToLive of " + timeToLive
+					+ " is less than 0: " + text);
+		}
 
-        // keep track of which still have matches
-        boolean[] noMoreMatchesForReplIndex = new boolean[searchLength];
+		int searchLength = searchList.length;
+		int replacementLength = replacementList.length;
 
-        // index on index that the match was found
-        int textIndex = -1;
-        int replaceIndex = -1;
-        int tempIndex = -1;
+		// make sure lengths are ok, these need to be equal
+		if (searchLength != replacementLength) {
+			throw new IllegalArgumentException(
+					"Search and Replace array lengths don't match: "
+							+ searchLength + " vs " + replacementLength);
+		}
 
-        // index of replace array that will replace the search string found
-        // NOTE: logic duplicated below START
-        for (int i = 0; i < searchLength; i++) {
-            if (noMoreMatchesForReplIndex[i] || searchList[i] == null || 
-                searchList[i].length() == 0 || replacementList[i] == null) 
-            {
-                continue;
-            }
-            tempIndex = text.indexOf(searchList[i]);
+		// keep track of which still have matches
+		boolean[] noMoreMatchesForReplIndex = new boolean[searchLength];
 
-            // see if we need to keep searching for this
-            if (tempIndex == -1) {
-                noMoreMatchesForReplIndex[i] = true;
-            } else {
-                if (textIndex == -1 || tempIndex < textIndex) {
-                    textIndex = tempIndex;
-                    replaceIndex = i;
-                }
-            }
-        }
-        // NOTE: logic mostly below END
+		// index on index that the match was found
+		int textIndex = -1;
+		int replaceIndex = -1;
+		int tempIndex = -1;
 
-        // no search strings found, we are done
-        if (textIndex == -1) {
-            return text;
-        }
+		// index of replace array that will replace the search string found
+		// NOTE: logic duplicated below START
+		for (int i = 0; i < searchLength; i++) {
+			if (noMoreMatchesForReplIndex[i] || searchList[i] == null
+					|| searchList[i].length() == 0
+					|| replacementList[i] == null) {
+				continue;
+			}
+			tempIndex = text.indexOf(searchList[i]);
 
-        int start = 0;
+			// see if we need to keep searching for this
+			if (tempIndex == -1) {
+				noMoreMatchesForReplIndex[i] = true;
+			} else {
+				if (textIndex == -1 || tempIndex < textIndex) {
+					textIndex = tempIndex;
+					replaceIndex = i;
+				}
+			}
+		}
+		// NOTE: logic mostly below END
 
-        // get a good guess on the size of the result buffer so it doesnt have to double if it goes over a bit
-        int increase = 0;
+		// no search strings found, we are done
+		if (textIndex == -1) {
+			return text;
+		}
 
-        // count the replacement text elements that are larger than their corresponding text being replaced
-        for (int i = 0; i < searchList.length; i++) {
-            int greater = replacementList[i].length() - searchList[i].length();
-            if (greater > 0) {
-                increase += 3 * greater; // assume 3 matches
-            }
-        }
-        // have upper-bound at 20% increase, then let Java take over
-        increase = Math.min(increase, text.length() / 5);
+		int start = 0;
 
-        StringBuffer buf = new StringBuffer(text.length() + increase);
+		// get a good guess on the size of the result buffer so it doesnt have
+		// to double if it goes over a bit
+		int increase = 0;
 
-        while (textIndex != -1) {
+		// count the replacement text elements that are larger than their
+		// corresponding text being replaced
+		for (int i = 0; i < searchList.length; i++) {
+			int greater = replacementList[i].length() - searchList[i].length();
+			if (greater > 0) {
+				increase += 3 * greater; // assume 3 matches
+			}
+		}
+		// have upper-bound at 20% increase, then let Java take over
+		increase = Math.min(increase, text.length() / 5);
 
-            for (int i = start; i < textIndex; i++) {
-                buf.append(text.charAt(i));
-            }
-            buf.append(replacementList[replaceIndex]);
+		StringBuffer buf = new StringBuffer(text.length() + increase);
 
-            start = textIndex + searchList[replaceIndex].length();
+		while (textIndex != -1) {
 
-            textIndex = -1;
-            replaceIndex = -1;
-            tempIndex = -1;
-            // find the next earliest match
-            // NOTE: logic mostly duplicated above START
-            for (int i = 0; i < searchLength; i++) {
-                if (noMoreMatchesForReplIndex[i] || searchList[i] == null || 
-                    searchList[i].length() == 0 || replacementList[i] == null) 
-                {
-                    continue;
-                }
-                tempIndex = text.indexOf(searchList[i], start);
+			for (int i = start; i < textIndex; i++) {
+				buf.append(text.charAt(i));
+			}
+			buf.append(replacementList[replaceIndex]);
 
-                // see if we need to keep searching for this
-                if (tempIndex == -1) {
-                    noMoreMatchesForReplIndex[i] = true;
-                } else {
-                    if (textIndex == -1 || tempIndex < textIndex) {
-                        textIndex = tempIndex;
-                        replaceIndex = i;
-                    }
-                }
-            }
-            // NOTE: logic duplicated above END
+			start = textIndex + searchList[replaceIndex].length();
 
-        }
-        int textLength = text.length();
-        for (int i = start; i < textLength; i++) {
-            buf.append(text.charAt(i));
-        }
-        String result = buf.toString();
-        if (!repeat) {
-            return result;
-        }
+			textIndex = -1;
+			replaceIndex = -1;
+			tempIndex = -1;
+			// find the next earliest match
+			// NOTE: logic mostly duplicated above START
+			for (int i = 0; i < searchLength; i++) {
+				if (noMoreMatchesForReplIndex[i] || searchList[i] == null
+						|| searchList[i].length() == 0
+						|| replacementList[i] == null) {
+					continue;
+				}
+				tempIndex = text.indexOf(searchList[i], start);
 
-        return replaceEach(result, searchList, replacementList, repeat, timeToLive - 1);
-    }
-    
+				// see if we need to keep searching for this
+				if (tempIndex == -1) {
+					noMoreMatchesForReplIndex[i] = true;
+				} else {
+					if (textIndex == -1 || tempIndex < textIndex) {
+						textIndex = tempIndex;
+						replaceIndex = i;
+					}
+				}
+			}
+			// NOTE: logic duplicated above END
+
+		}
+		int textLength = text.length();
+		for (int i = start; i < textLength; i++) {
+			buf.append(text.charAt(i));
+		}
+		String result = buf.toString();
+		if (!repeat) {
+			return result;
+		}
+
+		return replaceEach(result, searchList, replacementList, repeat,
+				timeToLive - 1);
+	}
+
 	/**
 	 * Decode the given String to UTF-8.
 	 * 
@@ -369,4 +401,5 @@ public class StringUtils {
 			return s;
 		}
 	}
+
 }

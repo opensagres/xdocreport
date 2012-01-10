@@ -402,4 +402,16 @@ public class StringUtils {
 		}
 	}
 
+	public static String xmlUnescape(String s) {
+		if (s == null) {
+			return null;
+		}
+		s = s.replaceAll(EncodingConstants.AMP, "&");
+		s = s.replaceAll(EncodingConstants.LT, "<");
+		s = s.replaceAll(EncodingConstants.GT, ">");
+		s = s.replaceAll(EncodingConstants.QUOT, "\"");
+		s = s.replaceAll(EncodingConstants.APOS, "'");
+		return s;
+	}
+
 }

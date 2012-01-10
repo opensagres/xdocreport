@@ -24,6 +24,12 @@
  */
 package fr.opensagres.xdocreport.document.preprocessor.sax;
 
+import static fr.opensagres.xdocreport.core.EncodingConstants.AMP;
+import static fr.opensagres.xdocreport.core.EncodingConstants.APOS;
+import static fr.opensagres.xdocreport.core.EncodingConstants.GT;
+import static fr.opensagres.xdocreport.core.EncodingConstants.LT;
+import static fr.opensagres.xdocreport.core.EncodingConstants.QUOT;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -32,7 +38,6 @@ import org.xml.sax.SAXException;
 import org.xml.sax.helpers.AttributesImpl;
 import org.xml.sax.helpers.DefaultHandler;
 
-import fr.opensagres.xdocreport.core.EncodingConstants;
 import fr.opensagres.xdocreport.core.utils.StringUtils;
 
 /**
@@ -41,7 +46,7 @@ import fr.opensagres.xdocreport.core.utils.StringUtils;
  * 
  */
 public class BufferedDocumentContentHandler<Document extends BufferedDocument>
-		extends DefaultHandler implements EncodingConstants {
+		extends DefaultHandler  {
 
 	private static final String XML_DECLARATION = "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>";
 	public static final String CDATA_TYPE = "CDATA";
@@ -205,18 +210,26 @@ public class BufferedDocumentContentHandler<Document extends BufferedDocument>
 		char c;
 		for (int i = start; i < start + length; i++) {
 			c = ch[i];
-			if (c == '<') {
-				currentCharacters.append(LT);
-			} else if (c == '>') {
-				currentCharacters.append(GT);
-			} else if (c == '\'') {
-				currentCharacters.append(APOS);
-			} else if (c == '&') {
-				currentCharacters.append(AMP);
-			}else {
+			if (mustEncodeCharachers()) {
+				if (c == '<') {
+					currentCharacters.append(LT);
+				} else if (c == '>') {
+					currentCharacters.append(GT);
+				} else if (c == '\'') {
+					currentCharacters.append(APOS);
+				} else if (c == '&') {
+					currentCharacters.append(AMP);
+				} else {
+					currentCharacters.append(c);
+				}
+			} else {
 				currentCharacters.append(c);
 			}
 		}
+	}
+
+	protected boolean mustEncodeCharachers() {
+		return true;
 	}
 
 	protected void flushCharacters(String characters) {
@@ -276,13 +289,13 @@ public class BufferedDocumentContentHandler<Document extends BufferedDocument>
 			} else if (ch == '"') {
 				region.append(QUOT);
 			} else {
-				region.append((char)ch);
+				region.append((char) ch);
 			}
-//			else if ((ch >= ' ' && _encodingInfo.isPrintable((char) ch))) {
-//				_printer.printText((char) ch);
-//			} else {
-//				printHex(ch, region);
-//			}
+			// else if ((ch >= ' ' && _encodingInfo.isPrintable((char) ch))) {
+			// _printer.printText((char) ch);
+			// } else {
+			// printHex(ch, region);
+			// }
 		}
 	}
 

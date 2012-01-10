@@ -435,4 +435,8 @@ public class VelocityDocumentFormatter extends AbstractDocumentFormatter {
 				"\"" + textStylingKind + "\"", "\"" + documentKind + "\""));
 		return newContent.toString();
 	}
+	
+	public boolean hasDirective(String characters) {
+		return characters.indexOf("#") != -1;
+	}
 }

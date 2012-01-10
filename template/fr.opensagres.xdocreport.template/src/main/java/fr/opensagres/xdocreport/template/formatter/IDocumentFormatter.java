@@ -74,4 +74,6 @@ public interface IDocumentFormatter {
 
 	String formatAsTextStyling(String fieldName, String metafieldName,
 			String documentKind, String syntaxKind);
+
+	boolean hasDirective(String characters);
 }

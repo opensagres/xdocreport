@@ -34,8 +34,7 @@ import fr.opensagres.xdocreport.document.preprocessor.sax.TransformedBufferedDoc
 import fr.opensagres.xdocreport.template.formatter.FieldMetadata;
 import fr.opensagres.xdocreport.template.formatter.IDocumentFormatter;
 
-public abstract class MergefieldBufferedRegion extends BufferedElement
-		implements EncodingConstants {
+public abstract class MergefieldBufferedRegion extends BufferedElement {
 
 	private static final String MERGEFORMAT = "\\* MERGEFORMAT";
 
@@ -138,13 +137,13 @@ public abstract class MergefieldBufferedRegion extends BufferedElement
 					// Fix bug
 					// http://code.google.com/p/xdocreport/issues/detail?id=29
 					// Replace \" with "
-					// ex : remplace [#if \"a\" = \"one\"]1[#else]not 1[/#if]
+					// ex : replace [#if \"a\" = \"one\"]1[#else]not 1[/#if]
 					// to have [#if "a" = "one"]1[#else]not 1[/#if]
 					fieldName = StringUtils.replaceAll(fieldName, "\\\"", "\"");
 					// ex : remplace [#if &apos;a&apos; = \"one\"]1[#else]not
 					// 1[/#if]
 					// to have [#if 'a' = "one"]1[#else]not 1[/#if]
-					fieldName = StringUtils.replaceAll(fieldName, APOS, "'");
+					fieldName = StringUtils.xmlUnescape(fieldName);
 
 					if (fieldAsTextStyling != null) {
 						fieldName = formatter.formatAsTextStyling(fieldName,

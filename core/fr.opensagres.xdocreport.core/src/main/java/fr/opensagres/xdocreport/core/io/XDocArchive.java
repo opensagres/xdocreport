@@ -52,8 +52,7 @@ import fr.opensagres.xdocreport.core.io.internal.OutputStreamWriterCancelable;
  * 
  */
 public class XDocArchive implements IEntryInputStreamProvider,
-		IEntryReaderProvider, IEntryWriterProvider, IEntryOutputStreamProvider,
-		EncodingConstants {
+		IEntryReaderProvider, IEntryWriterProvider, IEntryOutputStreamProvider {
 
 	private static final String MIMETYPE_ENTRY_NAME = "mimetype";
 	
@@ -235,7 +234,7 @@ public class XDocArchive implements IEntryInputStreamProvider,
 	 * @return reader from the input stream with UTF-8 charset.
 	 */
 	private static Reader toUTF8Reader(InputStream inputStream) {
-		return new InputStreamReader(inputStream, UTF_8);
+		return new InputStreamReader(inputStream, EncodingConstants.UTF_8);
 	}
 
 	/**
@@ -246,7 +245,7 @@ public class XDocArchive implements IEntryInputStreamProvider,
 	 * @return writer from the output stream with UTF-8 charset.
 	 */
 	private static Writer toUTF8Writer(OutputStream outputStream) {
-		return new OutputStreamWriterCancelable(outputStream, UTF_8);
+		return new OutputStreamWriterCancelable(outputStream, EncodingConstants.UTF_8);
 	}
 
 	/**

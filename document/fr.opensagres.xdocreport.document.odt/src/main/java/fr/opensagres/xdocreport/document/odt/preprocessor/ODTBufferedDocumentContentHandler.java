@@ -56,7 +56,7 @@ public class ODTBufferedDocumentContentHandler extends
 	public static final String BOLD_STYLE_NAME = "XDocReport_Bold";
 	public static final String ITALIC_STYLE_NAME = "XDocReport_Italic";
 	public static final String BOLD_ITALIC_STYLE_NAME = "XDocReport_BoldItalic";
-	
+
 	private String dynamicImageName;
 	private boolean textInputParsing = false;
 
@@ -135,9 +135,9 @@ public class ODTBufferedDocumentContentHandler extends
 							newHeight = formatter.getImageHeightDirective(
 									dynamicImageName, defaultHeight);
 						}
-						if (newWith != null || newHeight!= null) {
+						if (newWith != null || newHeight != null) {
 							AttributesImpl attr = toAttributesImpl(attributes);
-							if (newWith!= null) {
+							if (newWith != null) {
 								attr.setValue(widthIndex, newWith);
 							}
 							if (newHeight != null) {
@@ -210,6 +210,13 @@ public class ODTBufferedDocumentContentHandler extends
 	@Override
 	protected void flushCharacters(String characters) {
 		if (textInputParsing) {
+			IDocumentFormatter formatter = getFormatter();
+			if (formatter != null
+					&& (formatter.containsInterpolation(characters) || formatter
+							.hasDirective(characters))) {
+				// It's an interpolation, unescape the XML
+				characters = StringUtils.xmlUnescape(characters);
+			}
 			String fieldName = characters;
 			if (processScriptBefore(fieldName)) {
 				return;

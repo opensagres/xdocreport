@@ -41,7 +41,6 @@ import fr.opensagres.xdocreport.converter.ConverterRegistry;
 import fr.opensagres.xdocreport.converter.IConverter;
 import fr.opensagres.xdocreport.converter.Options;
 import fr.opensagres.xdocreport.converter.XDocConverterException;
-import fr.opensagres.xdocreport.core.EncodingConstants;
 import fr.opensagres.xdocreport.core.XDocReportException;
 import fr.opensagres.xdocreport.core.io.IEntryOutputStreamProvider;
 import fr.opensagres.xdocreport.core.io.IEntryReaderProvider;
@@ -63,8 +62,7 @@ import fr.opensagres.xdocreport.template.formatter.IDocumentFormatter;
  * Abstract class for {@link IXDocReport} to implement to manage docx, odt...
  * 
  */
-public abstract class AbstractXDocReport implements IXDocReport,
-		EncodingConstants {
+public abstract class AbstractXDocReport implements IXDocReport {
 	private static final Logger LOGGER = LogUtils
 			.getLogger(AbstractXDocReport.class.getName());
 	private static final long serialVersionUID = -6632379345569386476L;

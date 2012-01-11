@@ -468,4 +468,8 @@ public class FreemarkerDocumentFormatter extends AbstractDocumentFormatter {
 		}
 		return fieldName;
 	}
+	
+	public boolean hasDirective(String characters) {
+		return characters.indexOf("[#") != -1;
+	}
 }

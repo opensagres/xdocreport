@@ -22,81 +22,105 @@
  * OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
  * WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
-
 package fr.opensagres.xdocreport.core.utils;
 
-import java.io.StringReader;
-import java.io.StringWriter;
-import java.util.logging.Logger;
-
-import javax.xml.transform.OutputKeys;
-import javax.xml.transform.Transformer;
-import javax.xml.transform.TransformerException;
-import javax.xml.transform.TransformerFactory;
-import javax.xml.transform.TransformerFactoryConfigurationError;
-import javax.xml.transform.stream.StreamResult;
-import javax.xml.transform.stream.StreamSource;
+import java.util.ArrayList;
+import java.util.List;
 
 import org.xml.sax.Attributes;
 import org.xml.sax.helpers.AttributesImpl;
 
-import fr.opensagres.xdocreport.core.logging.LogUtils;
+import fr.opensagres.xdocreport.core.internal.IXMLPrettyPrinter;
+import fr.opensagres.xdocreport.core.internal.IndentNumberPrettyPrinter;
+import fr.opensagres.xdocreport.core.internal.NoIndentNumberPrettyPrinter;
+import fr.opensagres.xdocreport.core.internal.NoPrettyPrinter;
+import fr.opensagres.xdocreport.core.internal.XSLTPrettyPrinter;
 
-public class XMLUtils
-{
+/**
+ * XML Utilities to indent XML.
+ * 
+ */
+public class XMLUtils {
 
-    private static final Integer INDENT_NUMBER = new Integer(4);
-    /**
-     * Logger for this class
-     */
-    private static final Logger logger = LogUtils.getLogger(XMLUtils.class);
+	public static final Integer INDENT_NUMBER = new Integer(4);
+	public static final List<IXMLPrettyPrinter> PRINTERS;
 
-    public static String prettyPrint(String in) {
+	private static IXMLPrettyPrinter wellPrinter = null;
 
-        return prettyPrint(in, INDENT_NUMBER);
-    }
+	static {
+		PRINTERS = new ArrayList<IXMLPrettyPrinter>();
+		PRINTERS.add(IndentNumberPrettyPrinter.INSTANCE);
+		PRINTERS.add(XSLTPrettyPrinter.INSTANCE);
+		PRINTERS.add(NoIndentNumberPrettyPrinter.INSTANCE);
+		PRINTERS.add(NoPrettyPrinter.INSTANCE);
+	}
 
-    public static String prettyPrint(String in, int indent) throws TransformerFactoryConfigurationError {
-        try {
-            TransformerFactory transfac = TransformerFactory.newInstance();
+	/**
+	 * Indent the given xml with the 4 indentation.
+	 * 
+	 * @param xml
+	 *            XML to indent
+	 * @return
+	 * @throws Exception
+	 */
+	public static String prettyPrint(String xml) {
+		return prettyPrint(xml, INDENT_NUMBER);
+	}
 
-            transfac.setAttribute("indent-number", indent);
-            Transformer trans = transfac.newTransformer();
+	/**
+	 * Indent the given xml with the given indent number.
+	 * 
+	 * @param xml
+	 *            XML to indent
+	 * @param indent
+	 *            the indent number.
+	 * @return
+	 * @throws Exception
+	 */
+	public static String prettyPrint(String xml, int indent) {
+		if (wellPrinter == null) {
+			// Loop for printers to get the well printer which doesn't crash.
+			for (IXMLPrettyPrinter printer : PRINTERS) {
+				try {
+					String result = printer.prettyPrint(xml, indent);
+					wellPrinter = printer;
+					return result;
+				} catch (Throwable e) {
 
-            trans.setOutputProperty(OutputKeys.OMIT_XML_DECLARATION, "yes");
-            trans.setOutputProperty(OutputKeys.INDENT, "yes");
+				}
+			}
+			// If error occurs, returns the xml source (with no indentation).
+			return xml;
 
-            // create string from xml tree
-            final StringWriter out = new StringWriter();
+		}
+		// Here printer was found, use it.
+		try {
+			return wellPrinter.prettyPrint(xml, indent);
+		} catch (Throwable e) {
+			// If error occurs, returns the xml source (with no indentation).
+			return xml;
+		}
+	}
 
-            trans.transform(new StreamSource(new StringReader(in)), new StreamResult(out));
-            return out.toString();
-        } catch (TransformerException e) {
-            logger.severe("Unable to pretty print : " + e); //$NON-NLS-1$
-
-        }
-
-        return in;
-    }
-
-    /**
-     * Get the SAX {@link AttributesImpl} of teh given attributes to modify
-     * attribute values.
-     * 
-     * @param attributes
-     * @return
-     */
-    public static AttributesImpl toAttributesImpl(Attributes attributes) {
-        if (attributes instanceof AttributesImpl) {
-            return (AttributesImpl) attributes;
-        }
-        // Another SAX Implementation, create a new instance.
-        AttributesImpl attributesImpl = new AttributesImpl();
-        int length = attributes.getLength();
-        for (int i = 0; i < length; i++) {
-            attributesImpl.addAttribute(attributes.getURI(i), attributes.getLocalName(i), attributes.getQName(i),
-                    attributes.getType(i), attributes.getValue(i));
-        }
-        return attributesImpl;
-    }
+	/**
+	 * Get the SAX {@link AttributesImpl} of teh given attributes to modify
+	 * attribute values.
+	 * 
+	 * @param attributes
+	 * @return
+	 */
+	public static AttributesImpl toAttributesImpl(Attributes attributes) {
+		if (attributes instanceof AttributesImpl) {
+			return (AttributesImpl) attributes;
+		}
+		// Another SAX Implementation, create a new instance.
+		AttributesImpl attributesImpl = new AttributesImpl();
+		int length = attributes.getLength();
+		for (int i = 0; i < length; i++) {
+			attributesImpl.addAttribute(attributes.getURI(i),
+					attributes.getLocalName(i), attributes.getQName(i),
+					attributes.getType(i), attributes.getValue(i));
+		}
+		return attributesImpl;
+	}
 }

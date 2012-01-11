@@ -1,12 +1,15 @@
 package fr.opensagres.xdocreport.document.pptx.preprocessor;
 
 import static fr.opensagres.xdocreport.document.pptx.PPTXUtils.isAP;
+import static fr.opensagres.xdocreport.document.pptx.PPTXUtils.isAPPr;
 import static fr.opensagres.xdocreport.document.pptx.PPTXUtils.isAR;
 import static fr.opensagres.xdocreport.document.pptx.PPTXUtils.isPTxBody;
 
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
 
+import fr.opensagres.xdocreport.core.utils.StringUtils;
+import fr.opensagres.xdocreport.document.pptx.PPTXConstants;
 import fr.opensagres.xdocreport.document.preprocessor.sax.BufferedElement;
 import fr.opensagres.xdocreport.document.preprocessor.sax.TransformedBufferedDocument;
 import fr.opensagres.xdocreport.template.formatter.FieldsMetadata;
@@ -51,6 +54,12 @@ public class PPTXSlideDocument extends TransformedBufferedDocument {
 			}
 			return currentAPRegion;
 		}
+		if (isAPPr(uri, localName, name)) {
+			if (currentAPRegion != null) {
+				Integer level = getLevel(attributes);
+				currentAPRegion.setLevel(level);
+			}
+		}
 		if (isAR(uri, localName, name)) {
 			currentARRegion = new ARBufferedRegion(parent, uri, localName,
 					name, attributes);
@@ -60,6 +69,14 @@ public class PPTXSlideDocument extends TransformedBufferedDocument {
 			return currentARRegion;
 		}
 		return super.createElement(parent, uri, localName, name, attributes);
+	}
+
+	private Integer getLevel(Attributes attributes) {
+		if (attributes == null) {
+			return null;
+		}
+		return StringUtils.asInteger(attributes
+				.getValue(PPTXConstants.LVL_ATTR));
 	}
 
 	@Override

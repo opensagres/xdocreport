@@ -30,18 +30,18 @@ import java.nio.charset.Charset;
  * Encoding constants.
  * 
  */
-public interface EncodingConstants {
+public class EncodingConstants {
 
 	/**
 	 * UTF-8 Charset constant.
 	 */
-	Charset UTF_8 = Charset.forName("UTF-8");
+	public static final Charset UTF_8 = Charset.forName("UTF-8");
 
 	// Special characters
-	String APOS = "&apos;";
-	String GT = "&gt;";
-	String LT = "&lt;";
-	String AMP = "&amp;";
-	String QUOT = "&quot;";
+	public static final String APOS = "&apos;";
+	public static final String GT = "&gt;";
+	public static final String LT = "&lt;";
+	public static final String AMP = "&amp;";
+	public static final String QUOT = "&quot;";
 
 }

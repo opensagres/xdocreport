@@ -49,10 +49,14 @@ public class PPTXConstants {
 	
 	// Element
 	public static final String P_ELT = "p";
+	public static final String PPR_ELT = "pPr";
 	public static final String R_ELT = "r";
 	public static final String T_ELT = "t";
 	public static final String TXBODY_ELT = "txBody";
 
+	// Attributes 
+	public static final String LVL_ATTR = "lvl";
+	
 	// Mime mapping
 	public static final MimeMapping MIME_MAPPING = new MimeMapping(
 			PPTX_EXTENSION, PRESENTATIONML_PRESENTATION);

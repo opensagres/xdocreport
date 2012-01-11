@@ -285,12 +285,6 @@ public class ElementVisitorForIText extends ElementVisitorConverter {
 	public void visit(TextSpanElement ele) {
 		StylablePhrase phrase = document.createPhrase(currentContainer);
 		applyStyles(ele, phrase);
-		if (ele.getFirstChild() == null) {
-			// no content in the paragraph
-			// ex : <text:span text:style-name="Standard"></text:span>
-			// add blank Chunk
-			phrase.add(Chunk.NEWLINE);
-		}
 		addITextContainer(ele, phrase);
 	}
 

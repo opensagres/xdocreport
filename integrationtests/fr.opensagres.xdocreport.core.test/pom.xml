@@ -34,6 +34,11 @@
 			<groupId>fr.opensagres.xdocreport</groupId>
 			<artifactId>fr.opensagres.xdocreport.document.pptx</artifactId>
 			<version>0.9.4-SNAPSHOT</version>
-		</dependency>		
+		</dependency>
+		<dependency>
+			<groupId>fr.opensagres.xdocreport</groupId>
+			<artifactId>fr.opensagres.xdocreport.document.tools</artifactId>
+			<version>0.9.4-SNAPSHOT</version>
+		</dependency>				
 	</dependencies>
 </project>

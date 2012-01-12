@@ -24,6 +24,9 @@
 		<module>fr.opensagres.xdocreport.document.odt</module>
 		<module>fr.opensagres.xdocreport.document.ods</module>
 		<module>fr.opensagres.xdocreport.document.odp</module>
+		
+		<!-- XDocReport Document Tools -->
+		<module>fr.opensagres.xdocreport.document.tools</module>
 								
 	</modules>
 </project>

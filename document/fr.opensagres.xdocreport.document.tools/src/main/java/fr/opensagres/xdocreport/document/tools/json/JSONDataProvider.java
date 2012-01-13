@@ -13,14 +13,14 @@ import org.json.JSONObject;
 
 import fr.opensagres.xdocreport.core.XDocReportException;
 import fr.opensagres.xdocreport.document.IXDocReport;
-import fr.opensagres.xdocreport.document.tools.IPopulateContextAware;
+import fr.opensagres.xdocreport.document.tools.IDataProvider;
 import fr.opensagres.xdocreport.template.IContext;
 
-public class JSONPoupluateContextAware implements IPopulateContextAware {
+public class JSONDataProvider implements IDataProvider {
 
 	private JSONObject jsonObject;
 
-	public JSONPoupluateContextAware(String jsonData) throws Exception {
+	public JSONDataProvider(String jsonData) throws Exception {
 		jsonObject = new JSONObject(jsonData);
 	}
 

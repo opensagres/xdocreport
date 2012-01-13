@@ -12,25 +12,30 @@ import fr.opensagres.xdocreport.core.XDocReportException;
 import fr.opensagres.xdocreport.document.Generator;
 import fr.opensagres.xdocreport.template.IContext;
 import fr.opensagres.xdocreport.template.TemplateEngineKind;
+import fr.opensagres.xdocreport.template.formatter.FieldsMetadata;
 
 public class Tools extends Generator<Request, Response> {
 
 	public void process(File in, File out,
 			TemplateEngineKind templateEngineKind,
-			IPopulateContextAware contextAware) throws Exception {
-		process(in, out, templateEngineKind.name(), contextAware);
+			FieldsMetadata fieldsMetadata, IDataProvider contextAware)
+			throws Exception {
+		process(in, out, templateEngineKind.name(), fieldsMetadata,
+				contextAware);
 	}
 
 	public void process(File in, File out, String templateEngineKind,
-			IPopulateContextAware contextAware) throws Exception {
+			FieldsMetadata fieldsMetadata, IDataProvider contextAware)
+			throws Exception {
 		process(new FileInputStream(in), new FileOutputStream(out),
-				templateEngineKind, contextAware);
+				templateEngineKind, fieldsMetadata, contextAware);
 	}
 
 	public void process(InputStream in, OutputStream out,
-			String templateEngineKind, IPopulateContextAware contextAware)
-			throws Exception {
-		Request request = new Request(in, templateEngineKind, contextAware);
+			String templateEngineKind, FieldsMetadata fieldsMetadata,
+			IDataProvider contextAware) throws Exception {
+		Request request = new Request(in, templateEngineKind, fieldsMetadata,
+				contextAware);
 		Response response = new Response(out);
 		processRequest(request, response);
 	}
@@ -49,7 +54,7 @@ public class Tools extends Generator<Request, Response> {
 	@Override
 	protected void populateContext(IContext context, String reportId,
 			Request request) throws IOException, XDocReportException {
-		IPopulateContextAware contextAware=request.getContextAware();
+		IDataProvider contextAware = request.getDataProvider();
 		if (contextAware != null) {
 			contextAware.populateContext(getReport(request), context);
 		}
@@ -79,6 +84,11 @@ public class Tools extends Generator<Request, Response> {
 			Request request, Response response) {
 		// TODO Auto-generated method stub
 
+	}
+
+	@Override
+	protected FieldsMetadata getFieldsMetadata(String reportId, Request request) {
+		return request.getFieldsMetadata();
 	}
 
 }

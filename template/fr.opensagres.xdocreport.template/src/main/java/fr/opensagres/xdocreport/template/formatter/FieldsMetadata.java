@@ -322,14 +322,12 @@ public class FieldsMetadata {
 	 * Load simple fields metadata in the given fieldsMetadata by using the
 	 * given key and Java Class.
 	 * 
-	 * @param fieldsMetadata
-	 *            the fieldsMetadata where fields metadata must be added.
 	 * @param key
 	 *            the key (first token) to use to generate field name.
 	 * @param clazz
 	 *            the Java class model to use to load fields metadata.
 	 */
-	public void load(FieldsMetadata fieldsMetadata, String key, Class<?> clazz) {
+	public void load(String key, Class<?> clazz) {
 		if (serializer == null) {
 			// TODO : check that serializer is not null
 		}
@@ -340,8 +338,6 @@ public class FieldsMetadata {
 	 * Load simple/list fields metadata in the given fieldsMetadata by using the
 	 * given key and Java Class.
 	 * 
-	 * @param fieldsMetadata
-	 *            the fieldsMetadata where fields metadata must be added.
 	 * @param key
 	 *            the key (first token) to use to generate field name.
 	 * @param clazz
@@ -349,7 +345,7 @@ public class FieldsMetadata {
 	 * @param listType
 	 *            true if it's a list and false otherwise.
 	 */
-	public void load(FieldsMetadata fieldsMetadata, String key, Class<?> clazz,
+	public void load(String key, Class<?> clazz,
 			boolean listType) {
 		if (serializer == null) {
 			// TODO : check that serializer is not null

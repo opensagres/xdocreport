@@ -6,10 +6,12 @@ set OUT=%2
 if %OUT% == "" goto error
 set ENGINE=%3
 if %ENGINE% == "" goto error
-set JSON_FILE=%4
+set METADATA_FILE=%4
+if %METADATA_FILE% == "" goto error
+set JSON_FILE=%5
 if %JSON_FILE% == "" goto error
 
-set BASE_DIR=C:/XDocReport/lib
+set BASE_DIR=%~dp0/lib
 set XDOCREPORT_VERSION=0.9.4-SNAPSHOT
 set CLASSPATH=%BASE_DIR%/fr.opensagres.xdocreport.core-%XDOCREPORT_VERSION%.jar
 set CLASSPATH=%CLASSPATH%;%BASE_DIR%/fr.opensagres.xdocreport.converter-%XDOCREPORT_VERSION%.jar
@@ -21,7 +23,7 @@ set CLASSPATH=%CLASSPATH%;%BASE_DIR%/fr.opensagres.xdocreport.document-%XDOCREPO
 set CLASSPATH=%CLASSPATH%;%BASE_DIR%/fr.opensagres.xdocreport.document.docx-%XDOCREPORT_VERSION%.jar
 set CLASSPATH=%CLASSPATH%;%BASE_DIR%/fr.opensagres.xdocreport.document.tools-%XDOCREPORT_VERSION%.jar
 
-java -classpath "%CLASSPATH%" fr.opensagres.xdocreport.document.tools.Main -in %IN% -out %OUT% -engine %ENGINE% -jsonFile %JSON_FILE%
+java -classpath "%CLASSPATH%" fr.opensagres.xdocreport.document.tools.Main -in %IN% -out %OUT% -engine %ENGINE% -jsonFile %JSON_FILE% -metadataFile %METADATA_FILE% -autoGenData true
 
 goto end
 

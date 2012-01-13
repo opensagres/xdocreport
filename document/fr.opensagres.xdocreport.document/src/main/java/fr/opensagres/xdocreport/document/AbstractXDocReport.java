@@ -431,7 +431,7 @@ public abstract class AbstractXDocReport implements IXDocReport {
 			// 7) End process report generation
 			if (LOGGER.isLoggable(Level.FINE)) {
 
-				LOGGER.fine("End process report with error done with "
+				LOGGER.fine("End process report done with "
 						+ (System.currentTimeMillis() - startTime) + "(ms).");
 			}
 

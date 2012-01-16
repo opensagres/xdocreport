@@ -31,7 +31,7 @@ import java.io.Writer;
  * Multiple writer used to write for several writer.
  * 
  */
-public class MultiWriter extends Writer {
+public class MultiWriter extends Writer implements StreamCancelable {
 
 	private Writer[] writers;
 
@@ -66,6 +66,15 @@ public class MultiWriter extends Writer {
 		for (Writer w : writers) {
 			w.close();
 		}
+	}
+	
+	public void cancel() {
+		for (Writer w : writers) {
+			if (w instanceof StreamCancelable) {
+				((StreamCancelable)w).cancel();
+			}
+		}
+		
 	}
 
 	/**

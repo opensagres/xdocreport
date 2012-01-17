@@ -1,3 +1,13 @@
-<fields>
-	<field name="project.name" />
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<fields templateEngineKind="Freemarker">
+	<description><![CDATA[A description...]]></description>
+	<field name="project.name" list="false" imageName="" syntaxKind="">
+		<description><![CDATA[]]></description>
+	</field>
+	<field name="developers.name" list="list" imageName="" syntaxKind="">
+		<description><![CDATA[]]></description>
+	</field>
+	<field name="developers.lastName" list="list" imageName="" syntaxKind="">
+		<description><![CDATA[]]></description>
+	</field>
 </fields>

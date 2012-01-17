@@ -22,16 +22,41 @@
  * OF CONTRACT, TORT OR OTHERWISE,  ARISING FROM, OUT OF OR IN CONNECTION
  * WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
-package fr.opensagres.xdocreport.document.tools;
-
+package fr.opensagres.xdocreport.document.tools.internal;
 import java.io.IOException;
+import java.io.OutputStream;
 
-import fr.opensagres.xdocreport.core.XDocReportException;
-import fr.opensagres.xdocreport.document.IXDocReport;
-import fr.opensagres.xdocreport.template.IContext;
 
-public interface IDataProvider {
+public class StringBuilderOutputStream extends OutputStream
+{
+    private StringBuilder textBuffer = new StringBuilder();
+    
+    /**
+     * 
+     */
+    public StringBuilderOutputStream()
+    {
+        super();
+    }
 
-	void populateContext(IXDocReport report, IContext context)
-			throws IOException, XDocReportException;
+    /*
+     * @see java.io.OutputStream#write(int)
+     */
+    public void write(int b) throws IOException
+    {
+        char a = (char)b;
+        textBuffer.append(a);
+    }
+
+    public String toString()
+    {
+        return textBuffer.toString();
+    }
+  
+    public void clear()
+    {
+        textBuffer.delete(0, textBuffer.length());
+    }
+
+
 }

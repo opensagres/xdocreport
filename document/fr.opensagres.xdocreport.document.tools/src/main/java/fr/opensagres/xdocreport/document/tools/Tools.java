@@ -18,24 +18,24 @@ public class Tools extends Generator<Request, Response> {
 
 	public void process(File in, File out,
 			TemplateEngineKind templateEngineKind,
-			FieldsMetadata fieldsMetadata, IDataProvider contextAware)
+			FieldsMetadata fieldsMetadata, Iterable<IDataProvider> dataProviders)
 			throws Exception {
 		process(in, out, templateEngineKind.name(), fieldsMetadata,
-				contextAware);
+				dataProviders);
 	}
 
 	public void process(File in, File out, String templateEngineKind,
-			FieldsMetadata fieldsMetadata, IDataProvider contextAware)
+			FieldsMetadata fieldsMetadata, Iterable<IDataProvider> dataProviders)
 			throws Exception {
 		process(new FileInputStream(in), new FileOutputStream(out),
-				templateEngineKind, fieldsMetadata, contextAware);
+				templateEngineKind, fieldsMetadata, dataProviders);
 	}
 
 	public void process(InputStream in, OutputStream out,
 			String templateEngineKind, FieldsMetadata fieldsMetadata,
-			IDataProvider contextAware) throws Exception {
+			Iterable<IDataProvider> dataProviders) throws Exception {
 		Request request = new Request(in, templateEngineKind, fieldsMetadata,
-				contextAware);
+				dataProviders);
 		Response response = new Response(out);
 		processRequest(request, response);
 	}
@@ -54,11 +54,12 @@ public class Tools extends Generator<Request, Response> {
 	@Override
 	protected void populateContext(IContext context, String reportId,
 			Request request) throws IOException, XDocReportException {
-		IDataProvider contextAware = request.getDataProvider();
-		if (contextAware != null) {
-			contextAware.populateContext(getReport(request), context);
+		Iterable<IDataProvider> dataProviders = request.getDataProviders();
+		if (dataProviders != null) {
+			for (IDataProvider dataProvider : dataProviders) {
+				dataProvider.populateContext(getReport(request), context);
+			}
 		}
-
 	}
 
 	@Override

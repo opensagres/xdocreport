@@ -1,1 +1,2 @@
 fr.opensagres.xdocreport.document.tools.json.JSONDataProviderFactory
+fr.opensagres.xdocreport.document.tools.xml.XMLDataProviderFactory

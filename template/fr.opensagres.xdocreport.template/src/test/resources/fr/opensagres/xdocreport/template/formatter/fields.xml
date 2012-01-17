@@ -1,3 +1,7 @@
-<fields>
-	<field name="developer.Name" listType="true" />
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<fields templateEngineKind="Velocity">
+	<description><![CDATA[A description...]]></description>
+	<field name="developers.Name" list="true" imageName="" syntaxKind="">
+		<description><![CDATA[A field description...]]></description>
+	</field>
 </fields>

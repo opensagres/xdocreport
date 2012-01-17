@@ -1,24 +1,30 @@
 package fr.opensagres.xdocreport.document.tools.json;
 
-import java.util.Map;
+import java.io.InputStream;
+import java.io.OutputStream;
 
+import fr.opensagres.xdocreport.document.tools.AbstractDataProviderFactory;
 import fr.opensagres.xdocreport.document.tools.IDataProvider;
-import fr.opensagres.xdocreport.document.tools.IDataProviderFactory;
+import fr.opensagres.xdocreport.template.formatter.FieldsMetadata;
 
-public class JSONDataProviderFactory implements IDataProviderFactory {
+public class JSONDataProviderFactory extends AbstractDataProviderFactory {
 
-	public String getId() {
-		return "json";
+	private static final String ID = "json";
+	private static final String DESCRIPTION = "JSON Data Provider";
+
+	public JSONDataProviderFactory() {
+		super(ID, DESCRIPTION);
 	}
 
-	public String getDescription() {
-		return "JSON Data Provider Factory";
-	}
-
-	public IDataProvider create(Map<String, String> parameters)
+	public IDataProvider create(InputStream data, InputStream properties)
 			throws Exception {
-		String jsonData = parameters.get("jsonData");
-		return new JSONDataProvider(jsonData);
+		return new JSONDataProvider(data, properties);
 	}
 
+	public void generateDefaultData(FieldsMetadata fieldsMetadata, OutputStream out)
+			throws Exception {
+		// Generate JSON
+		FieldsMetadataJSONSerializer.getInstance().save(fieldsMetadata, out,
+				true);
+	}
 }

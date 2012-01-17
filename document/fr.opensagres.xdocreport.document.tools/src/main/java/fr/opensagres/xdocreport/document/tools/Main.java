@@ -3,14 +3,10 @@ package fr.opensagres.xdocreport.document.tools;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
-import java.io.FileReader;
-import java.io.StringWriter;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.ArrayList;
+import java.util.List;
 
-import fr.opensagres.xdocreport.core.io.IOUtils;
 import fr.opensagres.xdocreport.core.utils.StringUtils;
-import fr.opensagres.xdocreport.document.tools.json.FieldsMetadataJSONSerializer;
 import fr.opensagres.xdocreport.template.formatter.FieldsMetadata;
 import fr.opensagres.xdocreport.template.formatter.FieldsMetadataXMLSerializer;
 
@@ -25,8 +21,9 @@ public class Main {
 		String jsonFile = null;
 		String metadataFile = null;
 		boolean autoGenData = false;
+		String dataDir = null;
 
-		IDataProvider dataProvider = null;
+		List<IDataProvider> dataProviders = new ArrayList<IDataProvider>();
 		String arg = null;
 		for (int i = 0; i < args.length; i++) {
 			arg = args[i];
@@ -36,18 +33,14 @@ public class Main {
 				fileOut = getValue(args, i);
 			} else if ("-engine".equals(arg)) {
 				templateEngineKind = getValue(args, i);
-			} else if ("-jsonData".equals(arg)) {
-				jsonData = getValue(args, i);
-				Map<String, String> parameters = new HashMap<String, String>();
-				parameters.put("jsonData", jsonData);
-				dataProvider = DataProviderFactoryRegistry.getRegistry()
-						.create("json", parameters);
 			} else if ("-jsonFile".equals(arg)) {
 				jsonFile = getValue(args, i);
 			} else if ("-autoGenData".equals(arg)) {
 				autoGenData = StringUtils.asBoolean(getValue(args, i), false);
 			} else if ("-metadataFile".equals(arg)) {
 				metadataFile = getValue(args, i);
+			} else if ("-dataDir".equals(arg)) {
+				dataDir = getValue(args, i);
 			}
 		}
 
@@ -57,27 +50,59 @@ public class Main {
 					new FileInputStream(metadataFile));
 		}
 
-		if (!StringUtils.isEmpty(jsonFile)) {
-			StringWriter jsonDataWriter = new StringWriter();
-
-			File f = new File(jsonFile);
-			if (!f.exists() && autoGenData && fieldsMetadata != null) {
-				// Generate JSON
-				FieldsMetadataJSONSerializer.getInstance().save(fieldsMetadata,
-						new FileOutputStream(jsonFile), true);
+		if (dataDir != null) {
+			File dir = new File(dataDir);
+			if (!dir.exists()) {
+				dir.mkdirs();
+			}
+			if (!dir.isDirectory()) {
+				throw new Exception("-dataDir=" + dataDir
+						+ " is not a directory");
+			}
+			File file = null;
+			String fileName = null;
+			String extension = null;
+			int index = -1;
+			File[] files = dir.listFiles();
+			if (files.length > 0) {
+				for (int i = 0; i < files.length; i++) {
+					file = files[i];
+					extension = null;
+					if (file.isFile()) {
+						fileName = file.getName();
+						index = fileName.indexOf('.');
+						if (index != -1) {
+							extension = fileName.substring(index + 1,
+									fileName.length());
+						}
+						IDataProvider provider = DataProviderFactoryRegistry
+								.getRegistry().create(extension,
+										new FileInputStream(file), null);
+						if (provider != null) {
+							dataProviders.add(provider);
+						}
+					}
+				}
 			}
 
-			IOUtils.copy(new FileReader(f), jsonDataWriter);
-			Map<String, String> parameters = new HashMap<String, String>();
-			parameters.put("jsonData", jsonDataWriter.toString());
-			dataProvider = DataProviderFactoryRegistry.getRegistry().create(
-					"json", parameters);
+			if (dataProviders.size() < 1 && fieldsMetadata != null) {
+				// Generate default JSON
+				extension = "json";
+				file = new File(dir, "default.json");
 
+				DataProviderFactoryRegistry.getRegistry().generateDefaultData(
+						extension, fieldsMetadata, new FileOutputStream(file));
+
+				IDataProvider provider = DataProviderFactoryRegistry
+						.getRegistry().create(extension,
+								new FileInputStream(file), null);
+				dataProviders.add(provider);
+			}
 		}
 
 		Tools tools = new Tools();
 		tools.process(new File(fileIn), new File(fileOut), templateEngineKind,
-				fieldsMetadata, dataProvider);
+				fieldsMetadata, dataProviders);
 
 	}
 

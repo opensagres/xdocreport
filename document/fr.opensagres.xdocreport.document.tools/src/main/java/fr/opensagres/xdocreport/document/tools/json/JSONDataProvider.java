@@ -1,6 +1,7 @@
 package fr.opensagres.xdocreport.document.tools.json;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -13,15 +14,17 @@ import org.json.JSONObject;
 
 import fr.opensagres.xdocreport.core.XDocReportException;
 import fr.opensagres.xdocreport.document.IXDocReport;
-import fr.opensagres.xdocreport.document.tools.IDataProvider;
+import fr.opensagres.xdocreport.document.tools.AbstractDataProvider;
 import fr.opensagres.xdocreport.template.IContext;
 
-public class JSONDataProvider implements IDataProvider {
+public class JSONDataProvider extends AbstractDataProvider {
 
 	private JSONObject jsonObject;
 
-	public JSONDataProvider(String jsonData) throws Exception {
-		jsonObject = new JSONObject(jsonData);
+	public JSONDataProvider(InputStream data, InputStream properties)
+			throws Exception {
+		super(data, properties);
+		jsonObject = new JSONObject(getDataAsString());
 	}
 
 	public void populateContext(IXDocReport report, IContext context)

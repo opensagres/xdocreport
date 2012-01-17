@@ -28,7 +28,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.Reader;
-import java.io.StringWriter;
 import java.io.Writer;
 import java.util.Collection;
 
@@ -37,6 +36,7 @@ import org.xml.sax.SAXException;
 import org.xml.sax.XMLReader;
 import org.xml.sax.helpers.XMLReaderFactory;
 
+import fr.opensagres.xdocreport.core.utils.StringUtils;
 import fr.opensagres.xdocreport.template.formatter.sax.FieldsMetadataContentHandler;
 
 /**
@@ -45,9 +45,6 @@ import fr.opensagres.xdocreport.template.formatter.sax.FieldsMetadataContentHand
  * 
  */
 public class FieldsMetadataXMLSerializer {
-
-	private static final String FIELDS_START_ELT = "<fields>";
-	private static final String FIELDS_END_ELT = "</fields>";
 
 	private static final String LF = System.getProperty("line.separator");
 	private static final String TAB = "\t";
@@ -78,21 +75,17 @@ public class FieldsMetadataXMLSerializer {
 	 * 
 	 * @param fieldsMetadata
 	 * @param reader
-	 * @throws SAXException 
-	 * @throws IOException 
+	 * @throws SAXException
+	 * @throws IOException
 	 */
 	public FieldsMetadata load(Reader input) throws SAXException, IOException {
-		// TODO, implement SAX Parser to load fields and call
-		// fieldsMetadata.addField(fieldMetadata);
-
 		XMLReader saxReader = XMLReaderFactory.createXMLReader();
 		FieldsMetadataContentHandler myContentHandler = new FieldsMetadataContentHandler();
-		myContentHandler.setOutput(new StringWriter());
 		saxReader.setContentHandler(myContentHandler);
 		saxReader.parse(new InputSource(input));
 		return myContentHandler.getFieldsMetadata();
 	}
-	
+
 	/**
 	 * Load fields metadata in the given {@link FieldsMetadata} from the given
 	 * XML reader.
@@ -109,20 +102,17 @@ public class FieldsMetadataXMLSerializer {
 	 * 
 	 * @param fieldsMetadata
 	 * @param inputStream
-	 * @throws SAXException 
-	 * @throws IOException 
+	 * @throws SAXException
+	 * @throws IOException
 	 */
-	public FieldsMetadata load( InputStream inputStream) throws SAXException, IOException {
+	public FieldsMetadata load(InputStream inputStream) throws SAXException,
+			IOException {
 
-		// TODO, implement SAX Parser to load fields and call
-				// fieldsMetadata.addField(fieldMetadata);
-
-				XMLReader saxReader = XMLReaderFactory.createXMLReader();
-				FieldsMetadataContentHandler myContentHandler = new FieldsMetadataContentHandler();
-				myContentHandler.setOutput(new StringWriter());
-				saxReader.setContentHandler(myContentHandler);
-				saxReader.parse(new InputSource(inputStream));
-				return myContentHandler.getFieldsMetadata();
+		XMLReader saxReader = XMLReaderFactory.createXMLReader();
+		FieldsMetadataContentHandler myContentHandler = new FieldsMetadataContentHandler();
+		saxReader.setContentHandler(myContentHandler);
+		saxReader.parse(new InputSource(inputStream));
+		return myContentHandler.getFieldsMetadata();
 	}
 
 	/**
@@ -180,14 +170,39 @@ public class FieldsMetadataXMLSerializer {
 	private void save(FieldsMetadata fieldsMetadata, Writer writer,
 			OutputStream out, boolean indent) throws IOException {
 		Collection<FieldMetadata> fields = fieldsMetadata.getFields();
-		write(FIELDS_START_ELT, writer, out);
+		// <?xml version="1.0" encoding="UTF-8" standalone="yes"?>		
+		write(XMLFieldsConstants.XML_DECLARATION, writer, out);
+		if (indent) {
+			write(LF, writer, out);			
+		}
+		// <fields>
+		write(XMLFieldsConstants.FIELDS_TAG_START_ELT, writer, out);
+		// <fields/@templateEngineKind
+		writeAttr(XMLFieldsConstants.TEMPLATE_ENGINE_KIND_ATTR,
+				fieldsMetadata.getTemplateEngineKind(), writer, out);
+		write(" >", writer, out);
+		if (indent) {
+			write(LF, writer, out);
+			write(TAB, writer, out);
+		}
+		// <description>
+		write(XMLFieldsConstants.DESCRIPTION_START_ELT, writer, out);
+		write(XMLFieldsConstants.START_CDATA, writer, out);
+		if (fieldsMetadata.getDescription() != null) {
+			write(fieldsMetadata.getDescription(), writer, out);
+		}
+		write(XMLFieldsConstants.END_CDATA, writer, out);
+		// </description>
+		write(XMLFieldsConstants.DESCRIPTION_END_ELT, writer, out);		
+		// list of <field>
 		for (FieldMetadata field : fields) {
 			save(field, writer, out, indent);
 		}
 		if (indent) {
 			write(LF, writer, out);
 		}
-		write(FIELDS_END_ELT, writer, out);
+		// </fields>
+		write(XMLFieldsConstants.FIELDS_END_ELT, writer, out);
 	}
 
 	private void save(FieldMetadata field, Writer writer, OutputStream out,
@@ -196,10 +211,33 @@ public class FieldsMetadataXMLSerializer {
 			write(LF, writer, out);
 			write(TAB, writer, out);
 		}
-		// <field name="" imageName="" listType="true" >
-		write("<field", writer, out);
-		writeAttr("name", field.getFieldName(), writer, out);
-		write("/>", writer, out);
+		write(XMLFieldsConstants.FIELD_TAG_START_ELT, writer, out);
+		writeAttr(XMLFieldsConstants.NAME_ATTR, field.getFieldName(), writer,
+				out);
+		writeAttr(XMLFieldsConstants.LIST_ATTR, field.isListType(), writer, out);
+		writeAttr(XMLFieldsConstants.IMAGE_NAME_ATTR, field.getImageName(),
+				writer, out);
+		writeAttr(XMLFieldsConstants.SYNTAX_KIND_ATTR, field.getSyntaxKind(),
+				writer, out);
+		write(">", writer, out);
+		if (indent) {
+			write(LF, writer, out);
+			write(TAB, writer, out);
+			write(TAB, writer, out);
+		}
+		// Description
+		write(XMLFieldsConstants.DESCRIPTION_START_ELT, writer, out);
+		write(XMLFieldsConstants.START_CDATA, writer, out);
+		if (field.getDescription() != null) {
+			write(field.getDescription(), writer, out);
+		}
+		write(XMLFieldsConstants.END_CDATA, writer, out);
+		write(XMLFieldsConstants.DESCRIPTION_END_ELT, writer, out);
+		if (indent) {
+			write(LF, writer, out);
+			write(TAB, writer, out);
+		}
+		write(XMLFieldsConstants.FIELD_END_ELT, writer, out);
 	}
 
 	private void write(String s, Writer writer, OutputStream out)
@@ -216,7 +254,16 @@ public class FieldsMetadataXMLSerializer {
 		write(" ", writer, out);
 		write(attrName, writer, out);
 		write("=\"", writer, out);
-		write(attrValue, writer, out);
+		write(attrValue != null ? attrValue : "", writer, out);
+		write("\"", writer, out);
+	}
+
+	private void writeAttr(String attrName, boolean attrValue, Writer writer,
+			OutputStream out) throws IOException {
+		write(" ", writer, out);
+		write(attrName, writer, out);
+		write("=\"", writer, out);
+		write(attrValue ? StringUtils.TRUE : StringUtils.FALSE, writer, out);
 		write("\"", writer, out);
 
 	}

@@ -262,6 +262,10 @@ public abstract class AbstractXDocReport implements IXDocReport {
 	 */
 	public void setFieldsMetadata(FieldsMetadata fieldsMetadata) {
 		this.fieldsMetadata = fieldsMetadata;
+		ITemplateEngine templateEngine = this.getTemplateEngine();
+		if (templateEngine != null && fieldsMetadata != null) {
+			this.fieldsMetadata.setTemplateEngineKind(templateEngine.getKind());
+		}
 	}
 
 	/**

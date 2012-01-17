@@ -25,7 +25,6 @@
 package fr.opensagres.xdocreport.template.formatter;
 
 import java.io.IOException;
-import java.io.Reader;
 import java.io.StringWriter;
 import java.io.Writer;
 import java.util.ArrayList;
@@ -54,14 +53,16 @@ public class FieldsMetadata {
 	public static final String DEFAULT_AFTER_TABLE_CELL_TOKEN = "@after-cell";
 
 	private final IFieldsMetadataClassSerializer serializer;
-	private final List<FieldMetadata> fields;
-	private final Map<String, FieldMetadata> fieldsAsList;
-	private final Map<String, FieldMetadata> fieldsAsImage;
-	private final Map<String, FieldMetadata> fieldsAsTextStyling;
+	protected final List<FieldMetadata> fields;
+	protected final Map<String, FieldMetadata> fieldsAsList;
+	protected final Map<String, FieldMetadata> fieldsAsImage;
+	protected final Map<String, FieldMetadata> fieldsAsTextStyling;
 	private String beforeRowToken;
 	private String afterRowToken;
 	private String beforeTableCellToken;
 	private String afterTableCellToken;
+	private String description;
+	private String templateEngineKind;
 
 	public FieldsMetadata() {
 		this((IFieldsMetadataClassSerializer) null);
@@ -89,8 +90,8 @@ public class FieldsMetadata {
 	 * 
 	 * @param fieldName
 	 */
-	public void addFieldAsImage(String fieldName) {
-		addFieldAsImage(fieldName, fieldName);
+	public FieldMetadata addFieldAsImage(String fieldName) {
+		return addFieldAsImage(fieldName, fieldName);
 	}
 
 	/**
@@ -99,8 +100,8 @@ public class FieldsMetadata {
 	 * @param imageName
 	 * @param fieldName
 	 */
-	public void addFieldAsImage(String imageName, String fieldName) {
-		addField(fieldName, false, imageName, null);
+	public FieldMetadata addFieldAsImage(String imageName, String fieldName) {
+		return addField(fieldName, null, imageName, null);
 	}
 
 	/**
@@ -110,9 +111,9 @@ public class FieldsMetadata {
 	 * @param fieldName
 	 * @param syntaxKind
 	 */
-	public void addFieldAsTextStyling(String fieldName,
+	public FieldMetadata addFieldAsTextStyling(String fieldName,
 			SyntaxKind syntaxKind) {
-		addFieldAsTextStyling(fieldName, syntaxKind.name());
+		return addFieldAsTextStyling(fieldName, syntaxKind.name());
 	}
 
 	/**
@@ -122,9 +123,10 @@ public class FieldsMetadata {
 	 * @param fieldName
 	 * @param syntaxKind
 	 */
-	public void addFieldAsTextStyling(String fieldName, String syntaxKind) {
+	public FieldMetadata addFieldAsTextStyling(String fieldName,
+			String syntaxKind) {
 		// Test if it exists fields with the given name
-		addField(fieldName, false, null, syntaxKind);
+		return addField(fieldName, null, null, syntaxKind);
 	}
 
 	/**
@@ -132,12 +134,12 @@ public class FieldsMetadata {
 	 * 
 	 * @param fieldName
 	 */
-	public void addFieldAsList(String fieldName) {
-		addField(fieldName, true, null, null);
+	public FieldMetadata addFieldAsList(String fieldName) {
+		return addField(fieldName, true, null, null);
 	}
 
-	public void addField(String fieldName, boolean listType, String imageName,
-			String syntaxKind) {
+	public FieldMetadata addField(String fieldName, Boolean listType,
+			String imageName, String syntaxKind) {
 		// Test if it exists fields with the given name
 		FieldMetadata exsitingField = fieldsAsImage.get(fieldName);
 		if (exsitingField == null) {
@@ -148,33 +150,20 @@ public class FieldsMetadata {
 		}
 
 		if (exsitingField == null) {
-			FieldMetadata fieldMetadata = new FieldMetadata(fieldName,
-					listType, imageName, syntaxKind);
-			fields.add(fieldMetadata);
-			if (fieldMetadata.isImageType()) {
-				fieldsAsImage.put(fieldMetadata.getImageName(), fieldMetadata);
-			}
-			if (fieldMetadata.isListType()) {
-				fieldsAsList.put(fieldMetadata.getFieldName(), fieldMetadata);
-			}
-			if (fieldMetadata.getSyntaxKind() != null) {
-				fieldsAsTextStyling.put(fieldMetadata.getFieldName(),
-						fieldMetadata);
-			}
+			FieldMetadata fieldMetadata = new FieldMetadata(this, fieldName,
+					listType == null ? false : listType, imageName, syntaxKind);
+			return fieldMetadata;
 		} else {
-			if (listType == true && listType != exsitingField.isListType()) {
-				exsitingField.setListType(true);
-				fieldsAsList.put(exsitingField.getFieldName(), exsitingField);
+			if (listType != null) {
+				exsitingField.setListType(listType);
 			}
-			if (imageName != null
-					&& !imageName.equals(exsitingField.getImageName())) {
+			if (imageName != null) {
 				exsitingField.setImageName(imageName);
-				fieldsAsImage.put(imageName, exsitingField);
 			}
 			if (syntaxKind != null) {
 				exsitingField.setSyntaxKind(syntaxKind);
-				fieldsAsTextStyling.put(imageName, exsitingField);
 			}
+			return exsitingField;
 		}
 	}
 
@@ -273,7 +262,6 @@ public class FieldsMetadata {
 		return fields;
 	}
 
-
 	/**
 	 * Serialize as XML without indentation the fields metadata to the given XML
 	 * writer.
@@ -345,8 +333,7 @@ public class FieldsMetadata {
 	 * @param listType
 	 *            true if it's a list and false otherwise.
 	 */
-	public void load(String key, Class<?> clazz,
-			boolean listType) {
+	public void load(String key, Class<?> clazz, boolean listType) {
 		if (serializer == null) {
 			// TODO : check that serializer is not null
 		}
@@ -362,6 +349,42 @@ public class FieldsMetadata {
 			return super.toString();
 		}
 		return xml.toString();
+	}
+
+	/**
+	 * Returns the description of fields metadata.
+	 * 
+	 * @return
+	 */
+	public String getDescription() {
+		return description;
+	}
+
+	/**
+	 * Set the description of fields metadata.
+	 * 
+	 * @param templateEngineKind
+	 */
+	public void setDescription(String description) {
+		this.description = description;
+	}
+
+	/**
+	 * Returns the template engine kind.
+	 * 
+	 * @return
+	 */
+	public String getTemplateEngineKind() {
+		return templateEngineKind;
+	}
+
+	/**
+	 * Set the template engine kind.
+	 * 
+	 * @param templateEngineKind
+	 */
+	public void setTemplateEngineKind(String templateEngineKind) {
+		this.templateEngineKind = templateEngineKind;
 	}
 
 }

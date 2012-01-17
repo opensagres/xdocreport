@@ -1,9 +1,12 @@
 package fr.opensagres.xdocreport.document.tools;
 
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.util.HashMap;
 import java.util.Map;
 
 import fr.opensagres.xdocreport.core.registry.AbstractRegistry;
+import fr.opensagres.xdocreport.template.formatter.FieldsMetadata;
 
 public class DataProviderFactoryRegistry extends
 		AbstractRegistry<IDataProviderFactory> {
@@ -30,9 +33,28 @@ public class DataProviderFactoryRegistry extends
 		factories.clear();
 	}
 
-	public IDataProvider create(String id, Map<String, String> parameters)
-			throws Exception {
-		return getFactory(id).create(parameters);
+	public IDataProvider create(String id, InputStream data,
+			InputStream properties) throws Exception {
+		if (id == null) {
+			return null;
+		}
+		IDataProviderFactory factory =getFactory(id);
+		if (factory == null) {
+			return null;
+		}
+		return factory.create(data, properties);
+	}
+
+	public void generateDefaultData(String id, FieldsMetadata fieldsMetadata,
+			OutputStream out) throws Exception {
+		if (id == null) {
+			return;
+		}
+		IDataProviderFactory factory =getFactory(id);
+		if (factory == null) {
+			return;
+		}
+		factory.generateDefaultData(fieldsMetadata, out);
 	}
 
 	public IDataProviderFactory getFactory(String id) {

@@ -30,19 +30,22 @@ package fr.opensagres.xdocreport.template.formatter;
  */
 public class FieldMetadata {
 
+	private final FieldsMetadata fieldsMetadata;
 	private final String fieldName;
 	private String imageName;
 	private boolean listType;
 	private boolean imageType;
 	private String syntaxKind;
+	private String description;
 
-	public FieldMetadata(String fieldName, boolean listType, String imageName,
-			String syntaxKind) {
+	public FieldMetadata(FieldsMetadata fieldsMetadata, String fieldName,
+			boolean listType, String imageName, String syntaxKind) {
+		this.fieldsMetadata = fieldsMetadata;
 		this.fieldName = fieldName;
-		this.listType = listType;
+		setListType(listType);
 		setImageName(imageName);
-		this.imageType = imageName != null;
 		this.setSyntaxKind(syntaxKind);
+		fieldsMetadata.fields.add(this);
 	}
 
 	/**
@@ -79,6 +82,11 @@ public class FieldMetadata {
 	 */
 	public void setListType(boolean listType) {
 		this.listType = listType;
+		if (listType) {
+			fieldsMetadata.fieldsAsList.put(getFieldName(), this);
+		} else {
+			fieldsMetadata.fieldsAsList.remove(getFieldName());
+		}
 	}
 
 	/**
@@ -97,7 +105,12 @@ public class FieldMetadata {
 	 */
 	public void setImageName(String imageName) {
 		this.imageName = imageName;
-		this.imageType = true;
+		this.imageType = imageName != null;
+		if (imageType) {
+			fieldsMetadata.fieldsAsImage.put(getImageName(), this);
+		} else {
+			fieldsMetadata.fieldsAsImage.remove(getImageName());
+		}
 	}
 
 	public String getSyntaxKind() {
@@ -106,5 +119,18 @@ public class FieldMetadata {
 
 	public void setSyntaxKind(String syntaxKind) {
 		this.syntaxKind = syntaxKind;
+		if (syntaxKind != null) {
+			fieldsMetadata.fieldsAsTextStyling.put(getFieldName(), this);
+		} else {
+			fieldsMetadata.fieldsAsTextStyling.remove(getFieldName());
+		}
+	}
+
+	public void setDescription(String description) {
+		this.description = description;
+	}
+
+	public String getDescription() {
+		return description;
 	}
 }

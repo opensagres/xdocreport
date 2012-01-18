@@ -5,7 +5,7 @@ import java.io.OutputStream;
 import java.io.Writer;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -48,7 +48,7 @@ public class FieldsMetadataJSONSerializer {
 	}
 
 	private Map<String, Object> toMap(FieldsMetadata fieldsMetadata) {
-		Map<String, Object> bean = new HashMap<String, Object>();
+		Map<String, Object> bean = new LinkedHashMap<String, Object>();
 		Collection<FieldMetadata> fields = fieldsMetadata.getFields();
 		String fieldName = null;
 		String[] names = null;
@@ -75,7 +75,7 @@ public class FieldsMetadataJSONSerializer {
 							beanList = new ArrayList<Map>();
 							root.put(fieldName, beanList);
 						} else {
-							bean = new HashMap();
+							bean = new LinkedHashMap();
 							root.put(fieldName, bean);
 						}
 					} else {
@@ -90,7 +90,7 @@ public class FieldsMetadataJSONSerializer {
 					if (beanList != null) {
 						if (beanList.size() < 1) {
 							for (int j = 0; j < 10; j++) {
-								beanList.add(new HashMap());
+								beanList.add(new LinkedHashMap());
 							}
 						}
 						for (int j = 0; j < 10; j++) {

@@ -17,7 +17,7 @@ public class Request extends HashMap<String, String> {
 			FieldsMetadata fieldsMetadata, Iterable<IDataProvider> dataProviders) {
 		this.in = in;
 		super.put(Generator.TEMPLATE_ENGINE_KIND_HTTP_PARAM, templateEngineKind);
-		this.put(Generator.REPORT_ID_HTTP_PARAM, "xxxx");
+		this.put(Generator.REPORT_ID_HTTP_PARAM, "generated");
 		this.fieldsMetadata = fieldsMetadata;
 		this.dataProviders = dataProviders;
 	}

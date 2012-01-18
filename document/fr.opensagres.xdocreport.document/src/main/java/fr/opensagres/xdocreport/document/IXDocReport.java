@@ -279,7 +279,6 @@ public interface IXDocReport extends Serializable {
 	void convert(IContext context, Options options, OutputStream out)
 			throws XDocReportException, XDocConverterException, IOException;
 
-
 	/**
 	 * Returns mime mapping switch the kind of the report (odt, docx...).
 	 * 
@@ -327,12 +326,26 @@ public interface IXDocReport extends Serializable {
 	 * 
 	 * @return
 	 */
-	public boolean isPreprocessed();
+	boolean isPreprocessed();
 
 	/**
 	 * Returns the last modified time when the report is loaded.
 	 * 
 	 * @return
 	 */
-	public long getLastModified();
+	long getLastModified();
+
+	/**
+	 * Returns fields metadata used to manage lazy loop for table row.
+	 * 
+	 * @return
+	 */
+	FieldsMetadata getFieldsMetadata();
+
+	/**
+	 * Create fields metadata.
+	 * 
+	 * @return
+	 */
+	FieldsMetadata createFieldsMetadata();
 }

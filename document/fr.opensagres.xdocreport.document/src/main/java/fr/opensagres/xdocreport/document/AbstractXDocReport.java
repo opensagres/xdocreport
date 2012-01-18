@@ -278,6 +278,17 @@ public abstract class AbstractXDocReport implements IXDocReport {
 	}
 
 	/**
+	 * Create fields metadata.
+	 * 
+	 * @return
+	 */
+	public FieldsMetadata createFieldsMetadata() {
+		FieldsMetadata fieldsMetadata = new FieldsMetadata();
+		setFieldsMetadata(fieldsMetadata);
+		return fieldsMetadata;
+	}
+
+	/**
 	 * Execute processors registered to modify entry names of the original
 	 * document archive. Processors use {@link FieldsMetadata} and
 	 * {@link IDocumentFormatter} (coming from

@@ -30,6 +30,7 @@ import java.util.List;
 import org.junit.Assert;
 import org.junit.Test;
 
+import fr.opensagres.xdocreport.core.XDocReportException;
 import fr.opensagres.xdocreport.template.formatter.FieldsMetadata;
 
 public class FreemarkerFieldsMetadataClassSerializerTestCase {
@@ -98,14 +99,10 @@ public class FreemarkerFieldsMetadataClassSerializerTestCase {
 	}
 
 	@Test
-	public void testSimplePOJO() {
+	public void testSimplePOJO() throws XDocReportException {
 		FieldsMetadata fieldsMetadata = new FieldsMetadata();
 		FreemarkerFieldsMetadataClassSerializer serializer = new FreemarkerFieldsMetadataClassSerializer();
 		serializer.load(fieldsMetadata, "project", Project.class);
-
-		// START remove that once it's implemented
-		fieldsMetadata.addField("project.name", false, "", null);
-		// END remove that once it's implemented
 
 		Assert.assertEquals(1, fieldsMetadata.getFields().size());
 		Assert.assertEquals("project.name", fieldsMetadata.getFields().get(0)
@@ -113,21 +110,28 @@ public class FreemarkerFieldsMetadataClassSerializerTestCase {
 	}
 
 	@Test
-	public void testListPOJO() {
+	public void testListPOJO() throws Exception {
 		FieldsMetadata fieldsMetadata = new FieldsMetadata();
 		FreemarkerFieldsMetadataClassSerializer serializer = new FreemarkerFieldsMetadataClassSerializer();
 		serializer.load(fieldsMetadata, "developers", Developer.class, true);
 
-		// START remove that once it's implemented
-		fieldsMetadata.addField("developers.name", true, "", null);
-		fieldsMetadata.addField("developers.lastName", true, "", null);
-		// END remove that once it's implemented
-
-		Assert.assertEquals(2, fieldsMetadata.getFields().size());
-		Assert.assertEquals("developers.name", fieldsMetadata.getFields()
-				.get(0).getFieldName());
+		Assert.assertEquals(4, fieldsMetadata.getFields().size());
 		Assert.assertEquals("developers.lastName", fieldsMetadata.getFields()
+				.get(0).getFieldName());
+		Assert.assertTrue(fieldsMetadata.getFields()
+				.get(0).isListType());
+		Assert.assertEquals("developers.mail", fieldsMetadata.getFields()
 				.get(1).getFieldName());
+		Assert.assertTrue(fieldsMetadata.getFields()
+				.get(1).isListType());
+		Assert.assertEquals("developers.name", fieldsMetadata.getFields()
+				.get(2).getFieldName());
+		Assert.assertTrue(fieldsMetadata.getFields()
+				.get(2).isListType());
+		Assert.assertEquals("developers.roles.name", fieldsMetadata.getFields()
+				.get(3).getFieldName());
+		Assert.assertTrue(fieldsMetadata.getFields()
+				.get(3).isListType());
 	}
 
 	@Test

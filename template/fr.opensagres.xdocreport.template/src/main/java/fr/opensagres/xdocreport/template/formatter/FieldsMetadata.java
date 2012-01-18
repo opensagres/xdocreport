@@ -25,6 +25,7 @@
 package fr.opensagres.xdocreport.template.formatter;
 
 import java.io.IOException;
+import java.io.OutputStream;
 import java.io.StringWriter;
 import java.io.Writer;
 import java.util.ArrayList;
@@ -34,6 +35,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import fr.opensagres.xdocreport.core.XDocReportException;
 import fr.opensagres.xdocreport.core.utils.StringUtils;
 import fr.opensagres.xdocreport.template.registry.TemplateEngineRegistry;
 import fr.opensagres.xdocreport.template.textstyling.SyntaxKind;
@@ -52,7 +54,7 @@ public class FieldsMetadata {
 	public static final String DEFAULT_BEFORE_TABLE_CELL_TOKEN = "@before-cell";
 	public static final String DEFAULT_AFTER_TABLE_CELL_TOKEN = "@after-cell";
 
-	private final IFieldsMetadataClassSerializer serializer;
+	private IFieldsMetadataClassSerializer serializer;
 	protected final List<FieldMetadata> fields;
 	protected final Map<String, FieldMetadata> fieldsAsList;
 	protected final Map<String, FieldMetadata> fieldsAsImage;
@@ -65,16 +67,10 @@ public class FieldsMetadata {
 	private String templateEngineKind;
 
 	public FieldsMetadata() {
-		this((IFieldsMetadataClassSerializer) null);
+		this(null);
 	}
 
 	public FieldsMetadata(String templateEngineKind) {
-		this(TemplateEngineRegistry.getRegistry()
-				.getFieldsMetadataClassSerializer());
-	}
-
-	public FieldsMetadata(IFieldsMetadataClassSerializer serializer) {
-		this.serializer = serializer;
 		this.fields = new ArrayList<FieldMetadata>();
 		this.fieldsAsList = new HashMap<String, FieldMetadata>();
 		this.fieldsAsImage = new HashMap<String, FieldMetadata>();
@@ -83,6 +79,7 @@ public class FieldsMetadata {
 		this.afterRowToken = DEFAULT_AFTER_ROW_TOKEN;
 		this.beforeTableCellToken = DEFAULT_BEFORE_TABLE_CELL_TOKEN;
 		this.afterTableCellToken = DEFAULT_AFTER_TABLE_CELL_TOKEN;
+		setTemplateEngineKind(templateEngineKind);
 	}
 
 	/**
@@ -270,9 +267,9 @@ public class FieldsMetadata {
 	 * 
 	 * <pre>
 	 * <fields>
-	 * 	<field name="project.Name" imageName="" listType="false" />
-	 * 	<field name="developers.Name" imageName="" listType="true" />
-	 * <field name="project.Logo" imageName="Logo" listType="false" />
+	 * 	<field name="project.Name" imageName="" list="false" />
+	 * 	<field name="developers.Name" imageName="" list="true" />
+	 * <field name="project.Logo" imageName="Logo" list="false" />
 	 * </fields>
 	 * </pre>
 	 * 
@@ -290,9 +287,9 @@ public class FieldsMetadata {
 	 * 
 	 * <pre>
 	 * <fields>
-	 * 	<field name="project.Name" imageName="" listType="false" />
-	 * 	<field name="developers.Name" imageName="" listType="true" />
-	 * <field name="project.Logo" imageName="Logo" listType="false" />
+	 * 	<field name="project.Name" imageName="" list="false" />
+	 * 	<field name="developers.Name" imageName="" list="true" />
+	 * <field name="project.Logo" imageName="Logo" list="false" />
 	 * </fields>
 	 * </pre>
 	 * 
@@ -307,6 +304,50 @@ public class FieldsMetadata {
 	}
 
 	/**
+	 * Serialize as XML without indentation the fields metadata to the given
+	 * {@link OutputStream}.
+	 * 
+	 * Here a sample of XML out:
+	 * 
+	 * <pre>
+	 * <fields>
+	 * 	<field name="project.Name" imageName="" list="false" />
+	 * 	<field name="developers.Name" imageName="" list="true" />
+	 * <field name="project.Logo" imageName="Logo" list="false" />
+	 * </fields>
+	 * </pre>
+	 * 
+	 * @param writer
+	 * @throws IOException
+	 */
+	public void saveXML(OutputStream out) throws IOException {
+		saveXML(out, false);
+	}
+
+	/**
+	 * Serialize as XML the fields metadata to the given {@link OutputStream}.
+	 * 
+	 * Here a sample of XML out :
+	 * 
+	 * <pre>
+	 * <fields>
+	 * 	<field name="project.Name" imageName="" list="false" />
+	 * 	<field name="developers.Name" imageName="" list="true" />
+	 * <field name="project.Logo" imageName="Logo" list="false" />
+	 * </fields>
+	 * </pre>
+	 * 
+	 * @param writer
+	 *            XML writer.
+	 * @param indent
+	 *            true if indent must be managed and false otherwise.
+	 * @throws IOException
+	 */
+	public void saveXML(OutputStream out, boolean indent) throws IOException {
+		FieldsMetadataXMLSerializer.getInstance().save(this, out, indent);
+	}
+
+	/**
 	 * Load simple fields metadata in the given fieldsMetadata by using the
 	 * given key and Java Class.
 	 * 
@@ -314,8 +355,9 @@ public class FieldsMetadata {
 	 *            the key (first token) to use to generate field name.
 	 * @param clazz
 	 *            the Java class model to use to load fields metadata.
+	 * @throws XDocReportException
 	 */
-	public void load(String key, Class<?> clazz) {
+	public void load(String key, Class<?> clazz) throws XDocReportException {
 		if (serializer == null) {
 			// TODO : check that serializer is not null
 		}
@@ -332,10 +374,13 @@ public class FieldsMetadata {
 	 *            the Java class model to use to load fields metadata.
 	 * @param listType
 	 *            true if it's a list and false otherwise.
+	 * @throws XDocReportException
 	 */
-	public void load(String key, Class<?> clazz, boolean listType) {
+	public void load(String key, Class<?> clazz, boolean listType)
+			throws XDocReportException {
 		if (serializer == null) {
-			// TODO : check that serializer is not null
+			throw new XDocReportException(
+					"Cannot find serializer. Please set the template engine FieldsMetadata#setTemplateEngineKind(String templateEngineKind) before calling this method.");
 		}
 		serializer.load(this, key, clazz, listType);
 	}
@@ -385,6 +430,12 @@ public class FieldsMetadata {
 	 */
 	public void setTemplateEngineKind(String templateEngineKind) {
 		this.templateEngineKind = templateEngineKind;
+		if (templateEngineKind == null) {
+			serializer = null;
+		} else {
+			serializer = TemplateEngineRegistry.getRegistry()
+					.getFieldsMetadataClassSerializer();
+		}
 	}
 
 }

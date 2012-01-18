@@ -4,14 +4,12 @@ set IN=%1
 if %IN% == "" goto error
 set OUT=%2
 if %OUT% == "" goto error
-set ENGINE=%3
-if %ENGINE% == "" goto error
-set METADATA_FILE=%4
+set METADATA_FILE=%3
 if %METADATA_FILE% == "" goto error
-set DATA_DIR=%5
+set DATA_DIR=%4
 if %DATA_DIR% == "" goto error
 
-set BASE_DIR=%~dp0/lib
+set BASE_DIR=%~dp0/../lib
 set XDOCREPORT_VERSION=0.9.5-SNAPSHOT
 set CLASSPATH=%BASE_DIR%/fr.opensagres.xdocreport.core-%XDOCREPORT_VERSION%.jar
 set CLASSPATH=%CLASSPATH%;%BASE_DIR%/fr.opensagres.xdocreport.converter-%XDOCREPORT_VERSION%.jar
@@ -23,7 +21,7 @@ set CLASSPATH=%CLASSPATH%;%BASE_DIR%/fr.opensagres.xdocreport.document-%XDOCREPO
 set CLASSPATH=%CLASSPATH%;%BASE_DIR%/fr.opensagres.xdocreport.document.docx-%XDOCREPORT_VERSION%.jar
 set CLASSPATH=%CLASSPATH%;%BASE_DIR%/fr.opensagres.xdocreport.document.tools-%XDOCREPORT_VERSION%.jar
 
-java -classpath "%CLASSPATH%" fr.opensagres.xdocreport.document.tools.Main -in %IN% -out %OUT% -engine %ENGINE% -dataDir %DATA_DIR% -metadataFile %METADATA_FILE% -autoGenData true
+java -classpath "%CLASSPATH%" fr.opensagres.xdocreport.document.tools.Main -in %IN% -out %OUT% -dataDir %DATA_DIR% -metadataFile %METADATA_FILE% -autoGenData true
 
 goto end
 

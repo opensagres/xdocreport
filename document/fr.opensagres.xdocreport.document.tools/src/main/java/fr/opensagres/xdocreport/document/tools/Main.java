@@ -48,6 +48,7 @@ public class Main {
 		if (metadataFile != null) {
 			fieldsMetadata = FieldsMetadataXMLSerializer.getInstance().load(
 					new FileInputStream(metadataFile));
+			templateEngineKind = fieldsMetadata.getTemplateEngineKind();
 		}
 
 		if (dataDir != null) {
@@ -101,7 +102,9 @@ public class Main {
 		}
 
 		Tools tools = new Tools();
-		tools.process(new File(fileIn), new File(fileOut), templateEngineKind,
+		File out = new File(fileOut);
+		out.getParentFile().mkdirs();
+		tools.process(new File(fileIn), out, templateEngineKind,
 				fieldsMetadata, dataProviders);
 
 	}

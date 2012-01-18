@@ -1,5 +1,7 @@
 package fr.opensagres.xdocreport.document.tools;
 
+import java.io.File;
+
 import org.junit.Test;
 
 public class MainVithFreemarkerAutoGenTestCase {
@@ -18,11 +20,17 @@ public class MainVithFreemarkerAutoGenTestCase {
 	// }
 	// }
 
-	//@Test
+	@Test
 	public void testGenerateODTWithJSONFile() throws Exception {
+		File jsonFile = new File("target/default.json");
+		if (jsonFile.exists()) {
+			jsonFile.delete();
+		}
+		
+		
 		String[] args = { "-in", BASE_DIR + "/ODTHelloWordWithFreemarker.odt",
 				"-out", "target/ODTHelloWordWithFreemarker_Out.odt", "-engine",
-				"Freemarker", "-dataDir", "/target", "-autoGenData", "true",
+				"Freemarker", "-dataDir", "target", "-autoGenData", "true",
 				"-metadataFile", BASE_DIR + "/freemarker.fields.xml" };
 		Main.main(args);
 	}

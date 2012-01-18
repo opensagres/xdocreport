@@ -30,6 +30,7 @@ import java.util.List;
 import org.junit.Assert;
 import org.junit.Test;
 
+import fr.opensagres.xdocreport.core.XDocReportException;
 import fr.opensagres.xdocreport.template.formatter.FieldsMetadata;
 
 public class VelocityFieldsMetadataClassSerializerTestCase {
@@ -98,14 +99,10 @@ public class VelocityFieldsMetadataClassSerializerTestCase {
 	}
 
 	@Test
-	public void testSimplePOJO() {
+	public void testSimplePOJO() throws XDocReportException {
 		FieldsMetadata fieldsMetadata = new FieldsMetadata();
 		VelocityFieldsMetadataClassSerializer serializer = new VelocityFieldsMetadataClassSerializer();
 		serializer.load(fieldsMetadata, "project", Project.class);
-
-		// START remove that once it's implemented
-		fieldsMetadata.addField("project.Name", false, "", null);
-		// END remove that once it's implemented
 
 		Assert.assertEquals(1, fieldsMetadata.getFields().size());
 		Assert.assertEquals("project.Name", fieldsMetadata.getFields().get(0)
@@ -113,27 +110,29 @@ public class VelocityFieldsMetadataClassSerializerTestCase {
 	}
 
 	@Test
-	public void testListPOJO() {
+	public void testListPOJO() throws Exception {
 		FieldsMetadata fieldsMetadata = new FieldsMetadata();
 		VelocityFieldsMetadataClassSerializer serializer = new VelocityFieldsMetadataClassSerializer();
 		serializer.load(fieldsMetadata, "developers", Developer.class, true);
 
-		// START remove that once it's implemented
-		fieldsMetadata.addField("developers.Name", true, "", null);
-		fieldsMetadata.addField("developers.LastName", true, "", null);
-		// END remove that once it's implemented
-
-		Assert.assertEquals(2, fieldsMetadata.getFields().size());
-		Assert.assertEquals("developers.Name", fieldsMetadata.getFields()
-				.get(0).getFieldName());
+		Assert.assertEquals(4, fieldsMetadata.getFields().size());
 		Assert.assertEquals("developers.LastName", fieldsMetadata.getFields()
+				.get(0).getFieldName());
+		Assert.assertTrue(fieldsMetadata.getFields().get(0).isListType());
+		Assert.assertEquals("developers.Mail", fieldsMetadata.getFields()
 				.get(1).getFieldName());
+		Assert.assertTrue(fieldsMetadata.getFields().get(1).isListType());
+		Assert.assertEquals("developers.Name", fieldsMetadata.getFields()
+				.get(2).getFieldName());
+		Assert.assertTrue(fieldsMetadata.getFields().get(2).isListType());
+		Assert.assertEquals("developers.Roles.Name", fieldsMetadata.getFields()
+				.get(3).getFieldName());
+		Assert.assertTrue(fieldsMetadata.getFields().get(3).isListType());
 	}
 
 	@Test
 	public void testSimpleImage() {
 		// Problem IImageProvider is in the document package
 		// IImageProvider
-
 	}
 }

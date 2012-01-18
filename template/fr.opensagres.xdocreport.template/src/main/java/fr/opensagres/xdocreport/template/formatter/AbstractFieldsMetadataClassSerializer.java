@@ -24,6 +24,18 @@
  */
 package fr.opensagres.xdocreport.template.formatter;
 
+import java.beans.BeanInfo;
+import java.beans.IntrospectionException;
+import java.beans.Introspector;
+import java.beans.PropertyDescriptor;
+import java.lang.reflect.Method;
+import java.lang.reflect.ParameterizedType;
+import java.lang.reflect.Type;
+import java.util.ArrayList;
+import java.util.List;
+
+import fr.opensagres.xdocreport.core.XDocReportException;
+
 /**
  * 
  * Abstract class for Fields metadata serializer.
@@ -31,6 +43,14 @@ package fr.opensagres.xdocreport.template.formatter;
  */
 public abstract class AbstractFieldsMetadataClassSerializer implements
 		IFieldsMetadataClassSerializer {
+
+	// package name to exclude while processing
+	private final List<String> excludedPackages;
+
+	public AbstractFieldsMetadataClassSerializer() {
+		this.excludedPackages = new ArrayList<String>();
+		this.excludedPackages.add("java.");
+	}
 
 	/*
 	 * (non-Javadoc)
@@ -40,9 +60,9 @@ public abstract class AbstractFieldsMetadataClassSerializer implements
 	 * #load(fr.opensagres.xdocreport.template.formatter.FieldsMetadata,
 	 * java.lang.String, java.lang.Class)
 	 */
-	public void load(FieldsMetadata fieldsMetadata, String string,
-			Class<?> clazz) {
-		load(fieldsMetadata, string, clazz, false);
+	public void load(FieldsMetadata fieldsMetadata, String key, Class<?> clazz)
+			throws XDocReportException {
+		load(fieldsMetadata, key, clazz, false);
 	}
 
 	/*
@@ -54,18 +74,80 @@ public abstract class AbstractFieldsMetadataClassSerializer implements
 	 * java.lang.String, java.lang.Class, boolean)
 	 */
 	public void load(FieldsMetadata fieldsMetadata, String key, Class<?> clazz,
-			boolean listType) {
-		// TODO check parameters,
-		doLoad(fieldsMetadata, key, clazz, listType);
+			boolean listType) throws XDocReportException {
+		try {
+			process(fieldsMetadata, key, clazz, listType);
+		} catch (Exception e) {
+			throw new XDocReportException(e);
+		}
+	}
+
+	private void process(FieldsMetadata fieldsMetadata, String key,
+			Class<?> clazz, boolean listType) throws IntrospectionException {
+		String fieldName = null;
+		BeanInfo infos = Introspector.getBeanInfo(clazz);
+		PropertyDescriptor[] desc = infos.getPropertyDescriptors();
+		for (int i = 0; i < desc.length; i++) {
+			Method method = desc[i].getReadMethod();
+			if (isGetterMethod(method)) {
+				Class returnTypeClass = method.getReturnType();
+				if (Iterable.class.isAssignableFrom(returnTypeClass)) {
+					// process generic collection
+					Type collectionType = method.getGenericReturnType();
+					if (collectionType != null
+							&& (collectionType instanceof ParameterizedType)) {
+						ParameterizedType parameterizedType = (ParameterizedType) method
+								.getGenericReturnType();
+						Type[] types = parameterizedType
+								.getActualTypeArguments();
+						if (types.length == 1) {
+							Class itemClazz = (Class) types[0];
+							fieldName= getFieldName(key, desc[i].getName());
+							process(fieldsMetadata, fieldName, itemClazz, listType);
+							// process(fieldsMetadata,name + "." +
+							// desc[i].getName()+"[]"+clazz.getSimpleName(),clazz,
+							// false);
+						}
+					}
+				} else {
+					fieldName = getFieldName(key, desc[i].getName());
+					if (isClassToExclude(returnTypeClass)) {
+						fieldsMetadata
+								.addField(fieldName, listType, null, null);
+					} else {
+						process(fieldsMetadata, fieldName, clazz, listType);
+					}
+				}
+			}
+		}
 	}
 
 	/**
-	 * Load 
-	 * @param fieldsMetadata
-	 * @param key
+	 * Return true if package of the given class start with list of package to
+	 * exclude and false otherwise.
+	 * 
 	 * @param clazz
-	 * @param listType
+	 * @return
 	 */
-	protected abstract void doLoad(FieldsMetadata fieldsMetadata, String key,
-			Class<?> clazz, boolean listType);
+	private boolean isClassToExclude(Class clazz) {
+		if (clazz != null && clazz.getPackage() != null) {
+			String packageName = clazz.getPackage().getName();
+			for (String excludePackageName : excludedPackages) {
+				if (packageName.startsWith(excludePackageName))
+					return true;
+			}
+		}
+		return false;
+	}
+
+	private boolean isGetterMethod(Method method) {
+		if (method == null) {
+			return false;
+		}
+		String name = method.getName();
+		return !name.equals("getClass")
+				&& (name.startsWith("get") || name.startsWith("is"));
+	}
+
+	protected abstract String getFieldName(String key, String getterName);
 }

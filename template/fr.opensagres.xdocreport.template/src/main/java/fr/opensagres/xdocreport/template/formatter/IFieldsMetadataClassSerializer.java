@@ -24,9 +24,11 @@
  */
 package fr.opensagres.xdocreport.template.formatter;
 
+import fr.opensagres.xdocreport.core.XDocReportException;
+
 /**
- * Fields metadata serializer used to load {@link FieldsMetadata} from Java {@link Class}
- * model.
+ * Fields metadata serializer used to load {@link FieldsMetadata} from Java
+ * {@link Class} model.
  * 
  */
 public interface IFieldsMetadataClassSerializer {
@@ -42,7 +44,8 @@ public interface IFieldsMetadataClassSerializer {
 	 * @param clazz
 	 *            the Java class model to use to load fields metadata.
 	 */
-	void load(FieldsMetadata fieldsMetadata, String key, Class<?> clazz);
+	void load(FieldsMetadata fieldsMetadata, String key, Class<?> clazz)
+			throws XDocReportException;
 
 	/**
 	 * Load simple/list fields metadata in the given fieldsMetadata by using the
@@ -58,5 +61,5 @@ public interface IFieldsMetadataClassSerializer {
 	 *            true if it's a list and false otherwise.
 	 */
 	void load(FieldsMetadata fieldsMetadata, String key, Class<?> clazz,
-			boolean listType);
+			boolean listType) throws XDocReportException;
 }

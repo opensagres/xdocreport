@@ -10,7 +10,7 @@
     <fileSet>
       <directory>src/main/resources</directory>
       <includes>
-        <include>bat/*</include>
+        <include>bin/*</include>
       </includes>
        <filtered>true</filtered>
        <outputDirectory>/</outputDirectory>

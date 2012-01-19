@@ -25,11 +25,17 @@
 package fr.opensagres.xdocreport.template.freemarker;
 
 import fr.opensagres.xdocreport.core.utils.StringUtils;
+import fr.opensagres.xdocreport.template.TemplateEngineKind;
 import fr.opensagres.xdocreport.template.formatter.AbstractFieldsMetadataClassSerializer;
-import fr.opensagres.xdocreport.template.formatter.FieldsMetadata;
 
 public class FreemarkerFieldsMetadataClassSerializer extends
 		AbstractFieldsMetadataClassSerializer {
+
+	private static final String DESCRIPTION = "Freemarker FieldsMetadata ClassSerializer";
+
+	public FreemarkerFieldsMetadataClassSerializer() {
+		super(TemplateEngineKind.Freemarker.name(), DESCRIPTION);
+	}
 
 	@Override
 	protected String getFieldName(String key, String getterName) {

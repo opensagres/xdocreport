@@ -34,7 +34,6 @@ import java.util.Map;
 import fr.opensagres.xdocreport.core.registry.AbstractRegistry;
 import fr.opensagres.xdocreport.template.ITemplateEngine;
 import fr.opensagres.xdocreport.template.discovery.ITemplateEngineDiscovery;
-import fr.opensagres.xdocreport.template.formatter.IFieldsMetadataClassSerializer;
 
 /**
  * Template engine registry stores instance of {@link ITemplateEngine} for
@@ -114,10 +113,6 @@ public class TemplateEngineRegistry extends
 		this.templateEnginesDiscoveryCache.clear();
 		this.defaultTemplateEngine = null;
 		this.templateEngineKinds.clear();
-
 	}
 
-	public IFieldsMetadataClassSerializer getFieldsMetadataClassSerializer() {		
-		return null;
-	}
 }

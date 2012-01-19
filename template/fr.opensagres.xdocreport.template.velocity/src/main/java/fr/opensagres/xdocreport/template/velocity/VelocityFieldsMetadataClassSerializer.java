@@ -25,11 +25,17 @@
 package fr.opensagres.xdocreport.template.velocity;
 
 import fr.opensagres.xdocreport.core.utils.StringUtils;
+import fr.opensagres.xdocreport.template.TemplateEngineKind;
 import fr.opensagres.xdocreport.template.formatter.AbstractFieldsMetadataClassSerializer;
-import fr.opensagres.xdocreport.template.formatter.FieldsMetadata;
 
 public class VelocityFieldsMetadataClassSerializer extends
 		AbstractFieldsMetadataClassSerializer {
+
+	private static final String DESCRIPTION = "Velocity FieldsMetadata ClassSerializer";
+
+	public VelocityFieldsMetadataClassSerializer() {
+		super(TemplateEngineKind.Velocity.name(), DESCRIPTION);
+	}
 
 	@Override
 	protected String getFieldName(String key, String getterName) {

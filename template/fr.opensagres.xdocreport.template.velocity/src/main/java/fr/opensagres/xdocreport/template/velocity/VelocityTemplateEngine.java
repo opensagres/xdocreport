@@ -56,7 +56,7 @@ import fr.opensagres.xdocreport.template.velocity.internal.XDocVelocityContext;
 public class VelocityTemplateEngine extends AbstractTemplateEngine implements
 		VelocityConstants {
 
-	private static String ID = "Velocity";
+	private static String ID = TemplateEngineKind.Velocity.name();
 
 	private VelocityDocumentFormatter formatter = new VelocityDocumentFormatter();
 	private VelocityEngine velocityEngine;
@@ -75,8 +75,7 @@ public class VelocityTemplateEngine extends AbstractTemplateEngine implements
 
 	@Override
 	protected void processWithCache(String templateName, IContext context,
-			Writer writer)
-			throws XDocReportException, IOException {
+			Writer writer) throws XDocReportException, IOException {
 		VelocityEngine velocityEngine = getVelocityEngine();
 		Template template = velocityEngine.getTemplate(templateName,
 				EncodingConstants.UTF_8.name());
@@ -87,8 +86,8 @@ public class VelocityTemplateEngine extends AbstractTemplateEngine implements
 
 	@Override
 	protected void processNoCache(String entryName, IContext context,
-			Reader reader, Writer writer)
-			throws XDocReportException, IOException {
+			Reader reader, Writer writer) throws XDocReportException,
+			IOException {
 		VelocityEngine velocityEngine = getVelocityEngine();
 		velocityEngine.evaluate((VelocityContext) context, writer, "", reader);
 	}
@@ -113,9 +112,11 @@ public class VelocityTemplateEngine extends AbstractTemplateEngine implements
 				p.setProperty("eventhandler.referenceinsertion.class",
 						XDocReportEscapeReference.class.getName());
 			}
-			
-			ClassLoader backupCL =Thread.currentThread().getContextClassLoader();
-			Thread.currentThread().setContextClassLoader(VelocityTemplateEngine.class.getClassLoader());
+
+			ClassLoader backupCL = Thread.currentThread()
+					.getContextClassLoader();
+			Thread.currentThread().setContextClassLoader(
+					VelocityTemplateEngine.class.getClassLoader());
 			try {
 				velocityEngine.setProperty(VELOCITY_TEMPLATE_ENGINE_KEY, this);
 				velocityEngine.init(p);

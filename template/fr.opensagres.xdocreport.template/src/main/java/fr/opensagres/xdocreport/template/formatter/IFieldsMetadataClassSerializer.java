@@ -25,13 +25,14 @@
 package fr.opensagres.xdocreport.template.formatter;
 
 import fr.opensagres.xdocreport.core.XDocReportException;
+import fr.opensagres.xdocreport.core.discovery.IBaseDiscovery;
 
 /**
  * Fields metadata serializer used to load {@link FieldsMetadata} from Java
  * {@link Class} model.
  * 
  */
-public interface IFieldsMetadataClassSerializer {
+public interface IFieldsMetadataClassSerializer extends IBaseDiscovery {
 
 	/**
 	 * Load simple fields metadata in the given fieldsMetadata by using the

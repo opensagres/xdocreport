@@ -37,7 +37,7 @@ import java.util.Map;
 
 import fr.opensagres.xdocreport.core.XDocReportException;
 import fr.opensagres.xdocreport.core.utils.StringUtils;
-import fr.opensagres.xdocreport.template.registry.TemplateEngineRegistry;
+import fr.opensagres.xdocreport.template.registry.FieldsMetadataClassSerializerRegistry;
 import fr.opensagres.xdocreport.template.textstyling.SyntaxKind;
 
 /**
@@ -358,10 +358,7 @@ public class FieldsMetadata {
 	 * @throws XDocReportException
 	 */
 	public void load(String key, Class<?> clazz) throws XDocReportException {
-		if (serializer == null) {
-			// TODO : check that serializer is not null
-		}
-		serializer.load(this, key, clazz);
+		load(key, clazz, false);
 	}
 
 	/**
@@ -433,8 +430,8 @@ public class FieldsMetadata {
 		if (templateEngineKind == null) {
 			serializer = null;
 		} else {
-			serializer = TemplateEngineRegistry.getRegistry()
-					.getFieldsMetadataClassSerializer();
+			serializer = FieldsMetadataClassSerializerRegistry.getRegistry()
+					.getSerializer(templateEngineKind);
 		}
 	}
 

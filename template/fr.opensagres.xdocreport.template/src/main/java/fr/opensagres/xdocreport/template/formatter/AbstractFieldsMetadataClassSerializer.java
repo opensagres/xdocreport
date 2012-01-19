@@ -44,12 +44,24 @@ import fr.opensagres.xdocreport.core.XDocReportException;
 public abstract class AbstractFieldsMetadataClassSerializer implements
 		IFieldsMetadataClassSerializer {
 
+	private final String id;
+	private final String description;
 	// package name to exclude while processing
 	private final List<String> excludedPackages;
 
-	public AbstractFieldsMetadataClassSerializer() {
+	public AbstractFieldsMetadataClassSerializer(String id, String description) {
+		this.id = id;
+		this.description = description;
 		this.excludedPackages = new ArrayList<String>();
 		this.excludedPackages.add("java.");
+	}
+
+	public String getId() {
+		return id;
+	}
+
+	public String getDescription() {
+		return description;
 	}
 
 	/*
@@ -102,8 +114,9 @@ public abstract class AbstractFieldsMetadataClassSerializer implements
 								.getActualTypeArguments();
 						if (types.length == 1) {
 							Class itemClazz = (Class) types[0];
-							fieldName= getFieldName(key, desc[i].getName());
-							process(fieldsMetadata, fieldName, itemClazz, listType);
+							fieldName = getFieldName(key, desc[i].getName());
+							process(fieldsMetadata, fieldName, itemClazz,
+									listType);
 							// process(fieldsMetadata,name + "." +
 							// desc[i].getName()+"[]"+clazz.getSimpleName(),clazz,
 							// false);

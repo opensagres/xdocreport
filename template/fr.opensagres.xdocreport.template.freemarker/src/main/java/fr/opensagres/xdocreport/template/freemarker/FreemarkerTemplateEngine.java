@@ -67,7 +67,6 @@ public class FreemarkerTemplateEngine extends AbstractTemplateEngine implements
 	}
 
 	public String getId() {
-//		freemarker.ext.dom.NodeModel.parse
 		return ID_DISCOVERY;
 	}
 
@@ -77,8 +76,7 @@ public class FreemarkerTemplateEngine extends AbstractTemplateEngine implements
 
 	@Override
 	protected void processWithCache(String templateName, IContext context,
-			Writer writer)
-			throws XDocReportException, IOException {
+			Writer writer) throws XDocReportException, IOException {
 		// Get template from cache.
 		Template template = getFreemarkerConfiguration().getTemplate(
 				templateName);
@@ -87,8 +85,8 @@ public class FreemarkerTemplateEngine extends AbstractTemplateEngine implements
 	}
 
 	protected void processNoCache(String entryName, IContext context,
-			Reader reader, Writer writer)
-			throws XDocReportException, IOException {
+			Reader reader, Writer writer) throws XDocReportException,
+			IOException {
 		// Create a new template.
 		Template template = new Template(entryName, getReader(reader),
 				getFreemarkerConfiguration());

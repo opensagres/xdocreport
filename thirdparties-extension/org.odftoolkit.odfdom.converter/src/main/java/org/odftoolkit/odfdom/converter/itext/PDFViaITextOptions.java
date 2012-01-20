@@ -30,8 +30,22 @@ import com.lowagie.text.FontFactory;
 
 public class PDFViaITextOptions extends Options {
 
-	private String fontEncoding = FontFactory.defaultEncoding;
+	private String fontEncoding = determineSystemEncoding();
 	private boolean preserveSoftPageBreaks = false;
+
+	private String determineSystemEncoding() {
+		// don't rely on file.encoding property because
+		// it may be changed if application is launched inside an ide
+		String systemEncoding = System.getProperty("sun.jnu.encoding");
+		if (systemEncoding != null && systemEncoding.length() > 0) {
+			return systemEncoding;
+		}
+		systemEncoding = System.getProperty("ibm.system.encoding");
+		if (systemEncoding != null && systemEncoding.length() > 0) {
+			return systemEncoding;
+		}
+		return FontFactory.defaultEncoding;
+	}
 
 	private PDFViaITextOptions() {
 	}
@@ -45,8 +59,11 @@ public class PDFViaITextOptions extends Options {
 	}
 
 	/**
-	 * Set font encoding to use when retrieving fonts. The default value is Cp1252 
-	 * @param fontEncoding font encoding to use
+	 * Set font encoding to use when retrieving fonts. The default value is
+	 * Cp1252
+	 * 
+	 * @param fontEncoding
+	 *            font encoding to use
 	 * @return this instance
 	 */
 	public PDFViaITextOptions fontEncoding(String fontEncoding) {
@@ -59,12 +76,14 @@ public class PDFViaITextOptions extends Options {
 	}
 
 	/**
-	 * Whether to start a new page in a converted pdf upon encountering soft page break in an ODF file.
-	 * The default value is <code>false</code>.
+	 * Whether to start a new page in a converted pdf upon encountering soft
+	 * page break in an ODF file. The default value is <code>false</code>.
+	 * 
 	 * @param preserveSoftPageBreaks
 	 * @return this instance
 	 */
-	public PDFViaITextOptions preserveSoftPageBreaks(boolean preserveSoftPageBreaks) {
+	public PDFViaITextOptions preserveSoftPageBreaks(
+			boolean preserveSoftPageBreaks) {
 		this.preserveSoftPageBreaks = preserveSoftPageBreaks;
 		return this;
 	}

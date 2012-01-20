@@ -33,32 +33,37 @@ public class XHTMLOptions extends Options {
 	private boolean generateCSSComments;
 	private IURIResolver resolver = IURIResolver.DEFAULT;
 
-	public XHTMLOptions() {
+	private XHTMLOptions() {
+	}
 
+	public static XHTMLOptions create() {
+		return new XHTMLOptions();
 	}
 
 	public int getIndent() {
 		return indent;
 	}
 
-	public void setIndent(int indent) {
+	public XHTMLOptions indent(int indent) {
 		this.indent = indent;
+		return this;
 	}
 
 	public boolean isGenerateCSSComments() {
 		return generateCSSComments;
 	}
 
-	public void setGenerateCSSComments(boolean generateCSSComments) {
+	public XHTMLOptions generateCSSComments(boolean generateCSSComments) {
 		this.generateCSSComments = generateCSSComments;
+		return this;
 	}
 
 	public IURIResolver getURIResolver() {
 		return resolver;
 	}
 
-	public void setURIResolver(IURIResolver resolver) {
+	public XHTMLOptions URIResolver(IURIResolver resolver) {
 		this.resolver = resolver;
+		return this;
 	}
-
 }

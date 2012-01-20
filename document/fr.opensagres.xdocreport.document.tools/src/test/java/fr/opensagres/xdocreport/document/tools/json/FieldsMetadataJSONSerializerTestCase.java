@@ -63,8 +63,8 @@ public class FieldsMetadataJSONSerializerTestCase {
 			Assert.assertEquals("{\"name\":\"name_Value\",\"name2\":\"name2_Value\"}", writer.toString());
 		}
 		else {
-			Assert.assertEquals("{\"name2\":\"name_Value2\",\"name\":\"name_Value\"}", writer.toString());
-		}		
+			Assert.assertEquals("{\"name2\":\"name2_Value\",\"name\":\"name_Value\"}", writer.toString());
+		}
 	}
 
 	@Test
@@ -127,7 +127,13 @@ public class FieldsMetadataJSONSerializerTestCase {
 		StringWriter writer = new StringWriter();
 		FieldsMetadataJSONSerializer.getInstance().save(fieldsMetadata, writer,
 				false);
-		Assert.assertEquals("{\"project\":{\"name\":\"name_Value\",\"url\":\"url_Value\"},\"developer\":{\"mail\":\"mail_Value\",\"name\":\"name_Value\"}}", writer.toString());
+		String expected = "{\"project\":{\"name\":\"name_Value\",\"url\":\"url_Value\"},\"developer\":{\"mail\":\"mail_Value\",\"name\":\"name_Value\"}}";
+		if (expected.equals(writer.toString())){
+			Assert.assertEquals("{\"project\":{\"name\":\"name_Value\",\"url\":\"url_Value\"},\"developer\":{\"mail\":\"mail_Value\",\"name\":\"name_Value\"}}", writer.toString());
+		}
+		else {
+			Assert.assertEquals("{\"developer\":{\"mail\":\"mail_Value\",\"name\":\"name_Value\"},\"project\":{\"url\":\"url_Value\",\"name\":\"name_Value\"}}", writer.toString());
+		}
 	}
 	
 	@Test

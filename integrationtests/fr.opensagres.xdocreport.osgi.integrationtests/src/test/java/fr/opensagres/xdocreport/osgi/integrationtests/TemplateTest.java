@@ -54,9 +54,7 @@ public class TemplateTest {
 
 	@Configuration
 	public static Option[] configure() {
-		// XXX pass -Dproject.version=XXX int the IDE, otherwise maven will
-		// inject Its version
-		final String projectVersion = System.getProperty("project.version");
+
 
 		return options(
 
@@ -69,35 +67,18 @@ public class TemplateTest {
 				// logging (logProfile)
 				systemProperty("org.ops4j.pax.logging.DefaultServiceLog.level")
 						.value("WARN"),
-				mavenBundle().groupId("fr.opensagres.xdocreport")
-						.artifactId("fr.opensagres.xdocreport.core")
-						.version(projectVersion),
+				mavenBundle("fr.opensagres.xdocreport","fr.opensagres.xdocreport.core").versionAsInProject(),
 				// template API
-				mavenBundle().groupId("fr.opensagres.xdocreport")
-						.artifactId("fr.opensagres.xdocreport.template")
-						.version(projectVersion),
+				mavenBundle("fr.opensagres.xdocreport","fr.opensagres.xdocreport.template").versionAsInProject(),
 
 				// template fragments
-				mavenBundle()
-						.groupId("fr.opensagres.xdocreport")
-						.artifactId(
-								"fr.opensagres.xdocreport.template.freemarker")
-						.version(projectVersion).noStart(),
-				mavenBundle()
-						.groupId("fr.opensagres.xdocreport")
-						.artifactId(
-								"fr.opensagres.xdocreport.template.velocity")
-						.version(projectVersion).noStart(),
-				wrappedBundle(mavenBundle().groupId("org.freemarker")
-						.artifactId("freemarker").version("2.3.16")),
-				mavenBundle().groupId("commons-collections")
-						.artifactId("commons-collections").version("3.2.1"),
-				mavenBundle().groupId("commons-lang")
-						.artifactId("commons-lang").version("2.4"),
-				mavenBundle().groupId("org.apache.velocity")
-						.artifactId("velocity").version("1.7"),
-						wrappedBundle(mavenBundle().groupId("oro")
-						.artifactId("oro").version("2.0.8")),		
+				mavenBundle("fr.opensagres.xdocreport","fr.opensagres.xdocreport.template.freemarker").versionAsInProject().noStart(),
+				mavenBundle("fr.opensagres.xdocreport","fr.opensagres.xdocreport.template.velocity").versionAsInProject().noStart(),
+				wrappedBundle(mavenBundle("org.freemarker","freemarker","2.3.16")),
+				mavenBundle("commons-collections","commons-collections","3.2.1"),
+				mavenBundle("commons-lang","commons-lang","2.4"),
+				mavenBundle("org.apache.velocity","velocity","1.7"),
+				wrappedBundle(mavenBundle("oro","oro","2.0.8")),		
 				new Customizer() {
 
 					@Override

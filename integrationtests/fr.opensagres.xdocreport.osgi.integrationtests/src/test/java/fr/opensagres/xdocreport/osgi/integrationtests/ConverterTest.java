@@ -60,7 +60,7 @@ public class ConverterTest {
 
 		// XXX pass -Dproject.version=XXX int the IDE, otherwise maven will
 		// inject Its version
-		final String projectVersion = System.getProperty("project.version");
+		// final String projectVersion = System.getProperty("project.version");
 
 		return options(
 
@@ -68,60 +68,34 @@ public class ConverterTest {
 				// PaxRunnerOptions.vmOption("-Xrunjdwp:transport=dt_socket,server=y,suspend=y,address=5006"),
 				// equinox(),
 
-				systemProperty("org.ops4j.pax.logging.DefaultServiceLog.level")
-						.value("DEBUG"),
+				systemProperty("org.ops4j.pax.logging.DefaultServiceLog.level").value("DEBUG"),
 
-				mavenBundle().groupId("fr.opensagres.xdocreport")
-						.artifactId("fr.opensagres.xdocreport.core")
-						.version(projectVersion),
+				mavenBundle("fr.opensagres.xdocreport","fr.opensagres.xdocreport.core").versionAsInProject(),
 				// converter API
-				mavenBundle().groupId("fr.opensagres.xdocreport")
-						.artifactId("fr.opensagres.xdocreport.converter")
-						.version(projectVersion),
+				mavenBundle("fr.opensagres.xdocreport","fr.opensagres.xdocreport.converter").versionAsInProject(),
 				// converter Iml
-				mavenBundle()
-						.groupId("fr.opensagres.xdocreport")
-						.artifactId(
-								"fr.opensagres.xdocreport.converter.odt.odfdom")
-						.version(projectVersion).noStart(),
+				mavenBundle("fr.opensagres.xdocreport","fr.opensagres.xdocreport.converter.odt.odfdom").versionAsInProject().noStart(),
 
-				mavenBundle()
-						.groupId("fr.opensagres.xdocreport")
-						.artifactId(
-								"fr.opensagres.xdocreport.converter.docx.xwpf")
-						.version(projectVersion).noStart(),
+				mavenBundle("fr.opensagres.xdocreport","fr.opensagres.xdocreport.converter.docx.xwpf").versionAsInProject().noStart(),
 
 				// 3rd parties extensions...
 
-				mavenBundle().groupId("fr.opensagres.xdocreport")
-						.artifactId("org.odftoolkit.odfdom.converter")
-						.version(projectVersion),
-				mavenBundle().groupId("fr.opensagres.xdocreport")
-						.artifactId("fr.opensagres.xdocreport.itext.extension")
-						.version(projectVersion),
+				mavenBundle("fr.opensagres.xdocreport","org.odftoolkit.odfdom.converter").versionAsInProject(),
+				mavenBundle("fr.opensagres.xdocreport","fr.opensagres.xdocreport.itext.extension").versionAsInProject(),
 
-				mavenBundle().groupId("fr.opensagres.xdocreport")
-						.artifactId("org.apache.poi.xwpf.converter")
-						.version(projectVersion),
+				mavenBundle("fr.opensagres.xdocreport","org.apache.poi.xwpf.converter").versionAsInProject(),
 				// 3rd parties modules...
-				wrappedBundle(mavenBundle().groupId("org.apache.poi")
-						.artifactId("poi").version("3.7")),
-				wrappedBundle(mavenBundle().groupId("org.apache.poi")
-						.artifactId("poi-ooxml").version("3.7")),
-				wrappedBundle(mavenBundle().groupId("org.apache.xmlbeans")
-						.artifactId("xmlbeans").version("2.3.0")),
+				wrappedBundle(mavenBundle("org.apache.poi","poi","3.7")),
+				wrappedBundle(mavenBundle("org.apache.poi","poi-ooxml","3.7")),
+				wrappedBundle(mavenBundle("org.apache.xmlbeans","xmlbeans","2.3.0")),
 
-				wrappedBundle(mavenBundle().groupId("org.apache.poi")
-						.artifactId("ooxml-schemas").version("1.1")),
+				wrappedBundle(mavenBundle("org.apache.poi","ooxml-schemas","1.1")),
 
-				wrappedBundle(mavenBundle().groupId("org.odftoolkit")
-						.artifactId("odfdom-java").version("0.8.7")),
+				wrappedBundle(mavenBundle("org.odftoolkit","odfdom-java","0.8.7")),
 
-				wrappedBundle(mavenBundle().groupId("com.lowagie")
-						.artifactId("itext").version("2.1.7")),
+				wrappedBundle(mavenBundle("com.lowagie","itext","2.1.7")),
 
-				wrappedBundle(mavenBundle().groupId("stax")
-						.artifactId("stax-api").version("1.0.1")),
+				wrappedBundle(mavenBundle("stax","stax-api","1.0.1")),
 
 				new Customizer() {
 

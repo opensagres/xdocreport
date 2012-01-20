@@ -53,9 +53,6 @@ public class DocumentTest {
 
 	@Configuration
 	public static Option[] configure() {
-		// XXX pass -Dproject.version=XXX int the IDE, otherwise maven will
-		// inject Its version
-		final String projectVersion = System.getProperty("project.version");
 		return options(
 
 				//
@@ -67,40 +64,24 @@ public class DocumentTest {
 				// logging (logProfile)
 				systemProperty("org.ops4j.pax.logging.DefaultServiceLog.level")
 						.value("WARN"),
-				mavenBundle().groupId("fr.opensagres.xdocreport")
-						.artifactId("fr.opensagres.xdocreport.core")
-						.version(projectVersion),
+				mavenBundle("fr.opensagres.xdocreport","fr.opensagres.xdocreport.core").versionAsInProject(),
 				// converter api
-				mavenBundle().groupId("fr.opensagres.xdocreport")
-						.artifactId("fr.opensagres.xdocreport.converter")
-						.version(projectVersion),
+				mavenBundle("fr.opensagres.xdocreport","fr.opensagres.xdocreport.converter").versionAsInProject(),
 
 				// template API
-				mavenBundle().groupId("fr.opensagres.xdocreport")
-						.artifactId("fr.opensagres.xdocreport.template")
-						.version(projectVersion),
+				mavenBundle("fr.opensagres.xdocreport","fr.opensagres.xdocreport.template").versionAsInProject(),
 				// document API
-				mavenBundle().groupId("fr.opensagres.xdocreport")
-						.artifactId("fr.opensagres.xdocreport.document")
-						.version(projectVersion),
+				mavenBundle("fr.opensagres.xdocreport","fr.opensagres.xdocreport.document").versionAsInProject(),
 
 				// document Impl
-				mavenBundle().groupId("fr.opensagres.xdocreport")
-						.artifactId("fr.opensagres.xdocreport.document.docx")
-						.version(projectVersion).noStart(),
+				mavenBundle("fr.opensagres.xdocreport","fr.opensagres.xdocreport.document.docx").versionAsInProject().noStart(),
 				// document Impl
-				mavenBundle().groupId("fr.opensagres.xdocreport")
-						.artifactId("fr.opensagres.xdocreport.document.odt")
-						.version(projectVersion).noStart(),
-				mavenBundle().groupId("fr.opensagres.xdocreport")
-						.artifactId("fr.opensagres.xdocreport.document.odp")
-						.version(projectVersion).noStart(),
-				mavenBundle().groupId("fr.opensagres.xdocreport")
-						.artifactId("fr.opensagres.xdocreport.document.ods")
-						.version(projectVersion).noStart(),
-				mavenBundle().groupId("fr.opensagres.xdocreport")
-						.artifactId("fr.opensagres.xdocreport.document.pptx")
-						.version(projectVersion).noStart(), new Customizer() {
+				mavenBundle("fr.opensagres.xdocreport","fr.opensagres.xdocreport.document.odt").versionAsInProject().noStart(),
+				
+				mavenBundle("fr.opensagres.xdocreport","fr.opensagres.xdocreport.document.odp").versionAsInProject().noStart(),
+				mavenBundle("fr.opensagres.xdocreport","fr.opensagres.xdocreport.document.ods").versionAsInProject().noStart(),
+				mavenBundle("fr.opensagres.xdocreport","fr.opensagres.xdocreport.document.pptx").versionAsInProject().noStart(),
+				new Customizer() {
 
 					@Override
 					public void customizeEnvironment(File workingFolder) {

@@ -32,7 +32,6 @@ import org.odftoolkit.odfdom.converter.ODFConverterException;
 import org.odftoolkit.odfdom.converter.xhtml.XHTMLOptions;
 import org.odftoolkit.odfdom.doc.OdfTextDocument;
 
-import fr.opensagres.xdocreport.converter.IURIResolver;
 import fr.opensagres.xdocreport.converter.MimeMapping;
 import fr.opensagres.xdocreport.converter.MimeMappingConstants;
 import fr.opensagres.xdocreport.converter.Options;
@@ -54,7 +53,7 @@ public class ODF2XHTMLConverter extends AbstractConverterNoEntriesSupport
 			OdfTextDocument odfDocument = OdfTextDocument.loadDocument(in);
 			org.odftoolkit.odfdom.converter.xhtml.ODF2XHTMLConverter
 					.getInstance().convert(odfDocument, out,
-							toODFOptions(options));
+							getXHTMLOptions(options));
 		} catch (ODFConverterException e) {
 			throw new XDocConverterException(e);
 		} catch (IOException e) {
@@ -64,6 +63,12 @@ public class ODF2XHTMLConverter extends AbstractConverterNoEntriesSupport
 		}
 	}
 
+	private XHTMLOptions getXHTMLOptions(Options options) {
+		Object value = options.getSubOptions(XHTMLOptions.class);
+		return value instanceof XHTMLOptions ? (XHTMLOptions) value : null;
+	}
+
+	/*
 	private XHTMLOptions toODFOptions(Options o) {
 		XHTMLOptions options = XHTMLOptions.create();
 		final IURIResolver resolver = (IURIResolver) o
@@ -78,7 +83,7 @@ public class ODF2XHTMLConverter extends AbstractConverterNoEntriesSupport
 
 		}
 		return options;
-	}
+	}*/
 
 	public MimeMapping getMimeMapping() {
 		return XHTML_MIME_MAPPING;

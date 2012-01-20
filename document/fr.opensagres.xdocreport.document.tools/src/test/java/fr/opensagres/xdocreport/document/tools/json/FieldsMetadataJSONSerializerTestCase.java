@@ -58,7 +58,13 @@ public class FieldsMetadataJSONSerializerTestCase {
 		StringWriter writer = new StringWriter();
 		FieldsMetadataJSONSerializer.getInstance().save(fieldsMetadata, writer,
 				false);
-		Assert.assertEquals("{\"name\":\"name_Value\",\"name2\":\"name2_Value\"}", writer.toString());
+		// In some context (which?) the order of JSON object change
+		if ("{\"name\":\"name_Value\",\"name2\":\"name2_Value\"}".equals(writer.toString())) {
+			Assert.assertEquals("{\"name\":\"name_Value\",\"name2\":\"name2_Value\"}", writer.toString());
+		}
+		else {
+			Assert.assertEquals("{\"name2\":\"name_Value2\",\"name\":\"name_Value\"}", writer.toString());
+		}		
 	}
 
 	@Test
@@ -70,10 +76,22 @@ public class FieldsMetadataJSONSerializerTestCase {
 		StringWriter writer = new StringWriter();
 		FieldsMetadataJSONSerializer.getInstance().save(fieldsMetadata, writer,
 				true);
-		Assert.assertEquals("{" +
+		String expected= "{" +
 				"\n \"name\": \"name_Value\"," +
 				"\n \"name2\": \"name2_Value\"" +
-				"\n}", writer.toString());
+				"\n}";
+		if (expected.equals(writer.toString())) {
+			Assert.assertEquals("{" +
+					"\n \"name\": \"name_Value\"," +
+					"\n \"name2\": \"name2_Value\"" +
+					"\n}", writer.toString());
+		}
+		else {		
+			Assert.assertEquals("{" +
+					"\n \"name2\": \"name2_Value\"," +
+					"\n \"name\": \"name_Value\"" +
+					"\n}", writer.toString());
+		}
 	}
 	
 	@Test

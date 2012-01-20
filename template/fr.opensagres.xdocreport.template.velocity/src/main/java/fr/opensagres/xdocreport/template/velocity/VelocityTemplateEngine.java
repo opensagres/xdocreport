@@ -32,6 +32,7 @@ import java.util.Properties;
 import org.apache.velocity.Template;
 import org.apache.velocity.VelocityContext;
 import org.apache.velocity.app.VelocityEngine;
+import org.apache.velocity.runtime.RuntimeConstants;
 import org.apache.velocity.runtime.RuntimeSingleton;
 import org.apache.velocity.runtime.parser.ParseException;
 import org.apache.velocity.runtime.parser.node.SimpleNode;
@@ -60,6 +61,8 @@ public class VelocityTemplateEngine extends AbstractTemplateEngine implements
 
 	private VelocityDocumentFormatter formatter = new VelocityDocumentFormatter();
 	private VelocityEngine velocityEngine;
+
+	private Properties velocityEngineProperties;
 
 	public String getKind() {
 		return TemplateEngineKind.Velocity.name();
@@ -96,20 +99,13 @@ public class VelocityTemplateEngine extends AbstractTemplateEngine implements
 			throws XDocReportException {
 		if (velocityEngine == null) {
 			velocityEngine = new VelocityEngine();
-			Properties p = new Properties();
-			// Initialize properties to use XDocReportEntryResourceLoader to
-			// load template from entry name of XDocArchive.
-			p.setProperty("resource.loader", "file, class, jar ,report");
-			p.setProperty("report.resource.loader.class",
-					XDocReportEntryResourceLoader.class.getName());
-			p.setProperty("report.resource.loader.cache", "true");
-			p.setProperty("report.resource.loader.modificationCheckInterval",
-					"1");
+			Properties velocityEngineProperties = getVelocityEngineProperties();
 
 			ITemplateEngineConfiguration configuration = super
 					.getConfiguration();
 			if (configuration != null && configuration.escapeXML()) {
-				p.setProperty("eventhandler.referenceinsertion.class",
+				velocityEngineProperties.setProperty(
+						"eventhandler.referenceinsertion.class",
 						XDocReportEscapeReference.class.getName());
 			}
 
@@ -119,13 +115,50 @@ public class VelocityTemplateEngine extends AbstractTemplateEngine implements
 					VelocityTemplateEngine.class.getClassLoader());
 			try {
 				velocityEngine.setProperty(VELOCITY_TEMPLATE_ENGINE_KEY, this);
-				velocityEngine.init(p);
+				velocityEngine.init(velocityEngineProperties);
 			} catch (Exception e) {
 				throw new XDocReportException(e);
 			}
 			Thread.currentThread().setContextClassLoader(backupCL);
 		}
 		return velocityEngine;
+	}
+
+	/**
+	 * Returns the {@link Properties} used to initialize Velocity Engine.
+	 * 
+	 * @return
+	 */
+	public synchronized Properties getVelocityEngineProperties() {
+		if (velocityEngineProperties != null) {
+			return velocityEngineProperties;
+		}
+		velocityEngineProperties = new Properties();
+
+		// Initialize properties to use XDocReportEntryResourceLoader to
+		// load template from entry name of XDocArchive.
+		velocityEngineProperties.setProperty("resource.loader",
+				"file, class, jar ,report");
+		velocityEngineProperties.setProperty("report.resource.loader.class",
+				XDocReportEntryResourceLoader.class.getName());
+		velocityEngineProperties.setProperty("report.resource.loader.cache",
+				"true");
+		velocityEngineProperties.setProperty(
+				"report.resource.loader.modificationCheckInterval", "1");
+
+		// Disable log for Velocity to avoid to generate velocity.log (by
+		// default)
+		try {
+			if (Class.forName("org.apache.velocity.runtime.log.NullLogChute") != null) {
+				// Don't crash Velocity if NullLogChute doesn't exist
+				velocityEngineProperties.setProperty(
+						RuntimeConstants.RUNTIME_LOG_LOGSYSTEM_CLASS,
+						"org.apache.velocity.runtime.log.NullLogChute");
+			}
+		} catch (Throwable e) {
+			// Do nothing
+		}
+		return velocityEngineProperties;
 	}
 
 	public IDocumentFormatter getDocumentFormatter() {

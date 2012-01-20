@@ -94,6 +94,11 @@ public abstract class AbstractODFDOMConverterTest {
 	}
 
 	@Test
+	public void testTextSectionsAndTabulators() throws Exception {
+		doGenerate("TestTextSectionsAndTabulators.odt");
+	}
+	
+	@Test
 	public void testTitle() throws Exception {
 		doGenerate("TestTitle.odt");
 	}

@@ -46,10 +46,10 @@ public class ODFDOM2XHTMLConverterTest extends AbstractODFDOMConverterTest {
 
 		OdfTextDocument document = OdfTextDocument.loadDocument(Data.class
 				.getResourceAsStream(fileInName));
-		XHTMLOptions options = new XHTMLOptions();
-		options.setIndent(1);
-		options.setGenerateCSSComments(true);
-		options.setURIResolver(new FileURIResolver(new File("Pictures")));
+		XHTMLOptions options = XHTMLOptions.create();
+		options.indent(1);
+		options.generateCSSComments(true);
+		options.URIResolver(new FileURIResolver(new File("Pictures")));
 
 		OutputStream out = System.out;
 		ODF2XHTMLConverter.getInstance().convert(document, out, options);
@@ -67,10 +67,10 @@ public class ODFDOM2XHTMLConverterTest extends AbstractODFDOMConverterTest {
 
 		OdfTextDocument document = OdfTextDocument.loadDocument(Data.class
 				.getResourceAsStream(fileInName));
-		XHTMLOptions options = new XHTMLOptions();
-		options.setIndent(1);
-		options.setGenerateCSSComments(true);
-		options.setURIResolver(new FileURIResolver(new File("Pictures")));
+		XHTMLOptions options = XHTMLOptions.create();
+		options.indent(1);
+		options.generateCSSComments(true);
+		options.URIResolver(new FileURIResolver(new File("Pictures")));
 
 		OutputStream out = new FileOutputStream(new File(fileOutName));
 		ODF2XHTMLConverter.getInstance().convert(document, out, options);

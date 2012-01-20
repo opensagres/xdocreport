@@ -65,11 +65,11 @@ public class ODF2XHTMLConverter extends AbstractConverterNoEntriesSupport
 	}
 
 	private XHTMLOptions toODFOptions(Options o) {
-		XHTMLOptions options = new XHTMLOptions();
+		XHTMLOptions options = XHTMLOptions.create();
 		final IURIResolver resolver = (IURIResolver) o
 				.getProperty(IURIResolver.class.getName());
 		if (resolver != null) {
-			options.setURIResolver(new org.odftoolkit.odfdom.converter.IURIResolver() {
+			options.URIResolver(new org.odftoolkit.odfdom.converter.IURIResolver() {
 
 				public String resolve(String uri) {
 					return resolver.resolve(uri);

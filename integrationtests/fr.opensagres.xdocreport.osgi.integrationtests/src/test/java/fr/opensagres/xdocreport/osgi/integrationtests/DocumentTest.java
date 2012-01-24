@@ -38,6 +38,7 @@ import org.junit.runner.RunWith;
 import org.ops4j.pax.exam.Customizer;
 import org.ops4j.pax.exam.Inject;
 import org.ops4j.pax.exam.Option;
+import org.ops4j.pax.exam.container.def.PaxRunnerOptions;
 import org.ops4j.pax.exam.junit.Configuration;
 import org.ops4j.pax.exam.junit.JUnit4TestRunner;
 import org.osgi.framework.BundleContext;
@@ -55,6 +56,7 @@ public class DocumentTest {
 	public static Option[] configure() {
 		return options(
 
+				PaxRunnerOptions.cleanCaches(),
 				//
 				// PaxRunnerOptions.vmOption("-Xrunjdwp:transport=dt_socket,server=y,suspend=y,address=5006"),
 				// equinox(),
@@ -71,7 +73,7 @@ public class DocumentTest {
 				// template API
 				mavenBundle("fr.opensagres.xdocreport","fr.opensagres.xdocreport.template").versionAsInProject(),
 				// document API
-				mavenBundle("fr.opensagres.xdocreport","fr.opensagres.xdocreport.document").versionAsInProject(),
+				mavenBundle("fr.opensagres.xdocreport","fr.opensagres.xdocreport.document").versionAsInProject().noStart(),
 
 				// document Impl
 				mavenBundle("fr.opensagres.xdocreport","fr.opensagres.xdocreport.document.docx").versionAsInProject().noStart(),
@@ -83,8 +85,10 @@ public class DocumentTest {
 				mavenBundle("fr.opensagres.xdocreport","fr.opensagres.xdocreport.document.pptx").versionAsInProject().noStart(),
 				new Customizer() {
 
+					
 					@Override
 					public void customizeEnvironment(File workingFolder) {
+						
 						System.out.println("Hello World: "
 								+ workingFolder.getAbsolutePath());
 					}

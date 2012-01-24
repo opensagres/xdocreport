@@ -24,9 +24,7 @@
  */
 package fr.opensagres.xdocreport.document.textstyling.wiki.gwiki;
 
-import fr.opensagres.xdocreport.document.preprocessor.sax.BufferedElement;
 import fr.opensagres.xdocreport.document.textstyling.AbstractDocumentHandler;
-import fr.opensagres.xdocreport.template.IContext;
 
 /**
  * 
@@ -94,11 +92,24 @@ public class HTMLDocumentHandler extends AbstractDocumentHandler {
 	}
 
 	public void startParagraph() {
-		writer.write("<p>");		
+		writer.write("<p>");
 	}
 
 	public void endParagraph() {
-		writer.write("</p>");		
-	}	
+		writer.write("</p>");
+	}
+
+	public void startHeading(int level) {
+		writer.write("<h");
+		writer.write(level);
+		writer.write(">");
+
+	}
+
+	public void endHeading(int level) {
+		writer.write("</h");
+		writer.write(level);
+		writer.write(">");
+	}
 
 }

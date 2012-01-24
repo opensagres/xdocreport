@@ -152,4 +152,14 @@ public class DocxDocumentHandler extends AbstractDocumentHandler {
 		internalEndParagraph();
 	}
 
+	public void startHeading(int level) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	public void endHeading(int level) {
+		// TODO Auto-generated method stub
+		
+	}
+
 }

@@ -34,6 +34,7 @@ import fr.opensagres.xdocreport.document.images.IImageRegistry;
 import fr.opensagres.xdocreport.document.odt.images.ODTImageRegistry;
 import fr.opensagres.xdocreport.document.odt.preprocessor.ODTManifestXMLProcessor;
 import fr.opensagres.xdocreport.document.odt.preprocessor.ODTPreprocessor;
+import fr.opensagres.xdocreport.document.odt.preprocessor.ODTStylesPreprocessor;
 
 /**
  * Open Office ODT report. For mime mapping please see {@see
@@ -71,6 +72,8 @@ public class ODTReport extends AbstractXDocReport implements ODTConstants {
 		// processor to modify META-INF/manifest.xml
 		super.addPreprocessor(METAINF_MANIFEST_XML_ENTRY,
 				ODTManifestXMLProcessor.INSTANCE);
+		// processor to modify global styles
+		super.addPreprocessor(STYLES_XML_ENTRY, ODTStylesPreprocessor.INSTANCE);
 	}
 
 	@Override

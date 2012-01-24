@@ -31,7 +31,7 @@ import org.xml.sax.helpers.DefaultHandler;
 import fr.opensagres.xdocreport.document.textstyling.IDocumentHandler;
 
 /**
- * SAX content handler used to parse HTML content and call teh well method of
+ * SAX content handler used to parse HTML content and call the right method of
  * {@link IDocumentHandler} according the HTML content.
  * 
  */
@@ -52,6 +52,14 @@ public class HTMLTextStylingContentHandler extends DefaultHandler {
 
 	// HTML elements for paragraph
 	private static final String P_ELT = "p";
+
+	// HTML elements for Titles
+	private static final String H1_ELT = "h1";
+	private static final String H2_ELT = "h2";
+	private static final String H3_ELT = "h3";
+	private static final String H4_ELT = "h4";
+	private static final String H5_ELT = "h5";
+	private static final String H6_ELT = "h6";
 
 	private final IDocumentHandler documentHandler;
 
@@ -92,6 +100,24 @@ public class HTMLTextStylingContentHandler extends DefaultHandler {
 		} else if (P_ELT.equals(name)) {
 			// Paragraph
 			documentHandler.startParagraph();
+		} else if (H1_ELT.equals(name)) {
+			// Header 1
+			documentHandler.startHeading(1);
+		} else if (H2_ELT.equals(name)) {
+			// Header 2
+			documentHandler.startHeading(2);
+		} else if (H3_ELT.equals(name)) {
+			// Header 3
+			documentHandler.startHeading(3);
+		} else if (H4_ELT.equals(name)) {
+			// Header 4
+			documentHandler.startHeading(4);
+		} else if (H5_ELT.equals(name)) {
+			// Header 5
+			documentHandler.startHeading(5);
+		} else if (H6_ELT.equals(name)) {
+			// Header 6
+			documentHandler.startHeading(6);
 		}
 		super.startElement(uri, localName, name, attributes);
 	}
@@ -117,6 +143,24 @@ public class HTMLTextStylingContentHandler extends DefaultHandler {
 		} else if (P_ELT.equals(name)) {
 			// Paragraph
 			documentHandler.endParagraph();
+		} else if (H1_ELT.equals(name)) {
+			// Header 1
+			documentHandler.endHeading(1);
+		} else if (H2_ELT.equals(name)) {
+			// Header 2
+			documentHandler.endHeading(2);
+		} else if (H3_ELT.equals(name)) {
+			// Header 3
+			documentHandler.endHeading(3);
+		} else if (H4_ELT.equals(name)) {
+			// Header 4
+			documentHandler.endHeading(4);
+		} else if (H5_ELT.equals(name)) {
+			// Header 5
+			documentHandler.endHeading(5);
+		} else if (H6_ELT.equals(name)) {
+			// Header 6
+			documentHandler.endHeading(6);
 		}
 		super.endElement(uri, localName, name);
 	}

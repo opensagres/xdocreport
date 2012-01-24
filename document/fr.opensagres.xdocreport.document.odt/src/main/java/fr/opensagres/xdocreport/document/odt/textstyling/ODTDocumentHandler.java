@@ -12,6 +12,7 @@ public class ODTDocumentHandler extends AbstractDocumentHandler {
 	private boolean bolding;
 	private boolean italicsing;
 	private Stack<Boolean> paragraphsStack;
+	private boolean isHeader = false;
 
 	public ODTDocumentHandler(BufferedElement parent, IContext context) {
 		super(parent, context);
@@ -50,21 +51,25 @@ public class ODTDocumentHandler extends AbstractDocumentHandler {
 
 	@Override
 	public void handleString(String content) {
-		writer.write("<text:span");
-		if (bolding || italicsing) {
-			writer.write(" text:style-name=\"");
-			if (bolding && italicsing) {
-				writer.write(ODTBufferedDocumentContentHandler.BOLD_ITALIC_STYLE_NAME);
-			} else if (italicsing) {
-				writer.write(ODTBufferedDocumentContentHandler.ITALIC_STYLE_NAME);
-			} else if (bolding) {
-				writer.write(ODTBufferedDocumentContentHandler.BOLD_STYLE_NAME);
+		if (isHeader) {
+			writer.write(content);
+		} else {
+			writer.write("<text:span");
+			if (bolding || italicsing) {
+				writer.write(" text:style-name=\"");
+				if (bolding && italicsing) {
+					writer.write(ODTBufferedDocumentContentHandler.BOLD_ITALIC_STYLE_NAME);
+				} else if (italicsing) {
+					writer.write(ODTBufferedDocumentContentHandler.ITALIC_STYLE_NAME);
+				} else if (bolding) {
+					writer.write(ODTBufferedDocumentContentHandler.BOLD_STYLE_NAME);
+				}
+				writer.write("\" ");
 			}
-			writer.write("\" ");
+			writer.write(">");
+			writer.write(content);
+			writer.write("</text:span>");
 		}
-		writer.write(">");
-		writer.write(content);
-		writer.write("</text:span>");
 	}
 
 	public void startListItem() {
@@ -93,6 +98,21 @@ public class ODTDocumentHandler extends AbstractDocumentHandler {
 	private void internalEndParagraph() {
 		writer.write("</text:span>");
 		paragraphsStack.pop();
+	}
+
+	public void startHeading(int level) {
+		// writer.write("<text:span text:style-name=\"" +
+		// PARAGRAPH_AUTOBREAK_START + "\">  </text:span>");
+		writer.write("<text:h text:style-name=\"Heading_20_" + level
+				+ "\" text:outline-level=\"" + level + "\">");
+		isHeader = true; // XXX nested Headers ?
+	}
+
+	public void endHeading(int level) {
+		writer.write("</text:h>");
+		// writer.write("<text:span text:style-name=\"" +
+		// PARAGRAPH_AUTOBREAK_END + "\">  </text:span>");
+		isHeader = false;
 	}
 
 }

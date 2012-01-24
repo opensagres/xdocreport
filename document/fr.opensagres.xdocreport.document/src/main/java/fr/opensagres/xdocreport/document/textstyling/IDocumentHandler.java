@@ -107,6 +107,10 @@ public interface IDocumentHandler {
 	 */
 	void handleString(String s);
 
+	void startHeading(int level);
+
+    void endHeading(int level);
+    
 	//
 	// void endCaption();
 	// void endDocument();

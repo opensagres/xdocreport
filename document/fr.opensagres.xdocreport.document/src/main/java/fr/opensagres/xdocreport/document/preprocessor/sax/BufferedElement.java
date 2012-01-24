@@ -456,5 +456,10 @@ public class BufferedElement implements IBufferedRegion {
 		dynamicAttributes.add(attribute);
 		return attribute;
 	}
+	
+	public String getName() {
+		return name;
+	}
+	
 
 }

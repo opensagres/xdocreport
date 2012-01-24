@@ -107,4 +107,12 @@ public abstract class AbstractDocumentHandler implements IDocumentHandler {
 	protected void doStartOrderedList() {
 
 	}
+	
+	public BufferedElement getParent() {
+		return parent;
+	}
+	
+	public IContext getContext() {
+		return context;
+	}
 }

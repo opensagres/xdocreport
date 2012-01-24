@@ -456,7 +456,7 @@ public class FreemarkerDocumentFormatter extends AbstractDocumentFormatter {
 				"\"" + syntaxKind + "\"",				
 				"\"" + documentKind + "\"",
 				"\"" + elementId + "\"",
-				"${"+IContext.KEY+"}"));
+				IContext.KEY));
 		newContent.append(END_NOESCAPE);
 		return newContent.toString();
 	}

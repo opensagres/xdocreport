@@ -25,6 +25,7 @@
 package fr.opensagres.xdocreport.template.freemarker.internal;
 
 import java.util.HashMap;
+import java.util.Map;
 
 import fr.opensagres.xdocreport.template.IContext;
 import fr.opensagres.xdocreport.template.utils.TemplateUtils;
@@ -33,22 +34,22 @@ import fr.opensagres.xdocreport.template.utils.TemplateUtils;
  * Freemarker context.
  * 
  */
-public class XDocFreemarkerContext extends HashMap<String, Object> implements
-		IContext {
+public class XDocFreemarkerContext implements IContext {
 
 	public static final long serialVersionUID = 1L;
 
-	@Override
+	private final Map<String, Object> map = new HashMap<String, Object>();
+
 	public Object put(String key, Object value) {
 		Object result = TemplateUtils.putContextForDottedKey(this, key, value);
 		if (result == null) {
-			return super.put(key, value);
+			return map.put(key, value);
 		}
 		return result;
 	}
-	
+
 	public Object get(String key) {
-		return super.get(key);
-	}
+		return map.get(key);
+	}	
 
 }

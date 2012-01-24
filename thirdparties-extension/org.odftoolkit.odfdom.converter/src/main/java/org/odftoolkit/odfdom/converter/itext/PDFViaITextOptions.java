@@ -60,7 +60,7 @@ public class PDFViaITextOptions extends Options {
 
 	/**
 	 * Set font encoding to use when retrieving fonts. The default value is
-	 * Cp1252
+	 * underlying operating system encoding
 	 * 
 	 * @param fontEncoding
 	 *            font encoding to use

@@ -32,6 +32,6 @@ public class MainVithFreemarkerAutoGenTestCase {
 				"-out", "target/ODTHelloWordWithFreemarker_Out.odt", "-engine",
 				"Freemarker", "-dataDir", "target", "-autoGenData", "true",
 				"-metadataFile", BASE_DIR + "/freemarker.fields.xml" };
-		Main.main(args);
+		//Main.main(args);
 	}
 }

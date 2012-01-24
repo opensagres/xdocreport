@@ -42,6 +42,7 @@ import fr.opensagres.xdocreport.converter.IConverter;
 import fr.opensagres.xdocreport.converter.Options;
 import fr.opensagres.xdocreport.converter.XDocConverterException;
 import fr.opensagres.xdocreport.core.XDocReportException;
+import fr.opensagres.xdocreport.core.document.TextStylingConstants;
 import fr.opensagres.xdocreport.core.io.IEntryOutputStreamProvider;
 import fr.opensagres.xdocreport.core.io.IEntryReaderProvider;
 import fr.opensagres.xdocreport.core.io.IEntryWriterProvider;
@@ -50,6 +51,7 @@ import fr.opensagres.xdocreport.core.logging.LogUtils;
 import fr.opensagres.xdocreport.core.utils.StringUtils;
 import fr.opensagres.xdocreport.document.images.IImageRegistry;
 import fr.opensagres.xdocreport.document.preprocessor.IXDocPreprocessor;
+import fr.opensagres.xdocreport.document.preprocessor.sax.BufferedElement;
 import fr.opensagres.xdocreport.document.registry.TextStylingRegistry;
 import fr.opensagres.xdocreport.document.registry.XDocReportRegistry;
 import fr.opensagres.xdocreport.template.FieldsExtractor;
@@ -63,8 +65,10 @@ import fr.opensagres.xdocreport.template.formatter.IDocumentFormatter;
  * 
  */
 public abstract class AbstractXDocReport implements IXDocReport {
+
 	private static final Logger LOGGER = LogUtils
 			.getLogger(AbstractXDocReport.class.getName());
+
 	private static final long serialVersionUID = -6632379345569386476L;
 
 	/**
@@ -127,6 +131,11 @@ public abstract class AbstractXDocReport implements IXDocReport {
 	private Map<String, Object> data = null;
 
 	private long lastModified;
+
+	/**
+	 * Map of {@link BufferedElement} used for text styling to
+	 */
+	private Map<String, BufferedElement> elementsCache;
 
 	protected AbstractXDocReport() {
 		// Register preprocessor.
@@ -309,6 +318,11 @@ public abstract class AbstractXDocReport implements IXDocReport {
 			return;
 		}
 		Map<String, Object> sharedContext = new HashMap<String, Object>();
+		if (fieldsMetadata != null
+				&& fieldsMetadata.getFieldsAsTextStyling().size() > 0) {
+			elementsCache = new HashMap<String, BufferedElement>();
+			sharedContext.put(BufferedElement.KEY, elementsCache);
+		}
 		onBeforePreprocessing(sharedContext, preprocessedArchive);
 		try {
 
@@ -432,6 +446,8 @@ public abstract class AbstractXDocReport implements IXDocReport {
 			// engine (freemarker, velocity).
 			processTemplateEngine(context, outputArchive);
 
+            doPostprocessIfNeeded(outputArchive);
+            
 			if (StringUtils.isNotEmpty(entryName)) {
 				if (!outputArchive.hasEntry(entryName)) {
 					throw new XDocReportException(
@@ -474,6 +490,10 @@ public abstract class AbstractXDocReport implements IXDocReport {
 			outputArchive = null;
 		}
 	}
+
+    protected void doPostprocessIfNeeded(XDocArchive outputArchive) {
+        // Empty default impl to avoid breaking compat
+    }
 
 	public void save(ProcessState processState, OutputStream out)
 			throws IOException, XDocReportException {
@@ -656,7 +676,7 @@ public abstract class AbstractXDocReport implements IXDocReport {
 			XDocArchive outputArchive) throws XDocReportException {
 
 		// 1) Add text styling registry
-		context.put(TextStylingRegistry.KEY, TextStylingRegistry.getRegistry());
+		context.put(TextStylingConstants.KEY, TextStylingRegistry.getRegistry());
 
 		// 2) Add ImageRegistry if needed
 		IImageRegistry imageRegistry = null;
@@ -668,6 +688,14 @@ public abstract class AbstractXDocReport implements IXDocReport {
 						imageRegistry);
 				imageRegistry.preProcess();
 			}
+		}
+
+		// 3) Add context
+		context.put(IContext.KEY, context);
+
+		// 4) Add Bufferered element cache used for text styling
+		if (elementsCache != null) {
+			context.put(BufferedElement.KEY, elementsCache);
 		}
 	}
 

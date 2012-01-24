@@ -5,9 +5,11 @@ import java.util.Map;
 
 import fr.opensagres.xdocreport.core.registry.AbstractRegistry;
 import fr.opensagres.xdocreport.document.discovery.ITextStylingDocumentHandlerFactoryDiscovery;
-import fr.opensagres.xdocreport.template.textstyling.IDocumentHandler;
-import fr.opensagres.xdocreport.template.textstyling.ITextStylingTransformer;
-import fr.opensagres.xdocreport.template.textstyling.TextStylingTransformerRegistry;
+import fr.opensagres.xdocreport.document.preprocessor.sax.BufferedElement;
+import fr.opensagres.xdocreport.document.textstyling.IDocumentHandler;
+import fr.opensagres.xdocreport.document.textstyling.ITextStylingTransformer;
+import fr.opensagres.xdocreport.document.textstyling.TextStylingTransformerRegistry;
+import fr.opensagres.xdocreport.template.IContext;
 
 /**
  * Text styling registry to register {@link IDocumentHandler} and transform some
@@ -18,8 +20,6 @@ import fr.opensagres.xdocreport.template.textstyling.TextStylingTransformerRegis
  */
 public class TextStylingRegistry extends
 		AbstractRegistry<ITextStylingDocumentHandlerFactoryDiscovery> {
-
-	public static final String KEY = TextStylingTransformerRegistry.KEY;
 
 	private static final TextStylingRegistry INSTANCE = new TextStylingRegistry();
 	private final Map<String, ITextStylingDocumentHandlerFactoryDiscovery> documentHandlers = new HashMap<String, ITextStylingDocumentHandlerFactoryDiscovery>();
@@ -58,15 +58,16 @@ public class TextStylingRegistry extends
 	 * @return
 	 */
 	public String transform(String content, String syntaxKind,
-			String documentKind) {
+			String documentKind, String elementId, IContext context) {
 		// 1) Retrieve transformer from the text styling transformer registry.
 		ITextStylingTransformer transformer = TextStylingTransformerRegistry
 				.getRegistry().getTextStylingTransformer(syntaxKind);
 		if (transformer != null) {
 			try {
-				// 2) Transformer found, create an instance of document handler
+				// Transformer found, create an instance of document handler
 				// (docx, odt, etc).
-				IDocumentHandler visitor = createDocumentHandler(documentKind);
+				IDocumentHandler visitor = createDocumentHandler(documentKind,
+						elementId, context);
 				// 3) Process the transformation.
 				return transformer.transform(content, visitor);
 			} catch (Throwable e) {
@@ -84,14 +85,23 @@ public class TextStylingRegistry extends
 	 * @param documentKind
 	 * @return
 	 */
-	public IDocumentHandler createDocumentHandler(String documentKind) {
+	public IDocumentHandler createDocumentHandler(String documentKind,
+			String elementId, IContext context) {
 		super.initializeIfNeeded();
 		ITextStylingDocumentHandlerFactoryDiscovery factory = documentHandlers
 				.get(documentKind);
 		if (factory == null) {
 			return null;
 		}
-		return factory.createDocumentHandler();
+
+		// Get the parent buffered element
+		BufferedElement parent = null;
+		Map<String, BufferedElement> elements = (Map<String, BufferedElement>) context
+				.get(BufferedElement.KEY);
+		if (elements != null) {
+			parent = elements.get(elementId);
+		}
+		return factory.createDocumentHandler(parent, context);
 	}
 
 }

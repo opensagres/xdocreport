@@ -31,6 +31,8 @@ package fr.opensagres.xdocreport.template;
  */
 public interface IContext {
 
+	public static final String KEY = "___context";
+
 	/**
 	 * Register a Java object with the given key.
 	 * 

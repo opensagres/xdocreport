@@ -26,7 +26,6 @@ package fr.opensagres.xdocreport.document.docx.preprocessor;
 
 import org.xml.sax.Attributes;
 
-import fr.opensagres.xdocreport.core.EncodingConstants;
 import fr.opensagres.xdocreport.core.document.DocumentKind;
 import fr.opensagres.xdocreport.core.utils.StringUtils;
 import fr.opensagres.xdocreport.document.preprocessor.sax.BufferedElement;
@@ -62,7 +61,7 @@ public abstract class MergefieldBufferedRegion extends BufferedElement {
 			FieldMetadata fieldAsTextStyling) {
 		// compute field name if it's MERGEFIELD
 		this.fieldName = getFieldName(instrText, fieldAsTextStyling,
-				handler.getFormatter());
+				handler.getFormatter(), handler);
 		if (fieldName == null) {
 			// Not a MERGEFIELD, instrText must be decoded if it's an HYPERLINK
 			// and field is an interpolation
@@ -108,7 +107,8 @@ public abstract class MergefieldBufferedRegion extends BufferedElement {
 	}
 
 	private static String getFieldName(String instrText,
-			FieldMetadata fieldAsTextStyling, IDocumentFormatter formatter) {
+			FieldMetadata fieldAsTextStyling, IDocumentFormatter formatter,
+			TransformedBufferedDocumentContentHandler handler) {
 		if (StringUtils.isEmpty(instrText)) {
 			return null;
 		}
@@ -146,10 +146,13 @@ public abstract class MergefieldBufferedRegion extends BufferedElement {
 					fieldName = StringUtils.xmlUnescape(fieldName);
 
 					if (fieldAsTextStyling != null) {
+						// register parent buffered element
+						String elementId = handler.registerBufferedElement(handler.getCurrentElement()
+								.getParent());
 						fieldName = formatter.formatAsTextStyling(fieldName,
 								fieldAsTextStyling.getFieldName(),
 								DocumentKind.DOCX.name(),
-								fieldAsTextStyling.getSyntaxKind());
+								fieldAsTextStyling.getSyntaxKind(), elementId);
 					}
 					return fieldName;
 				}

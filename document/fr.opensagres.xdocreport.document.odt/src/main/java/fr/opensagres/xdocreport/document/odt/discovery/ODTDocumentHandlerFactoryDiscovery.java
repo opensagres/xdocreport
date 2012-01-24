@@ -3,7 +3,9 @@ package fr.opensagres.xdocreport.document.odt.discovery;
 import fr.opensagres.xdocreport.core.document.DocumentKind;
 import fr.opensagres.xdocreport.document.discovery.ITextStylingDocumentHandlerFactoryDiscovery;
 import fr.opensagres.xdocreport.document.odt.textstyling.ODTDocumentHandler;
-import fr.opensagres.xdocreport.template.textstyling.IDocumentHandler;
+import fr.opensagres.xdocreport.document.preprocessor.sax.BufferedElement;
+import fr.opensagres.xdocreport.document.textstyling.IDocumentHandler;
+import fr.opensagres.xdocreport.template.IContext;
 
 public class ODTDocumentHandlerFactoryDiscovery implements
 		ITextStylingDocumentHandlerFactoryDiscovery {
@@ -12,8 +14,9 @@ public class ODTDocumentHandlerFactoryDiscovery implements
 		return DocumentKind.ODT.name();
 	}
 
-	public IDocumentHandler createDocumentHandler() {
-		return new ODTDocumentHandler();
+	public IDocumentHandler createDocumentHandler(BufferedElement parent,
+			IContext context) {
+		return new ODTDocumentHandler(parent, context);
 	}
 
 	public String getDescription() {

@@ -1,0 +1,1 @@
+Fragment-Host: fr.opensagres.xdocreport.document

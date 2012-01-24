@@ -26,14 +26,15 @@ package fr.opensagres.xdocreport.template.freemarker;
 
 import java.util.Collection;
 
+import fr.opensagres.xdocreport.core.document.TextStylingConstants;
 import fr.opensagres.xdocreport.core.utils.StringUtils;
+import fr.opensagres.xdocreport.template.IContext;
 import fr.opensagres.xdocreport.template.config.ITemplateEngineConfiguration;
 import fr.opensagres.xdocreport.template.config.ReplaceText;
 import fr.opensagres.xdocreport.template.formatter.AbstractDocumentFormatter;
 import fr.opensagres.xdocreport.template.formatter.DirectivesStack;
 import fr.opensagres.xdocreport.template.formatter.IfDirective;
 import fr.opensagres.xdocreport.template.formatter.LoopDirective;
-import fr.opensagres.xdocreport.template.textstyling.TextStylingTransformerRegistry;
 
 /**
  * Freemarker document formatter used to format fields list with Freemarker
@@ -446,14 +447,16 @@ public class FreemarkerDocumentFormatter extends AbstractDocumentFormatter {
 
 	public String formatAsTextStyling(String fieldName,
 			String metadataFieldName, String documentKind,
-			String syntaxKind) {
+			String syntaxKind, String elementId) {
 		StringBuilder newContent = new StringBuilder(START_NOESCAPE);
 		newContent.append(getFunctionDirective(
-				TextStylingTransformerRegistry.KEY,
-				TextStylingTransformerRegistry.TRANSFORM_METHOD,
+				TextStylingConstants.KEY,
+				TextStylingConstants.TRANSFORM_METHOD,
 				removeInterpolation(fieldName),
-				"\"" + syntaxKind + "\"", 
-				"\"" + documentKind + "\""));
+				"\"" + syntaxKind + "\"",				
+				"\"" + documentKind + "\"",
+				"\"" + elementId + "\"",
+				"${"+IContext.KEY+"}"));
 		newContent.append(END_NOESCAPE);
 		return newContent.toString();
 	}

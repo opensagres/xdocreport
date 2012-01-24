@@ -26,7 +26,9 @@ package fr.opensagres.xdocreport.document.docx.textstyling;
 
 import java.util.Stack;
 
-import fr.opensagres.xdocreport.template.textstyling.AbstractDocumentHandler;
+import fr.opensagres.xdocreport.document.preprocessor.sax.BufferedElement;
+import fr.opensagres.xdocreport.document.textstyling.AbstractDocumentHandler;
+import fr.opensagres.xdocreport.template.IContext;
 
 /**
  * 
@@ -38,6 +40,10 @@ public class DocxDocumentHandler extends AbstractDocumentHandler {
 	private boolean bolding;
 	private boolean italicsing;
 	private Stack<Boolean> paragraphsStack;
+
+	public DocxDocumentHandler(BufferedElement parent, IContext context) {
+		super(parent, context);
+	}
 
 	public void startDocument() {
 		this.bolding = false;

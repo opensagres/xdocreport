@@ -24,12 +24,13 @@
  */
 package fr.opensagres.xdocreport.template.velocity;
 
+import fr.opensagres.xdocreport.core.document.TextStylingConstants;
 import fr.opensagres.xdocreport.core.utils.StringUtils;
+import fr.opensagres.xdocreport.template.IContext;
 import fr.opensagres.xdocreport.template.formatter.AbstractDocumentFormatter;
 import fr.opensagres.xdocreport.template.formatter.DirectivesStack;
 import fr.opensagres.xdocreport.template.formatter.IfDirective;
 import fr.opensagres.xdocreport.template.formatter.LoopDirective;
-import fr.opensagres.xdocreport.template.textstyling.TextStylingTransformerRegistry;
 
 /**
  * Velocity document formatter used to format fields list with Velocity syntax.
@@ -427,12 +428,15 @@ public class VelocityDocumentFormatter extends AbstractDocumentFormatter {
 
 	public String formatAsTextStyling(String fieldName,
 			String metadataFieldName, String documentKind,
-			String textStylingKind) {
+			String textStylingKind, String elementId) {
 		StringBuilder newContent = new StringBuilder();
 		newContent.append(getFunctionDirective(
-				TextStylingTransformerRegistry.KEY,
-				TextStylingTransformerRegistry.TRANSFORM_METHOD, fieldName,
-				"\"" + textStylingKind + "\"", "\"" + documentKind + "\""));
+				TextStylingConstants.KEY,
+				TextStylingConstants.TRANSFORM_METHOD, fieldName,
+				"\"" + textStylingKind + "\"",				
+				"\"" + documentKind + "\"",
+				"\"" + elementId + "\"", 
+				"$" +IContext.KEY));
 		return newContent.toString();
 	}
 	

@@ -1,3 +1,4 @@
 Import-Package: org.osgi.framework,*
 Export-Package: fr.opensagres.xdocreport.document.*
+Export-Package: fr.opensagres.xdocreport.document.preprocessor.*
 Bundle-Activator: fr.opensagres.xdocreport.document.internal.osgi.Activator

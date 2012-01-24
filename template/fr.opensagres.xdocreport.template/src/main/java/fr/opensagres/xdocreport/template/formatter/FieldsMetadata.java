@@ -36,9 +36,9 @@ import java.util.List;
 import java.util.Map;
 
 import fr.opensagres.xdocreport.core.XDocReportException;
+import fr.opensagres.xdocreport.core.document.SyntaxKind;
 import fr.opensagres.xdocreport.core.utils.StringUtils;
 import fr.opensagres.xdocreport.template.registry.FieldsMetadataClassSerializerRegistry;
-import fr.opensagres.xdocreport.template.textstyling.SyntaxKind;
 
 /**
  * Fields Metadata is used in the preprocessing step to modify some XML entries

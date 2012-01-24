@@ -39,6 +39,7 @@ import org.xml.sax.helpers.AttributesImpl;
 import fr.opensagres.xdocreport.core.document.DocumentKind;
 import fr.opensagres.xdocreport.core.utils.StringUtils;
 import fr.opensagres.xdocreport.document.odt.ODTConstants;
+import fr.opensagres.xdocreport.document.preprocessor.sax.BufferedElement;
 import fr.opensagres.xdocreport.document.preprocessor.sax.IBufferedRegion;
 import fr.opensagres.xdocreport.document.preprocessor.sax.TransformedBufferedDocumentContentHandler;
 import fr.opensagres.xdocreport.template.formatter.FieldMetadata;
@@ -225,11 +226,13 @@ public class ODTBufferedDocumentContentHandler extends
 				return;
 			}
 			FieldMetadata fieldAsTextStyling = getFieldAsTextStyling(fieldName);
-			if (fieldAsTextStyling != null && getFormatter() != null) {
+			if (fieldAsTextStyling != null && getFormatter() != null) {				
+				// register parent buffered element
+				String elementId= registerBufferedElement(getCurrentElement().getParent());				
 				characters = getFormatter().formatAsTextStyling(fieldName,
 						fieldAsTextStyling.getFieldName(),
 						DocumentKind.ODT.name(),
-						fieldAsTextStyling.getSyntaxKind());
+						fieldAsTextStyling.getSyntaxKind(), elementId);
 			}
 		}
 		super.flushCharacters(characters);

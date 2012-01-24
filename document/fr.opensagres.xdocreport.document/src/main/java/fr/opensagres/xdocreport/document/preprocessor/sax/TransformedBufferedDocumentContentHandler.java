@@ -25,6 +25,7 @@
 package fr.opensagres.xdocreport.document.preprocessor.sax;
 
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.Map;
 
 import org.xml.sax.SAXException;
@@ -376,6 +377,17 @@ public abstract class TransformedBufferedDocumentContentHandler<Document extends
 			}
 		}
 		return null;
+	}
+
+	public String registerBufferedElement(BufferedElement element) {
+		Map<String, BufferedElement> elements = (Map<String, BufferedElement>) getSharedContext()
+				.get(BufferedElement.KEY);
+		if (element == null) {
+			elements = new HashMap<String, BufferedElement>();
+		}
+		String id = System.currentTimeMillis() + "_id";
+		elements.put(id, element);
+		return id;
 	}
 
 	protected abstract Document createDocument();

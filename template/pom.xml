@@ -13,7 +13,5 @@
 		<!-- XDocReport Template implementation -->
 		<module>fr.opensagres.xdocreport.template.freemarker</module>
 		<module>fr.opensagres.xdocreport.template.velocity</module>
-		<!-- XDocReport Template/Text styling implementation -->
-		<module>fr.opensagres.xdocreport.template.textstyling.wiki</module>
 	</modules>
 </project>

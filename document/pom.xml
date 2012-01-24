@@ -27,6 +27,9 @@
 		
 		<!-- XDocReport Document Tools -->
 		<module>fr.opensagres.xdocreport.document.tools</module>
+		
+		<!-- Wiki Text Styling  -->
+		<module>fr.opensagres.xdocreport.document.textstyling.wiki</module>
 								
 	</modules>
 </project>

@@ -110,7 +110,7 @@ public class BufferedDocumentContentHandler<Document extends BufferedDocument>
 		}
 	}
 
-	protected BufferedElement getCurrentElement() {
+	public BufferedElement getCurrentElement() {
 		return bufferedDocument.getCurrentElement();
 	}
 

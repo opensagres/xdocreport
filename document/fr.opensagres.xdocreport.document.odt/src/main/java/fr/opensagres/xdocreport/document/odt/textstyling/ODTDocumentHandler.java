@@ -3,13 +3,19 @@ package fr.opensagres.xdocreport.document.odt.textstyling;
 import java.util.Stack;
 
 import fr.opensagres.xdocreport.document.odt.preprocessor.ODTBufferedDocumentContentHandler;
-import fr.opensagres.xdocreport.template.textstyling.AbstractDocumentHandler;
+import fr.opensagres.xdocreport.document.preprocessor.sax.BufferedElement;
+import fr.opensagres.xdocreport.document.textstyling.AbstractDocumentHandler;
+import fr.opensagres.xdocreport.template.IContext;
 
 public class ODTDocumentHandler extends AbstractDocumentHandler {
 
 	private boolean bolding;
 	private boolean italicsing;
 	private Stack<Boolean> paragraphsStack;
+
+	public ODTDocumentHandler(BufferedElement parent, IContext context) {
+		super(parent, context);
+	}
 
 	public void startDocument() {
 		this.bolding = false;
@@ -24,7 +30,6 @@ public class ODTDocumentHandler extends AbstractDocumentHandler {
 				internalEndParagraph();
 			}
 		}
-		// System.err.println(writer.getBuffer().toString());
 	}
 
 	public void startBold() {

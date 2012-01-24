@@ -4,16 +4,16 @@ import junit.framework.Assert;
 
 import org.junit.Test;
 
-import fr.opensagres.xdocreport.template.textstyling.IDocumentHandler;
-import fr.opensagres.xdocreport.template.textstyling.ITextStylingTransformer;
-import fr.opensagres.xdocreport.template.textstyling.html.HTMLTextStylingTransformer;
+import fr.opensagres.xdocreport.document.textstyling.IDocumentHandler;
+import fr.opensagres.xdocreport.document.textstyling.ITextStylingTransformer;
+import fr.opensagres.xdocreport.document.textstyling.html.HTMLTextStylingTransformer;
 
 public class DocxDocumentHandlerTestCase {
 
 	@Test
 	public void testHTML2Docx() throws Exception {
 		ITextStylingTransformer formatter = HTMLTextStylingTransformer.INSTANCE;
-		IDocumentHandler handler = new DocxDocumentHandler();
+		IDocumentHandler handler = new DocxDocumentHandler(null, null);
 		formatter
 				.transform(
 						"<p>\r\n\tHere are severals styles :</p>\r\n<ul>\r\n\t<li>\r\n\t\t<strong>Bold</strong> style.</li>\r\n\t<li>\r\n\t\t<em>Italic</em> style.</li>\r\n\t<li>\r\n\t\t<strong><em>BoldAndItalic</em></strong> style.</li>\r\n</ul>\r\n<p>\r\n\tHere are 3 styles :</p>\r\n<ol>\r\n\t<li>\r\n\t\t<strong>Bold</strong> style.</li>\r\n\t<li>\r\n\t\t<em>Italic</em> style.</li>\r\n\t<li>\r\n\t\t<strong><em>BoldAndItalic</em></strong> style.</li>\r\n</ol>\r\n<p>\r\n\tXDocReport can manage thoses styles.</p>\r\n",

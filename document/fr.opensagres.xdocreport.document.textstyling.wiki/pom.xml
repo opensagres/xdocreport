@@ -3,7 +3,7 @@
 	<artifactId>fr.opensagres.xdocreport.document.textstyling.wiki</artifactId>
 	<parent>
 		<groupId>fr.opensagres.xdocreport</groupId>
-		<artifactId>template</artifactId>
+		<artifactId>document</artifactId>
 		<version>0.9.5-SNAPSHOT</version>
 	</parent>
 	<build>

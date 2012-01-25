@@ -33,13 +33,13 @@ import java.util.Map;
 import java.util.logging.Logger;
 
 import org.apache.poi.xwpf.converter.internal.AbstractStyleEngine;
-import org.apache.poi.xwpf.converter.internal.DxaUtil;
 import org.apache.poi.xwpf.converter.internal.itext.stylable.StylableParagraph;
 import org.apache.poi.xwpf.converter.internal.itext.styles.FontInfos;
 import org.apache.poi.xwpf.converter.internal.itext.styles.Style;
 import org.apache.poi.xwpf.converter.internal.itext.styles.StyleBorder;
 import org.apache.poi.xwpf.converter.internal.itext.styles.StyleParagraphProperties;
 import org.apache.poi.xwpf.converter.internal.itext.styles.StyleTableProperties;
+import org.apache.poi.xwpf.converter.itext.PDFViaITextOptions;
 import org.apache.poi.xwpf.usermodel.XWPFDocument;
 import org.apache.poi.xwpf.usermodel.XWPFParagraph;
 import org.apache.poi.xwpf.usermodel.XWPFPicture;
@@ -62,7 +62,6 @@ import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTSpacing;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTString;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTStyles;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTTblBorders;
-import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTTblPPr;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTTblPrBase;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTTblWidth;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTTextAlignment;
@@ -84,6 +83,7 @@ public class StyleEngineForIText extends AbstractStyleEngine {
 	private static final String DEFAULT_STYLE = "default";
 	protected static final String BOLD = "bold";
 	protected static final String ITALIC = "italic";
+	private final PDFViaITextOptions options;
 	private final Map<String, Style> stylesMap = new HashMap<String, Style>();
 
 	/**
@@ -92,8 +92,9 @@ public class StyleEngineForIText extends AbstractStyleEngine {
 	private static final Logger LOGGER = Logger
 			.getLogger(StyleEngineForIText.class.getName());
 
-	public StyleEngineForIText(XWPFDocument document) {
+	public StyleEngineForIText(XWPFDocument document, PDFViaITextOptions options) {
 		super(document);
+		this.options = options != null ? options : PDFViaITextOptions.create();
 		buildDefault();
 	}
 
@@ -184,7 +185,7 @@ public class StyleEngineForIText extends AbstractStyleEngine {
 		if (fonts != null && fonts.getAscii() != null) {
 
 			// font familly
-			fontInfos.setFontFamilly(fonts.getAscii());
+			fontInfos.setFontFamily(fonts.getAscii());
 		}
 
 		boolean bold = ctParaRPr.getB() != null
@@ -237,6 +238,9 @@ public class StyleEngineForIText extends AbstractStyleEngine {
 				fontInfos.setFontColor(color);
 			}
 		}
+		
+		// font encoding
+		fontInfos.setFontEncoding(options.getFontEncoding());
 		return fontInfos;
 	}
 

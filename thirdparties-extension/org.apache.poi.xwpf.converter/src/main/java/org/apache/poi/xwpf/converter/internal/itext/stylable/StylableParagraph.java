@@ -75,7 +75,7 @@ public class StylableParagraph extends ExtendedParagraph implements IStylableCon
 			if (paragraphProperties != null) {
 				FontInfos fontInfos = paragraphProperties.getFontInfos();
 				if (fontInfos != null) {
-					Font font = XWPFFontRegistry.getRegistry().getFont(fontInfos.getFontFamilly(), fontInfos.getFontSize(), fontInfos.getFontStyle(), fontInfos.getFontColor());
+					Font font = XWPFFontRegistry.getRegistry().getFont(fontInfos.getFontFamily(), fontInfos.getFontEncoding(), fontInfos.getFontSize(), fontInfos.getFontStyle(), fontInfos.getFontColor());
 					setFont(font);
 				}
 				// Alignment

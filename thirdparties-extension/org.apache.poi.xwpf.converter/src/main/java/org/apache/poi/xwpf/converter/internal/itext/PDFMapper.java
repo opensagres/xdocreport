@@ -47,6 +47,7 @@ import org.apache.poi.xwpf.converter.internal.itext.stylable.StylableParagraph;
 import org.apache.poi.xwpf.converter.internal.itext.stylable.StylableTable;
 import org.apache.poi.xwpf.converter.internal.itext.styles.Style;
 import org.apache.poi.xwpf.converter.internal.itext.styles.StyleBorder;
+import org.apache.poi.xwpf.converter.itext.PDFViaITextOptions;
 import org.apache.poi.xwpf.usermodel.BodyElementType;
 import org.apache.poi.xwpf.usermodel.IBodyElement;
 import org.apache.poi.xwpf.usermodel.UnderlinePatterns;
@@ -63,7 +64,6 @@ import org.apache.poi.xwpf.usermodel.XWPFTableCell;
 import org.apache.poi.xwpf.usermodel.XWPFTableRow;
 import org.openxmlformats.schemas.drawingml.x2006.main.CTPositiveSize2D;
 import org.openxmlformats.schemas.drawingml.x2006.picture.CTPicture;
-
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTBorder;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTBr;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTDecimalNumber;
@@ -112,18 +112,19 @@ public class PDFMapper extends XWPFElementVisitor<IITextContainer> {
 	// Create instance of PDF document
 	private StylableDocument pdfDocument;
 	private Stack<CTSectPr> sectPrStack = null;
-
-	public PDFMapper(XWPFDocument document) {
-		super(document);
-
-	}
-
+	
 	private StyleEngineForIText styleEngine;
+	private final PDFViaITextOptions options;
+
+	public PDFMapper(XWPFDocument document, PDFViaITextOptions options) {
+		super(document);
+		this.options = options != null ? options : PDFViaITextOptions.create();
+	}
 
 	@Override
 	protected IITextContainer startVisitDocument(OutputStream out) throws Exception {
 		// Create instance of PDF document
-		styleEngine = new StyleEngineForIText(document);
+		styleEngine = new StyleEngineForIText(document, options);
 		pdfDocument = new StylableDocument(out, styleEngine);
 		CTSectPr sectPr = document.getDocument().getBody().getSectPr();
 		applySectPr(sectPr);
@@ -297,7 +298,7 @@ public class PDFMapper extends XWPFElementVisitor<IITextContainer> {
 			}
 		}
 		// Get font
-		Font font = XWPFFontRegistry.getRegistry().getFont(fontFamily, fontSize, fontStyle, fontColor);
+		Font font = XWPFFontRegistry.getRegistry().getFont(fontFamily, options.getFontEncoding(), fontSize, fontStyle, fontColor);
 
 		UnderlinePatterns underlinePatterns = run.getUnderline();
 

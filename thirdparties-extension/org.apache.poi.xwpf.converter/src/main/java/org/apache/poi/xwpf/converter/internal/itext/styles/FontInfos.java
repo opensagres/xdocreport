@@ -26,23 +26,23 @@ package org.apache.poi.xwpf.converter.internal.itext.styles;
 
 import java.awt.Color;
 
+import org.apache.poi.xwpf.converter.itext.PDFViaITextOptions;
+
 import com.lowagie.text.Font;
 
-
 public class FontInfos {
-	//defautl...
-	private String fontFamilly="Arial";
-
+	private String fontFamily = "Arial";
 	private float fontSize = 8;
-	private int fontStyle =Font.NORMAL;
-	private Color fontColor=Color.BLACK;
+	private int fontStyle = Font.NORMAL;
+	private Color fontColor = Color.BLACK;
+	private String fontEncoding = PDFViaITextOptions.create().getFontEncoding();
 
-	public String getFontFamilly() {
-		return fontFamilly;
+	public String getFontFamily() {
+		return fontFamily;
 	}
 
-	public void setFontFamilly(String fontFamilly) {
-		this.fontFamilly = fontFamilly;
+	public void setFontFamily(String fontFamily) {
+		this.fontFamily = fontFamily;
 	}
 
 	public float getFontSize() {
@@ -69,4 +69,11 @@ public class FontInfos {
 		this.fontColor = fontColor;
 	}
 
+	public String getFontEncoding() {
+		return fontEncoding;
+	}
+
+	public void setFontEncoding(String fontEncoding) {
+		this.fontEncoding = fontEncoding;
+	}
 }

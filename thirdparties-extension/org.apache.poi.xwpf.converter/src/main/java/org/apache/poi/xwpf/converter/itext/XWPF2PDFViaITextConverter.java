@@ -67,7 +67,7 @@ public class XWPF2PDFViaITextConverter extends
 			throws XWPFConverterException, IOException {
 
 		//Mapper mapper = new Mapper(document);
-		PDFMapper mapper = new PDFMapper(document);
+		PDFMapper mapper = new PDFMapper(document, options);
 		try {
 			mapper.visit(out);
 		} catch (Exception e) {

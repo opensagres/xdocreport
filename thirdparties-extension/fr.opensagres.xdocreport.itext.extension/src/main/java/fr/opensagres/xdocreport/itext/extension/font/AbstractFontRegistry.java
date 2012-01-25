@@ -33,10 +33,11 @@ public abstract class AbstractFontRegistry {
 
 	private static boolean registerFontDirectories = false;
 
+	/*
 	public Font getFont(String familyName, float size, int style, Color color) {
 		return getFont(familyName, FontFactory.defaultEncoding, size, style,
 				color);
-	}
+	}*/
 
 	public Font getFont(String familyName, String encoding, float size,
 			int style, Color color) {

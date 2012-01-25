@@ -49,7 +49,8 @@ public class XWPFPOI2PDFViaiTextConverterTest extends
 				Data.class.getResourceAsStream(fileInName));
 
 		OutputStream out = new FileOutputStream(new File(fileOutName));
-		XWPF2PDFViaITextConverter.getInstance().convert(document, out, null);
+		PDFViaITextOptions options = PDFViaITextOptions.create().fontEncoding("windows-1250");
+		XWPF2PDFViaITextConverter.getInstance().convert(document, out, options);
 
 		System.out.println("Generate " + fileOutName + " with "
 				+ (System.currentTimeMillis() - startTime) + " ms.");

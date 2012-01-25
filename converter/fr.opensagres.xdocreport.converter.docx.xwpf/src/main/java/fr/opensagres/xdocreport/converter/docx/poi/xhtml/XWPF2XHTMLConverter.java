@@ -31,7 +31,6 @@ import java.util.logging.Logger;
 import org.apache.poi.xwpf.converter.xhtml.XHTMLOptions;
 import org.apache.poi.xwpf.usermodel.XWPFDocument;
 
-import fr.opensagres.xdocreport.converter.IURIResolver;
 import fr.opensagres.xdocreport.converter.MimeMapping;
 import fr.opensagres.xdocreport.converter.MimeMappingConstants;
 import fr.opensagres.xdocreport.converter.Options;
@@ -40,15 +39,15 @@ import fr.opensagres.xdocreport.converter.docx.poi.itext.XWPF2PDFViaITextConvert
 import fr.opensagres.xdocreport.converter.internal.AbstractConverterNoEntriesSupport;
 import fr.opensagres.xdocreport.core.logging.LogUtils;
 
-public class XWPF2XHTMLConverter  extends AbstractConverterNoEntriesSupport
+public class XWPF2XHTMLConverter extends AbstractConverterNoEntriesSupport
 		implements MimeMappingConstants {
 
 	private static final XWPF2XHTMLConverter INSTANCE = new XWPF2XHTMLConverter();
 	/**
 	 * Logger for this class
 	 */
-	private static final Logger LOGGER = LogUtils.getLogger(XWPF2PDFViaITextConverter.class.getName());
-
+	private static final Logger LOGGER = LogUtils
+			.getLogger(XWPF2PDFViaITextConverter.class.getName());
 
 	public static XWPF2XHTMLConverter getInstance() {
 		return INSTANCE;
@@ -59,7 +58,8 @@ public class XWPF2XHTMLConverter  extends AbstractConverterNoEntriesSupport
 		try {
 			XWPFDocument document = new XWPFDocument(in);
 			org.apache.poi.xwpf.converter.xhtml.XWPF2XHTMLConverter
-					.getInstance().convert(document, out, toXWPFOptions(options));
+					.getInstance().convert(document, out,
+							getXHTMLOptions(options));
 
 		} catch (Exception e) {
 			LOGGER.severe(e.getMessage());
@@ -67,14 +67,18 @@ public class XWPF2XHTMLConverter  extends AbstractConverterNoEntriesSupport
 		}
 	}
 
-	
+	private XHTMLOptions getXHTMLOptions(Options options) {
+		Object value = options.getSubOptions(XHTMLOptions.class);
+		return value instanceof XHTMLOptions ? (XHTMLOptions) value : null;
+	}
 
+	/*
 	private XHTMLOptions toXWPFOptions(Options o) {
 		XHTMLOptions options = new XHTMLOptions();
 		final IURIResolver resolver = (IURIResolver) o
 				.getProperty(IURIResolver.class.getName());
 		if (resolver != null) {
-			
+
 			options.setURIResolver(new org.apache.poi.xwpf.converter.IURIResolver() {
 
 				public String resolve(String uri) {
@@ -84,7 +88,7 @@ public class XWPF2XHTMLConverter  extends AbstractConverterNoEntriesSupport
 
 		}
 		return options;
-	}
+	}*/
 
 	public MimeMapping getMimeMapping() {
 		return XHTML_MIME_MAPPING;

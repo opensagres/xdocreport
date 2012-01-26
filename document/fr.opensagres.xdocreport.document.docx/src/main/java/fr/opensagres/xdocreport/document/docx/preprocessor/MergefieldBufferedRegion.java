@@ -157,7 +157,7 @@ public abstract class MergefieldBufferedRegion extends BufferedElement {
 						// Set
 						String setVariableDirective = formatter
 								.formatAsCallTextStyling(
-										handler.getVariableIndex(), fieldName,
+										variableIndex, fieldName,
 										fieldAsTextStyling.getFieldName(),
 										DocumentKind.DOCX.name(),
 										fieldAsTextStyling.getSyntaxKind(),
@@ -177,6 +177,7 @@ public abstract class MergefieldBufferedRegion extends BufferedElement {
 								.setContentBeforeStartTagElement(setVariableDirective
 										+ " " + textBefore);
 						parent.setContentAfterEndTagElement(textEnd);
+						return textBody;
 
 					}
 					return fieldName;

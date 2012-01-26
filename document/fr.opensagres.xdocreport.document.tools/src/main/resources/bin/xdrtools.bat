@@ -23,6 +23,7 @@ set CLASSPATH=%CLASSPATH%;%BASE_DIR%/commons-lang-2.4.jar
 set CLASSPATH=%CLASSPATH%;%BASE_DIR%/oro-2.0.8.jar
 set CLASSPATH=%CLASSPATH%;%BASE_DIR%/fr.opensagres.xdocreport.document-%XDOCREPORT_VERSION%.jar
 set CLASSPATH=%CLASSPATH%;%BASE_DIR%/fr.opensagres.xdocreport.document.docx-%XDOCREPORT_VERSION%.jar
+set CLASSPATH=%CLASSPATH%;%BASE_DIR%/fr.opensagres.xdocreport.document.odt-%XDOCREPORT_VERSION%.jar
 set CLASSPATH=%CLASSPATH%;%BASE_DIR%/fr.opensagres.xdocreport.document.tools-%XDOCREPORT_VERSION%.jar
 
 java -classpath "%CLASSPATH%" fr.opensagres.xdocreport.document.tools.Main -in %IN% -out %OUT% -dataDir %DATA_DIR% -metadataFile %METADATA_FILE% -autoGenData true

@@ -44,6 +44,11 @@
 		</dependency>
 		<dependency>
 			<groupId>fr.opensagres.xdocreport</groupId>
+			<artifactId>fr.opensagres.xdocreport.document.odt</artifactId>
+			<version>0.9.5-SNAPSHOT</version>
+		</dependency>		
+		<dependency>
+			<groupId>fr.opensagres.xdocreport</groupId>
 			<artifactId>fr.opensagres.xdocreport.template.freemarker</artifactId>
 			<version>0.9.5-SNAPSHOT</version>
 		</dependency>

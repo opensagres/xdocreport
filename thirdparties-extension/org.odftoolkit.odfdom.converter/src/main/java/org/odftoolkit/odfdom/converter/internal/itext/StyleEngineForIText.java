@@ -33,11 +33,14 @@ import java.util.Map;
 import org.odftoolkit.odfdom.converter.internal.AbstractStyleEngine;
 import org.odftoolkit.odfdom.converter.internal.itext.styles.Style;
 import org.odftoolkit.odfdom.converter.internal.itext.styles.StyleBorder;
+import org.odftoolkit.odfdom.converter.internal.itext.styles.StyleColumnProperties;
+import org.odftoolkit.odfdom.converter.internal.itext.styles.StyleColumnsProperties;
 import org.odftoolkit.odfdom.converter.internal.itext.styles.StyleHeaderFooterProperties;
 import org.odftoolkit.odfdom.converter.internal.itext.styles.StyleMargin;
 import org.odftoolkit.odfdom.converter.internal.itext.styles.StylePadding;
 import org.odftoolkit.odfdom.converter.internal.itext.styles.StylePageLayoutProperties;
 import org.odftoolkit.odfdom.converter.internal.itext.styles.StyleParagraphProperties;
+import org.odftoolkit.odfdom.converter.internal.itext.styles.StyleSectionProperties;
 import org.odftoolkit.odfdom.converter.internal.itext.styles.StyleTableCellProperties;
 import org.odftoolkit.odfdom.converter.internal.itext.styles.StyleTableProperties;
 import org.odftoolkit.odfdom.converter.internal.itext.styles.StyleTableRowProperties;
@@ -45,16 +48,22 @@ import org.odftoolkit.odfdom.converter.internal.itext.styles.StyleTextProperties
 import org.odftoolkit.odfdom.converter.internal.utils.ODFUtils;
 import org.odftoolkit.odfdom.converter.itext.PDFViaITextOptions;
 import org.odftoolkit.odfdom.doc.OdfDocument;
+import org.odftoolkit.odfdom.dom.attribute.fo.FoBreakAfterAttribute;
+import org.odftoolkit.odfdom.dom.attribute.fo.FoBreakBeforeAttribute;
+import org.odftoolkit.odfdom.dom.attribute.fo.FoKeepTogetherAttribute;
 import org.odftoolkit.odfdom.dom.element.OdfStyleBase;
 import org.odftoolkit.odfdom.dom.element.office.OfficeAutomaticStylesElement;
 import org.odftoolkit.odfdom.dom.element.office.OfficeMasterStylesElement;
 import org.odftoolkit.odfdom.dom.element.office.OfficeStylesElement;
+import org.odftoolkit.odfdom.dom.element.style.StyleColumnElement;
+import org.odftoolkit.odfdom.dom.element.style.StyleColumnsElement;
 import org.odftoolkit.odfdom.dom.element.style.StyleDefaultStyleElement;
 import org.odftoolkit.odfdom.dom.element.style.StyleFooterStyleElement;
 import org.odftoolkit.odfdom.dom.element.style.StyleHeaderFooterPropertiesElement;
 import org.odftoolkit.odfdom.dom.element.style.StylePageLayoutElement;
 import org.odftoolkit.odfdom.dom.element.style.StylePageLayoutPropertiesElement;
 import org.odftoolkit.odfdom.dom.element.style.StyleParagraphPropertiesElement;
+import org.odftoolkit.odfdom.dom.element.style.StyleSectionPropertiesElement;
 import org.odftoolkit.odfdom.dom.element.style.StyleStyleElement;
 import org.odftoolkit.odfdom.dom.element.style.StyleTableCellPropertiesElement;
 import org.odftoolkit.odfdom.dom.element.style.StyleTablePropertiesElement;
@@ -82,9 +91,8 @@ public class StyleEngineForIText extends AbstractStyleEngine {
 	private static final String TOP = "top";
 	private static final String BASELINE = "baseline";
 	private static final String NONE = "none";
-	private static final String PAGE_BREAK = "page";
-	protected static final String BOLD = "bold";
-	protected static final String ITALIC = "italic";
+	private static final String BOLD = "bold";
+	private static final String ITALIC = "italic";
 
 	private Style currentStyle = null;
 	// private StyleForItext currentStyle;
@@ -351,18 +359,18 @@ public class StyleEngineForIText extends AbstractStyleEngine {
 
 		// keep-together
 		String keepTogether = ele.getFoKeepTogetherAttribute();
-		if ("always".equals(keepTogether)) {
+		if (FoKeepTogetherAttribute.Value.ALWAYS.name().equals(keepTogether)) {
 			paragraphProperties.setKeepTogether(true);
 		}
 
 		// fo:break-before
 		String breakBefore = ele.getFoBreakBeforeAttribute();
-		if (PAGE_BREAK.equals(breakBefore)) {
+		if (FoBreakBeforeAttribute.Value.PAGE.name().equals(breakBefore)) {
 			paragraphProperties.setBreakBeforePage(true);
 		}
 
 		String breakAfter = ele.getFoBreakAfterAttribute();
-		if (PAGE_BREAK.equals(breakAfter)) {
+		if (FoBreakAfterAttribute.Value.PAGE.name().equals(breakAfter)) {
 			paragraphProperties.setBreakAfterPage(true);
 		}
 
@@ -838,6 +846,102 @@ public class StyleEngineForIText extends AbstractStyleEngine {
 					.getDimensionAsPoint(minHeight));
 		}
 
+	}
+
+	// visit //style:section-properties
+	@Override
+	public void visit(StyleSectionPropertiesElement ele) {
+		StyleSectionProperties sectionProperties = currentStyle
+				.getSectionProperties();
+		if (sectionProperties == null) {
+			sectionProperties = new StyleSectionProperties();
+			currentStyle.setSectionProperties(sectionProperties);
+		}
+
+		// background-color
+		String backgroundColor = ele.getFoBackgroundColorAttribute();
+		if (StringUtils.isNotEmpty(backgroundColor)) {
+			sectionProperties.setBackgroundColor(ColorRegistry.getInstance()
+					.getColor(backgroundColor));
+		}
+
+		// dont-balance-text-columns
+		Boolean dontBalanceTextColumns = ele
+				.getTextDontBalanceTextColumnsAttribute();
+		if (dontBalanceTextColumns != null) {
+			sectionProperties.setDontBalanceTextColumns(dontBalanceTextColumns);
+		}
+
+		// margin-left
+		String marginLeft = ele.getFoMarginLeftAttribute();
+		if (StringUtils.isNotEmpty(marginLeft)) {
+			sectionProperties.setMarginLeft(ODFUtils
+					.getDimensionAsPoint(marginLeft));
+		}
+
+		// margin-right
+		String marginRight = ele.getFoMarginRightAttribute();
+		if (StringUtils.isNotEmpty(marginRight)) {
+			sectionProperties.setMarginRight(ODFUtils
+					.getDimensionAsPoint(marginRight));
+		}
+
+		super.visit(ele);
+	}
+
+	// visit //style:columns
+	@Override
+	public void visit(StyleColumnsElement ele) {
+		StyleSectionProperties sectionProperties = currentStyle
+				.getSectionProperties();
+		if (sectionProperties == null) {
+			// style:columns outside style:section-properties, ignore it
+			return;
+		}
+
+		StyleColumnsProperties columnsProperties = sectionProperties
+				.getColumnsProperties();
+		if (columnsProperties == null) {
+			columnsProperties = new StyleColumnsProperties();
+			sectionProperties.setColumnsProperties(columnsProperties);
+		}
+
+		// column-count
+		Integer columnCount = ele.getFoColumnCountAttribute();
+		if (columnCount != null) {
+			columnsProperties.setColumnCount(columnCount);
+		}
+
+		super.visit(ele);
+	}
+
+	// visit //style:column
+	@Override
+	public void visit(StyleColumnElement ele) {
+		StyleSectionProperties sectionProperties = currentStyle
+				.getSectionProperties();
+		if (sectionProperties == null) {
+			// style:column outside style:section-properties, ignore it
+			return;
+		}
+
+		StyleColumnsProperties columnsProperties = sectionProperties
+				.getColumnsProperties();
+		if (columnsProperties == null) {
+			// style:column outside style:columns, ignore it
+		}
+
+		StyleColumnProperties columnProperties = new StyleColumnProperties();
+
+		// rel-width
+		String relWidth = ele.getStyleRelWidthAttribute();
+		if (StringUtils.isNotEmpty(relWidth)) {
+			columnProperties.setRelWidth(ODFUtils.getRelativeSize(relWidth));
+		}
+
+		columnsProperties.getColumnProperties().add(columnProperties);
+
+		super.visit(ele);
 	}
 
 	public void visit(TextListStyleElement ele) {

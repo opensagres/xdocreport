@@ -35,10 +35,10 @@ public class Style {
 	private StyleHeaderFooterProperties footerProperties;
 	private StyleParagraphProperties paragraphProperties;
 	private StyleTextProperties textProperties;
-
 	private StyleTableProperties tableProperties;
 	private StyleTableRowProperties tableRowProperties;
 	private StyleTableCellProperties tableCellProperties;
+	private StyleSectionProperties sectionProperties;
 
 	public Style(String styleName, String familyName, String masterPageName) {
 		this.styleName = styleName;
@@ -125,8 +125,7 @@ public class Style {
 		return tableRowProperties;
 	}
 
-	public void setTableRowProperties(
-			StyleTableRowProperties tableRowProperties) {
+	public void setTableRowProperties(StyleTableRowProperties tableRowProperties) {
 		this.tableRowProperties = tableRowProperties;
 	}
 
@@ -137,6 +136,14 @@ public class Style {
 	public void setTableCellProperties(
 			StyleTableCellProperties tableCellProperties) {
 		this.tableCellProperties = tableCellProperties;
+	}
+
+	public StyleSectionProperties getSectionProperties() {
+		return sectionProperties;
+	}
+
+	public void setSectionProperties(StyleSectionProperties sectionProperties) {
+		this.sectionProperties = sectionProperties;
 	}
 
 	public StylePageLayoutProperties getPageLayoutProperties() {

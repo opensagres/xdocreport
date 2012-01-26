@@ -21,10 +21,6 @@
  * LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION
  * OF CONTRACT, TORT OR OTHERWISE,  ARISING FROM, OUT OF OR IN CONNECTION
  * WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
- * 
- * Contributions: 
- * 	leszekp@safe-mail.net - bug http://code.google.com/p/xdocreport/issues/detail?id=58
- * 
  */
 package org.odftoolkit.odfdom.converter.internal.utils;
 
@@ -43,9 +39,13 @@ import org.w3c.dom.NodeList;
 
 import fr.opensagres.xdocreport.utils.StringUtils;
 
+/**
+ * fixes for pdf conversion by Leszek Piotrowicz <leszekp@safe-mail.net>
+ */
 public class ODFUtils {
 
 	// Unit constants
+	private static final String REL_SIZE_UNIT = "*";
 	private static final String PERCENT_UNIT = "%";
 	private static final String INCH_UNIT = "in";
 	private static final String POINT_UNIT = "pt";
@@ -156,6 +156,16 @@ public class ODFUtils {
 			return Float.valueOf(s) / 100;
 		}
 		return Float.valueOf(s);
+	}
+
+	public static Integer getRelativeSize(String s) {
+		// * unit?
+		int index = s.indexOf(REL_SIZE_UNIT);
+		if (index != -1) {
+			s = s.substring(0, index);
+			return Integer.valueOf(s);
+		}
+		return Integer.valueOf(s);
 	}
 
 	/**

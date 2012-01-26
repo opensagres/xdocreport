@@ -24,6 +24,8 @@
  */
 package fr.opensagres.xdocreport.document.textstyling.html;
 
+import java.io.IOException;
+
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
 import org.xml.sax.helpers.DefaultHandler;
@@ -70,54 +72,66 @@ public class HTMLTextStylingContentHandler extends DefaultHandler {
 	@Override
 	public void startDocument() throws SAXException {
 		super.startDocument();
-		documentHandler.startDocument();
+		try {
+			documentHandler.startDocument();
+		} catch (IOException e) {
+			throw new SAXException(e);
+		}
 	}
 
 	@Override
 	public void endDocument() throws SAXException {
 		super.endDocument();
-		documentHandler.endDocument();
+		try {
+			documentHandler.endDocument();
+		} catch (IOException e) {
+			throw new SAXException(e);
+		}
 	}
 
 	@Override
 	public void startElement(String uri, String localName, String name,
 			Attributes attributes) throws SAXException {
-		if (STRONG_ELT.equals(name) || B_ELT.equals(name)) {
-			// Bold
-			documentHandler.startBold();
-		} else if (EM_ELT.equals(name) || I_ELT.equals(name)) {
-			// Italic
-			documentHandler.startItalics();
-		} else if (UL_ELT.equals(name)) {
-			// Unordered List
-			startList(false);
-		} else if (OL_ELT.equals(name)) {
-			// Orderer List
-			startList(true);
-		} else if (LI_ELT.equals(name)) {
-			// List item
-			documentHandler.startListItem();
-		} else if (P_ELT.equals(name)) {
-			// Paragraph
-			documentHandler.startParagraph();
-		} else if (H1_ELT.equals(name)) {
-			// Header 1
-			documentHandler.startHeading(1);
-		} else if (H2_ELT.equals(name)) {
-			// Header 2
-			documentHandler.startHeading(2);
-		} else if (H3_ELT.equals(name)) {
-			// Header 3
-			documentHandler.startHeading(3);
-		} else if (H4_ELT.equals(name)) {
-			// Header 4
-			documentHandler.startHeading(4);
-		} else if (H5_ELT.equals(name)) {
-			// Header 5
-			documentHandler.startHeading(5);
-		} else if (H6_ELT.equals(name)) {
-			// Header 6
-			documentHandler.startHeading(6);
+		try {
+			if (STRONG_ELT.equals(name) || B_ELT.equals(name)) {
+				// Bold
+				documentHandler.startBold();
+			} else if (EM_ELT.equals(name) || I_ELT.equals(name)) {
+				// Italic
+				documentHandler.startItalics();
+			} else if (UL_ELT.equals(name)) {
+				// Unordered List
+				startList(false);
+			} else if (OL_ELT.equals(name)) {
+				// Orderer List
+				startList(true);
+			} else if (LI_ELT.equals(name)) {
+				// List item
+				documentHandler.startListItem();
+			} else if (P_ELT.equals(name)) {
+				// Paragraph
+				documentHandler.startParagraph();
+			} else if (H1_ELT.equals(name)) {
+				// Header 1
+				documentHandler.startHeading(1);
+			} else if (H2_ELT.equals(name)) {
+				// Header 2
+				documentHandler.startHeading(2);
+			} else if (H3_ELT.equals(name)) {
+				// Header 3
+				documentHandler.startHeading(3);
+			} else if (H4_ELT.equals(name)) {
+				// Header 4
+				documentHandler.startHeading(4);
+			} else if (H5_ELT.equals(name)) {
+				// Header 5
+				documentHandler.startHeading(5);
+			} else if (H6_ELT.equals(name)) {
+				// Header 6
+				documentHandler.startHeading(6);
+			}
+		} catch (IOException e) {
+			throw new SAXException(e);
 		}
 		super.startElement(uri, localName, name, attributes);
 	}
@@ -125,42 +139,46 @@ public class HTMLTextStylingContentHandler extends DefaultHandler {
 	@Override
 	public void endElement(String uri, String localName, String name)
 			throws SAXException {
-		if (STRONG_ELT.equals(name) || B_ELT.equals(name)) {
-			// Bold
-			documentHandler.endBold();
-		} else if (EM_ELT.equals(name) || I_ELT.equals(name)) {
-			// Italic
-			documentHandler.endItalics();
-		} else if (UL_ELT.equals(name)) {
-			// Unordered List
-			endList(false);
-		} else if (OL_ELT.equals(name)) {
-			// Orderer List
-			endList(true);
-		} else if (LI_ELT.equals(name)) {
-			// List item
-			documentHandler.endListItem();
-		} else if (P_ELT.equals(name)) {
-			// Paragraph
-			documentHandler.endParagraph();
-		} else if (H1_ELT.equals(name)) {
-			// Header 1
-			documentHandler.endHeading(1);
-		} else if (H2_ELT.equals(name)) {
-			// Header 2
-			documentHandler.endHeading(2);
-		} else if (H3_ELT.equals(name)) {
-			// Header 3
-			documentHandler.endHeading(3);
-		} else if (H4_ELT.equals(name)) {
-			// Header 4
-			documentHandler.endHeading(4);
-		} else if (H5_ELT.equals(name)) {
-			// Header 5
-			documentHandler.endHeading(5);
-		} else if (H6_ELT.equals(name)) {
-			// Header 6
-			documentHandler.endHeading(6);
+		try {
+			if (STRONG_ELT.equals(name) || B_ELT.equals(name)) {
+				// Bold
+				documentHandler.endBold();
+			} else if (EM_ELT.equals(name) || I_ELT.equals(name)) {
+				// Italic
+				documentHandler.endItalics();
+			} else if (UL_ELT.equals(name)) {
+				// Unordered List
+				endList(false);
+			} else if (OL_ELT.equals(name)) {
+				// Orderer List
+				endList(true);
+			} else if (LI_ELT.equals(name)) {
+				// List item
+				documentHandler.endListItem();
+			} else if (P_ELT.equals(name)) {
+				// Paragraph
+				documentHandler.endParagraph();
+			} else if (H1_ELT.equals(name)) {
+				// Header 1
+				documentHandler.endHeading(1);
+			} else if (H2_ELT.equals(name)) {
+				// Header 2
+				documentHandler.endHeading(2);
+			} else if (H3_ELT.equals(name)) {
+				// Header 3
+				documentHandler.endHeading(3);
+			} else if (H4_ELT.equals(name)) {
+				// Header 4
+				documentHandler.endHeading(4);
+			} else if (H5_ELT.equals(name)) {
+				// Header 5
+				documentHandler.endHeading(5);
+			} else if (H6_ELT.equals(name)) {
+				// Header 6
+				documentHandler.endHeading(6);
+			}
+		} catch (IOException e) {
+			throw new SAXException(e);
 		}
 		super.endElement(uri, localName, name);
 	}
@@ -168,11 +186,15 @@ public class HTMLTextStylingContentHandler extends DefaultHandler {
 	@Override
 	public void characters(char[] ch, int start, int length)
 			throws SAXException {
-		documentHandler.handleString(String.valueOf(ch, start, length));
+		try {
+			documentHandler.handleString(String.valueOf(ch, start, length));
+		} catch (IOException e) {
+			throw new SAXException(e);
+		}
 		super.characters(ch, start, length);
 	}
 
-	private void startList(boolean ordered) {
+	private void startList(boolean ordered) throws IOException {
 		if (ordered) {
 			documentHandler.startOrderedList();
 		} else {
@@ -180,7 +202,7 @@ public class HTMLTextStylingContentHandler extends DefaultHandler {
 		}
 	}
 
-	private void endList(boolean ordered) {
+	private void endList(boolean ordered) throws IOException {
 		if (ordered) {
 			documentHandler.endOrderedList();
 		} else {

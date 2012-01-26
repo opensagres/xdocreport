@@ -72,7 +72,7 @@ public class FreemarkerDocumentFormatter extends AbstractDocumentFormatter {
 	private static final String START_IMAGE_HEIGHT_DIRECTIVE = DOLLAR_TOTKEN
 			+ IMAGE_REGISTRY_KEY + ".getHeight(";
 	private static final String END_IMAGE_HEIGHT_DIRECTIVE = ")}";
-	
+
 	private static final String START_NOESCAPE = "[#noescape]";
 	private static final String END_NOESCAPE = "[/#noescape]";
 
@@ -166,7 +166,7 @@ public class FreemarkerDocumentFormatter extends AbstractDocumentFormatter {
 		directive.append(END_IMAGE_DIRECTIVE);
 		return directive.toString();
 	}
-	
+
 	public String getImageWidthDirective(String fieldName, String defaultWidth) {
 		StringBuilder directive = new StringBuilder(START_IMAGE_WIDTH_DIRECTIVE);
 		directive.append(fieldName);
@@ -177,9 +177,10 @@ public class FreemarkerDocumentFormatter extends AbstractDocumentFormatter {
 		directive.append(END_IMAGE_WIDTH_DIRECTIVE);
 		return directive.toString();
 	}
-	
+
 	public String getImageHeightDirective(String fieldName, String defaultHeight) {
-		StringBuilder directive = new StringBuilder(START_IMAGE_HEIGHT_DIRECTIVE);
+		StringBuilder directive = new StringBuilder(
+				START_IMAGE_HEIGHT_DIRECTIVE);
 		directive.append(fieldName);
 		directive.append(',');
 		directive.append('\'');
@@ -191,7 +192,13 @@ public class FreemarkerDocumentFormatter extends AbstractDocumentFormatter {
 
 	public String getFunctionDirective(String key, String methodName,
 			String... parameters) {
-		StringBuilder directive = new StringBuilder(DOLLAR_TOTKEN);
+		return getFunctionDirective(key, methodName, true, parameters);
+	}
+
+	public String getFunctionDirective(String key, String methodName,
+			boolean withDollar, String... parameters) {
+		StringBuilder directive = new StringBuilder(withDollar ? DOLLAR_TOTKEN
+				: "");
 		directive.append(key);
 		directive.append('.');
 		directive.append(methodName);
@@ -204,7 +211,11 @@ public class FreemarkerDocumentFormatter extends AbstractDocumentFormatter {
 				directive.append(parameters[i]);
 			}
 		}
-		directive.append(END_IMAGE_DIRECTIVE);
+		if (withDollar) {
+			directive.append(END_IMAGE_DIRECTIVE);
+		} else {
+			directive.append(")");
+		}
 		return directive.toString();
 	}
 
@@ -445,22 +456,6 @@ public class FreemarkerDocumentFormatter extends AbstractDocumentFormatter {
 		return startIndex < endIndex ? startIndex : endIndex;
 	}
 
-	public String formatAsTextStyling(String fieldName,
-			String metadataFieldName, String documentKind,
-			String syntaxKind, String elementId) {
-		StringBuilder newContent = new StringBuilder(START_NOESCAPE);
-		newContent.append(getFunctionDirective(
-				TextStylingConstants.KEY,
-				TextStylingConstants.TRANSFORM_METHOD,
-				removeInterpolation(fieldName),
-				"\"" + syntaxKind + "\"",				
-				"\"" + documentKind + "\"",
-				"\"" + elementId + "\"",
-				IContext.KEY));
-		newContent.append(END_NOESCAPE);
-		return newContent.toString();
-	}
-
 	private String removeInterpolation(String fieldName) {
 		if (fieldName.startsWith(DOLLAR_TOTKEN)) {
 			fieldName = fieldName.substring(DOLLAR_TOTKEN.length(),
@@ -471,8 +466,31 @@ public class FreemarkerDocumentFormatter extends AbstractDocumentFormatter {
 		}
 		return fieldName;
 	}
-	
+
 	public boolean hasDirective(String characters) {
 		return characters.indexOf("[#") != -1;
+	}
+
+	public String formatAsCallTextStyling(long variableIndex, String fieldName,
+			String metafieldName, String documentKind, String syntaxKind,
+			String elementId) {
+		StringBuilder newContent = new StringBuilder("[#assign ");
+		newContent.append(getVariableName(variableIndex));
+		newContent.append("=");
+		newContent.append(getFunctionDirective(TextStylingConstants.KEY,
+				TextStylingConstants.TRANSFORM_METHOD, false,
+				removeInterpolation(fieldName), "\"" + syntaxKind + "\"", "\""
+						+ documentKind + "\"", "\"" + elementId + "\"",
+				IContext.KEY));
+		newContent.append("]");
+		return newContent.toString();
+	}
+
+	public String formatAsTextStylingField(long variableIndex, String property) {
+		StringBuilder result = new StringBuilder(START_NOESCAPE);
+		result.append(formatAsSimpleField(true, getVariableName(variableIndex),
+				property));
+		result.append(END_NOESCAPE);
+		return result.toString();
 	}
 }

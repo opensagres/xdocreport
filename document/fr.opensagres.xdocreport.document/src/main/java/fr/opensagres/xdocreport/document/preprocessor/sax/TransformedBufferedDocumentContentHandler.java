@@ -50,6 +50,7 @@ public abstract class TransformedBufferedDocumentContentHandler<Document extends
 	private final Map<String, Object> sharedContext;
 	private final DirectivesStack directives;
 	private int nbLoopDirectiveToRemove = 0;
+	private int variableIndex;
 
 	protected TransformedBufferedDocumentContentHandler(
 			FieldsMetadata fieldsMetadata, IDocumentFormatter formater,
@@ -58,6 +59,7 @@ public abstract class TransformedBufferedDocumentContentHandler<Document extends
 		this.formatter = formater;
 		this.sharedContext = sharedContext;
 		this.directives = new DirectivesStack();
+		this.variableIndex = 0;
 	}
 
 	@Override
@@ -388,6 +390,10 @@ public abstract class TransformedBufferedDocumentContentHandler<Document extends
 		String id = System.currentTimeMillis() + "_id";
 		elements.put(id, element);
 		return id;
+	}
+
+	public long getVariableIndex() {
+		return variableIndex++;
 	}
 
 	protected abstract Document createDocument();

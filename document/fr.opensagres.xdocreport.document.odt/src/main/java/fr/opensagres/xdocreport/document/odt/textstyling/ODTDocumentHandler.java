@@ -1,5 +1,6 @@
 package fr.opensagres.xdocreport.document.odt.textstyling;
 
+import java.io.IOException;
 import java.util.Stack;
 
 import fr.opensagres.xdocreport.document.odt.preprocessor.ODTBufferedDocumentContentHandler;
@@ -24,12 +25,17 @@ public class ODTDocumentHandler extends AbstractDocumentHandler {
 		this.paragraphsStack = new Stack<Boolean>();
 	}
 
-	public void endDocument() {
+	public void endDocument() throws IOException {
+		endParagraphIfNeeded();
+	}
+
+	private void endParagraphIfNeeded() throws IOException {
 		if (!paragraphsStack.isEmpty()) {
 			paragraphsStack.size();
 			for (int i = 0; i < paragraphsStack.size(); i++) {
 				internalEndParagraph();
 			}
+			paragraphsStack.clear();
 		}
 	}
 
@@ -50,25 +56,25 @@ public class ODTDocumentHandler extends AbstractDocumentHandler {
 	}
 
 	@Override
-	public void handleString(String content) {
+	public void handleString(String content) throws IOException {
 		if (isHeader) {
-			writer.write(content);
+			super.write(content);
 		} else {
-			writer.write("<text:span");
+			super.write("<text:span");
 			if (bolding || italicsing) {
-				writer.write(" text:style-name=\"");
+				super.write(" text:style-name=\"");
 				if (bolding && italicsing) {
-					writer.write(ODTBufferedDocumentContentHandler.BOLD_ITALIC_STYLE_NAME);
+					super.write(ODTBufferedDocumentContentHandler.BOLD_ITALIC_STYLE_NAME);
 				} else if (italicsing) {
-					writer.write(ODTBufferedDocumentContentHandler.ITALIC_STYLE_NAME);
+					super.write(ODTBufferedDocumentContentHandler.ITALIC_STYLE_NAME);
 				} else if (bolding) {
-					writer.write(ODTBufferedDocumentContentHandler.BOLD_STYLE_NAME);
+					super.write(ODTBufferedDocumentContentHandler.BOLD_STYLE_NAME);
 				}
-				writer.write("\" ");
+				super.write("\" ");
 			}
-			writer.write(">");
-			writer.write(content);
-			writer.write("</text:span>");
+			super.write(">");
+			super.write(content);
+			super.write("</text:span>");
 		}
 	}
 
@@ -82,37 +88,40 @@ public class ODTDocumentHandler extends AbstractDocumentHandler {
 
 	}
 
-	public void startParagraph() {
+	public void startParagraph() throws IOException {
+		super.setTextLocation(TextLocation.End);
 		internalStartParagraph(false);
 	}
 
-	public void endParagraph() {
+	public void endParagraph() throws IOException {
 		internalEndParagraph();
 	}
 
-	private void internalStartParagraph(boolean containerIsList) {
-		writer.write("<text:span>");
+	private void internalStartParagraph(boolean containerIsList)
+			throws IOException {
+		super.write("<text:p>");
 		paragraphsStack.push(containerIsList);
 	}
 
-	private void internalEndParagraph() {
-		writer.write("</text:span>");
-		paragraphsStack.pop();
+	private void internalEndParagraph() throws IOException {
+		if (!paragraphsStack.isEmpty()) {
+			super.write("</text:p>");
+			paragraphsStack.pop();
+		}
 	}
 
-	public void startHeading(int level) {
-		// writer.write("<text:span text:style-name=\"" +
-		// PARAGRAPH_AUTOBREAK_START + "\">  </text:span>");
-		writer.write("<text:h text:style-name=\"Heading_20_" + level
+	public void startHeading(int level) throws IOException {
+		endParagraphIfNeeded();
+		super.setTextLocation(TextLocation.End);
+		super.write("<text:h text:style-name=\"Heading_20_" + level
 				+ "\" text:outline-level=\"" + level + "\">");
 		isHeader = true; // XXX nested Headers ?
 	}
 
-	public void endHeading(int level) {
-		writer.write("</text:h>");
-		// writer.write("<text:span text:style-name=\"" +
-		// PARAGRAPH_AUTOBREAK_END + "\">  </text:span>");
+	public void endHeading(int level) throws IOException {
+		super.write("</text:h>");
 		isHeader = false;
+		startParagraph();
 	}
 
 }

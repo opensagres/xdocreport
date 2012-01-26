@@ -24,7 +24,9 @@
  */
 package fr.opensagres.xdocreport.document.textstyling;
 
+import java.io.IOException;
 import java.io.StringWriter;
+import java.io.Writer;
 import java.util.Stack;
 
 import fr.opensagres.xdocreport.document.preprocessor.sax.BufferedElement;
@@ -34,46 +36,45 @@ import fr.opensagres.xdocreport.template.IContext;
  * Abstract class for document handler {@link IDocumentHandler}.
  * 
  */
-public abstract class AbstractDocumentHandler implements IDocumentHandler {
+public abstract class AbstractDocumentHandler extends Writer implements
+		IDocumentHandler {
 
 	private final BufferedElement parent;
 	private final IContext context;
-	protected final StringWriter writer;
 	private final Stack<Boolean> listStack;
+
+	private StringWriter beforeWriter;
+	private StringWriter bodyWriter;
+	private StringWriter endWriter;
+	private StringWriter currentWriter;
 
 	public AbstractDocumentHandler(BufferedElement parent, IContext context) {
 		this.parent = parent;
 		this.context = context;
-		this.writer = new StringWriter();
 		// Stack of boolean (ordered or not) for the ordered/unordered list
 		this.listStack = new Stack<Boolean>();
 	}
 
-	public void handleString(String s) {
-		writer.write(s);
+	public void handleString(String s) throws IOException {
+		getCurrentWriter().write(s);
 	}
 
-	@Override
-	public String toString() {
-		return writer.toString();
-	}
-
-	public final void startOrderedList() {
+	public final void startOrderedList() throws IOException {
 		listStack.push(true);
 		doStartOrderedList();
 	}
 
-	public final void endOrderedList() {
+	public final void endOrderedList() throws IOException {
 		listStack.pop();
 		doEndOrderedList();
 	}
 
-	public final void startUnorderedList() {
+	public final void startUnorderedList() throws IOException {
 		listStack.push(false);
 		doStartUnorderedList();
 	}
 
-	public final void endUnorderedList() {
+	public final void endUnorderedList() throws IOException {
 		listStack.pop();
 		doEndUnorderedList();
 	}
@@ -92,27 +93,105 @@ public abstract class AbstractDocumentHandler implements IDocumentHandler {
 		return listStack.size() - 1;
 	}
 
-	protected void doEndUnorderedList() {
+	protected void doEndUnorderedList() throws IOException {
 
 	}
 
-	protected void doEndOrderedList() {
+	protected void doEndOrderedList() throws IOException {
 
 	}
 
-	protected void doStartUnorderedList() {
+	protected void doStartUnorderedList() throws IOException {
 
 	}
 
-	protected void doStartOrderedList() {
+	protected void doStartOrderedList() throws IOException {
 
 	}
-	
+
 	public BufferedElement getParent() {
 		return parent;
 	}
-	
+
 	public IContext getContext() {
 		return context;
 	}
+
+	public String getTextBefore() {
+		if (beforeWriter != null) {
+			return beforeWriter.toString();
+		}
+		return "";
+	}
+
+	public String getTextBody() {
+		if (bodyWriter != null) {
+			return bodyWriter.toString();
+		}
+		return "";
+	}
+
+	public String getTextEnd() {
+		if (endWriter != null) {
+			return endWriter.toString();
+		}
+		return "";
+	}
+
+	public void setTextLocation(TextLocation location) {
+		switch (location) {
+		case Before:
+			if (beforeWriter == null) {
+				beforeWriter = new StringWriter();
+			}
+			currentWriter = beforeWriter;
+			break;
+		case Body:
+			if (bodyWriter == null) {
+				bodyWriter = new StringWriter();
+			}
+			currentWriter = bodyWriter;
+			break;
+		case End:
+			if (endWriter == null) {
+				endWriter = new StringWriter();
+			}
+			currentWriter = endWriter;
+			break;
+		}
+	}
+
+	@Override
+	public void close() throws IOException {
+		getCurrentWriter().close();
+	}
+
+	@Override
+	public void flush() throws IOException {
+		getCurrentWriter().flush();
+	}
+
+	@Override
+	public void write(char[] arg0, int arg1, int arg2) throws IOException {
+		getCurrentWriter().write(arg0, arg1, arg2);
+	}
+
+	public Writer getCurrentWriter() {
+		if (currentWriter == null) {
+			setTextLocation(TextLocation.Body);
+		}
+		return currentWriter;
+	}
+
+	@Override
+	public String toString() {
+		StringBuilder result = new StringBuilder();
+		result.append("@textBefore=" + getTextBefore());
+		result.append("\n");
+		result.append("@textBody=" + getTextBody());
+		result.append("\n");
+		result.append("@textend=" + getTextEnd());
+		return result.toString();
+	}
+
 }

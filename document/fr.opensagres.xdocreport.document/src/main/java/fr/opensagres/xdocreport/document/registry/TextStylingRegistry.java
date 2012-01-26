@@ -6,8 +6,10 @@ import java.util.Map;
 import fr.opensagres.xdocreport.core.registry.AbstractRegistry;
 import fr.opensagres.xdocreport.document.discovery.ITextStylingDocumentHandlerFactoryDiscovery;
 import fr.opensagres.xdocreport.document.preprocessor.sax.BufferedElement;
+import fr.opensagres.xdocreport.document.textstyling.BasicTransformResult;
 import fr.opensagres.xdocreport.document.textstyling.IDocumentHandler;
 import fr.opensagres.xdocreport.document.textstyling.ITextStylingTransformer;
+import fr.opensagres.xdocreport.document.textstyling.ITransformResult;
 import fr.opensagres.xdocreport.document.textstyling.TextStylingTransformerRegistry;
 import fr.opensagres.xdocreport.template.IContext;
 
@@ -57,7 +59,7 @@ public class TextStylingRegistry extends
 	 *            the syntax to obtain after the transformation.
 	 * @return
 	 */
-	public String transform(String content, String syntaxKind,
+	public ITransformResult transform(String content, String syntaxKind,
 			String documentKind, String elementId, IContext context) {
 		// 1) Retrieve transformer from the text styling transformer registry.
 		ITextStylingTransformer transformer = TextStylingTransformerRegistry
@@ -73,10 +75,10 @@ public class TextStylingRegistry extends
 			} catch (Throwable e) {
 				// Error while transformation, returns the original content???
 				e.printStackTrace();
-				return content;
+				return new BasicTransformResult(content);
 			}
 		}
-		return content;
+		return new BasicTransformResult(content);
 	}
 
 	/**

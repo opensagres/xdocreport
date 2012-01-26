@@ -39,8 +39,10 @@ import org.xml.sax.helpers.AttributesImpl;
 import fr.opensagres.xdocreport.core.document.DocumentKind;
 import fr.opensagres.xdocreport.core.utils.StringUtils;
 import fr.opensagres.xdocreport.document.odt.ODTConstants;
+import fr.opensagres.xdocreport.document.preprocessor.sax.BufferedElement;
 import fr.opensagres.xdocreport.document.preprocessor.sax.IBufferedRegion;
 import fr.opensagres.xdocreport.document.preprocessor.sax.TransformedBufferedDocumentContentHandler;
+import fr.opensagres.xdocreport.document.textstyling.ITransformResult;
 import fr.opensagres.xdocreport.template.formatter.FieldMetadata;
 import fr.opensagres.xdocreport.template.formatter.FieldsMetadata;
 import fr.opensagres.xdocreport.template.formatter.IDocumentFormatter;
@@ -59,6 +61,7 @@ public class ODTBufferedDocumentContentHandler extends
 
 	private String dynamicImageName;
 	private boolean textInputParsing = false;
+	private int variableIndex = 0;
 
 	protected ODTBufferedDocumentContentHandler(FieldsMetadata fieldsMetadata,
 			IDocumentFormatter formatter, Map<String, Object> sharedContext) {
@@ -225,16 +228,43 @@ public class ODTBufferedDocumentContentHandler extends
 				return;
 			}
 			FieldMetadata fieldAsTextStyling = getFieldAsTextStyling(fieldName);
-			if (fieldAsTextStyling != null && getFormatter() != null) {				
+			if (fieldAsTextStyling != null && getFormatter() != null) {
 				// register parent buffered element
-				String elementId= registerBufferedElement(getCurrentElement().getParent());				
-				characters = getFormatter().formatAsTextStyling(fieldName,
-						fieldAsTextStyling.getFieldName(),
-						DocumentKind.ODT.name(),
-						fieldAsTextStyling.getSyntaxKind(), elementId);
+
+				BufferedElement textPElement = getCurrentElement().findParent(
+						"text:p");
+				if (textPElement == null) {
+					textPElement = getCurrentElement().getParent();
+				}
+				String elementId = registerBufferedElement(textPElement);
+
+				// [#assign
+				// 1327511861250_id=___TextStylingRegistry.transform(comments_odt,"NoEscape","ODT","1327511861250_id",___context)]
+				long variableIndex = getVariableIndex();
+				String setVariableDirective = getFormatter()
+						.formatAsCallTextStyling(variableIndex, fieldName,
+								fieldAsTextStyling.getFieldName(),
+								DocumentKind.ODT.name(),
+								fieldAsTextStyling.getSyntaxKind(), elementId);
+
+				String textBefore = getFormatter().formatAsTextStylingField(
+						variableIndex, ITransformResult.TEXT_BEFORE_PROPERTY);
+				String textBody = getFormatter().formatAsTextStylingField(
+						variableIndex, ITransformResult.TEXT_BODY_PROPERTY);
+				String textEnd = getFormatter().formatAsTextStylingField(
+						variableIndex, ITransformResult.TEXT_END_PROPERTY);
+
+				textPElement
+						.setContentBeforeStartTagElement(setVariableDirective
+								+ " " + textBefore);
+				textPElement.setContentAfterEndTagElement(textEnd);
+				super.flushCharacters(textBody);
+				return;
 			}
 		}
 		super.flushCharacters(characters);
 	}
+
+	
 
 }

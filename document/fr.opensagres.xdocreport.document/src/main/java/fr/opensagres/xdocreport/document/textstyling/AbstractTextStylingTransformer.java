@@ -43,13 +43,13 @@ public abstract class AbstractTextStylingTransformer implements
 	private static final Logger LOGGER = LogUtils
 			.getLogger(AbstractTextStylingTransformer.class.getName());
 
-	public String transform(String content, IDocumentHandler handler)
+	public ITransformResult transform(String content, IDocumentHandler handler)
 			throws XDocReportException {
 		try {
 			doTransform(content, handler);
-			String result = handler.toString();
+			ITransformResult result = handler;
 			if (LOGGER.isLoggable(Level.FINE)) {
-				LOGGER.fine(result);
+				LOGGER.fine(result.toString());
 			}
 			return result;
 		} catch (Throwable e) {

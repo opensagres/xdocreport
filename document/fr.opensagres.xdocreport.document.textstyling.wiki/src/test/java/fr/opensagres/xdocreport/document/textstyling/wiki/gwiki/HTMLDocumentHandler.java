@@ -24,6 +24,8 @@
  */
 package fr.opensagres.xdocreport.document.textstyling.wiki.gwiki;
 
+import java.io.IOException;
+
 import fr.opensagres.xdocreport.document.textstyling.AbstractDocumentHandler;
 
 /**
@@ -38,78 +40,78 @@ public class HTMLDocumentHandler extends AbstractDocumentHandler {
 	}
 
 	public void startDocument() {
-		// writer.write("<html>");
-		// writer.write("<body>");
+		// super.write("<html>");
+		// super.write("<body>");
 	}
 
 	public void endDocument() {
-		// writer.write("</body>");
-		// writer.write("</html>");
+		// super.write("</body>");
+		// super.write("</html>");
 	}
 
-	public void startBold() {
-		writer.write("<strong>");
+	public void startBold() throws IOException {
+		super.write("<strong>");
 	}
 
-	public void endBold() {
-		writer.write("</strong>");
+	public void endBold() throws IOException {
+		super.write("</strong>");
 	}
 
-	public void startItalics() {
-		writer.write("<i>");
+	public void startItalics() throws IOException {
+		super.write("<i>");
 	}
 
-	public void endItalics() {
-		writer.write("</i>");
+	public void endItalics() throws IOException {
+		super.write("</i>");
 	}
 
-	public void startListItem() {
-		writer.write("<li>");
+	public void startListItem() throws IOException {
+		super.write("<li>");
 	}
 
-	public void endListItem() {
-		writer.write("</li>");
-	}
-
-	@Override
-	protected void doStartOrderedList() {
-		writer.write("<ol>");
+	public void endListItem() throws IOException {
+		super.write("</li>");
 	}
 
 	@Override
-	protected void doEndOrderedList() {
-		writer.write("</ol>");
+	protected void doStartOrderedList() throws IOException {
+		super.write("<ol>");
 	}
 
 	@Override
-	protected void doStartUnorderedList() {
-		writer.write("<ul>");
+	protected void doEndOrderedList() throws IOException {
+		super.write("</ol>");
 	}
 
 	@Override
-	protected void doEndUnorderedList() {
-		writer.write("</ul>");
+	protected void doStartUnorderedList() throws IOException {
+		super.write("<ul>");
 	}
 
-	public void startParagraph() {
-		writer.write("<p>");
+	@Override
+	protected void doEndUnorderedList() throws IOException {
+		super.write("</ul>");
 	}
 
-	public void endParagraph() {
-		writer.write("</p>");
+	public void startParagraph() throws IOException {
+		super.write("<p>");
 	}
 
-	public void startHeading(int level) {
-		writer.write("<h");
-		writer.write(level);
-		writer.write(">");
+	public void endParagraph() throws IOException {
+		super.write("</p>");
+	}
+
+	public void startHeading(int level) throws IOException {
+		super.write("<h");
+		super.write(level);
+		super.write(">");
 
 	}
 
-	public void endHeading(int level) {
-		writer.write("</h");
-		writer.write(level);
-		writer.write(">");
+	public void endHeading(int level) throws IOException {
+		super.write("</h");
+		super.write(level);
+		super.write(">");
 	}
 
 }

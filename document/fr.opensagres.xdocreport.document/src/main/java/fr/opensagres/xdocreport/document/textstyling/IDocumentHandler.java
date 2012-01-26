@@ -24,93 +24,99 @@
  */
 package fr.opensagres.xdocreport.document.textstyling;
 
+import java.io.IOException;
+
 /**
  * Handler to build a document.
  * 
  */
-public interface IDocumentHandler {
+public interface IDocumentHandler extends ITransformResult {
+
+	public enum TextLocation {
+		Before, Body, End;
+	}
 
 	/**
 	 * Start the document.
 	 */
-	void startDocument();
+	void startDocument() throws IOException;
 
 	/**
 	 * End the document.
 	 */
-	void endDocument();
+	void endDocument() throws IOException;
 
 	/**
 	 * Start paragraph.
 	 */
-	void startParagraph();
+	void startParagraph() throws IOException;
 
 	/**
 	 * End paragraph.
 	 */
-	void endParagraph();
+	void endParagraph() throws IOException;
 
 	/**
 	 * Start bold style.
 	 */
-	void startBold();
+	void startBold() throws IOException;
 
 	/**
 	 * End bold style.
 	 */
-	void endBold();
+	void endBold() throws IOException;
 
 	/**
 	 * Start italics style.
 	 */
-	void startItalics();
+	void startItalics() throws IOException;
 
 	/**
 	 * End italics style.
 	 */
-	void endItalics();
+	void endItalics() throws IOException;
 
 	/**
 	 * Start ordered list.
 	 */
-	void startOrderedList();
+	void startOrderedList() throws IOException;
 
 	/**
 	 * End ordered list.
 	 */
-	void endOrderedList();
+	void endOrderedList() throws IOException;
 
 	/**
 	 * Start unordered list.
 	 */
-	void startUnorderedList();
+	void startUnorderedList() throws IOException;
 
 	/**
 	 * End unordered list.
 	 */
-	void endUnorderedList();
+	void endUnorderedList() throws IOException;
 
 	/**
 	 * Start list item.
 	 */
-	void startListItem();
+	void startListItem() throws IOException;
 
 	/**
 	 * End list item.
 	 */
-	void endListItem();
+	void endListItem() throws IOException;
 
 	/**
 	 * Text content.
 	 * 
 	 * @param s
 	 */
-	void handleString(String s);
+	void handleString(String s) throws IOException;
 
-	void startHeading(int level);
+	void startHeading(int level) throws IOException;
 
-    void endHeading(int level);
-    
+	void endHeading(int level) throws IOException;
+
 	//
 	// void endCaption();
 	// void endDocument();

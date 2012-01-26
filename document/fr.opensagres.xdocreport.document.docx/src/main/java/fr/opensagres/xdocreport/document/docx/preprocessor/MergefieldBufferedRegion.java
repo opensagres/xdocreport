@@ -30,6 +30,7 @@ import fr.opensagres.xdocreport.core.document.DocumentKind;
 import fr.opensagres.xdocreport.core.utils.StringUtils;
 import fr.opensagres.xdocreport.document.preprocessor.sax.BufferedElement;
 import fr.opensagres.xdocreport.document.preprocessor.sax.TransformedBufferedDocumentContentHandler;
+import fr.opensagres.xdocreport.document.textstyling.ITransformResult;
 import fr.opensagres.xdocreport.template.formatter.FieldMetadata;
 import fr.opensagres.xdocreport.template.formatter.IDocumentFormatter;
 
@@ -147,12 +148,36 @@ public abstract class MergefieldBufferedRegion extends BufferedElement {
 
 					if (fieldAsTextStyling != null) {
 						// register parent buffered element
-						String elementId = handler.registerBufferedElement(handler.getCurrentElement()
-								.getParent());
-						fieldName = formatter.formatAsTextStyling(fieldName,
-								fieldAsTextStyling.getFieldName(),
-								DocumentKind.DOCX.name(),
-								fieldAsTextStyling.getSyntaxKind(), elementId);
+						BufferedElement parent = handler.getCurrentElement()
+								.getParent();
+						String elementId = handler
+								.registerBufferedElement(parent);
+
+						long variableIndex = handler.getVariableIndex();
+						// Set
+						String setVariableDirective = formatter
+								.formatAsCallTextStyling(
+										handler.getVariableIndex(), fieldName,
+										fieldAsTextStyling.getFieldName(),
+										DocumentKind.DOCX.name(),
+										fieldAsTextStyling.getSyntaxKind(),
+										elementId);
+
+						String textBefore = formatter.formatAsTextStylingField(
+								variableIndex,
+								ITransformResult.TEXT_BEFORE_PROPERTY);
+						String textBody = formatter.formatAsTextStylingField(
+								variableIndex,
+								ITransformResult.TEXT_BODY_PROPERTY);
+						String textEnd = formatter.formatAsTextStylingField(
+								variableIndex,
+								ITransformResult.TEXT_END_PROPERTY);
+
+						parent
+								.setContentBeforeStartTagElement(setVariableDirective
+										+ " " + textBefore);
+						parent.setContentAfterEndTagElement(textEnd);
+
 					}
 					return fieldName;
 				}

@@ -24,6 +24,7 @@
  */
 package fr.opensagres.xdocreport.document.docx.textstyling;
 
+import java.io.IOException;
 import java.util.Stack;
 
 import fr.opensagres.xdocreport.document.preprocessor.sax.BufferedElement;
@@ -51,7 +52,7 @@ public class DocxDocumentHandler extends AbstractDocumentHandler {
 		this.paragraphsStack = new Stack<Boolean>();
 	}
 
-	public void endDocument() {
+	public void endDocument() throws IOException {
 		if (!paragraphsStack.isEmpty()) {
 			paragraphsStack.size();
 			for (int i = 0; i < paragraphsStack.size(); i++) {
@@ -77,89 +78,90 @@ public class DocxDocumentHandler extends AbstractDocumentHandler {
 	}
 
 	@Override
-	public void handleString(String content) {
+	public void handleString(String content) throws IOException {
 		// startParagraphIfNeeded();
-		writer.write("<w:r>");
+		super.write("<w:r>");
 		if (bolding || italicsing) {
-			writer.write("<w:rPr>");
+			super.write("<w:rPr>");
 			if (bolding) {
-				writer.write("<w:b />");
+				super.write("<w:b />");
 			}
 			if (italicsing) {
-				writer.write("<w:i />");
+				super.write("<w:i />");
 			}
-			writer.write("</w:rPr>");
+			super.write("</w:rPr>");
 		}
-		writer.write("<w:t xml:space=\"preserve\" >");
-		writer.write(content);
-		writer.write("</w:t>");
-		writer.write("</w:r>");
+		super.write("<w:t xml:space=\"preserve\" >");
+		super.write(content);
+		super.write("</w:t>");
+		super.write("</w:r>");
 	}
 
-	private void startParagraphIfNeeded() {
+	private void startParagraphIfNeeded() throws IOException {
 		if (paragraphsStack.isEmpty()) {
 			internalStartParagraph(false);
 		}
 	}
 
-	private void internalStartParagraph(boolean containerIsList) {
-		writer.write("<w:p>");
+	private void internalStartParagraph(boolean containerIsList)
+			throws IOException {
+		super.write("<w:p>");
 		paragraphsStack.push(containerIsList);
 	}
 
-	private void internalEndParagraph() {
-		writer.write("</w:p>");
+	private void internalEndParagraph() throws IOException {
+		super.write("</w:p>");
 		paragraphsStack.pop();
 	}
 
-	public void startListItem() {
+	public void startListItem() throws IOException {
 		// if (!paragraphsStack.isEmpty() && !paragraphsStack.peek()) {
 		// internalEndParagraph();
 		// }
 		internalStartParagraph(true);
 		boolean ordered = super.getCurrentListOrder();
-		writer.write("<w:pPr>");
-		writer.write("<w:pStyle w:val=\"Paragraphedeliste\" />");
-		writer.write("<w:numPr>");
+		super.write("<w:pPr>");
+		super.write("<w:pStyle w:val=\"Paragraphedeliste\" />");
+		super.write("<w:numPr>");
 
 		// <w:ilvl w:val="0" />
 		int ilvlVal = super.getCurrentListIndex();
-		writer.write("<w:ilvl w:val=\"");
-		writer.write(String.valueOf(ilvlVal));
-		writer.write("\" />");
+		super.write("<w:ilvl w:val=\"");
+		super.write(String.valueOf(ilvlVal));
+		super.write("\" />");
 
 		// "<w:numId w:val="1" />"
 		int numIdVal = ordered ? 2 : 1;
-		writer.write("<w:numId w:val=\"");
-		// writer.write(String.valueOf(numIdVal));
-		writer.write(String.valueOf(numIdVal));
-		writer.write("\" />");
+		super.write("<w:numId w:val=\"");
+		// super.write(String.valueOf(numIdVal));
+		super.write(String.valueOf(numIdVal));
+		super.write("\" />");
 
-		writer.write("</w:numPr>");
-		writer.write("</w:pPr>");
+		super.write("</w:numPr>");
+		super.write("</w:pPr>");
 
 	}
 
-	public void endListItem() {
+	public void endListItem() throws IOException {
 		internalEndParagraph();
 	}
 
-	public void startParagraph() {
+	public void startParagraph() throws IOException {
 		internalStartParagraph(false);
 	}
 
-	public void endParagraph() {
+	public void endParagraph() throws IOException {
 		internalEndParagraph();
 	}
 
 	public void startHeading(int level) {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 	public void endHeading(int level) {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 }

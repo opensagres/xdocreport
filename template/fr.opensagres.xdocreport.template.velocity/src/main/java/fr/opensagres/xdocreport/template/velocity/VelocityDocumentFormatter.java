@@ -63,7 +63,7 @@ public class VelocityDocumentFormatter extends AbstractDocumentFormatter {
 	private static final String START_IMAGE_HEIGHT_DIRECTIVE = DOLLAR_START_BRACKET
 			+ IMAGE_REGISTRY_KEY + ".getHeight(";
 	private static final String END_IMAGE_HEIGHT_DIRECTIVE = ")}";
-	
+
 	private static final String START_IF_DIRECTIVE = "#if(";
 	private static final String END_IF_DIRECTIVE = "#end";
 
@@ -158,7 +158,7 @@ public class VelocityDocumentFormatter extends AbstractDocumentFormatter {
 		directive.append(END_IMAGE_DIRECTIVE);
 		return directive.toString();
 	}
-	
+
 	public String getImageWidthDirective(String fieldName, String defaultWidth) {
 		StringBuilder directive = new StringBuilder(START_IMAGE_WIDTH_DIRECTIVE);
 		if (!fieldName.startsWith("$")) {
@@ -172,9 +172,10 @@ public class VelocityDocumentFormatter extends AbstractDocumentFormatter {
 		directive.append(END_IMAGE_WIDTH_DIRECTIVE);
 		return directive.toString();
 	}
-	
+
 	public String getImageHeightDirective(String fieldName, String defaultHeight) {
-		StringBuilder directive = new StringBuilder(START_IMAGE_HEIGHT_DIRECTIVE);
+		StringBuilder directive = new StringBuilder(
+				START_IMAGE_HEIGHT_DIRECTIVE);
 		if (!fieldName.startsWith("$")) {
 			directive.append("$");
 		}
@@ -426,20 +427,26 @@ public class VelocityDocumentFormatter extends AbstractDocumentFormatter {
 		return fieldName.indexOf("#");
 	}
 
-	public String formatAsTextStyling(String fieldName,
-			String metadataFieldName, String documentKind,
-			String textStylingKind, String elementId) {
-		StringBuilder newContent = new StringBuilder();
-		newContent.append(getFunctionDirective(
-				TextStylingConstants.KEY,
-				TextStylingConstants.TRANSFORM_METHOD, fieldName,
-				"\"" + textStylingKind + "\"",				
-				"\"" + documentKind + "\"",
-				"\"" + elementId + "\"", 
-				"$" +IContext.KEY));
+	public String formatAsCallTextStyling(long variableIndex, String fieldName,
+			String metafieldName, String documentKind, String syntaxKind,
+			String elementId) {
+		StringBuilder newContent = new StringBuilder("#set(");
+		newContent.append(formatAsSimpleField(true,
+				getVariableName(variableIndex)));
+		newContent.append("=");
+		newContent.append(getFunctionDirective(TextStylingConstants.KEY,
+				TextStylingConstants.TRANSFORM_METHOD, fieldName, "\""
+						+ syntaxKind + "\"", "\"" + documentKind + "\"", "\""
+						+ elementId + "\"", "$" + IContext.KEY));
+		newContent.append(")");
 		return newContent.toString();
 	}
-	
+
+	public String formatAsTextStylingField(long variableIndex, String property) {
+		return formatAsSimpleField(true, getVariableName(variableIndex),
+				property);
+	}
+
 	public boolean hasDirective(String characters) {
 		return characters.indexOf("#") != -1;
 	}

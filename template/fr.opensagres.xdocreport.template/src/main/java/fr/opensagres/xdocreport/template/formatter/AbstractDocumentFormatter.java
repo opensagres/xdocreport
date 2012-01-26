@@ -30,6 +30,7 @@ import java.util.List;
 
 public abstract class AbstractDocumentFormatter implements IDocumentFormatter {
 
+	public static final String NO_ESCAPE = "___NoEscape";
 	private String startDocumentDirective;
 	private String endDocumentDirective;
 
@@ -123,5 +124,11 @@ public abstract class AbstractDocumentFormatter implements IDocumentFormatter {
 			return coll.get(0);
 		}
 		return Collections.min(coll);
+	}
+
+	protected String getVariableName(long variableIndex) {
+		StringBuilder key = new StringBuilder(NO_ESCAPE);
+		key.append(variableIndex);
+		return key.toString();
 	}
 }

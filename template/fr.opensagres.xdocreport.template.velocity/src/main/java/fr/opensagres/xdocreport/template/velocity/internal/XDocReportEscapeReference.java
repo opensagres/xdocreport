@@ -33,12 +33,13 @@ import fr.opensagres.xdocreport.core.document.TextStylingConstants;
 import fr.opensagres.xdocreport.core.utils.StringUtils;
 import fr.opensagres.xdocreport.template.ITemplateEngine;
 import fr.opensagres.xdocreport.template.config.ReplaceText;
+import fr.opensagres.xdocreport.template.formatter.AbstractDocumentFormatter;
 import fr.opensagres.xdocreport.template.velocity.VelocityConstants;
 
 public class XDocReportEscapeReference extends EscapeXmlReference implements
 		VelocityConstants {
 
-	private static final String TEXT_STYLING_KEY = "${" + TextStylingConstants.KEY;
+	private static final String NO_ESCAPE = "$" + AbstractDocumentFormatter.NO_ESCAPE;
 	private String[] searchList;
 	private String[] replacementList;
 
@@ -74,7 +75,7 @@ public class XDocReportEscapeReference extends EscapeXmlReference implements
 	@Override
 	public Object referenceInsert(String reference, Object value) {
 		if (reference != null
-				&& reference.startsWith(TEXT_STYLING_KEY)) {
+				&& reference.startsWith(NO_ESCAPE)) {
 			// Emulate [#noescape] directive of Freemarker.
 			return value;
 		}

@@ -24,6 +24,7 @@
  */
 package fr.opensagres.xdocreport.document.textstyling.wiki;
 
+import java.io.IOException;
 import java.util.List;
 
 import org.wikimodel.wem.EmptyWemListener;
@@ -48,22 +49,34 @@ public class WemListenerAdapter extends EmptyWemListener {
 
 	@Override
 	public void beginDocument() {
-		documentHandler.startDocument();
+		try {
+			documentHandler.startDocument();
+		} catch (IOException e) {
+			// Do nothing
+		}
 	}
 
 	@Override
 	public void endDocument() {
-		documentHandler.endDocument();
+		try {
+			documentHandler.endDocument();
+		} catch (IOException e) {
+			// Do nothing
+		}
 	}
 
 	@Override
 	public void beginFormat(WikiFormat format) {
 		List<WikiStyle> styles = format.getStyles();
 		for (WikiStyle style : styles) {
-			if (IWemConstants.STRONG.equals(style)) {
-				documentHandler.startBold();
-			} else if (IWemConstants.EM.equals(style)) {
-				documentHandler.startItalics();
+			try {
+				if (IWemConstants.STRONG.equals(style)) {
+					documentHandler.startBold();
+				} else if (IWemConstants.EM.equals(style)) {
+					documentHandler.startItalics();
+				}
+			} catch (IOException e) {
+				// Do nothing
 			}
 		}
 	}
@@ -72,60 +85,96 @@ public class WemListenerAdapter extends EmptyWemListener {
 	public void endFormat(WikiFormat format) {
 		List<WikiStyle> styles = format.getStyles();
 		for (WikiStyle style : styles) {
-			if (IWemConstants.STRONG.equals(style)) {
-				documentHandler.endBold();
-			} else if (IWemConstants.EM.equals(style)) {
-				documentHandler.endItalics();
+			try {
+				if (IWemConstants.STRONG.equals(style)) {
+					documentHandler.endBold();
+				} else if (IWemConstants.EM.equals(style)) {
+					documentHandler.endItalics();
+				}
+			} catch (IOException e) {
+				// Do nothing
 			}
 		}
 	}
 
 	@Override
 	public void beginList(WikiParameters params, boolean ordered) {
-		if (ordered) {
-			documentHandler.startOrderedList();
-		} else {
-			documentHandler.startUnorderedList();
+		try {
+			if (ordered) {
+				documentHandler.startOrderedList();
+			} else {
+				documentHandler.startUnorderedList();
+			}
+		} catch (IOException e) {
+			// Do nothing
 		}
 	}
 
 	@Override
 	public void beginListItem() {
-		documentHandler.startListItem();
+		try {
+			documentHandler.startListItem();
+		} catch (IOException e) {
+			// Do nothing
+		}
 	}
 
 	@Override
 	public void endListItem() {
-		documentHandler.endListItem();
+		try {
+			documentHandler.endListItem();
+		} catch (IOException e) {
+			// Do nothing
+		}
 	}
 
 	@Override
 	public void endList(WikiParameters params, boolean ordered) {
-		if (ordered) {
-			documentHandler.endOrderedList();
-		} else {
-			documentHandler.endUnorderedList();
+		try {
+			if (ordered) {
+				documentHandler.endOrderedList();
+			} else {
+				documentHandler.endUnorderedList();
+			}
+		} catch (IOException e) {
+			// Do nothing
 		}
 	}
 
 	@Override
 	public void onSpace(String str) {
-		documentHandler.handleString(str);
+		try {
+			documentHandler.handleString(str);
+		} catch (IOException e) {
+			// Do nothing
+		}
 	}
 
 	@Override
 	public void onWord(String str) {
-		documentHandler.handleString(str);
+		try {
+			documentHandler.handleString(str);
+		} catch (IOException e) {
+			// Do nothing
+		}
 	}
 
 	@Override
 	public void beginParagraph(WikiParameters params) {
-		documentHandler.startParagraph();
+		try {
+			documentHandler.startParagraph();
+		} catch (IOException e) {
+			// Do nothing
+		}
 	}
 
 	@Override
 	public void endParagraph(WikiParameters params) {
-		documentHandler.endParagraph();
+		try {
+			documentHandler.endParagraph();
+		} catch (IOException e) {
+			// Do nothing
+		}
 	}
 
 }

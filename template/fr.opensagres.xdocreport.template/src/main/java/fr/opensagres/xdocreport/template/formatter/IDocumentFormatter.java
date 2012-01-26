@@ -72,8 +72,13 @@ public interface IDocumentFormatter {
 	String getFunctionDirective(String key, String methodName,
 			String... parameters);
 
-	String formatAsTextStyling(String fieldName, String metafieldName,
-			String documentKind, String syntaxKind, String elementId);
 
 	boolean hasDirective(String characters);
+
+	String formatAsCallTextStyling(long variableIndex, String fieldName,
+			String metafieldName, String documentKind, String syntaxKind,
+			String elementId);
+
+	String formatAsTextStylingField(long variableIndex,
+			String textBeforeProperty);
 }

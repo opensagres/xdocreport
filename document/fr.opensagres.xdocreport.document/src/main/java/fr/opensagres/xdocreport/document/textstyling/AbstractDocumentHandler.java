@@ -93,22 +93,6 @@ public abstract class AbstractDocumentHandler extends Writer implements
 		return listStack.size() - 1;
 	}
 
-	protected void doEndUnorderedList() throws IOException {
-
-	}
-
-	protected void doEndOrderedList() throws IOException {
-
-	}
-
-	protected void doStartUnorderedList() throws IOException {
-
-	}
-
-	protected void doStartOrderedList() throws IOException {
-
-	}
-
 	public BufferedElement getParent() {
 		return parent;
 	}
@@ -194,4 +178,7 @@ public abstract class AbstractDocumentHandler extends Writer implements
 		return result.toString();
 	}
 
-}
+	protected abstract void doEndUnorderedList() throws IOException;
+	protected abstract void doEndOrderedList() throws IOException;
+	protected abstract void doStartUnorderedList() throws IOException;
+	protected abstract void doStartOrderedList() throws IOException;}

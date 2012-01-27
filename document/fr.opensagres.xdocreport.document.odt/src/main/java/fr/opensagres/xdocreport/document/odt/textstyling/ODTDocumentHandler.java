@@ -78,16 +78,6 @@ public class ODTDocumentHandler extends AbstractDocumentHandler {
 		}
 	}
 
-	public void startListItem() {
-		// TODO Auto-generated method stub
-
-	}
-
-	public void endListItem() {
-		// TODO Auto-generated method stub
-
-	}
-
 	public void startParagraph() throws IOException {
 		super.setTextLocation(TextLocation.End);
 		internalStartParagraph(false);
@@ -124,4 +114,33 @@ public class ODTDocumentHandler extends AbstractDocumentHandler {
 		startParagraph();
 	}
 
+
+	@Override
+	protected void doStartOrderedList() throws IOException {
+		// TODO Auto-generated method stub
+	}
+	
+	@Override
+	protected void doEndOrderedList() throws IOException {
+		// TODO Auto-generated method stub
+	}
+
+	@Override
+	protected void doStartUnorderedList() throws IOException {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	protected void doEndUnorderedList() throws IOException {
+		// TODO Auto-generated method stub		
+	}
+
+	public void startListItem() {
+		// TODO Auto-generated method stub
+	}
+
+	public void endListItem() {
+		// TODO Auto-generated method stub
+	}
 }

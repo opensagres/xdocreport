@@ -164,4 +164,28 @@ public class DocxDocumentHandler extends AbstractDocumentHandler {
 
 	}
 
+	@Override
+	protected void doEndUnorderedList() throws IOException {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	protected void doEndOrderedList() throws IOException {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	protected void doStartUnorderedList() throws IOException {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	protected void doStartOrderedList() throws IOException {
+		// TODO Auto-generated method stub
+		
+	}
+
 }

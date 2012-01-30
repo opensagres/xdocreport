@@ -223,6 +223,8 @@ public class DocxDocumentXMLRelsDocumentContentHandler extends
 	private void generateScriptsForDynamicHyperlinks(StringBuilder script) {
 
 		// Start if
+		// if the current entry is "word/_rels/document.xml.rels", key used will
+		// be "word/document.xml").
 		String registryKey = HyperlinkUtils
 				.getHyperlinkRegistryKey(HyperlinkUtils
 						.getEntryNameWithoutRels(entryName));

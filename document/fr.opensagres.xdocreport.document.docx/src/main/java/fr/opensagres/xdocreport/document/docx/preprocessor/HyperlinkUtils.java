@@ -17,6 +17,8 @@ public class HyperlinkUtils {
 	private static final String[] BLANCK = new String[] { "", "" };
 
 	/**
+	 * Returns the {@link InitialHyperlinkMap} from the given sharedContext for
+	 * the given entry name.
 	 * 
 	 * @param entryName
 	 * @param sharedContext
@@ -32,6 +34,8 @@ public class HyperlinkUtils {
 	}
 
 	/**
+	 * Register the given {@link InitialHyperlinkMap} in the given sharedContext
+	 * for the given entry name.
 	 * 
 	 * @param entryName
 	 * @param sharedContext
@@ -43,6 +47,9 @@ public class HyperlinkUtils {
 	}
 
 	/**
+	 * Returns the key used for the template engine directive which must use the
+	 * hyperlink regitsry for the given entryName (ex :"word/document.xml" will
+	 * returns "___HyperlinkRegistryword_document_xml")
 	 * 
 	 * @param entryName
 	 * @return
@@ -54,6 +61,9 @@ public class HyperlinkUtils {
 	}
 
 	/**
+	 * Returns the entry name which uses the XML element Relationship from the
+	 * given *.rels entry. Example : "word/_rels/document.xml.rels" will returns
+	 * "word/document.xml".
 	 * 
 	 * @param relsEntryName
 	 * @return

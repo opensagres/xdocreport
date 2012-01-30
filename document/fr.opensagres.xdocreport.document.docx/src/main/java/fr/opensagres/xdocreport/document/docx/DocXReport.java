@@ -24,13 +24,13 @@
  */
 package fr.opensagres.xdocreport.document.docx;
 
+import static fr.opensagres.xdocreport.document.docx.DocXConstants.CONTENT_TYPES_XML_ENTRY;
+import static fr.opensagres.xdocreport.document.docx.DocXConstants.MIME_MAPPING;
 import static fr.opensagres.xdocreport.document.docx.DocXConstants.WORD_DOCUMENT_XML_ENTRY;
 import static fr.opensagres.xdocreport.document.docx.DocXConstants.WORD_FOOTER_XML_ENTRY;
 import static fr.opensagres.xdocreport.document.docx.DocXConstants.WORD_HEADER_XML_ENTRY;
 import static fr.opensagres.xdocreport.document.docx.DocXConstants.WORD_RELS_XMLRELS_XML_ENTRY;
 import static fr.opensagres.xdocreport.document.docx.DocXConstants.WORD_STYLES_XML_ENTRY;
-import static fr.opensagres.xdocreport.document.docx.DocXConstants.CONTENT_TYPES_XML_ENTRY;
-import static fr.opensagres.xdocreport.document.docx.DocXConstants.MIME_MAPPING;
 
 import java.io.IOException;
 import java.io.Reader;
@@ -117,12 +117,14 @@ public class DocXReport extends AbstractXDocReport {
 			XDocArchive preprocessedArchive) throws XDocReportException {
 		super.onBeforePreprocessing(sharedContext, preprocessedArchive);
 		// Before starting preprocessing, Hyperlink must be getted from
-		// "word/_rels/document.xml.rels" in the shared
+		// the whole entries (*.xml.rels like "word/_rels/document.xml.rels") in
+		// the shared
 		// context.
 		Set<String> xmlRelsEntryNames = preprocessedArchive
 				.getEntryNames(WORD_RELS_XMLRELS_XML_ENTRY);
 		this.allEntryNamesHyperlinks = new HashSet<String>();
 		String entryName = null;
+		// Loop for each entries *.xml.rels
 		for (String relsEntryName : xmlRelsEntryNames) {
 			HyperlinkContentHandler contentHandler = new HyperlinkContentHandler();
 			Reader reader = preprocessedArchive.getEntryReader(relsEntryName);
@@ -131,6 +133,11 @@ public class DocXReport extends AbstractXDocReport {
 				xmlReader.setContentHandler(contentHandler);
 				xmlReader.parse(new InputSource(reader));
 				if (contentHandler.getHyperlinks() != null) {
+					// Current *.xml.rels document has hyperlinks, store it in
+					// the
+					// sharedContext with the key *.xml (ex : if the current
+					// entry is "word/_rels/document.xml.rels", key used will be
+					// * "word/document.xml").
 					entryName = HyperlinkUtils
 							.getEntryNameWithoutRels(relsEntryName);
 					HyperlinkUtils.putInitialHyperlinkMap(entryName,

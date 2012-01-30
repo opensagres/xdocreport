@@ -59,7 +59,7 @@ public class TestWithRegistry {
 			IXDocReport report2 = XDocReportRegistry.getRegistry()
 					.getReport(id);
 			if (report != null && report.equals(report2)) {
-				System.out.println("Report retrouvé dans le registry ");
+				System.out.println("Report retrouvï¿½ dans le registry ");
 			} else {
 				System.out.println("Argh! Le registry ne marche pas");
 			}

@@ -61,6 +61,10 @@ public class HTMLTextStylingTransformer extends AbstractTextStylingTransformer {
 	@Override
 	protected void doTransform(String content, IDocumentHandler documentHandler)
 			throws Exception {
+	    
+	    // pre-process content : can be used to integrate a markup based html generator like markdown
+	    content = generateXhtmlFromContent(content);
+	    
 		// remove special characters \n, \r
 		String xml = StringUtils.replaceEach(content, searchList,
 				replacementList);
@@ -73,6 +77,10 @@ public class HTMLTextStylingTransformer extends AbstractTextStylingTransformer {
 		xmlReader.setContentHandler(new HTMLTextStylingContentHandler(
 				documentHandler));
 		xmlReader.parse(new InputSource(new StringReader(xml)));
+	}	
+	
+	protected String generateXhtmlFromContent(String content) throws Exception {
+	    return content;
 	}
 
 }

@@ -30,5 +30,5 @@ package fr.opensagres.xdocreport.core.document;
  */
 public enum SyntaxKind {
 
-	NoEscape, Html, GWiki, MediaWiki
+	NoEscape, Html, GWiki, MediaWiki, MarkDown
 }

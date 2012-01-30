@@ -24,6 +24,20 @@
  */
 package fr.opensagres.xdocreport.document.odt;
 
+import static fr.opensagres.xdocreport.document.odt.ODTConstants.DRAW_FRAME_ELT;
+import static fr.opensagres.xdocreport.document.odt.ODTConstants.DRAW_IMAGE_ELT;
+import static fr.opensagres.xdocreport.document.odt.ODTConstants.DRAW_NS;
+import static fr.opensagres.xdocreport.document.odt.ODTConstants.MIMETYPE;
+import static fr.opensagres.xdocreport.document.odt.ODTConstants.ODT_MIMETYPE;
+import static fr.opensagres.xdocreport.document.odt.ODTConstants.OFFICE_AUTOMATIC_STYLES_ELT;
+import static fr.opensagres.xdocreport.document.odt.ODTConstants.OFFICE_NS;
+import static fr.opensagres.xdocreport.document.odt.ODTConstants.TABLE_ELT;
+import static fr.opensagres.xdocreport.document.odt.ODTConstants.TABLE_NS;
+import static fr.opensagres.xdocreport.document.odt.ODTConstants.TABLE_ROW_ELT;
+import static fr.opensagres.xdocreport.document.odt.ODTConstants.TEXT_A_ELT;
+import static fr.opensagres.xdocreport.document.odt.ODTConstants.TEXT_INPUT_ELT;
+import static fr.opensagres.xdocreport.document.odt.ODTConstants.TEXT_NS;
+
 import java.io.IOException;
 
 import fr.opensagres.xdocreport.core.io.IOUtils;
@@ -32,7 +46,7 @@ import fr.opensagres.xdocreport.core.io.XDocArchive;
 /**
  * Utilities for Open Office ODT.
  */
-public class ODTUtils implements ODTConstants {
+public class ODTUtils {
 
 	/**
 	 * Returns true if the given document archive is a ODT and false otherwise.
@@ -126,7 +140,7 @@ public class ODTUtils implements ODTConstants {
 	public static boolean isTextA(String uri, String localName, String name) {
 		return TEXT_NS.equals(uri) && TEXT_A_ELT.equals(localName);
 	}
-	
+
 	/**
 	 * Returns true if element is office:automatic-styles and false otherwise.
 	 * 
@@ -135,7 +149,9 @@ public class ODTUtils implements ODTConstants {
 	 * @param name
 	 * @return
 	 */
-	public static boolean isOfficeAutomaticStyles(String uri, String localName, String name) {
-		return OFFICE_NS.equals(uri) && OFFICE_AUTOMATIC_STYLES_ELT.equals(localName);
-	}	
+	public static boolean isOfficeAutomaticStyles(String uri, String localName,
+			String name) {
+		return OFFICE_NS.equals(uri)
+				&& OFFICE_AUTOMATIC_STYLES_ELT.equals(localName);
+	}
 }

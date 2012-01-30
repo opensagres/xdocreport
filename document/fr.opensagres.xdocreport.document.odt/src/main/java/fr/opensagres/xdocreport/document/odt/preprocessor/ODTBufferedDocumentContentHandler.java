@@ -24,6 +24,13 @@
  */
 package fr.opensagres.xdocreport.document.odt.preprocessor;
 
+import static fr.opensagres.xdocreport.document.odt.ODTConstants.DRAW_NAME_ATTR;
+import static fr.opensagres.xdocreport.document.odt.ODTConstants.DRAW_NS;
+import static fr.opensagres.xdocreport.document.odt.ODTConstants.HEIGHT_ATTR;
+import static fr.opensagres.xdocreport.document.odt.ODTConstants.HREF_ATTR;
+import static fr.opensagres.xdocreport.document.odt.ODTConstants.SVG_NS;
+import static fr.opensagres.xdocreport.document.odt.ODTConstants.WIDTH_ATTR;
+import static fr.opensagres.xdocreport.document.odt.ODTConstants.XLINK_NS;
 import static fr.opensagres.xdocreport.document.odt.ODTUtils.isDrawFrame;
 import static fr.opensagres.xdocreport.document.odt.ODTUtils.isDrawImage;
 import static fr.opensagres.xdocreport.document.odt.ODTUtils.isOfficeAutomaticStyles;
@@ -38,7 +45,6 @@ import org.xml.sax.helpers.AttributesImpl;
 
 import fr.opensagres.xdocreport.core.document.DocumentKind;
 import fr.opensagres.xdocreport.core.utils.StringUtils;
-import fr.opensagres.xdocreport.document.odt.ODTConstants;
 import fr.opensagres.xdocreport.document.preprocessor.sax.BufferedElement;
 import fr.opensagres.xdocreport.document.preprocessor.sax.IBufferedRegion;
 import fr.opensagres.xdocreport.document.preprocessor.sax.TransformedBufferedDocumentContentHandler;
@@ -52,8 +58,7 @@ import fr.opensagres.xdocreport.template.formatter.IDocumentFormatter;
  * the table row which contains a list fields.
  */
 public class ODTBufferedDocumentContentHandler extends
-		TransformedBufferedDocumentContentHandler<ODTBufferedDocument>
-		implements ODTConstants {
+		TransformedBufferedDocumentContentHandler<ODTBufferedDocument> {
 
 	public static final String BOLD_STYLE_NAME = "XDocReport_Bold";
 	public static final String ITALIC_STYLE_NAME = "XDocReport_Italic";
@@ -123,14 +128,14 @@ public class ODTBufferedDocumentContentHandler extends
 						String newWith = null;
 						String newHeight = null;
 						int widthIndex = attributes
-								.getIndex(SWG_NS, WIDTH_ATTR);
+								.getIndex(SVG_NS, WIDTH_ATTR);
 						if (widthIndex != -1) {
 							String defaultWidth = attributes
 									.getValue(widthIndex);
 							newWith = formatter.getImageWidthDirective(
 									dynamicImageName, defaultWidth);
 						}
-						int heightIndex = attributes.getIndex(SWG_NS,
+						int heightIndex = attributes.getIndex(SVG_NS,
 								HEIGHT_ATTR);
 						if (heightIndex != -1) {
 							String defaultHeight = attributes
@@ -264,7 +269,5 @@ public class ODTBufferedDocumentContentHandler extends
 		}
 		super.flushCharacters(characters);
 	}
-
-	
 
 }

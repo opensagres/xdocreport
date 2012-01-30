@@ -24,6 +24,10 @@
  */
 package fr.opensagres.xdocreport.document.odt;
 
+import static fr.opensagres.xdocreport.document.odt.ODTConstants.CONTENT_XML_ENTRY;
+import static fr.opensagres.xdocreport.document.odt.ODTConstants.METAINF_MANIFEST_XML_ENTRY;
+import static fr.opensagres.xdocreport.document.odt.ODTConstants.MIME_MAPPING;
+import static fr.opensagres.xdocreport.document.odt.ODTConstants.STYLES_XML_ENTRY;
 import fr.opensagres.xdocreport.converter.MimeMapping;
 import fr.opensagres.xdocreport.core.document.DocumentKind;
 import fr.opensagres.xdocreport.core.io.IEntryOutputStreamProvider;
@@ -40,7 +44,7 @@ import fr.opensagres.xdocreport.document.odt.preprocessor.ODTStylesPreprocessor;
  * Open Office ODT report. For mime mapping please see {@see
  * http://framework.openoffice.org/documentation/mimetypes/mimetypes.html}.
  */
-public class ODTReport extends AbstractXDocReport implements ODTConstants {
+public class ODTReport extends AbstractXDocReport {
 
 	private static final long serialVersionUID = 5974669564624835649L;
 

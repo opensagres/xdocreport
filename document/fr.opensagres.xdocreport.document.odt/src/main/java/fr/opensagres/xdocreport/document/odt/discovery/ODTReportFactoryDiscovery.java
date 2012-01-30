@@ -42,7 +42,7 @@ import fr.opensagres.xdocreport.document.registry.XDocReportRegistry;
  */
 public class ODTReportFactoryDiscovery extends
 		AbstractXDocReportFactoryDiscovery implements
-		IXDocReportFactoryDiscovery, ODTConstants {
+		IXDocReportFactoryDiscovery {
 
 	public boolean isAdaptFor(XDocArchive archive) {
 		return ODTUtils.isODT(archive);
@@ -53,15 +53,15 @@ public class ODTReportFactoryDiscovery extends
 	}
 
 	public MimeMapping getMimeMapping() {
-		return MIME_MAPPING;
+		return ODTConstants.MIME_MAPPING;
 	}
 
 	public String getDescription() {
-		return DESCRIPTION_DISCOVERY;
+		return ODTConstants.DESCRIPTION_DISCOVERY;
 	}
 
 	public String getId() {
-		return ID_DISCOVERY;
+		return ODTConstants.ID_DISCOVERY;
 	}
 
 	public Class<?> getReportClass() {

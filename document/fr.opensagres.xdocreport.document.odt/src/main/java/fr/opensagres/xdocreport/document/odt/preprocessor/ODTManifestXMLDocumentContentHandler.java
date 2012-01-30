@@ -24,16 +24,17 @@
  */
 package fr.opensagres.xdocreport.document.odt.preprocessor;
 
+import static fr.opensagres.xdocreport.document.odt.ODTConstants.MANIFEST_ELT;
+
 import org.xml.sax.SAXException;
 
-import fr.opensagres.xdocreport.document.odt.ODTConstants;
 import fr.opensagres.xdocreport.document.preprocessor.sax.BufferedDocument;
 import fr.opensagres.xdocreport.document.preprocessor.sax.BufferedDocumentContentHandler;
 import fr.opensagres.xdocreport.template.formatter.FieldsMetadata;
 import fr.opensagres.xdocreport.template.formatter.IDocumentFormatter;
 
 public class ODTManifestXMLDocumentContentHandler extends
-		BufferedDocumentContentHandler<BufferedDocument> implements ODTConstants {
+		BufferedDocumentContentHandler<BufferedDocument> {
 
 	private static final String ITEM_INFO = "___info";
 
@@ -49,18 +50,19 @@ public class ODTManifestXMLDocumentContentHandler extends
 			throws SAXException {
 		if (MANIFEST_ELT.equals(localName)) {
 			StringBuilder script = new StringBuilder();
-			
-			String startIf = formatter.getStartIfDirective(IDocumentFormatter.IMAGE_REGISTRY_KEY);
+
+			String startIf = formatter
+					.getStartIfDirective(IDocumentFormatter.IMAGE_REGISTRY_KEY);
 			script.append(startIf);
-			
+
 			// 1) Generate script for dynamic images
 			generateScriptsForDynamicImages(script);
-			
-			script.append(formatter.getEndIfDirective(IDocumentFormatter.IMAGE_REGISTRY_KEY));
-			
+
+			script.append(formatter
+					.getEndIfDirective(IDocumentFormatter.IMAGE_REGISTRY_KEY));
+
 			getCurrentElement().append(script.toString());
-			
-			
+
 		}
 		super.doEndElement(uri, localName, name);
 	}
@@ -70,7 +72,7 @@ public class ODTManifestXMLDocumentContentHandler extends
 		String listInfos = formatter.formatAsSimpleField(false,
 				IDocumentFormatter.IMAGE_REGISTRY_KEY, "ImageProviderInfos");
 		String itemListInfos = formatter.formatAsSimpleField(false, ITEM_INFO);
-		
+
 		String startLoop = formatter.getStartLoopDirective(itemListInfos,
 				listInfos);
 
@@ -81,16 +83,15 @@ public class ODTManifestXMLDocumentContentHandler extends
 		// Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/image"
 		// Target="media/image1.png"/>
 
-		String mediaType = "image/" + formatter.formatAsSimpleField(true, ITEM_INFO,
-				"ImageType");
-		String fullPath = 
-				 formatter
-						.formatAsSimpleField(true, ITEM_INFO, "ImageFullPath");
+		String mediaType = "image/"
+				+ formatter.formatAsSimpleField(true, ITEM_INFO, "ImageType");
+		String fullPath = formatter.formatAsSimpleField(true, ITEM_INFO,
+				"ImageFullPath");
 		generateManifestFileEntry(script, mediaType, fullPath);
 
 		// 3) end loop
 		script.append(formatter.getEndLoopDirective(itemListInfos));
-		
+
 	}
 
 	protected void generateManifestFileEntry(StringBuilder script,

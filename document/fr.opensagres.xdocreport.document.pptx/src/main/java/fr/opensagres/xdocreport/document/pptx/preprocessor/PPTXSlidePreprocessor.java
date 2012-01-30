@@ -37,8 +37,8 @@ public class PPTXSlidePreprocessor extends SAXXDocPreprocessor {
 
 	@Override
 	protected PPTXSlideContentHandler createBufferedDocumentContentHandler(
-			FieldsMetadata fieldsMetadata, IDocumentFormatter formater,
-			Map<String, Object> context) {
+			String entryName, FieldsMetadata fieldsMetadata,
+			IDocumentFormatter formater, Map<String, Object> context) {
 		return new PPTXSlideContentHandler(fieldsMetadata, formater, context);
 	}
 

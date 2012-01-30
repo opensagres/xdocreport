@@ -24,6 +24,12 @@
  */
 package fr.opensagres.xdocreport.document.docx.preprocessor;
 
+import static fr.opensagres.xdocreport.document.docx.DocXConstants.CX_ATTR;
+import static fr.opensagres.xdocreport.document.docx.DocXConstants.CY_ATTR;
+import static fr.opensagres.xdocreport.document.docx.DocXConstants.EMBED_ATTR;
+import static fr.opensagres.xdocreport.document.docx.DocXConstants.FLDCHARTYPE_ATTR;
+import static fr.opensagres.xdocreport.document.docx.DocXConstants.R_NS;
+import static fr.opensagres.xdocreport.document.docx.DocXConstants.W_NS;
 import static fr.opensagres.xdocreport.document.docx.DocxUtils.isBlip;
 import static fr.opensagres.xdocreport.document.docx.DocxUtils.isExt;
 import static fr.opensagres.xdocreport.document.docx.DocxUtils.isExtent;
@@ -39,7 +45,6 @@ import org.xml.sax.SAXException;
 import org.xml.sax.helpers.AttributesImpl;
 
 import fr.opensagres.xdocreport.core.utils.StringUtils;
-import fr.opensagres.xdocreport.document.docx.DocXConstants;
 import fr.opensagres.xdocreport.document.preprocessor.sax.TransformedBufferedDocumentContentHandler;
 import fr.opensagres.xdocreport.template.formatter.FieldMetadata;
 import fr.opensagres.xdocreport.template.formatter.FieldsMetadata;
@@ -50,15 +55,17 @@ import fr.opensagres.xdocreport.template.formatter.IDocumentFormatter;
  * the table row which contains a list fields.
  */
 public class DocXBufferedDocumentContentHandler extends
-		TransformedBufferedDocumentContentHandler<DocxBufferedDocument>
-		implements DocXConstants {
+		TransformedBufferedDocumentContentHandler<DocxBufferedDocument> {
 
+	private final String entryName;
 	private boolean instrTextParsing;
 	private boolean tParsing = false;
 
-	protected DocXBufferedDocumentContentHandler(FieldsMetadata fieldsMetadata,
-			IDocumentFormatter formater, Map<String, Object> context) {
+	protected DocXBufferedDocumentContentHandler(String entryName,
+			FieldsMetadata fieldsMetadata, IDocumentFormatter formater,
+			Map<String, Object> context) {
 		super(fieldsMetadata, formater, context);
+		this.entryName = entryName;
 	}
 
 	@Override
@@ -253,5 +260,9 @@ public class DocXBufferedDocumentContentHandler extends
 
 	private void extractListDirectiveInfo(MergefieldBufferedRegion mergefield) {
 		super.extractListDirectiveInfo(mergefield.getFieldName());
+	}
+
+	public String getEntryName() {
+		return entryName;
 	}
 }

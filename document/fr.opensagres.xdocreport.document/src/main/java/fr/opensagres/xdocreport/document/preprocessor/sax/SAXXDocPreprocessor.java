@@ -53,7 +53,7 @@ public abstract class SAXXDocPreprocessor extends AbstractXDocPreprocessor {
 		try {
 			XMLReader xmlReader = XMLReaderFactory.createXMLReader();
 			BufferedDocumentContentHandler<?> contentHandler = createBufferedDocumentContentHandler(
-					fieldsMetadata, formater, sharedContext);
+					entryName, fieldsMetadata, formater, sharedContext);
 			xmlReader.setContentHandler(contentHandler);
 			xmlReader.parse(new InputSource(reader));
 			BufferedDocument document = contentHandler.getBufferedDocument();
@@ -62,9 +62,9 @@ public abstract class SAXXDocPreprocessor extends AbstractXDocPreprocessor {
 				if (debugWriter != null) {
 					document.save(debugWriter);
 				}
-//				 StringWriter s=new StringWriter();
-//				 document.save(s);
-//				 System.err.println(s);
+//				StringWriter s = new StringWriter();
+//				document.save(s);
+//				System.err.println(s);
 				return true;
 			}
 
@@ -75,7 +75,7 @@ public abstract class SAXXDocPreprocessor extends AbstractXDocPreprocessor {
 	}
 
 	protected abstract BufferedDocumentContentHandler<?> createBufferedDocumentContentHandler(
-			FieldsMetadata fieldsMetadata, IDocumentFormatter formatter,
-			Map<String, Object> sharedContext);
+			String entryName, FieldsMetadata fieldsMetadata,
+			IDocumentFormatter formatter, Map<String, Object> sharedContext);
 
 }

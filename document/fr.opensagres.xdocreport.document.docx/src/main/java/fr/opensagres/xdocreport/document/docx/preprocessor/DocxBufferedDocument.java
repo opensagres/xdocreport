@@ -24,6 +24,12 @@
  */
 package fr.opensagres.xdocreport.document.docx.preprocessor;
 
+import static fr.opensagres.xdocreport.document.docx.DocXConstants.FLDCHARTYPE_ATTR;
+import static fr.opensagres.xdocreport.document.docx.DocXConstants.ID_ATTR;
+import static fr.opensagres.xdocreport.document.docx.DocXConstants.INSTR_ATTR;
+import static fr.opensagres.xdocreport.document.docx.DocXConstants.NAME_ATTR;
+import static fr.opensagres.xdocreport.document.docx.DocXConstants.R_NS;
+import static fr.opensagres.xdocreport.document.docx.DocXConstants.W_NS;
 import static fr.opensagres.xdocreport.document.docx.DocxUtils.isBookmarkEnd;
 import static fr.opensagres.xdocreport.document.docx.DocxUtils.isBookmarkStart;
 import static fr.opensagres.xdocreport.document.docx.DocxUtils.isFldChar;
@@ -37,15 +43,13 @@ import org.xml.sax.SAXException;
 import org.xml.sax.helpers.AttributesImpl;
 
 import fr.opensagres.xdocreport.core.utils.XMLUtils;
-import fr.opensagres.xdocreport.document.docx.DocXConstants;
 import fr.opensagres.xdocreport.document.docx.DocxUtils;
 import fr.opensagres.xdocreport.document.preprocessor.sax.BufferedElement;
 import fr.opensagres.xdocreport.document.preprocessor.sax.TransformedBufferedDocument;
 import fr.opensagres.xdocreport.template.formatter.FieldMetadata;
 import fr.opensagres.xdocreport.template.formatter.FieldsMetadata;
 
-public class DocxBufferedDocument extends TransformedBufferedDocument implements
-		DocXConstants {
+public class DocxBufferedDocument extends TransformedBufferedDocument {
 
 	private final DocXBufferedDocumentContentHandler handler;
 	private PBufferedRegion currentPRegion;

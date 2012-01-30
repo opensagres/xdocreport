@@ -24,13 +24,31 @@
  */
 package fr.opensagres.xdocreport.document.docx;
 
+import static fr.opensagres.xdocreport.document.docx.DocXConstants.A_NS;
+import static fr.opensagres.xdocreport.document.docx.DocXConstants.BLIP_ELT;
+import static fr.opensagres.xdocreport.document.docx.DocXConstants.BOOKMARK_END_ELT;
+import static fr.opensagres.xdocreport.document.docx.DocXConstants.BOOKMARK_START_ELT;
+import static fr.opensagres.xdocreport.document.docx.DocXConstants.CONTENT_TYPES_XML;
+import static fr.opensagres.xdocreport.document.docx.DocXConstants.EXTENT_ELT;
+import static fr.opensagres.xdocreport.document.docx.DocXConstants.EXT_ELT;
+import static fr.opensagres.xdocreport.document.docx.DocXConstants.FLDCHAR_ELT;
+import static fr.opensagres.xdocreport.document.docx.DocXConstants.FLDSIMPLE_ELT;
+import static fr.opensagres.xdocreport.document.docx.DocXConstants.HYPERLINK_ELT;
+import static fr.opensagres.xdocreport.document.docx.DocXConstants.INSTR_TEXT_ELT;
+import static fr.opensagres.xdocreport.document.docx.DocXConstants.P_ELT;
+import static fr.opensagres.xdocreport.document.docx.DocXConstants.R_ELT;
+import static fr.opensagres.xdocreport.document.docx.DocXConstants.TBL_ELT;
+import static fr.opensagres.xdocreport.document.docx.DocXConstants.TR_ELT;
+import static fr.opensagres.xdocreport.document.docx.DocXConstants.T_ELT;
+import static fr.opensagres.xdocreport.document.docx.DocXConstants.WP_NS;
+import static fr.opensagres.xdocreport.document.docx.DocXConstants.W_NS;
 import fr.opensagres.xdocreport.core.io.XDocArchive;
 
 /**
  * Utilities for docx.
  * 
  */
-public class DocxUtils implements DocXConstants {
+public class DocxUtils {
 
 	/**
 	 * Returns true if the given document archive is a docx and false otherwise.
@@ -47,7 +65,7 @@ public class DocxUtils implements DocXConstants {
 		// <Override PartName="/word/document.xml"
 		// ContentType="application/vnd.openxmlformats-officedocument.wordprocessingml.document.main+xml"
 		// />
-		return documentArchive.getEntryNames(DocXReport.WORD_REGEXP).size() > 0;
+		return documentArchive.getEntryNames(DocXConstants.WORD_REGEXP).size() > 0;
 	}
 
 	public static boolean isTable(String uri, String localName, String name) {
@@ -186,7 +204,7 @@ public class DocxUtils implements DocXConstants {
 	public static boolean isExt(String uri, String localName, String name) {
 		return (A_NS.equals(uri) && EXT_ELT.equals(localName));
 	}
-	
+
 	/**
 	 * Returns true if current element is w:hyperlink and false otherwise.
 	 * 

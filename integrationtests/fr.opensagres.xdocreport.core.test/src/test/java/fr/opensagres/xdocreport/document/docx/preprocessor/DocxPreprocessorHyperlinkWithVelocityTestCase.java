@@ -215,13 +215,14 @@ public class DocxPreprocessorHyperlinkWithVelocityTestCase extends TestCase {
 		metadata.addFieldAsList("developers.Mail");
 		IDocumentFormatter formatter = new VelocityDocumentFormatter();
 
+		String entryName = "word/document.xml";
 		Map<String, Object> sharedContext = new HashMap<String, Object>();
 		// Emulate document.rels.xml with hyperlink
 		InitialHyperlinkMap hyperlinkMap = new InitialHyperlinkMap();
 		hyperlinkMap.put("rId5", new HyperlinkInfo("rId5", "$x", "External"));
-		sharedContext.put(DocXConstants.HYPERLINKS_SHARED_CONTEXT, hyperlinkMap);
+		sharedContext.put(HyperlinkUtils.getHyperlinkRegistryKey(entryName), hyperlinkMap);
 		
-		preprocessor.preprocess("test", reader, writer, null, metadata,
+		preprocessor.preprocess(entryName, reader, writer, null, metadata,
 				formatter, sharedContext);
 
 	assertEquals(
@@ -283,7 +284,7 @@ public class DocxPreprocessorHyperlinkWithVelocityTestCase extends TestCase {
 								+ "</w:rPr>"
 							+ "</w:pPr>"
 							// + "<w:hyperlink w:history=\"1\ r:id=\"rId5\"">"" 
-							+ "<w:hyperlink w:history=\"1\" r:id=\"${" + HyperlinkRegistry.KEY + ".registerHyperlink(\"rId5\",\"$x\",\"External\")}\">"						
+							+ "<w:hyperlink w:history=\"1\" r:id=\"${___HyperlinkRegistryword_document_xml.registerHyperlink(\"rId5\",\"$x\",\"External\")}\">"						
 								+ "<w:r w:rsidRPr=\"000F2653\">"
 									+ "<w:rPr>"
 										+ "<w:rStyle w:val=\"Lienhypertexte\"/>"

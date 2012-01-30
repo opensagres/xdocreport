@@ -33,8 +33,8 @@ public class MockSAXXDocPreprocessor extends SAXXDocPreprocessor {
 
 	@Override
 	protected BufferedDocumentContentHandler createBufferedDocumentContentHandler(
-			FieldsMetadata fieldsMetadata, IDocumentFormatter formater,
-			Map<String, Object> context) {
+			String entryName, FieldsMetadata fieldsMetadata,
+			IDocumentFormatter formater, Map<String, Object> context) {
 		return new MockBufferedDocumentContentHandler();
 	}
 

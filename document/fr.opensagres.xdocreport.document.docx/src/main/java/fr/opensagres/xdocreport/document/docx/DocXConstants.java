@@ -30,83 +30,84 @@ import fr.opensagres.xdocreport.converter.MimeMapping;
  * MS Word DOCX constants.
  * 
  */
-public interface DocXConstants {
+public class DocXConstants {
 
-	String WORD_DOCUMENT_XML_ENTRY = "word/document.xml";
-	String WORD_STYLES_XML_ENTRY = "word/styles.xml";
-	String WORD_HEADER_XML_ENTRY = "word/header*.xml";
-	String WORD_FOOTER_XML_ENTRY = "word/footer*.xml";
-	String CONTENT_TYPES_XML_ENTRY = "[Content_Types].xml";
-	String WORD_RELS_DOCUMENTXMLRELS_XML_ENTRY = "word/_rels/document.xml.rels";
 
-	String W_NS = "http://schemas.openxmlformats.org/wordprocessingml/2006/main";
-	String WP_NS = "http://schemas.openxmlformats.org/drawingml/2006/wordprocessingDrawing";
-	String A_NS = "http://schemas.openxmlformats.org/drawingml/2006/main";
-	String R_NS = "http://schemas.openxmlformats.org/officeDocument/2006/relationships";
-	String RELATIONSHIPS_IMAGE_NS = "http://schemas.openxmlformats.org/officeDocument/2006/relationships/image";
-	String RELATIONSHIPS_HYPERLINK_NS = "http://schemas.openxmlformats.org/officeDocument/2006/relationships/hyperlink";
+	public static final String WORD_REGEXP = "word*";
+
+	public static final String WORD_DOCUMENT_XML_ENTRY = "word/document.xml";
+	public static final String WORD_STYLES_XML_ENTRY = "word/styles.xml";
+	public static final String WORD_HEADER_XML_ENTRY = "word/header*.xml";
+	public static final String WORD_FOOTER_XML_ENTRY = "word/footer*.xml";
+	public static final String CONTENT_TYPES_XML_ENTRY = "[Content_Types].xml";
+	public static final String WORD_RELS_XMLRELS_XML_ENTRY = "word/_rels/*.xml.rels";
+
+	public static final String W_NS = "http://schemas.openxmlformats.org/wordprocessingml/2006/main";
+	public static final String WP_NS = "http://schemas.openxmlformats.org/drawingml/2006/wordprocessingDrawing";
+	public static final String A_NS = "http://schemas.openxmlformats.org/drawingml/2006/main";
+	public static final String R_NS = "http://schemas.openxmlformats.org/officeDocument/2006/relationships";
+	public static final String RELATIONSHIPS_IMAGE_NS = "http://schemas.openxmlformats.org/officeDocument/2006/relationships/image";
+	public static final String RELATIONSHIPS_HYPERLINK_NS = "http://schemas.openxmlformats.org/officeDocument/2006/relationships/hyperlink";
 
 	// Table element
-	String TBL_ELT = "tbl";
+	public static final String TBL_ELT = "tbl";
 	// Row element
-	String TR_ELT = "tr";
-	String T_ELT = "t";
+	public static final String TR_ELT = "tr";
+	public static final String T_ELT = "t";
 
 	// w:r element
-	String R_ELT = "r";
+	public static final String R_ELT = "r";
 	// w:p element
-	String P_ELT = "p";
+	public static final String P_ELT = "p";
 
 	// Merge field fldSimple
-	String FLDSIMPLE_ELT = "fldSimple";
-	String INSTR_ATTR = "instr";
+	public static final String FLDSIMPLE_ELT = "fldSimple";
+	public static final String INSTR_ATTR = "instr";
 
 	// Merge field instrText
-	String INSTR_TEXT_ELT = "instrText";
+	public static final String INSTR_TEXT_ELT = "instrText";
 	// w:fldChar
-	String FLDCHAR_ELT = "fldChar";
-	String FLDCHARTYPE_ATTR = "fldCharType";
+	public static final String FLDCHAR_ELT = "fldChar";
+	public static final String FLDCHARTYPE_ATTR = "fldCharType";
 
 	// Bookmark
-	String BOOKMARK_START_ELT = "bookmarkStart";
-	String BOOKMARK_END_ELT = "bookmarkEnd";
+	public static final String BOOKMARK_START_ELT = "bookmarkStart";
+	public static final String BOOKMARK_END_ELT = "bookmarkEnd";
 
 	// blip
-	String BLIP_ELT = "blip";
-	String EMBED_ATTR = "embed";
-	String EXTENT_ELT = "extent";
-	String EXT_ELT = "ext";
-	String CX_ATTR = "cx";
-	String CY_ATTR = "cy";
-	
+	public static final String BLIP_ELT = "blip";
+	public static final String EMBED_ATTR = "embed";
+	public static final String EXTENT_ELT = "extent";
+	public static final String EXT_ELT = "ext";
+	public static final String CX_ATTR = "cx";
+	public static final String CY_ATTR = "cy";
+
 	// hyperlink
-	String HYPERLINK_ELT = "hyperlink";
-	String ID_ATTR = "id";
+	public static final String HYPERLINK_ELT = "hyperlink";
+	public static final String ID_ATTR = "id";
 
 	// [Content_Types].xml
-	String CONTENT_TYPES_XML = "[Content_Types].xml";
-	String WORDPROCESSINGML_DOCUMENT = "application/vnd.openxmlformats-officedocument.wordprocessingml.document.main+xml";
-	String DOCX_EXTENSION = "docx";
+	public static final String CONTENT_TYPES_XML = "[Content_Types].xml";
+	public static final String WORDPROCESSINGML_DOCUMENT = "application/vnd.openxmlformats-officedocument.wordprocessingml.document.main+xml";
+	public static final String DOCX_EXTENSION = "docx";
 
-	String NAME_ATTR = "name";
+	public static final String NAME_ATTR = "name";
 
 	// word/_rels/document.xml.rels
-	String RELATIONSHIPS_ELT = "Relationships";
-	String RELATIONSHIP_ELT = "Relationship";
-	String RELATIONSHIP_ID_ATTR = "Id";
-	String RELATIONSHIP_TYPE_ATTR = "Type";
-	String RELATIONSHIP_TARGET_ATTR = "Target";
-	String RELATIONSHIP_TARGET_MODE_ATTR = "TargetMode";
-	String TARGET_MODE_EXTERNAL = "External";
+	public static final String RELATIONSHIPS_ELT = "Relationships";
+	public static final String RELATIONSHIP_ELT = "Relationship";
+	public static final String RELATIONSHIP_ID_ATTR = "Id";
+	public static final String RELATIONSHIP_TYPE_ATTR = "Type";
+	public static final String RELATIONSHIP_TARGET_ATTR = "Target";
+	public static final String RELATIONSHIP_TARGET_MODE_ATTR = "TargetMode";
+	public static final String TARGET_MODE_EXTERNAL = "External";
 
 	// Mime mapping
-	MimeMapping MIME_MAPPING = new MimeMapping(DOCX_EXTENSION,
+	public static final MimeMapping MIME_MAPPING = new MimeMapping(DOCX_EXTENSION,
 			WORDPROCESSINGML_DOCUMENT);
 
 	// Meta data for discovery
-	String ID_DISCOVERY = "docx";
-	String DESCRIPTION_DISCOVERY = "Manage Microsoft Office docx document.";
-
-	String HYPERLINKS_SHARED_CONTEXT = "___Hyperlinks";
+	public static final String ID_DISCOVERY = "docx";
+	public static final String DESCRIPTION_DISCOVERY = "Manage Microsoft Office docx document.";
 
 }

@@ -43,9 +43,10 @@ public class DocXPreprocessor extends SAXXDocPreprocessor {
 
 	@Override
 	protected BufferedDocumentContentHandler createBufferedDocumentContentHandler(
-			FieldsMetadata fieldsMetadata, IDocumentFormatter formater,
-			Map<String, Object> context) {
-		return new DocXBufferedDocumentContentHandler(fieldsMetadata, formater, context);
+			String entryName, FieldsMetadata fieldsMetadata,
+			IDocumentFormatter formater, Map<String, Object> context) {
+		return new DocXBufferedDocumentContentHandler(entryName,
+				fieldsMetadata, formater, context);
 	}
 
 }

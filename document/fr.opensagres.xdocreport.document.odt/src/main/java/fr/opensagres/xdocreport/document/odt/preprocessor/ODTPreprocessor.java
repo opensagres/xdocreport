@@ -43,8 +43,8 @@ public class ODTPreprocessor extends SAXXDocPreprocessor {
 
 	@Override
 	protected BufferedDocumentContentHandler createBufferedDocumentContentHandler(
-			FieldsMetadata fieldsMetadata, IDocumentFormatter formatter,
-			Map<String, Object> sharedContext) {
+			String entryName, FieldsMetadata fieldsMetadata,
+			IDocumentFormatter formatter, Map<String, Object> sharedContext) {
 		return new ODTBufferedDocumentContentHandler(fieldsMetadata, formatter,
 				sharedContext);
 	}

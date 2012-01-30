@@ -24,13 +24,21 @@
  */
 package fr.opensagres.xdocreport.document.docx.preprocessor;
 
+import static fr.opensagres.xdocreport.document.docx.DocXConstants.RELATIONSHIPS_ELT;
+import static fr.opensagres.xdocreport.document.docx.DocXConstants.RELATIONSHIPS_HYPERLINK_NS;
+import static fr.opensagres.xdocreport.document.docx.DocXConstants.RELATIONSHIPS_IMAGE_NS;
+import static fr.opensagres.xdocreport.document.docx.DocXConstants.RELATIONSHIP_ELT;
+import static fr.opensagres.xdocreport.document.docx.DocXConstants.RELATIONSHIP_ID_ATTR;
+import static fr.opensagres.xdocreport.document.docx.DocXConstants.RELATIONSHIP_TARGET_ATTR;
+import static fr.opensagres.xdocreport.document.docx.DocXConstants.RELATIONSHIP_TARGET_MODE_ATTR;
+import static fr.opensagres.xdocreport.document.docx.DocXConstants.RELATIONSHIP_TYPE_ATTR;
+
 import java.util.Collection;
 import java.util.Map;
 
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
 
-import fr.opensagres.xdocreport.document.docx.DocXConstants;
 import fr.opensagres.xdocreport.document.docx.images.DocxImageRegistry;
 import fr.opensagres.xdocreport.document.preprocessor.sax.BufferedDocumentContentHandler;
 import fr.opensagres.xdocreport.document.preprocessor.sax.IBufferedRegion;
@@ -92,24 +100,25 @@ import fr.opensagres.xdocreport.template.formatter.IDocumentFormatter;
  * </pre>
  */
 public class DocxDocumentXMLRelsDocumentContentHandler extends
-		BufferedDocumentContentHandler implements DocXConstants {
+		BufferedDocumentContentHandler {
 
 	private static final String ITEM_INFO = "___info";
 
+	protected final String entryName;
 	protected final IDocumentFormatter formatter;
 	protected final FieldsMetadata fieldsMetadata;
 	private final Map<String, HyperlinkInfo> hyperlinksMap;
 
 	private boolean hyperlinkParsing = false;
 
-	public DocxDocumentXMLRelsDocumentContentHandler(
+	public DocxDocumentXMLRelsDocumentContentHandler(String entryName,
 			FieldsMetadata fieldsMetadata, IDocumentFormatter formatter,
 			Map<String, Object> sharedContext) {
+		this.entryName = entryName;
 		this.formatter = formatter;
 		this.fieldsMetadata = fieldsMetadata;
-		this.hyperlinksMap = (sharedContext == null ? null
-				: (InitialHyperlinkMap) sharedContext
-						.get(HYPERLINKS_SHARED_CONTEXT));
+		this.hyperlinksMap = HyperlinkUtils.getInitialHyperlinkMap(entryName,
+				sharedContext);
 	}
 
 	@Override
@@ -214,11 +223,14 @@ public class DocxDocumentXMLRelsDocumentContentHandler extends
 	private void generateScriptsForDynamicHyperlinks(StringBuilder script) {
 
 		// Start if
-		String startIf = formatter.getStartIfDirective(HyperlinkRegistry.KEY);
+		String registryKey = HyperlinkUtils
+				.getHyperlinkRegistryKey(HyperlinkUtils
+						.getEntryNameWithoutRels(entryName));
+		String startIf = formatter.getStartIfDirective(registryKey);
 		script.append(startIf);
 
-		String listInfos = formatter.formatAsSimpleField(false,
-				HyperlinkRegistry.KEY, "Hyperlinks");
+		String listInfos = formatter.formatAsSimpleField(false, registryKey,
+				"Hyperlinks");
 		String itemListInfos = formatter.formatAsSimpleField(false, ITEM_INFO);
 
 		// 1) Start loop

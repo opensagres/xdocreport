@@ -92,9 +92,9 @@ public class DocxDocumentXMLRelsPreprocessor extends SAXXDocPreprocessor {
 
 	@Override
 	protected BufferedDocumentContentHandler createBufferedDocumentContentHandler(
-			FieldsMetadata fieldsMetadata, IDocumentFormatter formater,
+			String entryName, FieldsMetadata fieldsMetadata, IDocumentFormatter formater,
 			Map<String, Object> context) {
-		return new DocxDocumentXMLRelsDocumentContentHandler(fieldsMetadata,
+		return new DocxDocumentXMLRelsDocumentContentHandler(entryName, fieldsMetadata,
 				formater, context);
 	}
 

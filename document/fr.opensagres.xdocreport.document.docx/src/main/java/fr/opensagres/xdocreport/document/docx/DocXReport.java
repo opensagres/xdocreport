@@ -24,9 +24,19 @@
  */
 package fr.opensagres.xdocreport.document.docx;
 
+import static fr.opensagres.xdocreport.document.docx.DocXConstants.WORD_DOCUMENT_XML_ENTRY;
+import static fr.opensagres.xdocreport.document.docx.DocXConstants.WORD_FOOTER_XML_ENTRY;
+import static fr.opensagres.xdocreport.document.docx.DocXConstants.WORD_HEADER_XML_ENTRY;
+import static fr.opensagres.xdocreport.document.docx.DocXConstants.WORD_RELS_XMLRELS_XML_ENTRY;
+import static fr.opensagres.xdocreport.document.docx.DocXConstants.WORD_STYLES_XML_ENTRY;
+import static fr.opensagres.xdocreport.document.docx.DocXConstants.CONTENT_TYPES_XML_ENTRY;
+import static fr.opensagres.xdocreport.document.docx.DocXConstants.MIME_MAPPING;
+
 import java.io.IOException;
 import java.io.Reader;
+import java.util.HashSet;
 import java.util.Map;
+import java.util.Set;
 
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
@@ -47,6 +57,7 @@ import fr.opensagres.xdocreport.document.docx.preprocessor.DocxContentTypesPrepr
 import fr.opensagres.xdocreport.document.docx.preprocessor.DocxDocumentXMLRelsPreprocessor;
 import fr.opensagres.xdocreport.document.docx.preprocessor.HyperlinkContentHandler;
 import fr.opensagres.xdocreport.document.docx.preprocessor.HyperlinkRegistry;
+import fr.opensagres.xdocreport.document.docx.preprocessor.HyperlinkUtils;
 import fr.opensagres.xdocreport.document.docx.preprocessor.InitialHyperlinkMap;
 import fr.opensagres.xdocreport.document.images.IImageRegistry;
 import fr.opensagres.xdocreport.template.IContext;
@@ -55,18 +66,17 @@ import fr.opensagres.xdocreport.template.IContext;
  * MS Word DOCX report.
  * 
  */
-public class DocXReport extends AbstractXDocReport implements DocXConstants {
+public class DocXReport extends AbstractXDocReport {
 
 	private static final long serialVersionUID = -2323716817951928168L;
 
 	private static final String[] DEFAULT_XML_ENTRIES = {
 			WORD_DOCUMENT_XML_ENTRY, WORD_STYLES_XML_ENTRY,
 			WORD_HEADER_XML_ENTRY, WORD_FOOTER_XML_ENTRY,
-			WORD_RELS_DOCUMENTXMLRELS_XML_ENTRY };
+			WORD_RELS_XMLRELS_XML_ENTRY };
 
-	static final String WORD_REGEXP = "word*";
-
-	private boolean hasDynamicHyperlinks = false;
+	private Set<String> allEntryNamesHyperlinks;
+	private Set<String> modifiedEntryNamesHyperlinks;
 
 	public String getKind() {
 		return DocumentKind.DOCX.name();
@@ -80,7 +90,7 @@ public class DocXReport extends AbstractXDocReport implements DocXConstants {
 		super.addPreprocessor(WORD_FOOTER_XML_ENTRY, DocXPreprocessor.INSTANCE);
 		super.addPreprocessor(CONTENT_TYPES_XML_ENTRY,
 				DocxContentTypesPreprocessor.INSTANCE);
-		super.addPreprocessor(WORD_RELS_DOCUMENTXMLRELS_XML_ENTRY,
+		super.addPreprocessor(WORD_RELS_XMLRELS_XML_ENTRY,
 				DocxDocumentXMLRelsPreprocessor.INSTANCE);
 	}
 
@@ -109,21 +119,29 @@ public class DocXReport extends AbstractXDocReport implements DocXConstants {
 		// Before starting preprocessing, Hyperlink must be getted from
 		// "word/_rels/document.xml.rels" in the shared
 		// context.
-		HyperlinkContentHandler contentHandler = new HyperlinkContentHandler();
-		Reader reader = preprocessedArchive
-				.getEntryReader(WORD_RELS_DOCUMENTXMLRELS_XML_ENTRY);
-		try {
-			XMLReader xmlReader = XMLReaderFactory.createXMLReader();
-			xmlReader.setContentHandler(contentHandler);
-			xmlReader.parse(new InputSource(reader));
-			if (contentHandler.getHyperlinks() != null) {
-				sharedContext.put(HYPERLINKS_SHARED_CONTEXT,
-						contentHandler.getHyperlinks());
+		Set<String> xmlRelsEntryNames = preprocessedArchive
+				.getEntryNames(WORD_RELS_XMLRELS_XML_ENTRY);
+		this.allEntryNamesHyperlinks = new HashSet<String>();
+		String entryName = null;
+		for (String relsEntryName : xmlRelsEntryNames) {
+			HyperlinkContentHandler contentHandler = new HyperlinkContentHandler();
+			Reader reader = preprocessedArchive.getEntryReader(relsEntryName);
+			try {
+				XMLReader xmlReader = XMLReaderFactory.createXMLReader();
+				xmlReader.setContentHandler(contentHandler);
+				xmlReader.parse(new InputSource(reader));
+				if (contentHandler.getHyperlinks() != null) {
+					entryName = HyperlinkUtils
+							.getEntryNameWithoutRels(relsEntryName);
+					HyperlinkUtils.putInitialHyperlinkMap(entryName,
+							sharedContext, contentHandler.getHyperlinks());
+					allEntryNamesHyperlinks.add(entryName);
+				}
+			} catch (SAXException e) {
+				throw new XDocReportException(e);
+			} catch (IOException e) {
+				throw new XDocReportException(e);
 			}
-		} catch (SAXException e) {
-			throw new XDocReportException(e);
-		} catch (IOException e) {
-			throw new XDocReportException(e);
 		}
 	}
 
@@ -133,10 +151,15 @@ public class DocXReport extends AbstractXDocReport implements DocXConstants {
 		super.onAfterPreprocessing(sharedContext, preprocessedArchive);
 		// Compute if the docx has dynamic hyperlink
 		if (sharedContext != null) {
-			InitialHyperlinkMap hyperlinkMap = (InitialHyperlinkMap) sharedContext
-					.get(HYPERLINKS_SHARED_CONTEXT);
-			hasDynamicHyperlinks = hyperlinkMap == null ? false : hyperlinkMap
-					.isModified();
+			InitialHyperlinkMap hyperlinkMap = null;
+			modifiedEntryNamesHyperlinks = new HashSet<String>();
+			for (String entryName : allEntryNamesHyperlinks) {
+				hyperlinkMap = HyperlinkUtils.getInitialHyperlinkMap(entryName,
+						sharedContext);
+				if (hyperlinkMap != null && hyperlinkMap.isModified()) {
+					modifiedEntryNamesHyperlinks.add(entryName);
+				}
+			}
 		}
 	}
 
@@ -144,10 +167,11 @@ public class DocXReport extends AbstractXDocReport implements DocXConstants {
 	protected void onBeforeProcessTemplateEngine(IContext context,
 			XDocArchive outputArchive) throws XDocReportException {
 		super.onBeforeProcessTemplateEngine(context, outputArchive);
-		if (hasDynamicHyperlinks) {
+		for (String entryName : modifiedEntryNamesHyperlinks) {
 			// docx has dynamic hyperlink, put an instance of HyperlinkRegistry
 			// in the context.
-			context.put(HyperlinkRegistry.KEY, new HyperlinkRegistry());
+			context.put(HyperlinkUtils.getHyperlinkRegistryKey(entryName),
+					new HyperlinkRegistry());
 		}
 	}
 

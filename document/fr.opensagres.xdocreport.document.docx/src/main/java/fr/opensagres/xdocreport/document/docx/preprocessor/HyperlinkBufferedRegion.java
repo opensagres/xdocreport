@@ -30,12 +30,10 @@ import java.util.List;
 import org.xml.sax.Attributes;
 
 import fr.opensagres.xdocreport.core.utils.StringUtils;
-import fr.opensagres.xdocreport.document.docx.DocXConstants;
 import fr.opensagres.xdocreport.document.preprocessor.sax.BufferedAttribute;
 import fr.opensagres.xdocreport.document.preprocessor.sax.BufferedElement;
 import fr.opensagres.xdocreport.document.preprocessor.sax.ISavable;
 import fr.opensagres.xdocreport.document.preprocessor.sax.ProcessRowResult;
-import fr.opensagres.xdocreport.document.preprocessor.sax.TransformedBufferedDocumentContentHandler;
 import fr.opensagres.xdocreport.template.formatter.IDocumentFormatter;
 
 /**
@@ -62,12 +60,11 @@ import fr.opensagres.xdocreport.template.formatter.IDocumentFormatter;
  */
 public class HyperlinkBufferedRegion extends BufferedElement {
 
-	private final TransformedBufferedDocumentContentHandler handler;
+	private final DocXBufferedDocumentContentHandler handler;
 	private List<RBufferedRegion> rBufferedRegions = new ArrayList<RBufferedRegion>();
 	private BufferedAttribute idAttribute;
 
-	public HyperlinkBufferedRegion(
-			TransformedBufferedDocumentContentHandler handler,
+	public HyperlinkBufferedRegion(DocXBufferedDocumentContentHandler handler,
 			BufferedElement parent, String uri, String localName, String name,
 			Attributes attributes) {
 		super(parent, uri, localName, name, attributes);
@@ -112,9 +109,9 @@ public class HyperlinkBufferedRegion extends BufferedElement {
 			if (handler.hasSharedContext()) {
 				// There is shared context, search if it exists Map with initial
 				// Hyperlink.
-				InitialHyperlinkMap hyperlinksMap = (InitialHyperlinkMap) handler
-						.getSharedContext().get(
-								DocXConstants.HYPERLINKS_SHARED_CONTEXT);
+				InitialHyperlinkMap hyperlinksMap = (InitialHyperlinkMap) HyperlinkUtils
+						.getInitialHyperlinkMap(handler.getEntryName(),
+								handler.getSharedContext());
 				if (hyperlinksMap != null) {
 					// Map with Initial Hyperlink exists.
 					String relationId = idAttribute.getValue();
@@ -145,9 +142,12 @@ public class HyperlinkBufferedRegion extends BufferedElement {
 							// <w:hyperlink w:history="1"
 							// r:id="${___HyperlinkRegistry.registerHyperlink("rId5","mailto:${d.mail}","External")}">
 							String id = formatter.getFunctionDirective(
-									HyperlinkRegistry.KEY, "registerHyperlink",
-									"\"" + relationId + "\"", "\"" + target
-											+ "\"", "\"" + targetMode + "\"");
+									HyperlinkUtils
+											.getHyperlinkRegistryKey(handler
+													.getEntryName()),
+									"registerHyperlink", "\"" + relationId
+											+ "\"", "\"" + target + "\"", "\""
+											+ targetMode + "\"");
 							idAttribute.setValue(id);
 							hyperlinksMap.remove(hyperlink.getId());
 						}

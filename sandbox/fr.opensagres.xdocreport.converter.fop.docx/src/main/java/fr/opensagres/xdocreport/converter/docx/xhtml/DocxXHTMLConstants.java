@@ -15,12 +15,14 @@
  */
 package fr.opensagres.xdocreport.converter.docx.xhtml;
 
-public interface DocxXHTMLConstants {
+public interface DocxXHTMLConstants
+{
 
-	String XSL_XHTML_TEMPLATE_URI = "docx2xhtml.xsl";
+    String XSL_XHTML_TEMPLATE_URI = "docx2xhtml.xsl";
 
-	String WORD_DOCUMENT_XML_ENTRY = "word/document.xml";
-	String WORD_STYLES_XML_ENTRY = "word/styles.xml";
+    String WORD_DOCUMENT_XML_ENTRY = "word/document.xml";
 
-	String[] XML_ENTRIES = { WORD_DOCUMENT_XML_ENTRY, WORD_STYLES_XML_ENTRY };
+    String WORD_STYLES_XML_ENTRY = "word/styles.xml";
+
+    String[] XML_ENTRIES = { WORD_DOCUMENT_XML_ENTRY, WORD_STYLES_XML_ENTRY };
 }

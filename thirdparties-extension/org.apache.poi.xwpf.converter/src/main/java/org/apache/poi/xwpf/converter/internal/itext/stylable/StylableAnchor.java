@@ -24,7 +24,6 @@
  */
 package org.apache.poi.xwpf.converter.internal.itext.stylable;
 
-
 import org.apache.poi.xwpf.converter.internal.itext.styles.Style;
 import org.apache.poi.xwpf.converter.internal.itext.styles.StyleTextProperties;
 
@@ -34,56 +33,68 @@ import com.lowagie.text.Font;
 
 import fr.opensagres.xdocreport.itext.extension.IITextContainer;
 
+public class StylableAnchor
+    extends Anchor
+    implements IStylableContainer
+{
 
-public class StylableAnchor extends Anchor implements IStylableContainer {
+    private final IStylableFactory ownerDocument;
 
-	private final IStylableFactory ownerDocument;
-	private final IStylableContainer parent;
-	private Style lastStyleApplied = null;
+    private final IStylableContainer parent;
 
-	public StylableAnchor(IStylableFactory ownerDocument,
-			IStylableContainer parent) {
-		this.ownerDocument = ownerDocument;
-		this.parent = parent;
-	}
+    private Style lastStyleApplied = null;
 
-	public void addElement(Element element) {
-		super.add(element);
-	}
+    public StylableAnchor( IStylableFactory ownerDocument, IStylableContainer parent )
+    {
+        this.ownerDocument = ownerDocument;
+        this.parent = parent;
+    }
 
-	public void applyStyles(Object ele,Style style) {
-		this.lastStyleApplied = style;
+    public void addElement( Element element )
+    {
+        super.add( element );
+    }
 
-		StyleTextProperties textProperties = style.getTextProperties();
-		if (textProperties != null) {
-			// Font
-			Font font = textProperties.getFont();
-			if (font != null) {
-				super.setFont(font);
-			}
+    public void applyStyles( Object ele, Style style )
+    {
+        this.lastStyleApplied = style;
 
-		}
-	}
+        StyleTextProperties textProperties = style.getTextProperties();
+        if ( textProperties != null )
+        {
+            // Font
+            Font font = textProperties.getFont();
+            if ( font != null )
+            {
+                super.setFont( font );
+            }
 
-	public Style getLastStyleApplied() {
-		return lastStyleApplied;
-	}
+        }
+    }
 
-	public IStylableContainer getParent() {
-		return parent;
-	}
-	
-	public Element getElement() {
-		return this;
-	}
+    public Style getLastStyleApplied()
+    {
+        return lastStyleApplied;
+    }
 
-	public IITextContainer getITextContainer() {
-		return parent;
-	}
+    public IStylableContainer getParent()
+    {
+        return parent;
+    }
 
-	public void setITextContainer(IITextContainer container) {
-		
-	}
+    public Element getElement()
+    {
+        return this;
+    }
+
+    public IITextContainer getITextContainer()
+    {
+        return parent;
+    }
+
+    public void setITextContainer( IITextContainer container )
+    {
+
+    }
 
 }
-

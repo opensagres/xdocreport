@@ -30,12 +30,13 @@ import java.io.Writer;
 
 import org.odftoolkit.odfdom.doc.OdfDocument;
 
-public interface IODFConverter<T extends Options> {
+public interface IODFConverter<T extends Options>
+{
 
-	void convert(OdfDocument document, OutputStream out, T options)
-			throws ODFConverterException, IOException;
+    void convert( OdfDocument document, OutputStream out, T options )
+        throws ODFConverterException, IOException;
 
-	void convert(OdfDocument document, Writer writer, T options)
-			throws ODFConverterException, IOException;
+    void convert( OdfDocument document, Writer writer, T options )
+        throws ODFConverterException, IOException;
 
 }

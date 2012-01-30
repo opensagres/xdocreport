@@ -27,51 +27,62 @@ package fr.opensagres.xdocreport.template.velocity;
 import junit.framework.TestCase;
 
 public class VelocityTemplateEngineDocumentFormatterExtractModelTokenPrefixTestCase
-		extends TestCase {
+    extends TestCase
+{
 
-	public void test1() throws Exception {
-		VelocityDocumentFormatter formatter = new VelocityDocumentFormatter();
-		String fieldName = "$developers.Name";
+    public void test1()
+        throws Exception
+    {
+        VelocityDocumentFormatter formatter = new VelocityDocumentFormatter();
+        String fieldName = "$developers.Name";
 
-		String token = formatter.extractModelTokenPrefix(fieldName);
+        String token = formatter.extractModelTokenPrefix( fieldName );
 
-		assertEquals("developers", token);
-	}
+        assertEquals( "developers", token );
+    }
 
-	public void test2() throws Exception {
-		VelocityDocumentFormatter formatter = new VelocityDocumentFormatter();
-		String fieldName = "developers.Name";
+    public void test2()
+        throws Exception
+    {
+        VelocityDocumentFormatter formatter = new VelocityDocumentFormatter();
+        String fieldName = "developers.Name";
 
-		String token = formatter.extractModelTokenPrefix(fieldName);
+        String token = formatter.extractModelTokenPrefix( fieldName );
 
-		assertEquals(null, token);
-	}
-	
-	public void test3() throws Exception {
-		VelocityDocumentFormatter formatter = new VelocityDocumentFormatter();
-		String fieldName = "$name";
+        assertEquals( null, token );
+    }
 
-		String token = formatter.extractModelTokenPrefix(fieldName);
+    public void test3()
+        throws Exception
+    {
+        VelocityDocumentFormatter formatter = new VelocityDocumentFormatter();
+        String fieldName = "$name";
 
-		assertEquals("name", token);
-	}
+        String token = formatter.extractModelTokenPrefix( fieldName );
 
-	public void test4() throws Exception {
-		VelocityDocumentFormatter formatter = new VelocityDocumentFormatter();
-		String fieldName = "$developers.Roles.Name";
+        assertEquals( "name", token );
+    }
 
-		String token = formatter.extractModelTokenPrefix(fieldName);
+    public void test4()
+        throws Exception
+    {
+        VelocityDocumentFormatter formatter = new VelocityDocumentFormatter();
+        String fieldName = "$developers.Roles.Name";
 
-		assertEquals("developers.Roles", token);
-	}
-	
-	public void test5() throws Exception {
-		VelocityDocumentFormatter formatter = new VelocityDocumentFormatter();
-		String fieldName = "$developers.Roles.Name ";
+        String token = formatter.extractModelTokenPrefix( fieldName );
 
-		String token = formatter.extractModelTokenPrefix(fieldName);
+        assertEquals( "developers.Roles", token );
+    }
 
-		assertEquals("developers.Roles", token);
-	}
+    public void test5()
+        throws Exception
+    {
+        VelocityDocumentFormatter formatter = new VelocityDocumentFormatter();
+        String fieldName = "$developers.Roles.Name ";
+
+        String token = formatter.extractModelTokenPrefix( fieldName );
+
+        assertEquals( "developers.Roles", token );
+    }
 
 }

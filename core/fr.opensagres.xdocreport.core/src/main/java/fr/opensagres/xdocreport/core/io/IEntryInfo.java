@@ -27,13 +27,14 @@ package fr.opensagres.xdocreport.core.io;
 import java.io.InputStream;
 import java.io.Reader;
 
-public interface IEntryInfo {
+public interface IEntryInfo
+{
 
-	String getName();
-	
-	long getLastModified();
+    String getName();
 
-	Reader getReader();
+    long getLastModified();
 
-	InputStream getInputStream();
+    Reader getReader();
+
+    InputStream getInputStream();
 }

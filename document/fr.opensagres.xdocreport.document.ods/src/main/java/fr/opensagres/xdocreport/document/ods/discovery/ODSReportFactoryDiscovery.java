@@ -34,37 +34,42 @@ import fr.opensagres.xdocreport.document.ods.ODSReport;
 import fr.opensagres.xdocreport.document.registry.XDocReportRegistry;
 
 /**
- * Open Office ODS discovery used by the
- * {@link XDocReportRegistry#loadReport(java.io.InputStream)} to create an
+ * Open Office ODS discovery used by the {@link XDocReportRegistry#loadReport(java.io.InputStream)} to create an
  * instance of {@link ODSReport} if input stream to load is an ODS.
- * 
  */
-public class ODSReportFactoryDiscovery extends
-		AbstractXDocReportFactoryDiscovery implements
-		IXDocReportFactoryDiscovery, ODSConstants {
+public class ODSReportFactoryDiscovery
+    extends AbstractXDocReportFactoryDiscovery
+    implements IXDocReportFactoryDiscovery, ODSConstants
+{
 
-	public boolean isAdaptFor(XDocArchive archive) {
-		return ODSReport.isODS(archive);
-	}
+    public boolean isAdaptFor( XDocArchive archive )
+    {
+        return ODSReport.isODS( archive );
+    }
 
-	public IXDocReport createReport() {
-		return new ODSReport();
-	}
+    public IXDocReport createReport()
+    {
+        return new ODSReport();
+    }
 
-	public MimeMapping getMimeMapping() {
-		return MIME_MAPPING;
-	}
+    public MimeMapping getMimeMapping()
+    {
+        return MIME_MAPPING;
+    }
 
-	public String getDescription() {
-		return DESCRIPTION_DISCOVERY;
-	}
+    public String getDescription()
+    {
+        return DESCRIPTION_DISCOVERY;
+    }
 
-	public String getId() {
-		return ID_DISCOVERY;
-	}
+    public String getId()
+    {
+        return ID_DISCOVERY;
+    }
 
-	public Class<?> getReportClass() {
-		return ODSReport.class;
-	}
+    public Class<?> getReportClass()
+    {
+        return ODSReport.class;
+    }
 
 }

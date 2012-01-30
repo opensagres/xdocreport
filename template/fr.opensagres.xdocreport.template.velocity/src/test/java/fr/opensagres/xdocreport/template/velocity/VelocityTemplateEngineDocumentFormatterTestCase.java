@@ -26,19 +26,23 @@ package fr.opensagres.xdocreport.template.velocity;
 
 import junit.framework.TestCase;
 
-public class VelocityTemplateEngineDocumentFormatterTestCase extends TestCase {
+public class VelocityTemplateEngineDocumentFormatterTestCase
+    extends TestCase
+{
 
-	public void testFormatAsFieldItemList() throws Exception {
-		VelocityDocumentFormatter formatter = new VelocityDocumentFormatter();
-		String fieldName = formatter.formatAsFieldItemList("$cds.reference",
-				"cds.reference", false);
-		assertEquals("$item_cds.reference", fieldName);
-	}
+    public void testFormatAsFieldItemList()
+        throws Exception
+    {
+        VelocityDocumentFormatter formatter = new VelocityDocumentFormatter();
+        String fieldName = formatter.formatAsFieldItemList( "$cds.reference", "cds.reference", false );
+        assertEquals( "$item_cds.reference", fieldName );
+    }
 
-	public void testFormatAsFieldItemListEnclosed() throws Exception {
-		VelocityDocumentFormatter formatter = new VelocityDocumentFormatter();
-		String fieldName = formatter.formatAsFieldItemList("${cds.reference}",
-				"cds.reference", false);
-		assertEquals("${item_cds.reference}", fieldName);
-	}
+    public void testFormatAsFieldItemListEnclosed()
+        throws Exception
+    {
+        VelocityDocumentFormatter formatter = new VelocityDocumentFormatter();
+        String fieldName = formatter.formatAsFieldItemList( "${cds.reference}", "cds.reference", false );
+        assertEquals( "${item_cds.reference}", fieldName );
+    }
 }

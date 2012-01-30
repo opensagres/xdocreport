@@ -32,24 +32,28 @@ import fr.opensagres.xdocreport.template.utils.TemplateUtils;
 
 /**
  * Freemarker context.
- * 
  */
-public class XDocFreemarkerContext implements IContext {
+public class XDocFreemarkerContext
+    implements IContext
+{
 
-	public static final long serialVersionUID = 1L;
+    public static final long serialVersionUID = 1L;
 
-	private final Map<String, Object> map = new HashMap<String, Object>();
+    private final Map<String, Object> map = new HashMap<String, Object>();
 
-	public Object put(String key, Object value) {
-		Object result = TemplateUtils.putContextForDottedKey(this, key, value);
-		if (result == null) {
-			return map.put(key, value);
-		}
-		return result;
-	}
+    public Object put( String key, Object value )
+    {
+        Object result = TemplateUtils.putContextForDottedKey( this, key, value );
+        if ( result == null )
+        {
+            return map.put( key, value );
+        }
+        return result;
+    }
 
-	public Object get(String key) {
-		return map.get(key);
-	}	
+    public Object get( String key )
+    {
+        return map.get( key );
+    }
 
 }

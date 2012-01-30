@@ -34,63 +34,68 @@ import org.junit.Test;
 import fr.opensagres.xdocreport.core.internal.IndentNumberPrettyPrinter;
 import fr.opensagres.xdocreport.core.internal.XSLTPrettyPrinter;
 
-public class XSLTPrettyPrinterTestCase {
+public class XSLTPrettyPrinterTestCase
+{
 
-	private static final String LINE_SEPARATOR = System
-			.getProperty("line.separator");
+    private static final String LINE_SEPARATOR = System.getProperty( "line.separator" );
 
-	@Test
-	public void testPrettyPrint() {
-		String xml = "<a><b>c</b></a>";
+    @Test
+    public void testPrettyPrint()
+    {
+        String xml = "<a><b>c</b></a>";
 
-		System.out.println(prettyPrint(xml));
+        System.out.println( prettyPrint( xml ) );
 
-		long start = System.currentTimeMillis();
-		char[] padding = new char[4];
-		Arrays.fill(padding, ' ');
-		assertEquals("<a>" + LINE_SEPARATOR + String.copyValueOf(padding)
-				+ "<b>c</b>" + LINE_SEPARATOR + "</a>" + LINE_SEPARATOR,
-				prettyPrint(xml));
+        long start = System.currentTimeMillis();
+        char[] padding = new char[4];
+        Arrays.fill( padding, ' ' );
+        assertEquals( "<a>" + LINE_SEPARATOR + String.copyValueOf( padding ) + "<b>c</b>" + LINE_SEPARATOR + "</a>"
+            + LINE_SEPARATOR, prettyPrint( xml ) );
 
-		System.out
-				.println("time spent " + (System.currentTimeMillis() - start));
-	}
+        System.out.println( "time spent " + ( System.currentTimeMillis() - start ) );
+    }
 
-	@Test
-	public void testPrettyPrint2Indent() {
-		int ident = 2;
-		String xml = "<a><b>c</b></a>";
+    @Test
+    public void testPrettyPrint2Indent()
+    {
+        int ident = 2;
+        String xml = "<a><b>c</b></a>";
 
-		System.out.println(prettyPrint(xml, 2));
+        System.out.println( prettyPrint( xml, 2 ) );
 
-		long start = System.currentTimeMillis();
+        long start = System.currentTimeMillis();
 
-		char[] padding = new char[ident];
-		Arrays.fill(padding, ' ');
-		assertEquals("<a>" + LINE_SEPARATOR + String.copyValueOf(padding)
-				+ "<b>c</b>" + LINE_SEPARATOR + "</a>" + LINE_SEPARATOR,
-				prettyPrint(xml, ident));
+        char[] padding = new char[ident];
+        Arrays.fill( padding, ' ' );
+        assertEquals( "<a>" + LINE_SEPARATOR + String.copyValueOf( padding ) + "<b>c</b>" + LINE_SEPARATOR + "</a>"
+            + LINE_SEPARATOR, prettyPrint( xml, ident ) );
 
-		System.out
-				.println("time spent " + (System.currentTimeMillis() - start));
-	}
+        System.out.println( "time spent " + ( System.currentTimeMillis() - start ) );
+    }
 
-	private String prettyPrint(String xml, int indent) {
-		try {
-			return XSLTPrettyPrinter.INSTANCE.prettyPrint(xml, indent);
-		} catch (Exception e) {
-			e.printStackTrace();
-			return null;
-		}
-	}
+    private String prettyPrint( String xml, int indent )
+    {
+        try
+        {
+            return XSLTPrettyPrinter.INSTANCE.prettyPrint( xml, indent );
+        }
+        catch ( Exception e )
+        {
+            e.printStackTrace();
+            return null;
+        }
+    }
 
-	private String prettyPrint(String xml) {
-		try {
-			return XSLTPrettyPrinter.INSTANCE.prettyPrint(xml,
-					XMLUtils.INDENT_NUMBER);
-		} catch (Exception e) {
-			e.printStackTrace();
-			return null;
-		}
-	}
+    private String prettyPrint( String xml )
+    {
+        try
+        {
+            return XSLTPrettyPrinter.INSTANCE.prettyPrint( xml, XMLUtils.INDENT_NUMBER );
+        }
+        catch ( Exception e )
+        {
+            e.printStackTrace();
+            return null;
+        }
+    }
 }

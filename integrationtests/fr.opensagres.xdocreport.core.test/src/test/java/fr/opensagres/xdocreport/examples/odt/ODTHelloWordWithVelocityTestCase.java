@@ -53,163 +53,164 @@ import fr.opensagres.xdocreport.template.IContext;
 import fr.opensagres.xdocreport.template.TemplateEngineKind;
 
 /**
- * Example with Open Office ODT which contains the content Hello !$name. Merge
- * with Velocity template engine will replace this cell with Hello world!
- * 
+ * Example with Open Office ODT which contains the content Hello !$name. Merge with Velocity template engine will
+ * replace this cell with Hello world!
  */
-public class ODTHelloWordWithVelocityTestCase {
+public class ODTHelloWordWithVelocityTestCase
+{
 
-	@Before
-	public void onBefore() {
-		// Clear report cached in the registry before execute a test.
-		XDocReportRegistry.getRegistry().clear();
-	}
-	
-	@Test
-	public void testOne() {
-		try {
-			
-			// 1) Load ODT file by filling Velocity template engine and cache it
-			// to the registry
-			IXDocReport report = XDocReportRegistry
-					.getRegistry()
-					.loadReport(
-							ODTHelloWordWithVelocityTestCase.class
-									.getResourceAsStream("ODTHelloWordWithVelocity.odt"),
-							TemplateEngineKind.Velocity);
+    @Before
+    public void onBefore()
+    {
+        // Clear report cached in the registry before execute a test.
+        XDocReportRegistry.getRegistry().clear();
+    }
 
-			Assert.assertTrue(
-					"This is a odt file, ODTReport implementation should have been resolved....",
-					report instanceof ODTReport);
+    @Test
+    public void testOne()
+    {
+        try
+        {
 
-			// 2) Create context Java model
-			IContext context = report.createContext();
-			context.put("name", "world");
+            // 1) Load ODT file by filling Velocity template engine and cache it
+            // to the registry
+            IXDocReport report =
+                XDocReportRegistry.getRegistry().loadReport( ODTHelloWordWithVelocityTestCase.class.getResourceAsStream( "ODTHelloWordWithVelocity.odt" ),
+                                                             TemplateEngineKind.Velocity );
 
-			// 3) Merge Java model with the ODT
-			File file = new File("ODTHelloWordWithVelocity.odt");
-			report.process(context, new FileOutputStream(file));
+            Assert.assertTrue( "This is a odt file, ODTReport implementation should have been resolved....",
+                               report instanceof ODTReport );
 
-		} catch (IOException e) {
-			e.printStackTrace();
-		} catch (XDocReportException e) {
-			e.printStackTrace();
-		}
-	}
+            // 2) Create context Java model
+            IContext context = report.createContext();
+            context.put( "name", "world" );
 
-	@Test
-	public void loadNonExistingReport() {
+            // 3) Merge Java model with the ODT
+            File file = new File( "ODTHelloWordWithVelocity.odt" );
+            report.process( context, new FileOutputStream( file ) );
 
-		try {
-			XDocArchive.readZip(ODTHelloWordWithVelocityTestCase.class
-					.getResourceAsStream("not_found"));
-			fail("'not_found' does not exists ");
-		} catch (IOException e) {
-			// success
-		}
-	}
+        }
+        catch ( IOException e )
+        {
+            e.printStackTrace();
+        }
+        catch ( XDocReportException e )
+        {
+            e.printStackTrace();
+        }
+    }
 
-	@Test
-	public void loadExistingODTReport() {
-		String fileName = "ODTHelloWordWithVelocity.odt";
-		// 1) Load ODT file by filling Velocity template engine and cache it
-		// to the registry
-		IXDocReport report = null;
-		try {
+    @Test
+    public void loadNonExistingReport()
+    {
 
-			report = XDocReportRegistry
-					.getRegistry()
-					.loadReport(
-							ODTHelloWordWithVelocityTestCase.class
-									.getResourceAsStream(fileName),
-							TemplateEngineKind.Velocity);
+        try
+        {
+            XDocArchive.readZip( ODTHelloWordWithVelocityTestCase.class.getResourceAsStream( "not_found" ) );
+            fail( "'not_found' does not exists " );
+        }
+        catch ( IOException e )
+        {
+            // success
+        }
+    }
 
-		} catch (Exception e) {
-			fail("Unable to load " + fileName + " " + e.getMessage());
-		}
+    @Test
+    public void loadExistingODTReport()
+    {
+        String fileName = "ODTHelloWordWithVelocity.odt";
+        // 1) Load ODT file by filling Velocity template engine and cache it
+        // to the registry
+        IXDocReport report = null;
+        try
+        {
 
-		assertThat(
-				"This is a odt file, ODTReport implementation should have been resolved....",
-				report, instanceOf(ODTReport.class));
+            report =
+                XDocReportRegistry.getRegistry().loadReport( ODTHelloWordWithVelocityTestCase.class.getResourceAsStream( fileName ),
+                                                             TemplateEngineKind.Velocity );
 
-	}
+        }
+        catch ( Exception e )
+        {
+            fail( "Unable to load " + fileName + " " + e.getMessage() );
+        }
 
-	@Test
-	public void loadReportWithId() {
-		String fileName = "ODTHelloWordWithVelocity.odt";
+        assertThat( "This is a odt file, ODTReport implementation should have been resolved....", report,
+                    instanceOf( ODTReport.class ) );
 
-		IXDocReport report = null;
-		try {
+    }
 
-			report = XDocReportRegistry
-					.getRegistry()
-					.loadReport(
-							ODTHelloWordWithVelocityTestCase.class
-									.getResourceAsStream(fileName),
-							fileName, TemplateEngineKind.Velocity);
+    @Test
+    public void loadReportWithId()
+    {
+        String fileName = "ODTHelloWordWithVelocity.odt";
 
-		} catch (Exception e) {
-			fail("Unable to load " + fileName + " " + e.getMessage());
-		}
+        IXDocReport report = null;
+        try
+        {
 
-		assertEquals(fileName, report.getId());
-		assertEquals(report,
-				XDocReportRegistry.getRegistry().getReport(fileName));
-	}
+            report =
+                XDocReportRegistry.getRegistry().loadReport( ODTHelloWordWithVelocityTestCase.class.getResourceAsStream( fileName ),
+                                                             fileName, TemplateEngineKind.Velocity );
 
-	@Test
-	public void cannotRegisterTwoTimeSameId() {
-		String fileName = "ODTHelloWordWithVelocity.odt";
+        }
+        catch ( Exception e )
+        {
+            fail( "Unable to load " + fileName + " " + e.getMessage() );
+        }
 
-		IXDocReport report = null;
-		try {
+        assertEquals( fileName, report.getId() );
+        assertEquals( report, XDocReportRegistry.getRegistry().getReport( fileName ) );
+    }
 
-			report = XDocReportRegistry
-					.getRegistry()
-					.loadReport(
-							ODTHelloWordWithVelocityTestCase.class
-									.getResourceAsStream(fileName),
-							"id", TemplateEngineKind.Velocity);
+    @Test
+    public void cannotRegisterTwoTimeSameId()
+    {
+        String fileName = "ODTHelloWordWithVelocity.odt";
 
-			XDocReportRegistry
-					.getRegistry()
-					.loadReport(
-							ODTHelloWordWithVelocityTestCase.class
-									.getResourceAsStream(fileName),
-							"id", TemplateEngineKind.Velocity);
-			fail("cannot register 2 reports with the same id");
-		} catch (Exception e) {
-			// success
-		}
+        IXDocReport report = null;
+        try
+        {
 
-	}
+            report =
+                XDocReportRegistry.getRegistry().loadReport( ODTHelloWordWithVelocityTestCase.class.getResourceAsStream( fileName ),
+                                                             "id", TemplateEngineKind.Velocity );
 
-	@Test
-	public void checkXDocArchiveContent() throws IOException,
-			XDocReportException {
-		String fileName = "ODTHelloWordWithVelocity.odt";
+            XDocReportRegistry.getRegistry().loadReport( ODTHelloWordWithVelocityTestCase.class.getResourceAsStream( fileName ),
+                                                         "id", TemplateEngineKind.Velocity );
+            fail( "cannot register 2 reports with the same id" );
+        }
+        catch ( Exception e )
+        {
+            // success
+        }
 
-		IXDocReport report = null;
+    }
 
-		report = XDocReportRegistry
-				.getRegistry()
-				.loadReport(
-						ODTHelloWordWithVelocityTestCase.class
-								.getResourceAsStream(fileName),
-						TemplateEngineKind.Velocity);
+    @Test
+    public void checkXDocArchiveContent()
+        throws IOException, XDocReportException
+    {
+        String fileName = "ODTHelloWordWithVelocity.odt";
 
-		XDocArchive archive = report.getPreprocessedDocumentArchive();
+        IXDocReport report = null;
 
-		assertNotNull(archive);
-		assertTrue(archive.hasEntry(ODTConstants.CONTENT_XML_ENTRY));
-		assertTrue(ODTUtils.isODT(archive));
+        report =
+            XDocReportRegistry.getRegistry().loadReport( ODTHelloWordWithVelocityTestCase.class.getResourceAsStream( fileName ),
+                                                         TemplateEngineKind.Velocity );
 
-		Reader reader = archive.getEntryReader(ODTConstants.CONTENT_XML_ENTRY);
-		StringWriter writer = new StringWriter();
-		IOUtils.copy(reader, writer);
+        XDocArchive archive = report.getPreprocessedDocumentArchive();
 
-		String contentAsString = writer.toString();
-		// System.out.println(contentAsString);
-		assertTrue(contentAsString.contains("$name"));
-	}
+        assertNotNull( archive );
+        assertTrue( archive.hasEntry( ODTConstants.CONTENT_XML_ENTRY ) );
+        assertTrue( ODTUtils.isODT( archive ) );
+
+        Reader reader = archive.getEntryReader( ODTConstants.CONTENT_XML_ENTRY );
+        StringWriter writer = new StringWriter();
+        IOUtils.copy( reader, writer );
+
+        String contentAsString = writer.toString();
+        // System.out.println(contentAsString);
+        assertTrue( contentAsString.contains( "$name" ) );
+    }
 }

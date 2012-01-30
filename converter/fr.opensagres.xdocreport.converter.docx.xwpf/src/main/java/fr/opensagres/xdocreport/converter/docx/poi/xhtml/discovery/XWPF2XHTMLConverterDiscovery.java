@@ -31,29 +31,37 @@ import fr.opensagres.xdocreport.converter.discovery.IConverterDiscovery;
 import fr.opensagres.xdocreport.converter.docx.poi.xhtml.XWPF2XHTMLConverter;
 import fr.opensagres.xdocreport.core.document.DocumentKind;
 
-public class XWPF2XHTMLConverterDiscovery implements IConverterDiscovery {
+public class XWPF2XHTMLConverterDiscovery
+    implements IConverterDiscovery
+{
 
-	public String getId() {
-		return "Docx2XHTMViaXWPF";
-	}
+    public String getId()
+    {
+        return "Docx2XHTMViaXWPF";
+    }
 
-	public String getDescription() {
-		return "Convert DOCX 2 XHTML via XWPF";
-	}
+    public String getDescription()
+    {
+        return "Convert DOCX 2 XHTML via XWPF";
+    }
 
-	public String getFrom() {
-		return DocumentKind.DOCX.name();
-	}
+    public String getFrom()
+    {
+        return DocumentKind.DOCX.name();
+    }
 
-	public String getTo() {
-		return ConverterTypeTo.XHTML.name();
-	}
+    public String getTo()
+    {
+        return ConverterTypeTo.XHTML.name();
+    }
 
-	public String getVia() {
-		return ConverterTypeVia.XWPF.name();
-	}
+    public String getVia()
+    {
+        return ConverterTypeVia.XWPF.name();
+    }
 
-	public IConverter getConverter() {
-		return XWPF2XHTMLConverter.getInstance();
-	}
+    public IConverter getConverter()
+    {
+        return XWPF2XHTMLConverter.getInstance();
+    }
 }

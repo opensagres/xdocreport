@@ -20,65 +20,82 @@ import fr.opensagres.xdocreport.document.service.WSOptions;
 import fr.opensagres.xdocreport.document.service.XDocReportService;
 import fr.opensagres.xdocreport.template.formatter.FieldsMetadata;
 
-@Path("/")
-@Consumes({ MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML })
-@Produces({ MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML })
-public class RESTXDocReportService {
+@Path( "/" )
+@Consumes( { MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML } )
+@Produces( { MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML } )
+public class RESTXDocReportService
+{
 
-	private XDocReportService delegate = XDocReportService.INSTANCE;
+    private XDocReportService delegate = XDocReportService.INSTANCE;
 
-	public byte[] download(String reportID, String processState) throws XDocReportException {
-		return delegate.download(reportID, processState);
-	}
+    public byte[] download( String reportID, String processState )
+        throws XDocReportException
+    {
+        return delegate.download( reportID, processState );
+    }
 
-	@GET
-	@Path("/test")
-	public String get() {
+    @GET
+    @Path( "/test" )
+    public String get()
+    {
 
-		return "test";
-	}
+        return "test";
+    }
 
-	@GET
-	@Path("/listReports")
-	public List<ReportId> listReports() {
-		return delegate.listReports();
-	}
-	@POST
-	@Path("/processReport")
-	@Produces({"text/xml", "application/xml", "application/json"}) 
-    @Consumes({"application/x-www-form-urlencoded","multipart/form-data"})  
-	public byte[] processReport(@FormParam("") Report report
-			, @FormParam("") ArrayList<DataContext> dataContext,
-			@FormParam("") WSOptions wsOptions) throws XDocReportException {
-		
-		FieldsMetadata fieldsMetadata = new FieldsMetadata();
-		List<String> fields= report.getFieldsMetaData();
-		for (String field : fields) {
-			fieldsMetadata.addFieldAsList(field);
-		}
-		Options options= Options.getFrom(wsOptions.getFrom()).to(wsOptions.getTo()).via(wsOptions.getVia());
-		return delegate.process(report.getDocument(), fieldsMetadata, report.getTemplateEngine(), dataContext,options);
-	}
+    @GET
+    @Path( "/listReports" )
+    public List<ReportId> listReports()
+    {
+        return delegate.listReports();
+    }
 
-	public byte[] processReport(String reportId, List<DataContext> dataContext, Options options) throws XDocReportException {
-		return delegate.process(reportId, dataContext, options);
-	}
+    @POST
+    @Path( "/processReport" )
+    @Produces( { "text/xml", "application/xml", "application/json" } )
+    @Consumes( { "application/x-www-form-urlencoded", "multipart/form-data" } )
+    public byte[] processReport( @FormParam( "" )
+    Report report, @FormParam( "" )
+    ArrayList<DataContext> dataContext, @FormParam( "" )
+    WSOptions wsOptions )
+        throws XDocReportException
+    {
 
-	public void unRegister(String reportId) {
-		delegate.unregisterReport(reportId);
-	}
+        FieldsMetadata fieldsMetadata = new FieldsMetadata();
+        List<String> fields = report.getFieldsMetaData();
+        for ( String field : fields )
+        {
+            fieldsMetadata.addFieldAsList( field );
+        }
+        Options options = Options.getFrom( wsOptions.getFrom() ).to( wsOptions.getTo() ).via( wsOptions.getVia() );
+        return delegate.process( report.getDocument(), fieldsMetadata, report.getTemplateEngine(), dataContext, options );
+    }
 
-	@POST
-	@Path("/upload")
-	public void upload(Report report) throws XDocReportException {
-		System.out.println(report);
-		fr.opensagres.xdocreport.template.formatter.FieldsMetadata fieldsMetadata2 = new fr.opensagres.xdocreport.template.formatter.FieldsMetadata();
-		for (String field : report.getFieldsMetaData()) {
-			fieldsMetadata2.addFieldAsList(field);
-		}
+    public byte[] processReport( String reportId, List<DataContext> dataContext, Options options )
+        throws XDocReportException
+    {
+        return delegate.process( reportId, dataContext, options );
+    }
 
-		delegate.registerReport(report.getReportID(), report.getDocument(), fieldsMetadata2, "Velocity");
+    public void unRegister( String reportId )
+    {
+        delegate.unregisterReport( reportId );
+    }
 
-	}
+    @POST
+    @Path( "/upload" )
+    public void upload( Report report )
+        throws XDocReportException
+    {
+        System.out.println( report );
+        fr.opensagres.xdocreport.template.formatter.FieldsMetadata fieldsMetadata2 =
+            new fr.opensagres.xdocreport.template.formatter.FieldsMetadata();
+        for ( String field : report.getFieldsMetaData() )
+        {
+            fieldsMetadata2.addFieldAsList( field );
+        }
+
+        delegate.registerReport( report.getReportID(), report.getDocument(), fieldsMetadata2, "Velocity" );
+
+    }
 
 }

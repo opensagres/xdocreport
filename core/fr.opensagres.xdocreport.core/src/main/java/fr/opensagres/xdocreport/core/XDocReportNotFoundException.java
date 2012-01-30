@@ -28,15 +28,18 @@ import static java.text.MessageFormat.format;
 
 /**
  * Exception thrown when report is not found.
- * 
  */
-public class XDocReportNotFoundException extends XDocReportException {
+public class XDocReportNotFoundException
+    extends XDocReportException
+{
 
-	private static final long serialVersionUID = 4964482756060184544L;
-	private final static String MESSAGE = "Report with id={0} not found.";
+    private static final long serialVersionUID = 4964482756060184544L;
 
-	public XDocReportNotFoundException(String reportId) {
-		super(format(MESSAGE, reportId));
-	}
+    private final static String MESSAGE = "Report with id={0} not found.";
+
+    public XDocReportNotFoundException( String reportId )
+    {
+        super( format( MESSAGE, reportId ) );
+    }
 
 }

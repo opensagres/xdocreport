@@ -34,63 +34,75 @@ import fr.opensagres.xdocreport.converter.XDocConverterException;
 import fr.opensagres.xdocreport.converter.docx.XMLUtils;
 import fr.opensagres.xdocreport.core.io.IEntryInputStreamProvider;
 
-public class DocxXHTMLConverterTest extends TestCase {
+public class DocxXHTMLConverterTest
+    extends TestCase
+{
 
-	public void testNo() throws Exception {
+    public void testNo()
+        throws Exception
+    {
 
-	}
+    }
 
-	public static void main(String[] args) {
-		long startTime = System.currentTimeMillis();
+    public static void main( String[] args )
+    {
+        long startTime = System.currentTimeMillis();
 
-		DocxXHTMLConverter converter = DocxXHTMLConverter.getInstance();
+        DocxXHTMLConverter converter = DocxXHTMLConverter.getInstance();
 
-		IEntryInputStreamProvider inProvider = new IEntryInputStreamProvider() {
+        IEntryInputStreamProvider inProvider = new IEntryInputStreamProvider()
+        {
 
-			public InputStream getEntryInputStream(String entryName) {
-				if (entryName.equals("word/document.xml")) {
-					return DocxXHTMLConverterTest.class
-							.getResourceAsStream("HelloWorld.document.xml");
-				}
-				if (entryName.equals("word/styles.xml")) {
-					return DocxXHTMLConverterTest.class
-							.getResourceAsStream("HelloWorld.styles.xml");
-				}
-				return null;
-			}
-		};
-		
-		DOMResult result = new DOMResult();
-		try {
-			converter.convert2XHTML(inProvider, result, null);
-			System.err.println(XMLUtils.toString(result.getNode()));
-		} catch (XDocConverterException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+            public InputStream getEntryInputStream( String entryName )
+            {
+                if ( entryName.equals( "word/document.xml" ) )
+                {
+                    return DocxXHTMLConverterTest.class.getResourceAsStream( "HelloWorld.document.xml" );
+                }
+                if ( entryName.equals( "word/styles.xml" ) )
+                {
+                    return DocxXHTMLConverterTest.class.getResourceAsStream( "HelloWorld.styles.xml" );
+                }
+                return null;
+            }
+        };
 
-		System.out.println(System.currentTimeMillis() - startTime + "(ms)");
+        DOMResult result = new DOMResult();
+        try
+        {
+            converter.convert2XHTML( inProvider, result, null );
+            System.err.println( XMLUtils.toString( result.getNode() ) );
+        }
+        catch ( XDocConverterException e )
+        {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+        catch ( IOException e )
+        {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
 
-		// startTime = System.currentTimeMillis() ;
-		// inputStream = ODTXSLFOConverterTest.class
-		// .getResourceAsStream("HelloWorld.content.xml");
-		// // OutputStream outputStream = new StringBuilderOutputStream();
-		// result = new DOMResult();
-		// try {
-		// converter.convert2FO(new StreamSource(inputStream), result);
-		// System.err.println(XMLUtils.toString(result.getNode()));
-		// } catch (XDocConverterException e) {
-		// // TODO Auto-generated catch block
-		// e.printStackTrace();
-		// } catch (IOException e) {
-		// // TODO Auto-generated catch block
-		// e.printStackTrace();
-		// }
-		//
-		// System.out.println(System.currentTimeMillis() - startTime + "(ms)");
+        System.out.println( System.currentTimeMillis() - startTime + "(ms)" );
 
-	}
+        // startTime = System.currentTimeMillis() ;
+        // inputStream = ODTXSLFOConverterTest.class
+        // .getResourceAsStream("HelloWorld.content.xml");
+        // // OutputStream outputStream = new StringBuilderOutputStream();
+        // result = new DOMResult();
+        // try {
+        // converter.convert2FO(new StreamSource(inputStream), result);
+        // System.err.println(XMLUtils.toString(result.getNode()));
+        // } catch (XDocConverterException e) {
+        // // TODO Auto-generated catch block
+        // e.printStackTrace();
+        // } catch (IOException e) {
+        // // TODO Auto-generated catch block
+        // e.printStackTrace();
+        // }
+        //
+        // System.out.println(System.currentTimeMillis() - startTime + "(ms)");
+
+    }
 }

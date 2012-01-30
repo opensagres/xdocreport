@@ -29,23 +29,25 @@ import fr.opensagres.xdocreport.document.discovery.ITextStylingTransformerDiscov
 import fr.opensagres.xdocreport.document.textstyling.ITextStylingTransformer;
 
 /**
- * Discovery to register Google Wiki Text styling transformer
- * {@link GWikiTextStylingTransformer}.
- * 
+ * Discovery to register Google Wiki Text styling transformer {@link GWikiTextStylingTransformer}.
  */
-public class GWikiTextStylingTransformerDiscovery implements
-		ITextStylingTransformerDiscovery {
+public class GWikiTextStylingTransformerDiscovery
+    implements ITextStylingTransformerDiscovery
+{
 
-	public String getId() {
-		return SyntaxKind.GWiki.name();
-	}
+    public String getId()
+    {
+        return SyntaxKind.GWiki.name();
+    }
 
-	public ITextStylingTransformer getTransformer() {
-		return GWikiTextStylingTransformer.INSTANCE;
-	}
+    public ITextStylingTransformer getTransformer()
+    {
+        return GWikiTextStylingTransformer.INSTANCE;
+    }
 
-	public String getDescription() {
-		return "Google Wiki test styling transformer.";
-	}
+    public String getDescription()
+    {
+        return "Google Wiki test styling transformer.";
+    }
 
 }

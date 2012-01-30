@@ -25,75 +25,80 @@
 package fr.opensagres.xdocreport.document.preprocessor.sax;
 
 /**
- * Result of the process row which store information about loop directive of the
- * template engine.
- * 
+ * Result of the process row which store information about loop directive of the template engine.
  */
-public class ProcessRowResult {
+public class ProcessRowResult
+{
 
-	private final String content;
-	private final String fieldName;
-	private final String itemNameList;
-	private final String startLoopDirective;
-	private final String endLoopDirective;;
+    private final String content;
 
-	public ProcessRowResult(String content, String fieldName,
-			String itemNameList, String startLoopDirective,
-			String endLoopDirective) {
-		this.content = content;
-		this.fieldName = fieldName;
-		this.itemNameList = itemNameList;
-		this.startLoopDirective = startLoopDirective;
-		this.endLoopDirective = endLoopDirective;
-	}
+    private final String fieldName;
 
-	/**
-	 * The content of the result of process row. This content can be the
-	 * original content or modified content with fields transformed.
-	 * 
-	 * @return
-	 */
-	public String getContent() {
-		return content;
-	}
+    private final String itemNameList;
 
-	/**
-	 * Returns the field name which was used to transform the content if process
-	 * row has modified the content and null otherwise.
-	 * 
-	 * @return
-	 */
-	public String getFieldName() {
-		return fieldName;
-	}
+    private final String startLoopDirective;
 
-	/**
-	 * Returns the itame name list if process row has modified the content and
-	 * null otherwise.
-	 * 
-	 * @return
-	 */
-	public String getItemNameList() {
-		return itemNameList;
-	}
+    private final String endLoopDirective;;
 
-	/**
-	 * Returns the start loop directive if process row has modified the content
-	 * and null otherwise.
-	 * 
-	 * @return
-	 */
-	public String getStartLoopDirective() {
-		return startLoopDirective;
-	}
+    public ProcessRowResult( String content, String fieldName, String itemNameList, String startLoopDirective,
+                             String endLoopDirective )
+    {
+        this.content = content;
+        this.fieldName = fieldName;
+        this.itemNameList = itemNameList;
+        this.startLoopDirective = startLoopDirective;
+        this.endLoopDirective = endLoopDirective;
+    }
 
-	/**
-	 * Returns the end loop directive if process row has modified the content
-	 * and null otherwise.
-	 * 
-	 * @return
-	 */
-	public String getEndLoopDirective() {
-		return endLoopDirective;
-	}
+    /**
+     * The content of the result of process row. This content can be the original content or modified content with
+     * fields transformed.
+     * 
+     * @return
+     */
+    public String getContent()
+    {
+        return content;
+    }
+
+    /**
+     * Returns the field name which was used to transform the content if process row has modified the content and null
+     * otherwise.
+     * 
+     * @return
+     */
+    public String getFieldName()
+    {
+        return fieldName;
+    }
+
+    /**
+     * Returns the itame name list if process row has modified the content and null otherwise.
+     * 
+     * @return
+     */
+    public String getItemNameList()
+    {
+        return itemNameList;
+    }
+
+    /**
+     * Returns the start loop directive if process row has modified the content and null otherwise.
+     * 
+     * @return
+     */
+    public String getStartLoopDirective()
+    {
+        return startLoopDirective;
+    }
+
+    /**
+     * Returns the end loop directive if process row has modified the content and null otherwise.
+     * 
+     * @return
+     */
+    public String getEndLoopDirective()
+    {
+        return endLoopDirective;
+    }
 }

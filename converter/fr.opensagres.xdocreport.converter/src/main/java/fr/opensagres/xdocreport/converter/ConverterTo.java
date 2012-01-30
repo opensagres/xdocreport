@@ -30,43 +30,52 @@ import java.util.Map;
 
 /**
  * Converter to.
- * 
  */
-public class ConverterTo {
+public class ConverterTo
+{
 
-	private final String to;
-	private final Map<String, IConverter> converters;
+    private final String to;
 
-	public ConverterTo(String to) {
-		this.to = to;
-		this.converters = new HashMap<String, IConverter>();
-	}
+    private final Map<String, IConverter> converters;
 
-	public String getTo() {
-		return to;
-	}
+    public ConverterTo( String to )
+    {
+        this.to = to;
+        this.converters = new HashMap<String, IConverter>();
+    }
 
-	public Collection<IConverter> getConvertersTo() {
-		return converters.values();
-	}
+    public String getTo()
+    {
+        return to;
+    }
 
-	public IConverter getConverter(String via) {
-		return converters.get(via);
-	}
+    public Collection<IConverter> getConvertersTo()
+    {
+        return converters.values();
+    }
 
-	public IConverter getFirstConverter() {
-		for (IConverter converter : getConvertersTo()) {
-			return converter;
-		}
-		return null;
-	}
+    public IConverter getConverter( String via )
+    {
+        return converters.get( via );
+    }
 
-	public void addConverter(String via, IConverter converter) {
-		converters.put(via, converter);
-	}
+    public IConverter getFirstConverter()
+    {
+        for ( IConverter converter : getConvertersTo() )
+        {
+            return converter;
+        }
+        return null;
+    }
 
-	public Collection<String> getVias() {
-		return converters.keySet();
-	}
+    public void addConverter( String via, IConverter converter )
+    {
+        converters.put( via, converter );
+    }
+
+    public Collection<String> getVias()
+    {
+        return converters.keySet();
+    }
 
 }

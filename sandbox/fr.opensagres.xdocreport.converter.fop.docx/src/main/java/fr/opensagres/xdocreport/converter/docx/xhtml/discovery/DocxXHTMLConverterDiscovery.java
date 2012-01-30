@@ -22,30 +22,38 @@ import fr.opensagres.xdocreport.converter.discovery.IConverterDiscovery;
 import fr.opensagres.xdocreport.converter.docx.xhtml.DocxXHTMLConverter;
 import fr.opensagres.xdocreport.core.document.DocumentKind;
 
-public class DocxXHTMLConverterDiscovery implements IConverterDiscovery {
+public class DocxXHTMLConverterDiscovery
+    implements IConverterDiscovery
+{
 
-	public String getId() {
-		return "Docx2XHTMLViaXSL";
-	}
+    public String getId()
+    {
+        return "Docx2XHTMLViaXSL";
+    }
 
-	public String getDescription() {
-		return "Convert Docx 2 XHTML via XSL";
-	}
+    public String getDescription()
+    {
+        return "Convert Docx 2 XHTML via XSL";
+    }
 
-	public String getFrom() {
-		return DocumentKind.DOCX.name();
-	}
+    public String getFrom()
+    {
+        return DocumentKind.DOCX.name();
+    }
 
-	public String getTo() {
-		return ConverterTypeTo.XHTML.name();
-	}
+    public String getTo()
+    {
+        return ConverterTypeTo.XHTML.name();
+    }
 
-	public String getVia() {
-		return ConverterTypeVia.XSL.name();
-	}
+    public String getVia()
+    {
+        return ConverterTypeVia.XSL.name();
+    }
 
-	public IConverter getConverter() {
-		return DocxXHTMLConverter.getInstance();
-	}
+    public IConverter getConverter()
+    {
+        return DocxXHTMLConverter.getInstance();
+    }
 
 }

@@ -31,15 +31,19 @@ import fr.opensagres.xdocreport.document.preprocessor.sax.SAXXDocPreprocessor;
 import fr.opensagres.xdocreport.template.formatter.FieldsMetadata;
 import fr.opensagres.xdocreport.template.formatter.IDocumentFormatter;
 
-public class PPTXSlidePreprocessor extends SAXXDocPreprocessor {
+public class PPTXSlidePreprocessor
+    extends SAXXDocPreprocessor
+{
 
-	public static final IXDocPreprocessor INSTANCE = new PPTXSlidePreprocessor();
+    public static final IXDocPreprocessor INSTANCE = new PPTXSlidePreprocessor();
 
-	@Override
-	protected PPTXSlideContentHandler createBufferedDocumentContentHandler(
-			String entryName, FieldsMetadata fieldsMetadata,
-			IDocumentFormatter formater, Map<String, Object> context) {
-		return new PPTXSlideContentHandler(fieldsMetadata, formater, context);
-	}
+    @Override
+    protected PPTXSlideContentHandler createBufferedDocumentContentHandler( String entryName,
+                                                                            FieldsMetadata fieldsMetadata,
+                                                                            IDocumentFormatter formater,
+                                                                            Map<String, Object> context )
+    {
+        return new PPTXSlideContentHandler( fieldsMetadata, formater, context );
+    }
 
 }

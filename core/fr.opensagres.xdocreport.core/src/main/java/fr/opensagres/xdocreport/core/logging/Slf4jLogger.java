@@ -33,7 +33,7 @@ import java.util.logging.LogRecord;
  * java.util.logging.Logger implementation delegating to SLF4J.
  * </p>
  * <p>
- * Inspired from  org.apache.cxf.common.logging.LogUtils
+ * Inspired from org.apache.cxf.common.logging.LogUtils
  * </p>
  * 
  * <pre>
@@ -45,40 +45,57 @@ import java.util.logging.LogRecord;
  * WARN ING -&gt; WARN
  * SEVER   -&gt; ERROR
  * </pre>
+ * 
  * @author pascalleclercq
  */
-public class Slf4jLogger extends AbstractDelegatingLogger {
+public class Slf4jLogger
+    extends AbstractDelegatingLogger
+{
 
     private final org.slf4j.Logger logger;
 
-    public Slf4jLogger(String name) {
-        super(name);
-        logger = org.slf4j.LoggerFactory.getLogger(name);
+    public Slf4jLogger( String name )
+    {
+        super( name );
+        logger = org.slf4j.LoggerFactory.getLogger( name );
     }
 
     @Override
-    public Level getLevel() {
+    public Level getLevel()
+    {
         Level level;
         // Verify from the wider (trace) to the narrower (error)
-        if (logger.isTraceEnabled()) {
+        if ( logger.isTraceEnabled() )
+        {
             level = Level.FINER; // FINEST
-        } else if (logger.isDebugEnabled()) {
+        }
+        else if ( logger.isDebugEnabled() )
+        {
             // map to the lowest between FINER, FINE and CONFIG
             level = Level.FINER;
-        } else if (logger.isInfoEnabled()) {
+        }
+        else if ( logger.isInfoEnabled() )
+        {
             level = Level.INFO;
-        } else if (logger.isWarnEnabled()) {
+        }
+        else if ( logger.isWarnEnabled() )
+        {
             level = Level.WARNING;
-        } else if (logger.isErrorEnabled()) {
+        }
+        else if ( logger.isErrorEnabled() )
+        {
             level = Level.SEVERE;
-        } else {
+        }
+        else
+        {
             level = Level.OFF;
         }
         return level;
     }
 
     @Override
-    protected void internalLogFormatted(String msg, LogRecord record) {
+    protected void internalLogFormatted( String msg, LogRecord record )
+    {
 
         Level level = record.getLevel();
         Throwable t = record.getThrown();
@@ -87,25 +104,42 @@ public class Slf4jLogger extends AbstractDelegatingLogger {
          * As we can not use a "switch ... case" block but only a "if ... else if ..." block, the order of the
          * comparisons is important. We first try log level FINE then INFO, WARN, FINER, etc
          */
-        if (Level.FINE.equals(level)) {
-            logger.debug(msg, t);
-        } else if (Level.INFO.equals(level)) {
-            logger.info(msg, t);
-        } else if (Level.WARNING.equals(level)) {
-            logger.warn(msg, t);
-        } else if (Level.FINER.equals(level)) {
-            logger.trace(msg, t);
-        } else if (Level.FINEST.equals(level)) {
-            logger.trace(msg, t);
-        } else if (Level.ALL.equals(level)) {
+        if ( Level.FINE.equals( level ) )
+        {
+            logger.debug( msg, t );
+        }
+        else if ( Level.INFO.equals( level ) )
+        {
+            logger.info( msg, t );
+        }
+        else if ( Level.WARNING.equals( level ) )
+        {
+            logger.warn( msg, t );
+        }
+        else if ( Level.FINER.equals( level ) )
+        {
+            logger.trace( msg, t );
+        }
+        else if ( Level.FINEST.equals( level ) )
+        {
+            logger.trace( msg, t );
+        }
+        else if ( Level.ALL.equals( level ) )
+        {
             // should never occur, all is used to configure java.util.logging
             // but not accessible by the API Logger.xxx() API
-            logger.error(msg, t);
-        } else if (Level.SEVERE.equals(level)) {
-            logger.error(msg, t);
-        } else if (Level.CONFIG.equals(level)) {
-            logger.debug(msg, t);
-        } else if (Level.OFF.equals(level)) {
+            logger.error( msg, t );
+        }
+        else if ( Level.SEVERE.equals( level ) )
+        {
+            logger.error( msg, t );
+        }
+        else if ( Level.CONFIG.equals( level ) )
+        {
+            logger.debug( msg, t );
+        }
+        else if ( Level.OFF.equals( level ) )
+        {
             // don't log
         }
     }

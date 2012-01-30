@@ -38,53 +38,57 @@ import org.odftoolkit.odfdom.dom.OdfContentDom;
 import org.odftoolkit.odfdom.dom.OdfStylesDom;
 import org.odftoolkit.odfdom.incubator.doc.office.OdfOfficeMasterStyles;
 
-public class ODF2PDFViaITextConverter extends
-		AbstractODFConverter<PDFViaITextOptions> {
+public class ODF2PDFViaITextConverter
+    extends AbstractODFConverter<PDFViaITextOptions>
+{
 
-	private static final IODFConverter<PDFViaITextOptions> INSTANCE = new ODF2PDFViaITextConverter();
+    private static final IODFConverter<PDFViaITextOptions> INSTANCE = new ODF2PDFViaITextConverter();
 
-	public static IODFConverter<PDFViaITextOptions> getInstance() {
-		return INSTANCE;
-	}
+    public static IODFConverter<PDFViaITextOptions> getInstance()
+    {
+        return INSTANCE;
+    }
 
-	@Override
-	protected void doConvert(OdfDocument odfDocument, OutputStream out,
-			Writer writer, PDFViaITextOptions options)
-			throws ODFConverterException, IOException {
-		StyleEngineForIText styleEngine = new StyleEngineForIText(odfDocument, options);
-		try {
-			OdfStylesDom stylesDom = odfDocument.getStylesDom();
-			OdfContentDom contentDom = odfDocument.getContentDom();
-			// 1.1) Parse styles.xml//office:document-styles/office:styles
-			stylesDom.getOfficeStyles().accept(styleEngine);
+    @Override
+    protected void doConvert( OdfDocument odfDocument, OutputStream out, Writer writer, PDFViaITextOptions options )
+        throws ODFConverterException, IOException
+    {
+        StyleEngineForIText styleEngine = new StyleEngineForIText( odfDocument, options );
+        try
+        {
+            OdfStylesDom stylesDom = odfDocument.getStylesDom();
+            OdfContentDom contentDom = odfDocument.getContentDom();
+            // 1.1) Parse styles.xml//office:document-styles/office:styles
+            stylesDom.getOfficeStyles().accept( styleEngine );
 
-			// 1.2) Parse
-			// styles.xml//office:document-styles/office:automatic-styles
-			stylesDom.getAutomaticStyles().accept(styleEngine);
-			// 1.3) Parse
-			// content.xml//office:document-content/office:automatic-styles
-			contentDom.getAutomaticStyles().accept(styleEngine);
+            // 1.2) Parse
+            // styles.xml//office:document-styles/office:automatic-styles
+            stylesDom.getAutomaticStyles().accept( styleEngine );
+            // 1.3) Parse
+            // content.xml//office:document-content/office:automatic-styles
+            contentDom.getAutomaticStyles().accept( styleEngine );
 
-			ElementVisitorForIText visitorForIText = new ElementVisitorForIText(
-					odfDocument, out, writer, styleEngine, options);
+            ElementVisitorForIText visitorForIText =
+                new ElementVisitorForIText( odfDocument, out, writer, styleEngine, options );
 
-			// 2) Generate XHTML Page
+            // 2) Generate XHTML Page
 
-			// 2.1) Parse
-			// styles.xml//office:document-styles/office:master-styles
-			OdfOfficeMasterStyles masterStyles = odfDocument
-					.getOfficeMasterStyles();
-			masterStyles.accept(visitorForIText);
+            // 2.1) Parse
+            // styles.xml//office:document-styles/office:master-styles
+            OdfOfficeMasterStyles masterStyles = odfDocument.getOfficeMasterStyles();
+            masterStyles.accept( visitorForIText );
 
-			// 2) Compute meta
-			// TODO
-			odfDocument.getContentRoot().accept(visitorForIText);
+            // 2) Compute meta
+            // TODO
+            odfDocument.getContentRoot().accept( visitorForIText );
 
-			visitorForIText.save();
+            visitorForIText.save();
 
-		} catch (Exception e) {
-			throw new ODFConverterException(e);
-		}
-	}
+        }
+        catch ( Exception e )
+        {
+            throw new ODFConverterException( e );
+        }
+    }
 
 }

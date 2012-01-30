@@ -34,48 +34,58 @@ import fr.opensagres.xdocreport.core.document.ImageFormat;
 import fr.opensagres.xdocreport.document.preprocessor.sax.BufferedDocumentContentHandler;
 import fr.opensagres.xdocreport.document.preprocessor.sax.IBufferedRegion;
 
-public class DocxContentTypesDocumentContentHandler extends
-		BufferedDocumentContentHandler {
+public class DocxContentTypesDocumentContentHandler
+    extends BufferedDocumentContentHandler
+{
 
-	private List<ImageFormat> missingFormats = new ArrayList<ImageFormat>();
+    private List<ImageFormat> missingFormats = new ArrayList<ImageFormat>();
 
-	@Override
-	public void startDocument() throws SAXException {
-		ImageFormat format = null;
-		ImageFormat[] formats = ImageFormat.values();
-		for (int i = 0; i < formats.length; i++) {
-			format = formats[i];
-			missingFormats.add(format);
-		}
-		super.startDocument();
-	}
+    @Override
+    public void startDocument()
+        throws SAXException
+    {
+        ImageFormat format = null;
+        ImageFormat[] formats = ImageFormat.values();
+        for ( int i = 0; i < formats.length; i++ )
+        {
+            format = formats[i];
+            missingFormats.add( format );
+        }
+        super.startDocument();
+    }
 
-	@Override
-	public boolean doStartElement(String uri, String localName, String name,
-			Attributes attributes) throws SAXException {
-		if ("Default".equals(name)) {
-			ImageFormat format = ImageFormat.getFormatByExtension(attributes.getValue("Extension"));
-			if (format != null) {
-				missingFormats.remove(format);
-			}			
-		}		
-		return super.doStartElement(uri, localName, name, attributes);
-	}
+    @Override
+    public boolean doStartElement( String uri, String localName, String name, Attributes attributes )
+        throws SAXException
+    {
+        if ( "Default".equals( name ) )
+        {
+            ImageFormat format = ImageFormat.getFormatByExtension( attributes.getValue( "Extension" ) );
+            if ( format != null )
+            {
+                missingFormats.remove( format );
+            }
+        }
+        return super.doStartElement( uri, localName, name, attributes );
+    }
 
-	@Override
-	public void doEndElement(String uri, String localName, String name)
-			throws SAXException {
-		if ("Types".equals(name)) {
-			for (ImageFormat format : missingFormats) {
-				IBufferedRegion currentRegion = getCurrentElement();
-				currentRegion.append("<Default Extension=\"");
-				currentRegion.append(format.name());
-				currentRegion.append("\" ContentType=\"image/");
-				currentRegion.append(format.getType());
-				currentRegion.append("\" />");
+    @Override
+    public void doEndElement( String uri, String localName, String name )
+        throws SAXException
+    {
+        if ( "Types".equals( name ) )
+        {
+            for ( ImageFormat format : missingFormats )
+            {
+                IBufferedRegion currentRegion = getCurrentElement();
+                currentRegion.append( "<Default Extension=\"" );
+                currentRegion.append( format.name() );
+                currentRegion.append( "\" ContentType=\"image/" );
+                currentRegion.append( format.getType() );
+                currentRegion.append( "\" />" );
 
-			}
-		}
-		super.doEndElement(uri, localName, name);
-	}
+            }
+        }
+        super.doEndElement( uri, localName, name );
+    }
 }

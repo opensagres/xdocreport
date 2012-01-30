@@ -37,48 +37,56 @@ import fr.opensagres.xdocreport.template.ITemplateEngine;
 
 /**
  * Freemarker context test case.
- * 
  */
-public class FreemarkerTemplateEngineContextTestCase extends TestCase {
+public class FreemarkerTemplateEngineContextTestCase
+    extends TestCase
+{
 
-	public void testSimpleContext() throws Exception {
-		ITemplateEngine templateEngine = new FreemarkerTemplateEngine();
+    public void testSimpleContext()
+        throws Exception
+    {
+        ITemplateEngine templateEngine = new FreemarkerTemplateEngine();
 
-		Reader reader = new StringReader("Project: ${projectName}.");
-		Writer writer = new StringWriter();
-		IContext context = templateEngine.createContext();
-		context.put("projectName", "XDocReport");
+        Reader reader = new StringReader( "Project: ${projectName}." );
+        Writer writer = new StringWriter();
+        IContext context = templateEngine.createContext();
+        context.put( "projectName", "XDocReport" );
 
-		templateEngine.process("", context, reader, writer);
-		assertEquals("Project: XDocReport.", writer.toString());
-	}
+        templateEngine.process( "", context, reader, writer );
+        assertEquals( "Project: XDocReport.", writer.toString() );
+    }
 
-	public void testContextWithDot() throws Exception {
-		ITemplateEngine templateEngine = new FreemarkerTemplateEngine();
+    public void testContextWithDot()
+        throws Exception
+    {
+        ITemplateEngine templateEngine = new FreemarkerTemplateEngine();
 
-		Reader reader = new StringReader("Project: ${project.name}.");
-		Writer writer = new StringWriter();
-		IContext context = templateEngine.createContext();
-		context.put("project.name", "XDocReport");
+        Reader reader = new StringReader( "Project: ${project.name}." );
+        Writer writer = new StringWriter();
+        IContext context = templateEngine.createContext();
+        context.put( "project.name", "XDocReport" );
 
-		templateEngine.process("", context, reader, writer);
-		assertEquals("Project: XDocReport.", writer.toString());
-	}
+        templateEngine.process( "", context, reader, writer );
+        assertEquals( "Project: XDocReport.", writer.toString() );
+    }
 
-	public void testTwoContextWithTwoDot() throws Exception {
-		ITemplateEngine templateEngine = new FreemarkerTemplateEngine();
+    public void testTwoContextWithTwoDot()
+        throws Exception
+    {
+        ITemplateEngine templateEngine = new FreemarkerTemplateEngine();
 
-		Reader reader = new StringReader(
-				"Project: ${project.meta.name}. Users: [#list project.meta.users as user]${user} [/#list]");
-		Writer writer = new StringWriter();
-		IContext context = templateEngine.createContext();
-		context.put("project.meta.name", "XDocReport");
-		List<String> users = new ArrayList<String>();
-		users.add("Angelo");
-		users.add("Pascal");
-		context.put("project.meta.users", users);
+        Reader reader =
+            new StringReader(
+                              "Project: ${project.meta.name}. Users: [#list project.meta.users as user]${user} [/#list]" );
+        Writer writer = new StringWriter();
+        IContext context = templateEngine.createContext();
+        context.put( "project.meta.name", "XDocReport" );
+        List<String> users = new ArrayList<String>();
+        users.add( "Angelo" );
+        users.add( "Pascal" );
+        context.put( "project.meta.users", users );
 
-		templateEngine.process("", context, reader, writer);
-		assertEquals("Project: XDocReport. Users: Angelo Pascal ",writer.toString());
-	}
+        templateEngine.process( "", context, reader, writer );
+        assertEquals( "Project: XDocReport. Users: Angelo Pascal ", writer.toString() );
+    }
 }

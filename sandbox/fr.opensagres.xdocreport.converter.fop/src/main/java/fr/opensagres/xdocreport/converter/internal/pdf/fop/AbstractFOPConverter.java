@@ -34,49 +34,57 @@ import fr.opensagres.xdocreport.core.io.IEntryInputStreamProvider;
 
 /**
  * Abstract converter for FOP which use XSLT to generate FO.
- * 
  */
-public abstract class AbstractFOPConverter extends AbstractXSLFOConverter {
+public abstract class AbstractFOPConverter
+    extends AbstractXSLFOConverter
+{
 
-	@Override
-	public void convert(IEntryInputStreamProvider inProvider,
-			OutputStream outputStream, Options options)
-			throws XDocConverterException {
-		try {
-			FopFactory fopFactory = FopFactory.newInstance();
-			Fop fop = fopFactory.newFop(MimeConstants.MIME_PDF, outputStream);
-			URIResolver fopResolver = createURIResolver(inProvider);
-			fop.getUserAgent().setURIResolver(fopResolver);
-			convert2FO(inProvider, new SAXResult(fop.getDefaultHandler()),
-					options);
-		} catch (FOPException e) {
-			throw new XDocConverterException(e);
-		}
+    @Override
+    public void convert( IEntryInputStreamProvider inProvider, OutputStream outputStream, Options options )
+        throws XDocConverterException
+    {
+        try
+        {
+            FopFactory fopFactory = FopFactory.newInstance();
+            Fop fop = fopFactory.newFop( MimeConstants.MIME_PDF, outputStream );
+            URIResolver fopResolver = createURIResolver( inProvider );
+            fop.getUserAgent().setURIResolver( fopResolver );
+            convert2FO( inProvider, new SAXResult( fop.getDefaultHandler() ), options );
+        }
+        catch ( FOPException e )
+        {
+            throw new XDocConverterException( e );
+        }
 
-	}
+    }
 
-	public void convert(IEntryInputStreamProvider inProvider,
-			OutputStream outputStream, OutputStream outForFO, Options options)
-			throws XDocConverterException {
-		try {
-			if (outForFO != null) {
-				convert2FO(inProvider, new StreamResult(outForFO), options);
-			}
-			FopFactory fopFactory = FopFactory.newInstance();
-			Fop fop = fopFactory.newFop(MimeConstants.MIME_PDF, outputStream);
-			URIResolver fopResolver = createURIResolver(inProvider);
-			fop.getUserAgent().setURIResolver(fopResolver);
-			convert2FO(inProvider, new SAXResult(fop.getDefaultHandler()),
-					options);
-		} catch (FOPException e) {
-			throw new XDocConverterException(e);
-		}
+    public void convert( IEntryInputStreamProvider inProvider, OutputStream outputStream, OutputStream outForFO,
+                         Options options )
+        throws XDocConverterException
+    {
+        try
+        {
+            if ( outForFO != null )
+            {
+                convert2FO( inProvider, new StreamResult( outForFO ), options );
+            }
+            FopFactory fopFactory = FopFactory.newInstance();
+            Fop fop = fopFactory.newFop( MimeConstants.MIME_PDF, outputStream );
+            URIResolver fopResolver = createURIResolver( inProvider );
+            fop.getUserAgent().setURIResolver( fopResolver );
+            convert2FO( inProvider, new SAXResult( fop.getDefaultHandler() ), options );
+        }
+        catch ( FOPException e )
+        {
+            throw new XDocConverterException( e );
+        }
 
-	}
+    }
 
-	@Override
-	public MimeMapping getMimeMapping() {
-		return PDF_MIME_MAPPING;
-	}
+    @Override
+    public MimeMapping getMimeMapping()
+    {
+        return PDF_MIME_MAPPING;
+    }
 
 }

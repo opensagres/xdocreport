@@ -34,35 +34,38 @@ import javax.xml.transform.stream.StreamResult;
 import javax.xml.transform.stream.StreamSource;
 
 /**
- * XML Pretty Printer implemented with "indent-number". This XML Pretty Printer
- * implementation can crash with this error :
+ * XML Pretty Printer implemented with "indent-number". This XML Pretty Printer implementation can crash with this error
+ * :
  * 
  * <pre>
  *  java.lang.IllegalArgumentException: Not supported: indent-number
  * </pre>
  * 
  * (see bug http://bugs.sun.com/bugdatabase/view_bug.do?bug_id=6519088)
- * 
  */
-public class IndentNumberPrettyPrinter implements IXMLPrettyPrinter {
+public class IndentNumberPrettyPrinter
+    implements IXMLPrettyPrinter
+{
 
-	private static final String YES = "yes";
-	private static final String INDENT_NUMBER = "indent-number";
+    private static final String YES = "yes";
 
-	public static final IXMLPrettyPrinter INSTANCE = new IndentNumberPrettyPrinter();
+    private static final String INDENT_NUMBER = "indent-number";
 
-	public String prettyPrint(String xml, int indent) throws Exception {
-		TransformerFactory factory = TransformerFactory.newInstance();
+    public static final IXMLPrettyPrinter INSTANCE = new IndentNumberPrettyPrinter();
 
-		factory.setAttribute(INDENT_NUMBER, indent);
-		Transformer transformer = factory.newTransformer();
+    public String prettyPrint( String xml, int indent )
+        throws Exception
+    {
+        TransformerFactory factory = TransformerFactory.newInstance();
 
-		transformer.setOutputProperty(OutputKeys.OMIT_XML_DECLARATION, YES);
-		transformer.setOutputProperty(OutputKeys.INDENT, YES);
+        factory.setAttribute( INDENT_NUMBER, indent );
+        Transformer transformer = factory.newTransformer();
 
-		final StringWriter out = new StringWriter();
-		transformer.transform(new StreamSource(new StringReader(xml)),
-				new StreamResult(out));
-		return out.toString();
-	}
+        transformer.setOutputProperty( OutputKeys.OMIT_XML_DECLARATION, YES );
+        transformer.setOutputProperty( OutputKeys.INDENT, YES );
+
+        final StringWriter out = new StringWriter();
+        transformer.transform( new StreamSource( new StringReader( xml ) ), new StreamResult( out ) );
+        return out.toString();
+    }
 }

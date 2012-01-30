@@ -27,23 +27,29 @@ package org.apache.poi.xwpf.converter.internal.xhtml;
 import fr.opensagres.xdocreport.xhtml.extension.CSSStyleSheet;
 import fr.opensagres.xdocreport.xhtml.extension.XHTMLPage;
 
-public class POIXHTMLPage extends XHTMLPage {
+public class POIXHTMLPage
+    extends XHTMLPage
+{
 
-	private final StyleEngineForXHTML styleEngine;
-//	private final Writer writer;
-//	private final OutputStream out;
-	public POIXHTMLPage(StyleEngineForXHTML styleEngine, int indent) {
-		super(indent);
-		this.styleEngine = styleEngine;
-	}
+    private final StyleEngineForXHTML styleEngine;
 
-	public StyleEngineForXHTML getStyleEngine() {
-		return styleEngine;
-	}
+    // private final Writer writer;
+    // private final OutputStream out;
+    public POIXHTMLPage( StyleEngineForXHTML styleEngine, int indent )
+    {
+        super( indent );
+        this.styleEngine = styleEngine;
+    }
 
-	@Override
-	public CSSStyleSheet getCSSStyleSheet() {
-		return styleEngine.getCSSStyleSheet();
-	}
+    public StyleEngineForXHTML getStyleEngine()
+    {
+        return styleEngine;
+    }
+
+    @Override
+    public CSSStyleSheet getCSSStyleSheet()
+    {
+        return styleEngine.getCSSStyleSheet();
+    }
 
 }

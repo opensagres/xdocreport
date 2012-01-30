@@ -33,32 +33,42 @@ import org.apache.poi.xwpf.converter.Options;
 import org.apache.poi.xwpf.converter.XWPFConverterException;
 import org.apache.poi.xwpf.usermodel.XWPFDocument;
 
-public abstract class AbstractXWPFConverter<T extends Options> implements
-		IXWPFConverter<T> {
+public abstract class AbstractXWPFConverter<T extends Options>
+    implements IXWPFConverter<T>
+{
 
-	public void convert(XWPFDocument XWPFDocument, OutputStream out, T options)
-			throws XWPFConverterException, IOException {
-		try {
-			doConvert(XWPFDocument, out, null, options);
-		} finally {
-			if (out != null) {
-				out.close();
-			}
-		}
-	}
+    public void convert( XWPFDocument XWPFDocument, OutputStream out, T options )
+        throws XWPFConverterException, IOException
+    {
+        try
+        {
+            doConvert( XWPFDocument, out, null, options );
+        }
+        finally
+        {
+            if ( out != null )
+            {
+                out.close();
+            }
+        }
+    }
 
-	public void convert(XWPFDocument XWPFDocument, Writer writer, T options)
-			throws XWPFConverterException, IOException {
-		try {
-			doConvert(XWPFDocument, null, writer, options);
-		} finally {
-			if (writer != null) {
-				writer.close();
-			}
-		}
-	}
+    public void convert( XWPFDocument XWPFDocument, Writer writer, T options )
+        throws XWPFConverterException, IOException
+    {
+        try
+        {
+            doConvert( XWPFDocument, null, writer, options );
+        }
+        finally
+        {
+            if ( writer != null )
+            {
+                writer.close();
+            }
+        }
+    }
 
-	protected abstract void doConvert(XWPFDocument XWPFDocument,
-			OutputStream out, Writer writer, T options)
-			throws XWPFConverterException, IOException;
+    protected abstract void doConvert( XWPFDocument XWPFDocument, OutputStream out, Writer writer, T options )
+        throws XWPFConverterException, IOException;
 }

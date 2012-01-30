@@ -26,7 +26,8 @@ package org.apache.poi.xwpf.converter.internal.itext.stylable;
 
 import fr.opensagres.xdocreport.itext.extension.IITextContainer;
 
-public interface IStylableContainer<T> extends IStylableElement<T>,
-		IITextContainer {
+public interface IStylableContainer<T>
+    extends IStylableElement<T>, IITextContainer
+{
 
 }

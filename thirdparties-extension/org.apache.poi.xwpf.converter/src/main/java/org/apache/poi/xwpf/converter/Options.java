@@ -24,6 +24,7 @@
  */
 package org.apache.poi.xwpf.converter;
 
-public class Options {
+public class Options
+{
 
 }

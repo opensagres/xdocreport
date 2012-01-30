@@ -28,36 +28,44 @@ import java.util.Collection;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
-public class BasicXDocReportDispatcher<T extends IXDocReportController> extends
-		AbstractXDocReportDispatcher<T> {
+public class BasicXDocReportDispatcher<T extends IXDocReportController>
+    extends AbstractXDocReportDispatcher<T>
+{
 
-	private final Map<String, T> controllersMap;
+    private final Map<String, T> controllersMap;
 
-	public BasicXDocReportDispatcher() {
-		this.controllersMap = new LinkedHashMap<String, T>();
-	}
+    public BasicXDocReportDispatcher()
+    {
+        this.controllersMap = new LinkedHashMap<String, T>();
+    }
 
-	public T getReportController(String reportId) {
-		return controllersMap.get(reportId);
-	}
+    public T getReportController( String reportId )
+    {
+        return controllersMap.get( reportId );
+    }
 
-	public void register(String reportId, T controller) {
-		controllersMap.put(reportId, controller);
-	}
+    public void register( String reportId, T controller )
+    {
+        controllersMap.put( reportId, controller );
+    }
 
-	public void unregister(T controller) {
-		controllersMap.remove(controller);
-	}
-	
-	public void unregister(String reportId) {
-		T controller = controllersMap.get(reportId);
-		if (controller != null) {
-			unregister(controller);
-		}
-	}
-	
-	public Collection<T> getControllers() {
-		return controllersMap.values();
-	}
+    public void unregister( T controller )
+    {
+        controllersMap.remove( controller );
+    }
+
+    public void unregister( String reportId )
+    {
+        T controller = controllersMap.get( reportId );
+        if ( controller != null )
+        {
+            unregister( controller );
+        }
+    }
+
+    public Collection<T> getControllers()
+    {
+        return controllersMap.values();
+    }
 
 }

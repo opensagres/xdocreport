@@ -29,64 +29,73 @@ import javax.xml.transform.stream.StreamSource;
 
 /**
  * XSLT {@link Templates} registry which is used to compute XSLT and cache it.
- * 
  */
-public class XSLTemplatesRegistry {
+public class XSLTemplatesRegistry
+{
 
-	private static final XSLTemplatesRegistry INSTANCE = new XSLTemplatesRegistry();
+    private static final XSLTemplatesRegistry INSTANCE = new XSLTemplatesRegistry();
 
-	private Map<String, Templates> cachedTemplates = new HashMap<String, Templates>();
+    private Map<String, Templates> cachedTemplates = new HashMap<String, Templates>();
 
-	private ITransformerFactory transformerFactory = DefaultTransformerFactory
-			.getInstance();
+    private ITransformerFactory transformerFactory = DefaultTransformerFactory.getInstance();
 
-	private XSLTemplatesRegistry() {
+    private XSLTemplatesRegistry()
+    {
 
-	}
+    }
 
-	public static XSLTemplatesRegistry getRegistry() {
-		return INSTANCE;
-	}
+    public static XSLTemplatesRegistry getRegistry()
+    {
+        return INSTANCE;
+    }
 
-	public Templates getTemplates(String uri) {
-		return cachedTemplates.get(uri);
-	}
+    public Templates getTemplates( String uri )
+    {
+        return cachedTemplates.get( uri );
+    }
 
-	public Templates loadTemplates(String uri, Reader reader,
-			URIResolver resolver) throws TransformerConfigurationException {
-		return loadTemplates(uri, new StreamSource(reader), resolver);
-	}
+    public Templates loadTemplates( String uri, Reader reader, URIResolver resolver )
+        throws TransformerConfigurationException
+    {
+        return loadTemplates( uri, new StreamSource( reader ), resolver );
+    }
 
-	public Templates loadTemplates(String uri, InputStream stream,
-			URIResolver resolver) throws TransformerConfigurationException {
-		return loadTemplates(uri, new StreamSource(stream), resolver);
-	}
+    public Templates loadTemplates( String uri, InputStream stream, URIResolver resolver )
+        throws TransformerConfigurationException
+    {
+        return loadTemplates( uri, new StreamSource( stream ), resolver );
+    }
 
-	public synchronized Templates loadTemplates(String uri, Source source,
-			URIResolver resolver) throws TransformerConfigurationException {
-		Templates templates = getTemplates(uri);
-		if (templates != null) {
-			return templates;
-		}
-		TransformerFactory factory = getTransformerFactory()
-				.createTransformerFactory();
-		if (resolver != null) {
-			factory.setURIResolver(resolver);
-		}
-		templates = factory.newTemplates(source);
-		cachedTemplates.put(uri, templates);
-		return templates;
-	}
+    public synchronized Templates loadTemplates( String uri, Source source, URIResolver resolver )
+        throws TransformerConfigurationException
+    {
+        Templates templates = getTemplates( uri );
+        if ( templates != null )
+        {
+            return templates;
+        }
+        TransformerFactory factory = getTransformerFactory().createTransformerFactory();
+        if ( resolver != null )
+        {
+            factory.setURIResolver( resolver );
+        }
+        templates = factory.newTemplates( source );
+        cachedTemplates.put( uri, templates );
+        return templates;
+    }
 
-	public void setTransformerFactory(ITransformerFactory transformerFactory) {
-		this.transformerFactory = transformerFactory;
-	}
+    public void setTransformerFactory( ITransformerFactory transformerFactory )
+    {
+        this.transformerFactory = transformerFactory;
+    }
 
-	public ITransformerFactory getTransformerFactory() {
-		return transformerFactory;
-	}
+    public ITransformerFactory getTransformerFactory()
+    {
+        return transformerFactory;
+    }
 
-	public void registerTemplates(String uri, Templates templates) {
-		cachedTemplates.put(uri, templates);
-	}
+    public void registerTemplates( String uri, Templates templates )
+    {
+        cachedTemplates.put( uri, templates );
+    }
 }

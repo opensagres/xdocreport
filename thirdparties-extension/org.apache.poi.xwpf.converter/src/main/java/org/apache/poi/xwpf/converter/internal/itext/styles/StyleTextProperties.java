@@ -28,50 +28,63 @@ import java.awt.Color;
 
 import com.lowagie.text.Font;
 
+public class StyleTextProperties
+{
 
+    private Font font;
 
-public class StyleTextProperties {
+    private Color backgroundColor;
 
-	private Font font;
-	private Color backgroundColor;
-	private Float indentation;
-	
-	public StyleTextProperties() {
+    private Float indentation;
 
-	}
+    public StyleTextProperties()
+    {
 
-	public StyleTextProperties(StyleTextProperties textProperties) {
-		this.backgroundColor = textProperties.backgroundColor;	
-		this.font = textProperties.font;
-	}
+    }
 
-	public Color getBackgroundColor() {
-		return backgroundColor;
-	}
+    public StyleTextProperties( StyleTextProperties textProperties )
+    {
+        this.backgroundColor = textProperties.backgroundColor;
+        this.font = textProperties.font;
+    }
 
-	public void setBackgroundColor(Color backgroundColor) {
-		this.backgroundColor = backgroundColor;
-	}
+    public Color getBackgroundColor()
+    {
+        return backgroundColor;
+    }
 
-	public Font getFont() {
-		return font;
-	}
+    public void setBackgroundColor( Color backgroundColor )
+    {
+        this.backgroundColor = backgroundColor;
+    }
 
-	public void setFont(Font font) {
-		this.font = font;
-	}
+    public Font getFont()
+    {
+        return font;
+    }
 
-	public void merge(StyleTextProperties textProperties) {
-		if (textProperties.getBackgroundColor() != null) {
-			backgroundColor = textProperties.getBackgroundColor();
-		}
-		if (textProperties.getFont() != null) {
-			if (font == null) {
-				font = textProperties.getFont();
-			} else {
-				font = font.difference(textProperties.getFont());
-			}
-		}
+    public void setFont( Font font )
+    {
+        this.font = font;
+    }
 
-	}
+    public void merge( StyleTextProperties textProperties )
+    {
+        if ( textProperties.getBackgroundColor() != null )
+        {
+            backgroundColor = textProperties.getBackgroundColor();
+        }
+        if ( textProperties.getFont() != null )
+        {
+            if ( font == null )
+            {
+                font = textProperties.getFont();
+            }
+            else
+            {
+                font = font.difference( textProperties.getFont() );
+            }
+        }
+
+    }
 }

@@ -34,18 +34,20 @@ import fr.opensagres.xdocreport.template.formatter.IDocumentFormatter;
 
 /**
  * Open Office ODT preprocessor to modify the META-INF/manifest.xml entry.
- * 
  */
-public class ODTManifestXMLProcessor extends SAXXDocPreprocessor {
+public class ODTManifestXMLProcessor
+    extends SAXXDocPreprocessor
+{
 
-	public static final IXDocPreprocessor INSTANCE = new ODTManifestXMLProcessor();
+    public static final IXDocPreprocessor INSTANCE = new ODTManifestXMLProcessor();
 
-	@Override
-	protected BufferedDocumentContentHandler createBufferedDocumentContentHandler(
-			String entryName, FieldsMetadata fieldsMetadata,
-			IDocumentFormatter formatter, Map<String, Object> sharedContext) {
-		return new ODTManifestXMLDocumentContentHandler(fieldsMetadata,
-				formatter);
-	}
+    @Override
+    protected BufferedDocumentContentHandler createBufferedDocumentContentHandler( String entryName,
+                                                                                   FieldsMetadata fieldsMetadata,
+                                                                                   IDocumentFormatter formatter,
+                                                                                   Map<String, Object> sharedContext )
+    {
+        return new ODTManifestXMLDocumentContentHandler( fieldsMetadata, formatter );
+    }
 
 }

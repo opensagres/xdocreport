@@ -29,62 +29,74 @@ import java.util.Stack;
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
 
-public abstract class TransformedBufferedDocument extends BufferedDocument {
+public abstract class TransformedBufferedDocument
+    extends BufferedDocument
+{
 
-	// Table stack
-	private final Stack<TableBufferedRegion> tableStack = new Stack<TableBufferedRegion>();
-	protected RowBufferedRegion currentRow;
+    // Table stack
+    private final Stack<TableBufferedRegion> tableStack = new Stack<TableBufferedRegion>();
 
-	@Override
-	protected BufferedElement createElement(BufferedElement parent, String uri,
-			String localName, String name, Attributes attributes)
-			throws SAXException {
-		if (isTable(uri, localName, name)) {
-			TableBufferedRegion currentTable = new TableBufferedRegion(
-					getCurrentElement(), uri, localName, name, attributes);
-			// currentRegion = currentTable;
-			// Add table in the stack
-			tableStack.push(currentTable);
-			return currentTable;
+    protected RowBufferedRegion currentRow;
 
-		} else if (isTableRow(uri, localName, name)) {
-			// Check if currentRow belong to a table
-			if (tableStack.size() < 1) {
-				throw new SAXException(
-						"XML mal formatted. XML Row must be included in a XML Table");
-			}
-			currentRow = new RowBufferedRegion(getCurrentElement(), uri,
-					localName, name, attributes);
-			return currentRow;
-		}
-		return super.createElement(parent, uri, localName, name, attributes);
-	}
+    @Override
+    protected BufferedElement createElement( BufferedElement parent, String uri, String localName, String name,
+                                             Attributes attributes )
+        throws SAXException
+    {
+        if ( isTable( uri, localName, name ) )
+        {
+            TableBufferedRegion currentTable =
+                new TableBufferedRegion( getCurrentElement(), uri, localName, name, attributes );
+            // currentRegion = currentTable;
+            // Add table in the stack
+            tableStack.push( currentTable );
+            return currentTable;
 
-	@Override
-	public void onEndEndElement(String uri, String localName, String name) {
-		if (isTable(uri, localName, name)) {
-			// end of table, remove the last table which was added
-			tableStack.pop();
-		} else if (isTableRow(uri, localName, name)) {
-			// end of row, current region is the last table which was added.
-			currentRow = null;
-		}
-		super.onEndEndElement(uri, localName, name);
-	}
+        }
+        else if ( isTableRow( uri, localName, name ) )
+        {
+            // Check if currentRow belong to a table
+            if ( tableStack.size() < 1 )
+            {
+                throw new SAXException( "XML mal formatted. XML Row must be included in a XML Table" );
+            }
+            currentRow = new RowBufferedRegion( getCurrentElement(), uri, localName, name, attributes );
+            return currentRow;
+        }
+        return super.createElement( parent, uri, localName, name, attributes );
+    }
 
-	protected abstract boolean isTable(String uri, String localName, String name);
+    @Override
+    public void onEndEndElement( String uri, String localName, String name )
+    {
+        if ( isTable( uri, localName, name ) )
+        {
+            // end of table, remove the last table which was added
+            tableStack.pop();
+        }
+        else if ( isTableRow( uri, localName, name ) )
+        {
+            // end of row, current region is the last table which was added.
+            currentRow = null;
+        }
+        super.onEndEndElement( uri, localName, name );
+    }
 
-	protected abstract boolean isTableRow(String uri, String localName,
-			String name);
+    protected abstract boolean isTable( String uri, String localName, String name );
 
-	public TableBufferedRegion getCurrentTable() {
-		if (!tableStack.isEmpty()) {
-			return tableStack.peek();
-		}
-		return null;
-	}
+    protected abstract boolean isTableRow( String uri, String localName, String name );
 
-	public RowBufferedRegion getCurrentTableRow() {
-		return currentRow;
-	}
+    public TableBufferedRegion getCurrentTable()
+    {
+        if ( !tableStack.isEmpty() )
+        {
+            return tableStack.peek();
+        }
+        return null;
+    }
+
+    public RowBufferedRegion getCurrentTableRow()
+    {
+        return currentRow;
+    }
 }

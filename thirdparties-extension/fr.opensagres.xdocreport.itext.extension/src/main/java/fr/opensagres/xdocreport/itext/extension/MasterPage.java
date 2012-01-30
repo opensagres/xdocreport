@@ -24,34 +24,43 @@
  */
 package fr.opensagres.xdocreport.itext.extension;
 
-public class MasterPage {
+public class MasterPage
+{
 
-	private final String name;
-	private IMasterPageHeaderFooter header;
-	private IMasterPageHeaderFooter footer;
+    private final String name;
 
-	public MasterPage(String name) {
-		this.name = name;
-	}
+    private IMasterPageHeaderFooter header;
 
-	public IMasterPageHeaderFooter getHeader() {
-		return header;
-	}
+    private IMasterPageHeaderFooter footer;
 
-	public void setHeader(IMasterPageHeaderFooter header) {
-		this.header = header;
-	}
+    public MasterPage( String name )
+    {
+        this.name = name;
+    }
 
-	public IMasterPageHeaderFooter getFooter() {
-		return footer;
-	}
+    public IMasterPageHeaderFooter getHeader()
+    {
+        return header;
+    }
 
-	public void setFooter(IMasterPageHeaderFooter footer) {
-		this.footer = footer;
-	}
-	
-	public String getName() {
-		return name;
-	}
+    public void setHeader( IMasterPageHeaderFooter header )
+    {
+        this.header = header;
+    }
+
+    public IMasterPageHeaderFooter getFooter()
+    {
+        return footer;
+    }
+
+    public void setFooter( IMasterPageHeaderFooter footer )
+    {
+        this.footer = footer;
+    }
+
+    public String getName()
+    {
+        return name;
+    }
 
 }

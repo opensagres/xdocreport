@@ -27,24 +27,29 @@ package fr.opensagres.xdocreport.itext.extension;
 import com.lowagie.text.Rectangle;
 import com.lowagie.text.pdf.PdfPCell;
 
+public class MasterPageHeaderFooter
+    extends ExtendedPdfPTable
+    implements IMasterPageHeaderFooter
+{
 
-public class MasterPageHeaderFooter extends ExtendedPdfPTable implements IMasterPageHeaderFooter {
+    private final PdfPCell tableCell;
 
-	private final PdfPCell tableCell;
+    public MasterPageHeaderFooter()
+    {
+        super( 1 );
+        super.setTotalWidth( 1000 );
+        super.setWidthPercentage( 100f );
+        tableCell = new ExtendedPdfPCell();
+        tableCell.disableBorderSide( Rectangle.BOX );
+    }
 
-	public MasterPageHeaderFooter() {
-		super(1);
-		super.setTotalWidth(1000);
-		super.setWidthPercentage(100f);
-		tableCell = new ExtendedPdfPCell();
-		tableCell.disableBorderSide(Rectangle.BOX);				
-	}
-	
-	public PdfPCell getTableCell() {
-		return tableCell;
-	}
-	
-	public void flush() {
-		super.addCell(tableCell);		
-	}
+    public PdfPCell getTableCell()
+    {
+        return tableCell;
+    }
+
+    public void flush()
+    {
+        super.addCell( tableCell );
+    }
 }

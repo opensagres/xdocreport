@@ -34,125 +34,138 @@ import com.lowagie.text.Section;
 import com.lowagie.text.pdf.PdfPCell;
 import com.lowagie.text.pdf.PdfPTable;
 
-public class ExtendedSection extends Section {
+public class ExtendedSection
+    extends Section
+{
 
-	private PdfPCell cell;
-	private com.lowagie.text.Paragraph computedTitle;
-	private Paragraph bookmarkTitleParagraph;
+    private PdfPCell cell;
 
-	public ExtendedSection(Paragraph title, int numberDepth) {
-		super(title, numberDepth);
-	}
+    private com.lowagie.text.Paragraph computedTitle;
 
-	@Override
-	public Paragraph getTitle() {
-		if (computedTitle == null) {
-			bookmarkTitleParagraph = ExtendedSection.ancestorConstructTitle(
-					getParagraphFactory(), title, numbers, numberDepth,
-					numberStyle);
-			computedTitle = ExtendedSection.constructTitle(
-					getParagraphFactory(), bookmarkTitleParagraph, numbers,
-					numberDepth, numberStyle, cell);
-		}
-		return computedTitle;
-	}
+    private Paragraph bookmarkTitleParagraph;
 
-	@Override
-	public Paragraph getBookmarkTitle() {
-		return bookmarkTitleParagraph;
-	}
+    public ExtendedSection( Paragraph title, int numberDepth )
+    {
+        super( title, numberDepth );
+    }
 
-	public Section addSection(float indentation, Paragraph title,
-			int numberDepth) {
-		if (isAddedCompletely()) {
-			throw new IllegalStateException(
-					"This LargeElement has already been added to the Document.");
-		}
-		Section section = new ExtendedSection(title, numberDepth);
-		section.setIndentation(indentation);
-		add(section);
-		return section;
-	}
+    @Override
+    public Paragraph getTitle()
+    {
+        if ( computedTitle == null )
+        {
+            bookmarkTitleParagraph =
+                ExtendedSection.ancestorConstructTitle( getParagraphFactory(), title, numbers, numberDepth, numberStyle );
+            computedTitle =
+                ExtendedSection.constructTitle( getParagraphFactory(), bookmarkTitleParagraph, numbers, numberDepth,
+                                                numberStyle, cell );
+        }
+        return computedTitle;
+    }
 
-	public MarkedSection addMarkedSection() {
-		MarkedSection section = new MarkedSection(new ExtendedSection(null,
-				numberDepth + 1));
-		add(section);
-		return section;
-	}
+    @Override
+    public Paragraph getBookmarkTitle()
+    {
+        return bookmarkTitleParagraph;
+    }
 
-	public static Paragraph constructTitle(IParagraphFactory factory,
-			Paragraph ancestorTitle, ArrayList numbers, int numberDepth,
-			int numberStyle, PdfPCell cell) {		
-		if (ancestorTitle != null && cell != null) {
-			Paragraph newTitle = factory.createParagraph();
-			PdfPTable table = new PdfPTable(1);
-			table.setWidthPercentage(100f);
-			cell.addElement(ancestorTitle);
-			table.addCell(cell);
-			newTitle.add(table);
-			return newTitle;
-		}
-		return ancestorTitle;
-	}
+    public Section addSection( float indentation, Paragraph title, int numberDepth )
+    {
+        if ( isAddedCompletely() )
+        {
+            throw new IllegalStateException( "This LargeElement has already been added to the Document." );
+        }
+        Section section = new ExtendedSection( title, numberDepth );
+        section.setIndentation( indentation );
+        add( section );
+        return section;
+    }
 
-	/**
-	 * Constructs a Paragraph that will be used as title for a Section or
-	 * Chapter.
-	 * 
-	 * @param title
-	 *            the title of the section
-	 * @param numbers
-	 *            a list of sectionnumbers
-	 * @param numberDepth
-	 *            how many numbers have to be shown
-	 * @param numberStyle
-	 *            the numbering style
-	 * @return a Paragraph object
-	 * @since iText 2.0.8
-	 */
-	public static Paragraph ancestorConstructTitle(IParagraphFactory factory,
-			Paragraph title, ArrayList numbers, int numberDepth, int numberStyle) {
-		if (title == null) {
-			return null;
-		}
+    public MarkedSection addMarkedSection()
+    {
+        MarkedSection section = new MarkedSection( new ExtendedSection( null, numberDepth + 1 ) );
+        add( section );
+        return section;
+    }
 
-		int depth = Math.min(numbers.size(), numberDepth);
-		if (depth < 1) {
-			return title;
-		}
-		StringBuffer buf = new StringBuffer(" ");
-		for (int i = 0; i < depth; i++) {
-			buf.insert(0, ".");
-			buf.insert(0, ((Integer) numbers.get(i)).intValue());
-		}
-		if (numberStyle == NUMBERSTYLE_DOTTED_WITHOUT_FINAL_DOT) {
-			buf.deleteCharAt(buf.length() - 2);
-		}
-		Paragraph result = factory.createParagraph(title);
-		result.add(0, new Chunk(buf.toString(), title.getFont()));
-		return result;
-	}
+    public static Paragraph constructTitle( IParagraphFactory factory, Paragraph ancestorTitle, ArrayList numbers,
+                                            int numberDepth, int numberStyle, PdfPCell cell )
+    {
+        if ( ancestorTitle != null && cell != null )
+        {
+            Paragraph newTitle = factory.createParagraph();
+            PdfPTable table = new PdfPTable( 1 );
+            table.setWidthPercentage( 100f );
+            cell.addElement( ancestorTitle );
+            table.addCell( cell );
+            newTitle.add( table );
+            return newTitle;
+        }
+        return ancestorTitle;
+    }
 
-	public PdfPCell getPdfPCell() {
-		if (cell != null) {
-			return cell;
-		}
-		cell = createPdfPCell();
-		return cell;
-	}
+    /**
+     * Constructs a Paragraph that will be used as title for a Section or Chapter.
+     * 
+     * @param title the title of the section
+     * @param numbers a list of sectionnumbers
+     * @param numberDepth how many numbers have to be shown
+     * @param numberStyle the numbering style
+     * @return a Paragraph object
+     * @since iText 2.0.8
+     */
+    public static Paragraph ancestorConstructTitle( IParagraphFactory factory, Paragraph title, ArrayList numbers,
+                                                    int numberDepth, int numberStyle )
+    {
+        if ( title == null )
+        {
+            return null;
+        }
 
-	private synchronized PdfPCell createPdfPCell() {
-		if (cell != null) {
-			return cell;
-		}
-		PdfPCell cell = new PdfPCell();
-		cell.setBorder(Rectangle.NO_BORDER);
-		cell.setPadding(0);
-		return cell;
-	}
+        int depth = Math.min( numbers.size(), numberDepth );
+        if ( depth < 1 )
+        {
+            return title;
+        }
+        StringBuffer buf = new StringBuffer( " " );
+        for ( int i = 0; i < depth; i++ )
+        {
+            buf.insert( 0, "." );
+            buf.insert( 0, ( (Integer) numbers.get( i ) ).intValue() );
+        }
+        if ( numberStyle == NUMBERSTYLE_DOTTED_WITHOUT_FINAL_DOT )
+        {
+            buf.deleteCharAt( buf.length() - 2 );
+        }
+        Paragraph result = factory.createParagraph( title );
+        result.add( 0, new Chunk( buf.toString(), title.getFont() ) );
+        return result;
+    }
 
-	protected IParagraphFactory getParagraphFactory() {
-		return ParagraphFactory.getDefault();
-	}
+    public PdfPCell getPdfPCell()
+    {
+        if ( cell != null )
+        {
+            return cell;
+        }
+        cell = createPdfPCell();
+        return cell;
+    }
+
+    private synchronized PdfPCell createPdfPCell()
+    {
+        if ( cell != null )
+        {
+            return cell;
+        }
+        PdfPCell cell = new PdfPCell();
+        cell.setBorder( Rectangle.NO_BORDER );
+        cell.setPadding( 0 );
+        return cell;
+    }
+
+    protected IParagraphFactory getParagraphFactory()
+    {
+        return ParagraphFactory.getDefault();
+    }
 }

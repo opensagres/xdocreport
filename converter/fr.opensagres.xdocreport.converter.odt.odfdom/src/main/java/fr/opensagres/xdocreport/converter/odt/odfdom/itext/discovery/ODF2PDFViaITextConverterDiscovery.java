@@ -31,30 +31,38 @@ import fr.opensagres.xdocreport.converter.discovery.IConverterDiscovery;
 import fr.opensagres.xdocreport.converter.odt.odfdom.itext.ODF2PDFViaITextConverter;
 import fr.opensagres.xdocreport.core.document.DocumentKind;
 
-public class ODF2PDFViaITextConverterDiscovery implements IConverterDiscovery {
+public class ODF2PDFViaITextConverterDiscovery
+    implements IConverterDiscovery
+{
 
-	public String getId() {
-		return "ODT2PDFViaIText";
-	}
+    public String getId()
+    {
+        return "ODT2PDFViaIText";
+    }
 
-	public String getDescription() {
-		return "Convert ODT 2 PDF via IText";
-	}
+    public String getDescription()
+    {
+        return "Convert ODT 2 PDF via IText";
+    }
 
-	public String getFrom() {
-		return DocumentKind.ODT.name();
-	}
+    public String getFrom()
+    {
+        return DocumentKind.ODT.name();
+    }
 
-	public String getTo() {
-		return ConverterTypeTo.PDF.name();
-	}
+    public String getTo()
+    {
+        return ConverterTypeTo.PDF.name();
+    }
 
-	public String getVia() {
-		return ConverterTypeVia.ITEXT.name();
-	}
+    public String getVia()
+    {
+        return ConverterTypeVia.ITEXT.name();
+    }
 
-	public IConverter getConverter() {
-		return ODF2PDFViaITextConverter.getInstance();
-	}
+    public IConverter getConverter()
+    {
+        return ODF2PDFViaITextConverter.getInstance();
+    }
 
 }

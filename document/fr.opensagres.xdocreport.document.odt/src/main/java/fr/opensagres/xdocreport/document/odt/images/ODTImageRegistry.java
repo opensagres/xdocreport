@@ -34,40 +34,46 @@ import fr.opensagres.xdocreport.document.images.ImageProviderInfo;
  * ODT image registry.
  * 
  * @author Angelo ZERR
- * 
  */
-public class ODTImageRegistry extends AbstractImageRegistry {
+public class ODTImageRegistry
+    extends AbstractImageRegistry
+{
 
-	private static final String POINT_UNIT = "pt";
-	private static final String IMAGE_BASE_PATH = "Pictures/";
+    private static final String POINT_UNIT = "pt";
 
-	public ODTImageRegistry(IEntryReaderProvider readerProvider,
-			IEntryWriterProvider writerProvider,
-			IEntryOutputStreamProvider outputStreamProvider) {
-		super(readerProvider, writerProvider, outputStreamProvider);
-	}
+    private static final String IMAGE_BASE_PATH = "Pictures/";
 
-	@Override
-	protected String getImageBasePath() {
-		return IMAGE_BASE_PATH;
-	}
+    public ODTImageRegistry( IEntryReaderProvider readerProvider, IEntryWriterProvider writerProvider,
+                             IEntryOutputStreamProvider outputStreamProvider )
+    {
+        super( readerProvider, writerProvider, outputStreamProvider );
+    }
 
-	@Override
-	protected String getPath(ImageProviderInfo info) {
-		return info.getImageBasePath() + info.getImageFileName();
-	}
+    @Override
+    protected String getImageBasePath()
+    {
+        return IMAGE_BASE_PATH;
+    }
 
-	@Override
-	protected String getSize(float sizeAsPixel) {
-		float sizeAsPoint = sizeAsPixel * 0.75f;
-		String s = Float.toString(sizeAsPoint);
-		// TODO Use DecimalFormat.getIntegerInstance()to format the float to
-		// String.
-		int dotindex = s.indexOf('.');
-		if (dotindex != -1) {
-			return s.substring(0, dotindex) + POINT_UNIT;
-		}
-		return s + POINT_UNIT;
-	}
+    @Override
+    protected String getPath( ImageProviderInfo info )
+    {
+        return info.getImageBasePath() + info.getImageFileName();
+    }
+
+    @Override
+    protected String getSize( float sizeAsPixel )
+    {
+        float sizeAsPoint = sizeAsPixel * 0.75f;
+        String s = Float.toString( sizeAsPoint );
+        // TODO Use DecimalFormat.getIntegerInstance()to format the float to
+        // String.
+        int dotindex = s.indexOf( '.' );
+        if ( dotindex != -1 )
+        {
+            return s.substring( 0, dotindex ) + POINT_UNIT;
+        }
+        return s + POINT_UNIT;
+    }
 
 }

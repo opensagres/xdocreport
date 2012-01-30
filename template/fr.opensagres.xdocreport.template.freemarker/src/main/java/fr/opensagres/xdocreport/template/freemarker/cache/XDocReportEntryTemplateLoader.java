@@ -35,68 +35,71 @@ import fr.opensagres.xdocreport.template.utils.TemplateUtils;
 import freemarker.cache.TemplateLoader;
 
 /**
- * Freemarker template loader {@link TemplateLoader} implementation used to
- * cache entry name of {@link XDocArchive} which must be merged with Java model
- * with freemarker template engine.
- * 
+ * Freemarker template loader {@link TemplateLoader} implementation used to cache entry name of {@link XDocArchive}
+ * which must be merged with Java model with freemarker template engine.
  */
-public class XDocReportEntryTemplateLoader implements TemplateLoader {
+public class XDocReportEntryTemplateLoader
+    implements TemplateLoader
+{
 
-	private ITemplateEngine templateEngine;
+    private ITemplateEngine templateEngine;
 
-	public XDocReportEntryTemplateLoader(
-			ITemplateEngine freemarkerTemplateEngine) {
-		this.templateEngine = freemarkerTemplateEngine;
-	}
+    public XDocReportEntryTemplateLoader( ITemplateEngine freemarkerTemplateEngine )
+    {
+        this.templateEngine = freemarkerTemplateEngine;
+    }
 
-	public Object findTemplateSource(final String name) throws IOException {
-		ITemplateCacheInfoProvider templateCacheInfoProvider = templateEngine
-				.getTemplateCacheInfoProvider();
-		return TemplateUtils.getTemplateCacheInfo(templateCacheInfoProvider,
-				name);
-		//
-		// // Name received (see getCachedTemplateName) is like
-		// // this $reportId '!' $entryName
-		// int index = getIndexReportEntryName(name);
-		// if (index == -1) {
-		// return null;
-		// }
-		// String reportId = getReportId(name, index);
-		// String entryName = getEntryName(name, index);
-		//
-		// // Retrieve the report with the registry and create
-		// // XDocReportEntrySource
-		// // to set which entry name must be used as template.
-		// return new XDocReportEntrySource(XDocReportRegistry.getRegistry()
-		// .getReport(reportId), entryName);
-	}
+    public Object findTemplateSource( final String name )
+        throws IOException
+    {
+        ITemplateCacheInfoProvider templateCacheInfoProvider = templateEngine.getTemplateCacheInfoProvider();
+        return TemplateUtils.getTemplateCacheInfo( templateCacheInfoProvider, name );
+        //
+        // // Name received (see getCachedTemplateName) is like
+        // // this $reportId '!' $entryName
+        // int index = getIndexReportEntryName(name);
+        // if (index == -1) {
+        // return null;
+        // }
+        // String reportId = getReportId(name, index);
+        // String entryName = getEntryName(name, index);
+        //
+        // // Retrieve the report with the registry and create
+        // // XDocReportEntrySource
+        // // to set which entry name must be used as template.
+        // return new XDocReportEntrySource(XDocReportRegistry.getRegistry()
+        // .getReport(reportId), entryName);
+    }
 
-	public long getLastModified(final Object templateSource) {
-		// Get XDocReportEntrySource created with findTemplateSource
-		IEntryInfo cacheInfo = (IEntryInfo) templateSource;
-		return cacheInfo.getLastModified();
-		// XDocReportEntrySource entrySource = (XDocReportEntrySource)
-		// templateSource;
-		// IXDocReport report = entrySource.getReport();
-		// String entryName = entrySource.getEntryName();
-		// return report.getDocumentArchive().getLastModifiedEntry(entryName);
-	}
+    public long getLastModified( final Object templateSource )
+    {
+        // Get XDocReportEntrySource created with findTemplateSource
+        IEntryInfo cacheInfo = (IEntryInfo) templateSource;
+        return cacheInfo.getLastModified();
+        // XDocReportEntrySource entrySource = (XDocReportEntrySource)
+        // templateSource;
+        // IXDocReport report = entrySource.getReport();
+        // String entryName = entrySource.getEntryName();
+        // return report.getDocumentArchive().getLastModifiedEntry(entryName);
+    }
 
-	public Reader getReader(final Object templateSource, final String encoding)
-			throws IOException {
-		IEntryInfo cacheInfo = (IEntryInfo) templateSource;
-		return cacheInfo.getReader();
-		// Get XDocReportEntrySource created with findTemplateSource
-		// XDocReportEntrySource entrySource = (XDocReportEntrySource)
-		// templateSource;
-		// IXDocReport report = entrySource.getReport();
-		// String entryName = entrySource.getEntryName();
-		// // Returns the reader of the entry document archive of the report.
-		// return report.getDocumentArchive().getEntryReader(entryName);
-	}
+    public Reader getReader( final Object templateSource, final String encoding )
+        throws IOException
+    {
+        IEntryInfo cacheInfo = (IEntryInfo) templateSource;
+        return cacheInfo.getReader();
+        // Get XDocReportEntrySource created with findTemplateSource
+        // XDocReportEntrySource entrySource = (XDocReportEntrySource)
+        // templateSource;
+        // IXDocReport report = entrySource.getReport();
+        // String entryName = entrySource.getEntryName();
+        // // Returns the reader of the entry document archive of the report.
+        // return report.getDocumentArchive().getEntryReader(entryName);
+    }
 
-	public void closeTemplateSource(Object templateSource) {
-		// Do nothing.
-	}
+    public void closeTemplateSource( Object templateSource )
+    {
+        // Do nothing.
+    }
 
 }

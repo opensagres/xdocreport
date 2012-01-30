@@ -34,47 +34,59 @@ import junit.framework.TestCase;
 import fr.opensagres.xdocreport.converter.XDocConverterException;
 import fr.opensagres.xdocreport.core.io.IEntryInputStreamProvider;
 
-public class StructuresODT2PDFTest extends TestCase {
+public class StructuresODT2PDFTest
+    extends TestCase
+{
 
-	public void testNo() throws Exception {
+    public void testNo()
+        throws Exception
+    {
 
-	}
+    }
 
-	public static void main(String[] args) {
-		doGenerate();
-		doGenerate();
-	}
-	public static void doGenerate() {
-		long startTime = System.currentTimeMillis();
+    public static void main( String[] args )
+    {
+        doGenerate();
+        doGenerate();
+    }
 
-		ODTFOPConverter converter = ODTFOPConverter.getInstance();
+    public static void doGenerate()
+    {
+        long startTime = System.currentTimeMillis();
 
-		IEntryInputStreamProvider provider = new IEntryInputStreamProvider() {
+        ODTFOPConverter converter = ODTFOPConverter.getInstance();
 
-			public InputStream getEntryInputStream(String entryName) {
-				if (entryName.endsWith(".png")) {
-					entryName = entryName.substring(entryName.indexOf('/')+1, entryName.length());
-					return StructuresODT2PDFTest.class
-							.getResourceAsStream(entryName);
-				}
-				return StructuresODT2PDFTest.class
-						.getResourceAsStream("Structures." + entryName);
-			}
-		};
+        IEntryInputStreamProvider provider = new IEntryInputStreamProvider()
+        {
 
-		try {
-			OutputStream outputStream = new FileOutputStream(new File(
-					"Structures.pdf"));
-			converter.convert(provider, outputStream, System.out, null);
-		} catch (XDocConverterException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+            public InputStream getEntryInputStream( String entryName )
+            {
+                if ( entryName.endsWith( ".png" ) )
+                {
+                    entryName = entryName.substring( entryName.indexOf( '/' ) + 1, entryName.length() );
+                    return StructuresODT2PDFTest.class.getResourceAsStream( entryName );
+                }
+                return StructuresODT2PDFTest.class.getResourceAsStream( "Structures." + entryName );
+            }
+        };
 
-		System.out.println(System.currentTimeMillis() - startTime + "(ms)");
+        try
+        {
+            OutputStream outputStream = new FileOutputStream( new File( "Structures.pdf" ) );
+            converter.convert( provider, outputStream, System.out, null );
+        }
+        catch ( XDocConverterException e )
+        {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+        catch ( IOException e )
+        {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
 
-	}
+        System.out.println( System.currentTimeMillis() - startTime + "(ms)" );
+
+    }
 }

@@ -29,89 +29,120 @@ import java.io.IOException;
 import fr.opensagres.xdocreport.document.textstyling.AbstractDocumentHandler;
 
 /**
- * 
  * Basic Document handler implementation to build html fragment content.
- * 
  */
-public class HTMLDocumentHandler extends AbstractDocumentHandler {
+public class HTMLDocumentHandler
+    extends AbstractDocumentHandler
+{
 
-	public HTMLDocumentHandler() {
-		super(null, null);
-	}
+    public HTMLDocumentHandler()
+    {
+        super( null, null );
+    }
 
-	public void startDocument() {
-		// super.write("<html>");
-		// super.write("<body>");
-	}
+    public void startDocument()
+    {
+        // super.write("<html>");
+        // super.write("<body>");
+    }
 
-	public void endDocument() {
-		// super.write("</body>");
-		// super.write("</html>");
-	}
+    public void endDocument()
+    {
+        // super.write("</body>");
+        // super.write("</html>");
+    }
 
-	public void startBold() throws IOException {
-		super.write("<strong>");
-	}
+    public void startBold()
+        throws IOException
+    {
+        super.write( "<strong>" );
+    }
 
-	public void endBold() throws IOException {
-		super.write("</strong>");
-	}
+    public void endBold()
+        throws IOException
+    {
+        super.write( "</strong>" );
+    }
 
-	public void startItalics() throws IOException {
-		super.write("<i>");
-	}
+    public void startItalics()
+        throws IOException
+    {
+        super.write( "<i>" );
+    }
 
-	public void endItalics() throws IOException {
-		super.write("</i>");
-	}
+    public void endItalics()
+        throws IOException
+    {
+        super.write( "</i>" );
+    }
 
-	public void startListItem() throws IOException {
-		super.write("<li>");
-	}
+    public void startListItem()
+        throws IOException
+    {
+        super.write( "<li>" );
+    }
 
-	public void endListItem() throws IOException {
-		super.write("</li>");
-	}
+    public void endListItem()
+        throws IOException
+    {
+        super.write( "</li>" );
+    }
 
-	@Override
-	protected void doStartOrderedList() throws IOException {
-		super.write("<ol>");
-	}
+    @Override
+    protected void doStartOrderedList()
+        throws IOException
+    {
+        super.write( "<ol>" );
+    }
 
-	@Override
-	protected void doEndOrderedList() throws IOException {
-		super.write("</ol>");
-	}
+    @Override
+    protected void doEndOrderedList()
+        throws IOException
+    {
+        super.write( "</ol>" );
+    }
 
-	@Override
-	protected void doStartUnorderedList() throws IOException {
-		super.write("<ul>");
-	}
+    @Override
+    protected void doStartUnorderedList()
+        throws IOException
+    {
+        super.write( "<ul>" );
+    }
 
-	@Override
-	protected void doEndUnorderedList() throws IOException {
-		super.write("</ul>");
-	}
+    @Override
+    protected void doEndUnorderedList()
+        throws IOException
+    {
+        super.write( "</ul>" );
+    }
 
-	public void startParagraph() throws IOException {
-		super.write("<p>");
-	}
+    public void startParagraph()
+        throws IOException
+    {
+        super.write( "<p>" );
+    }
 
-	public void endParagraph() throws IOException {
-		super.write("</p>");
-	}
+    public void endParagraph()
+        throws IOException
+    {
+        super.write( "</p>" );
+    }
 
-	public void startHeading(int level) throws IOException {
-		super.write("<h");
-		super.write(level);
-		super.write(">");
+    public void startHeading( int level )
+        throws IOException
+    {
+        super.write( "<h" );
+        super.write( level );
+        super.write( ">" );
 
-	}
+    }
 
-	public void endHeading(int level) throws IOException {
-		super.write("</h");
-		super.write(level);
-		super.write(">");
-	}
+    public void endHeading( int level )
+        throws IOException
+    {
+        super.write( "</h" );
+        super.write( level );
+        super.write( ">" );
+    }
 
 }

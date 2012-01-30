@@ -30,64 +30,77 @@ import java.io.Writer;
 
 import fr.opensagres.xdocreport.utils.StringUtils;
 
-public class XHTMLPageBeforeBody extends XHTMLPageContentBuffer {
+public class XHTMLPageBeforeBody
+    extends XHTMLPageContentBuffer
+{
 
-	private final XHTMLPage page;
-	private String bodyClass = null;
+    private final XHTMLPage page;
 
-	public XHTMLPageBeforeBody(XHTMLPage page, int indent) {
-		super(indent);
-		this.page = page;
-		super.setText(XHTML_1_0_DOCTYPE);
-		super.startElement(HTML_ELEMENT);
-		super.startElement(HEAD_ELEMENT);
-		super.setText("<meta http-equiv=\"Content-Type\" content=\"text/html; charset=UTF-8\" />");
-	}
+    private String bodyClass = null;
 
-	@Override
-	public void save(Writer out) throws IOException {
-		super.save(out);
-		CSSStyleSheet styleSheet = page.getCSSStyleSheet();
-		if (styleSheet != null && !styleSheet.isEmpty()) {
-			startElement(STYLE_ELEMENT, true, out, indent + 1);
-			styleSheet.save(out);
-			endElement(STYLE_ELEMENT, out, indent + 1);
-		}
-		endElement(HEAD_ELEMENT, out, indent);
-		super.startElement(BODY_ELEMENT, false, out, 1);
-		if (StringUtils.isNotEmpty(bodyClass)) {
-			out.write(" ");
-			out.write(CLASS_ATTR);
-			out.write("=\"");
-			out.write(bodyClass);
-			out.write("\"");
-		}
-		out.write(">");
-	}
+    public XHTMLPageBeforeBody( XHTMLPage page, int indent )
+    {
+        super( indent );
+        this.page = page;
+        super.setText( XHTML_1_0_DOCTYPE );
+        super.startElement( HTML_ELEMENT );
+        super.startElement( HEAD_ELEMENT );
+        super.setText( "<meta http-equiv=\"Content-Type\" content=\"text/html; charset=UTF-8\" />" );
+    }
 
-	@Override
-	public void save(OutputStream out) throws IOException {
-		super.save(out);
-		CSSStyleSheet styleSheet = page.getCSSStyleSheet();
-		if (styleSheet != null && !styleSheet.isEmpty()) {
-			startElement(STYLE_ELEMENT, true, out, indent + 1);
-			styleSheet.save(out);
-			endElement(STYLE_ELEMENT, out, indent + 1);
-		}
-		endElement(HEAD_ELEMENT, out, 1);
-		super.startElement(BODY_ELEMENT, false, out, 1);
-		if (StringUtils.isNotEmpty(bodyClass)) {
-			out.write(" ".getBytes());
-			out.write(CLASS_ATTR.getBytes());
-			out.write("=\"".getBytes());
-			out.write(bodyClass.getBytes());
-			out.write("\"".getBytes());
-		}
-		out.write(">".getBytes());
-	}
+    @Override
+    public void save( Writer out )
+        throws IOException
+    {
+        super.save( out );
+        CSSStyleSheet styleSheet = page.getCSSStyleSheet();
+        if ( styleSheet != null && !styleSheet.isEmpty() )
+        {
+            startElement( STYLE_ELEMENT, true, out, indent + 1 );
+            styleSheet.save( out );
+            endElement( STYLE_ELEMENT, out, indent + 1 );
+        }
+        endElement( HEAD_ELEMENT, out, indent );
+        super.startElement( BODY_ELEMENT, false, out, 1 );
+        if ( StringUtils.isNotEmpty( bodyClass ) )
+        {
+            out.write( " " );
+            out.write( CLASS_ATTR );
+            out.write( "=\"" );
+            out.write( bodyClass );
+            out.write( "\"" );
+        }
+        out.write( ">" );
+    }
 
-	public void setBodyClass(String bodyClass) {
-		this.bodyClass = bodyClass;
-	}
+    @Override
+    public void save( OutputStream out )
+        throws IOException
+    {
+        super.save( out );
+        CSSStyleSheet styleSheet = page.getCSSStyleSheet();
+        if ( styleSheet != null && !styleSheet.isEmpty() )
+        {
+            startElement( STYLE_ELEMENT, true, out, indent + 1 );
+            styleSheet.save( out );
+            endElement( STYLE_ELEMENT, out, indent + 1 );
+        }
+        endElement( HEAD_ELEMENT, out, 1 );
+        super.startElement( BODY_ELEMENT, false, out, 1 );
+        if ( StringUtils.isNotEmpty( bodyClass ) )
+        {
+            out.write( " ".getBytes() );
+            out.write( CLASS_ATTR.getBytes() );
+            out.write( "=\"".getBytes() );
+            out.write( bodyClass.getBytes() );
+            out.write( "\"".getBytes() );
+        }
+        out.write( ">".getBytes() );
+    }
+
+    public void setBodyClass( String bodyClass )
+    {
+        this.bodyClass = bodyClass;
+    }
 
 }

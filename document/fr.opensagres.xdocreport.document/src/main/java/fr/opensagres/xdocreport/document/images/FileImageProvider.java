@@ -32,32 +32,37 @@ import java.io.InputStream;
 import fr.opensagres.xdocreport.core.document.ImageFormat;
 
 /**
- * Image provider implementation with image input stream coming from
- * {@link File}.
- * 
+ * Image provider implementation with image input stream coming from {@link File}.
  */
-public class FileImageProvider extends AbstractInputStreamImageProvider {
+public class FileImageProvider
+    extends AbstractInputStreamImageProvider
+{
 
-	private final File imageFile;
-	private final ImageFormat imageFormat;
+    private final File imageFile;
 
-	public FileImageProvider(File imageFile) {
-		this(imageFile, false);
-	}
+    private final ImageFormat imageFormat;
 
-	public FileImageProvider(File imageFile, boolean useImageSize) {
-		super(useImageSize);
-		this.imageFile = imageFile;
-		this.imageFormat = ImageFormat.getFormatByResourceName(imageFile
-				.getName());
-	}
+    public FileImageProvider( File imageFile )
+    {
+        this( imageFile, false );
+    }
 
-	@Override
-	protected InputStream getInputStream() throws IOException {
-		return new FileInputStream(imageFile);
-	}
+    public FileImageProvider( File imageFile, boolean useImageSize )
+    {
+        super( useImageSize );
+        this.imageFile = imageFile;
+        this.imageFormat = ImageFormat.getFormatByResourceName( imageFile.getName() );
+    }
 
-	public ImageFormat getImageFormat() {
-		return imageFormat;
-	}
+    @Override
+    protected InputStream getInputStream()
+        throws IOException
+    {
+        return new FileInputStream( imageFile );
+    }
+
+    public ImageFormat getImageFormat()
+    {
+        return imageFormat;
+    }
 }

@@ -23,38 +23,45 @@ import fr.opensagres.xdocreport.converter.internal.pdf.fop.AbstractFOPConverter;
 import fr.opensagres.xdocreport.converter.odt.xslfo.ODTXSLFOConstants;
 import fr.opensagres.xdocreport.converter.odt.xslfo.XSLFOURIResolver;
 
-public class ODTFOPConverter extends AbstractFOPConverter implements
-		ODTXSLFOConstants {
+public class ODTFOPConverter
+    extends AbstractFOPConverter
+    implements ODTXSLFOConstants
+{
 
-	private static final ODTFOPConverter INSTANCE = new ODTFOPConverter();
+    private static final ODTFOPConverter INSTANCE = new ODTFOPConverter();
 
-	public static ODTFOPConverter getInstance() {
-		return INSTANCE;
-	}
+    public static ODTFOPConverter getInstance()
+    {
+        return INSTANCE;
+    }
 
-	@Override
-	protected InputStream getXSLFOStream() {
-		return XSLFOURIResolver.class
-				.getResourceAsStream(getXSLFOTemplateURI());
-	}
+    @Override
+    protected InputStream getXSLFOStream()
+    {
+        return XSLFOURIResolver.class.getResourceAsStream( getXSLFOTemplateURI() );
+    }
 
-	@Override
-	protected String getXSLFOTemplateURI() {
-		return XSL_FO_TEMPLATE_URI;
-	}
+    @Override
+    protected String getXSLFOTemplateURI()
+    {
+        return XSL_FO_TEMPLATE_URI;
+    }
 
-	@Override
-	protected URIResolver getXSLFOURIResolver() {
-		return XSLFOURIResolver.INSTANCE;
-	}
+    @Override
+    protected URIResolver getXSLFOURIResolver()
+    {
+        return XSLFOURIResolver.INSTANCE;
+    }
 
-	@Override
-	protected String getMainEntryName() {
-		return CONTENT_XML_ENTRY;
-	}
+    @Override
+    protected String getMainEntryName()
+    {
+        return CONTENT_XML_ENTRY;
+    }
 
-	@Override
-	protected String[] getEntryNames() {
-		return XML_ENTRIES;
-	}
+    @Override
+    protected String[] getEntryNames()
+    {
+        return XML_ENTRIES;
+    }
 }

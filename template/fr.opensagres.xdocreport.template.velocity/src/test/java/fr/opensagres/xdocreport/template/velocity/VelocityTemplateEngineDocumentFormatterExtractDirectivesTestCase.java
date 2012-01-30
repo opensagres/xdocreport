@@ -31,133 +31,141 @@ import fr.opensagres.xdocreport.template.formatter.IfDirective;
 import fr.opensagres.xdocreport.template.formatter.LoopDirective;
 
 public class VelocityTemplateEngineDocumentFormatterExtractDirectivesTestCase
-		extends TestCase {
+    extends TestCase
+{
 
-	public void testFormatAsFieldItemList() throws Exception {
-		VelocityDocumentFormatter formatter = new VelocityDocumentFormatter();
-		String content = "xxxx#foreach($d in $developers)yyy";
+    public void testFormatAsFieldItemList()
+        throws Exception
+    {
+        VelocityDocumentFormatter formatter = new VelocityDocumentFormatter();
+        String content = "xxxx#foreach($d in $developers)yyy";
 
-		DirectivesStack directives = new DirectivesStack();
-		int nbDirective = formatter.extractListDirectiveInfo(content,
-				directives);
+        DirectivesStack directives = new DirectivesStack();
+        int nbDirective = formatter.extractListDirectiveInfo( content, directives );
 
-		assertEquals(1, nbDirective);
-		assertEquals(1, directives.size());
-		LoopDirective directive = (LoopDirective) directives.get(0);
-		assertEquals("developers", directive.getSequence());
-		assertEquals("d", directive.getItem());
-	}
+        assertEquals( 1, nbDirective );
+        assertEquals( 1, directives.size() );
+        LoopDirective directive = (LoopDirective) directives.get( 0 );
+        assertEquals( "developers", directive.getSequence() );
+        assertEquals( "d", directive.getItem() );
+    }
 
-	public void test2() throws Exception {
-		VelocityDocumentFormatter formatter = new VelocityDocumentFormatter();
-		String content = "xxxx#foreach($d in $developers)]yyy#foreach($r in $roles)";
+    public void test2()
+        throws Exception
+    {
+        VelocityDocumentFormatter formatter = new VelocityDocumentFormatter();
+        String content = "xxxx#foreach($d in $developers)]yyy#foreach($r in $roles)";
 
-		DirectivesStack directives = new DirectivesStack();
-		int nbDirective = formatter.extractListDirectiveInfo(content,
-				directives);
+        DirectivesStack directives = new DirectivesStack();
+        int nbDirective = formatter.extractListDirectiveInfo( content, directives );
 
-		assertEquals(2, nbDirective);
-		assertEquals(2, directives.size());
-		LoopDirective directive = (LoopDirective) directives.get(0);
-		assertEquals("developers", directive.getSequence());
-		assertEquals("d", directive.getItem());
+        assertEquals( 2, nbDirective );
+        assertEquals( 2, directives.size() );
+        LoopDirective directive = (LoopDirective) directives.get( 0 );
+        assertEquals( "developers", directive.getSequence() );
+        assertEquals( "d", directive.getItem() );
 
-		directive = (LoopDirective) directives.get(1);
-		assertEquals("roles", directive.getSequence());
-		assertEquals("r", directive.getItem());
-	}
+        directive = (LoopDirective) directives.get( 1 );
+        assertEquals( "roles", directive.getSequence() );
+        assertEquals( "r", directive.getItem() );
+    }
 
-	public void test3() throws Exception {
-		VelocityDocumentFormatter formatter = new VelocityDocumentFormatter();
-		String content = "xxxx#foreach($d in $developers)yyy#end";
+    public void test3()
+        throws Exception
+    {
+        VelocityDocumentFormatter formatter = new VelocityDocumentFormatter();
+        String content = "xxxx#foreach($d in $developers)yyy#end";
 
-		DirectivesStack directives = new DirectivesStack();
-		int nbDirective = formatter.extractListDirectiveInfo(content,
-				directives);
+        DirectivesStack directives = new DirectivesStack();
+        int nbDirective = formatter.extractListDirectiveInfo( content, directives );
 
-		assertEquals(0, nbDirective);
-		assertEquals(0, directives.size());
-	}
+        assertEquals( 0, nbDirective );
+        assertEquals( 0, directives.size() );
+    }
 
-	public void test4() throws Exception {
-		VelocityDocumentFormatter formatter = new VelocityDocumentFormatter();
-		String content = "xxxx#foreach($d in $developers)";
+    public void test4()
+        throws Exception
+    {
+        VelocityDocumentFormatter formatter = new VelocityDocumentFormatter();
+        String content = "xxxx#foreach($d in $developers)";
 
-		DirectivesStack directives = new DirectivesStack();
-		int nbDirective = formatter.extractListDirectiveInfo(content,
-				directives);
+        DirectivesStack directives = new DirectivesStack();
+        int nbDirective = formatter.extractListDirectiveInfo( content, directives );
 
-		assertEquals(1, nbDirective);
-		assertEquals(1, directives.size());
-		LoopDirective directive = (LoopDirective) directives.get(0);
-		assertEquals("developers", directive.getSequence());
-		assertEquals("d", directive.getItem());
+        assertEquals( 1, nbDirective );
+        assertEquals( 1, directives.size() );
+        LoopDirective directive = (LoopDirective) directives.get( 0 );
+        assertEquals( "developers", directive.getSequence() );
+        assertEquals( "d", directive.getItem() );
 
-		content = "#end";
-		nbDirective = formatter.extractListDirectiveInfo(content, directives);
+        content = "#end";
+        nbDirective = formatter.extractListDirectiveInfo( content, directives );
 
-		assertEquals(-1, nbDirective);
-		assertEquals(0, directives.size());
-	}
+        assertEquals( -1, nbDirective );
+        assertEquals( 0, directives.size() );
+    }
 
-	public void testIf1() throws Exception {
-		VelocityDocumentFormatter formatter = new VelocityDocumentFormatter();
-		String content = "xxx#if($d)yyy";
+    public void testIf1()
+        throws Exception
+    {
+        VelocityDocumentFormatter formatter = new VelocityDocumentFormatter();
+        String content = "xxx#if($d)yyy";
 
-		DirectivesStack directives = new DirectivesStack();
-		int nbDirective = formatter.extractListDirectiveInfo(content,
-				directives);
+        DirectivesStack directives = new DirectivesStack();
+        int nbDirective = formatter.extractListDirectiveInfo( content, directives );
 
-		assertEquals(1, nbDirective);
-		assertEquals(1, directives.size());
-		assertEquals(DirectiveType.IF, directives.get(0).getType());
-		IfDirective directive = (IfDirective) directives.get(0);
-		assertEquals("#if($d)", directive.getStartDirective());
-		assertEquals("#end", directive.getEndDirective());
-	}
+        assertEquals( 1, nbDirective );
+        assertEquals( 1, directives.size() );
+        assertEquals( DirectiveType.IF, directives.get( 0 ).getType() );
+        IfDirective directive = (IfDirective) directives.get( 0 );
+        assertEquals( "#if($d)", directive.getStartDirective() );
+        assertEquals( "#end", directive.getEndDirective() );
+    }
 
-	public void testLoopAndIf1() throws Exception {
-		VelocityDocumentFormatter formatter = new VelocityDocumentFormatter();
-		String content = "xxxx#foreach($d in $developers)xxx#if($d)yyy";
+    public void testLoopAndIf1()
+        throws Exception
+    {
+        VelocityDocumentFormatter formatter = new VelocityDocumentFormatter();
+        String content = "xxxx#foreach($d in $developers)xxx#if($d)yyy";
 
-		DirectivesStack directives = new DirectivesStack();
-		int nbDirective = formatter.extractListDirectiveInfo(content,
-				directives);
+        DirectivesStack directives = new DirectivesStack();
+        int nbDirective = formatter.extractListDirectiveInfo( content, directives );
 
-		assertEquals(2, nbDirective);
-		assertEquals(2, directives.size());
+        assertEquals( 2, nbDirective );
+        assertEquals( 2, directives.size() );
 
-		assertEquals(DirectiveType.LOOP, directives.get(0).getType());
-		LoopDirective loopDirective = (LoopDirective) directives.get(0);
-		assertEquals("developers", loopDirective.getSequence());
-		assertEquals("d", loopDirective.getItem());
+        assertEquals( DirectiveType.LOOP, directives.get( 0 ).getType() );
+        LoopDirective loopDirective = (LoopDirective) directives.get( 0 );
+        assertEquals( "developers", loopDirective.getSequence() );
+        assertEquals( "d", loopDirective.getItem() );
 
-		assertEquals(DirectiveType.IF, directives.get(1).getType());
-		IfDirective ifDirective = (IfDirective) directives.get(1);
-		assertEquals("#if($d)", ifDirective.getStartDirective());
-		assertEquals("#end", ifDirective.getEndDirective());
-	}
+        assertEquals( DirectiveType.IF, directives.get( 1 ).getType() );
+        IfDirective ifDirective = (IfDirective) directives.get( 1 );
+        assertEquals( "#if($d)", ifDirective.getStartDirective() );
+        assertEquals( "#end", ifDirective.getEndDirective() );
+    }
 
-	public void testIfAndLoop1() throws Exception {
-		VelocityDocumentFormatter formatter = new VelocityDocumentFormatter();
-		String content = "xxx#if($d)yyy#foreach($d in $developers)";
+    public void testIfAndLoop1()
+        throws Exception
+    {
+        VelocityDocumentFormatter formatter = new VelocityDocumentFormatter();
+        String content = "xxx#if($d)yyy#foreach($d in $developers)";
 
-		DirectivesStack directives = new DirectivesStack();
-		int nbDirective = formatter.extractListDirectiveInfo(content,
-				directives);
+        DirectivesStack directives = new DirectivesStack();
+        int nbDirective = formatter.extractListDirectiveInfo( content, directives );
 
-		assertEquals(2, nbDirective);
-		assertEquals(2, directives.size());
+        assertEquals( 2, nbDirective );
+        assertEquals( 2, directives.size() );
 
-		assertEquals(DirectiveType.IF, directives.get(0).getType());
-		IfDirective ifDirective = (IfDirective) directives.get(0);
-		assertEquals("#if($d)", ifDirective.getStartDirective());
-		assertEquals("#end", ifDirective.getEndDirective());
+        assertEquals( DirectiveType.IF, directives.get( 0 ).getType() );
+        IfDirective ifDirective = (IfDirective) directives.get( 0 );
+        assertEquals( "#if($d)", ifDirective.getStartDirective() );
+        assertEquals( "#end", ifDirective.getEndDirective() );
 
-		assertEquals(DirectiveType.LOOP, directives.get(1).getType());
-		LoopDirective loopDirective = (LoopDirective) directives.get(1);
-		assertEquals("developers", loopDirective.getSequence());
-		assertEquals("d", loopDirective.getItem());
+        assertEquals( DirectiveType.LOOP, directives.get( 1 ).getType() );
+        LoopDirective loopDirective = (LoopDirective) directives.get( 1 );
+        assertEquals( "developers", loopDirective.getSequence() );
+        assertEquals( "d", loopDirective.getItem() );
 
-	}
+    }
 }

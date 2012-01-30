@@ -26,23 +26,27 @@ package fr.opensagres.xdocreport.document.preprocessor.sax;
 
 /**
  * Prefix mapping used to generated XML namespaces with prefix.
- * 
  */
-public class PrefixMapping {
+public class PrefixMapping
+{
 
-	private final String prefix;
-	private final String uri;
+    private final String prefix;
 
-	public PrefixMapping(String prefix, String uri) {
-		this.prefix = prefix;
-		this.uri = uri;
-	}
+    private final String uri;
 
-	public String getPrefix() {
-		return prefix;
-	}
+    public PrefixMapping( String prefix, String uri )
+    {
+        this.prefix = prefix;
+        this.uri = uri;
+    }
 
-	public String getURI() {
-		return uri;
-	}
+    public String getPrefix()
+    {
+        return prefix;
+    }
+
+    public String getURI()
+    {
+        return uri;
+    }
 }

@@ -30,9 +30,7 @@ import fr.opensagres.xdocreport.document.preprocessor.sax.BufferedElement;
 import fr.opensagres.xdocreport.document.preprocessor.sax.TransformedBufferedDocumentContentHandler;
 
 /**
- * w:fldSimple with MERGEFIELD type and false otherwise.
- * 
- * If element is w:fldSimple :
+ * w:fldSimple with MERGEFIELD type and false otherwise. If element is w:fldSimple :
  * 
  * <pre>
  * <w:fldSimple w:instr=" MERGEFIELD  ${name} ">
@@ -40,7 +38,7 @@ import fr.opensagres.xdocreport.document.preprocessor.sax.TransformedBufferedDoc
  * 			<w:rPr>
  * 				<w:noProof/>
  * 			</w:rPr>
- * 			<w:t>«${name}»</w:t>
+ * 			<w:t>ï¿½${name}ï¿½</w:t>
  * 		</w:r>
  * 	</w:fldSimple>
  * </pre>
@@ -55,24 +53,28 @@ import fr.opensagres.xdocreport.document.preprocessor.sax.TransformedBufferedDoc
  * 				<w:t>${name}</w:t>
  * 		</w:r>
  * </pre>
- * 
  */
-public class FldSimpleBufferedRegion extends MergefieldBufferedRegion {
+public class FldSimpleBufferedRegion
+    extends MergefieldBufferedRegion
+{
 
-	public FldSimpleBufferedRegion(
-			TransformedBufferedDocumentContentHandler handler,
-			BufferedElement parent, String uri, String localName, String name,
-			Attributes attributes) {
-		super(handler, parent, uri, localName, name, attributes);
-	}
+    public FldSimpleBufferedRegion( TransformedBufferedDocumentContentHandler handler, BufferedElement parent,
+                                    String uri, String localName, String name, Attributes attributes )
+    {
+        super( handler, parent, uri, localName, name, attributes );
+    }
 
-	public void setTContent(String tContent) {
-		String fieldName = getFieldName();
-		if (fieldName != null) {
-			getTRegion().append(fieldName);
-		} else {
-			getTRegion().append(tContent);
-		}
-	}
+    public void setTContent( String tContent )
+    {
+        String fieldName = getFieldName();
+        if ( fieldName != null )
+        {
+            getTRegion().append( fieldName );
+        }
+        else
+        {
+            getTRegion().append( tContent );
+        }
+    }
 
 }

@@ -24,7 +24,6 @@
  */
 package org.apache.poi.xwpf.converter.internal.itext.stylable;
 
-
 import org.apache.poi.xwpf.converter.internal.itext.styles.Style;
 import org.apache.poi.xwpf.converter.internal.itext.styles.StyleParagraphProperties;
 
@@ -34,58 +33,70 @@ import fr.opensagres.xdocreport.itext.extension.ExtendedSection;
 import fr.opensagres.xdocreport.itext.extension.IITextContainer;
 import fr.opensagres.xdocreport.itext.extension.IParagraphFactory;
 
+public class StylableSection
+    extends ExtendedSection
+    implements IStylableContainer
+{
 
-public class StylableSection extends ExtendedSection implements
-		IStylableContainer {
+    private static final long serialVersionUID = 664309269352903329L;
 
-	private static final long serialVersionUID = 664309269352903329L;
+    private final StylableDocument ownerDocument;
 
-	private final StylableDocument ownerDocument;
-	private final IStylableContainer parent;
-	private Style lastStyleApplied = null;
+    private final IStylableContainer parent;
 
-	public StylableSection(StylableDocument ownerDocument,
-			IStylableContainer parent, StylableParagraph title, int numberDepth) {
-		super(title, numberDepth);
-		this.ownerDocument = ownerDocument;
-		this.parent = parent;
-	}
+    private Style lastStyleApplied = null;
 
-	public void addElement(Element element) {
-		super.add(element);
-	}
+    public StylableSection( StylableDocument ownerDocument, IStylableContainer parent, StylableParagraph title,
+                            int numberDepth )
+    {
+        super( title, numberDepth );
+        this.ownerDocument = ownerDocument;
+        this.parent = parent;
+    }
 
-	public void applyStyles(Object ele,Style style) {
-		this.lastStyleApplied = style;
-		StyleParagraphProperties paragraphProperties = style
-				.getParagraphProperties();
-		if (paragraphProperties != null) {
-//TODO : 
-		}
-	}
+    public void addElement( Element element )
+    {
+        super.add( element );
+    }
 
-	public Style getLastStyleApplied() {
-		return lastStyleApplied;
-	}
+    public void applyStyles( Object ele, Style style )
+    {
+        this.lastStyleApplied = style;
+        StyleParagraphProperties paragraphProperties = style.getParagraphProperties();
+        if ( paragraphProperties != null )
+        {
+            // TODO :
+        }
+    }
 
-	public IStylableContainer getParent() {
-		return parent;
-	}
+    public Style getLastStyleApplied()
+    {
+        return lastStyleApplied;
+    }
 
-	public Element getElement() {
-		return this;
-	}
+    public IStylableContainer getParent()
+    {
+        return parent;
+    }
 
-	@Override
-	protected IParagraphFactory getParagraphFactory() {
-		return ownerDocument;
-	}
-	
-	public IITextContainer getITextContainer() {
-		return parent;
-	}
+    public Element getElement()
+    {
+        return this;
+    }
 
-	public void setITextContainer(IITextContainer container) {
-		
-	}
+    @Override
+    protected IParagraphFactory getParagraphFactory()
+    {
+        return ownerDocument;
+    }
+
+    public IITextContainer getITextContainer()
+    {
+        return parent;
+    }
+
+    public void setITextContainer( IITextContainer container )
+    {
+
+    }
 }

@@ -38,89 +38,99 @@ import fr.opensagres.xdocreport.core.internal.XSLTPrettyPrinter;
 
 /**
  * XML Utilities to indent XML.
- * 
  */
-public class XMLUtils {
+public class XMLUtils
+{
 
-	public static final Integer INDENT_NUMBER = new Integer(4);
-	public static final List<IXMLPrettyPrinter> PRINTERS;
+    public static final Integer INDENT_NUMBER = new Integer( 4 );
 
-	private static IXMLPrettyPrinter wellPrinter = null;
+    public static final List<IXMLPrettyPrinter> PRINTERS;
 
-	static {
-		PRINTERS = new ArrayList<IXMLPrettyPrinter>();
-		PRINTERS.add(IndentNumberPrettyPrinter.INSTANCE);
-		PRINTERS.add(XSLTPrettyPrinter.INSTANCE);
-		PRINTERS.add(NoIndentNumberPrettyPrinter.INSTANCE);
-		PRINTERS.add(NoPrettyPrinter.INSTANCE);
-	}
+    private static IXMLPrettyPrinter wellPrinter = null;
 
-	/**
-	 * Indent the given xml with the 4 indentation.
-	 * 
-	 * @param xml
-	 *            XML to indent
-	 * @return
-	 * @throws Exception
-	 */
-	public static String prettyPrint(String xml) {
-		return prettyPrint(xml, INDENT_NUMBER);
-	}
+    static
+    {
+        PRINTERS = new ArrayList<IXMLPrettyPrinter>();
+        PRINTERS.add( IndentNumberPrettyPrinter.INSTANCE );
+        PRINTERS.add( XSLTPrettyPrinter.INSTANCE );
+        PRINTERS.add( NoIndentNumberPrettyPrinter.INSTANCE );
+        PRINTERS.add( NoPrettyPrinter.INSTANCE );
+    }
 
-	/**
-	 * Indent the given xml with the given indent number.
-	 * 
-	 * @param xml
-	 *            XML to indent
-	 * @param indent
-	 *            the indent number.
-	 * @return
-	 * @throws Exception
-	 */
-	public static String prettyPrint(String xml, int indent) {
-		if (wellPrinter == null) {
-			// Loop for printers to get the well printer which doesn't crash.
-			for (IXMLPrettyPrinter printer : PRINTERS) {
-				try {
-					String result = printer.prettyPrint(xml, indent);
-					wellPrinter = printer;
-					return result;
-				} catch (Throwable e) {
+    /**
+     * Indent the given xml with the 4 indentation.
+     * 
+     * @param xml XML to indent
+     * @return
+     * @throws Exception
+     */
+    public static String prettyPrint( String xml )
+    {
+        return prettyPrint( xml, INDENT_NUMBER );
+    }
 
-				}
-			}
-			// If error occurs, returns the xml source (with no indentation).
-			return xml;
+    /**
+     * Indent the given xml with the given indent number.
+     * 
+     * @param xml XML to indent
+     * @param indent the indent number.
+     * @return
+     * @throws Exception
+     */
+    public static String prettyPrint( String xml, int indent )
+    {
+        if ( wellPrinter == null )
+        {
+            // Loop for printers to get the well printer which doesn't crash.
+            for ( IXMLPrettyPrinter printer : PRINTERS )
+            {
+                try
+                {
+                    String result = printer.prettyPrint( xml, indent );
+                    wellPrinter = printer;
+                    return result;
+                }
+                catch ( Throwable e )
+                {
 
-		}
-		// Here printer was found, use it.
-		try {
-			return wellPrinter.prettyPrint(xml, indent);
-		} catch (Throwable e) {
-			// If error occurs, returns the xml source (with no indentation).
-			return xml;
-		}
-	}
+                }
+            }
+            // If error occurs, returns the xml source (with no indentation).
+            return xml;
 
-	/**
-	 * Get the SAX {@link AttributesImpl} of teh given attributes to modify
-	 * attribute values.
-	 * 
-	 * @param attributes
-	 * @return
-	 */
-	public static AttributesImpl toAttributesImpl(Attributes attributes) {
-		if (attributes instanceof AttributesImpl) {
-			return (AttributesImpl) attributes;
-		}
-		// Another SAX Implementation, create a new instance.
-		AttributesImpl attributesImpl = new AttributesImpl();
-		int length = attributes.getLength();
-		for (int i = 0; i < length; i++) {
-			attributesImpl.addAttribute(attributes.getURI(i),
-					attributes.getLocalName(i), attributes.getQName(i),
-					attributes.getType(i), attributes.getValue(i));
-		}
-		return attributesImpl;
-	}
+        }
+        // Here printer was found, use it.
+        try
+        {
+            return wellPrinter.prettyPrint( xml, indent );
+        }
+        catch ( Throwable e )
+        {
+            // If error occurs, returns the xml source (with no indentation).
+            return xml;
+        }
+    }
+
+    /**
+     * Get the SAX {@link AttributesImpl} of teh given attributes to modify attribute values.
+     * 
+     * @param attributes
+     * @return
+     */
+    public static AttributesImpl toAttributesImpl( Attributes attributes )
+    {
+        if ( attributes instanceof AttributesImpl )
+        {
+            return (AttributesImpl) attributes;
+        }
+        // Another SAX Implementation, create a new instance.
+        AttributesImpl attributesImpl = new AttributesImpl();
+        int length = attributes.getLength();
+        for ( int i = 0; i < length; i++ )
+        {
+            attributesImpl.addAttribute( attributes.getURI( i ), attributes.getLocalName( i ),
+                                         attributes.getQName( i ), attributes.getType( i ), attributes.getValue( i ) );
+        }
+        return attributesImpl;
+    }
 }

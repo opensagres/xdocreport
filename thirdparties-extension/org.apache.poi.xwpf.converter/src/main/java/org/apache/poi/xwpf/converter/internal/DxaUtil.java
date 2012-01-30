@@ -27,37 +27,49 @@ package org.apache.poi.xwpf.converter.internal;
 import java.math.BigInteger;
 
 /**
- * @author pascalleclercq
- * cf. http://startbigthinksmall.wordpress.com/2010/01/04/points-inches-and-emus-measuring-units-in-office-open-xml/
+ * @author pascalleclercq cf.
+ *         http://startbigthinksmall.wordpress.com/2010/01/04/points-inches-and-emus-measuring-units-in-office-open-xml/
  */
-public class DxaUtil {
+public class DxaUtil
+{
 
-	
-	public static float dxa2mm(float dxa) {
-		return (float)(dxa2inch(dxa)*25.4);
-	}
-	public static float dxa2mm(BigInteger dxa) {
-		return (float)(dxa2inch(dxa)*25.4);
-	}
+    public static float dxa2mm( float dxa )
+    {
+        return (float) ( dxa2inch( dxa ) * 25.4 );
+    }
 
-	public static float emu2points(long emu) {
-		return dxa2points(emu)/635;
-	}
-	public static float dxa2points(float dxa) {
-		return dxa / 20;
-	}
-	public static int dxa2points(int dxa) {
-		return dxa / 20;
-	}
-	public static int dxa2points(BigInteger dxa) {
-		return dxa.intValue() / 20;
-	}
-	
-	public static float dxa2inch(float dxa) {
-		return dxa2points(dxa) / 72;
-	}
-	
-	public static float dxa2inch(BigInteger dxa) {
-		return dxa2points(dxa) / 72;
-	}
+    public static float dxa2mm( BigInteger dxa )
+    {
+        return (float) ( dxa2inch( dxa ) * 25.4 );
+    }
+
+    public static float emu2points( long emu )
+    {
+        return dxa2points( emu ) / 635;
+    }
+
+    public static float dxa2points( float dxa )
+    {
+        return dxa / 20;
+    }
+
+    public static int dxa2points( int dxa )
+    {
+        return dxa / 20;
+    }
+
+    public static int dxa2points( BigInteger dxa )
+    {
+        return dxa.intValue() / 20;
+    }
+
+    public static float dxa2inch( float dxa )
+    {
+        return dxa2points( dxa ) / 72;
+    }
+
+    public static float dxa2inch( BigInteger dxa )
+    {
+        return dxa2points( dxa ) / 72;
+    }
 }

@@ -42,183 +42,213 @@ import fr.opensagres.xdocreport.utils.StringUtils;
 /**
  * fixes for pdf conversion by Leszek Piotrowicz <leszekp@safe-mail.net>
  */
-public class ODFUtils {
+public class ODFUtils
+{
 
-	// Unit constants
-	private static final String REL_SIZE_UNIT = "*";
-	private static final String PERCENT_UNIT = "%";
-	private static final String INCH_UNIT = "in";
-	private static final String POINT_UNIT = "pt";
-	private static final String MM_UNIT = "mm";
-	private static final String CM_UNIT = "cm";
+    // Unit constants
+    private static final String REL_SIZE_UNIT = "*";
 
-	public static float[] getColumnWidths(TableTableElement table,
-			OdfDocument odfDocument) {
-		Collection<String> colWidths = getColumnWidthsAsString(table,
-				odfDocument);
-		int i = 0;
-		float[] widths = new float[colWidths.size()];
-		for (String s : colWidths) {
-			widths[i++] = getDimensionAsPoint(s);
-		}
-		return widths;
-	}
+    private static final String PERCENT_UNIT = "%";
 
-	public static List<String> getColumnWidthsAsString(TableTableElement table,
-			OdfDocument odfDocument) {
-		List<String> colWidths = new ArrayList<String>();
-		Node node = null;
-		NodeList tableColums = table.getChildNodes();
-		for (int i = 0; i < tableColums.getLength(); i++) {
-			node = tableColums.item(i);
-			if (TableTableColumnElement.ELEMENT_NAME.getLocalName().equals(
-					node.getLocalName())) {
-				TableTableColumnElement tableColumn = (TableTableColumnElement) node;
-				Integer numberColumnsRepeated = tableColumn
-						.getTableNumberColumnsRepeatedAttribute();
-				String styleName = tableColumn.getTableStyleNameAttribute();
-				try {
-					String columnWidth = null;
-					OdfStyle style = odfDocument.getContentDom()
-							.getAutomaticStyles()
-							.getStyle(styleName, OdfStyleFamily.TableColumn);
-					if (style != null) {
-						StyleTableColumnPropertiesElement tableColumnStyle = getStyleTableColumnPropertiesElement(style);
-						if (tableColumnStyle != null) {
-							columnWidth = tableColumnStyle
-									.getStyleColumnWidthAttribute();
-						}
-					}
-					if (StringUtils.isEmpty(columnWidth)) {
-						columnWidth = "1";
-					}
-					if (numberColumnsRepeated == null) {
-						colWidths.add(columnWidth);
-					} else {
-						for (int j = 0; j < numberColumnsRepeated; j++) {
-							colWidths.add(columnWidth);
-						}
-					}
-				} catch (Exception e) {
-					// Do nothing
-				}
-			} else {
-				break;
-			}
-		}
-		return colWidths;
-	}
+    private static final String INCH_UNIT = "in";
 
-	public static StyleTableColumnPropertiesElement getStyleTableColumnPropertiesElement(
-			OdfStyle style) {
-		Node node = null;
-		NodeList nodes = style.getChildNodes();
-		for (int i = 0; i < nodes.getLength(); i++) {
-			node = nodes.item(i);
-			if (StyleTableColumnPropertiesElement.ELEMENT_NAME.getLocalName()
-					.equals(node.getLocalName())) {
-				return (StyleTableColumnPropertiesElement) node;
-			}
-		}
-		return null;
-	}
+    private static final String POINT_UNIT = "pt";
 
-	public static Float getDimensionAsPoint(String s) {
-		// IText works with point unit (1cm = 28.35 pt)
-		// cml unit?
-		int index = s.indexOf(CM_UNIT);
-		if (index != -1) {
-			s = s.substring(0, index);
-			return millimetersToPoints((float) (Float.valueOf(s) * 10));
-		}
-		// mm unit?
-		index = s.indexOf(MM_UNIT);
-		if (index != -1) {
-			s = s.substring(0, index);
-			return millimetersToPoints((float) (Float.valueOf(s)));
-		}
-		// point unit?
-		index = s.indexOf(POINT_UNIT);
-		if (index != -1) {
-			s = s.substring(0, index);
-			return Float.valueOf(s);
-		}
-		// inch unit?
-		index = s.indexOf(INCH_UNIT);
-		if (index != -1) {
-			s = s.substring(0, index);
-			return inchesToPoints(Float.valueOf(s));
-		}
-		// % unit?
-		index = s.indexOf(PERCENT_UNIT);
-		if (index != -1) {
-			s = s.substring(0, index);
-			return Float.valueOf(s) / 100;
-		}
-		return Float.valueOf(s);
-	}
+    private static final String MM_UNIT = "mm";
 
-	public static Integer getRelativeSize(String s) {
-		// * unit?
-		int index = s.indexOf(REL_SIZE_UNIT);
-		if (index != -1) {
-			s = s.substring(0, index);
-			return Integer.valueOf(s);
-		}
-		return Integer.valueOf(s);
-	}
+    private static final String CM_UNIT = "cm";
 
-	/**
-	 * Returns true if the given string has percent unit and false otherwise.
-	 * 
-	 * @param s
-	 * @return
-	 */
-	public static boolean hasPercentUnit(String s) {
-		return s.indexOf(PERCENT_UNIT) != -1;
-	}
+    public static float[] getColumnWidths( TableTableElement table, OdfDocument odfDocument )
+    {
+        Collection<String> colWidths = getColumnWidthsAsString( table, odfDocument );
+        int i = 0;
+        float[] widths = new float[colWidths.size()];
+        for ( String s : colWidths )
+        {
+            widths[i++] = getDimensionAsPoint( s );
+        }
+        return widths;
+    }
 
-	/**
-	 * Measurement conversion from millimeters to points.
-	 * 
-	 * @param value
-	 *            a value in millimeters
-	 * @return a value in points
-	 * @since 2.1.2
-	 */
-	public static final float millimetersToPoints(float value) {
-		return inchesToPoints(millimetersToInches(value));
-	}
+    public static List<String> getColumnWidthsAsString( TableTableElement table, OdfDocument odfDocument )
+    {
+        List<String> colWidths = new ArrayList<String>();
+        Node node = null;
+        NodeList tableColums = table.getChildNodes();
+        for ( int i = 0; i < tableColums.getLength(); i++ )
+        {
+            node = tableColums.item( i );
+            if ( TableTableColumnElement.ELEMENT_NAME.getLocalName().equals( node.getLocalName() ) )
+            {
+                TableTableColumnElement tableColumn = (TableTableColumnElement) node;
+                Integer numberColumnsRepeated = tableColumn.getTableNumberColumnsRepeatedAttribute();
+                String styleName = tableColumn.getTableStyleNameAttribute();
+                try
+                {
+                    String columnWidth = null;
+                    OdfStyle style =
+                        odfDocument.getContentDom().getAutomaticStyles().getStyle( styleName,
+                                                                                   OdfStyleFamily.TableColumn );
+                    if ( style != null )
+                    {
+                        StyleTableColumnPropertiesElement tableColumnStyle =
+                            getStyleTableColumnPropertiesElement( style );
+                        if ( tableColumnStyle != null )
+                        {
+                            columnWidth = tableColumnStyle.getStyleColumnWidthAttribute();
+                        }
+                    }
+                    if ( StringUtils.isEmpty( columnWidth ) )
+                    {
+                        columnWidth = "1";
+                    }
+                    if ( numberColumnsRepeated == null )
+                    {
+                        colWidths.add( columnWidth );
+                    }
+                    else
+                    {
+                        for ( int j = 0; j < numberColumnsRepeated; j++ )
+                        {
+                            colWidths.add( columnWidth );
+                        }
+                    }
+                }
+                catch ( Exception e )
+                {
+                    // Do nothing
+                }
+            }
+            else
+            {
+                break;
+            }
+        }
+        return colWidths;
+    }
 
-	/**
-	 * Measurement conversion from inches to points.
-	 * 
-	 * @param value
-	 *            a value in inches
-	 * @return a value in points
-	 * @since 2.1.2
-	 */
-	public static final float inchesToPoints(float value) {
-		return value * 72f;
-	}
+    public static StyleTableColumnPropertiesElement getStyleTableColumnPropertiesElement( OdfStyle style )
+    {
+        Node node = null;
+        NodeList nodes = style.getChildNodes();
+        for ( int i = 0; i < nodes.getLength(); i++ )
+        {
+            node = nodes.item( i );
+            if ( StyleTableColumnPropertiesElement.ELEMENT_NAME.getLocalName().equals( node.getLocalName() ) )
+            {
+                return (StyleTableColumnPropertiesElement) node;
+            }
+        }
+        return null;
+    }
 
-	/**
-	 * Measurement conversion from millimeters to inches.
-	 * 
-	 * @param value
-	 *            a value in millimeters
-	 * @return a value in inches
-	 * @since 2.1.2
-	 */
-	public static final float millimetersToInches(float value) {
-		return value / 25.4f;
-	}
+    public static Float getDimensionAsPoint( String s )
+    {
+        // IText works with point unit (1cm = 28.35 pt)
+        // cml unit?
+        int index = s.indexOf( CM_UNIT );
+        if ( index != -1 )
+        {
+            s = s.substring( 0, index );
+            return millimetersToPoints( (float) ( Float.valueOf( s ) * 10 ) );
+        }
+        // mm unit?
+        index = s.indexOf( MM_UNIT );
+        if ( index != -1 )
+        {
+            s = s.substring( 0, index );
+            return millimetersToPoints( (float) ( Float.valueOf( s ) ) );
+        }
+        // point unit?
+        index = s.indexOf( POINT_UNIT );
+        if ( index != -1 )
+        {
+            s = s.substring( 0, index );
+            return Float.valueOf( s );
+        }
+        // inch unit?
+        index = s.indexOf( INCH_UNIT );
+        if ( index != -1 )
+        {
+            s = s.substring( 0, index );
+            return inchesToPoints( Float.valueOf( s ) );
+        }
+        // % unit?
+        index = s.indexOf( PERCENT_UNIT );
+        if ( index != -1 )
+        {
+            s = s.substring( 0, index );
+            return Float.valueOf( s ) / 100;
+        }
+        return Float.valueOf( s );
+    }
 
-	public static String getDimensionAsPixel(String s) {
-		// px: pixel units � 1px is equal to 0.75pt.
-		if (s != null && s.endsWith("*")) {
-			return s;
-		}
-		return (getDimensionAsPoint(s) / 0.75f) + "px";
-	}
+    public static Integer getRelativeSize( String s )
+    {
+        // * unit?
+        int index = s.indexOf( REL_SIZE_UNIT );
+        if ( index != -1 )
+        {
+            s = s.substring( 0, index );
+            return Integer.valueOf( s );
+        }
+        return Integer.valueOf( s );
+    }
+
+    /**
+     * Returns true if the given string has percent unit and false otherwise.
+     * 
+     * @param s
+     * @return
+     */
+    public static boolean hasPercentUnit( String s )
+    {
+        return s.indexOf( PERCENT_UNIT ) != -1;
+    }
+
+    /**
+     * Measurement conversion from millimeters to points.
+     * 
+     * @param value a value in millimeters
+     * @return a value in points
+     * @since 2.1.2
+     */
+    public static final float millimetersToPoints( float value )
+    {
+        return inchesToPoints( millimetersToInches( value ) );
+    }
+
+    /**
+     * Measurement conversion from inches to points.
+     * 
+     * @param value a value in inches
+     * @return a value in points
+     * @since 2.1.2
+     */
+    public static final float inchesToPoints( float value )
+    {
+        return value * 72f;
+    }
+
+    /**
+     * Measurement conversion from millimeters to inches.
+     * 
+     * @param value a value in millimeters
+     * @return a value in inches
+     * @since 2.1.2
+     */
+    public static final float millimetersToInches( float value )
+    {
+        return value / 25.4f;
+    }
+
+    public static String getDimensionAsPixel( String s )
+    {
+        // px: pixel units � 1px is equal to 0.75pt.
+        if ( s != null && s.endsWith( "*" ) )
+        {
+            return s;
+        }
+        return ( getDimensionAsPoint( s ) / 0.75f ) + "px";
+    }
 }

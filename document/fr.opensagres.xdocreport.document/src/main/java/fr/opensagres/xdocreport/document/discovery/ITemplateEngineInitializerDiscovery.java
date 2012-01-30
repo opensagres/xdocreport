@@ -27,9 +27,11 @@ package fr.opensagres.xdocreport.document.discovery;
 import fr.opensagres.xdocreport.core.discovery.IBaseDiscovery;
 import fr.opensagres.xdocreport.template.ITemplateEngine;
 
-public interface ITemplateEngineInitializerDiscovery extends IBaseDiscovery {
+public interface ITemplateEngineInitializerDiscovery
+    extends IBaseDiscovery
+{
 
-	String getDocumentKind();
-	
-	void initialize(ITemplateEngine templateEngine);
+    String getDocumentKind();
+
+    void initialize( ITemplateEngine templateEngine );
 }

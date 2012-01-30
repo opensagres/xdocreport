@@ -38,39 +38,44 @@ import fr.opensagres.xdocreport.converter.XDocConverterException;
 import fr.opensagres.xdocreport.converter.internal.AbstractConverterNoEntriesSupport;
 import fr.opensagres.xdocreport.core.logging.LogUtils;
 
-public class XWPF2PDFViaITextConverter extends
-		AbstractConverterNoEntriesSupport {
+public class XWPF2PDFViaITextConverter
+    extends AbstractConverterNoEntriesSupport
+{
 
-	private static final XWPF2PDFViaITextConverter INSTANCE = new XWPF2PDFViaITextConverter();
+    private static final XWPF2PDFViaITextConverter INSTANCE = new XWPF2PDFViaITextConverter();
 
-	/**
-	 * Logger for this class
-	 */
-	private static final Logger LOGGER = LogUtils.getLogger(XWPF2PDFViaITextConverter.class.getName());
+    /**
+     * Logger for this class
+     */
+    private static final Logger LOGGER = LogUtils.getLogger( XWPF2PDFViaITextConverter.class.getName() );
 
+    public static IConverter getInstance()
+    {
+        return INSTANCE;
+    }
 
-	public static IConverter getInstance() {
-		return INSTANCE;
-	}
+    public void convert( InputStream in, OutputStream out, Options options )
+        throws XDocConverterException
+    {
 
-	public void convert(InputStream in, OutputStream out, Options options)
-			throws XDocConverterException {
+        try
+        {
+            XWPFDocument document = new XWPFDocument( in );
+            org.apache.poi.xwpf.converter.itext.XWPF2PDFViaITextConverter.getInstance().convert( document, out, null );
 
-		try {
-			XWPFDocument document = new XWPFDocument(in);
-			org.apache.poi.xwpf.converter.itext.XWPF2PDFViaITextConverter
-					.getInstance().convert(document, out, null);
+        }
+        catch ( Exception e )
+        {
 
-		} catch (Exception e) {
-			
-			LOGGER.severe(e.getMessage());
-			throw new XDocConverterException(e);
-		}
-	}
+            LOGGER.severe( e.getMessage() );
+            throw new XDocConverterException( e );
+        }
+    }
 
-	public MimeMapping getMimeMapping() {
+    public MimeMapping getMimeMapping()
+    {
 
-		return MimeMappingConstants.PDF_MIME_MAPPING;
-	}
+        return MimeMappingConstants.PDF_MIME_MAPPING;
+    }
 
 }

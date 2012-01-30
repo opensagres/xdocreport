@@ -33,38 +33,47 @@ import java.io.OutputStream;
 import junit.framework.TestCase;
 import fr.opensagres.xdocreport.converter.XDocConverterException;
 
-public class StructuresODTFile2PDFTest extends TestCase {
+public class StructuresODTFile2PDFTest
+    extends TestCase
+{
 
-	public void testNo() throws Exception {
+    public void testNo()
+        throws Exception
+    {
 
-	}
+    }
 
-	public static void main(String[] args) {
-		doGenerate();
-		doGenerate();
-	}
+    public static void main( String[] args )
+    {
+        doGenerate();
+        doGenerate();
+    }
 
-	public static void doGenerate() {
-		long startTime = System.currentTimeMillis();
+    public static void doGenerate()
+    {
+        long startTime = System.currentTimeMillis();
 
-		ODTFOPConverter converter = ODTFOPConverter.getInstance();
+        ODTFOPConverter converter = ODTFOPConverter.getInstance();
 
-		InputStream in = Struts2ODTFile2PDFTest.class
-				.getResourceAsStream("ODTStructures.odt");
+        InputStream in = Struts2ODTFile2PDFTest.class.getResourceAsStream( "ODTStructures.odt" );
 
-		try {
-			OutputStream out = new FileOutputStream(new File(
-					"Structures.pdf"));
-			converter.convert(in, out, null);
-		} catch (XDocConverterException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+        try
+        {
+            OutputStream out = new FileOutputStream( new File( "Structures.pdf" ) );
+            converter.convert( in, out, null );
+        }
+        catch ( XDocConverterException e )
+        {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+        catch ( IOException e )
+        {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
 
-		System.out.println(System.currentTimeMillis() - startTime + "(ms)");
+        System.out.println( System.currentTimeMillis() - startTime + "(ms)" );
 
-	}
+    }
 }

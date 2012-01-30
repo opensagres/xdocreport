@@ -50,452 +50,481 @@ import fr.opensagres.xdocreport.template.ITemplateEngine;
 import fr.opensagres.xdocreport.template.formatter.FieldsMetadata;
 
 /**
- * Abstract XDoc Report servlet used to process report (generate report and
- * remove report from cache).
- * 
+ * Abstract XDoc Report servlet used to process report (generate report and remove report from cache).
  */
-public abstract class AbstractProcessXDocReportServlet extends
-		BaseXDocReportServlet implements XDocProcessServletConstants {
+public abstract class AbstractProcessXDocReportServlet
+    extends BaseXDocReportServlet
+    implements XDocProcessServletConstants
+{
 
-	private static final String TEXT_HTML_CONTENT_TYPE = "text/html";
-	private static final String WEB_URI_RESOLVER_DATA_KEY = WEBURIResolver.class
-			.getName();
+    private static final String TEXT_HTML_CONTENT_TYPE = "text/html";
 
-	private static final long serialVersionUID = -4228326301636062279L;
+    private static final String WEB_URI_RESOLVER_DATA_KEY = WEBURIResolver.class.getName();
 
-	// JSP files
-	private static final String ADMIN_JSP = "admin.jsp";
-	private boolean cacheOriginalDocument = false;
+    private static final long serialVersionUID = -4228326301636062279L;
 
-	@Override
-	public void init(ServletConfig config) throws ServletException {
-		super.init(config);
-		this.cacheOriginalDocument = StringUtils.asBoolean(
-				super.getInitParameter("cacheOriginalDocument"), false);
-	}
+    // JSP files
+    private static final String ADMIN_JSP = "admin.jsp";
 
-	/**
-	 * Handles all requests (by default).
-	 * 
-	 * @param request
-	 *            HttpServletRequest object containing client request
-	 * @param response
-	 *            HttpServletResponse object for the response
-	 */
-	protected void processRequest(HttpServletRequest request,
-			HttpServletResponse response) throws ServletException, IOException {
-		String dispatch = getDispatchParameter(request);
-		if (REMOVE_DISPATCH.equals(dispatch)) {
-			doRemoveReport(request, response);
-		} else {
-			String entryName = getEntryName(request);
-			ProcessState processState = super.getProcessState(request);
-			if (processState == null) {
-				processState = (StringUtils.isNotEmpty(entryName)) ? ProcessState.PREPROCESSED
-						: ProcessState.GENERATED;
-			}
-			switch (processState) {
-			case ORIGINAL:
-			case PREPROCESSED:
-				doDocumentArchive(processState, entryName, request, response);
-				break;
-			case GENERATED:
-				doGenerateReport(entryName, request, response);
-				break;
-			}
-		}
-	}
+    private boolean cacheOriginalDocument = false;
 
-	/**
-	 * Remove report from the registry.
-	 * 
-	 * @param request
-	 * @param response
-	 * @throws IOException
-	 */
-	protected void doRemoveReport(HttpServletRequest request,
-			HttpServletResponse response) throws IOException {
-		String reportId = getReportId(request);
-		if (StringUtils.isNotEmpty(reportId)) {
-			getRegistry(request).unregisterReport(reportId);
-		}
-		doRedirectAfterRemoveReport(request, response);
-	}
+    @Override
+    public void init( ServletConfig config )
+        throws ServletException
+    {
+        super.init( config );
+        this.cacheOriginalDocument = StringUtils.asBoolean( super.getInitParameter( "cacheOriginalDocument" ), false );
+    }
 
-	protected void doRedirectAfterRemoveReport(HttpServletRequest request,
-			HttpServletResponse response) throws IOException {
-		response.sendRedirect(ADMIN_JSP);
-	}
+    /**
+     * Handles all requests (by default).
+     * 
+     * @param request HttpServletRequest object containing client request
+     * @param response HttpServletResponse object for the response
+     */
+    protected void processRequest( HttpServletRequest request, HttpServletResponse response )
+        throws ServletException, IOException
+    {
+        String dispatch = getDispatchParameter( request );
+        if ( REMOVE_DISPATCH.equals( dispatch ) )
+        {
+            doRemoveReport( request, response );
+        }
+        else
+        {
+            String entryName = getEntryName( request );
+            ProcessState processState = super.getProcessState( request );
+            if ( processState == null )
+            {
+                processState =
+                    ( StringUtils.isNotEmpty( entryName ) ) ? ProcessState.PREPROCESSED : ProcessState.GENERATED;
+            }
+            switch ( processState )
+            {
+                case ORIGINAL:
+                case PREPROCESSED:
+                    doDocumentArchive( processState, entryName, request, response );
+                    break;
+                case GENERATED:
+                    doGenerateReport( entryName, request, response );
+                    break;
+            }
+        }
+    }
 
-	protected void doDocumentArchive(ProcessState state, String entryName,
-			HttpServletRequest request, HttpServletResponse response)
-			throws IOException, ServletException {
-		if (StringUtils.isEmpty(entryName)) {
-			doSaveReport(state, request, response);
-		} else {
-			doSaveEntry(state, entryName, request, response);
-		}
-	}
+    /**
+     * Remove report from the registry.
+     * 
+     * @param request
+     * @param response
+     * @throws IOException
+     */
+    protected void doRemoveReport( HttpServletRequest request, HttpServletResponse response )
+        throws IOException
+    {
+        String reportId = getReportId( request );
+        if ( StringUtils.isNotEmpty( reportId ) )
+        {
+            getRegistry( request ).unregisterReport( reportId );
+        }
+        doRedirectAfterRemoveReport( request, response );
+    }
 
-	/**
-	 * Save document archive of the report.
-	 * 
-	 * @param processState
-	 * 
-	 * @param request
-	 * @param response
-	 * @throws IOException
-	 * @throws ServletException
-	 */
-	protected void doSaveReport(ProcessState processState,
-			HttpServletRequest request, HttpServletResponse response)
-			throws IOException, ServletException {
+    protected void doRedirectAfterRemoveReport( HttpServletRequest request, HttpServletResponse response )
+        throws IOException
+    {
+        response.sendRedirect( ADMIN_JSP );
+    }
 
-		try {
-			IXDocReport report = getReport(request);
-			if (report != null) {
-				// 2) Prepare HTTP response content type
-				prepareHTTPResponse(report.getId(), report.getMimeMapping(),
-						request, response);
-				try {
-					report.save(processState, response.getOutputStream());
-				} catch (XDocReportException e) {
-					throw new ServletException(e);
-				}
-			}
-		} catch (XDocReportException e) {
-			throw new ServletException(e);
-		}
-	}
+    protected void doDocumentArchive( ProcessState state, String entryName, HttpServletRequest request,
+                                      HttpServletResponse response )
+        throws IOException, ServletException
+    {
+        if ( StringUtils.isEmpty( entryName ) )
+        {
+            doSaveReport( state, request, response );
+        }
+        else
+        {
+            doSaveEntry( state, entryName, request, response );
+        }
+    }
 
-	/**
-	 * Extract entry from a report.
-	 * 
-	 * @param processState
-	 * 
-	 * @param request
-	 * @param response
-	 * @throws IOException
-	 * @throws ServletException
-	 */
-	protected void doSaveEntry(ProcessState processState, String entryName,
-			HttpServletRequest request, HttpServletResponse response)
-			throws IOException, ServletException {
-		try {
-			IXDocReport report = getReport(request);
-			if (report != null) {
-				try {
-					// 2) Prepare HTTP response content type
-					prepareHTTPResponse(report.getId(), entryName, request,
-							response);
-					report.saveEntry(entryName, processState,
-							response.getOutputStream());
-				} catch (XDocReportException e) {
-					throw new ServletException(e);
-				}
-			}
-		} catch (XDocReportException e) {
-			throw new ServletException(e);
-		}
-	}
+    /**
+     * Save document archive of the report.
+     * 
+     * @param processState
+     * @param request
+     * @param response
+     * @throws IOException
+     * @throws ServletException
+     */
+    protected void doSaveReport( ProcessState processState, HttpServletRequest request, HttpServletResponse response )
+        throws IOException, ServletException
+    {
 
-	protected boolean doGenerateReport(String entryName,
-			HttpServletRequest request, HttpServletResponse response)
-			throws ServletException, IOException {
+        try
+        {
+            IXDocReport report = getReport( request );
+            if ( report != null )
+            {
+                // 2) Prepare HTTP response content type
+                prepareHTTPResponse( report.getId(), report.getMimeMapping(), request, response );
+                try
+                {
+                    report.save( processState, response.getOutputStream() );
+                }
+                catch ( XDocReportException e )
+                {
+                    throw new ServletException( e );
+                }
+            }
+        }
+        catch ( XDocReportException e )
+        {
+            throw new ServletException( e );
+        }
+    }
 
-		try {
-			// 1) Get XDoc report
-			IXDocReport report = getReport(request);
-			if (report == null) {
-				throw new XDocReportException(
-						"Cannot get XDoc Report for the HTTP request");
-			}
-			Options options = getOptionsConverter(report, request);
-			if (options == null) {
-				doProcessReport(report, entryName, request, response);
-			} else {
-				doProcessReportWithConverter(report, options, request, response);
-			}
-			return true;
-		} catch (Exception e) {
-			/*
-			 * call the error handler to let the derived class do something
-			 * useful with this failure.
-			 */
-			error(request, response, e);
-			return false;
-		}
-	}
+    /**
+     * Extract entry from a report.
+     * 
+     * @param processState
+     * @param request
+     * @param response
+     * @throws IOException
+     * @throws ServletException
+     */
+    protected void doSaveEntry( ProcessState processState, String entryName, HttpServletRequest request,
+                                HttpServletResponse response )
+        throws IOException, ServletException
+    {
+        try
+        {
+            IXDocReport report = getReport( request );
+            if ( report != null )
+            {
+                try
+                {
+                    // 2) Prepare HTTP response content type
+                    prepareHTTPResponse( report.getId(), entryName, request, response );
+                    report.saveEntry( entryName, processState, response.getOutputStream() );
+                }
+                catch ( XDocReportException e )
+                {
+                    throw new ServletException( e );
+                }
+            }
+        }
+        catch ( XDocReportException e )
+        {
+            throw new ServletException( e );
+        }
+    }
 
-	/**
-	 * Generate report with process.
-	 * 
-	 * @param report
-	 * @param entryName
-	 * @param request
-	 * @param response
-	 * @throws XDocReportException
-	 * @throws IOException
-	 */
-	private void doProcessReport(IXDocReport report, String entryName,
-			HttpServletRequest request, HttpServletResponse response)
-			throws XDocReportException, IOException {
-		// 1) Prepare Java model context
-		IContext context = report.createContext();
-		populateContext(context, report.getId(), request);
+    protected boolean doGenerateReport( String entryName, HttpServletRequest request, HttpServletResponse response )
+        throws ServletException, IOException
+    {
 
-		if (StringUtils.isEmpty(entryName)) {
-			// 2) Prepare HTTP response content type
-			prepareHTTPResponse(report.getId(), report.getMimeMapping(),
-					request, response);
-			// 3) Generate report
-			report.process(context, response.getOutputStream());
-		} else {
-			// 2) Prepare HTTP response content type
-			prepareHTTPResponse(report.getId(), entryName, request, response);
-			// 3) Generate report
-			report.process(context, entryName, response.getOutputStream());
-		}
-	}
+        try
+        {
+            // 1) Get XDoc report
+            IXDocReport report = getReport( request );
+            if ( report == null )
+            {
+                throw new XDocReportException( "Cannot get XDoc Report for the HTTP request" );
+            }
+            Options options = getOptionsConverter( report, request );
+            if ( options == null )
+            {
+                doProcessReport( report, entryName, request, response );
+            }
+            else
+            {
+                doProcessReportWithConverter( report, options, request, response );
+            }
+            return true;
+        }
+        catch ( Exception e )
+        {
+            /*
+             * call the error handler to let the derived class do something useful with this failure.
+             */
+            error( request, response, e );
+            return false;
+        }
+    }
 
-	/**
-	 * Generate report with conversion.
-	 * 
-	 * @param report
-	 * @param options
-	 * @param request
-	 * @param response
-	 * @throws XDocReportException
-	 * @throws IOException
-	 * @throws XDocConverterException
-	 */
-	private void doProcessReportWithConverter(IXDocReport report,
-			Options options, HttpServletRequest request,
-			HttpServletResponse response) throws XDocReportException,
-			IOException, XDocConverterException {
-		IContext context = null;
-		ITemplateEngine templateEngine = report.getTemplateEngine();
-		if (templateEngine != null) {
-			// 1) Prepare Java model context
-			context = report.createContext();
-			populateContext(context, report.getId(), request);
-		}
+    /**
+     * Generate report with process.
+     * 
+     * @param report
+     * @param entryName
+     * @param request
+     * @param response
+     * @throws XDocReportException
+     * @throws IOException
+     */
+    private void doProcessReport( IXDocReport report, String entryName, HttpServletRequest request,
+                                  HttpServletResponse response )
+        throws XDocReportException, IOException
+    {
+        // 1) Prepare Java model context
+        IContext context = report.createContext();
+        populateContext( context, report.getId(), request );
 
-		// 2) Get converter
-		IConverter converter = report.getConverter(options);
-		// 3) Prepare HTTP response content type
-		prepareHTTPResponse(report.getId(), converter.getMimeMapping(),
-				request, response);
-		// 4) Generate report with conversion
-		report.convert(context, options, response.getOutputStream());
-	}
+        if ( StringUtils.isEmpty( entryName ) )
+        {
+            // 2) Prepare HTTP response content type
+            prepareHTTPResponse( report.getId(), report.getMimeMapping(), request, response );
+            // 3) Generate report
+            report.process( context, response.getOutputStream() );
+        }
+        else
+        {
+            // 2) Prepare HTTP response content type
+            prepareHTTPResponse( report.getId(), entryName, request, response );
+            // 3) Generate report
+            report.process( context, entryName, response.getOutputStream() );
+        }
+    }
 
-	// ----------------- Get Report
+    /**
+     * Generate report with conversion.
+     * 
+     * @param report
+     * @param options
+     * @param request
+     * @param response
+     * @throws XDocReportException
+     * @throws IOException
+     * @throws XDocConverterException
+     */
+    private void doProcessReportWithConverter( IXDocReport report, Options options, HttpServletRequest request,
+                                               HttpServletResponse response )
+        throws XDocReportException, IOException, XDocConverterException
+    {
+        IContext context = null;
+        ITemplateEngine templateEngine = report.getTemplateEngine();
+        if ( templateEngine != null )
+        {
+            // 1) Prepare Java model context
+            context = report.createContext();
+            populateContext( context, report.getId(), request );
+        }
 
-	/**
-	 * 
-	 * @param request
-	 * @return
-	 * @throws IOException
-	 * @throws XDocReportException
-	 */
-	protected IXDocReport getReport(HttpServletRequest request)
-			throws IOException, XDocReportException {
-		XDocReportRegistry registry = getRegistry(request);
-		// 1) Get report id
-		String reportId = getReportId(request);
-		if (StringUtils.isNotEmpty(reportId)) {
-			// Search if report is cached in the registry
-			IXDocReport report = registry.getReport(reportId);
-			if (report != null) {
-				return report;
-			}
-		}
-		return loadReport(reportId, registry, request);
-	}
+        // 2) Get converter
+        IConverter converter = report.getConverter( options );
+        // 3) Prepare HTTP response content type
+        prepareHTTPResponse( report.getId(), converter.getMimeMapping(), request, response );
+        // 4) Generate report with conversion
+        report.convert( context, options, response.getOutputStream() );
+    }
 
-	/**
-	 * Load report.
-	 * 
-	 * @param reportId
-	 * @param registry
-	 * @param request
-	 * @return
-	 * @throws IOException
-	 * @throws XDocReportException
-	 */
-	protected IXDocReport loadReport(String reportId,
-			XDocReportRegistry registry, HttpServletRequest request)
-			throws IOException, XDocReportException {
-		// 2) Get sourceStream
-		InputStream sourceStream = getSourceStream(reportId, request);
-		if (sourceStream == null) {
-			throw new XDocReportException("Input stream is null with reportId="
-					+ reportId);
-		}
-		IXDocReport report = null;
-		// 3) Get template engine to use for the report
-		ITemplateEngine templateEngine = null;
+    // ----------------- Get Report
 
-		String templateEngineKind = getTemplateEngineKind(reportId, request);
-		if (StringUtils.isNotEmpty(templateEngineKind)) {
-			// 3.1) Load report with template engine kind
-			report = registry.loadReport(sourceStream, reportId,
-					templateEngineKind);
-		} else {
-			// 3.1) Load report with template engine
-			templateEngine = getTemplateEngine(reportId, request);
-			report = registry
-					.loadReport(sourceStream, reportId, templateEngine);
-		}
+    /**
+     * @param request
+     * @return
+     * @throws IOException
+     * @throws XDocReportException
+     */
+    protected IXDocReport getReport( HttpServletRequest request )
+        throws IOException, XDocReportException
+    {
+        XDocReportRegistry registry = getRegistry( request );
+        // 1) Get report id
+        String reportId = getReportId( request );
+        if ( StringUtils.isNotEmpty( reportId ) )
+        {
+            // Search if report is cached in the registry
+            IXDocReport report = registry.getReport( reportId );
+            if ( report != null )
+            {
+                return report;
+            }
+        }
+        return loadReport( reportId, registry, request );
+    }
 
-		// 6) Set FieldsMetaData
-		FieldsMetadata fieldsMetadata = getFieldsMetadata(reportId, request);
-		report.setFieldsMetadata(fieldsMetadata);
+    /**
+     * Load report.
+     * 
+     * @param reportId
+     * @param registry
+     * @param request
+     * @return
+     * @throws IOException
+     * @throws XDocReportException
+     */
+    protected IXDocReport loadReport( String reportId, XDocReportRegistry registry, HttpServletRequest request )
+        throws IOException, XDocReportException
+    {
+        // 2) Get sourceStream
+        InputStream sourceStream = getSourceStream( reportId, request );
+        if ( sourceStream == null )
+        {
+            throw new XDocReportException( "Input stream is null with reportId=" + reportId );
+        }
+        IXDocReport report = null;
+        // 3) Get template engine to use for the report
+        ITemplateEngine templateEngine = null;
 
-		// 7) Set cache
-		report.setCacheOriginalDocument(isCacheOriginalDocument(reportId,
-				request));
+        String templateEngineKind = getTemplateEngineKind( reportId, request );
+        if ( StringUtils.isNotEmpty( templateEngineKind ) )
+        {
+            // 3.1) Load report with template engine kind
+            report = registry.loadReport( sourceStream, reportId, templateEngineKind );
+        }
+        else
+        {
+            // 3.1) Load report with template engine
+            templateEngine = getTemplateEngine( reportId, request );
+            report = registry.loadReport( sourceStream, reportId, templateEngine );
+        }
 
-		
-		return report;
-	}
+        // 6) Set FieldsMetaData
+        FieldsMetadata fieldsMetadata = getFieldsMetadata( reportId, request );
+        report.setFieldsMetadata( fieldsMetadata );
 
-	protected boolean isCacheOriginalDocument(String reportId,
-			HttpServletRequest request) {
-		return cacheOriginalDocument;
-	}
+        // 7) Set cache
+        report.setCacheOriginalDocument( isCacheOriginalDocument( reportId, request ) );
 
-	protected FieldsMetadata getFieldsMetadata(String reportId,
-			HttpServletRequest request) {
-		return null;
-	}
+        return report;
+    }
 
-	/**
-	 * Invoked when there is an error thrown in any part of doRequest()
-	 * processing. <br>
-	 * <br>
-	 * Default will send a simple HTML response indicating there was a problem.
-	 * 
-	 * @param request
-	 *            original HttpServletRequest from servlet container.
-	 * @param response
-	 *            HttpServletResponse object from servlet container.
-	 * @param cause
-	 *            Exception that was thrown by some other part of process.
-	 */
-	protected void error(HttpServletRequest request,
-			HttpServletResponse response, Exception cause)
-			throws ServletException, IOException {
-		if (response.isCommitted()) {
-			throw new ServletException(cause);
-		}
-		response.setContentType(TEXT_HTML_CONTENT_TYPE);
-		StringBuilder html = new StringBuilder();
-		html.append("<html>");
-		html.append("<title>Error</title>");
-		html.append("<body bgcolor=\"#ffffff\">");
-		html.append("<h2>XDocReport Servlet: Error report generation</h2>");
-		html.append("<pre>");
-		String why = cause.getMessage();
-		if (why != null && why.trim().length() > 0) {
-			html.append(why);
-			html.append("<br>");
-		}
+    protected boolean isCacheOriginalDocument( String reportId, HttpServletRequest request )
+    {
+        return cacheOriginalDocument;
+    }
 
-		StringWriter sw = new StringWriter();
-		cause.printStackTrace(new PrintWriter(sw));
+    protected FieldsMetadata getFieldsMetadata( String reportId, HttpServletRequest request )
+    {
+        return null;
+    }
 
-		html.append(sw.toString());
-		html.append("</pre>");
-		html.append("</body>");
-		html.append("</html>");
-		response.getOutputStream().print(html.toString());
+    /**
+     * Invoked when there is an error thrown in any part of doRequest() processing. <br>
+     * <br>
+     * Default will send a simple HTML response indicating there was a problem.
+     * 
+     * @param request original HttpServletRequest from servlet container.
+     * @param response HttpServletResponse object from servlet container.
+     * @param cause Exception that was thrown by some other part of process.
+     */
+    protected void error( HttpServletRequest request, HttpServletResponse response, Exception cause )
+        throws ServletException, IOException
+    {
+        if ( response.isCommitted() )
+        {
+            throw new ServletException( cause );
+        }
+        response.setContentType( TEXT_HTML_CONTENT_TYPE );
+        StringBuilder html = new StringBuilder();
+        html.append( "<html>" );
+        html.append( "<title>Error</title>" );
+        html.append( "<body bgcolor=\"#ffffff\">" );
+        html.append( "<h2>XDocReport Servlet: Error report generation</h2>" );
+        html.append( "<pre>" );
+        String why = cause.getMessage();
+        if ( why != null && why.trim().length() > 0 )
+        {
+            html.append( why );
+            html.append( "<br>" );
+        }
 
-	}
+        StringWriter sw = new StringWriter();
+        cause.printStackTrace( new PrintWriter( sw ) );
 
-	/**
-	 * Returns the converter id.
-	 * 
-	 * @param request
-	 * @return
-	 */
-	protected String getConverterId(IXDocReport report,
-			HttpServletRequest request) {
-		return (String) request.getParameter(CONVERTER_ID_HTTP_PARAM);
-	}
+        html.append( sw.toString() );
+        html.append( "</pre>" );
+        html.append( "</body>" );
+        html.append( "</html>" );
+        response.getOutputStream().print( html.toString() );
 
-	protected Options getOptionsConverter(IXDocReport report,
-			HttpServletRequest request) {
-		final String converterId = getConverterId(report, request);
-		if (StringUtils.isEmpty(converterId)) {
-			return null;
-		}
-		Options options = null;
-		int index = converterId.lastIndexOf('_');
-		if (index != -1) {
-			String to = converterId.substring(0, index);
-			String via = converterId.substring(index + 1, converterId.length());
-			options = Options.getTo(to).via(via);
-		} else {
-			options = Options.getTo(converterId);
-		}
-		prepareOptions(options, report, converterId, request);
-		return options;
-	}
+    }
 
-	protected void prepareOptions(Options options, IXDocReport report,
-			String converterId, HttpServletRequest request) {
-		if (ConverterTypeTo.FO.name().equals(options.getTo())
-				|| ConverterTypeTo.XHTML.name().equals(options.getTo())) {
-			options.setProperty(IURIResolver.class.getName(),
-					createWEBURIResolver(report, converterId, request));
-		}
-	}
+    /**
+     * Returns the converter id.
+     * 
+     * @param request
+     * @return
+     */
+    protected String getConverterId( IXDocReport report, HttpServletRequest request )
+    {
+        return (String) request.getParameter( CONVERTER_ID_HTTP_PARAM );
+    }
 
-	public IURIResolver createWEBURIResolver(IXDocReport report,
-			String converterId, HttpServletRequest request) {
-		WEBURIResolver resolver = report.getData(WEB_URI_RESOLVER_DATA_KEY);
-		if (resolver == null) {
-			resolver = new WEBURIResolver(report.getId(), request);
-			report.setData(WEB_URI_RESOLVER_DATA_KEY, resolver);
-		}
-		return resolver;
-	}
+    protected Options getOptionsConverter( IXDocReport report, HttpServletRequest request )
+    {
+        final String converterId = getConverterId( report, request );
+        if ( StringUtils.isEmpty( converterId ) )
+        {
+            return null;
+        }
+        Options options = null;
+        int index = converterId.lastIndexOf( '_' );
+        if ( index != -1 )
+        {
+            String to = converterId.substring( 0, index );
+            String via = converterId.substring( index + 1, converterId.length() );
+            options = Options.getTo( to ).via( via );
+        }
+        else
+        {
+            options = Options.getTo( converterId );
+        }
+        prepareOptions( options, report, converterId, request );
+        return options;
+    }
 
-	@Override
-	protected boolean isGenerateContentDisposition(String reportId,
-			MimeMapping mimeMapping, HttpServletRequest request) {
-		return !VIEW_DISPATCH.equals(getDispatchParameter(request));
-	}
+    protected void prepareOptions( Options options, IXDocReport report, String converterId, HttpServletRequest request )
+    {
+        if ( ConverterTypeTo.FO.name().equals( options.getTo() )
+            || ConverterTypeTo.XHTML.name().equals( options.getTo() ) )
+        {
+            options.setProperty( IURIResolver.class.getName(), createWEBURIResolver( report, converterId, request ) );
+        }
+    }
 
-	/**
-	 * Returns input stream of the report to load identified with
-	 * <code>reportId</code>.
-	 * 
-	 * @param reportId
-	 *            report id.
-	 * @param request
-	 *            Http servlet request context.
-	 * @return
-	 * @throws IOException
-	 * @throws XDocReportException
-	 */
-	protected abstract InputStream getSourceStream(String reportId,
-			HttpServletRequest request) throws IOException, XDocReportException;
+    public IURIResolver createWEBURIResolver( IXDocReport report, String converterId, HttpServletRequest request )
+    {
+        WEBURIResolver resolver = report.getData( WEB_URI_RESOLVER_DATA_KEY );
+        if ( resolver == null )
+        {
+            resolver = new WEBURIResolver( report.getId(), request );
+            report.setData( WEB_URI_RESOLVER_DATA_KEY, resolver );
+        }
+        return resolver;
+    }
 
-	/**
-	 * Put the Java model in the context for the report <code>reportId</code>.
-	 * 
-	 * @param context
-	 *            XDocReport context to register Java data model.
-	 * @param reportId
-	 *            report id.
-	 * @param request
-	 *            Http servlet request context.
-	 * @throws IOException
-	 * @throws XDocReportException
-	 */
-	protected abstract void populateContext(IContext context, String reportId,
-			HttpServletRequest request) throws IOException, XDocReportException;
+    @Override
+    protected boolean isGenerateContentDisposition( String reportId, MimeMapping mimeMapping, HttpServletRequest request )
+    {
+        return !VIEW_DISPATCH.equals( getDispatchParameter( request ) );
+    }
+
+    /**
+     * Returns input stream of the report to load identified with <code>reportId</code>.
+     * 
+     * @param reportId report id.
+     * @param request Http servlet request context.
+     * @return
+     * @throws IOException
+     * @throws XDocReportException
+     */
+    protected abstract InputStream getSourceStream( String reportId, HttpServletRequest request )
+        throws IOException, XDocReportException;
+
+    /**
+     * Put the Java model in the context for the report <code>reportId</code>.
+     * 
+     * @param context XDocReport context to register Java data model.
+     * @param reportId report id.
+     * @param request Http servlet request context.
+     * @throws IOException
+     * @throws XDocReportException
+     */
+    protected abstract void populateContext( IContext context, String reportId, HttpServletRequest request )
+        throws IOException, XDocReportException;
 }

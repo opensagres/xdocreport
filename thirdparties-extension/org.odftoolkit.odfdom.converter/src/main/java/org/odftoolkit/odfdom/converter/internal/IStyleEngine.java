@@ -34,30 +34,31 @@ import org.odftoolkit.odfdom.dom.element.style.StyleTableCellPropertiesElement;
 import org.odftoolkit.odfdom.dom.element.style.StyleTablePropertiesElement;
 import org.odftoolkit.odfdom.dom.element.style.StyleTextPropertiesElement;
 
-public interface IStyleEngine {
+public interface IStyleEngine
+{
 
-	public void visit(OfficeStylesElement ele);
+    public void visit( OfficeStylesElement ele );
 
-	public void visit(OfficeAutomaticStylesElement ele);
+    public void visit( OfficeAutomaticStylesElement ele );
 
-	public void visit(OfficeMasterStylesElement ele);
+    public void visit( OfficeMasterStylesElement ele );
 
-	public void visit(StyleDefaultStyleElement ele);
+    public void visit( StyleDefaultStyleElement ele );
 
-	public void visit(StyleStyleElement ele);
+    public void visit( StyleStyleElement ele );
 
-	// visit //style:paragraph-properties
+    // visit //style:paragraph-properties
 
-	public void visit(StyleParagraphPropertiesElement ele);
+    public void visit( StyleParagraphPropertiesElement ele );
 
-	public void visit(StyleTextPropertiesElement ele);
+    public void visit( StyleTextPropertiesElement ele );
 
-	// visit <style:style style:name="Tableau1"
-	// style:family="table">/stye:table-properties
-	public void visit(StyleTablePropertiesElement ele);
+    // visit <style:style style:name="Tableau1"
+    // style:family="table">/stye:table-properties
+    public void visit( StyleTablePropertiesElement ele );
 
-	// visit <style:style ...
-	// style:family="table-cell">/style:table-cell-properties
-	public void visit(StyleTableCellPropertiesElement ele);
+    // visit <style:style ...
+    // style:family="table-cell">/style:table-cell-properties
+    public void visit( StyleTableCellPropertiesElement ele );
 
 }

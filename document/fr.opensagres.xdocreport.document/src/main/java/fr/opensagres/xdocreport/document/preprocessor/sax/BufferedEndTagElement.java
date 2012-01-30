@@ -26,12 +26,14 @@ package fr.opensagres.xdocreport.document.preprocessor.sax;
 
 /**
  * Buffer for end tag element.
- *
  */
-public class BufferedEndTagElement extends BufferedTagElement {
+public class BufferedEndTagElement
+    extends BufferedTagElement
+{
 
-	public BufferedEndTagElement(BufferedElement parent) {
-		super(parent);
-	}
+    public BufferedEndTagElement( BufferedElement parent )
+    {
+        super( parent );
+    }
 
 }

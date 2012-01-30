@@ -29,84 +29,94 @@ import java.awt.Color;
 import com.lowagie.text.Font;
 import com.lowagie.text.FontFactory;
 
-public abstract class AbstractFontRegistry {
+public abstract class AbstractFontRegistry
+{
 
-	private static boolean registerFontDirectories = false;
+    private static boolean registerFontDirectories = false;
 
-	/*
-	public Font getFont(String familyName, float size, int style, Color color) {
-		return getFont(familyName, FontFactory.defaultEncoding, size, style,
-				color);
-	}*/
+    /*
+     * public Font getFont(String familyName, float size, int style, Color color) { return getFont(familyName,
+     * FontFactory.defaultEncoding, size, style, color); }
+     */
 
-	public Font getFont(String familyName, String encoding, float size,
-			int style, Color color) {
-		registerFontDirectoriesIfNeeded();
-		if (familyName != null) {
-			familyName = resolveFamilyName(familyName, style);
-		}
+    public Font getFont( String familyName, String encoding, float size, int style, Color color )
+    {
+        registerFontDirectoriesIfNeeded();
+        if ( familyName != null )
+        {
+            familyName = resolveFamilyName( familyName, style );
+        }
 
-		return FontFactory.getFont(familyName, encoding, size, style, color);
-	}
+        return FontFactory.getFont( familyName, encoding, size, style, color );
+    }
 
-	/**
-	 * Register fonts from files (ex : for windows, load files from
-	 * C:\WINDOWS\Fonts).
-	 */
-	private void registerFontDirectoriesIfNeeded() {
-		if (!registerFontDirectories) {
-			FontFactory.registerDirectories();
-			registerFontDirectories = true;
-		}
-	}
+    /**
+     * Register fonts from files (ex : for windows, load files from C:\WINDOWS\Fonts).
+     */
+    private void registerFontDirectoriesIfNeeded()
+    {
+        if ( !registerFontDirectories )
+        {
+            FontFactory.registerDirectories();
+            registerFontDirectories = true;
+        }
+    }
 
-	/**
-	 * checks if this font is Bold.
-	 * 
-	 * @return a <CODE>boolean</CODE>
-	 */
-	public boolean isBold(int style) {
-		if (style == Font.UNDEFINED) {
-			return false;
-		}
-		return (style & Font.BOLD) == Font.BOLD;
-	}
+    /**
+     * checks if this font is Bold.
+     * 
+     * @return a <CODE>boolean</CODE>
+     */
+    public boolean isBold( int style )
+    {
+        if ( style == Font.UNDEFINED )
+        {
+            return false;
+        }
+        return ( style & Font.BOLD ) == Font.BOLD;
+    }
 
-	/**
-	 * checks if this font is Bold.
-	 * 
-	 * @return a <CODE>boolean</CODE>
-	 */
-	public boolean isItalic(int style) {
-		if (style == Font.UNDEFINED) {
-			return false;
-		}
-		return (style & Font.ITALIC) == Font.ITALIC;
-	}
+    /**
+     * checks if this font is Bold.
+     * 
+     * @return a <CODE>boolean</CODE>
+     */
+    public boolean isItalic( int style )
+    {
+        if ( style == Font.UNDEFINED )
+        {
+            return false;
+        }
+        return ( style & Font.ITALIC ) == Font.ITALIC;
+    }
 
-	/**
-	 * checks if this font is underlined.
-	 * 
-	 * @return a <CODE>boolean</CODE>
-	 */
-	public boolean isUnderlined(int style) {
-		if (style == Font.UNDEFINED) {
-			return false;
-		}
-		return (style & Font.UNDERLINE) == Font.UNDERLINE;
-	}
+    /**
+     * checks if this font is underlined.
+     * 
+     * @return a <CODE>boolean</CODE>
+     */
+    public boolean isUnderlined( int style )
+    {
+        if ( style == Font.UNDEFINED )
+        {
+            return false;
+        }
+        return ( style & Font.UNDERLINE ) == Font.UNDERLINE;
+    }
 
-	/**
-	 * checks if the style of this font is STRIKETHRU.
-	 * 
-	 * @return a <CODE>boolean</CODE>
-	 */
-	public boolean isStrikethru(int style) {
-		if (style == Font.UNDEFINED) {
-			return false;
-		}
-		return (style & Font.STRIKETHRU) == Font.STRIKETHRU;
-	}
+    /**
+     * checks if the style of this font is STRIKETHRU.
+     * 
+     * @return a <CODE>boolean</CODE>
+     */
+    public boolean isStrikethru( int style )
+    {
+        if ( style == Font.UNDEFINED )
+        {
+            return false;
+        }
+        return ( style & Font.STRIKETHRU ) == Font.STRIKETHRU;
+    }
 
-	protected abstract String resolveFamilyName(String familyName, int style);
+    protected abstract String resolveFamilyName( String familyName, int style );
 }

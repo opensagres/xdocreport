@@ -44,105 +44,118 @@ import fr.opensagres.xdocreport.document.IXDocReport;
 import fr.opensagres.xdocreport.document.registry.XDocReportRegistry;
 
 /**
- * Class to upload files (odt, docx..) and register the report in the
- * {@link XDocReportRegistry}.
- * 
+ * Class to upload files (odt, docx..) and register the report in the {@link XDocReportRegistry}.
  */
-public class UploadXDocReportServlet extends BaseXDocReportServlet {
+public class UploadXDocReportServlet
+    extends BaseXDocReportServlet
+{
 
-	private static final long serialVersionUID = 9102651291455406387L;
-	private static final String LOADREPORT_JSP = "loadReport.jsp";
+    private static final long serialVersionUID = 9102651291455406387L;
 
-	@Override
-	protected void processRequest(HttpServletRequest request,
-			HttpServletResponse response) throws ServletException, IOException {
-		doUpload(request, response);
-	}
+    private static final String LOADREPORT_JSP = "loadReport.jsp";
 
-	/**
-	 * Handles all requests (by default).
-	 * 
-	 * @param request
-	 *            HttpServletRequest object containing client request
-	 * @param response
-	 *            HttpServletResponse object for the response
-	 */
-	protected void doUpload(HttpServletRequest request,
-			HttpServletResponse response) throws ServletException, IOException {
-		boolean isMultipart = ServletFileUpload.isMultipartContent(request);
+    @Override
+    protected void processRequest( HttpServletRequest request, HttpServletResponse response )
+        throws ServletException, IOException
+    {
+        doUpload( request, response );
+    }
 
-		if (isMultipart) {
+    /**
+     * Handles all requests (by default).
+     * 
+     * @param request HttpServletRequest object containing client request
+     * @param response HttpServletResponse object for the response
+     */
+    protected void doUpload( HttpServletRequest request, HttpServletResponse response )
+        throws ServletException, IOException
+    {
+        boolean isMultipart = ServletFileUpload.isMultipartContent( request );
 
-			// Create a factory for disk-based file items
-			FileItemFactory factory = new DiskFileItemFactory();
+        if ( isMultipart )
+        {
 
-			// Create a new file upload handler
-			ServletFileUpload upload = new ServletFileUpload(factory);
+            // Create a factory for disk-based file items
+            FileItemFactory factory = new DiskFileItemFactory();
 
-			// Parse the request
-			try {
-				@SuppressWarnings("unchecked")
-				List<FileItem> items = upload.parseRequest(request);
-				for (Iterator<FileItem> iterator = items.iterator(); iterator
-						.hasNext();) {
+            // Create a new file upload handler
+            ServletFileUpload upload = new ServletFileUpload( factory );
 
-					FileItem fileItem = (FileItem) iterator.next();
+            // Parse the request
+            try
+            {
+                @SuppressWarnings( "unchecked" )
+                List<FileItem> items = upload.parseRequest( request );
+                for ( Iterator<FileItem> iterator = items.iterator(); iterator.hasNext(); )
+                {
 
-					if ("uploadfile".equals(fileItem.getFieldName())) {
+                    FileItem fileItem = (FileItem) iterator.next();
 
-						InputStream in = fileItem.getInputStream();
-						try {
-							String reportId = generateReportId(fileItem,
-									request);
-							IXDocReport report = getRegistryForUpload(request)
-									.loadReport(in, reportId);
+                    if ( "uploadfile".equals( fileItem.getFieldName() ) )
+                    {
 
-							// Check if report id exists in global registry
-							getRegistry(request).checkReportId(report.getId());
-							reportLoaded(report, request);
-							doForward(report, request, response);
-							break;
-						} catch (XDocReportException e) {
-							throw new ServletException(e);
-						}
-					}
-				}
-			} catch (FileUploadException e) {
-				throw new ServletException(e);
-			}
+                        InputStream in = fileItem.getInputStream();
+                        try
+                        {
+                            String reportId = generateReportId( fileItem, request );
+                            IXDocReport report = getRegistryForUpload( request ).loadReport( in, reportId );
 
-		}
-	}
+                            // Check if report id exists in global registry
+                            getRegistry( request ).checkReportId( report.getId() );
+                            reportLoaded( report, request );
+                            doForward( report, request, response );
+                            break;
+                        }
+                        catch ( XDocReportException e )
+                        {
+                            throw new ServletException( e );
+                        }
+                    }
+                }
+            }
+            catch ( FileUploadException e )
+            {
+                throw new ServletException( e );
+            }
 
-	protected void reportLoaded(IXDocReport report, HttpServletRequest request) {
-		// Do Nothing
-	}
+        }
+    }
 
-	protected String generateReportId(FileItem fileItem,
-			HttpServletRequest request) {
-		String reportId = fileItem.getName();
-		// test if report id has slash (when document is uploaded with IE,
-		// fileItem.getName() is the full path of teh uploaded file).
-		int index = reportId.lastIndexOf('/');
-		if (index == -1) {
-			index = reportId.lastIndexOf('\\');
-		}
-		if (index != -1) {
-			reportId = reportId.substring(index+1, reportId.length());
-		}
-		return getRegistry(request).generateUniqueReportId(reportId);
-	}
+    protected void reportLoaded( IXDocReport report, HttpServletRequest request )
+    {
+        // Do Nothing
+    }
 
-	protected void doForward(IXDocReport report, HttpServletRequest request,
-			HttpServletResponse response) throws IOException, ServletException {
-		if (report != null) {
-			request.setAttribute(XDOCREPORT_ATTR_KEY, report);
-		}
-		request.getRequestDispatcher(LOADREPORT_JSP).forward(request, response);
-	}
+    protected String generateReportId( FileItem fileItem, HttpServletRequest request )
+    {
+        String reportId = fileItem.getName();
+        // test if report id has slash (when document is uploaded with IE,
+        // fileItem.getName() is the full path of teh uploaded file).
+        int index = reportId.lastIndexOf( '/' );
+        if ( index == -1 )
+        {
+            index = reportId.lastIndexOf( '\\' );
+        }
+        if ( index != -1 )
+        {
+            reportId = reportId.substring( index + 1, reportId.length() );
+        }
+        return getRegistry( request ).generateUniqueReportId( reportId );
+    }
 
-	protected XDocReportRegistry getRegistryForUpload(HttpServletRequest request) {
-		return super.getRegistry(request);
-	}
+    protected void doForward( IXDocReport report, HttpServletRequest request, HttpServletResponse response )
+        throws IOException, ServletException
+    {
+        if ( report != null )
+        {
+            request.setAttribute( XDOCREPORT_ATTR_KEY, report );
+        }
+        request.getRequestDispatcher( LOADREPORT_JSP ).forward( request, response );
+    }
+
+    protected XDocReportRegistry getRegistryForUpload( HttpServletRequest request )
+    {
+        return super.getRegistry( request );
+    }
 
 }

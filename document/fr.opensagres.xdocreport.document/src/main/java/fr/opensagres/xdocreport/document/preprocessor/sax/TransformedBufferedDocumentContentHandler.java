@@ -38,363 +38,428 @@ import fr.opensagres.xdocreport.template.formatter.IDocumentFormatter;
 
 /**
  * Document transformed to manage lazy loop for row table and dynamic image.
- * 
  */
 public abstract class TransformedBufferedDocumentContentHandler<Document extends TransformedBufferedDocument>
-		extends BufferedDocumentContentHandler<Document> {
+    extends BufferedDocumentContentHandler<Document>
+{
 
-	private static final String AFTER_TOKEN = "@/";
-	private static final String BEFORE_TOKEN = "@";
-	private final FieldsMetadata fieldsMetadata;
-	private final IDocumentFormatter formatter;
-	private final Map<String, Object> sharedContext;
-	private final DirectivesStack directives;
-	private int nbLoopDirectiveToRemove = 0;
-	private int variableIndex;
+    private static final String AFTER_TOKEN = "@/";
 
-	protected TransformedBufferedDocumentContentHandler(
-			FieldsMetadata fieldsMetadata, IDocumentFormatter formater,
-			Map<String, Object> sharedContext) {
-		this.fieldsMetadata = fieldsMetadata;
-		this.formatter = formater;
-		this.sharedContext = sharedContext;
-		this.directives = new DirectivesStack();
-		this.variableIndex = 0;
-	}
+    private static final String BEFORE_TOKEN = "@";
 
-	@Override
-	public void startDocument() throws SAXException {
-		String directive = formatter != null ? formatter
-				.getStartDocumentDirective() : null;
-		if (StringUtils.isNotEmpty(directive)) {
-			this.bufferedDocument.append(directive);
-		}
-		super.startDocument();
-	}
+    private final FieldsMetadata fieldsMetadata;
 
-	@Override
-	public void endDocument() throws SAXException {
-		String directive = formatter != null ? formatter
-				.getEndDocumentDirective() : null;
-		if (StringUtils.isNotEmpty(directive)) {
-			this.bufferedDocument.append(directive);
-		}
-		super.endDocument();
-	}
+    private final IDocumentFormatter formatter;
 
-	@Override
-	protected void flushCharacters(String characters) {
-		super.flushCharacters(processRowIfNeeded(characters));
-	}
+    private final Map<String, Object> sharedContext;
 
-	public String processRowIfNeeded(String content) {
-		return processRowIfNeeded(content, false);
-	}
+    private final DirectivesStack directives;
 
-	/**
-	 * If a row parsing, replace fields name with well script to manage lazy
-	 * loop for table row.
-	 * 
-	 * @param content
-	 * @return
-	 */
-	public String processRowIfNeeded(String content, boolean forceAsField) {
-		ProcessRowResult result = getProcessRowResult(content, forceAsField);
-		return result.getContent();
-	}
+    private int nbLoopDirectiveToRemove = 0;
 
-	/**
-	 * If a row parsing, replace fields name with well script to manage lazy
-	 * loop for table row.
-	 * 
-	 * @param content
-	 * @return
-	 */
-	public ProcessRowResult getProcessRowResult(String content,
-			boolean forceAsField) {
-		RowBufferedRegion currentRow = bufferedDocument.getCurrentTableRow();
-		if (currentRow != null && formatter != null) {
-			// characters parsing belong to a row
-			// search if it contains fields list from metadata
-			Collection<String> fieldsAsList = fieldsMetadata.getFieldsAsList();
-			if (!currentRow.isLoopTemplateDirectiveInitilalized()) {
-				for (final String fieldName : fieldsAsList) {
-					if (content.contains(fieldName)) {
-						String itemNameList = formatter.extractItemNameList(
-								content, fieldName, forceAsField);
-						if (StringUtils.isNotEmpty(itemNameList)) {
-							currentRow.initializeLoopTemplateDirective(
-									itemNameList, formatter);
-							break;
-						}
-					}
-				}
-			}
+    private int variableIndex;
 
-			if (currentRow.isLoopTemplateDirectiveInitilalized()) {
-				for (final String fieldName : fieldsAsList) {
-					if (content.contains(fieldName)) {
-						String newContent = formatter.formatAsFieldItemList(
-								content, fieldName, forceAsField);
-						if (newContent != null) {
-							return new ProcessRowResult(newContent, fieldName,
-									currentRow.getItemNameList(),
-									currentRow.getStartLoopDirective(),
-									currentRow.getEndLoopDirective());
-						}
-					}
-				}
-			}
-		}
-		return new ProcessRowResult(content, null, null, null, null);
-	}
+    protected TransformedBufferedDocumentContentHandler( FieldsMetadata fieldsMetadata, IDocumentFormatter formater,
+                                                         Map<String, Object> sharedContext )
+    {
+        this.fieldsMetadata = fieldsMetadata;
+        this.formatter = formater;
+        this.sharedContext = sharedContext;
+        this.directives = new DirectivesStack();
+        this.variableIndex = 0;
+    }
 
-	public Map<String, Object> getSharedContext() {
-		return sharedContext;
-	}
+    @Override
+    public void startDocument()
+        throws SAXException
+    {
+        String directive = formatter != null ? formatter.getStartDocumentDirective() : null;
+        if ( StringUtils.isNotEmpty( directive ) )
+        {
+            this.bufferedDocument.append( directive );
+        }
+        super.startDocument();
+    }
 
-	public boolean hasSharedContext() {
-		return sharedContext != null;
-	}
+    @Override
+    public void endDocument()
+        throws SAXException
+    {
+        String directive = formatter != null ? formatter.getEndDocumentDirective() : null;
+        if ( StringUtils.isNotEmpty( directive ) )
+        {
+            this.bufferedDocument.append( directive );
+        }
+        super.endDocument();
+    }
 
-	public FieldsMetadata getFieldsMetadata() {
-		return fieldsMetadata;
-	}
+    @Override
+    protected void flushCharacters( String characters )
+    {
+        super.flushCharacters( processRowIfNeeded( characters ) );
+    }
 
-	public IDocumentFormatter getFormatter() {
-		return formatter;
-	}
+    public String processRowIfNeeded( String content )
+    {
+        return processRowIfNeeded( content, false );
+    }
 
-	public DirectivesStack getDirectives() {
-		return directives;
-	}
+    /**
+     * If a row parsing, replace fields name with well script to manage lazy loop for table row.
+     * 
+     * @param content
+     * @return
+     */
+    public String processRowIfNeeded( String content, boolean forceAsField )
+    {
+        ProcessRowResult result = getProcessRowResult( content, forceAsField );
+        return result.getContent();
+    }
 
-	/**
-	 * Returns the before row token.
-	 * 
-	 * @return
-	 */
-	protected String getBeforeRowToken() {
-		if (fieldsMetadata == null) {
-			return FieldsMetadata.DEFAULT_BEFORE_ROW_TOKEN;
-		}
-		return fieldsMetadata.getBeforeRowToken();
-	}
+    /**
+     * If a row parsing, replace fields name with well script to manage lazy loop for table row.
+     * 
+     * @param content
+     * @return
+     */
+    public ProcessRowResult getProcessRowResult( String content, boolean forceAsField )
+    {
+        RowBufferedRegion currentRow = bufferedDocument.getCurrentTableRow();
+        if ( currentRow != null && formatter != null )
+        {
+            // characters parsing belong to a row
+            // search if it contains fields list from metadata
+            Collection<String> fieldsAsList = fieldsMetadata.getFieldsAsList();
+            if ( !currentRow.isLoopTemplateDirectiveInitilalized() )
+            {
+                for ( final String fieldName : fieldsAsList )
+                {
+                    if ( content.contains( fieldName ) )
+                    {
+                        String itemNameList = formatter.extractItemNameList( content, fieldName, forceAsField );
+                        if ( StringUtils.isNotEmpty( itemNameList ) )
+                        {
+                            currentRow.initializeLoopTemplateDirective( itemNameList, formatter );
+                            break;
+                        }
+                    }
+                }
+            }
 
-	/**
-	 * Returns the after row token.
-	 * 
-	 * @return
-	 */
-	protected String getAfterRowToken() {
-		if (fieldsMetadata == null) {
-			return FieldsMetadata.DEFAULT_AFTER_ROW_TOKEN;
-		}
-		return fieldsMetadata.getAfterRowToken();
-	}
+            if ( currentRow.isLoopTemplateDirectiveInitilalized() )
+            {
+                for ( final String fieldName : fieldsAsList )
+                {
+                    if ( content.contains( fieldName ) )
+                    {
+                        String newContent = formatter.formatAsFieldItemList( content, fieldName, forceAsField );
+                        if ( newContent != null )
+                        {
+                            return new ProcessRowResult( newContent, fieldName, currentRow.getItemNameList(),
+                                                         currentRow.getStartLoopDirective(),
+                                                         currentRow.getEndLoopDirective() );
+                        }
+                    }
+                }
+            }
+        }
+        return new ProcessRowResult( content, null, null, null, null );
+    }
 
-	/**
-	 * Returns the before row token.
-	 * 
-	 * @return
-	 */
-	protected String getBeforeTableCellToken() {
-		if (fieldsMetadata == null) {
-			return FieldsMetadata.DEFAULT_BEFORE_TABLE_CELL_TOKEN;
-		}
-		return fieldsMetadata.getBeforeTableCellToken();
-	}
+    public Map<String, Object> getSharedContext()
+    {
+        return sharedContext;
+    }
 
-	/**
-	 * Returns the after row token.
-	 * 
-	 * @return
-	 */
-	protected String getAfterTableCellToken() {
-		if (fieldsMetadata == null) {
-			return FieldsMetadata.DEFAULT_AFTER_TABLE_CELL_TOKEN;
-		}
-		return fieldsMetadata.getAfterTableCellToken();
-	}
+    public boolean hasSharedContext()
+    {
+        return sharedContext != null;
+    }
 
-	public int extractListDirectiveInfo(String characters,
-			boolean dontRemoveListDirectiveInfo) {
-		if (formatter == null || characters == null) {
-			return 0;
-		}
-		return formatter.extractListDirectiveInfo(characters, getDirectives(),
-				dontRemoveListDirectiveInfo);
-	}
+    public FieldsMetadata getFieldsMetadata()
+    {
+        return fieldsMetadata;
+    }
 
-	public int extractListDirectiveInfo(String characters) {
-		int i = extractListDirectiveInfo(characters,
-				bufferedDocument.getCurrentTableRow() != null);
-		if (i < 0) {
-			nbLoopDirectiveToRemove += -i;
-		}
-		return i;
-	}
+    public IDocumentFormatter getFormatter()
+    {
+        return formatter;
+    }
 
-	/**
-	 * Returns true if current element is a table and false otherwise.
-	 * 
-	 * @param uri
-	 * @param localName
-	 * @param name
-	 * @return
-	 */
-	protected boolean isTable(String uri, String localName, String name) {
-		return bufferedDocument.isTable(uri, localName, name);
-	}
+    public DirectivesStack getDirectives()
+    {
+        return directives;
+    }
 
-	protected abstract String getTableRowName();
+    /**
+     * Returns the before row token.
+     * 
+     * @return
+     */
+    protected String getBeforeRowToken()
+    {
+        if ( fieldsMetadata == null )
+        {
+            return FieldsMetadata.DEFAULT_BEFORE_ROW_TOKEN;
+        }
+        return fieldsMetadata.getBeforeRowToken();
+    }
 
-	protected abstract String getTableCellName();
+    /**
+     * Returns the after row token.
+     * 
+     * @return
+     */
+    protected String getAfterRowToken()
+    {
+        if ( fieldsMetadata == null )
+        {
+            return FieldsMetadata.DEFAULT_AFTER_ROW_TOKEN;
+        }
+        return fieldsMetadata.getAfterRowToken();
+    }
 
-	/**
-	 * Returns true if current element is a table row and false otherwise.
-	 * 
-	 * @param uri
-	 * @param localName
-	 * @param name
-	 * @return
-	 */
-	protected boolean isTableRow(String uri, String localName, String name) {
-		return bufferedDocument.isTableRow(uri, localName, name);
-	}
+    /**
+     * Returns the before row token.
+     * 
+     * @return
+     */
+    protected String getBeforeTableCellToken()
+    {
+        if ( fieldsMetadata == null )
+        {
+            return FieldsMetadata.DEFAULT_BEFORE_TABLE_CELL_TOKEN;
+        }
+        return fieldsMetadata.getBeforeTableCellToken();
+    }
 
-	public boolean processScriptBefore(String fieldName) {
-		int index = getIndexOfScript(fieldName, true);
-		if (index == -1) {
-			return false;
-		}
-		String beforeElementName = fieldName.substring(0, index);
-		if (StringUtils.isNotEmpty(beforeElementName)) {
-			if (beforeElementName.equals(getBeforeRowToken())) {
-				beforeElementName = getTableRowName();
-			} else if (beforeElementName.equals(getBeforeTableCellToken())) {
-				beforeElementName = getTableCellName();
-			}
-			BufferedElement elementInfo = super
-					.findParentElementInfo(beforeElementName);
-			if (elementInfo == null) {
-				return false;
-			}
-			String before = fieldName.substring(index, fieldName.length());
-			elementInfo.setContentBeforeStartTagElement(before);
-			return true;
-		}
-		return false;
-	}
+    /**
+     * Returns the after row token.
+     * 
+     * @return
+     */
+    protected String getAfterTableCellToken()
+    {
+        if ( fieldsMetadata == null )
+        {
+            return FieldsMetadata.DEFAULT_AFTER_TABLE_CELL_TOKEN;
+        }
+        return fieldsMetadata.getAfterTableCellToken();
+    }
 
-	private int getIndexOfScript(String fieldName, boolean before) {
-		if (fieldName == null) {
-			return -1;
-		}
-		if (before) {
-			if (formatter == null) {
-				if (fieldName.startsWith(getBeforeRowToken())) {
-					return getBeforeRowToken().length();
-				}
-				if (fieldName.startsWith(getBeforeTableCellToken())) {
-					return getBeforeTableCellToken().length();
-				}
-				return -1;
-			}
-			if (!(fieldName.startsWith(BEFORE_TOKEN)
-					|| fieldName.startsWith(getBeforeRowToken()) || fieldName
-						.startsWith(getBeforeTableCellToken()))) {
-				return -1;
-			}
+    public int extractListDirectiveInfo( String characters, boolean dontRemoveListDirectiveInfo )
+    {
+        if ( formatter == null || characters == null )
+        {
+            return 0;
+        }
+        return formatter.extractListDirectiveInfo( characters, getDirectives(), dontRemoveListDirectiveInfo );
+    }
 
-		} else {
-			if (formatter == null) {
-				if (fieldName.startsWith(getAfterRowToken())) {
-					return getAfterRowToken().length();
-				}
-				if (fieldName.startsWith(getAfterTableCellToken())) {
-					return getAfterTableCellToken().length();
-				}
-				return -1;
-			}
-			if (!(fieldName.startsWith(AFTER_TOKEN)
-					|| fieldName.startsWith(getAfterRowToken()) || fieldName
-						.startsWith(getAfterTableCellToken()))) {
-				return -1;
-			}
-		}
-		return formatter.getIndexOfScript(fieldName);
-	}
+    public int extractListDirectiveInfo( String characters )
+    {
+        int i = extractListDirectiveInfo( characters, bufferedDocument.getCurrentTableRow() != null );
+        if ( i < 0 )
+        {
+            nbLoopDirectiveToRemove += -i;
+        }
+        return i;
+    }
 
-	public boolean processScriptAfter(String fieldName) {
-		int index = getIndexOfScript(fieldName, false);
-		if (index == -1) {
-			return false;
-		}
-		String afterElementName = fieldName.substring(0, index);
-		if (StringUtils.isNotEmpty(afterElementName)) {
-			if (afterElementName.equals(getAfterRowToken())) {
-				afterElementName = getTableRowName();
-			} else if (afterElementName.equals(getAfterTableCellToken())) {
-				afterElementName = getTableCellName();
-			}
-			BufferedElement elementInfo = super
-					.findParentElementInfo(afterElementName);
-			if (elementInfo == null) {
-				return false;
-			}
-			String after = fieldName.substring(index, fieldName.length());
-			elementInfo.setContentAfterEndTagElement(after);
-			return true;
-		}
-		return false;
-	}
+    /**
+     * Returns true if current element is a table and false otherwise.
+     * 
+     * @param uri
+     * @param localName
+     * @param name
+     * @return
+     */
+    protected boolean isTable( String uri, String localName, String name )
+    {
+        return bufferedDocument.isTable( uri, localName, name );
+    }
 
-	@Override
-	public void doEndElement(String uri, String localName, String name)
-			throws SAXException {
-		// remove list directive if needed
-		if (isTable(uri, localName, name)) {
-			if (nbLoopDirectiveToRemove > 0) {
-				for (int i = 0; i < nbLoopDirectiveToRemove; i++) {
-					if (!getDirectives().isEmpty()) {
-						getDirectives().pop();
+    protected abstract String getTableRowName();
 
-					}
-				}
-				nbLoopDirectiveToRemove = 0;
-			}
-		}
-		super.doEndElement(uri, localName, name);
-	}
+    protected abstract String getTableCellName();
 
-	public FieldMetadata getFieldAsTextStyling(String content) {
-		if (formatter != null && fieldsMetadata != null) {
-			Collection<FieldMetadata> fieldsAsTextStyling = fieldsMetadata
-					.getFieldsAsTextStyling();
-			for (FieldMetadata field : fieldsAsTextStyling) {
-				if (content.contains(field.getFieldName())) {
-					return field;
-				}
-			}
-		}
-		return null;
-	}
+    /**
+     * Returns true if current element is a table row and false otherwise.
+     * 
+     * @param uri
+     * @param localName
+     * @param name
+     * @return
+     */
+    protected boolean isTableRow( String uri, String localName, String name )
+    {
+        return bufferedDocument.isTableRow( uri, localName, name );
+    }
 
-	public String registerBufferedElement(BufferedElement element) {
-		Map<String, BufferedElement> elements = (Map<String, BufferedElement>) getSharedContext()
-				.get(BufferedElement.KEY);
-		if (element == null) {
-			elements = new HashMap<String, BufferedElement>();
-		}
-		String id = System.currentTimeMillis() + "_id";
-		elements.put(id, element);
-		return id;
-	}
+    public boolean processScriptBefore( String fieldName )
+    {
+        int index = getIndexOfScript( fieldName, true );
+        if ( index == -1 )
+        {
+            return false;
+        }
+        String beforeElementName = fieldName.substring( 0, index );
+        if ( StringUtils.isNotEmpty( beforeElementName ) )
+        {
+            if ( beforeElementName.equals( getBeforeRowToken() ) )
+            {
+                beforeElementName = getTableRowName();
+            }
+            else if ( beforeElementName.equals( getBeforeTableCellToken() ) )
+            {
+                beforeElementName = getTableCellName();
+            }
+            BufferedElement elementInfo = super.findParentElementInfo( beforeElementName );
+            if ( elementInfo == null )
+            {
+                return false;
+            }
+            String before = fieldName.substring( index, fieldName.length() );
+            elementInfo.setContentBeforeStartTagElement( before );
+            return true;
+        }
+        return false;
+    }
 
-	public long getVariableIndex() {
-		return variableIndex++;
-	}
+    private int getIndexOfScript( String fieldName, boolean before )
+    {
+        if ( fieldName == null )
+        {
+            return -1;
+        }
+        if ( before )
+        {
+            if ( formatter == null )
+            {
+                if ( fieldName.startsWith( getBeforeRowToken() ) )
+                {
+                    return getBeforeRowToken().length();
+                }
+                if ( fieldName.startsWith( getBeforeTableCellToken() ) )
+                {
+                    return getBeforeTableCellToken().length();
+                }
+                return -1;
+            }
+            if ( !( fieldName.startsWith( BEFORE_TOKEN ) || fieldName.startsWith( getBeforeRowToken() ) || fieldName.startsWith( getBeforeTableCellToken() ) ) )
+            {
+                return -1;
+            }
 
-	protected abstract Document createDocument();
+        }
+        else
+        {
+            if ( formatter == null )
+            {
+                if ( fieldName.startsWith( getAfterRowToken() ) )
+                {
+                    return getAfterRowToken().length();
+                }
+                if ( fieldName.startsWith( getAfterTableCellToken() ) )
+                {
+                    return getAfterTableCellToken().length();
+                }
+                return -1;
+            }
+            if ( !( fieldName.startsWith( AFTER_TOKEN ) || fieldName.startsWith( getAfterRowToken() ) || fieldName.startsWith( getAfterTableCellToken() ) ) )
+            {
+                return -1;
+            }
+        }
+        return formatter.getIndexOfScript( fieldName );
+    }
+
+    public boolean processScriptAfter( String fieldName )
+    {
+        int index = getIndexOfScript( fieldName, false );
+        if ( index == -1 )
+        {
+            return false;
+        }
+        String afterElementName = fieldName.substring( 0, index );
+        if ( StringUtils.isNotEmpty( afterElementName ) )
+        {
+            if ( afterElementName.equals( getAfterRowToken() ) )
+            {
+                afterElementName = getTableRowName();
+            }
+            else if ( afterElementName.equals( getAfterTableCellToken() ) )
+            {
+                afterElementName = getTableCellName();
+            }
+            BufferedElement elementInfo = super.findParentElementInfo( afterElementName );
+            if ( elementInfo == null )
+            {
+                return false;
+            }
+            String after = fieldName.substring( index, fieldName.length() );
+            elementInfo.setContentAfterEndTagElement( after );
+            return true;
+        }
+        return false;
+    }
+
+    @Override
+    public void doEndElement( String uri, String localName, String name )
+        throws SAXException
+    {
+        // remove list directive if needed
+        if ( isTable( uri, localName, name ) )
+        {
+            if ( nbLoopDirectiveToRemove > 0 )
+            {
+                for ( int i = 0; i < nbLoopDirectiveToRemove; i++ )
+                {
+                    if ( !getDirectives().isEmpty() )
+                    {
+                        getDirectives().pop();
+
+                    }
+                }
+                nbLoopDirectiveToRemove = 0;
+            }
+        }
+        super.doEndElement( uri, localName, name );
+    }
+
+    public FieldMetadata getFieldAsTextStyling( String content )
+    {
+        if ( formatter != null && fieldsMetadata != null )
+        {
+            Collection<FieldMetadata> fieldsAsTextStyling = fieldsMetadata.getFieldsAsTextStyling();
+            for ( FieldMetadata field : fieldsAsTextStyling )
+            {
+                if ( content.contains( field.getFieldName() ) )
+                {
+                    return field;
+                }
+            }
+        }
+        return null;
+    }
+
+    public String registerBufferedElement( BufferedElement element )
+    {
+        Map<String, BufferedElement> elements =
+            (Map<String, BufferedElement>) getSharedContext().get( BufferedElement.KEY );
+        if ( element == null )
+        {
+            elements = new HashMap<String, BufferedElement>();
+        }
+        String id = System.currentTimeMillis() + "_id";
+        elements.put( id, element );
+        return id;
+    }
+
+    public long getVariableIndex()
+    {
+        return variableIndex++;
+    }
+
+    protected abstract Document createDocument();
 }

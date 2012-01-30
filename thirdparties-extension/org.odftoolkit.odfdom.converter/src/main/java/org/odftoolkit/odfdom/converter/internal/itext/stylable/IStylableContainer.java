@@ -26,7 +26,8 @@ package org.odftoolkit.odfdom.converter.internal.itext.stylable;
 
 import fr.opensagres.xdocreport.itext.extension.IITextContainer;
 
-public interface IStylableContainer extends IStylableElement,
-		IITextContainer {
+public interface IStylableContainer
+    extends IStylableElement, IITextContainer
+{
 
 }

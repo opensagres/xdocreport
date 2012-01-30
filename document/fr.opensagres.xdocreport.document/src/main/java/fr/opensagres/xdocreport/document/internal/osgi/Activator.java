@@ -31,16 +31,21 @@ import fr.opensagres.xdocreport.document.registry.XDocReportRegistry;
 
 /**
  * OSGi Activator to initialize/dispose reports registry when bundle start/stop.
- * 
  */
-public class Activator implements BundleActivator {
+public class Activator
+    implements BundleActivator
+{
 
-	public void start(BundleContext context) throws Exception {
-		XDocReportRegistry.getRegistry().initialize();
+    public void start( BundleContext context )
+        throws Exception
+    {
+        XDocReportRegistry.getRegistry().initialize();
 
-	}
+    }
 
-	public void stop(BundleContext context) throws Exception {
-		XDocReportRegistry.getRegistry().dispose();
-	}
+    public void stop( BundleContext context )
+        throws Exception
+    {
+        XDocReportRegistry.getRegistry().dispose();
+    }
 }

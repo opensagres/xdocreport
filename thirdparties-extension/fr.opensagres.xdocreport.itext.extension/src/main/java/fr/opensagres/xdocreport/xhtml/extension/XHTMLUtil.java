@@ -24,20 +24,21 @@
  */
 package fr.opensagres.xdocreport.xhtml.extension;
 
-public class XHTMLUtil {
+public class XHTMLUtil
+{
 
-	public static StringBuilder addHTMLStyle(StringBuilder htmlStyle,
-			String styleName, String styleValue) {
-		htmlStyle.append(styleName);
-		htmlStyle.append(':');
-		htmlStyle.append(styleValue);
-		htmlStyle.append(';');
-		return htmlStyle;
-	}
+    public static StringBuilder addHTMLStyle( StringBuilder htmlStyle, String styleName, String styleValue )
+    {
+        htmlStyle.append( styleName );
+        htmlStyle.append( ':' );
+        htmlStyle.append( styleValue );
+        htmlStyle.append( ';' );
+        return htmlStyle;
+    }
 
-	public static StringBuilder addHTMLStyle(StringBuilder htmlStyle,
-			String styleName, float styleValue) {
-		return addHTMLStyle(htmlStyle, styleName, String.valueOf(styleValue));
+    public static StringBuilder addHTMLStyle( StringBuilder htmlStyle, String styleName, float styleValue )
+    {
+        return addHTMLStyle( htmlStyle, styleName, String.valueOf( styleValue ) );
 
-	}
+    }
 }

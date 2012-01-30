@@ -56,134 +56,159 @@ import fr.opensagres.xdocreport.template.formatter.IDocumentFormatter;
  *  	<w:proofErr w:type="spellEnd" /> 
  *  </w:hyperlink>
  * </pre>
- * 
  */
-public class HyperlinkBufferedRegion extends BufferedElement {
+public class HyperlinkBufferedRegion
+    extends BufferedElement
+{
 
-	private final DocXBufferedDocumentContentHandler handler;
-	private List<RBufferedRegion> rBufferedRegions = new ArrayList<RBufferedRegion>();
-	private BufferedAttribute idAttribute;
+    private final DocXBufferedDocumentContentHandler handler;
 
-	public HyperlinkBufferedRegion(DocXBufferedDocumentContentHandler handler,
-			BufferedElement parent, String uri, String localName, String name,
-			Attributes attributes) {
-		super(parent, uri, localName, name, attributes);
-		this.handler = handler;
-	}
+    private List<RBufferedRegion> rBufferedRegions = new ArrayList<RBufferedRegion>();
 
-	@Override
-	public void addRegion(ISavable region) {
-		if (region instanceof RBufferedRegion) {
-			rBufferedRegions.add((RBufferedRegion) region);
-		} else {
-			super.addRegion(region);
-		}
-	}
+    private BufferedAttribute idAttribute;
 
-	public void process() {
-		IDocumentFormatter formatter = handler.getFormatter();
-		if (formatter == null) {
-			return;
-		}
-		// Concat all w:t text node
-		String content = getAllTContent();
-		ProcessRowResult result = handler.getProcessRowResult(content, false);
-		String newContent = result.getContent();
-		if (newContent != null) {
-			if (result.getFieldName() != null) {
-				// Hyperlink is in a Table and hyperlink is a list (see
-				// FieldsMetadata), transform it.
+    public HyperlinkBufferedRegion( DocXBufferedDocumentContentHandler handler, BufferedElement parent, String uri,
+                                    String localName, String name, Attributes attributes )
+    {
+        super( parent, uri, localName, name, attributes );
+        this.handler = handler;
+    }
 
-				// 1) Modify w:t
-				modifyTContents(newContent);
-			} else {
-				if (formatter.containsInterpolation(newContent)) {
-					// the new content contains fields which are interpolation
-					// (ex:${developer.name}
+    @Override
+    public void addRegion( ISavable region )
+    {
+        if ( region instanceof RBufferedRegion )
+        {
+            rBufferedRegions.add( (RBufferedRegion) region );
+        }
+        else
+        {
+            super.addRegion( region );
+        }
+    }
 
-					// 1) Modify w:t
-					modifyTContents(newContent);
-				}
-			}
+    public void process()
+    {
+        IDocumentFormatter formatter = handler.getFormatter();
+        if ( formatter == null )
+        {
+            return;
+        }
+        // Concat all w:t text node
+        String content = getAllTContent();
+        ProcessRowResult result = handler.getProcessRowResult( content, false );
+        String newContent = result.getContent();
+        if ( newContent != null )
+        {
+            if ( result.getFieldName() != null )
+            {
+                // Hyperlink is in a Table and hyperlink is a list (see
+                // FieldsMetadata), transform it.
 
-			if (handler.hasSharedContext()) {
-				// There is shared context, search if it exists Map with initial
-				// Hyperlink.
-				InitialHyperlinkMap hyperlinksMap = (InitialHyperlinkMap) HyperlinkUtils
-						.getInitialHyperlinkMap(handler.getEntryName(),
-								handler.getSharedContext());
-				if (hyperlinksMap != null) {
-					// Map with Initial Hyperlink exists.
-					String relationId = idAttribute.getValue();
-					// Search if the current hyperlink exists
-					HyperlinkInfo hyperlink = hyperlinksMap.get(relationId);
-					if (hyperlink != null) {
-						// Current hyperlink exsists
-						// Try to modify it to generate
-						// <w:hyperlink w:history="1"
-						// r:id="${___HyperlinkRegistry.registerHyperlink("rId5","mailto:${d.mail}","External")}">
-						String target = StringUtils.decode(hyperlink
-								.getTarget());
-						String targetMode = hyperlink.getTargetMode();
-						ProcessRowResult hyperlinkResult = handler
-								.getProcessRowResult(target, false);
-						boolean dynamicHyperlink = false;
-						if (hyperlinkResult != null
-								&& hyperlinkResult.getFieldName() != null) {
-							target = hyperlinkResult.getContent();
-							dynamicHyperlink = true;
-						} else if (formatter.containsInterpolation(target)) {
-							dynamicHyperlink = true;
-						}
+                // 1) Modify w:t
+                modifyTContents( newContent );
+            }
+            else
+            {
+                if ( formatter.containsInterpolation( newContent ) )
+                {
+                    // the new content contains fields which are interpolation
+                    // (ex:${developer.name}
 
-						if (dynamicHyperlink) {
-							// Hyperlink is dynamic, modify the id attribute to
-							// generate
-							// <w:hyperlink w:history="1"
-							// r:id="${___HyperlinkRegistry.registerHyperlink("rId5","mailto:${d.mail}","External")}">
-							String id = formatter.getFunctionDirective(
-									HyperlinkUtils
-											.getHyperlinkRegistryKey(handler
-													.getEntryName()),
-									"registerHyperlink", "\"" + relationId
-											+ "\"", "\"" + target + "\"", "\""
-											+ targetMode + "\"");
-							idAttribute.setValue(id);
-							hyperlinksMap.remove(hyperlink.getId());
-						}
-					}
-				}
-			}
-		}
+                    // 1) Modify w:t
+                    modifyTContents( newContent );
+                }
+            }
 
-	}
+            if ( handler.hasSharedContext() )
+            {
+                // There is shared context, search if it exists Map with initial
+                // Hyperlink.
+                InitialHyperlinkMap hyperlinksMap =
+                    (InitialHyperlinkMap) HyperlinkUtils.getInitialHyperlinkMap( handler.getEntryName(),
+                                                                                 handler.getSharedContext() );
+                if ( hyperlinksMap != null )
+                {
+                    // Map with Initial Hyperlink exists.
+                    String relationId = idAttribute.getValue();
+                    // Search if the current hyperlink exists
+                    HyperlinkInfo hyperlink = hyperlinksMap.get( relationId );
+                    if ( hyperlink != null )
+                    {
+                        // Current hyperlink exsists
+                        // Try to modify it to generate
+                        // <w:hyperlink w:history="1"
+                        // r:id="${___HyperlinkRegistry.registerHyperlink("rId5","mailto:${d.mail}","External")}">
+                        String target = StringUtils.decode( hyperlink.getTarget() );
+                        String targetMode = hyperlink.getTargetMode();
+                        ProcessRowResult hyperlinkResult = handler.getProcessRowResult( target, false );
+                        boolean dynamicHyperlink = false;
+                        if ( hyperlinkResult != null && hyperlinkResult.getFieldName() != null )
+                        {
+                            target = hyperlinkResult.getContent();
+                            dynamicHyperlink = true;
+                        }
+                        else if ( formatter.containsInterpolation( target ) )
+                        {
+                            dynamicHyperlink = true;
+                        }
 
-	private String getAllTContent() {
-		StringBuilder t = new StringBuilder();
-		for (RBufferedRegion r : rBufferedRegions) {
-			String c = r.getTContent();
-			if (c != null) {
-				t.append(c);
-			}
-		}
-		return t.toString();
-	}
+                        if ( dynamicHyperlink )
+                        {
+                            // Hyperlink is dynamic, modify the id attribute to
+                            // generate
+                            // <w:hyperlink w:history="1"
+                            // r:id="${___HyperlinkRegistry.registerHyperlink("rId5","mailto:${d.mail}","External")}">
+                            String id =
+                                formatter.getFunctionDirective( HyperlinkUtils.getHyperlinkRegistryKey( handler.getEntryName() ),
+                                                                "registerHyperlink", "\"" + relationId + "\"", "\""
+                                                                    + target + "\"", "\"" + targetMode + "\"" );
+                            idAttribute.setValue( id );
+                            hyperlinksMap.remove( hyperlink.getId() );
+                        }
+                    }
+                }
+            }
+        }
 
-	private void modifyTContents(String newContent) {
-		for (int i = 0; i < rBufferedRegions.size(); i++) {
-			if (i == rBufferedRegions.size() - 1) {
-				rBufferedRegions.get(i).setTContent(newContent);
-			} else {
-				rBufferedRegions.get(i).setTContent("");
-			}
-		}
-	}
+    }
 
-	public void setId(String name, String value) {
-		if (idAttribute == null) {
-			idAttribute = super.setAttribute(name, value);
-		}
-		idAttribute.setValue(value);
-	}
+    private String getAllTContent()
+    {
+        StringBuilder t = new StringBuilder();
+        for ( RBufferedRegion r : rBufferedRegions )
+        {
+            String c = r.getTContent();
+            if ( c != null )
+            {
+                t.append( c );
+            }
+        }
+        return t.toString();
+    }
+
+    private void modifyTContents( String newContent )
+    {
+        for ( int i = 0; i < rBufferedRegions.size(); i++ )
+        {
+            if ( i == rBufferedRegions.size() - 1 )
+            {
+                rBufferedRegions.get( i ).setTContent( newContent );
+            }
+            else
+            {
+                rBufferedRegions.get( i ).setTContent( "" );
+            }
+        }
+    }
+
+    public void setId( String name, String value )
+    {
+        if ( idAttribute == null )
+        {
+            idAttribute = super.setAttribute( name, value );
+        }
+        idAttribute.setValue( value );
+    }
 
 }

@@ -27,42 +27,51 @@ package fr.opensagres.xdocreport.template.freemarker;
 import junit.framework.TestCase;
 
 public class FreemarkerTemplateEngineDocumentFormatterExtractModelTokenPrefixTestCase
-		extends TestCase {
+    extends TestCase
+{
 
-	public void test1() throws Exception {
-		FreemarkerDocumentFormatter formatter = new FreemarkerDocumentFormatter();
-		String fieldName = "${developers.name}";
+    public void test1()
+        throws Exception
+    {
+        FreemarkerDocumentFormatter formatter = new FreemarkerDocumentFormatter();
+        String fieldName = "${developers.name}";
 
-		String token = formatter.extractModelTokenPrefix(fieldName);
+        String token = formatter.extractModelTokenPrefix( fieldName );
 
-		assertEquals("developers", token);
-	}
+        assertEquals( "developers", token );
+    }
 
-	public void test2() throws Exception {
-		FreemarkerDocumentFormatter formatter = new FreemarkerDocumentFormatter();
-		String fieldName = "${developers.name";
+    public void test2()
+        throws Exception
+    {
+        FreemarkerDocumentFormatter formatter = new FreemarkerDocumentFormatter();
+        String fieldName = "${developers.name";
 
-		String token = formatter.extractModelTokenPrefix(fieldName);
+        String token = formatter.extractModelTokenPrefix( fieldName );
 
-		assertEquals(null, token);
-	}
-	
-	public void test3() throws Exception {
-		FreemarkerDocumentFormatter formatter = new FreemarkerDocumentFormatter();
-		String fieldName = "${name}";
+        assertEquals( null, token );
+    }
 
-		String token = formatter.extractModelTokenPrefix(fieldName);
+    public void test3()
+        throws Exception
+    {
+        FreemarkerDocumentFormatter formatter = new FreemarkerDocumentFormatter();
+        String fieldName = "${name}";
 
-		assertEquals("name", token);
-	}
+        String token = formatter.extractModelTokenPrefix( fieldName );
 
-	public void test4() throws Exception {
-		FreemarkerDocumentFormatter formatter = new FreemarkerDocumentFormatter();
-		String fieldName = "${developers.roles.name}";
+        assertEquals( "name", token );
+    }
 
-		String token = formatter.extractModelTokenPrefix(fieldName);
+    public void test4()
+        throws Exception
+    {
+        FreemarkerDocumentFormatter formatter = new FreemarkerDocumentFormatter();
+        String fieldName = "${developers.roles.name}";
 
-		assertEquals("developers.roles", token);
-	}
+        String token = formatter.extractModelTokenPrefix( fieldName );
+
+        assertEquals( "developers.roles", token );
+    }
 
 }

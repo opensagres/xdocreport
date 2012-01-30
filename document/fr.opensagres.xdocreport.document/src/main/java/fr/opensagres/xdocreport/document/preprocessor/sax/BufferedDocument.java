@@ -31,123 +31,132 @@ import org.xml.sax.SAXException;
 
 /**
  * Buffered document.
- * 
  */
-public class BufferedDocument extends BufferedElement {
+public class BufferedDocument
+    extends BufferedElement
+{
 
-	// Stack of element
-	private final Stack<BufferedElement> elementsStack;
+    // Stack of element
+    private final Stack<BufferedElement> elementsStack;
 
-	public BufferedDocument() {
-		super(null, null, null, null, null);
-		this.elementsStack = new Stack<BufferedElement>();
-	}
+    public BufferedDocument()
+    {
+        super( null, null, null, null, null );
+        this.elementsStack = new Stack<BufferedElement>();
+    }
 
-	// ----------------------- START element events ------------------------
+    // ----------------------- START element events ------------------------
 
-	/**
-	 * On start of Start element.
-	 * 
-	 * @param uri
-	 * @param localName
-	 * @param name
-	 * @param attributes
-	 * @return
-	 * @throws SAXException
-	 */
-	public BufferedElement onStartStartElement(String uri, String localName,
-			String name, Attributes attributes) throws SAXException {
-		// 1) Get parent element
-		BufferedElement parent = getCurrentElement();
-		if (parent == null) {
-			// Parent element is null, teh parent is the document
-			parent = this;
-		}
-		// 2) Create element
-		BufferedElement element = createElement(parent, uri, localName, name,
-				attributes);
-		// 3) Add the element in the elements stack
-		elementsStack.push(element);
-		// 4) Flag the element as start element
-		element.start();
-		// 5) Add the start tag element region in the parent element
-		parent.addRegion(element.getStartTagElement());
-		return element;
-	}
+    /**
+     * On start of Start element.
+     * 
+     * @param uri
+     * @param localName
+     * @param name
+     * @param attributes
+     * @return
+     * @throws SAXException
+     */
+    public BufferedElement onStartStartElement( String uri, String localName, String name, Attributes attributes )
+        throws SAXException
+    {
+        // 1) Get parent element
+        BufferedElement parent = getCurrentElement();
+        if ( parent == null )
+        {
+            // Parent element is null, teh parent is the document
+            parent = this;
+        }
+        // 2) Create element
+        BufferedElement element = createElement( parent, uri, localName, name, attributes );
+        // 3) Add the element in the elements stack
+        elementsStack.push( element );
+        // 4) Flag the element as start element
+        element.start();
+        // 5) Add the start tag element region in the parent element
+        parent.addRegion( element.getStartTagElement() );
+        return element;
+    }
 
-	/**
-	 * Create an element instance.
-	 * 
-	 * @param parent
-	 * @param uri
-	 * @param localName
-	 * @param name
-	 * @param attributes
-	 * @return
-	 * @throws SAXException
-	 */
-	protected BufferedElement createElement(BufferedElement parent, String uri,
-			String localName, String name, Attributes attributes)
-			throws SAXException {
-		return new BufferedElement(parent, uri, localName, name, attributes);
-	}
+    /**
+     * Create an element instance.
+     * 
+     * @param parent
+     * @param uri
+     * @param localName
+     * @param name
+     * @param attributes
+     * @return
+     * @throws SAXException
+     */
+    protected BufferedElement createElement( BufferedElement parent, String uri, String localName, String name,
+                                             Attributes attributes )
+        throws SAXException
+    {
+        return new BufferedElement( parent, uri, localName, name, attributes );
+    }
 
-	/**
-	 * On end of Start element.
-	 * 
-	 * @param element
-	 * @param uri
-	 * @param localName
-	 * @param name
-	 * @param attributes
-	 * @throws SAXException
-	 */
-	public void onEndStartElement(BufferedElement element, String uri,
-			String localName, String name, Attributes attributes)
-			throws SAXException {
-		// Do nothing
-	}
+    /**
+     * On end of Start element.
+     * 
+     * @param element
+     * @param uri
+     * @param localName
+     * @param name
+     * @param attributes
+     * @throws SAXException
+     */
+    public void onEndStartElement( BufferedElement element, String uri, String localName, String name,
+                                   Attributes attributes )
+        throws SAXException
+    {
+        // Do nothing
+    }
 
-	// ----------------------- END element events ------------------------
+    // ----------------------- END element events ------------------------
 
-	/**
-	 * On start of End element.
-	 * 
-	 * @param uri
-	 * @param localName
-	 * @param name
-	 */
-	public void onStartEndElement(String uri, String localName, String name) {
-		// 1) get the current parsed element.
-		BufferedElement element = getCurrentElement();
-		// 2) Flag the element as end element
-		element.end();
-		// 3) Add the end tag element region in the parent element
-		element.getParent().addRegion(element.getEndTagElement());
-	}
+    /**
+     * On start of End element.
+     * 
+     * @param uri
+     * @param localName
+     * @param name
+     */
+    public void onStartEndElement( String uri, String localName, String name )
+    {
+        // 1) get the current parsed element.
+        BufferedElement element = getCurrentElement();
+        // 2) Flag the element as end element
+        element.end();
+        // 3) Add the end tag element region in the parent element
+        element.getParent().addRegion( element.getEndTagElement() );
+    }
 
-	/**
-	 * On end of End element.
-	 * 
-	 * @param uri
-	 * @param localName
-	 * @param name
-	 */
-	public void onEndEndElement(String uri, String localName, String name) {
-		// remove the current element from the stack.
-		elementsStack.pop();
-	}
+    /**
+     * On end of End element.
+     * 
+     * @param uri
+     * @param localName
+     * @param name
+     */
+    public void onEndEndElement( String uri, String localName, String name )
+    {
+        // remove the current element from the stack.
+        elementsStack.pop();
+    }
 
-	/**
-	 * Returns the current element from the stack and null otherwise.
-	 * 
-	 * @return
-	 */
-	public BufferedElement getCurrentElement() {
-		if (!elementsStack.isEmpty()) {
-			return elementsStack.peek();
-		}
-		return null;
-	}
+    /**
+     * Returns the current element from the stack and null otherwise.
+     * 
+     * @return
+     */
+    public BufferedElement getCurrentElement()
+    {
+        if ( !elementsStack.isEmpty() )
+        {
+            return elementsStack.peek();
+        }
+        return null;
+    }
 
 }

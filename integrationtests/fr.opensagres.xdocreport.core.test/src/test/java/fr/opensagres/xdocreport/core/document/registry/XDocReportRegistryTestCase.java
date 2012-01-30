@@ -51,296 +51,281 @@ import fr.opensagres.xdocreport.template.velocity.VelocityTemplateEngine;
 
 /**
  * Test case for {@link XDocReportRegistry}.
- * 
  */
-public class XDocReportRegistryTestCase  {
+public class XDocReportRegistryTestCase
+{
 
-	@Test
-	public void testReportNoExists() throws Exception {
-		// Tests no existence with XDocReportRegistry#existsReport
-		boolean exists = XDocReportRegistry.getRegistry().existsReport(
-				"Unknown");
-		assertFalse("IXDocReport with id='Unknown' must not exists", exists);
+    @Test
+    public void testReportNoExists()
+        throws Exception
+    {
+        // Tests no existence with XDocReportRegistry#existsReport
+        boolean exists = XDocReportRegistry.getRegistry().existsReport( "Unknown" );
+        assertFalse( "IXDocReport with id='Unknown' must not exists", exists );
 
-		// Tests no existence with XDocReportRegistry#getReport
-		IXDocReport report = XDocReportRegistry.getRegistry().getReport(
-				"Unknown");
-		assertNull("IXDocReport with id='Unknown' must be null.", report);
-	}
+        // Tests no existence with XDocReportRegistry#getReport
+        IXDocReport report = XDocReportRegistry.getRegistry().getReport( "Unknown" );
+        assertNull( "IXDocReport with id='Unknown' must be null.", report );
+    }
 
-	@Test
-	public void testRegisterAndUnRegisterReportWithDefaultId() {
-		Exception ex = null;
-		try {
-			IXDocReport report = XDocReportRegistry
-					.getRegistry()
-					.loadReport(
-							XDocReportRegistryTestCase.class
-									.getResourceAsStream("ODTHelloWordWithFreemarker.odt"));
-			// Report is created
-			assertNotNull("Report must be not null", report);
+    @Test
+    public void testRegisterAndUnRegisterReportWithDefaultId()
+    {
+        Exception ex = null;
+        try
+        {
+            IXDocReport report =
+                XDocReportRegistry.getRegistry().loadReport( XDocReportRegistryTestCase.class.getResourceAsStream( "ODTHelloWordWithFreemarker.odt" ) );
+            // Report is created
+            assertNotNull( "Report must be not null", report );
 
-			assertTrue(
-					"This is a odt file, ODTReport implementation should have been resolved....",
-					report instanceof ODTReport);
+            assertTrue( "This is a odt file, ODTReport implementation should have been resolved....",
+                        report instanceof ODTReport );
 
-			// Report id by default is toString
-			assertEquals("Report id", report.toString(), report.getId());
+            // Report id by default is toString
+            assertEquals( "Report id", report.toString(), report.getId() );
 
-			// Search report with id in the registry
-			String reportId = report.getId();
-			IXDocReport report2 = XDocReportRegistry.getRegistry().getReport(
-					reportId);
-			assertNotNull("Report from registry must be not null", report2);
-			assertEquals("Report from registry is not equals", report, report2);
+            // Search report with id in the registry
+            String reportId = report.getId();
+            IXDocReport report2 = XDocReportRegistry.getRegistry().getReport( reportId );
+            assertNotNull( "Report from registry must be not null", report2 );
+            assertEquals( "Report from registry is not equals", report, report2 );
 
-			// UnRegister the report
-			XDocReportRegistry.getRegistry().unregisterReport(report);
-			boolean exists = XDocReportRegistry.getRegistry().existsReport(
-					report.getId());
-			assertFalse("IXDocReport must not exists", exists);
+            // UnRegister the report
+            XDocReportRegistry.getRegistry().unregisterReport( report );
+            boolean exists = XDocReportRegistry.getRegistry().existsReport( report.getId() );
+            assertFalse( "IXDocReport must not exists", exists );
 
-		} catch (Exception e) {
-			e.printStackTrace();
-			ex = e;
-		}
-		assertNull("Error while loading report", ex);
-	}
-	
-	@Test
-	public void testRegisterAndUnRegisterReportWithGivenId() {
-		Exception ex = null;
-		try {
-			String reportId = "MyReportId";
-			IXDocReport report = XDocReportRegistry
-					.getRegistry()
-					.loadReport(
-							XDocReportRegistryTestCase.class
-									.getResourceAsStream("ODTHelloWordWithFreemarker.odt"),
-							reportId);
-			// Report is created
-			assertNotNull("Report must be not null", report);
+        }
+        catch ( Exception e )
+        {
+            e.printStackTrace();
+            ex = e;
+        }
+        assertNull( "Error while loading report", ex );
+    }
 
-			assertTrue(
-					"This is a odt file, ODTReport implementation should have been resolved....",
-					report instanceof ODTReport);
+    @Test
+    public void testRegisterAndUnRegisterReportWithGivenId()
+    {
+        Exception ex = null;
+        try
+        {
+            String reportId = "MyReportId";
+            IXDocReport report =
+                XDocReportRegistry.getRegistry().loadReport( XDocReportRegistryTestCase.class.getResourceAsStream( "ODTHelloWordWithFreemarker.odt" ),
+                                                             reportId );
+            // Report is created
+            assertNotNull( "Report must be not null", report );
 
-			// Report id by default is the given report id
-			assertEquals("Report id", reportId, report.getId());
+            assertTrue( "This is a odt file, ODTReport implementation should have been resolved....",
+                        report instanceof ODTReport );
 
-			// Search report with id in the registry
-			IXDocReport report2 = XDocReportRegistry.getRegistry().getReport(
-					reportId);
-			assertNotNull("Report from registry must be not null", report2);
-			assertEquals("Report from registry is not equals", report, report2);
+            // Report id by default is the given report id
+            assertEquals( "Report id", reportId, report.getId() );
 
-			// UnRegister the report
-			XDocReportRegistry.getRegistry().unregisterReport(report);
-			boolean exists = XDocReportRegistry.getRegistry().existsReport(
-					reportId);
-			assertFalse("IXDocReport must not exists", exists);
+            // Search report with id in the registry
+            IXDocReport report2 = XDocReportRegistry.getRegistry().getReport( reportId );
+            assertNotNull( "Report from registry must be not null", report2 );
+            assertEquals( "Report from registry is not equals", report, report2 );
 
-		} catch (Exception e) {
-			ex = e;
-		}
-		assertNull("Error while loading report", ex);
-	}
+            // UnRegister the report
+            XDocReportRegistry.getRegistry().unregisterReport( report );
+            boolean exists = XDocReportRegistry.getRegistry().existsReport( reportId );
+            assertFalse( "IXDocReport must not exists", exists );
 
-	@Test
-	public void testWithFreemarker() {
-		Exception ex = null;
-		try {
-			// Load report and set Freemarker as template engine
-			String reportId = "MyFreemarkerReportId";
-			IXDocReport report = XDocReportRegistry
-					.getRegistry()
-					.loadReport(
-							XDocReportRegistryTestCase.class
-									.getResourceAsStream("ODTHelloWordWithFreemarker.odt"),
-							reportId, TemplateEngineKind.Freemarker);
+        }
+        catch ( Exception e )
+        {
+            ex = e;
+        }
+        assertNull( "Error while loading report", ex );
+    }
 
-			// test ODT
-			assertTrue(
-					"This is a odt file, ODTReport implementation should have been resolved....",
-					report instanceof ODTReport);
+    @Test
+    public void testWithFreemarker()
+    {
+        Exception ex = null;
+        try
+        {
+            // Load report and set Freemarker as template engine
+            String reportId = "MyFreemarkerReportId";
+            IXDocReport report =
+                XDocReportRegistry.getRegistry().loadReport( XDocReportRegistryTestCase.class.getResourceAsStream( "ODTHelloWordWithFreemarker.odt" ),
+                                                             reportId, TemplateEngineKind.Freemarker );
 
-			// Test Freemarker
-			assertTrue(
-					"Template engine must be Freemarker",
-					report.getTemplateEngine() instanceof FreemarkerTemplateEngine);
+            // test ODT
+            assertTrue( "This is a odt file, ODTReport implementation should have been resolved....",
+                        report instanceof ODTReport );
 
-			// Process template engine with context
-			IContext context = report.createContext();
-			context.put("name", "world");
-			String contentXML = processTemplateEngineForEntry(report, context,
-					"content.xml");
-			assertNotNull(contentXML);
-			assertTrue(contentXML.contains(">Hello world!<"));
+            // Test Freemarker
+            assertTrue( "Template engine must be Freemarker",
+                        report.getTemplateEngine() instanceof FreemarkerTemplateEngine );
 
-		} catch (Exception e) {
-			ex = e;
-		}
-		assertNull("Error while loading report", ex);
-	}
+            // Process template engine with context
+            IContext context = report.createContext();
+            context.put( "name", "world" );
+            String contentXML = processTemplateEngineForEntry( report, context, "content.xml" );
+            assertNotNull( contentXML );
+            assertTrue( contentXML.contains( ">Hello world!<" ) );
 
-	@Test
-	public void testWithFreemarkerAndRefreshSourceODT() {
-		Exception ex = null;
-		try {
-			// Load report and set Freemarker as template engine
-			String reportId = "MyFreemarkerReportAndRefreshSourceODTId";
-			IXDocReport report = XDocReportRegistry
-					.getRegistry()
-					.loadReport(
-							XDocReportRegistryTestCase.class
-									.getResourceAsStream("ODTHelloWordWithFreemarker.odt"),
-							reportId, TemplateEngineKind.Freemarker);
+        }
+        catch ( Exception e )
+        {
+            ex = e;
+        }
+        assertNull( "Error while loading report", ex );
+    }
 
-			// test ODT
-			assertTrue(
-					"This is a odt file, ODTReport implementation should have been resolved....",
-					report instanceof ODTReport);
+    @Test
+    public void testWithFreemarkerAndRefreshSourceODT()
+    {
+        Exception ex = null;
+        try
+        {
+            // Load report and set Freemarker as template engine
+            String reportId = "MyFreemarkerReportAndRefreshSourceODTId";
+            IXDocReport report =
+                XDocReportRegistry.getRegistry().loadReport( XDocReportRegistryTestCase.class.getResourceAsStream( "ODTHelloWordWithFreemarker.odt" ),
+                                                             reportId, TemplateEngineKind.Freemarker );
 
-			// Test Freemarker
-			assertTrue(
-					"Template engine must be Freemarker",
-					report.getTemplateEngine() instanceof FreemarkerTemplateEngine);
+            // test ODT
+            assertTrue( "This is a odt file, ODTReport implementation should have been resolved....",
+                        report instanceof ODTReport );
 
-			// Process template engine with context
-			IContext context = report.createContext();
-			context.put("name", "world");
-			String contentXML = processTemplateEngineForEntry(report, context,
-					"content.xml");
-			assertNotNull(contentXML);
-			assertTrue(contentXML.contains(">Hello world!<"));
+            // Test Freemarker
+            assertTrue( "Template engine must be Freemarker",
+                        report.getTemplateEngine() instanceof FreemarkerTemplateEngine );
 
-			// Refresh report with new content
-			report.load(XDocReportRegistryTestCase.class
-					.getResourceAsStream("ODTHelloWordWithFreemarker2.odt"));
-			// Thread.sleep(1000);
-			String newContentXML = processTemplateEngineForEntry(report,
-					context, "content.xml");
-			assertNotNull(newContentXML);
-			assertTrue(
-					"content XML must contains '>Hello world! You are welcome!<'",
-					newContentXML.contains(">Hello world! You are welcome!<"));
+            // Process template engine with context
+            IContext context = report.createContext();
+            context.put( "name", "world" );
+            String contentXML = processTemplateEngineForEntry( report, context, "content.xml" );
+            assertNotNull( contentXML );
+            assertTrue( contentXML.contains( ">Hello world!<" ) );
 
-		} catch (Exception e) {
-			ex = e;
-			e.printStackTrace();
-		}
-		assertNull("Error while loading report", ex);
-	}
+            // Refresh report with new content
+            report.load( XDocReportRegistryTestCase.class.getResourceAsStream( "ODTHelloWordWithFreemarker2.odt" ) );
+            // Thread.sleep(1000);
+            String newContentXML = processTemplateEngineForEntry( report, context, "content.xml" );
+            assertNotNull( newContentXML );
+            assertTrue( "content XML must contains '>Hello world! You are welcome!<'",
+                        newContentXML.contains( ">Hello world! You are welcome!<" ) );
 
-	@Test
-	public void testWithVelocity() {
-		Exception ex = null;
-		try {
-			// Load report and set Velocity as template engine
-			String reportId = "MyVelocityReportId";
-			IXDocReport report = XDocReportRegistry
-					.getRegistry()
-					.loadReport(
-							XDocReportRegistryTestCase.class
-									.getResourceAsStream("ODTHelloWordWithFreemarker.odt"),
-							reportId, TemplateEngineKind.Velocity);
+        }
+        catch ( Exception e )
+        {
+            ex = e;
+            e.printStackTrace();
+        }
+        assertNull( "Error while loading report", ex );
+    }
 
-			// test ODT
-			assertTrue(
-					"This is a odt file, ODTReport implementation should have been resolved....",
-					report instanceof ODTReport);
+    @Test
+    public void testWithVelocity()
+    {
+        Exception ex = null;
+        try
+        {
+            // Load report and set Velocity as template engine
+            String reportId = "MyVelocityReportId";
+            IXDocReport report =
+                XDocReportRegistry.getRegistry().loadReport( XDocReportRegistryTestCase.class.getResourceAsStream( "ODTHelloWordWithFreemarker.odt" ),
+                                                             reportId, TemplateEngineKind.Velocity );
 
-			// Test Freemarker
-			assertTrue(
-					"Template engine must be Velocity",
-					report.getTemplateEngine() instanceof VelocityTemplateEngine);
+            // test ODT
+            assertTrue( "This is a odt file, ODTReport implementation should have been resolved....",
+                        report instanceof ODTReport );
 
-			// Process template engine with context
-			IContext context = report.createContext();
-			context.put("name", "world");
-			String contentXML = processTemplateEngineForEntry(report, context,
-					"content.xml");
-			assertNotNull(contentXML);
-			assertTrue(contentXML.contains(">Hello world!<"));
+            // Test Freemarker
+            assertTrue( "Template engine must be Velocity",
+                        report.getTemplateEngine() instanceof VelocityTemplateEngine );
 
-		} catch (Exception e) {
-			ex = e;
-		}
-		assertNull("Error while loading report", ex);
-	}
+            // Process template engine with context
+            IContext context = report.createContext();
+            context.put( "name", "world" );
+            String contentXML = processTemplateEngineForEntry( report, context, "content.xml" );
+            assertNotNull( contentXML );
+            assertTrue( contentXML.contains( ">Hello world!<" ) );
 
-	@Test
-	public void testWithVelocityAndRefreshSourceODT() {
-		Exception ex = null;
-		try {
-			// Load report and set Velocity as template engine
-			String reportId = "MyVelocityReportAndRefreshSourceODTId";
-			IXDocReport report = XDocReportRegistry
-					.getRegistry()
-					.loadReport(
-							XDocReportRegistryTestCase.class
-									.getResourceAsStream("ODTHelloWordWithVelocity.odt"),
-							reportId, TemplateEngineKind.Velocity);
+        }
+        catch ( Exception e )
+        {
+            ex = e;
+        }
+        assertNull( "Error while loading report", ex );
+    }
 
-			// test ODT
-			assertTrue(
-					"This is a odt file, ODTReport implementation should have been resolved....",
-					report instanceof ODTReport);
+    @Test
+    public void testWithVelocityAndRefreshSourceODT()
+    {
+        Exception ex = null;
+        try
+        {
+            // Load report and set Velocity as template engine
+            String reportId = "MyVelocityReportAndRefreshSourceODTId";
+            IXDocReport report =
+                XDocReportRegistry.getRegistry().loadReport( XDocReportRegistryTestCase.class.getResourceAsStream( "ODTHelloWordWithVelocity.odt" ),
+                                                             reportId, TemplateEngineKind.Velocity );
 
-			// Test Velocity
-			assertTrue(
-					"Template engine must be Velocity",
-					report.getTemplateEngine() instanceof VelocityTemplateEngine);
+            // test ODT
+            assertTrue( "This is a odt file, ODTReport implementation should have been resolved....",
+                        report instanceof ODTReport );
 
-			// Process template engine with context
-			IContext context = report.createContext();
-			context.put("name", "world");
-			String contentXML = processTemplateEngineForEntry(report, context,
-					"content.xml");
-			assertNotNull(contentXML);
-			assertTrue(contentXML.contains(">Hello world!<"));
+            // Test Velocity
+            assertTrue( "Template engine must be Velocity",
+                        report.getTemplateEngine() instanceof VelocityTemplateEngine );
 
-			// Refresh report with new content
-			report.load(XDocReportRegistryTestCase.class
-					.getResourceAsStream("ODTHelloWordWithVelocity2.odt"));
+            // Process template engine with context
+            IContext context = report.createContext();
+            context.put( "name", "world" );
+            String contentXML = processTemplateEngineForEntry( report, context, "content.xml" );
+            assertNotNull( contentXML );
+            assertTrue( contentXML.contains( ">Hello world!<" ) );
 
-			// Sleep with 1sec to wait that Velocity cache refresh.
-			// TODO : I don't know how manage that better
-			// "report.resource.loader.modificationCheckInterval" (please see
-			// VelocityTemplayteEngine) can accept
-			// ONLY second interval to refresh cache???
-			// Thread.sleep(1000);
+            // Refresh report with new content
+            report.load( XDocReportRegistryTestCase.class.getResourceAsStream( "ODTHelloWordWithVelocity2.odt" ) );
 
-			String newContentXML = processTemplateEngineForEntry(report,
-					context, "content.xml");
-			assertNotNull(newContentXML);
-			assertTrue(newContentXML.contains(">Hello world!"));
-			// You are welcome!<
-		} catch (Exception e) {
-			ex = e;
-			e.printStackTrace();
-		}
-		assertNull("Error while loading report", ex);
-	}
+            // Sleep with 1sec to wait that Velocity cache refresh.
+            // TODO : I don't know how manage that better
+            // "report.resource.loader.modificationCheckInterval" (please see
+            // VelocityTemplayteEngine) can accept
+            // ONLY second interval to refresh cache???
+            // Thread.sleep(1000);
 
-	
-	private String processTemplateEngineForEntry(IXDocReport report,
-			IContext context, String entryName) throws IOException,
-			XDocReportException {
-		File tempFile = null;
-		try {
-			tempFile = File.createTempFile("document", ".zip");
-			report.process(context, new FileOutputStream(tempFile));
-			XDocArchive documentArchive = XDocArchive
-					.readZip(new FileInputStream(tempFile));
+            String newContentXML = processTemplateEngineForEntry( report, context, "content.xml" );
+            assertNotNull( newContentXML );
+            assertTrue( newContentXML.contains( ">Hello world!" ) );
+            // You are welcome!<
+        }
+        catch ( Exception e )
+        {
+            ex = e;
+            e.printStackTrace();
+        }
+        assertNull( "Error while loading report", ex );
+    }
 
-			Reader contentXMLreader = documentArchive.getEntryReader(entryName);
-			return IOUtils.toString(contentXMLreader);
+    private String processTemplateEngineForEntry( IXDocReport report, IContext context, String entryName )
+        throws IOException, XDocReportException
+    {
+        File tempFile = null;
+        try
+        {
+            tempFile = File.createTempFile( "document", ".zip" );
+            report.process( context, new FileOutputStream( tempFile ) );
+            XDocArchive documentArchive = XDocArchive.readZip( new FileInputStream( tempFile ) );
 
-		} finally {
-			if (tempFile != null) {
-				tempFile.delete();
-			}
-		}
-	}
+            Reader contentXMLreader = documentArchive.getEntryReader( entryName );
+            return IOUtils.toString( contentXMLreader );
+
+        }
+        finally
+        {
+            if ( tempFile != null )
+            {
+                tempFile.delete();
+            }
+        }
+    }
 }

@@ -29,10 +29,11 @@ import fr.opensagres.xdocreport.core.io.IEntryInfo;
 /**
  * Template cache information provider.
  */
-public interface ITemplateCacheInfoProvider {
+public interface ITemplateCacheInfoProvider
+{
 
-	IEntryInfo getTemplateCacheInfo(String reportId, String entryName);
+    IEntryInfo getTemplateCacheInfo( String reportId, String entryName );
 
-	boolean existsReport(String reportId);
+    boolean existsReport( String reportId );
 
 }

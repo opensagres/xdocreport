@@ -27,18 +27,22 @@ package org.odftoolkit.odfdom.converter.internal.itext.styles;
 /**
  * fixes for pdf conversion by Leszek Piotrowicz <leszekp@safe-mail.net>
  */
-public class StyleColumnProperties {
+public class StyleColumnProperties
+{
 
-	private Integer relWidth;
+    private Integer relWidth;
 
-	public StyleColumnProperties() {
-	}
+    public StyleColumnProperties()
+    {
+    }
 
-	public Integer getRelWidth() {
-		return relWidth;
-	}
+    public Integer getRelWidth()
+    {
+        return relWidth;
+    }
 
-	public void setRelWidth(Integer relWidth) {
-		this.relWidth = relWidth;
-	}
+    public void setRelWidth( Integer relWidth )
+    {
+        this.relWidth = relWidth;
+    }
 }

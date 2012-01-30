@@ -25,31 +25,29 @@
 package fr.opensagres.xdocreport.template;
 
 /**
- * Context used to register a Java model with given key. This context is used
- * for merging XML document archive with the Java model and generate report.
- * 
+ * Context used to register a Java model with given key. This context is used for merging XML document archive with the
+ * Java model and generate report.
  */
-public interface IContext {
+public interface IContext
+{
 
-	public static final String KEY = "___context";
+    public static final String KEY = "___context";
 
-	/**
-	 * Register a Java object with the given key.
-	 * 
-	 * @param key
-	 * @param value
-	 *            Java model
-	 * @return
-	 */
-	Object put(String key, Object value);
+    /**
+     * Register a Java object with the given key.
+     * 
+     * @param key
+     * @param value Java model
+     * @return
+     */
+    Object put( String key, Object value );
 
-	/**
-	 * Get the Java object with the given key which was registered and null
-	 * otherwise.
-	 * 
-	 * @param key
-	 * @return
-	 */
-	Object get(String key);
+    /**
+     * Get the Java object with the given key which was registered and null otherwise.
+     * 
+     * @param key
+     * @return
+     */
+    Object get( String key );
 
 }

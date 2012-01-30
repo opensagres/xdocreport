@@ -27,40 +27,45 @@ package fr.opensagres.xdocreport.document.service;
 import javax.xml.bind.annotation.XmlRootElement;
 
 @XmlRootElement
-public class DataContext {
+public class DataContext
+{
 
-	public static final DataContext[] EMPTY = new DataContext[0];
+    public static final DataContext[] EMPTY = new DataContext[0];
 
-	private String key;
-	
-	private String value;
-	
-	private byte[] binary;
+    private String key;
 
-	public String getKey() {
-		return key;
-	}
+    private String value;
 
-	public void setKey(String key) {
-		this.key = key;
-	}
+    private byte[] binary;
 
-	public String getValue() {
-		return value;
-	}
+    public String getKey()
+    {
+        return key;
+    }
 
-	public void setValue(String value) {
-		this.value = value;
-	}
+    public void setKey( String key )
+    {
+        this.key = key;
+    }
 
-	public byte[] getBinary() {
-		return binary;
-	}
+    public String getValue()
+    {
+        return value;
+    }
 
-	public void setBinary(byte[] binary) {
-		this.binary = binary;
-	}
-	
-	
-	
+    public void setValue( String value )
+    {
+        this.value = value;
+    }
+
+    public byte[] getBinary()
+    {
+        return binary;
+    }
+
+    public void setBinary( byte[] binary )
+    {
+        this.binary = binary;
+    }
+
 }

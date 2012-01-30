@@ -31,22 +31,24 @@ import fr.opensagres.xdocreport.template.velocity.VelocityConstants;
 import fr.opensagres.xdocreport.template.velocity.VelocityTemplateEngine;
 
 /**
- * Velocity template engine discovery used to returns
- * {@link VelocityTemplateEngine}.
- * 
+ * Velocity template engine discovery used to returns {@link VelocityTemplateEngine}.
  */
-public class VelocityTemplateEngineDiscovery implements
-		ITemplateEngineDiscovery, VelocityConstants {
+public class VelocityTemplateEngineDiscovery
+    implements ITemplateEngineDiscovery, VelocityConstants
+{
 
-	public ITemplateEngine createTemplateEngine() {
-		return new VelocityTemplateEngine();
-	}
+    public ITemplateEngine createTemplateEngine()
+    {
+        return new VelocityTemplateEngine();
+    }
 
-	public String getDescription() {
-		return DESCRIPTION_DISCOVERY;
-	}
+    public String getDescription()
+    {
+        return DESCRIPTION_DISCOVERY;
+    }
 
-	public String getId() {
-		return TemplateEngineKind.Velocity.name();
-	}
+    public String getId()
+    {
+        return TemplateEngineKind.Velocity.name();
+    }
 }

@@ -15,13 +15,16 @@
  */
 package fr.opensagres.xdocreport.converter.odt.xslfo;
 
-public interface ODTXSLFOConstants {
+public interface ODTXSLFOConstants
+{
 
-	String XSL_FO_TEMPLATE_URI = "odt2fo.xsl";
+    String XSL_FO_TEMPLATE_URI = "odt2fo.xsl";
 
-	String CONTENT_XML_ENTRY = "content.xml";
-	String STYLES_XML_ENTRY = "styles.xml";
-	String META_XML_ENTRY = "meta.xml";
-	
-	String[] XML_ENTRIES = { CONTENT_XML_ENTRY, STYLES_XML_ENTRY, META_XML_ENTRY };
+    String CONTENT_XML_ENTRY = "content.xml";
+
+    String STYLES_XML_ENTRY = "styles.xml";
+
+    String META_XML_ENTRY = "meta.xml";
+
+    String[] XML_ENTRIES = { CONTENT_XML_ENTRY, STYLES_XML_ENTRY, META_XML_ENTRY };
 }

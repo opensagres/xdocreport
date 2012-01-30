@@ -31,30 +31,38 @@ import fr.opensagres.xdocreport.converter.discovery.IConverterDiscovery;
 import fr.opensagres.xdocreport.converter.odt.odfdom.xhtml.ODF2XHTMLConverter;
 import fr.opensagres.xdocreport.core.document.DocumentKind;
 
-public class ODF2XHTMLConverterDiscovery implements IConverterDiscovery {
+public class ODF2XHTMLConverterDiscovery
+    implements IConverterDiscovery
+{
 
-	public String getId() {
-		return "ODT2XHTMLViaODFDOM";
-	}
+    public String getId()
+    {
+        return "ODT2XHTMLViaODFDOM";
+    }
 
-	public String getDescription() {
-		return "Convert ODT 2 XHTML via ODFDOM";
-	}
+    public String getDescription()
+    {
+        return "Convert ODT 2 XHTML via ODFDOM";
+    }
 
-	public String getFrom() {
-		return DocumentKind.ODT.name();
-	}
+    public String getFrom()
+    {
+        return DocumentKind.ODT.name();
+    }
 
-	public String getTo() {
-		return ConverterTypeTo.XHTML.name();
-	}
+    public String getTo()
+    {
+        return ConverterTypeTo.XHTML.name();
+    }
 
-	public String getVia() {
-		return ConverterTypeVia.ODFDOM.name();
-	}
+    public String getVia()
+    {
+        return ConverterTypeVia.ODFDOM.name();
+    }
 
-	public IConverter getConverter() {
-		return ODF2XHTMLConverter.getInstance();
-	}
+    public IConverter getConverter()
+    {
+        return ODF2XHTMLConverter.getInstance();
+    }
 
 }

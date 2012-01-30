@@ -102,452 +102,537 @@ import fr.opensagres.xdocreport.itext.extension.PageOrientation;
 import fr.opensagres.xdocreport.utils.BorderType;
 import fr.opensagres.xdocreport.utils.StringUtils;
 
-public class PDFMapper extends XWPFElementVisitor<IITextContainer> {
-
-	/**
-	 * Logger for this class
-	 */
-	private static final Logger LOGGER = Logger.getLogger(XWPFElementVisitor.class.getName());
-
-	// Create instance of PDF document
-	private StylableDocument pdfDocument;
-	private Stack<CTSectPr> sectPrStack = null;
-	
-	private StyleEngineForIText styleEngine;
-	private final PDFViaITextOptions options;
-
-	public PDFMapper(XWPFDocument document, PDFViaITextOptions options) {
-		super(document);
-		this.options = options != null ? options : PDFViaITextOptions.create();
-	}
-
-	@Override
-	protected IITextContainer startVisitDocument(OutputStream out) throws Exception {
-		// Create instance of PDF document
-		styleEngine = new StyleEngineForIText(document, options);
-		pdfDocument = new StylableDocument(out, styleEngine);
-		CTSectPr sectPr = document.getDocument().getBody().getSectPr();
-		applySectPr(sectPr);
-
-		return pdfDocument;
-	}
-
-	private void applySectPr(CTSectPr sectPr) {
-		if (sectPr == null) {
-			return;
-		}
-		// Set page size
-		CTPageSz pageSize = sectPr.getPgSz();
-		Rectangle pdfPageSize = new Rectangle(dxa2points(pageSize.getW()), dxa2points(pageSize.getH()));
-		pdfDocument.setPageSize(pdfPageSize);
-
-		// Orientation
-		org.openxmlformats.schemas.wordprocessingml.x2006.main.STPageOrientation.Enum orientation = pageSize.getOrient();
-		if (orientation != null) {
-			if (org.openxmlformats.schemas.wordprocessingml.x2006.main.STPageOrientation.LANDSCAPE.equals(orientation)) {
-				pdfDocument.setOrientation(PageOrientation.Landscape);
-			} else {
-				pdfDocument.setOrientation(PageOrientation.Portrait);
-			}
-		}
-
-		// Set page margin
-		CTPageMar pageMar = sectPr.getPgMar();
-		if (pageMar != null) {
-			pdfDocument.setOriginalMargins(dxa2points(pageMar.getLeft()), dxa2points(pageMar.getRight()), dxa2points(pageMar.getTop()), dxa2points(pageMar.getBottom()));
-		}
-	}
-
-	@Override
-	protected void endVisitDocument() throws Exception {
-		pdfDocument.close();
-	}
-
-	@Override
-	protected void visitHeader(CTHdrFtrRef headerRef) throws Exception {
-		STHdrFtr.Enum type = headerRef.getType();
-		MasterPage masterPage = getOrCreateMasterPage(type);
-
-		MasterPageHeaderFooter pdfHeader = new MasterPageHeaderFooter();
-		XWPFHeader hdr = getXWPFHeader(headerRef);
-		visitBodyElements(hdr.getBodyElements(), (ExtendedPdfPCell) pdfHeader.getTableCell());
-		pdfHeader.flush();
-		masterPage.setHeader(pdfHeader);
-
-	}
-
-	@Override
-	protected void visitFooter(CTHdrFtrRef footerRef) throws Exception {
-		STHdrFtr.Enum type = footerRef.getType();
-		MasterPage masterPage = getOrCreateMasterPage(type);
-
-		MasterPageHeaderFooter pdfFooter = new MasterPageHeaderFooter();
-		XWPFFooter hdr = getXWPFFooter(footerRef);
-		visitBodyElements(hdr.getBodyElements(), (ExtendedPdfPCell) pdfFooter.getTableCell());
-		pdfFooter.flush();
-		masterPage.setFooter(pdfFooter);
-
-	}
-
-	private MasterPage getOrCreateMasterPage(STHdrFtr.Enum type) {
-		String masterPageName = type.toString();
-		MasterPage masterPage = pdfDocument.getMasterPage(masterPageName);
-		if (masterPage == null) {
-			masterPage = new MasterPage(masterPageName);
-			pdfDocument.addMasterPage(masterPage);
-		}
-		return masterPage;
-	}
-
-	private Stack<CTSectPr> getSectPrStack() {
-		if (sectPrStack != null) {
-			return sectPrStack;
-		}
-		sectPrStack = new Stack<CTSectPr>();
-		for (IBodyElement bodyElement : document.getBodyElements()) {
-			if (bodyElement.getElementType() == BodyElementType.PARAGRAPH) {
-				CTPPr ppr = ((XWPFParagraph) bodyElement).getCTP().getPPr();
-				if (ppr != null) {
-					CTSectPr sectPr = ppr.getSectPr();
-					if (sectPr != null) {
-						sectPrStack.push(sectPr);
-					}
-				}
-			}
-		}
-		return sectPrStack;
-	}
-
-	@Override
-	protected IITextContainer startVisitPargraph(XWPFParagraph docxParagraph, IITextContainer parentContainer) throws Exception {
-
-		// 1) Instanciate a pdfParagraph
-		StylableParagraph pdfParagraph = pdfDocument.createParagraph((IStylableContainer) null);
-		// apply style for the title font, color, bold style...
-		// 2) Create style instance of the paragraph if needed
-		styleEngine.startVisitPargraph(docxParagraph, pdfParagraph);
-		pdfParagraph.setITextContainer(parentContainer);
-
-		// TODO
-
-		String backgroundColor = XWPFParagraphUtils.getBackgroundColor(docxParagraph);
-		if (StringUtils.isNotEmpty(backgroundColor)) {
-			pdfParagraph.getPdfPCell().setBackgroundColor(ColorRegistry.getInstance().getColor("0x" + backgroundColor));
-		}
-		// finally apply the style to the iText paragraph....
-		applyStyles(docxParagraph, pdfParagraph);
-		return pdfParagraph;
-	}
-
-	@Override
-	protected void endVisitPargraph(XWPFParagraph paragraph, IITextContainer parentContainer, IITextContainer paragraphContainer) throws Exception {
-
-		// Page Break
-		// Cannot use paragraph.isPageBreak() because it throw NPE because
-		// pageBreak.getVal() can be null.
-		CTPPr ppr = paragraph.getCTP().getPPr();
-		if (ppr.isSetPageBreakBefore()) {
-			CTOnOff pageBreak = ppr.getPageBreakBefore();
-			if (pageBreak != null && (pageBreak.getVal() == null || pageBreak.getVal().intValue() == STOnOff.INT_TRUE)) {
-				pdfDocument.newPage();
-			}
-		}
-
-		// Paragraph
-		ExtendedParagraph pdfParagraph = (ExtendedParagraph) paragraphContainer;
-		parentContainer.addElement(pdfParagraph.getContainer());
-	}
-
-	@Override
-	protected void visitEmptyRun(IITextContainer paragraphContainer) throws Exception {
-		ExtendedParagraph pdfParagraph = (ExtendedParagraph) paragraphContainer;
-		pdfParagraph.add(Chunk.NEWLINE);
-	}
-
-	@Override
-	protected void visitRun(XWPFRun run, IITextContainer pdfContainer) throws Exception {
-		CTR ctr = run.getCTR();
-		// Get family name
-		// Get CTRPr from style+defaults
-		CTString rStyle = getRStyle(run);
-		CTRPr runRprStyle = getRPr(super.getXWPFStyle(rStyle != null ? rStyle.getVal() : null));
-		CTRPr rprStyle = getRPr(super.getXWPFStyle(run.getParagraph().getStyleID()));
-		CTRPr rprDefault = getRPr(defaults);
-
-		// Font family
-		String fontFamily = getFontFamily(run, rprStyle, rprDefault);
-
-		// Get font size
-		float fontSize = run.getFontSize();
-
-		// Get font style
-		int fontStyle = Font.NORMAL;
-		if (isBold(run, runRprStyle, rprStyle, rprDefault)) {
-			fontStyle |= Font.BOLD;
-		}
-		if (isItalic(run, runRprStyle, rprStyle, rprDefault)) {
-			fontStyle |= Font.ITALIC;
-		}
-
-		// Process color
-		Color fontColor = null;
-		String hexColor = getFontColor(run, runRprStyle, rprStyle, rprDefault);
-		if (StringUtils.isNotEmpty(hexColor)) {
-			if (hexColor != null && !"auto".equals(hexColor)) {
-				fontColor = ColorRegistry.getInstance().getColor("0x" + hexColor);
-			}
-		}
-		// Get font
-		Font font = XWPFFontRegistry.getRegistry().getFont(fontFamily, options.getFontEncoding(), fontSize, fontStyle, fontColor);
-
-		UnderlinePatterns underlinePatterns = run.getUnderline();
-
-		boolean singleUnderlined = false;
-		switch (underlinePatterns) {
-		case SINGLE:
-			singleUnderlined = true;
-			break;
-
-		default:
-			break;
-		}
-
-		List<CTBr> brs = ctr.getBrList();
-		for (@SuppressWarnings("unused")
-		CTBr br : brs) {
-			pdfContainer.addElement(Chunk.NEWLINE);
-		}
-
-		List<CTText> texts = run.getCTR().getTList();
-		for (CTText ctText : texts) {
-
-			Chunk aChunk = new Chunk(ctText.getStringValue(), font);
-			if (singleUnderlined)
-				aChunk.setUnderline(1, -2);
-
-			pdfContainer.addElement(aChunk);
-		}
-
-		super.visitPictures(run, pdfContainer);
-
-		// <w:lastRenderedPageBreak />
-		List<CTEmpty> lastRenderedPageBreakList = ctr.getLastRenderedPageBreakList();
-		if (lastRenderedPageBreakList != null && lastRenderedPageBreakList.size() > 0) {
-			// IText Document#newPage must be called to generate page break.
-			// But before that, CTSectPr must be getted to compute pageSize,
-			// margins...
-			// The CTSectPr <w:pPr><w:sectPr w:rsidR="00AA33F7"
-			// w:rsidSect="00607077"><w:pgSz w:w="16838" w:h="11906"
-			// w:orient="landscape" />...
-			Stack<CTSectPr> sectPrStack = getSectPrStack();
-			if (sectPrStack != null && !sectPrStack.isEmpty()) {
-				CTSectPr sectPr = sectPrStack.pop();
-				applySectPr(sectPr);
-			}
-			for (CTEmpty lastRenderedPageBreak : lastRenderedPageBreakList) {
-				pdfDocument.newPage();
-			}
-		}
-	}
-
-	// Visit table
-	protected IITextContainer startVisitTable(XWPFTable table, IITextContainer pdfContainer) throws Exception {
-		styleEngine.startVisitTable(table, pdfContainer);
-
-		// 1) Compute colWidth
-		float[] colWidths = XWPFTableUtil.computeColWidths(table);
-
-		// 2) Compute tableWith
-		TableWidth tableWidth = XWPFTableUtil.getTableWidth(table);
-
-		StylableTable pdfPTable = pdfDocument.createTable((IStylableContainer) null, colWidths.length);
-		// 3) Create PDF Table.
-		// ExtendedPdfPTable pdfPTable = new
-		// ExtendedPdfPTable(colWidths.length);
-		pdfPTable.setITextContainer(pdfContainer);
-
-		pdfPTable.setTotalWidth(colWidths);
-		if (tableWidth.width > 0) {
-			if (tableWidth.percentUnit) {
-				pdfPTable.setWidthPercentage(tableWidth.width);
-			} else {
-				pdfPTable.setTotalWidth(tableWidth.width);
-			}
-		}
-		
-		
-		if(table.getCTTbl()!=null){
-			if(table.getCTTbl().getTblPr().getTblBorders()!=null){
-				CTBorder bottom=	table.getCTTbl().getTblPr().getTblBorders().getBottom();
-				if(bottom!=null){
-					pdfPTable.setBorderBottom(createBorder(bottom, BorderType.BOTTOM));	
-				}
-				CTBorder left=	table.getCTTbl().getTblPr().getTblBorders().getLeft();
-				if(left!=null){
-					pdfPTable.setBorderLeft(createBorder(left, BorderType.LEFT));	
-				}
-				CTBorder top=	table.getCTTbl().getTblPr().getTblBorders().getTop();
-				if(top!=null){
-					pdfPTable.setBorderTop(createBorder(top, BorderType.TOP));	
-				}
-				CTBorder right=	table.getCTTbl().getTblPr().getTblBorders().getRight();
-				if(right!=null){
-					pdfPTable.setBorderRight(createBorder(right, BorderType.RIGHT));	
-				}		
-			}
-		}
-		
-		
-		
-		
-		pdfPTable.setLockedWidth(true);
-		// finally apply the style to the iText paragraph....
-		applyStyles(table, pdfPTable);
-		return pdfPTable;
-	}
-
-	private StyleBorder createBorder(CTBorder docxBorder, BorderType borderType) {
-		if (docxBorder == null) {
-			return null;
-		}
-		StyleBorder styleBorder = new StyleBorder(docxBorder.getVal()
-				.toString(), borderType);
-		// XXX semi point ?
-		styleBorder.setWidth(docxBorder.getSz());
-		STHexColor hexColor = docxBorder.xgetColor();
-		Color bc = ColorRegistry.getInstance().getColor(
-				"0x" + hexColor.getStringValue());
-		styleBorder.setColor(bc);
-		return styleBorder;
-	}
-	@Override
-	protected void endVisitTable(XWPFTable table, IITextContainer parentContainer, IITextContainer tableContainer) throws Exception {
-		parentContainer.addElement((Element) tableContainer);
-	}
-
-	@Override
-	protected IITextContainer startVisitTableCell(XWPFTableCell cell, IITextContainer tableContainer) {
-		StylableTable pdfPTable = (StylableTable) tableContainer;
-		
-		XWPFTableRow row = cell.getTableRow();
-		ExtendedPdfPCell pdfPCell = new ExtendedPdfPCell();
-		pdfPCell.setITextContainer(pdfPTable);
-
-		CTTcPr tcPr = cell.getCTTc().getTcPr();
-
-	if(tcPr!=null){
-		
-	
-		// Colspan
-		Integer colspan = null;
-		CTDecimalNumber gridSpan = tcPr.getGridSpan();
-		if (gridSpan != null) {
-			colspan = gridSpan.getVal().intValue();
-		}
-		if (colspan != null) {
-			pdfPCell.setColspan(colspan);
-		}
-
-		// Backround Color
-		CTShd shd = tcPr.getShd();
-		String hexColor = null;
-		if (shd != null) {
-			hexColor = shd.xgetFill().getStringValue();
-		}
-		if (hexColor != null && !"auto".equals(hexColor)) {
-			pdfPCell.setBackgroundColor(ColorRegistry.getInstance().getColor("0x" + hexColor));
-		}
-		
-		
-	
-		// Borders
-		// Table Properties on cells
-		
-		// overridden locally
-		CTTcBorders borders = tcPr.getTcBorders();
-		if (borders != null) {
-			// border-left
-			setBorder(borders.getLeft(), pdfPCell, Rectangle.LEFT);
-			// border-right
-			setBorder(borders.getRight(), pdfPCell, Rectangle.RIGHT);
-			// border-top
-			setBorder(borders.getTop(), pdfPCell, Rectangle.TOP);
-			// border-bottom
-			setBorder(borders.getBottom(), pdfPCell, Rectangle.BOTTOM);
-		}
-	}
-		int height = row.getHeight();
-		pdfPCell.setMinimumHeight(dxa2points(height));
-		
-		
-		
-		
-		return pdfPCell;
-	}
-
-	@Override
-	protected void endVisitTableCell(XWPFTableCell cell, IITextContainer tableContainer, IITextContainer tableCellContainer) {
-		ExtendedPdfPTable pdfPTable = (ExtendedPdfPTable) tableContainer;
-		ExtendedPdfPCell pdfPCell = (ExtendedPdfPCell) tableCellContainer;
-		pdfPTable.addCell(pdfPCell);
-	}
-
-	@Override
-	protected void visitPicture(XWPFPicture picture, IITextContainer parentContainer) throws Exception {
-		CTPositiveSize2D ext = picture.getCTPicture().getSpPr().getXfrm().getExt();
-		long x = ext.getCx();
-		long y = ext.getCy();
-
-		CTPicture ctPic = picture.getCTPicture();
-		String blipId = ctPic.getBlipFill().getBlip().getEmbed();
-
-		XWPFPictureData pictureData = XWPFPictureUtil.getPictureData(document, blipId);
-
-		if (pictureData != null) {
-			try {
-				Image img = Image.getInstance(pictureData.getData());
-				img.scaleAbsolute(dxa2points(x) / 635, dxa2points(y) / 635);
-
-				IITextContainer parentOfParentContainer = parentContainer.getITextContainer();
-				if (parentOfParentContainer != null && parentOfParentContainer instanceof PdfPCell) {
-					((PdfPCell) parentOfParentContainer).setImage(img);
-				} else {
-					parentContainer.addElement(img);
-				}
-
-			} catch (Exception e) {
-				LOGGER.severe(e.getMessage());
-			}
-
-		}
-
-	}
-
-	private void applyStyles(XWPFParagraph ele, IStylableElement<XWPFParagraph> element) {
-
-		Style style = styleEngine.getStyle(ele.getStyleID());
-
-		element.applyStyles(ele, style);
-
-	}
-
-	private void applyStyles(XWPFTable ele, IStylableElement<XWPFTable> element) {
-
-		CTString tblStyle = ele.getCTTbl().getTblPr().getTblStyle();
-		Style style;
-		if (tblStyle != null) {
-			style = styleEngine.getStyle(tblStyle.getVal());
-		} else {
-			style = styleEngine.getDefaultStyle();
-		}
-		element.applyStyles(ele, style);
-
-	}
-
-	protected XWPFStyle getXWPFStyle(XWPFParagraph paragraph) {
-		if (paragraph == null) {
-			return null;
-		}
-		return getXWPFStyle(paragraph.getStyleID());
-	}
+public class PDFMapper
+    extends XWPFElementVisitor<IITextContainer>
+{
+
+    /**
+     * Logger for this class
+     */
+    private static final Logger LOGGER = Logger.getLogger( XWPFElementVisitor.class.getName() );
+
+    // Create instance of PDF document
+    private StylableDocument pdfDocument;
+
+    private Stack<CTSectPr> sectPrStack = null;
+
+    private StyleEngineForIText styleEngine;
+
+    private final PDFViaITextOptions options;
+
+    public PDFMapper( XWPFDocument document, PDFViaITextOptions options )
+    {
+        super( document );
+        this.options = options != null ? options : PDFViaITextOptions.create();
+    }
+
+    @Override
+    protected IITextContainer startVisitDocument( OutputStream out )
+        throws Exception
+    {
+        // Create instance of PDF document
+        styleEngine = new StyleEngineForIText( document, options );
+        pdfDocument = new StylableDocument( out, styleEngine );
+        CTSectPr sectPr = document.getDocument().getBody().getSectPr();
+        applySectPr( sectPr );
+
+        return pdfDocument;
+    }
+
+    private void applySectPr( CTSectPr sectPr )
+    {
+        if ( sectPr == null )
+        {
+            return;
+        }
+        // Set page size
+        CTPageSz pageSize = sectPr.getPgSz();
+        Rectangle pdfPageSize = new Rectangle( dxa2points( pageSize.getW() ), dxa2points( pageSize.getH() ) );
+        pdfDocument.setPageSize( pdfPageSize );
+
+        // Orientation
+        org.openxmlformats.schemas.wordprocessingml.x2006.main.STPageOrientation.Enum orientation =
+            pageSize.getOrient();
+        if ( orientation != null )
+        {
+            if ( org.openxmlformats.schemas.wordprocessingml.x2006.main.STPageOrientation.LANDSCAPE.equals( orientation ) )
+            {
+                pdfDocument.setOrientation( PageOrientation.Landscape );
+            }
+            else
+            {
+                pdfDocument.setOrientation( PageOrientation.Portrait );
+            }
+        }
+
+        // Set page margin
+        CTPageMar pageMar = sectPr.getPgMar();
+        if ( pageMar != null )
+        {
+            pdfDocument.setOriginalMargins( dxa2points( pageMar.getLeft() ), dxa2points( pageMar.getRight() ),
+                                            dxa2points( pageMar.getTop() ), dxa2points( pageMar.getBottom() ) );
+        }
+    }
+
+    @Override
+    protected void endVisitDocument()
+        throws Exception
+    {
+        pdfDocument.close();
+    }
+
+    @Override
+    protected void visitHeader( CTHdrFtrRef headerRef )
+        throws Exception
+    {
+        STHdrFtr.Enum type = headerRef.getType();
+        MasterPage masterPage = getOrCreateMasterPage( type );
+
+        MasterPageHeaderFooter pdfHeader = new MasterPageHeaderFooter();
+        XWPFHeader hdr = getXWPFHeader( headerRef );
+        visitBodyElements( hdr.getBodyElements(), (ExtendedPdfPCell) pdfHeader.getTableCell() );
+        pdfHeader.flush();
+        masterPage.setHeader( pdfHeader );
+
+    }
+
+    @Override
+    protected void visitFooter( CTHdrFtrRef footerRef )
+        throws Exception
+    {
+        STHdrFtr.Enum type = footerRef.getType();
+        MasterPage masterPage = getOrCreateMasterPage( type );
+
+        MasterPageHeaderFooter pdfFooter = new MasterPageHeaderFooter();
+        XWPFFooter hdr = getXWPFFooter( footerRef );
+        visitBodyElements( hdr.getBodyElements(), (ExtendedPdfPCell) pdfFooter.getTableCell() );
+        pdfFooter.flush();
+        masterPage.setFooter( pdfFooter );
+
+    }
+
+    private MasterPage getOrCreateMasterPage( STHdrFtr.Enum type )
+    {
+        String masterPageName = type.toString();
+        MasterPage masterPage = pdfDocument.getMasterPage( masterPageName );
+        if ( masterPage == null )
+        {
+            masterPage = new MasterPage( masterPageName );
+            pdfDocument.addMasterPage( masterPage );
+        }
+        return masterPage;
+    }
+
+    private Stack<CTSectPr> getSectPrStack()
+    {
+        if ( sectPrStack != null )
+        {
+            return sectPrStack;
+        }
+        sectPrStack = new Stack<CTSectPr>();
+        for ( IBodyElement bodyElement : document.getBodyElements() )
+        {
+            if ( bodyElement.getElementType() == BodyElementType.PARAGRAPH )
+            {
+                CTPPr ppr = ( (XWPFParagraph) bodyElement ).getCTP().getPPr();
+                if ( ppr != null )
+                {
+                    CTSectPr sectPr = ppr.getSectPr();
+                    if ( sectPr != null )
+                    {
+                        sectPrStack.push( sectPr );
+                    }
+                }
+            }
+        }
+        return sectPrStack;
+    }
+
+    @Override
+    protected IITextContainer startVisitPargraph( XWPFParagraph docxParagraph, IITextContainer parentContainer )
+        throws Exception
+    {
+
+        // 1) Instanciate a pdfParagraph
+        StylableParagraph pdfParagraph = pdfDocument.createParagraph( (IStylableContainer) null );
+        // apply style for the title font, color, bold style...
+        // 2) Create style instance of the paragraph if needed
+        styleEngine.startVisitPargraph( docxParagraph, pdfParagraph );
+        pdfParagraph.setITextContainer( parentContainer );
+
+        // TODO
+
+        String backgroundColor = XWPFParagraphUtils.getBackgroundColor( docxParagraph );
+        if ( StringUtils.isNotEmpty( backgroundColor ) )
+        {
+            pdfParagraph.getPdfPCell().setBackgroundColor( ColorRegistry.getInstance().getColor( "0x" + backgroundColor ) );
+        }
+        // finally apply the style to the iText paragraph....
+        applyStyles( docxParagraph, pdfParagraph );
+        return pdfParagraph;
+    }
+
+    @Override
+    protected void endVisitPargraph( XWPFParagraph paragraph, IITextContainer parentContainer,
+                                     IITextContainer paragraphContainer )
+        throws Exception
+    {
+
+        // Page Break
+        // Cannot use paragraph.isPageBreak() because it throw NPE because
+        // pageBreak.getVal() can be null.
+        CTPPr ppr = paragraph.getCTP().getPPr();
+        if ( ppr.isSetPageBreakBefore() )
+        {
+            CTOnOff pageBreak = ppr.getPageBreakBefore();
+            if ( pageBreak != null
+                && ( pageBreak.getVal() == null || pageBreak.getVal().intValue() == STOnOff.INT_TRUE ) )
+            {
+                pdfDocument.newPage();
+            }
+        }
+
+        // Paragraph
+        ExtendedParagraph pdfParagraph = (ExtendedParagraph) paragraphContainer;
+        parentContainer.addElement( pdfParagraph.getContainer() );
+    }
+
+    @Override
+    protected void visitEmptyRun( IITextContainer paragraphContainer )
+        throws Exception
+    {
+        ExtendedParagraph pdfParagraph = (ExtendedParagraph) paragraphContainer;
+        pdfParagraph.add( Chunk.NEWLINE );
+    }
+
+    @Override
+    protected void visitRun( XWPFRun run, IITextContainer pdfContainer )
+        throws Exception
+    {
+        CTR ctr = run.getCTR();
+        // Get family name
+        // Get CTRPr from style+defaults
+        CTString rStyle = getRStyle( run );
+        CTRPr runRprStyle = getRPr( super.getXWPFStyle( rStyle != null ? rStyle.getVal() : null ) );
+        CTRPr rprStyle = getRPr( super.getXWPFStyle( run.getParagraph().getStyleID() ) );
+        CTRPr rprDefault = getRPr( defaults );
+
+        // Font family
+        String fontFamily = getFontFamily( run, rprStyle, rprDefault );
+
+        // Get font size
+        float fontSize = run.getFontSize();
+
+        // Get font style
+        int fontStyle = Font.NORMAL;
+        if ( isBold( run, runRprStyle, rprStyle, rprDefault ) )
+        {
+            fontStyle |= Font.BOLD;
+        }
+        if ( isItalic( run, runRprStyle, rprStyle, rprDefault ) )
+        {
+            fontStyle |= Font.ITALIC;
+        }
+
+        // Process color
+        Color fontColor = null;
+        String hexColor = getFontColor( run, runRprStyle, rprStyle, rprDefault );
+        if ( StringUtils.isNotEmpty( hexColor ) )
+        {
+            if ( hexColor != null && !"auto".equals( hexColor ) )
+            {
+                fontColor = ColorRegistry.getInstance().getColor( "0x" + hexColor );
+            }
+        }
+        // Get font
+        Font font =
+            XWPFFontRegistry.getRegistry().getFont( fontFamily, options.getFontEncoding(), fontSize, fontStyle,
+                                                    fontColor );
+
+        UnderlinePatterns underlinePatterns = run.getUnderline();
+
+        boolean singleUnderlined = false;
+        switch ( underlinePatterns )
+        {
+            case SINGLE:
+                singleUnderlined = true;
+                break;
+
+            default:
+                break;
+        }
+
+        List<CTBr> brs = ctr.getBrList();
+        for ( @SuppressWarnings( "unused" )
+        CTBr br : brs )
+        {
+            pdfContainer.addElement( Chunk.NEWLINE );
+        }
+
+        List<CTText> texts = run.getCTR().getTList();
+        for ( CTText ctText : texts )
+        {
+
+            Chunk aChunk = new Chunk( ctText.getStringValue(), font );
+            if ( singleUnderlined )
+                aChunk.setUnderline( 1, -2 );
+
+            pdfContainer.addElement( aChunk );
+        }
+
+        super.visitPictures( run, pdfContainer );
+
+        // <w:lastRenderedPageBreak />
+        List<CTEmpty> lastRenderedPageBreakList = ctr.getLastRenderedPageBreakList();
+        if ( lastRenderedPageBreakList != null && lastRenderedPageBreakList.size() > 0 )
+        {
+            // IText Document#newPage must be called to generate page break.
+            // But before that, CTSectPr must be getted to compute pageSize,
+            // margins...
+            // The CTSectPr <w:pPr><w:sectPr w:rsidR="00AA33F7"
+            // w:rsidSect="00607077"><w:pgSz w:w="16838" w:h="11906"
+            // w:orient="landscape" />...
+            Stack<CTSectPr> sectPrStack = getSectPrStack();
+            if ( sectPrStack != null && !sectPrStack.isEmpty() )
+            {
+                CTSectPr sectPr = sectPrStack.pop();
+                applySectPr( sectPr );
+            }
+            for ( CTEmpty lastRenderedPageBreak : lastRenderedPageBreakList )
+            {
+                pdfDocument.newPage();
+            }
+        }
+    }
+
+    // Visit table
+    protected IITextContainer startVisitTable( XWPFTable table, IITextContainer pdfContainer )
+        throws Exception
+    {
+        styleEngine.startVisitTable( table, pdfContainer );
+
+        // 1) Compute colWidth
+        float[] colWidths = XWPFTableUtil.computeColWidths( table );
+
+        // 2) Compute tableWith
+        TableWidth tableWidth = XWPFTableUtil.getTableWidth( table );
+
+        StylableTable pdfPTable = pdfDocument.createTable( (IStylableContainer) null, colWidths.length );
+        // 3) Create PDF Table.
+        // ExtendedPdfPTable pdfPTable = new
+        // ExtendedPdfPTable(colWidths.length);
+        pdfPTable.setITextContainer( pdfContainer );
+
+        pdfPTable.setTotalWidth( colWidths );
+        if ( tableWidth.width > 0 )
+        {
+            if ( tableWidth.percentUnit )
+            {
+                pdfPTable.setWidthPercentage( tableWidth.width );
+            }
+            else
+            {
+                pdfPTable.setTotalWidth( tableWidth.width );
+            }
+        }
+
+        if ( table.getCTTbl() != null )
+        {
+            if ( table.getCTTbl().getTblPr().getTblBorders() != null )
+            {
+                CTBorder bottom = table.getCTTbl().getTblPr().getTblBorders().getBottom();
+                if ( bottom != null )
+                {
+                    pdfPTable.setBorderBottom( createBorder( bottom, BorderType.BOTTOM ) );
+                }
+                CTBorder left = table.getCTTbl().getTblPr().getTblBorders().getLeft();
+                if ( left != null )
+                {
+                    pdfPTable.setBorderLeft( createBorder( left, BorderType.LEFT ) );
+                }
+                CTBorder top = table.getCTTbl().getTblPr().getTblBorders().getTop();
+                if ( top != null )
+                {
+                    pdfPTable.setBorderTop( createBorder( top, BorderType.TOP ) );
+                }
+                CTBorder right = table.getCTTbl().getTblPr().getTblBorders().getRight();
+                if ( right != null )
+                {
+                    pdfPTable.setBorderRight( createBorder( right, BorderType.RIGHT ) );
+                }
+            }
+        }
+
+        pdfPTable.setLockedWidth( true );
+        // finally apply the style to the iText paragraph....
+        applyStyles( table, pdfPTable );
+        return pdfPTable;
+    }
+
+    private StyleBorder createBorder( CTBorder docxBorder, BorderType borderType )
+    {
+        if ( docxBorder == null )
+        {
+            return null;
+        }
+        StyleBorder styleBorder = new StyleBorder( docxBorder.getVal().toString(), borderType );
+        // XXX semi point ?
+        styleBorder.setWidth( docxBorder.getSz() );
+        STHexColor hexColor = docxBorder.xgetColor();
+        Color bc = ColorRegistry.getInstance().getColor( "0x" + hexColor.getStringValue() );
+        styleBorder.setColor( bc );
+        return styleBorder;
+    }
+
+    @Override
+    protected void endVisitTable( XWPFTable table, IITextContainer parentContainer, IITextContainer tableContainer )
+        throws Exception
+    {
+        parentContainer.addElement( (Element) tableContainer );
+    }
+
+    @Override
+    protected IITextContainer startVisitTableCell( XWPFTableCell cell, IITextContainer tableContainer )
+    {
+        StylableTable pdfPTable = (StylableTable) tableContainer;
+
+        XWPFTableRow row = cell.getTableRow();
+        ExtendedPdfPCell pdfPCell = new ExtendedPdfPCell();
+        pdfPCell.setITextContainer( pdfPTable );
+
+        CTTcPr tcPr = cell.getCTTc().getTcPr();
+
+        if ( tcPr != null )
+        {
+
+            // Colspan
+            Integer colspan = null;
+            CTDecimalNumber gridSpan = tcPr.getGridSpan();
+            if ( gridSpan != null )
+            {
+                colspan = gridSpan.getVal().intValue();
+            }
+            if ( colspan != null )
+            {
+                pdfPCell.setColspan( colspan );
+            }
+
+            // Backround Color
+            CTShd shd = tcPr.getShd();
+            String hexColor = null;
+            if ( shd != null )
+            {
+                hexColor = shd.xgetFill().getStringValue();
+            }
+            if ( hexColor != null && !"auto".equals( hexColor ) )
+            {
+                pdfPCell.setBackgroundColor( ColorRegistry.getInstance().getColor( "0x" + hexColor ) );
+            }
+
+            // Borders
+            // Table Properties on cells
+
+            // overridden locally
+            CTTcBorders borders = tcPr.getTcBorders();
+            if ( borders != null )
+            {
+                // border-left
+                setBorder( borders.getLeft(), pdfPCell, Rectangle.LEFT );
+                // border-right
+                setBorder( borders.getRight(), pdfPCell, Rectangle.RIGHT );
+                // border-top
+                setBorder( borders.getTop(), pdfPCell, Rectangle.TOP );
+                // border-bottom
+                setBorder( borders.getBottom(), pdfPCell, Rectangle.BOTTOM );
+            }
+        }
+        int height = row.getHeight();
+        pdfPCell.setMinimumHeight( dxa2points( height ) );
+
+        return pdfPCell;
+    }
+
+    @Override
+    protected void endVisitTableCell( XWPFTableCell cell, IITextContainer tableContainer,
+                                      IITextContainer tableCellContainer )
+    {
+        ExtendedPdfPTable pdfPTable = (ExtendedPdfPTable) tableContainer;
+        ExtendedPdfPCell pdfPCell = (ExtendedPdfPCell) tableCellContainer;
+        pdfPTable.addCell( pdfPCell );
+    }
+
+    @Override
+    protected void visitPicture( XWPFPicture picture, IITextContainer parentContainer )
+        throws Exception
+    {
+        CTPositiveSize2D ext = picture.getCTPicture().getSpPr().getXfrm().getExt();
+        long x = ext.getCx();
+        long y = ext.getCy();
+
+        CTPicture ctPic = picture.getCTPicture();
+        String blipId = ctPic.getBlipFill().getBlip().getEmbed();
+
+        XWPFPictureData pictureData = XWPFPictureUtil.getPictureData( document, blipId );
+
+        if ( pictureData != null )
+        {
+            try
+            {
+                Image img = Image.getInstance( pictureData.getData() );
+                img.scaleAbsolute( dxa2points( x ) / 635, dxa2points( y ) / 635 );
+
+                IITextContainer parentOfParentContainer = parentContainer.getITextContainer();
+                if ( parentOfParentContainer != null && parentOfParentContainer instanceof PdfPCell )
+                {
+                    ( (PdfPCell) parentOfParentContainer ).setImage( img );
+                }
+                else
+                {
+                    parentContainer.addElement( img );
+                }
+
+            }
+            catch ( Exception e )
+            {
+                LOGGER.severe( e.getMessage() );
+            }
+
+        }
+
+    }
+
+    private void applyStyles( XWPFParagraph ele, IStylableElement<XWPFParagraph> element )
+    {
+
+        Style style = styleEngine.getStyle( ele.getStyleID() );
+
+        element.applyStyles( ele, style );
+
+    }
+
+    private void applyStyles( XWPFTable ele, IStylableElement<XWPFTable> element )
+    {
+
+        CTString tblStyle = ele.getCTTbl().getTblPr().getTblStyle();
+        Style style;
+        if ( tblStyle != null )
+        {
+            style = styleEngine.getStyle( tblStyle.getVal() );
+        }
+        else
+        {
+            style = styleEngine.getDefaultStyle();
+        }
+        element.applyStyles( ele, style );
+
+    }
+
+    protected XWPFStyle getXWPFStyle( XWPFParagraph paragraph )
+    {
+        if ( paragraph == null )
+        {
+            return null;
+        }
+        return getXWPFStyle( paragraph.getStyleID() );
+    }
 }

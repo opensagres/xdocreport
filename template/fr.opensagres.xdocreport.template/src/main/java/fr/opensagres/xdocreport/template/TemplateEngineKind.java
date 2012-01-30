@@ -24,7 +24,8 @@
  */
 package fr.opensagres.xdocreport.template;
 
-public enum TemplateEngineKind {
+public enum TemplateEngineKind
+{
 
-	Freemarker, Velocity;
+    Freemarker, Velocity;
 }

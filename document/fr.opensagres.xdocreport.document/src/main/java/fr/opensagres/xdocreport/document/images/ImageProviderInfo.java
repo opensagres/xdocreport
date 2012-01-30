@@ -26,75 +26,84 @@ package fr.opensagres.xdocreport.document.images;
 
 /**
  * Information about image provider.
- * 
  */
-public class ImageProviderInfo {
+public class ImageProviderInfo
+{
 
-	private final IImageProvider imageProvider;
-	private final String imageId;
-	private final String imageBasePath;
-	private final String imageFileName;
+    private final IImageProvider imageProvider;
 
-	public ImageProviderInfo(IImageProvider imageProvider, String imageId,
-			String imageBasePath, String imageFileName) {
-		this.imageId = imageId;
-		this.imageProvider = imageProvider;
-		this.imageBasePath = imageBasePath;
-		this.imageFileName = imageFileName;
-	}
+    private final String imageId;
 
-	/**
-	 * Returns the image provider instance.
-	 * 
-	 * @return
-	 */
-	public IImageProvider getImageProvider() {
-		return imageProvider;
-	}
+    private final String imageBasePath;
 
-	/**
-	 * Returns the image id.
-	 * 
-	 * @return
-	 */
-	public String getImageId() {
-		return imageId;
-	}
+    private final String imageFileName;
 
-	/**
-	 * Returns the image base path.
-	 * 
-	 * @return
-	 */
-	public String getImageBasePath() {
-		return imageBasePath;
-	}
+    public ImageProviderInfo( IImageProvider imageProvider, String imageId, String imageBasePath, String imageFileName )
+    {
+        this.imageId = imageId;
+        this.imageProvider = imageProvider;
+        this.imageBasePath = imageBasePath;
+        this.imageFileName = imageFileName;
+    }
 
-	/**
-	 * Returns the image file name.
-	 * 
-	 * @return
-	 */
-	public String getImageFileName() {
-		return imageFileName;
-	}
+    /**
+     * Returns the image provider instance.
+     * 
+     * @return
+     */
+    public IImageProvider getImageProvider()
+    {
+        return imageProvider;
+    }
 
-	/**
-	 * Returns the image type.
-	 * 
-	 * @return
-	 */
-	public String getImageType() {
-		return getImageProvider().getImageFormat().getType();
-	}
+    /**
+     * Returns the image id.
+     * 
+     * @return
+     */
+    public String getImageId()
+    {
+        return imageId;
+    }
 
-	/**
-	 * Returns the full path of the image.
-	 * 
-	 * @return
-	 */
-	public String getImageFullPath() {
-		return getImageBasePath() + getImageFileName();
-	}
+    /**
+     * Returns the image base path.
+     * 
+     * @return
+     */
+    public String getImageBasePath()
+    {
+        return imageBasePath;
+    }
+
+    /**
+     * Returns the image file name.
+     * 
+     * @return
+     */
+    public String getImageFileName()
+    {
+        return imageFileName;
+    }
+
+    /**
+     * Returns the image type.
+     * 
+     * @return
+     */
+    public String getImageType()
+    {
+        return getImageProvider().getImageFormat().getType();
+    }
+
+    /**
+     * Returns the full path of the image.
+     * 
+     * @return
+     */
+    public String getImageFullPath()
+    {
+        return getImageBasePath() + getImageFileName();
+    }
 
 }

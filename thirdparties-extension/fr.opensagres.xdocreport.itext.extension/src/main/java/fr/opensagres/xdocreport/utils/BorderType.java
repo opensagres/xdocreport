@@ -24,7 +24,8 @@
  */
 package fr.opensagres.xdocreport.utils;
 
-public enum BorderType {
+public enum BorderType
+{
 
-	ALL, BOTTOM, TOP, RIGHT, LEFT
+    ALL, BOTTOM, TOP, RIGHT, LEFT
 }

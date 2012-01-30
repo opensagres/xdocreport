@@ -23,6 +23,7 @@
  * WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 package fr.opensagres.xdocreport.converter.odt;
+
 import java.io.IOException;
 import java.io.StringWriter;
 import java.io.Writer;
@@ -32,27 +33,35 @@ import org.apache.xml.serialize.XMLSerializer;
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
 
-public class XMLUtils {
+public class XMLUtils
+{
 
-	public static String toString(Node node) throws IOException {
-		StringWriter writer = new StringWriter();
-		toString(node, writer);
-		return writer.toString();
-	}
+    public static String toString( Node node )
+        throws IOException
+    {
+        StringWriter writer = new StringWriter();
+        toString( node, writer );
+        return writer.toString();
+    }
 
-	public static void toString(Node node, Writer writer) throws IOException {
-		Document document = null;
-		if (node.getNodeType() == Node.DOCUMENT_NODE) {
-			document = (Document) node;
-		} else {
-			document = node.getOwnerDocument();
-		}
-		XMLSerializer serializer = new XMLSerializer();
-		OutputFormat format = new OutputFormat();
-		format.setIndenting(true);
-		format.setIndent(1);
-		serializer.setOutputFormat(format);
-		serializer.setOutputCharStream(writer);
-		serializer.serialize(document);
-	}
+    public static void toString( Node node, Writer writer )
+        throws IOException
+    {
+        Document document = null;
+        if ( node.getNodeType() == Node.DOCUMENT_NODE )
+        {
+            document = (Document) node;
+        }
+        else
+        {
+            document = node.getOwnerDocument();
+        }
+        XMLSerializer serializer = new XMLSerializer();
+        OutputFormat format = new OutputFormat();
+        format.setIndenting( true );
+        format.setIndent( 1 );
+        serializer.setOutputFormat( format );
+        serializer.setOutputCharStream( writer );
+        serializer.serialize( document );
+    }
 }

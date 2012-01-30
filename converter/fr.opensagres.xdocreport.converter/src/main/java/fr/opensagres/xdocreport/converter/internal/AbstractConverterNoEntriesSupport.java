@@ -32,18 +32,21 @@ import fr.opensagres.xdocreport.converter.XDocConverterException;
 import fr.opensagres.xdocreport.core.io.IEntryInputStreamProvider;
 
 /**
- * Abstract class for {@link IConverter} which don't support entries input
- * stream provider (only zipped document odt, docx...).
- * 
+ * Abstract class for {@link IConverter} which don't support entries input stream provider (only zipped document odt,
+ * docx...).
  */
-public abstract class AbstractConverterNoEntriesSupport implements IConverter {
+public abstract class AbstractConverterNoEntriesSupport
+    implements IConverter
+{
 
-	public void convert(IEntryInputStreamProvider inProvider, OutputStream out,
-			Options options) throws XDocConverterException {
-		convert(inProvider.getEntryInputStream(null), out, options);
-	}
+    public void convert( IEntryInputStreamProvider inProvider, OutputStream out, Options options )
+        throws XDocConverterException
+    {
+        convert( inProvider.getEntryInputStream( null ), out, options );
+    }
 
-	public boolean canSupportEntries() {
-		return false;
-	}
+    public boolean canSupportEntries()
+    {
+        return false;
+    }
 }

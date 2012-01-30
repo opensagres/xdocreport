@@ -26,26 +26,29 @@ package fr.opensagres.xdocreport.document.odp;
 
 import fr.opensagres.xdocreport.converter.MimeMapping;
 
-
 /**
  * Open Office ODS constants. For mime mapping please see {@see
  * http://framework.openoffice.org/documentation/mimetypes/mimetypes.html}.
- *
  */
-public interface ODPConstants {
+public interface ODPConstants
+{
 
-	String CONTENT_XML_ENTRY = "content.xml";
-	String STYLES_XML_ENTRY = "styles.xml";
-	
-	// Mime type
-	String MIMETYPE = "mimetype";
-	String ODP_MIMETYPE = "application/vnd.oasis.opendocument.presentation";
-	String ODP_EXTENSION = "odp";
-	
-	// Mime mapping
-	MimeMapping MIME_MAPPING = new MimeMapping(ODP_EXTENSION, ODP_MIMETYPE);
-	
-	// Meta data for discovery
-	String ID_DISCOVERY = "odp";
-	String DESCRIPTION_DISCOVERY = "Manage OpenOffice ODP document.";
+    String CONTENT_XML_ENTRY = "content.xml";
+
+    String STYLES_XML_ENTRY = "styles.xml";
+
+    // Mime type
+    String MIMETYPE = "mimetype";
+
+    String ODP_MIMETYPE = "application/vnd.oasis.opendocument.presentation";
+
+    String ODP_EXTENSION = "odp";
+
+    // Mime mapping
+    MimeMapping MIME_MAPPING = new MimeMapping( ODP_EXTENSION, ODP_MIMETYPE );
+
+    // Meta data for discovery
+    String ID_DISCOVERY = "odp";
+
+    String DESCRIPTION_DISCOVERY = "Manage OpenOffice ODP document.";
 }

@@ -58,231 +58,253 @@ import fr.opensagres.xdocreport.xhtml.extension.CSSStylePropertyConstants;
 import fr.opensagres.xdocreport.xhtml.extension.XHTMLConstants;
 import fr.opensagres.xdocreport.xhtml.extension.XHTMLPageContentBuffer;
 
-public class XHTMLMapper extends XWPFElementVisitor<XHTMLPageContentBuffer>
-		implements XHTMLConstants, CSSStylePropertyConstants {
+public class XHTMLMapper
+    extends XWPFElementVisitor<XHTMLPageContentBuffer>
+    implements XHTMLConstants, CSSStylePropertyConstants
+{
 
-	private static final String WORD_MEDIA = "word/media/";
+    private static final String WORD_MEDIA = "word/media/";
 
-	/**
-	 * Logger for this class
-	 */
-	private static final Logger LOGGER = Logger.getLogger(StyleEngineForIText.class.getName());
+    /**
+     * Logger for this class
+     */
+    private static final Logger LOGGER = Logger.getLogger( StyleEngineForIText.class.getName() );
 
+    private POIXHTMLPage xhtml = null;
 
-	private POIXHTMLPage xhtml = null;
-	private final IURIResolver resolver;
-	private final int indent;
-	private StyleEngineForXHTML styleEngine;
-	protected  OutputStream out;
-	
+    private final IURIResolver resolver;
 
-	public XHTMLMapper(XWPFDocument document, int indent, IURIResolver resolver) {
-		super(document);
-		this.resolver = resolver;
-		this.indent = indent;
-		styleEngine=new StyleEngineForXHTML(document,false,indent,resolver);
-	}
+    private final int indent;
 
-	@Override
-	protected XHTMLPageContentBuffer startVisitDocument(OutputStream out)
-			throws Exception {
-		xhtml = new POIXHTMLPage(styleEngine,indent);
-		this.out=out;
-		xhtml.getPageBodyContentBody().startElementNotEnclosed(DIV_ELEMENT);
+    private StyleEngineForXHTML styleEngine;
 
-		// HTML style
-		StringBuilder htmlStyle = XHTMLStyleUtil.getStyle(document, defaults);
-		setAttributStyleIfNeeded(xhtml.getPageBodyContentBody(), htmlStyle);
+    protected OutputStream out;
 
-		xhtml.getPageBodyContentBody().endElementNotEnclosed();
-		return xhtml.getPageBodyContentBody();
-	}
+    public XHTMLMapper( XWPFDocument document, int indent, IURIResolver resolver )
+    {
+        super( document );
+        this.resolver = resolver;
+        this.indent = indent;
+        styleEngine = new StyleEngineForXHTML( document, false, indent, resolver );
+    }
 
-	@Override
-	protected void endVisitDocument() throws Exception {
-		xhtml.getPageBodyContentBody().endElement(DIV_ELEMENT);
-		/*Writer writer = xhtml.getWriter();
-		if (writer != null) {
-			xhtml.save(writer);
-		} else*/
-		{
-			//OutputStream out = xhtml.getOutputStream();
-			xhtml.save(out);
-		}
-	}
+    @Override
+    protected XHTMLPageContentBuffer startVisitDocument( OutputStream out )
+        throws Exception
+    {
+        xhtml = new POIXHTMLPage( styleEngine, indent );
+        this.out = out;
+        xhtml.getPageBodyContentBody().startElementNotEnclosed( DIV_ELEMENT );
 
-	protected XHTMLPageContentBuffer startVisitPargraph(
-			XWPFParagraph paragraph, XHTMLPageContentBuffer parentContainer)
-			throws Exception {
-		styleEngine.startVisitPargraph(paragraph, null);
-		parentContainer.startElementNotEnclosed(P_ELEMENT);
-		if(paragraph.getStyleID()!=null){
-			if(LOGGER.isLoggable(Level.FINE)){
-				LOGGER.fine("StyleID "+paragraph.getStyleID());	
-			}
-			
-			
-			parentContainer.setAttribute(CLASS_ATTR, paragraph.getStyleID());	
-		}
-		
-		// HTML style
-		StringBuilder htmlStyle = XHTMLStyleUtil.getStyle(paragraph,
-				super.getXWPFStyle(paragraph.getStyleID()), defaults);
-	
-		setAttributStyleIfNeeded(parentContainer, htmlStyle);
-		
-		
-		parentContainer.endElementNotEnclosed();
-		return parentContainer;
-	}
+        // HTML style
+        StringBuilder htmlStyle = XHTMLStyleUtil.getStyle( document, defaults );
+        setAttributStyleIfNeeded( xhtml.getPageBodyContentBody(), htmlStyle );
 
-	@Override
-	protected void endVisitPargraph(XWPFParagraph paragraph,
-			XHTMLPageContentBuffer parentContainer,
-			XHTMLPageContentBuffer paragraphContainer) throws Exception {
-		paragraphContainer.endElement(P_ELEMENT);
-	}
+        xhtml.getPageBodyContentBody().endElementNotEnclosed();
+        return xhtml.getPageBodyContentBody();
+    }
 
-	@Override
-	protected void visitEmptyRun(XHTMLPageContentBuffer paragraphContainer)
-			throws Exception {
-		paragraphContainer.startEndElement(BR_ELEMENT);
-	}
+    @Override
+    protected void endVisitDocument()
+        throws Exception
+    {
+        xhtml.getPageBodyContentBody().endElement( DIV_ELEMENT );
+        /*
+         * Writer writer = xhtml.getWriter(); if (writer != null) { xhtml.save(writer); } else
+         */
+        {
+            // OutputStream out = xhtml.getOutputStream();
+            xhtml.save( out );
+        }
+    }
 
-	@Override
-	protected void visitRun(XWPFRun run,
-			XHTMLPageContentBuffer paragraphContainer) throws Exception {
+    protected XHTMLPageContentBuffer startVisitPargraph( XWPFParagraph paragraph, XHTMLPageContentBuffer parentContainer )
+        throws Exception
+    {
+        styleEngine.startVisitPargraph( paragraph, null );
+        parentContainer.startElementNotEnclosed( P_ELEMENT );
+        if ( paragraph.getStyleID() != null )
+        {
+            if ( LOGGER.isLoggable( Level.FINE ) )
+            {
+                LOGGER.fine( "StyleID " + paragraph.getStyleID() );
+            }
 
-		// HTML style
+            parentContainer.setAttribute( CLASS_ATTR, paragraph.getStyleID() );
+        }
 
-		CTString rStyle = getRStyle(run);
-		XWPFStyle runStyle = super.getXWPFStyle(rStyle != null ? rStyle.getVal()
-				: null);
+        // HTML style
+        StringBuilder htmlStyle =
+            XHTMLStyleUtil.getStyle( paragraph, super.getXWPFStyle( paragraph.getStyleID() ), defaults );
 
-		StringBuilder htmlStyle = XHTMLStyleUtil.getStyle(run, runStyle,
-				super.getXWPFStyle(run.getParagraph().getStyle()), defaults);
-		List<CTBr> brs = run.getCTR().getBrList();
-		for (@SuppressWarnings("unused")
-		CTBr br : brs) {
-			paragraphContainer.startEndElement(BR_ELEMENT);
-		}
+        setAttributStyleIfNeeded( parentContainer, htmlStyle );
 
-		List<CTText> texts = run.getCTR().getTList();
-		for (CTText ctText : texts) {
-			paragraphContainer.startElementNotEnclosed(SPAN_ELEMENT);
-			setAttributStyleIfNeeded(paragraphContainer, htmlStyle);
-			paragraphContainer.endElementNotEnclosed();
-			// Set the text by escaping it with HTML.
-			paragraphContainer.setText(StringEscapeUtils.escapeHtml(ctText
-					.getStringValue()));
-			paragraphContainer.endElement(SPAN_ELEMENT);
-		}
+        parentContainer.endElementNotEnclosed();
+        return parentContainer;
+    }
 
-		super.visitPictures(run, paragraphContainer);
-	}
+    @Override
+    protected void endVisitPargraph( XWPFParagraph paragraph, XHTMLPageContentBuffer parentContainer,
+                                     XHTMLPageContentBuffer paragraphContainer )
+        throws Exception
+    {
+        paragraphContainer.endElement( P_ELEMENT );
+    }
 
-	@Override
-	protected XHTMLPageContentBuffer startVisitTable(XWPFTable table,
-			XHTMLPageContentBuffer tableContainer) throws Exception {
-		tableContainer.startElementNotEnclosed(TABLE_ELEMENT);
+    @Override
+    protected void visitEmptyRun( XHTMLPageContentBuffer paragraphContainer )
+        throws Exception
+    {
+        paragraphContainer.startEndElement( BR_ELEMENT );
+    }
 
-		//XWPFStyle tableStyle = super.getStyle(table.getStyleID());
-		// HTML style
-		//StringBuilder htmlStyle = XHTMLStyleUtil.getStyle(table, tableStyle, defaults);
-		//setAttributStyleIfNeeded(xhtml.getPageBodyContentBody(), htmlStyle);
+    @Override
+    protected void visitRun( XWPFRun run, XHTMLPageContentBuffer paragraphContainer )
+        throws Exception
+    {
 
-		tableContainer.endElementNotEnclosed();
-		return tableContainer;
-	}
+        // HTML style
 
-	@Override
-	protected void visitTableRow(XWPFTableRow row,
-			XHTMLPageContentBuffer tableContainer) throws Exception {
-		tableContainer.startElementNotEnclosed(TR_ELEMENT);
-		tableContainer.endElementNotEnclosed();
+        CTString rStyle = getRStyle( run );
+        XWPFStyle runStyle = super.getXWPFStyle( rStyle != null ? rStyle.getVal() : null );
 
-		super.visitTableRow(row, tableContainer);
+        StringBuilder htmlStyle =
+            XHTMLStyleUtil.getStyle( run, runStyle, super.getXWPFStyle( run.getParagraph().getStyle() ), defaults );
+        List<CTBr> brs = run.getCTR().getBrList();
+        for ( @SuppressWarnings( "unused" )
+        CTBr br : brs )
+        {
+            paragraphContainer.startEndElement( BR_ELEMENT );
+        }
 
-		tableContainer.endElement(TR_ELEMENT);
-	}
+        List<CTText> texts = run.getCTR().getTList();
+        for ( CTText ctText : texts )
+        {
+            paragraphContainer.startElementNotEnclosed( SPAN_ELEMENT );
+            setAttributStyleIfNeeded( paragraphContainer, htmlStyle );
+            paragraphContainer.endElementNotEnclosed();
+            // Set the text by escaping it with HTML.
+            paragraphContainer.setText( StringEscapeUtils.escapeHtml( ctText.getStringValue() ) );
+            paragraphContainer.endElement( SPAN_ELEMENT );
+        }
 
-	@Override
-	protected XHTMLPageContentBuffer startVisitTableCell(
-			XWPFTableCell tableCell, XHTMLPageContentBuffer tableContainer) {
-		tableContainer.startElementNotEnclosed(TD_ELEMENT);
+        super.visitPictures( run, paragraphContainer );
+    }
 
-		CTTcPr tcPr = tableCell.getCTTc().getTcPr();
+    @Override
+    protected XHTMLPageContentBuffer startVisitTable( XWPFTable table, XHTMLPageContentBuffer tableContainer )
+        throws Exception
+    {
+        tableContainer.startElementNotEnclosed( TABLE_ELEMENT );
 
-		// Colspan
-		Integer colspan = null;
-		CTDecimalNumber gridSpan = tcPr.getGridSpan();
-		if (gridSpan != null) {
-			colspan = gridSpan.getVal().intValue();
-		}
-		if (colspan != null) {
-			tableContainer.setAttribute(COLSPAN_ATTR, colspan);
-		}
-		// HTML style
-		StringBuilder htmlStyle = XHTMLStyleUtil.getStyle(tableCell, defaults);
-		setAttributStyleIfNeeded(tableContainer, htmlStyle);
+        // XWPFStyle tableStyle = super.getStyle(table.getStyleID());
+        // HTML style
+        // StringBuilder htmlStyle = XHTMLStyleUtil.getStyle(table, tableStyle, defaults);
+        // setAttributStyleIfNeeded(xhtml.getPageBodyContentBody(), htmlStyle);
 
-		tableContainer.endElementNotEnclosed();
-		return tableContainer;
-	}
+        tableContainer.endElementNotEnclosed();
+        return tableContainer;
+    }
 
-	@Override
-	protected void endVisitTableCell(XWPFTableCell cell,
-			XHTMLPageContentBuffer tableContainer,
-			XHTMLPageContentBuffer tableCellContainer) {
-		tableContainer.endElement(TD_ELEMENT);
-	}
+    @Override
+    protected void visitTableRow( XWPFTableRow row, XHTMLPageContentBuffer tableContainer )
+        throws Exception
+    {
+        tableContainer.startElementNotEnclosed( TR_ELEMENT );
+        tableContainer.endElementNotEnclosed();
 
-	@Override
-	protected void endVisitTable(XWPFTable table,
-			XHTMLPageContentBuffer parentContainer,
-			XHTMLPageContentBuffer tableContainer) throws Exception {
-		tableContainer.endElement(TABLE_ELEMENT);
-	}
+        super.visitTableRow( row, tableContainer );
 
-	@Override
-	protected void visitPicture(XWPFPicture picture,
-			XHTMLPageContentBuffer parentContainer) throws Exception {
-		parentContainer.startElementNotEnclosed(IMG_ELEMENT);
+        tableContainer.endElement( TR_ELEMENT );
+    }
 
-		CTPicture ctPic = picture.getCTPicture();
-		String blipId = ctPic.getBlipFill().getBlip().getEmbed();
-		// Src attribute
-		XWPFPictureData pictureData = XWPFPictureUtil.getPictureData(document,
-				blipId);
-		if (pictureData != null) {
-			String src = pictureData.getFileName();
-			if (StringUtils.isNotEmpty(src)) {
-				src = resolver.resolve(WORD_MEDIA + src);
-				parentContainer.setAttribute(SRC_ATTR, src);
-			}
-		}
+    @Override
+    protected XHTMLPageContentBuffer startVisitTableCell( XWPFTableCell tableCell, XHTMLPageContentBuffer tableContainer )
+    {
+        tableContainer.startElementNotEnclosed( TD_ELEMENT );
 
-		StringBuilder htmlStyle = XHTMLStyleUtil.getStyle(picture);
-		setAttributStyleIfNeeded(parentContainer, htmlStyle);
-		parentContainer.endElementNotEnclosed();
-		parentContainer.endElement(IMG_ELEMENT);
+        CTTcPr tcPr = tableCell.getCTTc().getTcPr();
 
-	}
+        // Colspan
+        Integer colspan = null;
+        CTDecimalNumber gridSpan = tcPr.getGridSpan();
+        if ( gridSpan != null )
+        {
+            colspan = gridSpan.getVal().intValue();
+        }
+        if ( colspan != null )
+        {
+            tableContainer.setAttribute( COLSPAN_ATTR, colspan );
+        }
+        // HTML style
+        StringBuilder htmlStyle = XHTMLStyleUtil.getStyle( tableCell, defaults );
+        setAttributStyleIfNeeded( tableContainer, htmlStyle );
 
-	private void setAttributStyleIfNeeded(XHTMLPageContentBuffer buffer,
-			StringBuilder htmlStyle) {
-		if (htmlStyle.length() > 0) {
-			buffer.setAttribute(STYLE_ATTR, htmlStyle.toString());
-		}
-	}
-	
-	@Override
-	protected void visitHeader(CTHdrFtrRef headerRef) throws Exception {
-		// TODO Auto-generated method stub		
-	}
-	
-	@Override
-	protected void visitFooter(CTHdrFtrRef footerRef) throws Exception {
-		// TODO Auto-generated method stub
-	}
+        tableContainer.endElementNotEnclosed();
+        return tableContainer;
+    }
+
+    @Override
+    protected void endVisitTableCell( XWPFTableCell cell, XHTMLPageContentBuffer tableContainer,
+                                      XHTMLPageContentBuffer tableCellContainer )
+    {
+        tableContainer.endElement( TD_ELEMENT );
+    }
+
+    @Override
+    protected void endVisitTable( XWPFTable table, XHTMLPageContentBuffer parentContainer,
+                                  XHTMLPageContentBuffer tableContainer )
+        throws Exception
+    {
+        tableContainer.endElement( TABLE_ELEMENT );
+    }
+
+    @Override
+    protected void visitPicture( XWPFPicture picture, XHTMLPageContentBuffer parentContainer )
+        throws Exception
+    {
+        parentContainer.startElementNotEnclosed( IMG_ELEMENT );
+
+        CTPicture ctPic = picture.getCTPicture();
+        String blipId = ctPic.getBlipFill().getBlip().getEmbed();
+        // Src attribute
+        XWPFPictureData pictureData = XWPFPictureUtil.getPictureData( document, blipId );
+        if ( pictureData != null )
+        {
+            String src = pictureData.getFileName();
+            if ( StringUtils.isNotEmpty( src ) )
+            {
+                src = resolver.resolve( WORD_MEDIA + src );
+                parentContainer.setAttribute( SRC_ATTR, src );
+            }
+        }
+
+        StringBuilder htmlStyle = XHTMLStyleUtil.getStyle( picture );
+        setAttributStyleIfNeeded( parentContainer, htmlStyle );
+        parentContainer.endElementNotEnclosed();
+        parentContainer.endElement( IMG_ELEMENT );
+
+    }
+
+    private void setAttributStyleIfNeeded( XHTMLPageContentBuffer buffer, StringBuilder htmlStyle )
+    {
+        if ( htmlStyle.length() > 0 )
+        {
+            buffer.setAttribute( STYLE_ATTR, htmlStyle.toString() );
+        }
+    }
+
+    @Override
+    protected void visitHeader( CTHdrFtrRef headerRef )
+        throws Exception
+    {
+        // TODO Auto-generated method stub
+    }
+
+    @Override
+    protected void visitFooter( CTHdrFtrRef footerRef )
+        throws Exception
+    {
+        // TODO Auto-generated method stub
+    }
 }

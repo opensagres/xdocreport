@@ -46,65 +46,65 @@ import org.osgi.framework.BundleContext;
 import fr.opensagres.xdocreport.template.ITemplateEngine;
 import fr.opensagres.xdocreport.template.registry.TemplateEngineRegistry;
 
-@RunWith(JUnit4TestRunner.class)
-public class TemplateTest {
+@RunWith( JUnit4TestRunner.class )
+public class TemplateTest
+{
 
-	@Inject
-	BundleContext bundleContext = null;
+    @Inject
+    BundleContext bundleContext = null;
 
-	@Configuration
-	public static Option[] configure() {
+    @Configuration
+    public static Option[] configure()
+    {
 
+        return options(
 
-		return options(
+                        //
+                        // PaxRunnerOptions.vmOption("-Xrunjdwp:transport=dt_socket,server=y,suspend=y,address=5006"),
+                        // equinox(),
 
-				//
-				// PaxRunnerOptions.vmOption("-Xrunjdwp:transport=dt_socket,server=y,suspend=y,address=5006"),
-				// equinox(),
+                        // logProfile(),
+                        // this is how you set the default log level when using pax
+                        // logging (logProfile)
+                        systemProperty( "org.ops4j.pax.logging.DefaultServiceLog.level" ).value( "WARN" ),
+                        mavenBundle( "fr.opensagres.xdocreport", "fr.opensagres.xdocreport.core" ).versionAsInProject(),
+                        // template API
+                        mavenBundle( "fr.opensagres.xdocreport", "fr.opensagres.xdocreport.template" ).versionAsInProject(),
 
-				// logProfile(),
-				// this is how you set the default log level when using pax
-				// logging (logProfile)
-				systemProperty("org.ops4j.pax.logging.DefaultServiceLog.level")
-						.value("WARN"),
-				mavenBundle("fr.opensagres.xdocreport","fr.opensagres.xdocreport.core").versionAsInProject(),
-				// template API
-				mavenBundle("fr.opensagres.xdocreport","fr.opensagres.xdocreport.template").versionAsInProject(),
+                        // template fragments
+                        mavenBundle( "fr.opensagres.xdocreport", "fr.opensagres.xdocreport.template.freemarker" ).versionAsInProject().noStart(),
+                        mavenBundle( "fr.opensagres.xdocreport", "fr.opensagres.xdocreport.template.velocity" ).versionAsInProject().noStart(),
+                        wrappedBundle( mavenBundle( "org.freemarker", "freemarker", "2.3.16" ) ),
+                        mavenBundle( "commons-collections", "commons-collections", "3.2.1" ),
+                        mavenBundle( "commons-lang", "commons-lang", "2.4" ),
+                        mavenBundle( "org.apache.velocity", "velocity", "1.7" ),
+                        wrappedBundle( mavenBundle( "oro", "oro", "2.0.8" ) ), new Customizer()
+                        {
 
-				// template fragments
-				mavenBundle("fr.opensagres.xdocreport","fr.opensagres.xdocreport.template.freemarker").versionAsInProject().noStart(),
-				mavenBundle("fr.opensagres.xdocreport","fr.opensagres.xdocreport.template.velocity").versionAsInProject().noStart(),
-				wrappedBundle(mavenBundle("org.freemarker","freemarker","2.3.16")),
-				mavenBundle("commons-collections","commons-collections","3.2.1"),
-				mavenBundle("commons-lang","commons-lang","2.4"),
-				mavenBundle("org.apache.velocity","velocity","1.7"),
-				wrappedBundle(mavenBundle("oro","oro","2.0.8")),		
-				new Customizer() {
+                            @Override
+                            public void customizeEnvironment( File workingFolder )
+                            {
 
-					@Override
-					public void customizeEnvironment(File workingFolder) {
+                                System.out.println( "Hello World: " + workingFolder.getAbsolutePath() );
+                            }
+                        } );
+    }
 
-						System.out.println("Hello World: "
-								+ workingFolder.getAbsolutePath());
-					}
-				});
-	}
+    @Test
+    public void templateEngineRegistry()
+        throws Exception
+    {
+        // FIXME PLQ
+        // // Test if converter is not null
+        Collection<ITemplateEngine> templateEngines = TemplateEngineRegistry.getRegistry().getTemplateEngines();
 
-	@Test
-	public void templateEngineRegistry() throws Exception {
-		// FIXME PLQ
-		// // Test if converter is not null
-		Collection<ITemplateEngine> templateEngines = TemplateEngineRegistry
-				.getRegistry().getTemplateEngines();
+        assertNotNull( templateEngines );
+        assertEquals( 2, templateEngines.size() );
 
-		assertNotNull(templateEngines);
-		assertEquals(2, templateEngines.size());
+        Collection<String> kinds = TemplateEngineRegistry.getRegistry().getTemplateEngineKinds();
+        assertNotNull( kinds );
+        assertEquals( 2, kinds.size() );
 
-		Collection<String> kinds = TemplateEngineRegistry.getRegistry()
-				.getTemplateEngineKinds();
-		assertNotNull(kinds);
-		assertEquals(2, kinds.size());
-
-	}
+    }
 
 }

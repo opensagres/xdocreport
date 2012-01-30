@@ -31,46 +31,58 @@ import com.lowagie.text.Element;
 
 import fr.opensagres.xdocreport.itext.extension.ExtendedPdfPTable;
 
-public class StylableTable extends ExtendedPdfPTable implements IStylableContainer {
+public class StylableTable
+    extends ExtendedPdfPTable
+    implements IStylableContainer
+{
 
-	private static final long serialVersionUID = 664309269352903329L;
+    private static final long serialVersionUID = 664309269352903329L;
 
-	private final StylableDocument ownerDocument;
-	private IStylableContainer parent;
-	private Style lastStyleApplied = null;
+    private final StylableDocument ownerDocument;
 
-	public StylableTable(StylableDocument ownerDocument,
-			IStylableContainer parent, int numColumns) {
-		super(numColumns);
-		this.ownerDocument = ownerDocument;
-		this.parent = parent;
-	}
+    private IStylableContainer parent;
 
-	public void applyStyles(Style style) {
-		this.lastStyleApplied = style;
+    private Style lastStyleApplied = null;
 
-		StyleTableProperties tableProperties = style.getTableProperties();
-		if (tableProperties != null) {
-			if (tableProperties.getWidth() != null) {
-				super.setTotalWidth(tableProperties.getWidth());
-				super.setLockedWidth(true);
-			}
-		}
-	}
+    public StylableTable( StylableDocument ownerDocument, IStylableContainer parent, int numColumns )
+    {
+        super( numColumns );
+        this.ownerDocument = ownerDocument;
+        this.parent = parent;
+    }
 
-	public Style getLastStyleApplied() {
-		return lastStyleApplied;
-	}
+    public void applyStyles( Style style )
+    {
+        this.lastStyleApplied = style;
 
-	public IStylableContainer getParent() {
-		return parent;
-	}
+        StyleTableProperties tableProperties = style.getTableProperties();
+        if ( tableProperties != null )
+        {
+            if ( tableProperties.getWidth() != null )
+            {
+                super.setTotalWidth( tableProperties.getWidth() );
+                super.setLockedWidth( true );
+            }
+        }
+    }
 
-	public StylableDocument getOwnerDocument() {
-		return ownerDocument;
-	}
+    public Style getLastStyleApplied()
+    {
+        return lastStyleApplied;
+    }
 
-	public Element getElement() {
-		return this;
-	}
+    public IStylableContainer getParent()
+    {
+        return parent;
+    }
+
+    public StylableDocument getOwnerDocument()
+    {
+        return ownerDocument;
+    }
+
+    public Element getElement()
+    {
+        return this;
+    }
 }

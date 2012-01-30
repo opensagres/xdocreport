@@ -29,81 +29,80 @@ import java.util.List;
 
 /**
  * Registry which stores each Hyperlink of the final generated report.
- * 
  */
-public class HyperlinkRegistry {
+public class HyperlinkRegistry
+{
 
-	public static final String KEY = "___HyperlinkRegistry";
+    public static final String KEY = "___HyperlinkRegistry";
 
-	private List<HyperlinkInfo> hyperlinks;
+    private List<HyperlinkInfo> hyperlinks;
 
-	/**
-	 * Register in the registry the given Hyperlink and returns the computed if
-	 * of the hyperlink.
-	 * 
-	 * <p>
-	 * This method is called at first by the entry "document.xml" which defines
-	 * hyperlink (after preprocessing) like this :
-	 * 
-	 * <pre>
-	 *     <w:hyperlink w:history="1" r:id="${___HyperlinkRegistry.registerHyperlink("rId5","mailto:${d.mail}","External")}">
-	 * </pre>
-	 * 
-	 * To generate for instance
-	 * 
-	 * <pre>
-	 *     <w:hyperlink w:history="1" r:id="___rId0">
-	 * </pre>
-	 * 
-	 * </p>
-	 * 
-	 * <p>
-	 * The registry stores each hyperlink which are used in the second XML entry
-	 * "word/_rels/document.xml.rels" :
-	 * 
-	 * <pre>
-	 * 	  [#if ___HyperlinkRegistry??]
-	 *    [#list ___HyperlinkRegistry.hyperlinks as ___info]
-	 *    <Relationship Id="${___info.id}" 
-	 *    				Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/hyperlink" 
-	 *    				Target="${___info.target}" 
-	 *    				TargetMode="${___info.targetMode}" />
-	 *    [/#list]
-	 *    [/#if]
-	 * </pre>
-	 * 
-	 * To generate for instance
-	 * 
-	 * <pre>
-	 *     <Relationship Id="___rId0" 
-	 *    				Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/hyperlink" 
-	 *    				Target="mailto:angelo.zerr@gmail.com" 
-	 *    				TargetMode="External" />
-	 * </pre>
-	 * 
-	 * </p>
-	 * 
-	 * @param id
-	 * @param target
-	 * @param targetMode
-	 * @return
-	 */
-	public String registerHyperlink(String id, String target, String targetMode) {
-		if (hyperlinks == null) {
-			hyperlinks = new ArrayList<HyperlinkInfo>();
-		}
-		id = "___rId" + hyperlinks.size();
-		hyperlinks.add(new HyperlinkInfo(id, target, targetMode));
-		return id;
-	}
+    /**
+     * Register in the registry the given Hyperlink and returns the computed if of the hyperlink.
+     * <p>
+     * This method is called at first by the entry "document.xml" which defines hyperlink (after preprocessing) like
+     * this :
+     * 
+     * <pre>
+     *     <w:hyperlink w:history="1" r:id="${___HyperlinkRegistry.registerHyperlink("rId5","mailto:${d.mail}","External")}">
+     * </pre>
+     * 
+     * To generate for instance
+     * 
+     * <pre>
+     *     <w:hyperlink w:history="1" r:id="___rId0">
+     * </pre>
+     * 
+     * </p>
+     * <p>
+     * The registry stores each hyperlink which are used in the second XML entry "word/_rels/document.xml.rels" :
+     * 
+     * <pre>
+     * 	  [#if ___HyperlinkRegistry??]
+     *    [#list ___HyperlinkRegistry.hyperlinks as ___info]
+     *    <Relationship Id="${___info.id}" 
+     *    				Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/hyperlink" 
+     *    				Target="${___info.target}" 
+     *    				TargetMode="${___info.targetMode}" />
+     *    [/#list]
+     *    [/#if]
+     * </pre>
+     * 
+     * To generate for instance
+     * 
+     * <pre>
+     *     <Relationship Id="___rId0" 
+     *    				Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/hyperlink" 
+     *    				Target="mailto:angelo.zerr@gmail.com" 
+     *    				TargetMode="External" />
+     * </pre>
+     * 
+     * </p>
+     * 
+     * @param id
+     * @param target
+     * @param targetMode
+     * @return
+     */
+    public String registerHyperlink( String id, String target, String targetMode )
+    {
+        if ( hyperlinks == null )
+        {
+            hyperlinks = new ArrayList<HyperlinkInfo>();
+        }
+        id = "___rId" + hyperlinks.size();
+        hyperlinks.add( new HyperlinkInfo( id, target, targetMode ) );
+        return id;
+    }
 
-	/**
-	 * Returns list of Hyperlink.
-	 * 
-	 * @return
-	 */
-	public List<HyperlinkInfo> getHyperlinks() {
-		return hyperlinks;
-	}
+    /**
+     * Returns list of Hyperlink.
+     * 
+     * @return
+     */
+    public List<HyperlinkInfo> getHyperlinks()
+    {
+        return hyperlinks;
+    }
 
 }

@@ -90,474 +90,543 @@ import fr.opensagres.xdocreport.utils.StringUtils;
 /**
  * fixes for pdf conversion by Leszek Piotrowicz <leszekp@safe-mail.net>
  */
-public class ElementVisitorForIText extends ElementVisitorConverter {
+public class ElementVisitorForIText
+    extends ElementVisitorConverter
+{
 
-	private final StyleEngineForIText styleEngine;
-	private final PDFViaITextOptions options;
-	private IStylableContainer currentContainer;
+    private final StyleEngineForIText styleEngine;
 
-	private StylableMasterPage currentMasterPage;
-	private StylableDocument document;
-	private StylableMasterPage defaultMasterPage;
-	private boolean parseOfficeTextElement = false;
-	private Style currentRowStyle;
+    private final PDFViaITextOptions options;
 
-	public ElementVisitorForIText(OdfDocument odfDocument, OutputStream out,
-			Writer writer, StyleEngineForIText styleEngine,
-			PDFViaITextOptions options) {
-		super(odfDocument, out, writer);
-		this.styleEngine = styleEngine;
-		this.options = options != null ? options : PDFViaITextOptions.create();
-		// Create document
-		try {
-			document = new StylableDocument(out, styleEngine);
-		} catch (DocumentException e) {
-			throw new ODFConverterException(e);
-		}
-	}
+    private IStylableContainer currentContainer;
 
-	// ---------------------- visit root
-	// styles.xml//office:document-styles/office:master-styles/style:master-page
+    private StylableMasterPage currentMasterPage;
 
-	/**
-	 * Generate XHTML page footer + header
-	 */
-	@Override
-	public void visit(StyleMasterPageElement ele) {
-		String name = ele.getStyleNameAttribute();
-		String pageLayoutName = ele.getStylePageLayoutNameAttribute();
-		currentMasterPage = new StylableMasterPage(name, pageLayoutName);
-		if (defaultMasterPage == null) {
-			defaultMasterPage = currentMasterPage;
-		}
-		document.addMasterPage(currentMasterPage);
-		super.visit(ele);
-		currentMasterPage = null;
-	}
+    private StylableDocument document;
 
-	// ---------------------- visit
-	// styles.xml//office:document-styles/office:master-styles/style:master-page/style-header
+    private StylableMasterPage defaultMasterPage;
 
-	@Override
-	public void visit(StyleHeaderElement ele) {
-		StylableHeaderFooter header = new StylableHeaderFooter(document, true);
-		Style style = document.getStyleMasterPage(currentMasterPage);
-		if (style != null) {
-			header.applyStyles(style);
-		}
-		currentMasterPage.setHeader(header);
-		StylableTableCell tableCell = header.getTableCell();
-		currentContainer = tableCell;
-		super.visit(ele);
-		header.flush();
-		currentContainer = null;
-	}
+    private boolean parseOfficeTextElement = false;
 
-	@Override
-	public void visit(StyleHeaderLeftElement ele) {
-		// TODO : implement it.
-	}
+    private Style currentRowStyle;
 
-	// ---------------------- visit
-	// styles.xml//office:document-styles/office:master-styles/style:master-page/style-footer
+    public ElementVisitorForIText( OdfDocument odfDocument, OutputStream out, Writer writer,
+                                   StyleEngineForIText styleEngine, PDFViaITextOptions options )
+    {
+        super( odfDocument, out, writer );
+        this.styleEngine = styleEngine;
+        this.options = options != null ? options : PDFViaITextOptions.create();
+        // Create document
+        try
+        {
+            document = new StylableDocument( out, styleEngine );
+        }
+        catch ( DocumentException e )
+        {
+            throw new ODFConverterException( e );
+        }
+    }
 
-	@Override
-	public void visit(StyleFooterElement ele) {
-		StylableHeaderFooter footer = new StylableHeaderFooter(document, false);
-		Style style = document.getStyleMasterPage(currentMasterPage);
-		if (style != null) {
-			footer.applyStyles(style);
-		}
-		currentMasterPage.setFooter(footer);
-		StylableTableCell tableCell = footer.getTableCell();
-		currentContainer = tableCell;
-		super.visit(ele);
-		footer.flush();
-		currentContainer = null;
+    // ---------------------- visit root
+    // styles.xml//office:document-styles/office:master-styles/style:master-page
 
-	}
+    /**
+     * Generate XHTML page footer + header
+     */
+    @Override
+    public void visit( StyleMasterPageElement ele )
+    {
+        String name = ele.getStyleNameAttribute();
+        String pageLayoutName = ele.getStylePageLayoutNameAttribute();
+        currentMasterPage = new StylableMasterPage( name, pageLayoutName );
+        if ( defaultMasterPage == null )
+        {
+            defaultMasterPage = currentMasterPage;
+        }
+        document.addMasterPage( currentMasterPage );
+        super.visit( ele );
+        currentMasterPage = null;
+    }
 
-	@Override
-	public void visit(StyleFooterLeftElement ele) {
-		// TODO : implement it.
-	}
+    // ---------------------- visit
+    // styles.xml//office:document-styles/office:master-styles/style:master-page/style-header
 
-	// ---------------------- visit root //office-body/office-text
+    @Override
+    public void visit( StyleHeaderElement ele )
+    {
+        StylableHeaderFooter header = new StylableHeaderFooter( document, true );
+        Style style = document.getStyleMasterPage( currentMasterPage );
+        if ( style != null )
+        {
+            header.applyStyles( style );
+        }
+        currentMasterPage.setHeader( header );
+        StylableTableCell tableCell = header.getTableCell();
+        currentContainer = tableCell;
+        super.visit( ele );
+        header.flush();
+        currentContainer = null;
+    }
 
-	@Override
-	public void visit(OfficeTextElement ele) {
-		this.parseOfficeTextElement = true;
-		currentContainer = document;
-		super.visit(ele);
-		addCurrentChapterIfNeeded();
-		this.parseOfficeTextElement = false;
-	}
+    @Override
+    public void visit( StyleHeaderLeftElement ele )
+    {
+        // TODO : implement it.
+    }
 
-	// ---------------------- visit //text:h
+    // ---------------------- visit
+    // styles.xml//office:document-styles/office:master-styles/style:master-page/style-footer
 
-	@Override
-	public void visit(TextHElement ele) {
-		int level = ele.getTextOutlineLevelAttribute() != null ? ele
-				.getTextOutlineLevelAttribute() : 1;
+    @Override
+    public void visit( StyleFooterElement ele )
+    {
+        StylableHeaderFooter footer = new StylableHeaderFooter( document, false );
+        Style style = document.getStyleMasterPage( currentMasterPage );
+        if ( style != null )
+        {
+            footer.applyStyles( style );
+        }
+        currentMasterPage.setFooter( footer );
+        StylableTableCell tableCell = footer.getTableCell();
+        currentContainer = tableCell;
+        super.visit( ele );
+        footer.flush();
+        currentContainer = null;
 
-		// 1) Create title of the chapter
-		StylableParagraph title = document
-				.createParagraph((IStylableContainer) null);
-		// apply style for the title font, color, bold style...
-		applyStyles(ele, title);
-		// loop for Text node to add text in the title without add the paragraph
-		// to the current container.
-		addITextContainer(ele, title, false);
+    }
 
-		// 2) Create a chapter or section according level title
-		if (level == 1) {
-			// It's text:h with level one, create a chapter
+    @Override
+    public void visit( StyleFooterLeftElement ele )
+    {
+        // TODO : implement it.
+    }
 
-			// Create chapter without adding it to the current container.
-			// Chapter must be added to the container AFTER it is filled.
-			currentContainer = addCurrentChapterIfNeeded();
-			StylableChapter chapter = document.createChapter(currentContainer,
-					title);
-			// apply style for the chapter title border, background color...
-			applyStyles(ele, chapter);
-			// Current container is chapter
-			currentContainer = chapter;
-		} else {
-			// It's text:h with another level, create a section and add it to
-			// the current chapter
-			StylableChapter currentChapter = document.getCurrentChapter();
+    // ---------------------- visit root //office-body/office-text
 
-			// Current container is section
-			StylableSection section = (StylableSection) currentChapter
-					.addSection(title);
-			// apply style for the section title border, background color...
-			applyStyles(ele, section);
-			currentContainer = section;
+    @Override
+    public void visit( OfficeTextElement ele )
+    {
+        this.parseOfficeTextElement = true;
+        currentContainer = document;
+        super.visit( ele );
+        addCurrentChapterIfNeeded();
+        this.parseOfficeTextElement = false;
+    }
 
-		}
-	}
+    // ---------------------- visit //text:h
 
-	/**
-	 * This method add the current chapter to the parent container of teh
-	 * chapter if current container is chapter.
-	 * 
-	 * @return parent container of the current chapter otherwise returns current
-	 *         container.
-	 */
-	private IStylableContainer addCurrentChapterIfNeeded() {
-		StylableChapter currentChapter = document.getCurrentChapter();
-		if (currentChapter != null) {
-			IStylableContainer parentContainer = currentChapter.getParent();
-			parentContainer.addElement(currentChapter);
-			return parentContainer;
-		}
-		return currentContainer;
-	}
+    @Override
+    public void visit( TextHElement ele )
+    {
+        int level = ele.getTextOutlineLevelAttribute() != null ? ele.getTextOutlineLevelAttribute() : 1;
 
-	// ---------------------- visit //text:p
+        // 1) Create title of the chapter
+        StylableParagraph title = document.createParagraph( (IStylableContainer) null );
+        // apply style for the title font, color, bold style...
+        applyStyles( ele, title );
+        // loop for Text node to add text in the title without add the paragraph
+        // to the current container.
+        addITextContainer( ele, title, false );
 
-	@Override
-	public void visit(TextPElement ele) {
-		StylableParagraph paragraph = document
-				.createParagraph(currentContainer);
-		applyStyles(ele, paragraph);
-		if (ele.getFirstChild() == null) {
-			// no content in the paragraph
-			// ex : <text:p text:style-name="Standard"></text:p>
-			// add blank Chunk
-			paragraph.add(Chunk.NEWLINE);
-		}
-		addITextContainer(ele, paragraph);
+        // 2) Create a chapter or section according level title
+        if ( level == 1 )
+        {
+            // It's text:h with level one, create a chapter
 
-	}
+            // Create chapter without adding it to the current container.
+            // Chapter must be added to the container AFTER it is filled.
+            currentContainer = addCurrentChapterIfNeeded();
+            StylableChapter chapter = document.createChapter( currentContainer, title );
+            // apply style for the chapter title border, background color...
+            applyStyles( ele, chapter );
+            // Current container is chapter
+            currentContainer = chapter;
+        }
+        else
+        {
+            // It's text:h with another level, create a section and add it to
+            // the current chapter
+            StylableChapter currentChapter = document.getCurrentChapter();
 
-	// ---------------------- visit //text:tab
+            // Current container is section
+            StylableSection section = (StylableSection) currentChapter.addSection( title );
+            // apply style for the section title border, background color...
+            applyStyles( ele, section );
+            currentContainer = section;
 
-	@Override
-	public void visit(TextTabElement ele) {
-		// ele.getParentNode();
-		// System.err.println(ele);
-	}
+        }
+    }
 
-	// ---------------------- visit //text:span
+    /**
+     * This method add the current chapter to the parent container of teh chapter if current container is chapter.
+     * 
+     * @return parent container of the current chapter otherwise returns current container.
+     */
+    private IStylableContainer addCurrentChapterIfNeeded()
+    {
+        StylableChapter currentChapter = document.getCurrentChapter();
+        if ( currentChapter != null )
+        {
+            IStylableContainer parentContainer = currentChapter.getParent();
+            parentContainer.addElement( currentChapter );
+            return parentContainer;
+        }
+        return currentContainer;
+    }
 
-	@Override
-	public void visit(TextSpanElement ele) {
-		StylablePhrase phrase = document.createPhrase(currentContainer);
-		applyStyles(ele, phrase);
-		addITextContainer(ele, phrase);
-	}
+    // ---------------------- visit //text:p
 
-	// ---------------------- visit //text:a
+    @Override
+    public void visit( TextPElement ele )
+    {
+        StylableParagraph paragraph = document.createParagraph( currentContainer );
+        applyStyles( ele, paragraph );
+        if ( ele.getFirstChild() == null )
+        {
+            // no content in the paragraph
+            // ex : <text:p text:style-name="Standard"></text:p>
+            // add blank Chunk
+            paragraph.add( Chunk.NEWLINE );
+        }
+        addITextContainer( ele, paragraph );
 
-	@Override
-	public void visit(TextAElement ele) {
-		StylableAnchor anchor = document.createAnchor(currentContainer);
-		String reference = ele.getXlinkHrefAttribute();
-		applyStyles(ele, anchor);
+    }
 
-		if (anchor.getFont().getColor() == null) {
-			// if no color was applied to the link
-			// get the font of the paragraph and set blue color.
-			Font linkFont = anchor.getFont();
-			Style style = currentContainer.getLastStyleApplied();
-			if (style != null) {
-				StyleTextProperties textProperties = style.getTextProperties();
-				if (textProperties != null) {
-					Font font = textProperties.getFont();
-					if (font != null) {
-						linkFont = new Font(font);
-						anchor.setFont(linkFont);
-					}
-				}
-			}
-			// Color blueColor =
-			// ColorRegistryForIText.getInstance().getColor("#0000CC");
-			linkFont.setColor(Color.BLUE);
-		}
+    // ---------------------- visit //text:tab
 
-		// TODO ; manage internal link
-		// set the link
-		anchor.setReference(reference);
-		// Add to current container.
-		addITextContainer(ele, anchor);
-	}
+    @Override
+    public void visit( TextTabElement ele )
+    {
+        // ele.getParentNode();
+        // System.err.println(ele);
+    }
 
-	// ---------------------- visit table:table (ex : <table:table
-	// table:name="Tableau1" table:style-name="Tableau1">)
+    // ---------------------- visit //text:span
 
-	@Override
-	public void visit(TableTableElement ele) {
-		float[] columnWidth = ODFUtils.getColumnWidths(ele, odfDocument);
-		StylableTable table = document.createTable(currentContainer,
-				columnWidth.length);
-		try {
-			table.setTotalWidth(columnWidth);
-		} catch (DocumentException e) {
-			// Do nothing
-		}
-		applyStyles(ele, table);
-		addITextContainer(ele, table);
-	}
+    @Override
+    public void visit( TextSpanElement ele )
+    {
+        StylablePhrase phrase = document.createPhrase( currentContainer );
+        applyStyles( ele, phrase );
+        addITextContainer( ele, phrase );
+    }
 
-	// ---------------------- visit table:table-row
+    // ---------------------- visit //text:a
 
-	@Override
-	public void visit(TableTableRowElement ele) {
-		currentRowStyle = getStyle(ele);
-		super.visit(ele);
-		currentRowStyle = null;
-	}
+    @Override
+    public void visit( TextAElement ele )
+    {
+        StylableAnchor anchor = document.createAnchor( currentContainer );
+        String reference = ele.getXlinkHrefAttribute();
+        applyStyles( ele, anchor );
 
-	// ---------------------- visit table:table-cell
+        if ( anchor.getFont().getColor() == null )
+        {
+            // if no color was applied to the link
+            // get the font of the paragraph and set blue color.
+            Font linkFont = anchor.getFont();
+            Style style = currentContainer.getLastStyleApplied();
+            if ( style != null )
+            {
+                StyleTextProperties textProperties = style.getTextProperties();
+                if ( textProperties != null )
+                {
+                    Font font = textProperties.getFont();
+                    if ( font != null )
+                    {
+                        linkFont = new Font( font );
+                        anchor.setFont( linkFont );
+                    }
+                }
+            }
+            // Color blueColor =
+            // ColorRegistryForIText.getInstance().getColor("#0000CC");
+            linkFont.setColor( Color.BLUE );
+        }
 
-	@Override
-	public void visit(TableTableCellElement ele) {
-		StylableTableCell tableCell = document
-				.createTableCell(currentContainer);
+        // TODO ; manage internal link
+        // set the link
+        anchor.setReference( reference );
+        // Add to current container.
+        addITextContainer( ele, anchor );
+    }
 
-		// table:number-columns-spanned
-		Integer colSpan = ele.getTableNumberColumnsSpannedAttribute();
-		if (colSpan != null) {
-			tableCell.setColspan(colSpan);
-		}
-		// table:number-rows-spanned
-		Integer rowSpan = ele.getTableNumberRowsSpannedAttribute();
-		if (rowSpan != null) {
-			tableCell.setRowspan(rowSpan);
+    // ---------------------- visit table:table (ex : <table:table
+    // table:name="Tableau1" table:style-name="Tableau1">)
 
-		}
-		// Apply styles coming from table-row
-		if (currentRowStyle != null) {
-			tableCell.applyStyles(currentRowStyle);
-		}
-		// Apply styles coming from table-cell
-		applyStyles(ele, tableCell);
-		addITextContainer(ele, tableCell);
-	}
+    @Override
+    public void visit( TableTableElement ele )
+    {
+        float[] columnWidth = ODFUtils.getColumnWidths( ele, odfDocument );
+        StylableTable table = document.createTable( currentContainer, columnWidth.length );
+        try
+        {
+            table.setTotalWidth( columnWidth );
+        }
+        catch ( DocumentException e )
+        {
+            // Do nothing
+        }
+        applyStyles( ele, table );
+        addITextContainer( ele, table );
+    }
 
-	// ---------------------- visit text:list
+    // ---------------------- visit table:table-row
 
-	@Override
-	public void visit(TextListElement ele) {
-		// int level = 1;
-		StylableList list = document.createList(currentContainer);
-		// applyStyles(ele, list);
-		addITextContainer(ele, list);
-	}
+    @Override
+    public void visit( TableTableRowElement ele )
+    {
+        currentRowStyle = getStyle( ele );
+        super.visit( ele );
+        currentRowStyle = null;
+    }
 
-	// ---------------------- visit text:listitem
+    // ---------------------- visit table:table-cell
 
-	@Override
-	public void visit(TextListItemElement ele) {
-		// int level = 1;
-		StylableListItem listItem = document.createListItem(currentContainer);
-		// applyStyles(ele, list);
-		addITextContainer(ele, listItem);
+    @Override
+    public void visit( TableTableCellElement ele )
+    {
+        StylableTableCell tableCell = document.createTableCell( currentContainer );
 
-	}
+        // table:number-columns-spanned
+        Integer colSpan = ele.getTableNumberColumnsSpannedAttribute();
+        if ( colSpan != null )
+        {
+            tableCell.setColspan( colSpan );
+        }
+        // table:number-rows-spanned
+        Integer rowSpan = ele.getTableNumberRowsSpannedAttribute();
+        if ( rowSpan != null )
+        {
+            tableCell.setRowspan( rowSpan );
 
-	// ---------------------- visit draw:image
+        }
+        // Apply styles coming from table-row
+        if ( currentRowStyle != null )
+        {
+            tableCell.applyStyles( currentRowStyle );
+        }
+        // Apply styles coming from table-cell
+        applyStyles( ele, tableCell );
+        addITextContainer( ele, tableCell );
+    }
 
-	@Override
-	public void visit(DrawImageElement ele) {
-		String href = ele.getXlinkHrefAttribute();
-		if (StringUtils.isNotEmpty(href)) {
-			byte[] imageStream = odfDocument.getPackage().getBytes(href);
-			if (imageStream != null) {
-				try {
-					Image image = Image.getInstance(imageStream);
-					if (image != null) {
-						String x = null;
-						String y = null;
-						String width = null;
-						String height = null;
-						// set width, height....image
-						Node parentNode = ele.getParentNode();
-						if (parentNode instanceof DrawFrameElement) {
-							DrawFrameElement frame = (DrawFrameElement) parentNode;
-							x = frame.getSvgXAttribute();
-							y = frame.getSvgYAttribute();
-							width = frame.getSvgWidthAttribute();
-							height = frame.getSvgHeightAttribute();
-						}
-						if (StringUtils.isNotEmpty(x)
-								&& StringUtils.isNotEmpty(y)) {
-							image.setAbsolutePosition(
-									ODFUtils.getDimensionAsPoint(x),
-									ODFUtils.getDimensionAsPoint(y));
-						}
-						if (StringUtils.isNotEmpty(width)) {
-							image.scaleAbsoluteWidth(ODFUtils
-									.getDimensionAsPoint(width));
-						}
-						if (StringUtils.isNotEmpty(height)) {
-							image.scaleAbsoluteHeight(ODFUtils
-									.getDimensionAsPoint(height));
-						}
-						IStylableContainer parent = currentContainer
-								.getParent();
-						if (parent instanceof PdfPCell) {
-							// When image is included into a Table Cell, we must
-							// use PdfPCell#setImage
-							// otherwise the image will not appear. Why???
-							((PdfPCell) parent).setImage(image);
-						} else {
-							currentContainer.addElement(image);
-						}
-					}
-				} catch (BadElementException e) {
-					// TODO : display log
-				} catch (MalformedURLException e) {
-					// TODO : display log
-				} catch (IOException e) {
-					// TODO : display log
-				}
-			}
-		}
-	}
+    // ---------------------- visit text:list
 
-	// ---------------------- visit //text:soft-page-break
+    @Override
+    public void visit( TextListElement ele )
+    {
+        // int level = 1;
+        StylableList list = document.createList( currentContainer );
+        // applyStyles(ele, list);
+        addITextContainer( ele, list );
+    }
 
-	@Override
-	public void visit(TextSoftPageBreakElement ele) {
-		if (options.isPreserveSoftPageBreaks()) {
-			document.newPage();
-		}
-	}
+    // ---------------------- visit text:listitem
 
-	// ---------------------- visit text:line-break
+    @Override
+    public void visit( TextListItemElement ele )
+    {
+        // int level = 1;
+        StylableListItem listItem = document.createListItem( currentContainer );
+        // applyStyles(ele, list);
+        addITextContainer( ele, listItem );
 
-	@Override
-	public void visit(TextLineBreakElement ele) {
-		currentContainer.addElement(Chunk.NEWLINE);
-	}
+    }
 
-	@Override
-	protected void processTextNode(Text node) {
-		createChunk(node);
-	}
+    // ---------------------- visit draw:image
 
-	private Chunk createChunk(Text node) {
-		String textContent = node.getTextContent();
-		StylableChunk chunk = document.createChunk(currentContainer,
-				textContent);
-		Style style = currentContainer.getLastStyleApplied();
-		if (style != null) {
-			chunk.applyStyles(style);
-		}
-		addITextElement(chunk);
-		return chunk;
-	}
+    @Override
+    public void visit( DrawImageElement ele )
+    {
+        String href = ele.getXlinkHrefAttribute();
+        if ( StringUtils.isNotEmpty( href ) )
+        {
+            byte[] imageStream = odfDocument.getPackage().getBytes( href );
+            if ( imageStream != null )
+            {
+                try
+                {
+                    Image image = Image.getInstance( imageStream );
+                    if ( image != null )
+                    {
+                        String x = null;
+                        String y = null;
+                        String width = null;
+                        String height = null;
+                        // set width, height....image
+                        Node parentNode = ele.getParentNode();
+                        if ( parentNode instanceof DrawFrameElement )
+                        {
+                            DrawFrameElement frame = (DrawFrameElement) parentNode;
+                            x = frame.getSvgXAttribute();
+                            y = frame.getSvgYAttribute();
+                            width = frame.getSvgWidthAttribute();
+                            height = frame.getSvgHeightAttribute();
+                        }
+                        if ( StringUtils.isNotEmpty( x ) && StringUtils.isNotEmpty( y ) )
+                        {
+                            image.setAbsolutePosition( ODFUtils.getDimensionAsPoint( x ),
+                                                       ODFUtils.getDimensionAsPoint( y ) );
+                        }
+                        if ( StringUtils.isNotEmpty( width ) )
+                        {
+                            image.scaleAbsoluteWidth( ODFUtils.getDimensionAsPoint( width ) );
+                        }
+                        if ( StringUtils.isNotEmpty( height ) )
+                        {
+                            image.scaleAbsoluteHeight( ODFUtils.getDimensionAsPoint( height ) );
+                        }
+                        IStylableContainer parent = currentContainer.getParent();
+                        if ( parent instanceof PdfPCell )
+                        {
+                            // When image is included into a Table Cell, we must
+                            // use PdfPCell#setImage
+                            // otherwise the image will not appear. Why???
+                            ( (PdfPCell) parent ).setImage( image );
+                        }
+                        else
+                        {
+                            currentContainer.addElement( image );
+                        }
+                    }
+                }
+                catch ( BadElementException e )
+                {
+                    // TODO : display log
+                }
+                catch ( MalformedURLException e )
+                {
+                    // TODO : display log
+                }
+                catch ( IOException e )
+                {
+                    // TODO : display log
+                }
+            }
+        }
+    }
 
-	@Override
-	public void save() throws IOException {
-		if (document != null) {
-			document.close();
-		}
-		super.save();
-	}
+    // ---------------------- visit //text:soft-page-break
 
-	private void addITextContainer(OdfElement ele,
-			IStylableContainer newContainer) {
-		addITextContainer(ele, newContainer, true);
-	}
+    @Override
+    public void visit( TextSoftPageBreakElement ele )
+    {
+        if ( options.isPreserveSoftPageBreaks() )
+        {
+            document.newPage();
+        }
+    }
 
-	private void addITextContainer(OdfElement ele,
-			IStylableContainer newContainer, boolean add) {
-		IStylableContainer oldContainer = currentContainer;
-		try {
-			currentContainer = newContainer;
-			super.visit(ele);
-			if (add) {
-				oldContainer.addElement(newContainer.getElement());
-			}
-		} finally {
-			currentContainer = oldContainer;
-		}
-	}
+    // ---------------------- visit text:line-break
 
-	private void addITextElement(Element element) {
-		currentContainer.addElement(element);
-	}
+    @Override
+    public void visit( TextLineBreakElement ele )
+    {
+        currentContainer.addElement( Chunk.NEWLINE );
+    }
 
-	private StylableMasterPage applyStyles(OdfStylableElement ele,
-			IStylableElement element) {
-		StylableMasterPage newMasterPage = null;
-		Style style = getStyle(ele);
-		if (style != null) {
-			if (parseOfficeTextElement) {
-				String masterPageName = style.getMasterPageName();
-				if (StringUtils.isEmpty(masterPageName)) {
-					if (!defaultMasterPage.equals(currentMasterPage)) {
-						// Add page
-						newMasterPage = defaultMasterPage;
-					}
-				} else {
-					StylableMasterPage masterPage = document
-							.getMasterPage(masterPageName);
-					if (masterPage != null
-							&& !masterPage.equals(currentMasterPage)) {
-						newMasterPage = masterPage;
-					}
-				}
-			}
-			if (newMasterPage != null) {
-				currentMasterPage = newMasterPage;
-				document.setActiveMasterPage(newMasterPage);
-			}
-			element.applyStyles(style);
-		}
-		return newMasterPage;
-	}
+    @Override
+    protected void processTextNode( Text node )
+    {
+        createChunk( node );
+    }
 
-	private Style getStyle(OdfStylableElement ele) {
-		String styleName = ele.getStyleName();
-		String familyName = ele.getStyleFamily() != null ? ele.getStyleFamily()
-				.getName() : null;
+    private Chunk createChunk( Text node )
+    {
+        String textContent = node.getTextContent();
+        StylableChunk chunk = document.createChunk( currentContainer, textContent );
+        Style style = currentContainer.getLastStyleApplied();
+        if ( style != null )
+        {
+            chunk.applyStyles( style );
+        }
+        addITextElement( chunk );
+        return chunk;
+    }
 
-		Style style = styleEngine.getStyle(familyName, styleName);
-		return style;
-	}
+    @Override
+    public void save()
+        throws IOException
+    {
+        if ( document != null )
+        {
+            document.close();
+        }
+        super.save();
+    }
+
+    private void addITextContainer( OdfElement ele, IStylableContainer newContainer )
+    {
+        addITextContainer( ele, newContainer, true );
+    }
+
+    private void addITextContainer( OdfElement ele, IStylableContainer newContainer, boolean add )
+    {
+        IStylableContainer oldContainer = currentContainer;
+        try
+        {
+            currentContainer = newContainer;
+            super.visit( ele );
+            if ( add )
+            {
+                oldContainer.addElement( newContainer.getElement() );
+            }
+        }
+        finally
+        {
+            currentContainer = oldContainer;
+        }
+    }
+
+    private void addITextElement( Element element )
+    {
+        currentContainer.addElement( element );
+    }
+
+    private StylableMasterPage applyStyles( OdfStylableElement ele, IStylableElement element )
+    {
+        StylableMasterPage newMasterPage = null;
+        Style style = getStyle( ele );
+        if ( style != null )
+        {
+            if ( parseOfficeTextElement )
+            {
+                String masterPageName = style.getMasterPageName();
+                if ( StringUtils.isEmpty( masterPageName ) )
+                {
+                    if ( !defaultMasterPage.equals( currentMasterPage ) )
+                    {
+                        // Add page
+                        newMasterPage = defaultMasterPage;
+                    }
+                }
+                else
+                {
+                    StylableMasterPage masterPage = document.getMasterPage( masterPageName );
+                    if ( masterPage != null && !masterPage.equals( currentMasterPage ) )
+                    {
+                        newMasterPage = masterPage;
+                    }
+                }
+            }
+            if ( newMasterPage != null )
+            {
+                currentMasterPage = newMasterPage;
+                document.setActiveMasterPage( newMasterPage );
+            }
+            element.applyStyles( style );
+        }
+        return newMasterPage;
+    }
+
+    private Style getStyle( OdfStylableElement ele )
+    {
+        String styleName = ele.getStyleName();
+        String familyName = ele.getStyleFamily() != null ? ele.getStyleFamily().getName() : null;
+
+        Style style = styleEngine.getStyle( familyName, styleName );
+        return style;
+    }
 
 }

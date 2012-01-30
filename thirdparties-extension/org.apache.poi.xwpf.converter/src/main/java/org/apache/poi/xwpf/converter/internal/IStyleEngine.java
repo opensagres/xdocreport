@@ -24,8 +24,8 @@
  */
 package org.apache.poi.xwpf.converter.internal;
 
+public interface IStyleEngine
+{
 
-public interface IStyleEngine {
-
-	public void visit(Object ele);
+    public void visit( Object ele );
 }

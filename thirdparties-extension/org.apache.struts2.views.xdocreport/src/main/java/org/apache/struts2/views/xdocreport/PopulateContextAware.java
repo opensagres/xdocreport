@@ -27,7 +27,9 @@ package org.apache.struts2.views.xdocreport;
 import fr.opensagres.xdocreport.document.IXDocReport;
 import fr.opensagres.xdocreport.template.IContext;
 
-public interface PopulateContextAware {
+public interface PopulateContextAware
+{
 
-	void populateContext(IXDocReport report, IContext context) throws Exception;
+    void populateContext( IXDocReport report, IContext context )
+        throws Exception;
 }

@@ -28,27 +28,29 @@ import fr.opensagres.xdocreport.core.document.DocumentKind;
 import fr.opensagres.xdocreport.document.discovery.ITemplateEngineInitializerDiscovery;
 import fr.opensagres.xdocreport.template.ITemplateEngine;
 
-public class DocxTemplateEngineInitializerConfigurationDiscovery implements
-		ITemplateEngineInitializerDiscovery {
+public class DocxTemplateEngineInitializerConfigurationDiscovery
+    implements ITemplateEngineInitializerDiscovery
+{
 
-	public String getId() {
-		
-		
-		return DocxTemplateEngineInitializerConfigurationDiscovery.class
-				.getSimpleName();
-	}
+    public String getId()
+    {
 
-	public String getDescription() {
-		return "";
-	}
+        return DocxTemplateEngineInitializerConfigurationDiscovery.class.getSimpleName();
+    }
 
-	public String getDocumentKind() {
-		return DocumentKind.DOCX.name();
-	}
+    public String getDescription()
+    {
+        return "";
+    }
 
-	public void initialize(ITemplateEngine templateEngine) {
-		templateEngine
-				.setConfiguration(DocxTemplateEngineConfiguration.INSTANCE);
-	}
+    public String getDocumentKind()
+    {
+        return DocumentKind.DOCX.name();
+    }
+
+    public void initialize( ITemplateEngine templateEngine )
+    {
+        templateEngine.setConfiguration( DocxTemplateEngineConfiguration.INSTANCE );
+    }
 
 }

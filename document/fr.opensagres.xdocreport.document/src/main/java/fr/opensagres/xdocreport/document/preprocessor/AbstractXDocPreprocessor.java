@@ -45,95 +45,114 @@ import fr.opensagres.xdocreport.template.formatter.IDocumentFormatter;
 
 /**
  * Abstract class for {@link IXDocPreprocessor}.
- * 
  */
-public abstract class AbstractXDocPreprocessor implements IXDocPreprocessor {
+public abstract class AbstractXDocPreprocessor
+    implements IXDocPreprocessor
+{
 
-	/**
-	 * Logger for this class
-	 */
-	private static final Logger LOGGER = LogUtils.getLogger(AbstractXDocPreprocessor.class.getName());
+    /**
+     * Logger for this class
+     */
+    private static final Logger LOGGER = LogUtils.getLogger( AbstractXDocPreprocessor.class.getName() );
 
-	public void preprocess(String entryName, XDocArchive documentArchive,
-			FieldsMetadata fieldsMetadata, IDocumentFormatter formater,
-			Map<String, Object> sharedContext)
-			throws XDocReportException, IOException {
-		if (fieldsMetadata == null) {
-			fieldsMetadata = FieldsMetadata.EMPTY;
-		}
-		// 1) Start preprocess
-		long startTime = -1;
-		if(LOGGER.isLoggable(Level.FINE)){
-			
-			startTime = System.currentTimeMillis();
-			
-			LOGGER.fine("Start preprocess for the entry=" + entryName);
-		}
+    public void preprocess( String entryName, XDocArchive documentArchive, FieldsMetadata fieldsMetadata,
+                            IDocumentFormatter formater, Map<String, Object> sharedContext )
+        throws XDocReportException, IOException
+    {
+        if ( fieldsMetadata == null )
+        {
+            fieldsMetadata = FieldsMetadata.EMPTY;
+        }
+        // 1) Start preprocess
+        long startTime = -1;
+        if ( LOGGER.isLoggable( Level.FINE ) )
+        {
 
-		// 2) Do preprocess
-		Reader reader = null;
-		Writer writer = null;
-		boolean result = false;
-		try {
-			// Get reader + writer for the entry name.
-			reader = documentArchive.getEntryReader(entryName);
-			writer = getWriter(entryName, documentArchive);
+            startTime = System.currentTimeMillis();
 
-			// Do preprocess which use reader and store the result of preprocess
-			// in the writer.
-			result = preprocess(entryName, reader, writer, null,
-					fieldsMetadata, formater, sharedContext);
+            LOGGER.fine( "Start preprocess for the entry=" + entryName );
+        }
 
-			if(LOGGER.isLoggable(Level.FINE)) {
-				LOGGER.fine("Result preprocess for the entry=" + entryName + ": "+					
-						prettyPrint(((MultiWriter) writer).getWriter(1).toString()));
-				LOGGER.fine("End preprocess for the entry=" + entryName + " done with "+ (System.currentTimeMillis()- startTime) + "(ms).");
-			}
-		} catch (Throwable e) {
-			if(LOGGER.isLoggable(Level.FINE)) {
-				LOGGER.fine("End preprocess for the entry=" + entryName + " done with "+ (System.currentTimeMillis()- startTime) + "(ms).");
-				LOGGER.throwing(getClass().getName(), "preprocess", e);
-			}
-			if (e instanceof RuntimeException) {
-				throw (RuntimeException) e;
-			}
-			if (e instanceof IOException) {
-				throw (IOException) e;
-			}
-			if (e instanceof XDocReportException) {
-				throw (XDocReportException) e;
-			}
-			throw new XDocReportException(e);
-		} finally {
-			// Close reader + writer
-			if (reader != null) {
-				IOUtils.closeQuietly(reader);
-			}
-			if (writer != null) {
-				if (result) {
-					IOUtils.closeQuietly(writer);
-				} else {
-					// preprocess was not done, don't modify the entry.
-					((StreamCancelable) writer).cancel();
-				}
-			}
-		}
+        // 2) Do preprocess
+        Reader reader = null;
+        Writer writer = null;
+        boolean result = false;
+        try
+        {
+            // Get reader + writer for the entry name.
+            reader = documentArchive.getEntryReader( entryName );
+            writer = getWriter( entryName, documentArchive );
 
-	}
+            // Do preprocess which use reader and store the result of preprocess
+            // in the writer.
+            result = preprocess( entryName, reader, writer, null, fieldsMetadata, formater, sharedContext );
 
-	private Writer getWriter(String entryName, XDocArchive documentArchive
-			) {
-		
-			if(LOGGER.isLoggable(Level.FINE)) {
-			return new MultiWriter(documentArchive.getEntryWriter(entryName),
-					new StringWriter());
-		}
-		return documentArchive.getEntryWriter(entryName);
-	}
+            if ( LOGGER.isLoggable( Level.FINE ) )
+            {
+                LOGGER.fine( "Result preprocess for the entry=" + entryName + ": "
+                    + prettyPrint( ( (MultiWriter) writer ).getWriter( 1 ).toString() ) );
+                LOGGER.fine( "End preprocess for the entry=" + entryName + " done with "
+                    + ( System.currentTimeMillis() - startTime ) + "(ms)." );
+            }
+        }
+        catch ( Throwable e )
+        {
+            if ( LOGGER.isLoggable( Level.FINE ) )
+            {
+                LOGGER.fine( "End preprocess for the entry=" + entryName + " done with "
+                    + ( System.currentTimeMillis() - startTime ) + "(ms)." );
+                LOGGER.throwing( getClass().getName(), "preprocess", e );
+            }
+            if ( e instanceof RuntimeException )
+            {
+                throw (RuntimeException) e;
+            }
+            if ( e instanceof IOException )
+            {
+                throw (IOException) e;
+            }
+            if ( e instanceof XDocReportException )
+            {
+                throw (XDocReportException) e;
+            }
+            throw new XDocReportException( e );
+        }
+        finally
+        {
+            // Close reader + writer
+            if ( reader != null )
+            {
+                IOUtils.closeQuietly( reader );
+            }
+            if ( writer != null )
+            {
+                if ( result )
+                {
+                    IOUtils.closeQuietly( writer );
+                }
+                else
+                {
+                    // preprocess was not done, don't modify the entry.
+                    ( (StreamCancelable) writer ).cancel();
+                }
+            }
+        }
 
-	public abstract boolean preprocess(String entryName, Reader reader,
-			Writer writer, Writer debugWriter, FieldsMetadata fieldsMetadata,
-			IDocumentFormatter formater, Map<String, Object> context)
-			throws XDocReportException, IOException;
+    }
+
+    private Writer getWriter( String entryName, XDocArchive documentArchive )
+    {
+
+        if ( LOGGER.isLoggable( Level.FINE ) )
+        {
+            return new MultiWriter( documentArchive.getEntryWriter( entryName ), new StringWriter() );
+        }
+        return documentArchive.getEntryWriter( entryName );
+    }
+
+    public abstract boolean preprocess( String entryName, Reader reader, Writer writer, Writer debugWriter,
+                                        FieldsMetadata fieldsMetadata, IDocumentFormatter formater,
+                                        Map<String, Object> context )
+        throws XDocReportException, IOException;
 
 }

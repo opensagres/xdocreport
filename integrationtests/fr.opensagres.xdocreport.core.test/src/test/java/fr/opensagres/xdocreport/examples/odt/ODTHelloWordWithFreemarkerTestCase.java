@@ -52,142 +52,157 @@ import fr.opensagres.xdocreport.template.IContext;
 import fr.opensagres.xdocreport.template.TemplateEngineKind;
 
 /**
- * Example with Open Office ODT which contains the content Hello !$name. Merge
- * with Freemarker template engine will replace this cell with Hello world!
- * 
+ * Example with Open Office ODT which contains the content Hello !$name. Merge with Freemarker template engine will
+ * replace this cell with Hello world!
  */
-public class ODTHelloWordWithFreemarkerTestCase {
+public class ODTHelloWordWithFreemarkerTestCase
+{
 
-	@Test
-	public void testOne() {
-		try {
+    @Test
+    public void testOne()
+    {
+        try
+        {
 
-			// 1) Load ODT file by filling Freemarker template engine and cache it
-			// to the registry
-			IXDocReport report = XDocReportRegistry
-					.getRegistry()
-					.loadReport(
-							ODTHelloWordWithFreemarkerTestCase.class
-									.getResourceAsStream("ODTHelloWordWithFreemarker.odt"),
-							TemplateEngineKind.Freemarker);
+            // 1) Load ODT file by filling Freemarker template engine and cache it
+            // to the registry
+            IXDocReport report =
+                XDocReportRegistry.getRegistry().loadReport( ODTHelloWordWithFreemarkerTestCase.class.getResourceAsStream( "ODTHelloWordWithFreemarker.odt" ),
+                                                             TemplateEngineKind.Freemarker );
 
-			Assert.assertTrue(
-					"This is a odt file, ODTReport implementation should have been resolved....",
-					report instanceof ODTReport);
+            Assert.assertTrue( "This is a odt file, ODTReport implementation should have been resolved....",
+                               report instanceof ODTReport );
 
-			// 3) Create context Java model
-			IContext context = report.createContext();
-			context.put("name", "world");
+            // 3) Create context Java model
+            IContext context = report.createContext();
+            context.put( "name", "world" );
 
-			// 3) Merge Java model with the ODT
-			File file = new File("ODTHelloWordWithFreemarker.odt");
-			report.process(context, new FileOutputStream(file));
+            // 3) Merge Java model with the ODT
+            File file = new File( "ODTHelloWordWithFreemarker.odt" );
+            report.process( context, new FileOutputStream( file ) );
 
-		} catch (IOException e) {
-			e.printStackTrace();
-		} catch (XDocReportException e) {
-			e.printStackTrace();
-		}
-	}
+        }
+        catch ( IOException e )
+        {
+            e.printStackTrace();
+        }
+        catch ( XDocReportException e )
+        {
+            e.printStackTrace();
+        }
+    }
 
-	@Test
-	public void loadNonExistingReport() {
+    @Test
+    public void loadNonExistingReport()
+    {
 
-		try {
-			XDocArchive.readZip(ODTHelloWordWithFreemarkerTestCase.class
-					.getResourceAsStream("not_found"));
-			fail("'not_found' does not exists ");
-		} catch (IOException e) {
-			// success
-		}
-	}
+        try
+        {
+            XDocArchive.readZip( ODTHelloWordWithFreemarkerTestCase.class.getResourceAsStream( "not_found" ) );
+            fail( "'not_found' does not exists " );
+        }
+        catch ( IOException e )
+        {
+            // success
+        }
+    }
 
-	@Test
-	public void loadExistingODTReport() {
-		String fileName = "ODTHelloWordWithFreemarker.odt";
-		// 1) Load ODT file by filling Freemarker template engine and cache it
-		// to the registry
-		IXDocReport report = null;
-		try {
+    @Test
+    public void loadExistingODTReport()
+    {
+        String fileName = "ODTHelloWordWithFreemarker.odt";
+        // 1) Load ODT file by filling Freemarker template engine and cache it
+        // to the registry
+        IXDocReport report = null;
+        try
+        {
 
-			report = XDocReportRegistry.getRegistry().loadReport(
-					ODTHelloWordWithFreemarkerTestCase.class.getResourceAsStream(fileName),
-					TemplateEngineKind.Freemarker);
+            report =
+                XDocReportRegistry.getRegistry().loadReport( ODTHelloWordWithFreemarkerTestCase.class.getResourceAsStream( fileName ),
+                                                             TemplateEngineKind.Freemarker );
 
-		} catch (Exception e) {
-			fail("Unable to load " + fileName + " " + e.getMessage());
-		}
+        }
+        catch ( Exception e )
+        {
+            fail( "Unable to load " + fileName + " " + e.getMessage() );
+        }
 
-		assertThat(
-				"This is a odt file, ODTReport implementation should have been resolved....",
-				report, instanceOf(ODTReport.class));
+        assertThat( "This is a odt file, ODTReport implementation should have been resolved....", report,
+                    instanceOf( ODTReport.class ) );
 
-	}
+    }
 
-	@Test
-	public void loadReportWithId() {
-		String fileName = "ODTHelloWordWithFreemarker.odt";
+    @Test
+    public void loadReportWithId()
+    {
+        String fileName = "ODTHelloWordWithFreemarker.odt";
 
-		IXDocReport report = null;
-		try {
+        IXDocReport report = null;
+        try
+        {
 
-			report = XDocReportRegistry.getRegistry().loadReport(
-					ODTHelloWordWithFreemarkerTestCase.class.getResourceAsStream(fileName),
-					fileName, TemplateEngineKind.Freemarker);
+            report =
+                XDocReportRegistry.getRegistry().loadReport( ODTHelloWordWithFreemarkerTestCase.class.getResourceAsStream( fileName ),
+                                                             fileName, TemplateEngineKind.Freemarker );
 
-		} catch (Exception e) {
-			fail("Unable to load " + fileName + " " + e.getMessage());
-		}
+        }
+        catch ( Exception e )
+        {
+            fail( "Unable to load " + fileName + " " + e.getMessage() );
+        }
 
-		assertEquals(fileName, report.getId());
-		assertEquals(report,
-				XDocReportRegistry.getRegistry().getReport(fileName));
-	}
+        assertEquals( fileName, report.getId() );
+        assertEquals( report, XDocReportRegistry.getRegistry().getReport( fileName ) );
+    }
 
-	@Test
-	public void cannotRegisterTwoTimeSameId() {
-		String fileName = "ODTHelloWordWithFreemarker.odt";
+    @Test
+    public void cannotRegisterTwoTimeSameId()
+    {
+        String fileName = "ODTHelloWordWithFreemarker.odt";
 
-		IXDocReport report = null;
-		try {
+        IXDocReport report = null;
+        try
+        {
 
-			report = XDocReportRegistry.getRegistry().loadReport(
-					ODTHelloWordWithFreemarkerTestCase.class.getResourceAsStream(fileName),
-					"id", TemplateEngineKind.Freemarker);
+            report =
+                XDocReportRegistry.getRegistry().loadReport( ODTHelloWordWithFreemarkerTestCase.class.getResourceAsStream( fileName ),
+                                                             "id", TemplateEngineKind.Freemarker );
 
-			XDocReportRegistry.getRegistry().loadReport(
-					ODTHelloWordWithFreemarkerTestCase.class.getResourceAsStream(fileName),
-					"id", TemplateEngineKind.Freemarker);
-			fail("cannot register 2 reports with the same id");
-		} catch (Exception e) {
-			// success
-		}
+            XDocReportRegistry.getRegistry().loadReport( ODTHelloWordWithFreemarkerTestCase.class.getResourceAsStream( fileName ),
+                                                         "id", TemplateEngineKind.Freemarker );
+            fail( "cannot register 2 reports with the same id" );
+        }
+        catch ( Exception e )
+        {
+            // success
+        }
 
-	}
+    }
 
-	@Test
-	public void checkXDocArchiveContent() throws IOException,
-			XDocReportException {
-		String fileName = "ODTHelloWordWithFreemarker.odt";
+    @Test
+    public void checkXDocArchiveContent()
+        throws IOException, XDocReportException
+    {
+        String fileName = "ODTHelloWordWithFreemarker.odt";
 
-		IXDocReport report = null;
+        IXDocReport report = null;
 
-		report = XDocReportRegistry.getRegistry().loadReport(
-				ODTHelloWordWithFreemarkerTestCase.class.getResourceAsStream(fileName),
-				TemplateEngineKind.Freemarker);
+        report =
+            XDocReportRegistry.getRegistry().loadReport( ODTHelloWordWithFreemarkerTestCase.class.getResourceAsStream( fileName ),
+                                                         TemplateEngineKind.Freemarker );
 
-		XDocArchive archive = report.getPreprocessedDocumentArchive();
+        XDocArchive archive = report.getPreprocessedDocumentArchive();
 
-		assertNotNull(archive);
-		assertTrue(archive.hasEntry(ODTConstants.CONTENT_XML_ENTRY));
-		assertTrue(ODTUtils.isODT(archive));
+        assertNotNull( archive );
+        assertTrue( archive.hasEntry( ODTConstants.CONTENT_XML_ENTRY ) );
+        assertTrue( ODTUtils.isODT( archive ) );
 
-		Reader reader = archive.getEntryReader(ODTConstants.CONTENT_XML_ENTRY);
-		StringWriter writer = new StringWriter();
-		IOUtils.copy(reader, writer);
+        Reader reader = archive.getEntryReader( ODTConstants.CONTENT_XML_ENTRY );
+        StringWriter writer = new StringWriter();
+        IOUtils.copy( reader, writer );
 
-		String contentAsString = writer.toString();
-		//System.out.println(contentAsString);
-		assertTrue(contentAsString.contains("${name}"));
-	}
+        String contentAsString = writer.toString();
+        // System.out.println(contentAsString);
+        assertTrue( contentAsString.contains( "${name}" ) );
+    }
 }

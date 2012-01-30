@@ -31,53 +31,59 @@ import fr.opensagres.xdocreport.template.formatter.IDocumentFormatter;
 
 /**
  * Table row buffered region.
- * 
  */
-public class RowBufferedRegion extends BufferedElement {
+public class RowBufferedRegion
+    extends BufferedElement
+{
 
-	private String itemNameList;
+    private String itemNameList;
 
-	public RowBufferedRegion(BufferedElement parent, String uri,
-			String localName, String name, Attributes attributes) {
-		super(parent, uri, localName, name, attributes);
-	}
+    public RowBufferedRegion( BufferedElement parent, String uri, String localName, String name, Attributes attributes )
+    {
+        super( parent, uri, localName, name, attributes );
+    }
 
-	public void setLoopTemplateDirective(String startLoopDirective,
-			String endLoopDirective) {
-		setStartLoopDirective(startLoopDirective);
-		setEndLoopDirective(endLoopDirective);
-	}
+    public void setLoopTemplateDirective( String startLoopDirective, String endLoopDirective )
+    {
+        setStartLoopDirective( startLoopDirective );
+        setEndLoopDirective( endLoopDirective );
+    }
 
-	public void setStartLoopDirective(String startLoopDirective) {
-		this.startTagElement.setBefore(startLoopDirective);
-	}
+    public void setStartLoopDirective( String startLoopDirective )
+    {
+        this.startTagElement.setBefore( startLoopDirective );
+    }
 
-	public void setEndLoopDirective(String endLoopDirective) {
-		this.endTagElement.setAfter(endLoopDirective);
-	}
+    public void setEndLoopDirective( String endLoopDirective )
+    {
+        this.endTagElement.setAfter( endLoopDirective );
+    }
 
-	public boolean isLoopTemplateDirectiveInitilalized() {
-		return StringUtils.isNotEmpty(getStartLoopDirective())
-				&& StringUtils.isNotEmpty(getEndLoopDirective());
-	}
+    public boolean isLoopTemplateDirectiveInitilalized()
+    {
+        return StringUtils.isNotEmpty( getStartLoopDirective() ) && StringUtils.isNotEmpty( getEndLoopDirective() );
+    }
 
-	public void initializeLoopTemplateDirective(String itemNameList,
-			IDocumentFormatter formatter) {
-		this.itemNameList = itemNameList;
-		setStartLoopDirective(formatter.getStartLoopDirective(itemNameList));
-		setEndLoopDirective(formatter.getEndLoopDirective(itemNameList));
-	}
+    public void initializeLoopTemplateDirective( String itemNameList, IDocumentFormatter formatter )
+    {
+        this.itemNameList = itemNameList;
+        setStartLoopDirective( formatter.getStartLoopDirective( itemNameList ) );
+        setEndLoopDirective( formatter.getEndLoopDirective( itemNameList ) );
+    }
 
-	public String getItemNameList() {
-		return itemNameList;
-	}
+    public String getItemNameList()
+    {
+        return itemNameList;
+    }
 
-	public String getStartLoopDirective() {
-		return this.startTagElement.getBefore();
-	}
+    public String getStartLoopDirective()
+    {
+        return this.startTagElement.getBefore();
+    }
 
-	public String getEndLoopDirective() {
-		return this.endTagElement.getAfter();
-	}
+    public String getEndLoopDirective()
+    {
+        return this.endTagElement.getAfter();
+    }
 
 }

@@ -27,28 +27,29 @@ package fr.opensagres.xdocreport.document.docx.preprocessor;
 import java.util.HashMap;
 
 /**
- * Map which stores the initial Relationship type of Hyperlink declared in the
- * "word/_rels/document.xml.rels".
+ * Map which stores the initial Relationship type of Hyperlink declared in the "word/_rels/document.xml.rels".
  * 
  * <pre>
  * 	<Relationship Id="rId1" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/hyperlink" 
  * 				  Target="mailto:$mail" 
  * 				  TargetMode="External" />
  * </pre>
- * 
- * 
  */
-public class InitialHyperlinkMap extends HashMap<String, HyperlinkInfo> {
+public class InitialHyperlinkMap
+    extends HashMap<String, HyperlinkInfo>
+{
 
-	private boolean modified = false;
+    private boolean modified = false;
 
-	@Override
-	public HyperlinkInfo remove(Object key) {
-		this.modified = true;
-		return super.remove(key);
-	}
+    @Override
+    public HyperlinkInfo remove( Object key )
+    {
+        this.modified = true;
+        return super.remove( key );
+    }
 
-	public boolean isModified() {
-		return modified;
-	}
+    public boolean isModified()
+    {
+        return modified;
+    }
 }

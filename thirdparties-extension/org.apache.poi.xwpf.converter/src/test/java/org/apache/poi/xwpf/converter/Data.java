@@ -24,6 +24,7 @@
  */
 package org.apache.poi.xwpf.converter;
 
-public class Data {
+public class Data
+{
 
 }

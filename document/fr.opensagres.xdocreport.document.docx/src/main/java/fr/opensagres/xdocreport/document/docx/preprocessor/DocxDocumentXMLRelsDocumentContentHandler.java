@@ -46,8 +46,7 @@ import fr.opensagres.xdocreport.template.formatter.FieldsMetadata;
 import fr.opensagres.xdocreport.template.formatter.IDocumentFormatter;
 
 /**
- * This handler modify the XML entry word/_rels/document.xml.rels to add
- * Relationship for dynamic image and hyperlink :
+ * This handler modify the XML entry word/_rels/document.xml.rels to add Relationship for dynamic image and hyperlink :
  * 
  * <pre>
  *   <?xml version="1.0" encoding="UTF-8" standalone="yes" ?> 
@@ -99,200 +98,200 @@ import fr.opensagres.xdocreport.template.formatter.IDocumentFormatter;
  * </Relationships>
  * </pre>
  */
-public class DocxDocumentXMLRelsDocumentContentHandler extends
-		BufferedDocumentContentHandler {
+public class DocxDocumentXMLRelsDocumentContentHandler
+    extends BufferedDocumentContentHandler
+{
 
-	private static final String ITEM_INFO = "___info";
+    private static final String ITEM_INFO = "___info";
 
-	protected final String entryName;
-	protected final IDocumentFormatter formatter;
-	protected final FieldsMetadata fieldsMetadata;
-	private final Map<String, HyperlinkInfo> hyperlinksMap;
+    protected final String entryName;
 
-	private boolean hyperlinkParsing = false;
+    protected final IDocumentFormatter formatter;
 
-	public DocxDocumentXMLRelsDocumentContentHandler(String entryName,
-			FieldsMetadata fieldsMetadata, IDocumentFormatter formatter,
-			Map<String, Object> sharedContext) {
-		this.entryName = entryName;
-		this.formatter = formatter;
-		this.fieldsMetadata = fieldsMetadata;
-		this.hyperlinksMap = HyperlinkUtils.getInitialHyperlinkMap(entryName,
-				sharedContext);
-	}
+    protected final FieldsMetadata fieldsMetadata;
 
-	@Override
-	public boolean doStartElement(String uri, String localName, String name,
-			Attributes attributes) throws SAXException {
-		if (RELATIONSHIP_ELT.equals(name)) {
-			String type = attributes.getValue(RELATIONSHIP_TYPE_ATTR);
-			if (RELATIONSHIPS_HYPERLINK_NS.equals(type)
-					&& this.hyperlinksMap != null) {
-				// Ignore element
-				hyperlinkParsing = true;
-				return false;
-			}
-		}
-		return super.doStartElement(uri, localName, name, attributes);
-	}
+    private final Map<String, HyperlinkInfo> hyperlinksMap;
 
-	@Override
-	public void doEndElement(String uri, String localName, String name)
-			throws SAXException {
-		if (hyperlinkParsing) {
-			hyperlinkParsing = false;
-			return;
-		}
-		if (RELATIONSHIPS_ELT.equals(name)) {
-			StringBuilder script = new StringBuilder();
+    private boolean hyperlinkParsing = false;
 
-			// 1) Generate script for dynamic images
-			generateScriptsForDynamicImages(script);
+    public DocxDocumentXMLRelsDocumentContentHandler( String entryName, FieldsMetadata fieldsMetadata,
+                                                      IDocumentFormatter formatter, Map<String, Object> sharedContext )
+    {
+        this.entryName = entryName;
+        this.formatter = formatter;
+        this.fieldsMetadata = fieldsMetadata;
+        this.hyperlinksMap = HyperlinkUtils.getInitialHyperlinkMap( entryName, sharedContext );
+    }
 
-			// 2) Generate static hyperlink
-			generateScriptsForStaticHyperlinks(script);
-			// 3) Generate script for dynamic hyperlinks
-			generateScriptsForDynamicHyperlinks(script);
+    @Override
+    public boolean doStartElement( String uri, String localName, String name, Attributes attributes )
+        throws SAXException
+    {
+        if ( RELATIONSHIP_ELT.equals( name ) )
+        {
+            String type = attributes.getValue( RELATIONSHIP_TYPE_ATTR );
+            if ( RELATIONSHIPS_HYPERLINK_NS.equals( type ) && this.hyperlinksMap != null )
+            {
+                // Ignore element
+                hyperlinkParsing = true;
+                return false;
+            }
+        }
+        return super.doStartElement( uri, localName, name, attributes );
+    }
 
-			IBufferedRegion currentRegion = getCurrentElement();
-			currentRegion.append(script.toString());
-		}
-		super.doEndElement(uri, localName, name);
-	}
+    @Override
+    public void doEndElement( String uri, String localName, String name )
+        throws SAXException
+    {
+        if ( hyperlinkParsing )
+        {
+            hyperlinkParsing = false;
+            return;
+        }
+        if ( RELATIONSHIPS_ELT.equals( name ) )
+        {
+            StringBuilder script = new StringBuilder();
 
-	private void generateScriptsForDynamicImages(StringBuilder script) {
+            // 1) Generate script for dynamic images
+            generateScriptsForDynamicImages( script );
 
-		String startIf = formatter
-				.getStartIfDirective(IDocumentFormatter.IMAGE_REGISTRY_KEY);
-		script.append(startIf);
+            // 2) Generate static hyperlink
+            generateScriptsForStaticHyperlinks( script );
+            // 3) Generate script for dynamic hyperlinks
+            generateScriptsForDynamicHyperlinks( script );
 
-		String listInfos = formatter.formatAsSimpleField(false,
-				IDocumentFormatter.IMAGE_REGISTRY_KEY, "ImageProviderInfos");
-		String itemListInfos = formatter.formatAsSimpleField(false, ITEM_INFO);
+            IBufferedRegion currentRegion = getCurrentElement();
+            currentRegion.append( script.toString() );
+        }
+        super.doEndElement( uri, localName, name );
+    }
 
-		// 1) Start loop
-		String startLoop = formatter.getStartLoopDirective(itemListInfos,
-				listInfos);
-		script.append(startLoop);
+    private void generateScriptsForDynamicImages( StringBuilder script )
+    {
 
-		// <Relationship Id="rId4"
-		// Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/image"
-		// Target="media/image1.png"/>
-		String relationId = formatter.formatAsSimpleField(true, ITEM_INFO,
-				"ImageId");
-		String target = DocxImageRegistry.MEDIA_PATH
-				+ formatter.formatAsSimpleField(true, ITEM_INFO,
-						"ImageFileName");
-		generateRelationship(script, relationId, RELATIONSHIPS_IMAGE_NS,
-				target, null);
+        String startIf = formatter.getStartIfDirective( IDocumentFormatter.IMAGE_REGISTRY_KEY );
+        script.append( startIf );
 
-		// 3) end loop
-		script.append(formatter.getEndLoopDirective(itemListInfos));
+        String listInfos =
+            formatter.formatAsSimpleField( false, IDocumentFormatter.IMAGE_REGISTRY_KEY, "ImageProviderInfos" );
+        String itemListInfos = formatter.formatAsSimpleField( false, ITEM_INFO );
 
-		script.append(formatter
-				.getEndIfDirective(IDocumentFormatter.IMAGE_REGISTRY_KEY));
-	}
+        // 1) Start loop
+        String startLoop = formatter.getStartLoopDirective( itemListInfos, listInfos );
+        script.append( startLoop );
 
-	private void generateScriptsForStaticHyperlinks(StringBuilder script) {
-		if (this.hyperlinksMap != null) {
-			Collection<HyperlinkInfo> hyperlinks = hyperlinksMap.values();
-			for (HyperlinkInfo hyperlink : hyperlinks) {
-				generateRelationship(script, hyperlink.getId(),
-						RELATIONSHIPS_HYPERLINK_NS, hyperlink.getTarget(),
-						hyperlink.getTargetMode());
-			}
-		}
-	}
+        // <Relationship Id="rId4"
+        // Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/image"
+        // Target="media/image1.png"/>
+        String relationId = formatter.formatAsSimpleField( true, ITEM_INFO, "ImageId" );
+        String target = DocxImageRegistry.MEDIA_PATH + formatter.formatAsSimpleField( true, ITEM_INFO, "ImageFileName" );
+        generateRelationship( script, relationId, RELATIONSHIPS_IMAGE_NS, target, null );
 
-	/**
-	 * Generate scripts for fynamic hyperlink. Ex for Freemarker :
-	 * 
-	 * <pre>
-	 * [#if ___HyperlinkRegistry??]
-	 *    [#list ___HyperlinkRegistry.hyperlinks as ___info]
-	 *    <Relationship Id="${___info.id}" 
-	 *    				Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/hyperlink" 
-	 *    				Target="${___info.target}" 
-	 *    				TargetMode="${___info.targetMode}" />
-	 *    [/#list]
-	 *    [/#if]
-	 * </pre>
-	 * 
-	 * @param script
-	 */
-	private void generateScriptsForDynamicHyperlinks(StringBuilder script) {
+        // 3) end loop
+        script.append( formatter.getEndLoopDirective( itemListInfos ) );
 
-		// Start if
-		// if the current entry is "word/_rels/document.xml.rels", key used will
-		// be "word/document.xml").
-		String registryKey = HyperlinkUtils
-				.getHyperlinkRegistryKey(HyperlinkUtils
-						.getEntryNameWithoutRels(entryName));
-		String startIf = formatter.getStartIfDirective(registryKey);
-		script.append(startIf);
+        script.append( formatter.getEndIfDirective( IDocumentFormatter.IMAGE_REGISTRY_KEY ) );
+    }
 
-		String listInfos = formatter.formatAsSimpleField(false, registryKey,
-				"Hyperlinks");
-		String itemListInfos = formatter.formatAsSimpleField(false, ITEM_INFO);
+    private void generateScriptsForStaticHyperlinks( StringBuilder script )
+    {
+        if ( this.hyperlinksMap != null )
+        {
+            Collection<HyperlinkInfo> hyperlinks = hyperlinksMap.values();
+            for ( HyperlinkInfo hyperlink : hyperlinks )
+            {
+                generateRelationship( script, hyperlink.getId(), RELATIONSHIPS_HYPERLINK_NS, hyperlink.getTarget(),
+                                      hyperlink.getTargetMode() );
+            }
+        }
+    }
 
-		// 1) Start loop
-		String startLoop = formatter.getStartLoopDirective(itemListInfos,
-				listInfos);
-		script.append(startLoop);
+    /**
+     * Generate scripts for fynamic hyperlink. Ex for Freemarker :
+     * 
+     * <pre>
+     * [#if ___HyperlinkRegistry??]
+     *    [#list ___HyperlinkRegistry.hyperlinks as ___info]
+     *    <Relationship Id="${___info.id}" 
+     *    				Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/hyperlink" 
+     *    				Target="${___info.target}" 
+     *    				TargetMode="${___info.targetMode}" />
+     *    [/#list]
+     *    [/#if]
+     * </pre>
+     * 
+     * @param script
+     */
+    private void generateScriptsForDynamicHyperlinks( StringBuilder script )
+    {
 
-		// <Relationship Id="rId4"
-		// Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/image"
-		// Target="media/image1.png"/>
-		String relationId = formatter
-				.formatAsSimpleField(true, ITEM_INFO, "Id");
-		String target = formatter
-				.formatAsSimpleField(true, ITEM_INFO, "Target");
-		String targetMode = formatter.formatAsSimpleField(true, ITEM_INFO,
-				"TargetMode");
-		generateRelationship(script, relationId, RELATIONSHIPS_HYPERLINK_NS,
-				target, targetMode);
+        // Start if
+        // if the current entry is "word/_rels/document.xml.rels", key used will
+        // be "word/document.xml").
+        String registryKey =
+            HyperlinkUtils.getHyperlinkRegistryKey( HyperlinkUtils.getEntryNameWithoutRels( entryName ) );
+        String startIf = formatter.getStartIfDirective( registryKey );
+        script.append( startIf );
 
-		// 3) end loop
-		script.append(formatter.getEndLoopDirective(itemListInfos));
+        String listInfos = formatter.formatAsSimpleField( false, registryKey, "Hyperlinks" );
+        String itemListInfos = formatter.formatAsSimpleField( false, ITEM_INFO );
 
-		script.append(formatter.getEndIfDirective(HyperlinkRegistry.KEY));
-	}
+        // 1) Start loop
+        String startLoop = formatter.getStartLoopDirective( itemListInfos, listInfos );
+        script.append( startLoop );
 
-	/**
-	 * Generate Relationship XML element.
-	 * 
-	 * @param script
-	 * @param relationId
-	 * @param type
-	 * @param target
-	 * @param targetMode
-	 */
-	protected void generateRelationship(StringBuilder script,
-			String relationId, String type, String target, String targetMode) {
-		script.append("<");
-		script.append(RELATIONSHIP_ELT);
-		// Id
-		script.append(" ");
-		script.append(RELATIONSHIP_ID_ATTR);
-		script.append("=\"");
-		script.append(relationId);
-		// Type
-		script.append("\" ");
-		script.append(RELATIONSHIP_TYPE_ATTR);
-		script.append("=\"");
-		script.append(type);
-		// Target
-		script.append("\" ");
-		script.append(RELATIONSHIP_TARGET_ATTR);
-		script.append("=\"");
-		script.append(target);
-		if (targetMode != null) {
-			script.append("\" ");
-			script.append(RELATIONSHIP_TARGET_MODE_ATTR);
-			script.append("=\"");
-			script.append(targetMode);
+        // <Relationship Id="rId4"
+        // Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/image"
+        // Target="media/image1.png"/>
+        String relationId = formatter.formatAsSimpleField( true, ITEM_INFO, "Id" );
+        String target = formatter.formatAsSimpleField( true, ITEM_INFO, "Target" );
+        String targetMode = formatter.formatAsSimpleField( true, ITEM_INFO, "TargetMode" );
+        generateRelationship( script, relationId, RELATIONSHIPS_HYPERLINK_NS, target, targetMode );
 
-		}
-		script.append("\" />");
-	}
+        // 3) end loop
+        script.append( formatter.getEndLoopDirective( itemListInfos ) );
+
+        script.append( formatter.getEndIfDirective( HyperlinkRegistry.KEY ) );
+    }
+
+    /**
+     * Generate Relationship XML element.
+     * 
+     * @param script
+     * @param relationId
+     * @param type
+     * @param target
+     * @param targetMode
+     */
+    protected void generateRelationship( StringBuilder script, String relationId, String type, String target,
+                                         String targetMode )
+    {
+        script.append( "<" );
+        script.append( RELATIONSHIP_ELT );
+        // Id
+        script.append( " " );
+        script.append( RELATIONSHIP_ID_ATTR );
+        script.append( "=\"" );
+        script.append( relationId );
+        // Type
+        script.append( "\" " );
+        script.append( RELATIONSHIP_TYPE_ATTR );
+        script.append( "=\"" );
+        script.append( type );
+        // Target
+        script.append( "\" " );
+        script.append( RELATIONSHIP_TARGET_ATTR );
+        script.append( "=\"" );
+        script.append( target );
+        if ( targetMode != null )
+        {
+            script.append( "\" " );
+            script.append( RELATIONSHIP_TARGET_MODE_ATTR );
+            script.append( "=\"" );
+            script.append( targetMode );
+
+        }
+        script.append( "\" />" );
+    }
 }

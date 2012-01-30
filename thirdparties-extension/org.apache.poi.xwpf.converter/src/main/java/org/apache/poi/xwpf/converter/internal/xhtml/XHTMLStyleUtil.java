@@ -65,397 +65,430 @@ import fr.opensagres.xdocreport.utils.StringUtils;
 import fr.opensagres.xdocreport.xhtml.extension.CSSStylePropertyConstants;
 import fr.opensagres.xdocreport.xhtml.extension.XHTMLUtil;
 
-public class XHTMLStyleUtil implements CSSStylePropertyConstants {
+public class XHTMLStyleUtil
+    implements CSSStylePropertyConstants
+{
 
-	public static StringBuilder getStyle(XWPFDocument document,
-			CTDocDefaults defaults) {
-		StringBuilder htmlStyle = new StringBuilder();
-		CTSectPr sectPr = document.getDocument().getBody().getSectPr();
-		CTPageSz pageSize = sectPr.getPgSz();
+    public static StringBuilder getStyle( XWPFDocument document, CTDocDefaults defaults )
+    {
+        StringBuilder htmlStyle = new StringBuilder();
+        CTSectPr sectPr = document.getDocument().getBody().getSectPr();
+        CTPageSz pageSize = sectPr.getPgSz();
 
-		if (pageSize != null) {
-			// Width
-			BigInteger width = pageSize.getW();
-			float widthPt = dxa2points(width);
-			XHTMLUtil.addHTMLStyle(htmlStyle, WIDTH, widthPt + "pt");
-		}
+        if ( pageSize != null )
+        {
+            // Width
+            BigInteger width = pageSize.getW();
+            float widthPt = dxa2points( width );
+            XHTMLUtil.addHTMLStyle( htmlStyle, WIDTH, widthPt + "pt" );
+        }
 
-		CTPageMar pageMargin = sectPr.getPgMar();
-		if (pageMargin != null) {
+        CTPageMar pageMargin = sectPr.getPgMar();
+        if ( pageMargin != null )
+        {
 
-			// margin bottom
-			BigInteger marginBottom = pageMargin.getBottom();
-			if (marginBottom != null) {
-				float marginBottomPt = dxa2points(marginBottom);
-				XHTMLUtil.addHTMLStyle(htmlStyle, MARGIN_BOTTOM, marginBottomPt
-						+ "pt");
-			}
+            // margin bottom
+            BigInteger marginBottom = pageMargin.getBottom();
+            if ( marginBottom != null )
+            {
+                float marginBottomPt = dxa2points( marginBottom );
+                XHTMLUtil.addHTMLStyle( htmlStyle, MARGIN_BOTTOM, marginBottomPt + "pt" );
+            }
 
-			// margin top
-			BigInteger marginTop = pageMargin.getTop();
-			if (marginTop != null) {
-				float marginTopPt = dxa2points(marginTop);
-				XHTMLUtil.addHTMLStyle(htmlStyle, MARGIN_TOP, marginTopPt
-						+ "pt");
-			}
+            // margin top
+            BigInteger marginTop = pageMargin.getTop();
+            if ( marginTop != null )
+            {
+                float marginTopPt = dxa2points( marginTop );
+                XHTMLUtil.addHTMLStyle( htmlStyle, MARGIN_TOP, marginTopPt + "pt" );
+            }
 
-			// margin right
-			BigInteger marginRight = pageMargin.getRight();
-			if (marginRight != null) {
-				float marginRightPt = dxa2points(marginRight);
-				XHTMLUtil.addHTMLStyle(htmlStyle, MARGIN_RIGHT, marginRightPt
-						+ "pt");
-			}
+            // margin right
+            BigInteger marginRight = pageMargin.getRight();
+            if ( marginRight != null )
+            {
+                float marginRightPt = dxa2points( marginRight );
+                XHTMLUtil.addHTMLStyle( htmlStyle, MARGIN_RIGHT, marginRightPt + "pt" );
+            }
 
-			// margin left
-			BigInteger marginLeft = pageMargin.getLeft();
-			if (marginLeft != null) {
-				float marginLeftPt = dxa2points(marginLeft);
-				XHTMLUtil.addHTMLStyle(htmlStyle, MARGIN_LEFT, marginLeftPt
-						+ "pt");
-			}
+            // margin left
+            BigInteger marginLeft = pageMargin.getLeft();
+            if ( marginLeft != null )
+            {
+                float marginLeftPt = dxa2points( marginLeft );
+                XHTMLUtil.addHTMLStyle( htmlStyle, MARGIN_LEFT, marginLeftPt + "pt" );
+            }
 
-		}
-		return htmlStyle;
-	}
+        }
+        return htmlStyle;
+    }
 
-	public static StringBuilder getStyle(XWPFParagraph paragraph,
-			XWPFStyle style, CTDocDefaults defaults) {
-		StringBuilder htmlStyle = new StringBuilder();
+    public static StringBuilder getStyle( XWPFParagraph paragraph, XWPFStyle style, CTDocDefaults defaults )
+    {
+        StringBuilder htmlStyle = new StringBuilder();
 
-		float indentationLeft = -1;
-		float indentationRight = -1;
-		float firstLineIndent = -1;
-		float spacingBefore = -1;
-		float spacingAfter = -1;
+        float indentationLeft = -1;
+        float indentationRight = -1;
+        float firstLineIndent = -1;
+        float spacingBefore = -1;
+        float spacingAfter = -1;
 
-//		// 1) From style
-//		CTPPr ppr = getPPr(style);
-//		if (ppr != null) {
-//			// Indentation
-//			CTInd ind = ppr.getInd();
-//			if (ind != null) {
-//
-//				// Left Indentation
-//				BigInteger left = ind.getLeft();
-//				if (left != null) {
-//					indentationLeft = dxa2points(left);
-//				}
-//
-//				// Right Indentation
-//				BigInteger right = ind.getRight();
-//				if (right != null) {
-//					indentationRight = dxa2points(right);
-//				}
-//
-//				// First line Indentation
-//				BigInteger firstLine = ind.getFirstLine();
-//				if (firstLine != null) {
-//					firstLineIndent = dxa2points(firstLine);
-//				}
-//			}
-//
-//			CTSpacing spacing = ppr.getSpacing();
-//			if (spacing != null) {
-//
-//				// Spacing before
-//				BigInteger before = spacing.getBefore();
-//				if (before != null) {
-//					spacingBefore = dxa2points(before);
-//				}
-//
-//				// Spacing after
-//				BigInteger after = spacing.getAfter();
-//				if (after != null) {
-//					spacingAfter = dxa2points(after);
-//				}
-//			}
-//
-//		}
+        // // 1) From style
+        // CTPPr ppr = getPPr(style);
+        // if (ppr != null) {
+        // // Indentation
+        // CTInd ind = ppr.getInd();
+        // if (ind != null) {
+        //
+        // // Left Indentation
+        // BigInteger left = ind.getLeft();
+        // if (left != null) {
+        // indentationLeft = dxa2points(left);
+        // }
+        //
+        // // Right Indentation
+        // BigInteger right = ind.getRight();
+        // if (right != null) {
+        // indentationRight = dxa2points(right);
+        // }
+        //
+        // // First line Indentation
+        // BigInteger firstLine = ind.getFirstLine();
+        // if (firstLine != null) {
+        // firstLineIndent = dxa2points(firstLine);
+        // }
+        // }
+        //
+        // CTSpacing spacing = ppr.getSpacing();
+        // if (spacing != null) {
+        //
+        // // Spacing before
+        // BigInteger before = spacing.getBefore();
+        // if (before != null) {
+        // spacingBefore = dxa2points(before);
+        // }
+        //
+        // // Spacing after
+        // BigInteger after = spacing.getAfter();
+        // if (after != null) {
+        // spacingAfter = dxa2points(after);
+        // }
+        // }
+        //
+        // }
 
-		// 2) From paragraph
-		if (indentationLeft == -1 && paragraph.getIndentationLeft() != -1) {
-			indentationLeft = dxa2points(paragraph.getIndentationLeft());
-		}
-		if (indentationRight == -1 && paragraph.getIndentationRight() != -1) {
-			indentationRight = dxa2points(paragraph.getIndentationRight());
-		}
-		if (firstLineIndent == -1 && paragraph.getIndentationFirstLine() != -1) {
-			firstLineIndent = dxa2points(paragraph.getIndentationFirstLine());
-		}
-		if (spacingBefore == -1 && paragraph.getSpacingBefore() != -1) {
-			spacingBefore = dxa2points(paragraph.getSpacingBefore());
-		}
-		if (spacingAfter == -1 && paragraph.getSpacingAfter() != -1) {
-			spacingAfter = dxa2points(paragraph.getSpacingAfter());
-		}
+        // 2) From paragraph
+        if ( indentationLeft == -1 && paragraph.getIndentationLeft() != -1 )
+        {
+            indentationLeft = dxa2points( paragraph.getIndentationLeft() );
+        }
+        if ( indentationRight == -1 && paragraph.getIndentationRight() != -1 )
+        {
+            indentationRight = dxa2points( paragraph.getIndentationRight() );
+        }
+        if ( firstLineIndent == -1 && paragraph.getIndentationFirstLine() != -1 )
+        {
+            firstLineIndent = dxa2points( paragraph.getIndentationFirstLine() );
+        }
+        if ( spacingBefore == -1 && paragraph.getSpacingBefore() != -1 )
+        {
+            spacingBefore = dxa2points( paragraph.getSpacingBefore() );
+        }
+        if ( spacingAfter == -1 && paragraph.getSpacingAfter() != -1 )
+        {
+            spacingAfter = dxa2points( paragraph.getSpacingAfter() );
+        }
 
-		// 3) From default
-		// TODO
+        // 3) From default
+        // TODO
 
-		// Apply
-		if (indentationLeft != -1) {
-			XHTMLUtil.addHTMLStyle(htmlStyle, TEXT_ALIGN, "left");
-			XHTMLUtil.addHTMLStyle(htmlStyle, TEXT_INDENT, indentationLeft
-					+ "pt");
-		}
-		if (indentationRight != -1) {
-			XHTMLUtil.addHTMLStyle(htmlStyle, TEXT_ALIGN, "right");
-			XHTMLUtil.addHTMLStyle(htmlStyle, TEXT_INDENT, indentationRight
-					+ "pt");
-		}
-		if (firstLineIndent != -1) {
-			XHTMLUtil.addHTMLStyle(htmlStyle, TEXT_INDENT, firstLineIndent
-					+ "pt");
-		}
+        // Apply
+        if ( indentationLeft != -1 )
+        {
+            XHTMLUtil.addHTMLStyle( htmlStyle, TEXT_ALIGN, "left" );
+            XHTMLUtil.addHTMLStyle( htmlStyle, TEXT_INDENT, indentationLeft + "pt" );
+        }
+        if ( indentationRight != -1 )
+        {
+            XHTMLUtil.addHTMLStyle( htmlStyle, TEXT_ALIGN, "right" );
+            XHTMLUtil.addHTMLStyle( htmlStyle, TEXT_INDENT, indentationRight + "pt" );
+        }
+        if ( firstLineIndent != -1 )
+        {
+            XHTMLUtil.addHTMLStyle( htmlStyle, TEXT_INDENT, firstLineIndent + "pt" );
+        }
 
-		// Aligment
-		ParagraphAlignment alignment = paragraph.getAlignment();
-		switch (alignment) {
-		case LEFT:
-			XHTMLUtil.addHTMLStyle(htmlStyle, TEXT_ALIGN, TEXT_ALIGN_LEFT);
-			break;
-		case RIGHT:
-			XHTMLUtil.addHTMLStyle(htmlStyle, TEXT_ALIGN, TEXT_ALIGN_RIGHT);
-			break;
+        // Aligment
+        ParagraphAlignment alignment = paragraph.getAlignment();
+        switch ( alignment )
+        {
+            case LEFT:
+                XHTMLUtil.addHTMLStyle( htmlStyle, TEXT_ALIGN, TEXT_ALIGN_LEFT );
+                break;
+            case RIGHT:
+                XHTMLUtil.addHTMLStyle( htmlStyle, TEXT_ALIGN, TEXT_ALIGN_RIGHT );
+                break;
 
-		case CENTER:
-			XHTMLUtil.addHTMLStyle(htmlStyle, TEXT_ALIGN, TEXT_ALIGN_CENTER);
-			break;
+            case CENTER:
+                XHTMLUtil.addHTMLStyle( htmlStyle, TEXT_ALIGN, TEXT_ALIGN_CENTER );
+                break;
 
-		case BOTH:
-			XHTMLUtil.addHTMLStyle(htmlStyle, TEXT_ALIGN, TEXT_ALIGN_JUSTIFIED);
-			break;
-		}
+            case BOTH:
+                XHTMLUtil.addHTMLStyle( htmlStyle, TEXT_ALIGN, TEXT_ALIGN_JUSTIFIED );
+                break;
+        }
 
-		// Margin bottom/top
-		if (spacingBefore != -1) {
-			XHTMLUtil.addHTMLStyle(htmlStyle, MARGIN_TOP, spacingBefore + "pt");
-		} else {
-			// By default p element are no margin top/bottom
-			// XHTMLUtil.addHTMLStyle(htmlStyle, MARGIN_TOP, "0");
-			XHTMLUtil.addHTMLStyle(htmlStyle, MARGIN_TOP, "0");
-		}
-		if (spacingAfter != -1) {
-			XHTMLUtil.addHTMLStyle(htmlStyle, MARGIN_BOTTOM, spacingAfter
-					+ "pt");
-		} else {
-			// By default p element are no margin top/bottom
-			// XHTMLUtil.addHTMLStyle(htmlStyle, MARGIN_TOP, "0");
-			XHTMLUtil.addHTMLStyle(htmlStyle, MARGIN_BOTTOM, "0");
-		}
+        // Margin bottom/top
+        if ( spacingBefore != -1 )
+        {
+            XHTMLUtil.addHTMLStyle( htmlStyle, MARGIN_TOP, spacingBefore + "pt" );
+        }
+        else
+        {
+            // By default p element are no margin top/bottom
+            // XHTMLUtil.addHTMLStyle(htmlStyle, MARGIN_TOP, "0");
+            XHTMLUtil.addHTMLStyle( htmlStyle, MARGIN_TOP, "0" );
+        }
+        if ( spacingAfter != -1 )
+        {
+            XHTMLUtil.addHTMLStyle( htmlStyle, MARGIN_BOTTOM, spacingAfter + "pt" );
+        }
+        else
+        {
+            // By default p element are no margin top/bottom
+            // XHTMLUtil.addHTMLStyle(htmlStyle, MARGIN_TOP, "0");
+            XHTMLUtil.addHTMLStyle( htmlStyle, MARGIN_BOTTOM, "0" );
+        }
 
-		// Background-color
-		String backgroundColor = XWPFParagraphUtils
-				.getBackgroundColor(paragraph);
-		if (StringUtils.isNotEmpty(backgroundColor)) {
-			XHTMLUtil.addHTMLStyle(htmlStyle, BACKGROUND_COLOR, "#"
-					+ backgroundColor);
+        // Background-color
+        String backgroundColor = XWPFParagraphUtils.getBackgroundColor( paragraph );
+        if ( StringUtils.isNotEmpty( backgroundColor ) )
+        {
+            XHTMLUtil.addHTMLStyle( htmlStyle, BACKGROUND_COLOR, "#" + backgroundColor );
 
-		}
-		return htmlStyle;
-	}
+        }
+        return htmlStyle;
+    }
 
-	public static StringBuilder getStyle(XWPFRun run, XWPFStyle runStyle,
-			XWPFStyle style, CTDocDefaults defaults) {
-		StringBuilder htmlStyle = new StringBuilder();
+    public static StringBuilder getStyle( XWPFRun run, XWPFStyle runStyle, XWPFStyle style, CTDocDefaults defaults )
+    {
+        StringBuilder htmlStyle = new StringBuilder();
 
-		// Get CTRPr from style+defaults
-		CTRPr runRprStyle = getRPr(runStyle);
-		CTRPr rprStyle = getRPr(style);
-		CTRPr rprDefault = getRPr(defaults);
+        // Get CTRPr from style+defaults
+        CTRPr runRprStyle = getRPr( runStyle );
+        CTRPr rprStyle = getRPr( style );
+        CTRPr rprDefault = getRPr( defaults );
 
-		// Font family
-		String fontFamily = getFontFamily(run, rprStyle, rprDefault);
-		if (StringUtils.isNotEmpty(fontFamily)) {
-			XHTMLUtil.addHTMLStyle(htmlStyle, FONT_FAMILY, "'" + fontFamily
-					+ "'");
-		}
+        // Font family
+        String fontFamily = getFontFamily( run, rprStyle, rprDefault );
+        if ( StringUtils.isNotEmpty( fontFamily ) )
+        {
+            XHTMLUtil.addHTMLStyle( htmlStyle, FONT_FAMILY, "'" + fontFamily + "'" );
+        }
 
-		// 2) Font size
-		float fontSize = run.getFontSize();
-		if (fontSize == -1) {
-			XHTMLUtil.addHTMLStyle(htmlStyle, FONT_SIZE, fontSize + "pt");
-		}
+        // 2) Font size
+        float fontSize = run.getFontSize();
+        if ( fontSize == -1 )
+        {
+            XHTMLUtil.addHTMLStyle( htmlStyle, FONT_SIZE, fontSize + "pt" );
+        }
 
-		// Font Bold
-		if (isBold(run, runRprStyle, rprStyle, rprDefault)) {
-			XHTMLUtil.addHTMLStyle(htmlStyle, FONT_WEIGHT, "bold");
-		}
-		// Font Italic
-		if (isItalic(run, runRprStyle, rprStyle, rprDefault)) {
-			XHTMLUtil.addHTMLStyle(htmlStyle, FONT_STYLE, "italic");
-		}
+        // Font Bold
+        if ( isBold( run, runRprStyle, rprStyle, rprDefault ) )
+        {
+            XHTMLUtil.addHTMLStyle( htmlStyle, FONT_WEIGHT, "bold" );
+        }
+        // Font Italic
+        if ( isItalic( run, runRprStyle, rprStyle, rprDefault ) )
+        {
+            XHTMLUtil.addHTMLStyle( htmlStyle, FONT_STYLE, "italic" );
+        }
 
-		// Font color
-		String fontColor = getFontColor(run, runRprStyle, rprStyle, rprDefault);
-		if (StringUtils.isNotEmpty(fontColor)) {
-			XHTMLUtil.addHTMLStyle(htmlStyle, COLOR, "#" + fontColor);
-		}
+        // Font color
+        String fontColor = getFontColor( run, runRprStyle, rprStyle, rprDefault );
+        if ( StringUtils.isNotEmpty( fontColor ) )
+        {
+            XHTMLUtil.addHTMLStyle( htmlStyle, COLOR, "#" + fontColor );
+        }
 
-		UnderlinePatterns underlinePatterns = run.getUnderline();
+        UnderlinePatterns underlinePatterns = run.getUnderline();
 
-		switch (underlinePatterns) {
-		case SINGLE:
-			XHTMLUtil.addHTMLStyle(htmlStyle, TEXT_DECORATION,
-					TEXT_DECORATION_UNDERLINE);
-			break;
-		default:
-			break;
-		}
+        switch ( underlinePatterns )
+        {
+            case SINGLE:
+                XHTMLUtil.addHTMLStyle( htmlStyle, TEXT_DECORATION, TEXT_DECORATION_UNDERLINE );
+                break;
+            default:
+                break;
+        }
 
-		return htmlStyle;
-	}
+        return htmlStyle;
+    }
 
-//	public static ComputedBorder computeBorder(XWPFTable table, XWPFStyle tableStyle,
-//			CTDocDefaults defaults) {
-//
-//		ComputedBorder computedBorder = new ComputedBorder(); 
-//		CTTblBorders localTblBorders = null;
-//		CTTblBorders styleTblBorders = null;
-//
-//		if (tableStyle != null) {
-//			styleTblBorders = tableStyle.getCTStyle().getTblPr()
-//					.getTblBorders();
-//		}
-//
-//		localTblBorders = table.getCTTbl().getTblPr().getTblBorders();
-//		computeBorder(localTblBorders, styleTblBorders, computedBorder);
-//		return computedBorder;
-//	}
+    // public static ComputedBorder computeBorder(XWPFTable table, XWPFStyle tableStyle,
+    // CTDocDefaults defaults) {
+    //
+    // ComputedBorder computedBorder = new ComputedBorder();
+    // CTTblBorders localTblBorders = null;
+    // CTTblBorders styleTblBorders = null;
+    //
+    // if (tableStyle != null) {
+    // styleTblBorders = tableStyle.getCTStyle().getTblPr()
+    // .getTblBorders();
+    // }
+    //
+    // localTblBorders = table.getCTTbl().getTblPr().getTblBorders();
+    // computeBorder(localTblBorders, styleTblBorders, computedBorder);
+    // return computedBorder;
+    // }
 
-//	private static void computeBorder(CTTblBorders localTblBorders,
-//			CTTblBorders styleTblBorders, ComputedBorder computedBorder) {
-//		// TODO Auto-generated method stub
-//		
-//	}
+    // private static void computeBorder(CTTblBorders localTblBorders,
+    // CTTblBorders styleTblBorders, ComputedBorder computedBorder) {
+    // // TODO Auto-generated method stub
+    //
+    // }
 
-	private static void setBorders(CTTblBorders localTblBorders,
-			CTTblBorders styleTblBorders, StringBuilder htmlStyle) {
-		setBorder(localTblBorders != null ? localTblBorders.getTop() : null,
-				styleTblBorders != null ? styleTblBorders.getTop() : null,
-				htmlStyle, BorderType.TOP);
-	}
+    private static void setBorders( CTTblBorders localTblBorders, CTTblBorders styleTblBorders, StringBuilder htmlStyle )
+    {
+        setBorder( localTblBorders != null ? localTblBorders.getTop() : null,
+                   styleTblBorders != null ? styleTblBorders.getTop() : null, htmlStyle, BorderType.TOP );
+    }
 
-	private static void setBorder(CTBorder localBorder, CTBorder styleBorder,
-			StringBuilder htmlStyle, BorderType borderType) {
-		boolean noBorder = false;
-		float borderSize = -1;
-		String borderColor = null;
-		if (localBorder != null) {
-			noBorder = (STBorder.NONE == localBorder.getVal());
-			if (noBorder) {
-				XHTMLUtil.addHTMLStyle(htmlStyle, BORDER, "none");
-				return;
-			}
+    private static void setBorder( CTBorder localBorder, CTBorder styleBorder, StringBuilder htmlStyle,
+                                   BorderType borderType )
+    {
+        boolean noBorder = false;
+        float borderSize = -1;
+        String borderColor = null;
+        if ( localBorder != null )
+        {
+            noBorder = ( STBorder.NONE == localBorder.getVal() );
+            if ( noBorder )
+            {
+                XHTMLUtil.addHTMLStyle( htmlStyle, BORDER, "none" );
+                return;
+            }
 
-			BigInteger size = localBorder.getSz();
-			if (size != null) {
-				borderSize = dxa2points(size);
-			}
+            BigInteger size = localBorder.getSz();
+            if ( size != null )
+            {
+                borderSize = dxa2points( size );
+            }
 
-			borderColor = XWPFTableUtil.getBorderColor(localBorder);
-		}
+            borderColor = XWPFTableUtil.getBorderColor( localBorder );
+        }
 
-		if (styleBorder != null) {
-			noBorder = (STBorder.NONE == styleBorder.getVal());
-			if (noBorder) {
-				XHTMLUtil.addHTMLStyle(htmlStyle, BORDER, "none");
-				return;
-			}
+        if ( styleBorder != null )
+        {
+            noBorder = ( STBorder.NONE == styleBorder.getVal() );
+            if ( noBorder )
+            {
+                XHTMLUtil.addHTMLStyle( htmlStyle, BORDER, "none" );
+                return;
+            }
 
-			if (borderSize == -1) {
-				BigInteger size = styleBorder.getSz();
-				if (size != null) {
-					borderSize = dxa2points(size);
-				}
-			}
+            if ( borderSize == -1 )
+            {
+                BigInteger size = styleBorder.getSz();
+                if ( size != null )
+                {
+                    borderSize = dxa2points( size );
+                }
+            }
 
-			if (borderColor == null) {
-				borderColor = XWPFTableUtil.getBorderColor(styleBorder);
-			}
-		}
+            if ( borderColor == null )
+            {
+                borderColor = XWPFTableUtil.getBorderColor( styleBorder );
+            }
+        }
 
-		if (borderSize != -1) {
-			switch (borderType) {
-			case TOP:
-				XHTMLUtil.addHTMLStyle(htmlStyle, "border-top-width",
-						borderSize + "pt");
-				break;
-			}
-		}
+        if ( borderSize != -1 )
+        {
+            switch ( borderType )
+            {
+                case TOP:
+                    XHTMLUtil.addHTMLStyle( htmlStyle, "border-top-width", borderSize + "pt" );
+                    break;
+            }
+        }
 
-		if (borderColor != null) {
-			switch (borderType) {
-			case TOP:
-				XHTMLUtil.addHTMLStyle(htmlStyle, "border-top-color", "#"
-						+ borderColor);
-				break;
-			}
-		}
-	}
+        if ( borderColor != null )
+        {
+            switch ( borderType )
+            {
+                case TOP:
+                    XHTMLUtil.addHTMLStyle( htmlStyle, "border-top-color", "#" + borderColor );
+                    break;
+            }
+        }
+    }
 
-	public static StringBuilder getStyle(XWPFTableCell tableCell,
-			CTDocDefaults defaults) {
-		StringBuilder htmlStyle = new StringBuilder();
+    public static StringBuilder getStyle( XWPFTableCell tableCell, CTDocDefaults defaults )
+    {
+        StringBuilder htmlStyle = new StringBuilder();
 
-		CTTcPr tcPr = tableCell.getCTTc().getTcPr();
+        CTTcPr tcPr = tableCell.getCTTc().getTcPr();
 
-		// Width
-		CTTblWidth tblWidth = tcPr.getTcW();
-		if (tblWidth != null) {
-			TableWidth tableWidth = XWPFTableUtil.getTableWidth(tableCell);
-			boolean percentUnit = tableWidth.percentUnit;
-			if (percentUnit) {
-				XHTMLUtil
-						.addHTMLStyle(htmlStyle, WIDTH, tableWidth.width + "%");
-			} else {
-				XHTMLUtil.addHTMLStyle(htmlStyle, WIDTH, tableWidth.width
-						+ "pt");
-			}
-		}
+        // Width
+        CTTblWidth tblWidth = tcPr.getTcW();
+        if ( tblWidth != null )
+        {
+            TableWidth tableWidth = XWPFTableUtil.getTableWidth( tableCell );
+            boolean percentUnit = tableWidth.percentUnit;
+            if ( percentUnit )
+            {
+                XHTMLUtil.addHTMLStyle( htmlStyle, WIDTH, tableWidth.width + "%" );
+            }
+            else
+            {
+                XHTMLUtil.addHTMLStyle( htmlStyle, WIDTH, tableWidth.width + "pt" );
+            }
+        }
 
-		// Background Color
-		CTShd shd = tcPr.getShd();
-		if (shd != null) {
-			String backgroundColor = XWPFUtils.getColor(shd.xgetFill());
-			if (StringUtils.isNotEmpty(backgroundColor)) {
-				XHTMLUtil.addHTMLStyle(htmlStyle, BACKGROUND_COLOR, "#"
-						+ backgroundColor);
-			}
-		}
+        // Background Color
+        CTShd shd = tcPr.getShd();
+        if ( shd != null )
+        {
+            String backgroundColor = XWPFUtils.getColor( shd.xgetFill() );
+            if ( StringUtils.isNotEmpty( backgroundColor ) )
+            {
+                XHTMLUtil.addHTMLStyle( htmlStyle, BACKGROUND_COLOR, "#" + backgroundColor );
+            }
+        }
 
+        return htmlStyle;
+    }
 
-		return htmlStyle;
-	}
+    public static CTPPr getPPr( XWPFStyle style )
+    {
+        if ( style == null )
+        {
+            return null;
+        }
 
-	public static CTPPr getPPr(XWPFStyle style) {
-		if (style == null) {
-			return null;
-		}
+        CTStyle ctStyle = style.getCTStyle();
+        if ( ctStyle == null )
+        {
+            return null;
+        }
+        return ctStyle.getPPr();
+    }
 
-		CTStyle ctStyle = style.getCTStyle();
-		if (ctStyle == null) {
-			return null;
-		}
-		return ctStyle.getPPr();
-	}
+    public static StringBuilder getStyle( XWPFPicture picture )
+    {
+        StringBuilder htmlStyle = new StringBuilder();
 
-	public static StringBuilder getStyle(XWPFPicture picture) {
-		StringBuilder htmlStyle = new StringBuilder();
+        // Position
+        CTPositiveSize2D ext = picture.getCTPicture().getSpPr().getXfrm().getExt();
+        long x = ext.getCx();
+        long y = ext.getCy();
+        float width = dxa2points( x ) / 635;
+        float height = dxa2points( y ) / 635;
 
-		// Position
-		CTPositiveSize2D ext = picture.getCTPicture().getSpPr().getXfrm()
-				.getExt();
-		long x = ext.getCx();
-		long y = ext.getCy();
-		float width = dxa2points(x) / 635;
-		float height = dxa2points(y) / 635;
+        XHTMLUtil.addHTMLStyle( htmlStyle, WIDTH, width + "pt" );
+        XHTMLUtil.addHTMLStyle( htmlStyle, HEIGHT, height + "pt" );
 
-		XHTMLUtil.addHTMLStyle(htmlStyle, WIDTH, width + "pt");
-		XHTMLUtil.addHTMLStyle(htmlStyle, HEIGHT, height + "pt");
-
-		return htmlStyle;
-	}
+        return htmlStyle;
+    }
 
 }

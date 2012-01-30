@@ -34,151 +34,202 @@ import fr.opensagres.xdocreport.template.IContext;
 
 /**
  * Abstract class for document handler {@link IDocumentHandler}.
- * 
  */
-public abstract class AbstractDocumentHandler extends Writer implements
-		IDocumentHandler {
+public abstract class AbstractDocumentHandler
+    extends Writer
+    implements IDocumentHandler
+{
 
-	private final BufferedElement parent;
-	private final IContext context;
-	private final Stack<Boolean> listStack;
+    private final BufferedElement parent;
 
-	private StringWriter beforeWriter;
-	private StringWriter bodyWriter;
-	private StringWriter endWriter;
-	private StringWriter currentWriter;
+    private final IContext context;
 
-	public AbstractDocumentHandler(BufferedElement parent, IContext context) {
-		this.parent = parent;
-		this.context = context;
-		// Stack of boolean (ordered or not) for the ordered/unordered list
-		this.listStack = new Stack<Boolean>();
-	}
+    private final Stack<Boolean> listStack;
 
-	public void handleString(String s) throws IOException {
-		getCurrentWriter().write(s);
-	}
+    private StringWriter beforeWriter;
 
-	public final void startOrderedList() throws IOException {
-		listStack.push(true);
-		doStartOrderedList();
-	}
+    private StringWriter bodyWriter;
 
-	public final void endOrderedList() throws IOException {
-		listStack.pop();
-		doEndOrderedList();
-	}
+    private StringWriter endWriter;
 
-	public final void startUnorderedList() throws IOException {
-		listStack.push(false);
-		doStartUnorderedList();
-	}
+    private StringWriter currentWriter;
 
-	public final void endUnorderedList() throws IOException {
-		listStack.pop();
-		doEndUnorderedList();
-	}
+    public AbstractDocumentHandler( BufferedElement parent, IContext context )
+    {
+        this.parent = parent;
+        this.context = context;
+        // Stack of boolean (ordered or not) for the ordered/unordered list
+        this.listStack = new Stack<Boolean>();
+    }
 
-	protected boolean getCurrentListOrder() {
-		if (listStack.isEmpty()) {
-			return false;
-		}
-		return listStack.peek();
-	}
+    public void handleString( String s )
+        throws IOException
+    {
+        getCurrentWriter().write( s );
+    }
 
-	protected int getCurrentListIndex() {
-		if (listStack.isEmpty()) {
-			return 0;
-		}
-		return listStack.size() - 1;
-	}
+    public final void startOrderedList()
+        throws IOException
+    {
+        listStack.push( true );
+        doStartOrderedList();
+    }
 
-	public BufferedElement getParent() {
-		return parent;
-	}
+    public final void endOrderedList()
+        throws IOException
+    {
+        listStack.pop();
+        doEndOrderedList();
+    }
 
-	public IContext getContext() {
-		return context;
-	}
+    public final void startUnorderedList()
+        throws IOException
+    {
+        listStack.push( false );
+        doStartUnorderedList();
+    }
 
-	public String getTextBefore() {
-		if (beforeWriter != null) {
-			return beforeWriter.toString();
-		}
-		return "";
-	}
+    public final void endUnorderedList()
+        throws IOException
+    {
+        listStack.pop();
+        doEndUnorderedList();
+    }
 
-	public String getTextBody() {
-		if (bodyWriter != null) {
-			return bodyWriter.toString();
-		}
-		return "";
-	}
+    protected boolean getCurrentListOrder()
+    {
+        if ( listStack.isEmpty() )
+        {
+            return false;
+        }
+        return listStack.peek();
+    }
 
-	public String getTextEnd() {
-		if (endWriter != null) {
-			return endWriter.toString();
-		}
-		return "";
-	}
+    protected int getCurrentListIndex()
+    {
+        if ( listStack.isEmpty() )
+        {
+            return 0;
+        }
+        return listStack.size() - 1;
+    }
 
-	public void setTextLocation(TextLocation location) {
-		switch (location) {
-		case Before:
-			if (beforeWriter == null) {
-				beforeWriter = new StringWriter();
-			}
-			currentWriter = beforeWriter;
-			break;
-		case Body:
-			if (bodyWriter == null) {
-				bodyWriter = new StringWriter();
-			}
-			currentWriter = bodyWriter;
-			break;
-		case End:
-			if (endWriter == null) {
-				endWriter = new StringWriter();
-			}
-			currentWriter = endWriter;
-			break;
-		}
-	}
+    public BufferedElement getParent()
+    {
+        return parent;
+    }
 
-	@Override
-	public void close() throws IOException {
-		getCurrentWriter().close();
-	}
+    public IContext getContext()
+    {
+        return context;
+    }
 
-	@Override
-	public void flush() throws IOException {
-		getCurrentWriter().flush();
-	}
+    public String getTextBefore()
+    {
+        if ( beforeWriter != null )
+        {
+            return beforeWriter.toString();
+        }
+        return "";
+    }
 
-	@Override
-	public void write(char[] arg0, int arg1, int arg2) throws IOException {
-		getCurrentWriter().write(arg0, arg1, arg2);
-	}
+    public String getTextBody()
+    {
+        if ( bodyWriter != null )
+        {
+            return bodyWriter.toString();
+        }
+        return "";
+    }
 
-	public Writer getCurrentWriter() {
-		if (currentWriter == null) {
-			setTextLocation(TextLocation.Body);
-		}
-		return currentWriter;
-	}
+    public String getTextEnd()
+    {
+        if ( endWriter != null )
+        {
+            return endWriter.toString();
+        }
+        return "";
+    }
 
-	@Override
-	public String toString() {
-		StringBuilder result = new StringBuilder();
-		result.append("@textBefore=" + getTextBefore());
-		result.append("\n");
-		result.append("@textBody=" + getTextBody());
-		result.append("\n");
-		result.append("@textend=" + getTextEnd());
-		return result.toString();
-	}
+    public void setTextLocation( TextLocation location )
+    {
+        switch ( location )
+        {
+            case Before:
+                if ( beforeWriter == null )
+                {
+                    beforeWriter = new StringWriter();
+                }
+                currentWriter = beforeWriter;
+                break;
+            case Body:
+                if ( bodyWriter == null )
+                {
+                    bodyWriter = new StringWriter();
+                }
+                currentWriter = bodyWriter;
+                break;
+            case End:
+                if ( endWriter == null )
+                {
+                    endWriter = new StringWriter();
+                }
+                currentWriter = endWriter;
+                break;
+        }
+    }
 
-	protected abstract void doEndUnorderedList() throws IOException;
-	protected abstract void doEndOrderedList() throws IOException;
-	protected abstract void doStartUnorderedList() throws IOException;
-	protected abstract void doStartOrderedList() throws IOException;}
+    @Override
+    public void close()
+        throws IOException
+    {
+        getCurrentWriter().close();
+    }
+
+    @Override
+    public void flush()
+        throws IOException
+    {
+        getCurrentWriter().flush();
+    }
+
+    @Override
+    public void write( char[] arg0, int arg1, int arg2 )
+        throws IOException
+    {
+        getCurrentWriter().write( arg0, arg1, arg2 );
+    }
+
+    public Writer getCurrentWriter()
+    {
+        if ( currentWriter == null )
+        {
+            setTextLocation( TextLocation.Body );
+        }
+        return currentWriter;
+    }
+
+    @Override
+    public String toString()
+    {
+        StringBuilder result = new StringBuilder();
+        result.append( "@textBefore=" + getTextBefore() );
+        result.append( "\n" );
+        result.append( "@textBody=" + getTextBody() );
+        result.append( "\n" );
+        result.append( "@textend=" + getTextEnd() );
+        return result.toString();
+    }
+
+    protected abstract void doEndUnorderedList()
+        throws IOException;
+
+    protected abstract void doEndOrderedList()
+        throws IOException;
+
+    protected abstract void doStartUnorderedList()
+        throws IOException;
+
+    protected abstract void doStartOrderedList()
+        throws IOException;
+}

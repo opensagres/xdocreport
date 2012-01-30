@@ -37,50 +37,60 @@ import fr.opensagres.xdocreport.template.config.AbstractTemplateEngineConfigurat
 import fr.opensagres.xdocreport.template.config.ITemplateEngineConfiguration;
 import fr.opensagres.xdocreport.template.config.ReplaceText;
 
-public class VelocityTemplateEngineConfigurationTestCase extends TestCase {
+public class VelocityTemplateEngineConfigurationTestCase
+    extends TestCase
+{
 
-	public void testEscapeXMLContext() throws Exception {
-		ITemplateEngine templateEngine = new VelocityTemplateEngine();
+    public void testEscapeXMLContext()
+        throws Exception
+    {
+        ITemplateEngine templateEngine = new VelocityTemplateEngine();
 
-		ITemplateEngineConfiguration configuration = new JUnitTemplateEngineConfiguration();
-		templateEngine.setConfiguration(configuration);
-		
-		Reader reader = new StringReader("Project: ${project.name}.");
-		Writer writer = new StringWriter();
-		IContext context = templateEngine.createContext();
-		context.put("project.name", "A&B");
+        ITemplateEngineConfiguration configuration = new JUnitTemplateEngineConfiguration();
+        templateEngine.setConfiguration( configuration );
 
-		templateEngine.process("", context, reader, writer);
-		assertEquals("Project: A&amp;B.", writer.toString());
-	}
+        Reader reader = new StringReader( "Project: ${project.name}." );
+        Writer writer = new StringWriter();
+        IContext context = templateEngine.createContext();
+        context.put( "project.name", "A&B" );
 
-	public void testSpecialCharacterContext() throws Exception {
-		ITemplateEngine templateEngine = new VelocityTemplateEngine();
+        templateEngine.process( "", context, reader, writer );
+        assertEquals( "Project: A&amp;B.", writer.toString() );
+    }
 
-		ITemplateEngineConfiguration configuration = new JUnitTemplateEngineConfiguration();
-		templateEngine.setConfiguration(configuration);
-		
-		Reader reader = new StringReader("Project: ${project.name}.");
-		Writer writer = new StringWriter();
-		IContext context = templateEngine.createContext();
-		context.put("project.name", "A\nB");
+    public void testSpecialCharacterContext()
+        throws Exception
+    {
+        ITemplateEngine templateEngine = new VelocityTemplateEngine();
 
-		templateEngine.process("", context, reader, writer);
-		assertEquals("Project: A<text:line-break>B.", writer.toString());
-	}
-	
-	private static class JUnitTemplateEngineConfiguration extends AbstractTemplateEngineConfiguration {
-		
-		@Override
-		public boolean escapeXML() {
-			return true;
-		}
-		
-		@Override
-		protected void populate(Collection<ReplaceText> replacment) {
-			replacment.add(new ReplaceText("\n", "<text:line-break>"));
-			
-		}
-				
-	}
+        ITemplateEngineConfiguration configuration = new JUnitTemplateEngineConfiguration();
+        templateEngine.setConfiguration( configuration );
+
+        Reader reader = new StringReader( "Project: ${project.name}." );
+        Writer writer = new StringWriter();
+        IContext context = templateEngine.createContext();
+        context.put( "project.name", "A\nB" );
+
+        templateEngine.process( "", context, reader, writer );
+        assertEquals( "Project: A<text:line-break>B.", writer.toString() );
+    }
+
+    private static class JUnitTemplateEngineConfiguration
+        extends AbstractTemplateEngineConfiguration
+    {
+
+        @Override
+        public boolean escapeXML()
+        {
+            return true;
+        }
+
+        @Override
+        protected void populate( Collection<ReplaceText> replacment )
+        {
+            replacment.add( new ReplaceText( "\n", "<text:line-break>" ) );
+
+        }
+
+    }
 }

@@ -24,13 +24,16 @@
  */
 package org.apache.poi.xwpf.converter.internal.itext;
 
-public class TableWidth {
+public class TableWidth
+{
 
-	public final float width;
-	public final boolean percentUnit;
-	
-	public TableWidth(float width, boolean percentUnit) {
-		this.width = width;
-		this.percentUnit = percentUnit;
-	}
+    public final float width;
+
+    public final boolean percentUnit;
+
+    public TableWidth( float width, boolean percentUnit )
+    {
+        this.width = width;
+        this.percentUnit = percentUnit;
+    }
 }

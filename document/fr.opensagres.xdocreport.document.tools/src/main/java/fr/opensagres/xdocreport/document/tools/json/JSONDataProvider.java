@@ -17,74 +17,103 @@ import fr.opensagres.xdocreport.document.IXDocReport;
 import fr.opensagres.xdocreport.document.tools.AbstractDataProvider;
 import fr.opensagres.xdocreport.template.IContext;
 
-public class JSONDataProvider extends AbstractDataProvider {
+public class JSONDataProvider
+    extends AbstractDataProvider
+{
 
-	private JSONObject jsonObject;
+    private JSONObject jsonObject;
 
-	public JSONDataProvider(InputStream data, InputStream properties)
-			throws Exception {
-		super(data, properties);
-		jsonObject = new JSONObject(getDataAsString());
-	}
+    public JSONDataProvider( InputStream data, InputStream properties )
+        throws Exception
+    {
+        super( data, properties );
+        jsonObject = new JSONObject( getDataAsString() );
+    }
 
-	public void populateContext(IXDocReport report, IContext context)
-			throws IOException, XDocReportException {
-		Iterator i = jsonObject.keys();
-		while (i.hasNext()) {
-			String key = (String) i.next();
-			try {
-				Object value = jsonObject.get(key);
-				if (value instanceof JSONObject) {
-					Map subBean = toMap((JSONObject) value);
-					context.put(key, subBean);
-				} else if (value instanceof JSONArray) {
-					JSONArray array = (JSONArray) value;
-					int length = array.length();
-					List list = new ArrayList(length);
-					for (int j = 0; j < length; j++) {
-						Object itemValue = array.get(j);
-						if (itemValue instanceof JSONObject) {
-							list.add(toMap((JSONObject) itemValue));
-						} else {
-							list.add(itemValue);
-						}
-					}
-					context.put(key, list);
-				} else {
-					context.put(key, value);
-				}
-			} catch (JSONException e) {
-				throw new XDocReportException(e);
-			}
-		}
-	}
+    public void populateContext( IXDocReport report, IContext context )
+        throws IOException, XDocReportException
+    {
+        Iterator i = jsonObject.keys();
+        while ( i.hasNext() )
+        {
+            String key = (String) i.next();
+            try
+            {
+                Object value = jsonObject.get( key );
+                if ( value instanceof JSONObject )
+                {
+                    Map subBean = toMap( (JSONObject) value );
+                    context.put( key, subBean );
+                }
+                else if ( value instanceof JSONArray )
+                {
+                    JSONArray array = (JSONArray) value;
+                    int length = array.length();
+                    List list = new ArrayList( length );
+                    for ( int j = 0; j < length; j++ )
+                    {
+                        Object itemValue = array.get( j );
+                        if ( itemValue instanceof JSONObject )
+                        {
+                            list.add( toMap( (JSONObject) itemValue ) );
+                        }
+                        else
+                        {
+                            list.add( itemValue );
+                        }
+                    }
+                    context.put( key, list );
+                }
+                else
+                {
+                    context.put( key, value );
+                }
+            }
+            catch ( JSONException e )
+            {
+                throw new XDocReportException( e );
+            }
+        }
+    }
 
-	private Map toMap(JSONObject jsonObject) throws JSONException {
-		Map parentBean = new HashMap();
-		Iterator i = jsonObject.keys();
-		while (i.hasNext()) {
-			String key = (String) i.next();
-			Object value = jsonObject.get(key);
-			if (value instanceof JSONObject) {
-				Map subBean = toMap((JSONObject) value);
-				parentBean.put(key, subBean);
-			} else if (value instanceof JSONArray) {
-				JSONArray array = (JSONArray) value;
-				int length = array.length();
-				List list = new ArrayList(length);
-				for (int j = 0; j < length; j++) {
-					Object itemValue = array.get(j);
-					if (itemValue instanceof JSONObject) {
-						list.add(toMap((JSONObject) itemValue));
-					} else {
-						list.add(itemValue);
-					}
-				}
-				parentBean.put(key, list);
-			} else {
-				parentBean.put(key, value);
-			}
-		}
-		return parentBean;
-	}
+    private Map toMap( JSONObject jsonObject )
+        throws JSONException
+    {
+        Map parentBean = new HashMap();
+        Iterator i = jsonObject.keys();
+        while ( i.hasNext() )
+        {
+            String key = (String) i.next();
+            Object value = jsonObject.get( key );
+            if ( value instanceof JSONObject )
+            {
+                Map subBean = toMap( (JSONObject) value );
+                parentBean.put( key, subBean );
+            }
+            else if ( value instanceof JSONArray )
+            {
+                JSONArray array = (JSONArray) value;
+                int length = array.length();
+                List list = new ArrayList( length );
+                for ( int j = 0; j < length; j++ )
+                {
+                    Object itemValue = array.get( j );
+                    if ( itemValue instanceof JSONObject )
+                    {
+                        list.add( toMap( (JSONObject) itemValue ) );
+                    }
+                    else
+                    {
+                        list.add( itemValue );
+                    }
+                }
+                parentBean.put( key, list );
+            }
+            else
+            {
+                parentBean.put( key, value );
+            }
+        }
+        return parentBean;
+    }
 }

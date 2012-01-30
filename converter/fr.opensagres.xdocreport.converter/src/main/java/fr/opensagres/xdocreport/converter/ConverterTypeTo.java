@@ -26,9 +26,9 @@ package fr.opensagres.xdocreport.converter;
 
 /**
  * XDocReport available converter type to another format.
- * 
  */
-public enum ConverterTypeTo {
+public enum ConverterTypeTo
+{
 
-	XHTML, FO, PDF
+    XHTML, FO, PDF
 }

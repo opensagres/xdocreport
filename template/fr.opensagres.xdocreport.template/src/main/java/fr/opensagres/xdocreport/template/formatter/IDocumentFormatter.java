@@ -24,61 +24,55 @@
  */
 package fr.opensagres.xdocreport.template.formatter;
 
-public interface IDocumentFormatter {
+public interface IDocumentFormatter
+{
 
-	String IMAGE_REGISTRY_KEY = "imageRegistry";
+    String IMAGE_REGISTRY_KEY = "imageRegistry";
 
-	String getStartDocumentDirective();
+    String getStartDocumentDirective();
 
-	String getEndDocumentDirective();
+    String getEndDocumentDirective();
 
-	String formatAsFieldItemList(String content, String fieldName,
-			boolean forceAsField);
+    String formatAsFieldItemList( String content, String fieldName, boolean forceAsField );
 
-	String extractItemNameList(String content, String fieldName,
-			boolean forceAsField);
+    String extractItemNameList( String content, String fieldName, boolean forceAsField );
 
-	String getStartLoopDirective(String itemNameList);
+    String getStartLoopDirective( String itemNameList );
 
-	String getStartLoopDirective(String itemNameList, String listName);
+    String getStartLoopDirective( String itemNameList, String listName );
 
-	String getEndLoopDirective(String itemNameList);
+    String getEndLoopDirective( String itemNameList );
 
-	String getLoopCountDirective(String fieldName);
+    String getLoopCountDirective( String fieldName );
 
-	String getStartIfDirective(String fieldName);
+    String getStartIfDirective( String fieldName );
 
-	String getEndIfDirective(String fieldName);
+    String getEndIfDirective( String fieldName );
 
-	String formatAsSimpleField(boolean encloseInDirective, String... fields);
+    String formatAsSimpleField( boolean encloseInDirective, String... fields );
 
-	String getImageDirective(String fieldName);
+    String getImageDirective( String fieldName );
 
-	String getImageWidthDirective(String fieldName, String defaultWidth);
+    String getImageWidthDirective( String fieldName, String defaultWidth );
 
-	String getImageHeightDirective(String fieldName, String defaultHeight);
+    String getImageHeightDirective( String fieldName, String defaultHeight );
 
-	boolean containsInterpolation(String content);
+    boolean containsInterpolation( String content );
 
-	int extractListDirectiveInfo(String content, DirectivesStack directives);
+    int extractListDirectiveInfo( String content, DirectivesStack directives );
 
-	int extractListDirectiveInfo(String content, DirectivesStack directives,
-			boolean dontRemoveListDirectiveInfo);
+    int extractListDirectiveInfo( String content, DirectivesStack directives, boolean dontRemoveListDirectiveInfo );
 
-	String extractModelTokenPrefix(String newContent);
+    String extractModelTokenPrefix( String newContent );
 
-	int getIndexOfScript(String fieldName);
+    int getIndexOfScript( String fieldName );
 
-	String getFunctionDirective(String key, String methodName,
-			String... parameters);
+    String getFunctionDirective( String key, String methodName, String... parameters );
 
+    boolean hasDirective( String characters );
 
-	boolean hasDirective(String characters);
+    String formatAsCallTextStyling( long variableIndex, String fieldName, String metafieldName, String documentKind,
+                                    String syntaxKind, String elementId );
 
-	String formatAsCallTextStyling(long variableIndex, String fieldName,
-			String metafieldName, String documentKind, String syntaxKind,
-			String elementId);
-
-	String formatAsTextStylingField(long variableIndex,
-			String textBeforeProperty);
+    String formatAsTextStylingField( long variableIndex, String textBeforeProperty );
 }

@@ -38,84 +38,95 @@ import fr.opensagres.xdocreport.core.io.IOUtils;
 import fr.opensagres.xdocreport.template.TemplateEngineKind;
 import fr.opensagres.xdocreport.template.formatter.FieldsMetadata;
 
-public class XDocReportServiceProcessTestCase extends TestCase {
+public class XDocReportServiceProcessTestCase
+    extends TestCase
+{
 
-	public void testProcessReportWithoutCache() throws Exception {
+    public void testProcessReportWithoutCache()
+        throws Exception
+    {
 
-		// 1) Prepare Parameters
-		byte[] document = getDocumentAsByteArray(XDocReportServiceProcessTestCase.class
-				.getResourceAsStream("ODTHelloWordWithVelocity.odt"));
-		FieldsMetadata fieldsMetadata = null;
-		String templateEngineId = TemplateEngineKind.Velocity.name();
+        // 1) Prepare Parameters
+        byte[] document =
+            getDocumentAsByteArray( XDocReportServiceProcessTestCase.class.getResourceAsStream( "ODTHelloWordWithVelocity.odt" ) );
+        FieldsMetadata fieldsMetadata = null;
+        String templateEngineId = TemplateEngineKind.Velocity.name();
 
-		// Data Context parameters
-		List<DataContext> dataContext = new ArrayList<DataContext>();
-		DataContext data = new DataContext();
-		data.setKey("name");
-		data.setValue("world");
-		dataContext.add(data);
+        // Data Context parameters
+        List<DataContext> dataContext = new ArrayList<DataContext>();
+        DataContext data = new DataContext();
+        data.setKey( "name" );
+        data.setValue( "world" );
+        dataContext.add( data );
 
-		Options options = null;
+        Options options = null;
 
-		// 2) Call process which returns byte array
-		byte[] result = XDocReportService.INSTANCE.process(document,
-				fieldsMetadata, templateEngineId,
-				dataContext, options);
-		assertNotNull(result);
+        // 2) Call process which returns byte array
+        byte[] result =
+            XDocReportService.INSTANCE.process( document, fieldsMetadata, templateEngineId, dataContext, options );
+        assertNotNull( result );
 
-		// 3) Save generated report
-		File outFile = new File("target/ODTHelloWordWithVelocity_WithoutCache.odt");
-		FileOutputStream out = new FileOutputStream(outFile);
-		try {
-			out.write(result);
-			out.flush();
-		} finally {
-			out.close();
-		}
-	}
+        // 3) Save generated report
+        File outFile = new File( "target/ODTHelloWordWithVelocity_WithoutCache.odt" );
+        FileOutputStream out = new FileOutputStream( outFile );
+        try
+        {
+            out.write( result );
+            out.flush();
+        }
+        finally
+        {
+            out.close();
+        }
+    }
 
-	public void testProcessReportWithCache() throws Exception {
+    public void testProcessReportWithCache()
+        throws Exception
+    {
 
-		// 1) Prepare Parameters
-		String reportId = "MyId";
-		byte[] document = getDocumentAsByteArray(XDocReportServiceProcessTestCase.class
-				.getResourceAsStream("ODTHelloWordWithVelocity.odt"));
-		FieldsMetadata fieldsMetadata = null;
-		String templateEngineId = TemplateEngineKind.Velocity.name();
+        // 1) Prepare Parameters
+        String reportId = "MyId";
+        byte[] document =
+            getDocumentAsByteArray( XDocReportServiceProcessTestCase.class.getResourceAsStream( "ODTHelloWordWithVelocity.odt" ) );
+        FieldsMetadata fieldsMetadata = null;
+        String templateEngineId = TemplateEngineKind.Velocity.name();
 
-		// Data Context parameters
-		List<DataContext> dataContext = new ArrayList<DataContext>();
-		DataContext data = new DataContext();
-		data.setKey("name");
-		data.setValue("world");
-		dataContext.add(data);
+        // Data Context parameters
+        List<DataContext> dataContext = new ArrayList<DataContext>();
+        DataContext data = new DataContext();
+        data.setKey( "name" );
+        data.setValue( "world" );
+        dataContext.add( data );
 
-		Options options = null;
+        Options options = null;
 
-		// 2) Register the report
-		XDocReportService.INSTANCE.registerReport(reportId, document,
-				fieldsMetadata, templateEngineId);
+        // 2) Register the report
+        XDocReportService.INSTANCE.registerReport( reportId, document, fieldsMetadata, templateEngineId );
 
-		// 3) Call process which returns byte array
-		byte[] result = XDocReportService.INSTANCE.process(reportId,
-				dataContext, options);
-		assertNotNull(result);
+        // 3) Call process which returns byte array
+        byte[] result = XDocReportService.INSTANCE.process( reportId, dataContext, options );
+        assertNotNull( result );
 
-		// 3) Save generated report
-		File outFile = new File("target/ODTHelloWordWithVelocity_WithCache.odt");
-		FileOutputStream out = new FileOutputStream(outFile);
-		try {
-			out.write(result);
-			out.flush();
-		} finally {
-			out.close();
-		}
-	}
+        // 3) Save generated report
+        File outFile = new File( "target/ODTHelloWordWithVelocity_WithCache.odt" );
+        FileOutputStream out = new FileOutputStream( outFile );
+        try
+        {
+            out.write( result );
+            out.flush();
+        }
+        finally
+        {
+            out.close();
+        }
+    }
 
-	protected byte[] getDocumentAsByteArray(InputStream in) throws IOException {
-		ByteArrayOutputStream out = new ByteArrayOutputStream();
-		IOUtils.copy(in, out);
-		return out.toByteArray();
-	}
+    protected byte[] getDocumentAsByteArray( InputStream in )
+        throws IOException
+    {
+        ByteArrayOutputStream out = new ByteArrayOutputStream();
+        IOUtils.copy( in, out );
+        return out.toByteArray();
+    }
 
 }

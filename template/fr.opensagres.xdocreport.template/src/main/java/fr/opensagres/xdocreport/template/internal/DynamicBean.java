@@ -27,43 +27,54 @@ package fr.opensagres.xdocreport.template.internal;
 import java.util.HashMap;
 
 /**
- * DynamicBean is used to emulate Java Bean. 
- *
+ * DynamicBean is used to emulate Java Bean.
  */
-public class DynamicBean extends HashMap<String, Object> {
+public class DynamicBean
+    extends HashMap<String, Object>
+{
 
-	private static final long serialVersionUID = 5652931397585026247L;
+    private static final long serialVersionUID = 5652931397585026247L;
 
-	public void setValue(String[] keys, Object value, int startIndex) {
-		DynamicBean bean = this;
-		String key = null;
-		for (int i = startIndex; i < keys.length; i++) {
-			key = keys[i];
-			if (i == keys.length - 1) {
-				if (bean != null) {
-					bean.setValue(key, value);
-				}
-			}
-			else {
-				bean = getDynamicBean(key);
-			}
-		}
-	}
+    public void setValue( String[] keys, Object value, int startIndex )
+    {
+        DynamicBean bean = this;
+        String key = null;
+        for ( int i = startIndex; i < keys.length; i++ )
+        {
+            key = keys[i];
+            if ( i == keys.length - 1 )
+            {
+                if ( bean != null )
+                {
+                    bean.setValue( key, value );
+                }
+            }
+            else
+            {
+                bean = getDynamicBean( key );
+            }
+        }
+    }
 
-	private void setValue(String key, Object value) {
-		super.put(key, value);
-	}
+    private void setValue( String key, Object value )
+    {
+        super.put( key, value );
+    }
 
-	private DynamicBean getDynamicBean(String key) {
-		Object result = super.get(key);
-		if (result == null) {
-			DynamicBean bean = new DynamicBean();
-			super.put(key, bean);
-			return bean;
-		} else if (result instanceof DynamicBean) {
-			return (DynamicBean) result;
-		}
-		return null;
-	}
+    private DynamicBean getDynamicBean( String key )
+    {
+        Object result = super.get( key );
+        if ( result == null )
+        {
+            DynamicBean bean = new DynamicBean();
+            super.put( key, bean );
+            return bean;
+        }
+        else if ( result instanceof DynamicBean )
+        {
+            return (DynamicBean) result;
+        }
+        return null;
+    }
 
 }

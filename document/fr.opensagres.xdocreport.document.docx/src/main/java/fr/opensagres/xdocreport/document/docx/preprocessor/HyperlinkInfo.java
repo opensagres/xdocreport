@@ -25,53 +25,58 @@
 package fr.opensagres.xdocreport.document.docx.preprocessor;
 
 /**
- * Java model of a Relationship type of Hyperlink declared in the
- * "word/_rels/document.xml.rels".
+ * Java model of a Relationship type of Hyperlink declared in the "word/_rels/document.xml.rels".
  * 
  * <pre>
  * 	<Relationship Id="rId1" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/hyperlink" 
  * 				  Target="mailto:$mail" 
  * 				  TargetMode="External" />
  * </pre>
- * 
  */
-public class HyperlinkInfo {
+public class HyperlinkInfo
+{
 
-	private final String id;
-	private final String target;
-	private final String targetMode;
+    private final String id;
 
-	public HyperlinkInfo(String id, String target, String targetMode) {
-		this.id = id;
-		this.target = target;
-		this.targetMode = targetMode;
-	}
+    private final String target;
 
-	/**
-	 * Returns the Relationship/@Id value.
-	 * 
-	 * @return
-	 */
-	public String getId() {
-		return id;
-	}
+    private final String targetMode;
 
-	/**
-	 * Returns the Relationship/@Target value.
-	 * 
-	 * @return
-	 */
-	public String getTarget() {
-		return target;
-	}
+    public HyperlinkInfo( String id, String target, String targetMode )
+    {
+        this.id = id;
+        this.target = target;
+        this.targetMode = targetMode;
+    }
 
-	/**
-	 * Returns the Relationship/@TargetMode value.
-	 * 
-	 * @return
-	 */
-	public String getTargetMode() {
-		return targetMode;
-	}
+    /**
+     * Returns the Relationship/@Id value.
+     * 
+     * @return
+     */
+    public String getId()
+    {
+        return id;
+    }
+
+    /**
+     * Returns the Relationship/@Target value.
+     * 
+     * @return
+     */
+    public String getTarget()
+    {
+        return target;
+    }
+
+    /**
+     * Returns the Relationship/@TargetMode value.
+     * 
+     * @return
+     */
+    public String getTargetMode()
+    {
+        return targetMode;
+    }
 
 }

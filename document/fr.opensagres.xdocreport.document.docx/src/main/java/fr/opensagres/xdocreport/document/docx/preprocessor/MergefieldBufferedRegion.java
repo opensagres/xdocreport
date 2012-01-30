@@ -34,164 +34,168 @@ import fr.opensagres.xdocreport.document.textstyling.ITransformResult;
 import fr.opensagres.xdocreport.template.formatter.FieldMetadata;
 import fr.opensagres.xdocreport.template.formatter.IDocumentFormatter;
 
-public abstract class MergefieldBufferedRegion extends BufferedElement {
+public abstract class MergefieldBufferedRegion
+    extends BufferedElement
+{
 
-	private static final String MERGEFORMAT = "\\* MERGEFORMAT";
+    private static final String MERGEFORMAT = "\\* MERGEFORMAT";
 
-	private static final String MERGEFIELD_FIELD_TYPE = "MERGEFIELD";
-	private static final String HYPERLINK_FIELD_TYPE = "HYPERLINK";
+    private static final String MERGEFIELD_FIELD_TYPE = "MERGEFIELD";
 
-	private final TransformedBufferedDocumentContentHandler handler;
-	private String fieldName;
+    private static final String HYPERLINK_FIELD_TYPE = "HYPERLINK";
 
-	private BufferedElement tRegion;
+    private final TransformedBufferedDocumentContentHandler handler;
 
-	public MergefieldBufferedRegion(
-			TransformedBufferedDocumentContentHandler handler,
-			BufferedElement parent, String uri, String localName, String name,
-			Attributes attributes) {
-		super(parent, uri, localName, name, attributes);
-		this.handler = handler;
-	}
+    private String fieldName;
 
-	public String getFieldName() {
-		return fieldName;
-	}
+    private BufferedElement tRegion;
 
-	public String setInstrText(String instrText,
-			FieldMetadata fieldAsTextStyling) {
-		// compute field name if it's MERGEFIELD
-		this.fieldName = getFieldName(instrText, fieldAsTextStyling,
-				handler.getFormatter(), handler);
-		if (fieldName == null) {
-			// Not a MERGEFIELD, instrText must be decoded if it's an HYPERLINK
-			// and field is an interpolation
-			// ex : HYPERLINK "mailto:$%7bdeveloper.mail%7d"
-			// must be modified to
-			// ex : HYPERLINK "mailto:${developer.mail}"
-			return decodeInstrTextIfNeeded(instrText);
-		}
-		return instrText;
-	}
+    public MergefieldBufferedRegion( TransformedBufferedDocumentContentHandler handler, BufferedElement parent,
+                                     String uri, String localName, String name, Attributes attributes )
+    {
+        super( parent, uri, localName, name, attributes );
+        this.handler = handler;
+    }
 
-	private String decodeInstrTextIfNeeded(String instrText) {
-		// It's not a mergefield.
-		IDocumentFormatter formatter = handler.getFormatter();
-		if (formatter == null) {
-			return instrText;
-		}
-		// Test if it's HYPERLINK
-		// ex : HYPERLINK "mailto:$%7bdeveloper.mail%7d"
-		int index = instrText.indexOf(HYPERLINK_FIELD_TYPE);
-		if (index != -1) {
-			// It's HYPERLINK, remove HYPERLINK prefix
-			// ex : "mailto:$%7bdeveloper.mail%7d"
-			String fieldName = instrText.substring(
-					index + HYPERLINK_FIELD_TYPE.length(), instrText.length())
-					.trim();
-			if (StringUtils.isNotEmpty(fieldName)) {
-				// remove double quote
-				// ex : mailto:$%7bdeveloper.mail%7d
-				if (fieldName.startsWith("\"") && fieldName.endsWith("\"")) {
-					fieldName = fieldName.substring(1, fieldName.length() - 1);
-				}
-				// decode it
-				// ex : mailto:${developer.mail}
-				fieldName = StringUtils.decode(fieldName);
-				if (formatter.containsInterpolation(fieldName)) {
-					// It's an interpolation, returns the decoded field
-					return StringUtils.decode(instrText);
-				}
-			}
-		}
-		return instrText;
-	}
+    public String getFieldName()
+    {
+        return fieldName;
+    }
 
-	private static String getFieldName(String instrText,
-			FieldMetadata fieldAsTextStyling, IDocumentFormatter formatter,
-			TransformedBufferedDocumentContentHandler handler) {
-		if (StringUtils.isEmpty(instrText)) {
-			return null;
-		}
-		int index = instrText.indexOf(MERGEFIELD_FIELD_TYPE);
-		if (index != -1) {
-			// Extract field name and add it to the current buffer
-			String fieldName = instrText.substring(
-					index + MERGEFIELD_FIELD_TYPE.length(), instrText.length())
-					.trim();
-			if (StringUtils.isNotEmpty(fieldName)) {
-				// Test if fieldName ends with \* MERGEFORMAT
-				if (fieldName.endsWith(MERGEFORMAT)) {
-					fieldName = fieldName.substring(0,
-							fieldName.length() - MERGEFORMAT.length()).trim();
-				}
-				if (StringUtils.isNotEmpty(fieldName)) {
-					// if #foreach is used w:fldSimple looks like this :
-					// <w:fldSimple w:instr="MERGEFIELD "#foreach($developer in
-					// $developers)" \\* MERGEFORMAT\"> to have
-					// foreach($developer in $developers)
-					// remove first " if needed
-					if (fieldName.startsWith("\"") && fieldName.endsWith("\"")) {
-						fieldName = fieldName.substring(1,
-								fieldName.length() - 1);
-					}
-					// Fix bug
-					// http://code.google.com/p/xdocreport/issues/detail?id=29
-					// Replace \" with "
-					// ex : replace [#if \"a\" = \"one\"]1[#else]not 1[/#if]
-					// to have [#if "a" = "one"]1[#else]not 1[/#if]
-					fieldName = StringUtils.replaceAll(fieldName, "\\\"", "\"");
-					// ex : remplace [#if &apos;a&apos; = \"one\"]1[#else]not
-					// 1[/#if]
-					// to have [#if 'a' = "one"]1[#else]not 1[/#if]
-					fieldName = StringUtils.xmlUnescape(fieldName);
+    public String setInstrText( String instrText, FieldMetadata fieldAsTextStyling )
+    {
+        // compute field name if it's MERGEFIELD
+        this.fieldName = getFieldName( instrText, fieldAsTextStyling, handler.getFormatter(), handler );
+        if ( fieldName == null )
+        {
+            // Not a MERGEFIELD, instrText must be decoded if it's an HYPERLINK
+            // and field is an interpolation
+            // ex : HYPERLINK "mailto:$%7bdeveloper.mail%7d"
+            // must be modified to
+            // ex : HYPERLINK "mailto:${developer.mail}"
+            return decodeInstrTextIfNeeded( instrText );
+        }
+        return instrText;
+    }
 
-					if (fieldAsTextStyling != null) {
-						// register parent buffered element
-						BufferedElement parent = handler.getCurrentElement()
-								.getParent();
-						String elementId = handler
-								.registerBufferedElement(parent);
+    private String decodeInstrTextIfNeeded( String instrText )
+    {
+        // It's not a mergefield.
+        IDocumentFormatter formatter = handler.getFormatter();
+        if ( formatter == null )
+        {
+            return instrText;
+        }
+        // Test if it's HYPERLINK
+        // ex : HYPERLINK "mailto:$%7bdeveloper.mail%7d"
+        int index = instrText.indexOf( HYPERLINK_FIELD_TYPE );
+        if ( index != -1 )
+        {
+            // It's HYPERLINK, remove HYPERLINK prefix
+            // ex : "mailto:$%7bdeveloper.mail%7d"
+            String fieldName = instrText.substring( index + HYPERLINK_FIELD_TYPE.length(), instrText.length() ).trim();
+            if ( StringUtils.isNotEmpty( fieldName ) )
+            {
+                // remove double quote
+                // ex : mailto:$%7bdeveloper.mail%7d
+                if ( fieldName.startsWith( "\"" ) && fieldName.endsWith( "\"" ) )
+                {
+                    fieldName = fieldName.substring( 1, fieldName.length() - 1 );
+                }
+                // decode it
+                // ex : mailto:${developer.mail}
+                fieldName = StringUtils.decode( fieldName );
+                if ( formatter.containsInterpolation( fieldName ) )
+                {
+                    // It's an interpolation, returns the decoded field
+                    return StringUtils.decode( instrText );
+                }
+            }
+        }
+        return instrText;
+    }
 
-						long variableIndex = handler.getVariableIndex();
-						// Set
-						String setVariableDirective = formatter
-								.formatAsCallTextStyling(
-										variableIndex, fieldName,
-										fieldAsTextStyling.getFieldName(),
-										DocumentKind.DOCX.name(),
-										fieldAsTextStyling.getSyntaxKind(),
-										elementId);
+    private static String getFieldName( String instrText, FieldMetadata fieldAsTextStyling,
+                                        IDocumentFormatter formatter, TransformedBufferedDocumentContentHandler handler )
+    {
+        if ( StringUtils.isEmpty( instrText ) )
+        {
+            return null;
+        }
+        int index = instrText.indexOf( MERGEFIELD_FIELD_TYPE );
+        if ( index != -1 )
+        {
+            // Extract field name and add it to the current buffer
+            String fieldName = instrText.substring( index + MERGEFIELD_FIELD_TYPE.length(), instrText.length() ).trim();
+            if ( StringUtils.isNotEmpty( fieldName ) )
+            {
+                // Test if fieldName ends with \* MERGEFORMAT
+                if ( fieldName.endsWith( MERGEFORMAT ) )
+                {
+                    fieldName = fieldName.substring( 0, fieldName.length() - MERGEFORMAT.length() ).trim();
+                }
+                if ( StringUtils.isNotEmpty( fieldName ) )
+                {
+                    // if #foreach is used w:fldSimple looks like this :
+                    // <w:fldSimple w:instr="MERGEFIELD "#foreach($developer in
+                    // $developers)" \\* MERGEFORMAT\"> to have
+                    // foreach($developer in $developers)
+                    // remove first " if needed
+                    if ( fieldName.startsWith( "\"" ) && fieldName.endsWith( "\"" ) )
+                    {
+                        fieldName = fieldName.substring( 1, fieldName.length() - 1 );
+                    }
+                    // Fix bug
+                    // http://code.google.com/p/xdocreport/issues/detail?id=29
+                    // Replace \" with "
+                    // ex : replace [#if \"a\" = \"one\"]1[#else]not 1[/#if]
+                    // to have [#if "a" = "one"]1[#else]not 1[/#if]
+                    fieldName = StringUtils.replaceAll( fieldName, "\\\"", "\"" );
+                    // ex : remplace [#if &apos;a&apos; = \"one\"]1[#else]not
+                    // 1[/#if]
+                    // to have [#if 'a' = "one"]1[#else]not 1[/#if]
+                    fieldName = StringUtils.xmlUnescape( fieldName );
 
-						String textBefore = formatter.formatAsTextStylingField(
-								variableIndex,
-								ITransformResult.TEXT_BEFORE_PROPERTY);
-						String textBody = formatter.formatAsTextStylingField(
-								variableIndex,
-								ITransformResult.TEXT_BODY_PROPERTY);
-						String textEnd = formatter.formatAsTextStylingField(
-								variableIndex,
-								ITransformResult.TEXT_END_PROPERTY);
+                    if ( fieldAsTextStyling != null )
+                    {
+                        // register parent buffered element
+                        BufferedElement parent = handler.getCurrentElement().getParent();
+                        String elementId = handler.registerBufferedElement( parent );
 
-						parent
-								.setContentBeforeStartTagElement(setVariableDirective
-										+ " " + textBefore);
-						parent.setContentAfterEndTagElement(textEnd);
-						return textBody;
+                        long variableIndex = handler.getVariableIndex();
+                        // Set
+                        String setVariableDirective =
+                            formatter.formatAsCallTextStyling( variableIndex, fieldName,
+                                                               fieldAsTextStyling.getFieldName(),
+                                                               DocumentKind.DOCX.name(),
+                                                               fieldAsTextStyling.getSyntaxKind(), elementId );
 
-					}
-					return fieldName;
-				}
-			}
-		}
-		return null;
-	}
+                        String textBefore =
+                            formatter.formatAsTextStylingField( variableIndex, ITransformResult.TEXT_BEFORE_PROPERTY );
+                        String textBody =
+                            formatter.formatAsTextStylingField( variableIndex, ITransformResult.TEXT_BODY_PROPERTY );
+                        String textEnd =
+                            formatter.formatAsTextStylingField( variableIndex, ITransformResult.TEXT_END_PROPERTY );
 
-	public BufferedElement getTRegion() {
-		if (tRegion == null) {
-			tRegion = super.findFirstChild("w:t");
-		}
-		return tRegion;
-	}
+                        parent.setContentBeforeStartTagElement( setVariableDirective + " " + textBefore );
+                        parent.setContentAfterEndTagElement( textEnd );
+                        return textBody;
+
+                    }
+                    return fieldName;
+                }
+            }
+        }
+        return null;
+    }
+
+    public BufferedElement getTRegion()
+    {
+        if ( tRegion == null )
+        {
+            tRegion = super.findFirstChild( "w:t" );
+        }
+        return tRegion;
+    }
 
 }

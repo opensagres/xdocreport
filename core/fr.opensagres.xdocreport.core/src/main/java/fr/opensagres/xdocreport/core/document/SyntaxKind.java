@@ -26,9 +26,9 @@ package fr.opensagres.xdocreport.core.document;
 
 /**
  * Kind of syntax used for text styling.
- * 
  */
-public enum SyntaxKind {
+public enum SyntaxKind
+{
 
-	NoEscape, Html, GWiki, MediaWiki, MarkDown
+    NoEscape, Html, GWiki, MediaWiki, MarkDown
 }

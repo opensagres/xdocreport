@@ -29,13 +29,17 @@ import java.util.Map;
 import fr.opensagres.xdocreport.template.formatter.FieldsMetadata;
 import fr.opensagres.xdocreport.template.formatter.IDocumentFormatter;
 
-public class MockSAXXDocPreprocessor extends SAXXDocPreprocessor {
+public class MockSAXXDocPreprocessor
+    extends SAXXDocPreprocessor
+{
 
-	@Override
-	protected BufferedDocumentContentHandler createBufferedDocumentContentHandler(
-			String entryName, FieldsMetadata fieldsMetadata,
-			IDocumentFormatter formater, Map<String, Object> context) {
-		return new MockBufferedDocumentContentHandler();
-	}
+    @Override
+    protected BufferedDocumentContentHandler createBufferedDocumentContentHandler( String entryName,
+                                                                                   FieldsMetadata fieldsMetadata,
+                                                                                   IDocumentFormatter formater,
+                                                                                   Map<String, Object> context )
+    {
+        return new MockBufferedDocumentContentHandler();
+    }
 
 }

@@ -56,8 +56,9 @@ import fr.opensagres.xdocreport.template.cache.ITemplateCacheInfoProvider;
 /**
  * Registry for loading and cahing {@link IXDocReport} instances.
  */
-public class XDocReportRegistry extends AbstractRegistry<IXDocReportFactoryDiscovery> implements
-        ITemplateCacheInfoProvider, Serializable
+public class XDocReportRegistry
+    extends AbstractRegistry<IXDocReportFactoryDiscovery>
+    implements ITemplateCacheInfoProvider, Serializable
 {
 
     /**
@@ -68,19 +69,25 @@ public class XDocReportRegistry extends AbstractRegistry<IXDocReportFactoryDisco
     /**
      * Logger for this class
      */
-    private static final Logger LOGGER = LogUtils.getLogger(AbstractRegistry.class.getName());
+    private static final Logger LOGGER = LogUtils.getLogger( AbstractRegistry.class.getName() );
 
-    private static final String FILES_TYPE_ERROR = "Impossible to create report for the input stream. The report loader supports only [{0}] files type.";
+    private static final String FILES_TYPE_ERROR =
+        "Impossible to create report for the input stream. The report loader supports only [{0}] files type.";
+
     private static final XDocReportRegistry INSTANCE = new XDocReportRegistry();
 
-    private final Collection<IXDocReportFactoryDiscovery> reportFactoryDiscoveries = new ArrayList<IXDocReportFactoryDiscovery>();
+    private final Collection<IXDocReportFactoryDiscovery> reportFactoryDiscoveries =
+        new ArrayList<IXDocReportFactoryDiscovery>();
+
     private final Map<String, IXDocReport> cachedReports = new HashMap<String, IXDocReport>();
 
-    public XDocReportRegistry() {
-        super(IXDocReportFactoryDiscovery.class);
+    public XDocReportRegistry()
+    {
+        super( IXDocReportFactoryDiscovery.class );
     }
 
-    public static XDocReportRegistry getRegistry() {
+    public static XDocReportRegistry getRegistry()
+    {
         return INSTANCE;
     }
 
@@ -93,8 +100,10 @@ public class XDocReportRegistry extends AbstractRegistry<IXDocReportFactoryDisco
      * @throws IOException
      * @throws XDocReportException
      */
-    public IXDocReport loadReport(InputStream sourceStream) throws IOException, XDocReportException {
-        return loadReport(sourceStream, null, null, null, true);
+    public IXDocReport loadReport( InputStream sourceStream )
+        throws IOException, XDocReportException
+    {
+        return loadReport( sourceStream, null, null, null, true );
     }
 
     /**
@@ -106,9 +115,10 @@ public class XDocReportRegistry extends AbstractRegistry<IXDocReportFactoryDisco
      * @throws IOException
      * @throws XDocReportException
      */
-    public IXDocReport loadReport(InputStream sourceStream, boolean cacheReport) throws IOException,
-            XDocReportException {
-        return loadReport(sourceStream, null, null, null, cacheReport);
+    public IXDocReport loadReport( InputStream sourceStream, boolean cacheReport )
+        throws IOException, XDocReportException
+    {
+        return loadReport( sourceStream, null, null, null, cacheReport );
     }
 
     /**
@@ -120,8 +130,10 @@ public class XDocReportRegistry extends AbstractRegistry<IXDocReportFactoryDisco
      * @throws IOException
      * @throws XDocReportException
      */
-    public IXDocReport loadReport(InputStream sourceStream, String reportId) throws IOException, XDocReportException {
-        return loadReport(sourceStream, reportId, true);
+    public IXDocReport loadReport( InputStream sourceStream, String reportId )
+        throws IOException, XDocReportException
+    {
+        return loadReport( sourceStream, reportId, true );
     }
 
     /**
@@ -133,9 +145,10 @@ public class XDocReportRegistry extends AbstractRegistry<IXDocReportFactoryDisco
      * @throws IOException
      * @throws XDocReportException
      */
-    public IXDocReport loadReport(InputStream sourceStream, String reportId, boolean cacheReport) throws IOException,
-            XDocReportException {
-        return loadReport(sourceStream, reportId, null, null, cacheReport);
+    public IXDocReport loadReport( InputStream sourceStream, String reportId, boolean cacheReport )
+        throws IOException, XDocReportException
+    {
+        return loadReport( sourceStream, reportId, null, null, cacheReport );
     }
 
     /**
@@ -147,9 +160,10 @@ public class XDocReportRegistry extends AbstractRegistry<IXDocReportFactoryDisco
      * @throws IOException
      * @throws XDocReportException
      */
-    public IXDocReport loadReport(InputStream sourceStream, String reportId, ITemplateEngine templateEngine)
-            throws IOException, XDocReportException {
-        return loadReport(sourceStream, reportId, null, templateEngine, true);
+    public IXDocReport loadReport( InputStream sourceStream, String reportId, ITemplateEngine templateEngine )
+        throws IOException, XDocReportException
+    {
+        return loadReport( sourceStream, reportId, null, templateEngine, true );
     }
 
     /**
@@ -161,9 +175,11 @@ public class XDocReportRegistry extends AbstractRegistry<IXDocReportFactoryDisco
      * @throws IOException
      * @throws XDocReportException
      */
-    public IXDocReport loadReport(InputStream sourceStream, String reportId, ITemplateEngine templateEngine,
-            boolean cacheReport) throws IOException, XDocReportException {
-        return loadReport(sourceStream, reportId, null, templateEngine, cacheReport);
+    public IXDocReport loadReport( InputStream sourceStream, String reportId, ITemplateEngine templateEngine,
+                                   boolean cacheReport )
+        throws IOException, XDocReportException
+    {
+        return loadReport( sourceStream, reportId, null, templateEngine, cacheReport );
     }
 
     /**
@@ -175,9 +191,10 @@ public class XDocReportRegistry extends AbstractRegistry<IXDocReportFactoryDisco
      * @throws IOException
      * @throws XDocReportException
      */
-    public IXDocReport loadReport(InputStream sourceStream, String reportId, String templateEngineKind)
-            throws IOException, XDocReportException {
-        return loadReport(sourceStream, reportId, templateEngineKind, true);
+    public IXDocReport loadReport( InputStream sourceStream, String reportId, String templateEngineKind )
+        throws IOException, XDocReportException
+    {
+        return loadReport( sourceStream, reportId, templateEngineKind, true );
     }
 
     /**
@@ -189,9 +206,11 @@ public class XDocReportRegistry extends AbstractRegistry<IXDocReportFactoryDisco
      * @throws IOException
      * @throws XDocReportException
      */
-    public IXDocReport loadReport(InputStream sourceStream, String reportId, String templateEngineKind,
-            boolean cacheReport) throws IOException, XDocReportException {
-        return loadReport(sourceStream, reportId, templateEngineKind, null, cacheReport);
+    public IXDocReport loadReport( InputStream sourceStream, String reportId, String templateEngineKind,
+                                   boolean cacheReport )
+        throws IOException, XDocReportException
+    {
+        return loadReport( sourceStream, reportId, templateEngineKind, null, cacheReport );
     }
 
     /**
@@ -203,9 +222,10 @@ public class XDocReportRegistry extends AbstractRegistry<IXDocReportFactoryDisco
      * @throws IOException
      * @throws XDocReportException
      */
-    public IXDocReport loadReport(InputStream sourceStream, String reportId, TemplateEngineKind templateEngineKind)
-            throws IOException, XDocReportException {
-        return loadReport(sourceStream, reportId, templateEngineKind, true);
+    public IXDocReport loadReport( InputStream sourceStream, String reportId, TemplateEngineKind templateEngineKind )
+        throws IOException, XDocReportException
+    {
+        return loadReport( sourceStream, reportId, templateEngineKind, true );
     }
 
     /**
@@ -217,9 +237,11 @@ public class XDocReportRegistry extends AbstractRegistry<IXDocReportFactoryDisco
      * @throws IOException
      * @throws XDocReportException
      */
-    public IXDocReport loadReport(InputStream sourceStream, String reportId, TemplateEngineKind templateEngineKind,
-            boolean cacheReport) throws IOException, XDocReportException {
-        return loadReport(sourceStream, reportId, templateEngineKind.name(), null, cacheReport);
+    public IXDocReport loadReport( InputStream sourceStream, String reportId, TemplateEngineKind templateEngineKind,
+                                   boolean cacheReport )
+        throws IOException, XDocReportException
+    {
+        return loadReport( sourceStream, reportId, templateEngineKind.name(), null, cacheReport );
     }
 
     /**
@@ -231,9 +253,10 @@ public class XDocReportRegistry extends AbstractRegistry<IXDocReportFactoryDisco
      * @throws IOException
      * @throws XDocReportException
      */
-    public IXDocReport loadReport(InputStream sourceStream, ITemplateEngine templateEngine) throws IOException,
-            XDocReportException {
-        return loadReport(sourceStream, templateEngine, true);
+    public IXDocReport loadReport( InputStream sourceStream, ITemplateEngine templateEngine )
+        throws IOException, XDocReportException
+    {
+        return loadReport( sourceStream, templateEngine, true );
     }
 
     /**
@@ -245,9 +268,10 @@ public class XDocReportRegistry extends AbstractRegistry<IXDocReportFactoryDisco
      * @throws IOException
      * @throws XDocReportException
      */
-    public IXDocReport loadReport(InputStream sourceStream, ITemplateEngine templateEngine, boolean cacheReport)
-            throws IOException, XDocReportException {
-        return loadReport(sourceStream, null, null, templateEngine, cacheReport);
+    public IXDocReport loadReport( InputStream sourceStream, ITemplateEngine templateEngine, boolean cacheReport )
+        throws IOException, XDocReportException
+    {
+        return loadReport( sourceStream, null, null, templateEngine, cacheReport );
     }
 
     /**
@@ -259,9 +283,10 @@ public class XDocReportRegistry extends AbstractRegistry<IXDocReportFactoryDisco
      * @throws IOException
      * @throws XDocReportException
      */
-    public IXDocReport loadReport(InputStream sourceStream, TemplateEngineKind templateEngineKind) throws IOException,
-            XDocReportException {
-        return loadReport(sourceStream, templateEngineKind, true);
+    public IXDocReport loadReport( InputStream sourceStream, TemplateEngineKind templateEngineKind )
+        throws IOException, XDocReportException
+    {
+        return loadReport( sourceStream, templateEngineKind, true );
     }
 
     /**
@@ -273,104 +298,123 @@ public class XDocReportRegistry extends AbstractRegistry<IXDocReportFactoryDisco
      * @throws IOException
      * @throws XDocReportException
      */
-    public IXDocReport loadReport(InputStream sourceStream, TemplateEngineKind templateEngineKind, boolean cacheReport)
-            throws IOException, XDocReportException {
-        return loadReport(sourceStream, null, templateEngineKind.name(), null, cacheReport);
+    public IXDocReport loadReport( InputStream sourceStream, TemplateEngineKind templateEngineKind, boolean cacheReport )
+        throws IOException, XDocReportException
+    {
+        return loadReport( sourceStream, null, templateEngineKind.name(), null, cacheReport );
     }
 
-    private IXDocReport loadReport(InputStream sourceStream, String reportId, String templateEngineKind,
-            ITemplateEngine templateEngine, boolean cacheReport) throws IOException, XDocReportException {
+    private IXDocReport loadReport( InputStream sourceStream, String reportId, String templateEngineKind,
+                                    ITemplateEngine templateEngine, boolean cacheReport )
+        throws IOException, XDocReportException
+    {
         initializeIfNeeded();
         // 2) zip was loaded, create an instance of report
-        IXDocReport report = createReport(sourceStream);
+        IXDocReport report = createReport( sourceStream );
         // 3) Update the report id if need.
-        if (StringUtils.isEmpty(reportId)) {
+        if ( StringUtils.isEmpty( reportId ) )
+        {
             reportId = report.toString();
         }
-        report.setId(reportId);
+        report.setId( reportId );
         // 4) Search or set the template engine.
-        if (templateEngine == null && StringUtils.isNotEmpty(templateEngineKind)) {
+        if ( templateEngine == null && StringUtils.isNotEmpty( templateEngineKind ) )
+        {
             // Template engine was not forced.
             // Search template engine
             String documentKind = report.getKind();
-            templateEngine = TemplateEngineInitializerRegistry.getRegistry().getTemplateEngine(templateEngineKind,
-                    documentKind);
-            if (templateEngine == null) {
-                templateEngine = TemplateEngineInitializerRegistry.getRegistry().getTemplateEngine(templateEngineKind,
-                        null);
+            templateEngine =
+                TemplateEngineInitializerRegistry.getRegistry().getTemplateEngine( templateEngineKind, documentKind );
+            if ( templateEngine == null )
+            {
+                templateEngine =
+                    TemplateEngineInitializerRegistry.getRegistry().getTemplateEngine( templateEngineKind, null );
             }
         }
-        report.setTemplateEngine(templateEngine);
-        if (cacheReport) {
-            registerReport(report);
+        report.setTemplateEngine( templateEngine );
+        if ( cacheReport )
+        {
+            registerReport( report );
         }
         return report;
     }
 
-    public IXDocReport createReport(InputStream sourceStream) throws IOException, XDocReportException {
+    public IXDocReport createReport( InputStream sourceStream )
+        throws IOException, XDocReportException
+    {
         // Load zipped XML document
-        XDocArchive documentArchive = XDocArchive.readZip(sourceStream);
-        return createReport(documentArchive);
+        XDocArchive documentArchive = XDocArchive.readZip( sourceStream );
+        return createReport( documentArchive );
     }
 
-    public IXDocReport createReport(XDocArchive documentArchive) throws IOException, XDocReportException {
+    public IXDocReport createReport( XDocArchive documentArchive )
+        throws IOException, XDocReportException
+    {
         initializeIfNeeded();
-        for (IXDocReportFactoryDiscovery discovery : reportFactoryDiscoveries) {
-            if (discovery.isAdaptFor(documentArchive)) {
+        for ( IXDocReportFactoryDiscovery discovery : reportFactoryDiscoveries )
+        {
+            if ( discovery.isAdaptFor( documentArchive ) )
+            {
                 IXDocReport report = discovery.createReport();
-                if (report != null) {
-                    report.setDocumentArchive(documentArchive);
+                if ( report != null )
+                {
+                    report.setDocumentArchive( documentArchive );
                 }
                 return report;
             }
         }
 
-        throw new XDocReportException(format(FILES_TYPE_ERROR, getFilesType()));
+        throw new XDocReportException( format( FILES_TYPE_ERROR, getFilesType() ) );
     }
 
-    private String getFilesType() {
+    private String getFilesType()
+    {
         StringBuilder filesType = new StringBuilder();
         Collection<IXDocReportFactoryDiscovery> discoveries = getReportFactoryDiscoveries();
-        for (IXDocReportFactoryDiscovery discovery : discoveries) {
-            if (filesType.length() > 0) {
-                filesType.append(",");
+        for ( IXDocReportFactoryDiscovery discovery : discoveries )
+        {
+            if ( filesType.length() > 0 )
+            {
+                filesType.append( "," );
             }
-            filesType.append(discovery.getMimeMapping().getExtension());
+            filesType.append( discovery.getMimeMapping().getExtension() );
         }
         return filesType.toString();
     }
 
     /**
-     * Register report and throws XDocReportException if it already exists a
-     * report in the registry with the same id .
+     * Register report and throws XDocReportException if it already exists a report in the registry with the same id .
      * 
      * @param report
      * @throws XDocReportException
      */
-    public void registerReport(IXDocReport report) throws XDocReportException {
-        registerReport(report, false);
+    public void registerReport( IXDocReport report )
+        throws XDocReportException
+    {
+        registerReport( report, false );
     }
 
     /**
      * Register report.
      * 
-     * @param report
-     *        the report to register
-     * @param force
-     *        true if report must be forced (if report already exists with
-     *        the same id) and false otherwise (throw XDocReportException if
-     *        report exists with the same id).
+     * @param report the report to register
+     * @param force true if report must be forced (if report already exists with the same id) and false otherwise (throw
+     *            XDocReportException if report exists with the same id).
      * @throws XDocReportException
      */
-    public synchronized void registerReport(IXDocReport report, boolean force) throws XDocReportException {
+    public synchronized void registerReport( IXDocReport report, boolean force )
+        throws XDocReportException
+    {
         String reportId = report.getId();
-        if (StringUtils.isEmpty(reportId)) {
-            throw new XDocReportException("Cannot register report. IXDocReport#getId() cannot be empty.");
+        if ( StringUtils.isEmpty( reportId ) )
+        {
+            throw new XDocReportException( "Cannot register report. IXDocReport#getId() cannot be empty." );
         }
-        if (!force) {
-            checkReportId(reportId);
+        if ( !force )
+        {
+            checkReportId( reportId );
         }
-        cachedReports.put(report.getId(), report);
+        cachedReports.put( report.getId(), report );
     }
 
     /**
@@ -379,12 +423,15 @@ public class XDocReportRegistry extends AbstractRegistry<IXDocReportFactoryDisco
      * @param reportId
      * @throws XDocReportException
      */
-    public void checkReportId(String reportId) throws XDocReportException {
-        if (cachedReports.containsKey(reportId)) {
-            String msg = String.format("Cannot register report. A report with id=%s already exists in the registry",
-                    reportId);
-            LOGGER.warning(msg);
-            throw new XDocReportException(msg);
+    public void checkReportId( String reportId )
+        throws XDocReportException
+    {
+        if ( cachedReports.containsKey( reportId ) )
+        {
+            String msg =
+                String.format( "Cannot register report. A report with id=%s already exists in the registry", reportId );
+            LOGGER.warning( msg );
+            throw new XDocReportException( msg );
         }
     }
 
@@ -394,19 +441,20 @@ public class XDocReportRegistry extends AbstractRegistry<IXDocReportFactoryDisco
      * @param reportId
      * @return
      */
-    public IXDocReport getReport(String reportId) {
-        return cachedReports.get(reportId);
+    public IXDocReport getReport( String reportId )
+    {
+        return cachedReports.get( reportId );
     }
 
     /**
-     * Returns true if report identified with the given id exists in the
-     * registry and false otherwise.
+     * Returns true if report identified with the given id exists in the registry and false otherwise.
      * 
      * @param id
      * @return
      */
-    public boolean existsReport(String reportId) {
-        return cachedReports.containsKey(reportId);
+    public boolean existsReport( String reportId )
+    {
+        return cachedReports.containsKey( reportId );
     }
 
     /**
@@ -414,9 +462,11 @@ public class XDocReportRegistry extends AbstractRegistry<IXDocReportFactoryDisco
      * 
      * @param reportId
      */
-    public void unregisterReport(String reportId) {
-        if (existsReport(reportId)) {
-            cachedReports.remove(reportId);
+    public void unregisterReport( String reportId )
+    {
+        if ( existsReport( reportId ) )
+        {
+            cachedReports.remove( reportId );
         }
     }
 
@@ -425,9 +475,11 @@ public class XDocReportRegistry extends AbstractRegistry<IXDocReportFactoryDisco
      * 
      * @param report
      */
-    public void unregisterReport(IXDocReport report) {
-        if (report != null) {
-            cachedReports.remove(report.getId());
+    public void unregisterReport( IXDocReport report )
+    {
+        if ( report != null )
+        {
+            cachedReports.remove( report.getId() );
         }
     }
 
@@ -436,7 +488,8 @@ public class XDocReportRegistry extends AbstractRegistry<IXDocReportFactoryDisco
      * 
      * @return
      */
-    public Collection<IXDocReportFactoryDiscovery> getReportFactoryDiscoveries() {
+    public Collection<IXDocReportFactoryDiscovery> getReportFactoryDiscoveries()
+    {
         initializeIfNeeded();
 
         return reportFactoryDiscoveries;
@@ -462,25 +515,30 @@ public class XDocReportRegistry extends AbstractRegistry<IXDocReportFactoryDisco
      * 
      * @return
      */
-    public Collection<IXDocReport> getCachedReports() {
-        return Collections.unmodifiableCollection(cachedReports.values());
+    public Collection<IXDocReport> getCachedReports()
+    {
+        return Collections.unmodifiableCollection( cachedReports.values() );
     }
 
-    public void setClearTimeout(long timeout) {
-        PooledAlarmTimer pooledAlarmTimer = new PooledAlarmTimer(timeout);
-        pooledAlarmTimer.addAlarmTimerListener(new AlarmTimerListener() {
+    public void setClearTimeout( long timeout )
+    {
+        PooledAlarmTimer pooledAlarmTimer = new PooledAlarmTimer( timeout );
+        pooledAlarmTimer.addAlarmTimerListener( new AlarmTimerListener()
+        {
 
-            public void alarm(AlarmTimer timer) {
+            public void alarm( AlarmTimer timer )
+            {
                 clear();
 
             }
-        });
+        } );
     }
 
     /**
      * Clear the cached reports.
      */
-    public void clear() {
+    public void clear()
+    {
         cachedReports.clear();
     }
 
@@ -492,10 +550,14 @@ public class XDocReportRegistry extends AbstractRegistry<IXDocReportFactoryDisco
      * @throws IOException
      * @throws XDocReportException
      */
-    public MimeMapping getMimeMapping(String fileExtension) throws IOException, XDocReportException {
+    public MimeMapping getMimeMapping( String fileExtension )
+        throws IOException, XDocReportException
+    {
         initializeIfNeeded();
-        for (IXDocReportFactoryDiscovery discovery : reportFactoryDiscoveries) {
-            if (discovery.isAdaptFor(fileExtension)) {
+        for ( IXDocReportFactoryDiscovery discovery : reportFactoryDiscoveries )
+        {
+            if ( discovery.isAdaptFor( fileExtension ) )
+            {
                 return discovery.getMimeMapping();
             }
         }
@@ -508,34 +570,40 @@ public class XDocReportRegistry extends AbstractRegistry<IXDocReportFactoryDisco
      * @param reportId
      * @return
      */
-    public synchronized String generateUniqueReportId(String reportId) {
-        IXDocReport report = getReport(reportId);
-        if (report != null) {
-            StringBuilder id = new StringBuilder(reportId);
-            id.append("_");
-            id.append(System.currentTimeMillis());
+    public synchronized String generateUniqueReportId( String reportId )
+    {
+        IXDocReport report = getReport( reportId );
+        if ( report != null )
+        {
+            StringBuilder id = new StringBuilder( reportId );
+            id.append( "_" );
+            id.append( System.currentTimeMillis() );
             return id.toString();
         }
         return reportId;
     }
 
-    public IEntryInfo getTemplateCacheInfo(String reportId, String entryName) {
-        IXDocReport report = getReport(reportId);
-        if (report == null) {
+    public IEntryInfo getTemplateCacheInfo( String reportId, String entryName )
+    {
+        IXDocReport report = getReport( reportId );
+        if ( report == null )
+        {
             return null;
         }
-        return report.getPreprocessedDocumentArchive().getEntryInfo(entryName);
+        return report.getPreprocessedDocumentArchive().getEntryInfo( entryName );
     }
 
     @Override
-    protected void doDispose() {
+    protected void doDispose()
+    {
         this.reportFactoryDiscoveries.clear();
         this.cachedReports.clear();
     }
 
     @Override
-    protected boolean registerInstance(IXDocReportFactoryDiscovery instance) {
-        reportFactoryDiscoveries.add(instance);
+    protected boolean registerInstance( IXDocReportFactoryDiscovery instance )
+    {
+        reportFactoryDiscoveries.add( instance );
         return true;
     }
 }

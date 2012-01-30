@@ -24,31 +24,38 @@
  */
 package org.apache.struts2.views.xdocreport;
 
-public enum LocationType {
+public enum LocationType
+{
 
-	CLASSPATH("classpath:"), FILESYSTEM("file:/"), WEBAPP("");
+    CLASSPATH( "classpath:" ), FILESYSTEM( "file:/" ), WEBAPP( "" );
 
-	private final String suffix;
+    private final String suffix;
 
-	LocationType(String suffix) {
-		this.suffix = suffix;
-	}
+    LocationType( String suffix )
+    {
+        this.suffix = suffix;
+    }
 
-	public static LocationType getLocationType(String location) {
-		if (location.startsWith(CLASSPATH.getSuffix())) {
-			return CLASSPATH;
-		}
-		if (location.startsWith(FILESYSTEM.getSuffix())) {
-			return FILESYSTEM;
-		}
-		return WEBAPP;
-	}
+    public static LocationType getLocationType( String location )
+    {
+        if ( location.startsWith( CLASSPATH.getSuffix() ) )
+        {
+            return CLASSPATH;
+        }
+        if ( location.startsWith( FILESYSTEM.getSuffix() ) )
+        {
+            return FILESYSTEM;
+        }
+        return WEBAPP;
+    }
 
-	public String getLocation(String location) {
-		return location.substring(getSuffix().length(), location.length());
-	}
+    public String getLocation( String location )
+    {
+        return location.substring( getSuffix().length(), location.length() );
+    }
 
-	public String getSuffix() {
-		return suffix;
-	}
+    public String getSuffix()
+    {
+        return suffix;
+    }
 }

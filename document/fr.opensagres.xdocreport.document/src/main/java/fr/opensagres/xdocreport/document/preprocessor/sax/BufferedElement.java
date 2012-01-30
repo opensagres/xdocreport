@@ -34,432 +34,493 @@ import java.util.List;
 import org.xml.sax.Attributes;
 
 /**
- * Buffered element which stores start Tag element (ex: <a>) and end Tag element
- * (ex: </a>). The start Tag element stores too the {@link BufferedElement}
- * children.
- * 
+ * Buffered element which stores start Tag element (ex: <a>) and end Tag element (ex: </a>). The start Tag element
+ * stores too the {@link BufferedElement} children.
  */
-public class BufferedElement implements IBufferedRegion {
+public class BufferedElement
+    implements IBufferedRegion
+{
 
-	public static final String KEY = "___BufferedElementMap";
-	
-	private final BufferedElement parent;
-	private final String name;
-	private final String startTagElementName;
-	private final String endTagElementName;
-	protected final BufferedStartTagElement startTagElement;
-	protected final BufferedEndTagElement endTagElement;
-	private BufferedTagElement currentTagElement;
-	private final Attributes attributes;
-	private Collection<BufferedAttribute> dynamicAttributes = null;
-	private boolean reseted;
+    public static final String KEY = "___BufferedElementMap";
 
-	public BufferedElement(BufferedElement parent, String uri,
-			String localName, String name, Attributes attributes) {
-		this.parent = parent;
-		this.name = name;
-		this.startTagElementName = "<" + name + ">";
-		this.endTagElementName = "</" + name + ">";
-		this.attributes = attributes;
-		this.startTagElement = new BufferedStartTagElement(this);
-		this.endTagElement = new BufferedEndTagElement(this);
-		this.currentTagElement = startTagElement;
-		this.reseted = false;
-	}
+    private final BufferedElement parent;
 
-	/**
-	 * Returns true if the given name match the name of this element and false
-	 * otherwise.
-	 * 
-	 * @param name
-	 * @return
-	 */
-	public boolean match(String name) {
-		if (name == null) {
-			return false;
-		}
-		return name.equals(this.name);
-	}
+    private final String name;
 
-	/**
-	 * Returns the buffer of the start tag element.
-	 * 
-	 * @return
-	 */
-	public BufferedStartTagElement getStartTagElement() {
-		return startTagElement;
-	}
+    private final String startTagElementName;
 
-	/**
-	 * Returns the buffer of the end tag element.
-	 * 
-	 * @return
-	 */
-	public BufferedEndTagElement getEndTagElement() {
-		return endTagElement;
-	}
+    private final String endTagElementName;
 
-	/**
-	 * Set content on the before start tag element.
-	 * 
-	 * @param before
-	 */
-	public void setContentBeforeStartTagElement(String before) {
-		this.startTagElement.setBefore(before);
-	}
+    protected final BufferedStartTagElement startTagElement;
 
-	/**
-	 * Set content on the after end tag element.
-	 * 
-	 * @param before
-	 */
-	public void setContentAfterEndTagElement(String after) {
-		this.endTagElement.setAfter(after);
-	}
+    protected final BufferedEndTagElement endTagElement;
 
-	/**
-	 * Returns the parent buffered element of this element.
-	 */
-	public BufferedElement getParent() {
-		return parent;
-	}
+    private BufferedTagElement currentTagElement;
 
-	/**
-	 * Returns the current tag element (start or end).
-	 * 
-	 * @return
-	 */
-	private BufferedTagElement getCurrentTagElement() {
-		return currentTagElement;
-	}
+    private final Attributes attributes;
 
-	/**
-	 * Write the content of this element in the given writer.
-	 */
-	public void save(Writer writer) throws IOException {
-		// Write start tag element content
-		getStartTagElement().save(writer);
-		// Write end tag element content
-		getEndTagElement().save(writer);
-	}
+    private Collection<BufferedAttribute> dynamicAttributes = null;
 
-	/**
-	 * Add a savable region in the current tag element.
-	 */
-	public void addRegion(ISavable region) {
-		getCurrentTagElement().addRegion(region);
-	}
+    private boolean reseted;
 
-	/**
-	 * Returns false
-	 */
-	public boolean isString() {
-		return getCurrentTagElement().isString();
-	}
+    public BufferedElement( BufferedElement parent, String uri, String localName, String name, Attributes attributes )
+    {
+        this.parent = parent;
+        this.name = name;
+        this.startTagElementName = "<" + name + ">";
+        this.endTagElementName = "</" + name + ">";
+        this.attributes = attributes;
+        this.startTagElement = new BufferedStartTagElement( this );
+        this.endTagElement = new BufferedEndTagElement( this );
+        this.currentTagElement = startTagElement;
+        this.reseted = false;
+    }
 
-	/**
-	 * Append content in the current tag element.
-	 */
-	public void append(String content) {
-		getCurrentTagElement().append(content);
-	}
+    /**
+     * Returns true if the given name match the name of this element and false otherwise.
+     * 
+     * @param name
+     * @return
+     */
+    public boolean match( String name )
+    {
+        if ( name == null )
+        {
+            return false;
+        }
+        return name.equals( this.name );
+    }
 
-	/**
-	 * Append content in the current tag element.
-	 */
-	public void append(char[] ch, int start, int length) {
-		getCurrentTagElement().append(ch, start, length);
-	}
+    /**
+     * Returns the buffer of the start tag element.
+     * 
+     * @return
+     */
+    public BufferedStartTagElement getStartTagElement()
+    {
+        return startTagElement;
+    }
 
-	/**
-	 * Append content in the current tag element.
-	 */
-	public void append(char c) {
-		getCurrentTagElement().append(c);
-	}
+    /**
+     * Returns the buffer of the end tag element.
+     * 
+     * @return
+     */
+    public BufferedEndTagElement getEndTagElement()
+    {
+        return endTagElement;
+    }
 
-	/**
-	 * Reset the whole content of the element.
-	 */
-	public void reset() {
-		startTagElement.reset();
-		endTagElement.reset();
-		this.reseted = true;
-	}
-	
-	public boolean isReseted() {
-		return reseted;
-	}
+    /**
+     * Set content on the before start tag element.
+     * 
+     * @param before
+     */
+    public void setContentBeforeStartTagElement( String before )
+    {
+        this.startTagElement.setBefore( before );
+    }
 
-	/**
-	 * Remove the collection of element.
-	 * 
-	 * @param elements
-	 */
-	public void removeAll(Collection<BufferedElement> elements) {
-		BufferedTagElement tagElement = null;
-		for (BufferedElement element : elements) {
-			// remove start tag element
-			tagElement = element.getStartTagElement();
-			if (tagElement != null) {
-				getStartTagElement().regions.remove(tagElement);
-			}
-			// remove end tag element
-			tagElement = element.getEndTagElement();
-			if (tagElement != null) {
-				getStartTagElement().regions.remove(tagElement);
-			}
-		}
-	}
+    /**
+     * Set content on the after end tag element.
+     * 
+     * @param before
+     */
+    public void setContentAfterEndTagElement( String after )
+    {
+        this.endTagElement.setAfter( after );
+    }
 
-	@Override
-	public String toString() {
-		StringWriter writer = new StringWriter();
-		try {
-			save(writer);
-		} catch (IOException e) {
-			// Do nothing
-		}
-		return writer.toString();
-	}
+    /**
+     * Returns the parent buffered element of this element.
+     */
+    public BufferedElement getParent()
+    {
+        return parent;
+    }
 
-	/**
-	 * Returns the owner element.
-	 */
-	public BufferedElement getOwnerElement() {
-		return this;
-	}
+    /**
+     * Returns the current tag element (start or end).
+     * 
+     * @return
+     */
+    private BufferedTagElement getCurrentTagElement()
+    {
+        return currentTagElement;
+    }
 
-	/**
-	 * Returns the parent element of this element which match the given name.
-	 * 
-	 * @param element
-	 * @param name
-	 * @return
-	 */
-	public BufferedElement findParent(String name) {
-		return findParent(this, name);
-	}
+    /**
+     * Write the content of this element in the given writer.
+     */
+    public void save( Writer writer )
+        throws IOException
+    {
+        // Write start tag element content
+        getStartTagElement().save( writer );
+        // Write end tag element content
+        getEndTagElement().save( writer );
+    }
 
-	/**
-	 * Returns the parent element of the given element which match the given
-	 * name.
-	 * 
-	 * @param element
-	 * @param name
-	 * @return
-	 */
-	public BufferedElement findParent(BufferedElement element, String name) {
-		if (element == null) {
-			return null;
-		}
-		if (element.match(name)) {
-			return element;
-		}
-		return findParent(element.getParent(), name);
-	}
+    /**
+     * Add a savable region in the current tag element.
+     */
+    public void addRegion( ISavable region )
+    {
+        getCurrentTagElement().addRegion( region );
+    }
 
-	/**
-	 * Returns the children element of this element which match the given name.
-	 * 
-	 * @param name
-	 * @return
-	 */
-	public List<BufferedElement> findChildren(String name) {
-		return findChildren(this, name);
-	}
+    /**
+     * Returns false
+     */
+    public boolean isString()
+    {
+        return getCurrentTagElement().isString();
+    }
 
-	/**
-	 * Returns the children element of the given element which match the given
-	 * name.
-	 * 
-	 * @param element
-	 * @param name
-	 * @return
-	 */
-	public List<BufferedElement> findChildren(BufferedElement element,
-			String name) {
-		List<BufferedElement> elements = new ArrayList<BufferedElement>();
-		List<ISavable> regions = element.getStartTagElement().regions;
-		findChildren(regions, name, elements);
-		return elements;
-	}
+    /**
+     * Append content in the current tag element.
+     */
+    public void append( String content )
+    {
+        getCurrentTagElement().append( content );
+    }
 
-	/**
-	 * Returns the first child element of the given element which match the
-	 * given name and null otherwise.
-	 * 
-	 * @param name
-	 * @return
-	 */
-	public BufferedElement findFirstChild(String name) {
-		return findFirstChild(this, name);
-	}
+    /**
+     * Append content in the current tag element.
+     */
+    public void append( char[] ch, int start, int length )
+    {
+        getCurrentTagElement().append( ch, start, length );
+    }
 
-	/**
-	 * Returns the first child element of this element which match the given
-	 * name and null otherwise.
-	 * 
-	 * @param name
-	 * @return
-	 */
-	public BufferedElement findFirstChild(BufferedElement element, String name) {
-		List<BufferedElement> elements = findChildren(element, name);
-		if (elements.size() > 1) {
-			return elements.get(0);
-		}
-		return null;
-	}
+    /**
+     * Append content in the current tag element.
+     */
+    public void append( char c )
+    {
+        getCurrentTagElement().append( c );
+    }
 
-	/**
-	 * Populate list elements with children element which match the given name.
-	 * 
-	 * @param regions
-	 * @param name
-	 * @param elements
-	 */
-	private void findChildren(List<ISavable> regions, String name,
-			List<BufferedElement> elements) {
-		for (ISavable region : regions) {
-			if (region instanceof IBufferedRegion) {
-				IBufferedRegion r = (IBufferedRegion) region;
-				if (r.getOwnerElement().match(name)) {
-					elements.add(r.getOwnerElement());
-				}
-				if (r instanceof BufferedRegion) {
-					findChildren(((BufferedRegion) r).regions, name, elements);
-				}
-			}
-		}
-	}
+    /**
+     * Reset the whole content of the element.
+     */
+    public void reset()
+    {
+        startTagElement.reset();
+        endTagElement.reset();
+        this.reseted = true;
+    }
 
-	/**
-	 * Set the current buffer with start tag element.
-	 */
-	public void start() {
-		this.currentTagElement = startTagElement;
-	}
+    public boolean isReseted()
+    {
+        return reseted;
+    }
 
-	/**
-	 * Set the current buffer with end tag element.
-	 */
-	public void end() {
-		this.currentTagElement = endTagElement;
-	}
+    /**
+     * Remove the collection of element.
+     * 
+     * @param elements
+     */
+    public void removeAll( Collection<BufferedElement> elements )
+    {
+        BufferedTagElement tagElement = null;
+        for ( BufferedElement element : elements )
+        {
+            // remove start tag element
+            tagElement = element.getStartTagElement();
+            if ( tagElement != null )
+            {
+                getStartTagElement().regions.remove( tagElement );
+            }
+            // remove end tag element
+            tagElement = element.getEndTagElement();
+            if ( tagElement != null )
+            {
+                getStartTagElement().regions.remove( tagElement );
+            }
+        }
+    }
 
-	/**
-	 * Returns true if current buffer is end tag element and false otherwise.
-	 * 
-	 * @return
-	 */
-	public boolean isEnded() {
-		return this.currentTagElement == endTagElement;
-	}
+    @Override
+    public String toString()
+    {
+        StringWriter writer = new StringWriter();
+        try
+        {
+            save( writer );
+        }
+        catch ( IOException e )
+        {
+            // Do nothing
+        }
+        return writer.toString();
+    }
 
-	/**
-	 * Returns the name of this start tag element (ex : <w:t>).
-	 * 
-	 * @return
-	 */
-	public String getStartTagElementName() {
-		return startTagElementName;
-	}
+    /**
+     * Returns the owner element.
+     */
+    public BufferedElement getOwnerElement()
+    {
+        return this;
+    }
 
-	/**
-	 * Returns the name of this end tag element (ex : </w:t>).
-	 * 
-	 * @return
-	 */
-	public String getEndTagElementName() {
-		return endTagElementName;
-	}
+    /**
+     * Returns the parent element of this element which match the given name.
+     * 
+     * @param element
+     * @param name
+     * @return
+     */
+    public BufferedElement findParent( String name )
+    {
+        return findParent( this, name );
+    }
 
-	/**
-	 * Set text content for this element.
-	 * 
-	 * @param content
-	 */
-	public void setTextContent(String content) {
-		if (isEnded()) {
-			// end tag element is parsed (ex: <w:t>XXXX</w:t>), reset the buffer
-			// and rebuild the buffer with the new content.
-			reset();
-			getStartTagElement().append(getStartTagElementName());
-			getStartTagElement().append(content);
-			getEndTagElement().append(getEndTagElementName());
-		} else {
-			// end tag element is not parsed (ex: <w:t>) append teh content.
-			getCurrentTagElement().append(content);
-		}
-	}
+    /**
+     * Returns the parent element of the given element which match the given name.
+     * 
+     * @param element
+     * @param name
+     * @return
+     */
+    public BufferedElement findParent( BufferedElement element, String name )
+    {
+        if ( element == null )
+        {
+            return null;
+        }
+        if ( element.match( name ) )
+        {
+            return element;
+        }
+        return findParent( element.getParent(), name );
+    }
 
-	/**
-	 * Returns the text content for this element.
-	 * 
-	 * @return
-	 */
-	public String getTextContent() {
-		// get content of the element (ex : <w:t>XXXX</w:t>)
-		StringWriter writer = new StringWriter();
-		try {
-			save(writer);
-		} catch (IOException e) {
+    /**
+     * Returns the children element of this element which match the given name.
+     * 
+     * @param name
+     * @return
+     */
+    public List<BufferedElement> findChildren( String name )
+    {
+        return findChildren( this, name );
+    }
 
-			e.printStackTrace();
-		}
-		// remove the start/end tag ex : XXXX)
-		String textContent = writer.toString();
-		if (textContent.startsWith(getStartTagElementName())) {
-			textContent = textContent.substring(getStartTagElementName()
-					.length(), textContent.length());
-		}
-		if (textContent.endsWith(getEndTagElementName())) {
-			textContent = textContent.substring(0, textContent.length()
-					- getStartTagElementName().length() - 1);
-		}
-		return textContent;
-	}
+    /**
+     * Returns the children element of the given element which match the given name.
+     * 
+     * @param element
+     * @param name
+     * @return
+     */
+    public List<BufferedElement> findChildren( BufferedElement element, String name )
+    {
+        List<BufferedElement> elements = new ArrayList<BufferedElement>();
+        List<ISavable> regions = element.getStartTagElement().regions;
+        findChildren( regions, name, elements );
+        return elements;
+    }
 
-	/**
-	 * Returns the static SAX attributes.
-	 * 
-	 * @return
-	 */
-	public Attributes getAttributes() {
-		return attributes;
-	}
+    /**
+     * Returns the first child element of the given element which match the given name and null otherwise.
+     * 
+     * @param name
+     * @return
+     */
+    public BufferedElement findFirstChild( String name )
+    {
+        return findFirstChild( this, name );
+    }
 
-	/**
-	 * Register dynamic attributes if needed.
-	 */
-	public void registerDynamicAttributes() {
-		if (dynamicAttributes == null) {
-			return;
-		}
-		for (BufferedAttribute attribute : dynamicAttributes) {
-			getCurrentTagElement().addRegion(attribute);
-		}
-	}
+    /**
+     * Returns the first child element of this element which match the given name and null otherwise.
+     * 
+     * @param name
+     * @return
+     */
+    public BufferedElement findFirstChild( BufferedElement element, String name )
+    {
+        List<BufferedElement> elements = findChildren( element, name );
+        if ( elements.size() > 1 )
+        {
+            return elements.get( 0 );
+        }
+        return null;
+    }
 
-	/**
-	 * Set dynamic attribute.
-	 * 
-	 * @param name
-	 * @param value
-	 * @return
-	 */
-	public BufferedAttribute setAttribute(String name, String value) {
-		if (dynamicAttributes == null) {
-			dynamicAttributes = new ArrayList<BufferedAttribute>();
-		}
-		BufferedAttribute attribute = new BufferedAttribute(this, name, value);
-		dynamicAttributes.add(attribute);
-		return attribute;
-	}
-	
-	public String getName() {
-		return name;
-	}
-	
+    /**
+     * Populate list elements with children element which match the given name.
+     * 
+     * @param regions
+     * @param name
+     * @param elements
+     */
+    private void findChildren( List<ISavable> regions, String name, List<BufferedElement> elements )
+    {
+        for ( ISavable region : regions )
+        {
+            if ( region instanceof IBufferedRegion )
+            {
+                IBufferedRegion r = (IBufferedRegion) region;
+                if ( r.getOwnerElement().match( name ) )
+                {
+                    elements.add( r.getOwnerElement() );
+                }
+                if ( r instanceof BufferedRegion )
+                {
+                    findChildren( ( (BufferedRegion) r ).regions, name, elements );
+                }
+            }
+        }
+    }
+
+    /**
+     * Set the current buffer with start tag element.
+     */
+    public void start()
+    {
+        this.currentTagElement = startTagElement;
+    }
+
+    /**
+     * Set the current buffer with end tag element.
+     */
+    public void end()
+    {
+        this.currentTagElement = endTagElement;
+    }
+
+    /**
+     * Returns true if current buffer is end tag element and false otherwise.
+     * 
+     * @return
+     */
+    public boolean isEnded()
+    {
+        return this.currentTagElement == endTagElement;
+    }
+
+    /**
+     * Returns the name of this start tag element (ex : <w:t>).
+     * 
+     * @return
+     */
+    public String getStartTagElementName()
+    {
+        return startTagElementName;
+    }
+
+    /**
+     * Returns the name of this end tag element (ex : </w:t>).
+     * 
+     * @return
+     */
+    public String getEndTagElementName()
+    {
+        return endTagElementName;
+    }
+
+    /**
+     * Set text content for this element.
+     * 
+     * @param content
+     */
+    public void setTextContent( String content )
+    {
+        if ( isEnded() )
+        {
+            // end tag element is parsed (ex: <w:t>XXXX</w:t>), reset the buffer
+            // and rebuild the buffer with the new content.
+            reset();
+            getStartTagElement().append( getStartTagElementName() );
+            getStartTagElement().append( content );
+            getEndTagElement().append( getEndTagElementName() );
+        }
+        else
+        {
+            // end tag element is not parsed (ex: <w:t>) append teh content.
+            getCurrentTagElement().append( content );
+        }
+    }
+
+    /**
+     * Returns the text content for this element.
+     * 
+     * @return
+     */
+    public String getTextContent()
+    {
+        // get content of the element (ex : <w:t>XXXX</w:t>)
+        StringWriter writer = new StringWriter();
+        try
+        {
+            save( writer );
+        }
+        catch ( IOException e )
+        {
+
+            e.printStackTrace();
+        }
+        // remove the start/end tag ex : XXXX)
+        String textContent = writer.toString();
+        if ( textContent.startsWith( getStartTagElementName() ) )
+        {
+            textContent = textContent.substring( getStartTagElementName().length(), textContent.length() );
+        }
+        if ( textContent.endsWith( getEndTagElementName() ) )
+        {
+            textContent = textContent.substring( 0, textContent.length() - getStartTagElementName().length() - 1 );
+        }
+        return textContent;
+    }
+
+    /**
+     * Returns the static SAX attributes.
+     * 
+     * @return
+     */
+    public Attributes getAttributes()
+    {
+        return attributes;
+    }
+
+    /**
+     * Register dynamic attributes if needed.
+     */
+    public void registerDynamicAttributes()
+    {
+        if ( dynamicAttributes == null )
+        {
+            return;
+        }
+        for ( BufferedAttribute attribute : dynamicAttributes )
+        {
+            getCurrentTagElement().addRegion( attribute );
+        }
+    }
+
+    /**
+     * Set dynamic attribute.
+     * 
+     * @param name
+     * @param value
+     * @return
+     */
+    public BufferedAttribute setAttribute( String name, String value )
+    {
+        if ( dynamicAttributes == null )
+        {
+            dynamicAttributes = new ArrayList<BufferedAttribute>();
+        }
+        BufferedAttribute attribute = new BufferedAttribute( this, name, value );
+        dynamicAttributes.add( attribute );
+        return attribute;
+    }
+
+    public String getName()
+    {
+        return name;
+    }
 
 }

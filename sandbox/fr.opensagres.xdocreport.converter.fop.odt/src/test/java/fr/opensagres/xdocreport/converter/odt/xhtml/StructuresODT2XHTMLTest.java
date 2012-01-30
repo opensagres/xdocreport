@@ -34,49 +34,60 @@ import fr.opensagres.xdocreport.converter.XDocConverterException;
 import fr.opensagres.xdocreport.converter.odt.XMLUtils;
 import fr.opensagres.xdocreport.core.io.IEntryInputStreamProvider;
 
-public class StructuresODT2XHTMLTest extends TestCase {
+public class StructuresODT2XHTMLTest
+    extends TestCase
+{
 
-	public void testNo() throws Exception {
+    public void testNo()
+        throws Exception
+    {
 
-	}
+    }
 
-	public static void main(String[] args) {
-		long startTime = System.currentTimeMillis();
+    public static void main( String[] args )
+    {
+        long startTime = System.currentTimeMillis();
 
-		ODTXHTMLConverter converter = ODTXHTMLConverter.getInstance();
+        ODTXHTMLConverter converter = ODTXHTMLConverter.getInstance();
 
-		IEntryInputStreamProvider inProvider = new IEntryInputStreamProvider() {
+        IEntryInputStreamProvider inProvider = new IEntryInputStreamProvider()
+        {
 
-			public InputStream getEntryInputStream(String entryName) {
-				if (entryName.equals("content.xml")) {
-					return StructuresODT2XHTMLTest.class
-							.getResourceAsStream("Structures.content.xml");
-				}
-				if (entryName.equals("styles.xml")) {
-					return StructuresODT2XHTMLTest.class
-							.getResourceAsStream("Structures.styles.xml");
-				}
-				if (entryName.equals("meta.xml")) {
-					return StructuresODT2XHTMLTest.class
-							.getResourceAsStream("Structures.meta.xml");
-				}
-				return null;
-			}
-		};
+            public InputStream getEntryInputStream( String entryName )
+            {
+                if ( entryName.equals( "content.xml" ) )
+                {
+                    return StructuresODT2XHTMLTest.class.getResourceAsStream( "Structures.content.xml" );
+                }
+                if ( entryName.equals( "styles.xml" ) )
+                {
+                    return StructuresODT2XHTMLTest.class.getResourceAsStream( "Structures.styles.xml" );
+                }
+                if ( entryName.equals( "meta.xml" ) )
+                {
+                    return StructuresODT2XHTMLTest.class.getResourceAsStream( "Structures.meta.xml" );
+                }
+                return null;
+            }
+        };
 
-		// OutputStream outputStream = new StringBuilderOutputStream();
-		DOMResult result = new DOMResult();
-		try {
-			converter.convert2XHTML(inProvider, result, null);
-			System.err.println(XMLUtils.toString(result.getNode()));
-		} catch (XDocConverterException e) {
-			e.printStackTrace();
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
+        // OutputStream outputStream = new StringBuilderOutputStream();
+        DOMResult result = new DOMResult();
+        try
+        {
+            converter.convert2XHTML( inProvider, result, null );
+            System.err.println( XMLUtils.toString( result.getNode() ) );
+        }
+        catch ( XDocConverterException e )
+        {
+            e.printStackTrace();
+        }
+        catch ( IOException e )
+        {
+            e.printStackTrace();
+        }
 
-		System.out.println(System.currentTimeMillis() - startTime + "(ms)");
+        System.out.println( System.currentTimeMillis() - startTime + "(ms)" );
 
-
-	}
+    }
 }

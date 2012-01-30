@@ -32,15 +32,19 @@ import fr.opensagres.xdocreport.document.preprocessor.sax.SAXXDocPreprocessor;
 import fr.opensagres.xdocreport.template.formatter.FieldsMetadata;
 import fr.opensagres.xdocreport.template.formatter.IDocumentFormatter;
 
-public class DocxContentTypesPreprocessor extends SAXXDocPreprocessor {
+public class DocxContentTypesPreprocessor
+    extends SAXXDocPreprocessor
+{
 
-	public static final IXDocPreprocessor INSTANCE = new DocxContentTypesPreprocessor();
+    public static final IXDocPreprocessor INSTANCE = new DocxContentTypesPreprocessor();
 
-	@Override
-	protected BufferedDocumentContentHandler createBufferedDocumentContentHandler(
-			String entryName, FieldsMetadata fieldsMetadata,
-			IDocumentFormatter formater, Map<String, Object> context) {
-		return new DocxContentTypesDocumentContentHandler();
-	}
+    @Override
+    protected BufferedDocumentContentHandler createBufferedDocumentContentHandler( String entryName,
+                                                                                   FieldsMetadata fieldsMetadata,
+                                                                                   IDocumentFormatter formater,
+                                                                                   Map<String, Object> context )
+    {
+        return new DocxContentTypesDocumentContentHandler();
+    }
 
 }

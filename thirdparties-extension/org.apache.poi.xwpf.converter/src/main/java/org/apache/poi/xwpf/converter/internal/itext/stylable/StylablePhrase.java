@@ -24,7 +24,6 @@
  */
 package org.apache.poi.xwpf.converter.internal.itext.stylable;
 
-
 import org.apache.poi.xwpf.converter.internal.itext.styles.Style;
 import org.apache.poi.xwpf.converter.internal.itext.styles.StyleTextProperties;
 
@@ -34,55 +33,68 @@ import com.lowagie.text.Phrase;
 
 import fr.opensagres.xdocreport.itext.extension.IITextContainer;
 
+public class StylablePhrase
+    extends Phrase
+    implements IStylableContainer
+{
 
-public class StylablePhrase extends Phrase implements IStylableContainer {
+    private static final long serialVersionUID = 664309269352903329L;
 
-	private static final long serialVersionUID = 664309269352903329L;
+    private final IStylableFactory ownerDocument;
 
-	private final IStylableFactory ownerDocument;
-	private IStylableContainer parent;
-	private Style lastStyleApplied = null;
+    private IStylableContainer parent;
 
-	public StylablePhrase(IStylableFactory ownerDocument,
-			IStylableContainer parent) {
-		this.ownerDocument = ownerDocument;
-		this.parent = parent;
-	}
+    private Style lastStyleApplied = null;
 
-	public void addElement(Element element) {
-		super.add(element);
-	}
+    public StylablePhrase( IStylableFactory ownerDocument, IStylableContainer parent )
+    {
+        this.ownerDocument = ownerDocument;
+        this.parent = parent;
+    }
 
-	public void applyStyles(Object ele,Style style) {
-		this.lastStyleApplied = style;
+    public void addElement( Element element )
+    {
+        super.add( element );
+    }
 
-		StyleTextProperties textProperties = style.getTextProperties();
-		if (textProperties != null) {
-			// Font
-			Font font = textProperties.getFont();
-			if (font != null) {
-				super.setFont(font);
-			}
-		}
-	}
+    public void applyStyles( Object ele, Style style )
+    {
+        this.lastStyleApplied = style;
 
-	public Style getLastStyleApplied() {
-		return lastStyleApplied;
-	}
+        StyleTextProperties textProperties = style.getTextProperties();
+        if ( textProperties != null )
+        {
+            // Font
+            Font font = textProperties.getFont();
+            if ( font != null )
+            {
+                super.setFont( font );
+            }
+        }
+    }
 
-	public IStylableContainer getParent() {
-		return parent;
-	}
+    public Style getLastStyleApplied()
+    {
+        return lastStyleApplied;
+    }
 
-	public Element getElement() {
-		return this;
-	}
-	
-	public IITextContainer getITextContainer() {
-		return parent;
-	}
+    public IStylableContainer getParent()
+    {
+        return parent;
+    }
 
-	public void setITextContainer(IITextContainer container) {
-		
-	}
+    public Element getElement()
+    {
+        return this;
+    }
+
+    public IITextContainer getITextContainer()
+    {
+        return parent;
+    }
+
+    public void setITextContainer( IITextContainer container )
+    {
+
+    }
 }

@@ -28,49 +28,67 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.io.Writer;
 
-public abstract class AbstractContentBuffer {
+public abstract class AbstractContentBuffer
+{
 
-	protected final int indent;
+    protected final int indent;
 
-	public AbstractContentBuffer(final int indent) {
-		this.indent = indent;
-	}
+    public AbstractContentBuffer( final int indent )
+    {
+        this.indent = indent;
+    }
 
-	public void setText(String content) {
-		getCurrentBuffer().append(content);
-	}
+    public void setText( String content )
+    {
+        getCurrentBuffer().append( content );
+    }
 
-	protected void doIndentIfNeeded(StringBuilder buffer, int index) {
-		if (indent > 0) {
-			buffer.append("\n");
-			for (int i = 0; i < index; i++) {
-				for (int j = 0; j < indent; j++) {
-					buffer.append(' ');
-				}
-			}
-		}
-	}
+    protected void doIndentIfNeeded( StringBuilder buffer, int index )
+    {
+        if ( indent > 0 )
+        {
+            buffer.append( "\n" );
+            for ( int i = 0; i < index; i++ )
+            {
+                for ( int j = 0; j < indent; j++ )
+                {
+                    buffer.append( ' ' );
+                }
+            }
+        }
+    }
 
-	protected void doIndentIfNeeded(OutputStream out, int index) throws IOException {
-		if (indent > 0) {
-			out.write('\n');
-			for (int i = 0; i < index; i++) {
-				for (int j = 0; j < indent; j++) {
-					out.write(' ');
-				}
-			}
-		}
-	}
-	
-	protected void doIndentIfNeeded(Writer writer, int index) throws IOException {
-		if (indent > 0) {
-			writer.write('\n');
-			for (int i = 0; i < index; i++) {
-				for (int j = 0; j < indent; j++) {
-					writer.write(' ');
-				}
-			}
-		}
-	}
-	protected abstract StringBuilder getCurrentBuffer();
+    protected void doIndentIfNeeded( OutputStream out, int index )
+        throws IOException
+    {
+        if ( indent > 0 )
+        {
+            out.write( '\n' );
+            for ( int i = 0; i < index; i++ )
+            {
+                for ( int j = 0; j < indent; j++ )
+                {
+                    out.write( ' ' );
+                }
+            }
+        }
+    }
+
+    protected void doIndentIfNeeded( Writer writer, int index )
+        throws IOException
+    {
+        if ( indent > 0 )
+        {
+            writer.write( '\n' );
+            for ( int i = 0; i < index; i++ )
+            {
+                for ( int j = 0; j < indent; j++ )
+                {
+                    writer.write( ' ' );
+                }
+            }
+        }
+    }
+
+    protected abstract StringBuilder getCurrentBuffer();
 }

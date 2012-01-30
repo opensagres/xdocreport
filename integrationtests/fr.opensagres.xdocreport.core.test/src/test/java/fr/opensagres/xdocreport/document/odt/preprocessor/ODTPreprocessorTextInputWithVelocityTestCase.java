@@ -31,122 +31,118 @@ import junit.framework.TestCase;
 import fr.opensagres.xdocreport.template.formatter.IDocumentFormatter;
 import fr.opensagres.xdocreport.template.velocity.VelocityDocumentFormatter;
 
-public class ODTPreprocessorTextInputWithVelocityTestCase extends TestCase {
+public class ODTPreprocessorTextInputWithVelocityTestCase
+    extends TestCase
+{
 
-	public void testInterpolationWithSimpleQuote() throws Exception {
-		ODTPreprocessor preprocessor = new ODTPreprocessor();
-		StringReader reader = new StringReader(
-				"<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>"
-						+ "<office:document-content xmlns:office=\"urn:oasis:names:tc:opendocument:xmlns:office:1.0\" "
-						+ "xmlns:text=\"urn:oasis:names:tc:opendocument:xmlns:text:1.0\" "
-						+ "xmlns:table=\"urn:oasis:names:tc:opendocument:xmlns:table:1.0\">"
-						+ "<text:p text:style-name=\"Table_20_Contents\">"
-							+ "<text:text-input text:description=\"\">${doc[&apos;dc:title&apos;]}</text:text-input>"
-						+ "</text:p>"
-					+ "</office:document-content>");
-		StringWriter writer = new StringWriter();
+    public void testInterpolationWithSimpleQuote()
+        throws Exception
+    {
+        ODTPreprocessor preprocessor = new ODTPreprocessor();
+        StringReader reader =
+            new StringReader( "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>"
+                + "<office:document-content xmlns:office=\"urn:oasis:names:tc:opendocument:xmlns:office:1.0\" "
+                + "xmlns:text=\"urn:oasis:names:tc:opendocument:xmlns:text:1.0\" "
+                + "xmlns:table=\"urn:oasis:names:tc:opendocument:xmlns:table:1.0\">"
+                + "<text:p text:style-name=\"Table_20_Contents\">"
+                + "<text:text-input text:description=\"\">${doc[&apos;dc:title&apos;]}</text:text-input>" + "</text:p>"
+                + "</office:document-content>" );
+        StringWriter writer = new StringWriter();
 
-		IDocumentFormatter formatter = new VelocityDocumentFormatter();
-		preprocessor.preprocess("test", reader, writer, null, null, formatter, null);
+        IDocumentFormatter formatter = new VelocityDocumentFormatter();
+        preprocessor.preprocess( "test", reader, writer, null, null, formatter, null );
 
-		assertEquals(
-				"<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>"
-						+ "<office:document-content xmlns:office=\"urn:oasis:names:tc:opendocument:xmlns:office:1.0\" "
-						+ "xmlns:text=\"urn:oasis:names:tc:opendocument:xmlns:text:1.0\" "
-						+ "xmlns:table=\"urn:oasis:names:tc:opendocument:xmlns:table:1.0\">"
-						+ "<text:p text:style-name=\"Table_20_Contents\">"
-						//	+ "<text:text-input text:description=\"\">${doc[&apos;dc:title&apos;]}</text:text-input>"
-							+ "${doc['dc:title']}"
-						+ "</text:p>"
-					+ "</office:document-content>",
-				writer.toString());
-	}
-	
-	public void testInterpolationWithDoubleQuote() throws Exception {
-		ODTPreprocessor preprocessor = new ODTPreprocessor();
-		StringReader reader = new StringReader(
-				"<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>"
-						+ "<office:document-content xmlns:office=\"urn:oasis:names:tc:opendocument:xmlns:office:1.0\" "
-						+ "xmlns:text=\"urn:oasis:names:tc:opendocument:xmlns:text:1.0\" "
-						+ "xmlns:table=\"urn:oasis:names:tc:opendocument:xmlns:table:1.0\">"
-						+ "<text:p text:style-name=\"Table_20_Contents\">"
-							+ "<text:text-input text:description=\"\">${doc[&quot;dc:title&quot;]}</text:text-input>"
-						+ "</text:p>"
-					+ "</office:document-content>");
-		StringWriter writer = new StringWriter();
+        assertEquals( "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>"
+            + "<office:document-content xmlns:office=\"urn:oasis:names:tc:opendocument:xmlns:office:1.0\" "
+            + "xmlns:text=\"urn:oasis:names:tc:opendocument:xmlns:text:1.0\" "
+            + "xmlns:table=\"urn:oasis:names:tc:opendocument:xmlns:table:1.0\">"
+            + "<text:p text:style-name=\"Table_20_Contents\">"
+            // + "<text:text-input text:description=\"\">${doc[&apos;dc:title&apos;]}</text:text-input>"
+            + "${doc['dc:title']}" + "</text:p>" + "</office:document-content>", writer.toString() );
+    }
 
-		IDocumentFormatter formatter = new VelocityDocumentFormatter();
-		preprocessor.preprocess("test", reader, writer, null, null, formatter, null);
+    public void testInterpolationWithDoubleQuote()
+        throws Exception
+    {
+        ODTPreprocessor preprocessor = new ODTPreprocessor();
+        StringReader reader =
+            new StringReader( "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>"
+                + "<office:document-content xmlns:office=\"urn:oasis:names:tc:opendocument:xmlns:office:1.0\" "
+                + "xmlns:text=\"urn:oasis:names:tc:opendocument:xmlns:text:1.0\" "
+                + "xmlns:table=\"urn:oasis:names:tc:opendocument:xmlns:table:1.0\">"
+                + "<text:p text:style-name=\"Table_20_Contents\">"
+                + "<text:text-input text:description=\"\">${doc[&quot;dc:title&quot;]}</text:text-input>" + "</text:p>"
+                + "</office:document-content>" );
+        StringWriter writer = new StringWriter();
 
-		assertEquals(
-				"<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>"
-						+ "<office:document-content xmlns:office=\"urn:oasis:names:tc:opendocument:xmlns:office:1.0\" "
-						+ "xmlns:text=\"urn:oasis:names:tc:opendocument:xmlns:text:1.0\" "
-						+ "xmlns:table=\"urn:oasis:names:tc:opendocument:xmlns:table:1.0\">"
-						+ "<text:p text:style-name=\"Table_20_Contents\">"
-						//	+ "<text:text-input text:description=\"\">${doc[&quot;dc:title&quot;]}</text:text-input>"
-							+ "${doc[\"dc:title\"]}"
-						+ "</text:p>"
-					+ "</office:document-content>",
-				writer.toString());
-	}
-	
-	public void testDirectiveWithSimpleQuote() throws Exception {
-		ODTPreprocessor preprocessor = new ODTPreprocessor();
-		StringReader reader = new StringReader(
-				"<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>"
-						+ "<office:document-content xmlns:office=\"urn:oasis:names:tc:opendocument:xmlns:office:1.0\" "
-						+ "xmlns:text=\"urn:oasis:names:tc:opendocument:xmlns:text:1.0\" "
-						+ "xmlns:table=\"urn:oasis:names:tc:opendocument:xmlns:table:1.0\">"
-						+ "<text:p text:style-name=\"Table_20_Contents\">"
-							+ "<text:text-input text:description=\"\">#foreach($subject in $doc[&apos;dc:subjects&apos;])</text:text-input>"
-						+ "</text:p>"
-					+ "</office:document-content>");
-		StringWriter writer = new StringWriter();
+        IDocumentFormatter formatter = new VelocityDocumentFormatter();
+        preprocessor.preprocess( "test", reader, writer, null, null, formatter, null );
 
-		IDocumentFormatter formatter = new VelocityDocumentFormatter();
-		preprocessor.preprocess("test", reader, writer, null, null, formatter, null);
+        assertEquals( "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>"
+            + "<office:document-content xmlns:office=\"urn:oasis:names:tc:opendocument:xmlns:office:1.0\" "
+            + "xmlns:text=\"urn:oasis:names:tc:opendocument:xmlns:text:1.0\" "
+            + "xmlns:table=\"urn:oasis:names:tc:opendocument:xmlns:table:1.0\">"
+            + "<text:p text:style-name=\"Table_20_Contents\">"
+            // + "<text:text-input text:description=\"\">${doc[&quot;dc:title&quot;]}</text:text-input>"
+            + "${doc[\"dc:title\"]}" + "</text:p>" + "</office:document-content>", writer.toString() );
+    }
 
-		assertEquals(
-				"<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>"
-						+ "<office:document-content xmlns:office=\"urn:oasis:names:tc:opendocument:xmlns:office:1.0\" "
-						+ "xmlns:text=\"urn:oasis:names:tc:opendocument:xmlns:text:1.0\" "
-						+ "xmlns:table=\"urn:oasis:names:tc:opendocument:xmlns:table:1.0\">"
-						+ "<text:p text:style-name=\"Table_20_Contents\">"
-						//	+ "<text:text-input text:description=\"\">#foreach($subject in $doc[&apos;dc:subjects&apos;])</text:text-input>"
-							+ "#foreach($subject in $doc['dc:subjects'])"
-						+ "</text:p>"
-					+ "</office:document-content>",
-				writer.toString());
-	}
-	
-	public void testDirectiveWithDoubleQuote() throws Exception {
-		ODTPreprocessor preprocessor = new ODTPreprocessor();
-		StringReader reader = new StringReader(
-				"<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>"
-						+ "<office:document-content xmlns:office=\"urn:oasis:names:tc:opendocument:xmlns:office:1.0\" "
-						+ "xmlns:text=\"urn:oasis:names:tc:opendocument:xmlns:text:1.0\" "
-						+ "xmlns:table=\"urn:oasis:names:tc:opendocument:xmlns:table:1.0\">"
-						+ "<text:p text:style-name=\"Table_20_Contents\">"
-						+ "<text:text-input text:description=\"\">#foreach($subject in $doc[&quot;dc:subjects&quot;])</text:text-input>"
-						+ "</text:p>"
-					+ "</office:document-content>");
-		StringWriter writer = new StringWriter();
+    public void testDirectiveWithSimpleQuote()
+        throws Exception
+    {
+        ODTPreprocessor preprocessor = new ODTPreprocessor();
+        StringReader reader =
+            new StringReader(
+                              "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>"
+                                  + "<office:document-content xmlns:office=\"urn:oasis:names:tc:opendocument:xmlns:office:1.0\" "
+                                  + "xmlns:text=\"urn:oasis:names:tc:opendocument:xmlns:text:1.0\" "
+                                  + "xmlns:table=\"urn:oasis:names:tc:opendocument:xmlns:table:1.0\">"
+                                  + "<text:p text:style-name=\"Table_20_Contents\">"
+                                  + "<text:text-input text:description=\"\">#foreach($subject in $doc[&apos;dc:subjects&apos;])</text:text-input>"
+                                  + "</text:p>" + "</office:document-content>" );
+        StringWriter writer = new StringWriter();
 
-		IDocumentFormatter formatter = new VelocityDocumentFormatter();
-		preprocessor.preprocess("test", reader, writer, null, null, formatter, null);
+        IDocumentFormatter formatter = new VelocityDocumentFormatter();
+        preprocessor.preprocess( "test", reader, writer, null, null, formatter, null );
 
-		assertEquals(
-				"<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>"
-						+ "<office:document-content xmlns:office=\"urn:oasis:names:tc:opendocument:xmlns:office:1.0\" "
-						+ "xmlns:text=\"urn:oasis:names:tc:opendocument:xmlns:text:1.0\" "
-						+ "xmlns:table=\"urn:oasis:names:tc:opendocument:xmlns:table:1.0\">"
-						+ "<text:p text:style-name=\"Table_20_Contents\">"
-						//	+ "<text:text-input text:description=\"\">#foreach($subject in $doc[&quot;dc:subjects&quot;])</text:text-input>"
-							+ "#foreach($subject in $doc[\"dc:subjects\"])"
-						+ "</text:p>"
-					+ "</office:document-content>",
-				writer.toString());
-	}
+        assertEquals( "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>"
+                          + "<office:document-content xmlns:office=\"urn:oasis:names:tc:opendocument:xmlns:office:1.0\" "
+                          + "xmlns:text=\"urn:oasis:names:tc:opendocument:xmlns:text:1.0\" "
+                          + "xmlns:table=\"urn:oasis:names:tc:opendocument:xmlns:table:1.0\">"
+                          + "<text:p text:style-name=\"Table_20_Contents\">"
+                          // +
+                          // "<text:text-input text:description=\"\">#foreach($subject in $doc[&apos;dc:subjects&apos;])</text:text-input>"
+                          + "#foreach($subject in $doc['dc:subjects'])" + "</text:p>" + "</office:document-content>",
+                      writer.toString() );
+    }
+
+    public void testDirectiveWithDoubleQuote()
+        throws Exception
+    {
+        ODTPreprocessor preprocessor = new ODTPreprocessor();
+        StringReader reader =
+            new StringReader(
+                              "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>"
+                                  + "<office:document-content xmlns:office=\"urn:oasis:names:tc:opendocument:xmlns:office:1.0\" "
+                                  + "xmlns:text=\"urn:oasis:names:tc:opendocument:xmlns:text:1.0\" "
+                                  + "xmlns:table=\"urn:oasis:names:tc:opendocument:xmlns:table:1.0\">"
+                                  + "<text:p text:style-name=\"Table_20_Contents\">"
+                                  + "<text:text-input text:description=\"\">#foreach($subject in $doc[&quot;dc:subjects&quot;])</text:text-input>"
+                                  + "</text:p>" + "</office:document-content>" );
+        StringWriter writer = new StringWriter();
+
+        IDocumentFormatter formatter = new VelocityDocumentFormatter();
+        preprocessor.preprocess( "test", reader, writer, null, null, formatter, null );
+
+        assertEquals( "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>"
+                          + "<office:document-content xmlns:office=\"urn:oasis:names:tc:opendocument:xmlns:office:1.0\" "
+                          + "xmlns:text=\"urn:oasis:names:tc:opendocument:xmlns:text:1.0\" "
+                          + "xmlns:table=\"urn:oasis:names:tc:opendocument:xmlns:table:1.0\">"
+                          + "<text:p text:style-name=\"Table_20_Contents\">"
+                          // +
+                          // "<text:text-input text:description=\"\">#foreach($subject in $doc[&quot;dc:subjects&quot;])</text:text-input>"
+                          + "#foreach($subject in $doc[\"dc:subjects\"])" + "</text:p>" + "</office:document-content>",
+                      writer.toString() );
+    }
 
 }

@@ -26,9 +26,10 @@ package fr.opensagres.xdocreport.template.config;
 
 import java.util.Collection;
 
-public interface ITemplateEngineConfiguration {
+public interface ITemplateEngineConfiguration
+{
 
-	boolean escapeXML();
+    boolean escapeXML();
 
-	Collection<ReplaceText> getReplacment();
+    Collection<ReplaceText> getReplacment();
 }

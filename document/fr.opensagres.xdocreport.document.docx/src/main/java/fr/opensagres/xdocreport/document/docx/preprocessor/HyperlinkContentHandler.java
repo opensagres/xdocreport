@@ -36,49 +36,53 @@ import org.xml.sax.SAXException;
 import org.xml.sax.helpers.DefaultHandler;
 
 /**
- * SAX Handler which loads Relationship type of Hyperlink declared in the
- * "word/_rels/document.xml.rels" in the initial {@link InitialHyperlinkMap}.
- * 
+ * SAX Handler which loads Relationship type of Hyperlink declared in the "word/_rels/document.xml.rels" in the initial
+ * {@link InitialHyperlinkMap}.
  */
-public class HyperlinkContentHandler extends DefaultHandler {
+public class HyperlinkContentHandler
+    extends DefaultHandler
+{
 
-	private InitialHyperlinkMap hyperlinks;
+    private InitialHyperlinkMap hyperlinks;
 
-	@Override
-	public void startElement(String uri, String localName, String name,
-			Attributes attributes) throws SAXException {
-		if (RELATIONSHIP_ELT.equals(name)) {
-			String type = attributes.getValue(RELATIONSHIP_TYPE_ATTR);
-			if (RELATIONSHIPS_HYPERLINK_NS.equals(type)) {
+    @Override
+    public void startElement( String uri, String localName, String name, Attributes attributes )
+        throws SAXException
+    {
+        if ( RELATIONSHIP_ELT.equals( name ) )
+        {
+            String type = attributes.getValue( RELATIONSHIP_TYPE_ATTR );
+            if ( RELATIONSHIPS_HYPERLINK_NS.equals( type ) )
+            {
 
-				// <Relationship Id="rId1"
-				// Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/hyperlink"
-				// Target="mailto:$mail"
-				// TargetMode="External" />
+                // <Relationship Id="rId1"
+                // Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/hyperlink"
+                // Target="mailto:$mail"
+                // TargetMode="External" />
 
-				// Create Java model HyperlinkInfo of this XML declaration and
-				// register it in the Map
-				String id = attributes.getValue(RELATIONSHIP_ID_ATTR);
-				String target = attributes.getValue(RELATIONSHIP_TARGET_ATTR);
-				String targetMode = attributes
-						.getValue(RELATIONSHIP_TARGET_MODE_ATTR);
+                // Create Java model HyperlinkInfo of this XML declaration and
+                // register it in the Map
+                String id = attributes.getValue( RELATIONSHIP_ID_ATTR );
+                String target = attributes.getValue( RELATIONSHIP_TARGET_ATTR );
+                String targetMode = attributes.getValue( RELATIONSHIP_TARGET_MODE_ATTR );
 
-				if (hyperlinks == null) {
-					hyperlinks = new InitialHyperlinkMap();
-				}
-				hyperlinks.put(id, new HyperlinkInfo(id, target, targetMode));
-			}
-		}
-	}
+                if ( hyperlinks == null )
+                {
+                    hyperlinks = new InitialHyperlinkMap();
+                }
+                hyperlinks.put( id, new HyperlinkInfo( id, target, targetMode ) );
+            }
+        }
+    }
 
-	/**
-	 * Returns Map of initial Relationship type of Hyperlink declared in the
-	 * "word/_rels/document.xml.rels" and null if there is no Hyperlink
-	 * declared.
-	 * 
-	 * @return
-	 */
-	public InitialHyperlinkMap getHyperlinks() {
-		return hyperlinks;
-	}
+    /**
+     * Returns Map of initial Relationship type of Hyperlink declared in the "word/_rels/document.xml.rels" and null if
+     * there is no Hyperlink declared.
+     * 
+     * @return
+     */
+    public InitialHyperlinkMap getHyperlinks()
+    {
+        return hyperlinks;
+    }
 }

@@ -30,164 +30,202 @@ import java.math.BigInteger;
 
 import com.lowagie.text.Element;
 
+public class StyleParagraphProperties
+{
 
-public class StyleParagraphProperties {
+    // private StyleBorder border;
+    private StyleBorder borderTop;
 
-//	private StyleBorder border;
-	private StyleBorder borderTop;
-	private StyleBorder borderBottom;
-	private StyleBorder borderLeft;
-	private StyleBorder borderRight;
-//	private BaseColor backgroundColor;
+    private StyleBorder borderBottom;
 
-	private int alignment = Element.ALIGN_UNDEFINED;
-	
-	private int verticalAlignment = Element.ALIGN_UNDEFINED;
-//	private Float indentation;
-	private Float lineHeight;
-//	private boolean autoTextIndent = false;
-//	
-	private int indentationFirstLine;
-	private int indentationLeft;
-	private int indentationRight;
-	private int spacingAfter;
-	
-	private int spacingBefore;
-	public StyleParagraphProperties() {
+    private StyleBorder borderLeft;
 
-	}
+    private StyleBorder borderRight;
 
-	public StyleParagraphProperties(StyleParagraphProperties paragraphProperties) {
-		if (paragraphProperties == null) {
-			return;
-		}
-//		backgroundColor = paragraphProperties.backgroundColor;
-//		alignment = paragraphProperties.alignment;
-//		indentation = paragraphProperties.indentation;
-	}
+    // private BaseColor backgroundColor;
 
-	public int getSpacingAfter() {
-		return spacingAfter;
-	}
+    private int alignment = Element.ALIGN_UNDEFINED;
 
-	public void setSpacingAfter(int spacingAfter) {
-		this.spacingAfter = dxa2points(spacingAfter);
-	}
+    private int verticalAlignment = Element.ALIGN_UNDEFINED;
 
-	public float getSpacingBefore() {
-		return spacingBefore;
-	}
+    // private Float indentation;
+    private Float lineHeight;
 
-	
-	public void setSpacingBefore(int spacingBefore) {
-		this.spacingBefore = dxa2points(spacingBefore);
-	}
-	public int getAlignment() {
-		return alignment;
-	}
+    // private boolean autoTextIndent = false;
+    //
+    private int indentationFirstLine;
 
-	public void setAlignment(int alignment) {
-		this.alignment = alignment;
-	}
+    private int indentationLeft;
 
-	public Float getLineHeight() {
-		return lineHeight;
-	}
+    private int indentationRight;
 
-	public void setLineHeight(Float lineHeight) {
-		this.lineHeight = lineHeight;
-	}
+    private int spacingAfter;
 
-	public int getIndentationFirstLine() {
-		return indentationFirstLine;
-	}
+    private int spacingBefore;
 
-	public void setIndentationFirstLine(int indentationFirstLine) {
-		this.indentationFirstLine = dxa2points(indentationFirstLine);
-	}
+    public StyleParagraphProperties()
+    {
 
-	public int getIndentationLeft() {
-		return indentationLeft;
-	}
+    }
 
-	public void setIndentationLeft(int indentationLeft) {
-		this.indentationLeft = dxa2points(indentationLeft);
-	}
+    public StyleParagraphProperties( StyleParagraphProperties paragraphProperties )
+    {
+        if ( paragraphProperties == null )
+        {
+            return;
+        }
+        // backgroundColor = paragraphProperties.backgroundColor;
+        // alignment = paragraphProperties.alignment;
+        // indentation = paragraphProperties.indentation;
+    }
 
-	public void setIndentationRight(BigInteger indentationRight) {
-		this.indentationRight = dxa2points(indentationRight);
-	}
+    public int getSpacingAfter()
+    {
+        return spacingAfter;
+    }
 
-	public int getIndentationRight() {
-		return indentationRight;
-	}
+    public void setSpacingAfter( int spacingAfter )
+    {
+        this.spacingAfter = dxa2points( spacingAfter );
+    }
 
+    public float getSpacingBefore()
+    {
+        return spacingBefore;
+    }
 
-	public void merge(StyleParagraphProperties paragraphProperties) {
-		if (paragraphProperties.getAlignment() != Element.ALIGN_UNDEFINED) {
-			alignment = paragraphProperties.getAlignment();
-		}
-		if (paragraphProperties.getLineHeight() != null) {
-			lineHeight = paragraphProperties.getLineHeight();
-		}
-	}
+    public void setSpacingBefore( int spacingBefore )
+    {
+        this.spacingBefore = dxa2points( spacingBefore );
+    }
 
-	private FontInfos fontInfos;
+    public int getAlignment()
+    {
+        return alignment;
+    }
 
-	
-	
-	public FontInfos getFontInfos() {
-		return fontInfos;
-	}
+    public void setAlignment( int alignment )
+    {
+        this.alignment = alignment;
+    }
 
-	public void setFontInfos(FontInfos fontInfos) {
-		this.fontInfos = fontInfos;
-	}
+    public Float getLineHeight()
+    {
+        return lineHeight;
+    }
 
-	public int getVerticalAlignment() {
-		return verticalAlignment;
-	}
+    public void setLineHeight( Float lineHeight )
+    {
+        this.lineHeight = lineHeight;
+    }
 
-	public void setVerticalAlignment(int verticalAlignment) {
-		this.verticalAlignment = verticalAlignment;
-	}
+    public int getIndentationFirstLine()
+    {
+        return indentationFirstLine;
+    }
 
-	public StyleBorder getBorderTop() {
-		return borderTop;
-	}
+    public void setIndentationFirstLine( int indentationFirstLine )
+    {
+        this.indentationFirstLine = dxa2points( indentationFirstLine );
+    }
 
-	public void setBorderTop(StyleBorder borderTop) {
-		this.borderTop = borderTop;
-	}
+    public int getIndentationLeft()
+    {
+        return indentationLeft;
+    }
 
-	public StyleBorder getBorderBottom() {
-		return borderBottom;
-	}
+    public void setIndentationLeft( int indentationLeft )
+    {
+        this.indentationLeft = dxa2points( indentationLeft );
+    }
 
-	public void setBorderBottom(StyleBorder borderBottom) {
-		this.borderBottom = borderBottom;
-	}
+    public void setIndentationRight( BigInteger indentationRight )
+    {
+        this.indentationRight = dxa2points( indentationRight );
+    }
 
-	public StyleBorder getBorderLeft() {
-		return borderLeft;
-	}
+    public int getIndentationRight()
+    {
+        return indentationRight;
+    }
 
-	public void setBorderLeft(StyleBorder borderLeft) {
-		this.borderLeft = borderLeft;
-	}
+    public void merge( StyleParagraphProperties paragraphProperties )
+    {
+        if ( paragraphProperties.getAlignment() != Element.ALIGN_UNDEFINED )
+        {
+            alignment = paragraphProperties.getAlignment();
+        }
+        if ( paragraphProperties.getLineHeight() != null )
+        {
+            lineHeight = paragraphProperties.getLineHeight();
+        }
+    }
 
-	public StyleBorder getBorderRight() {
-		return borderRight;
-	}
+    private FontInfos fontInfos;
 
-	public void setBorderRight(StyleBorder borderRight) {
-		this.borderRight = borderRight;
-	}
+    public FontInfos getFontInfos()
+    {
+        return fontInfos;
+    }
 
-	public void setIndentationRight(int indentationRight) {
-		this.indentationRight = indentationRight;
-	}
-	
+    public void setFontInfos( FontInfos fontInfos )
+    {
+        this.fontInfos = fontInfos;
+    }
 
-	
+    public int getVerticalAlignment()
+    {
+        return verticalAlignment;
+    }
+
+    public void setVerticalAlignment( int verticalAlignment )
+    {
+        this.verticalAlignment = verticalAlignment;
+    }
+
+    public StyleBorder getBorderTop()
+    {
+        return borderTop;
+    }
+
+    public void setBorderTop( StyleBorder borderTop )
+    {
+        this.borderTop = borderTop;
+    }
+
+    public StyleBorder getBorderBottom()
+    {
+        return borderBottom;
+    }
+
+    public void setBorderBottom( StyleBorder borderBottom )
+    {
+        this.borderBottom = borderBottom;
+    }
+
+    public StyleBorder getBorderLeft()
+    {
+        return borderLeft;
+    }
+
+    public void setBorderLeft( StyleBorder borderLeft )
+    {
+        this.borderLeft = borderLeft;
+    }
+
+    public StyleBorder getBorderRight()
+    {
+        return borderRight;
+    }
+
+    public void setBorderRight( StyleBorder borderRight )
+    {
+        this.borderRight = borderRight;
+    }
+
+    public void setIndentationRight( int indentationRight )
+    {
+        this.indentationRight = indentationRight;
+    }
+
 }

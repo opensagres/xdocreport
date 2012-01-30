@@ -32,19 +32,18 @@ import fr.opensagres.xdocreport.document.textstyling.ITextStylingTransformer;
 import fr.opensagres.xdocreport.document.textstyling.wiki.AbstractWikiTextStylingTransformer;
 
 /**
- * 
- * Google Wiki text styling transformer to transform Google wiki syntax to
- * another document kind (odt, docx, etc) syntax. The ODT, DOCX is represented
- * with the given {@link IDocumentHandler}.
- * 
+ * Google Wiki text styling transformer to transform Google wiki syntax to another document kind (odt, docx, etc)
+ * syntax. The ODT, DOCX is represented with the given {@link IDocumentHandler}.
  */
-public class GWikiTextStylingTransformer extends
-		AbstractWikiTextStylingTransformer {
+public class GWikiTextStylingTransformer
+    extends AbstractWikiTextStylingTransformer
+{
 
-	public static final ITextStylingTransformer INSTANCE = new GWikiTextStylingTransformer();
+    public static final ITextStylingTransformer INSTANCE = new GWikiTextStylingTransformer();
 
-	@Override
-	protected IWikiParser createWikiParser() {
-		return new GWikiParser();
-	}
+    @Override
+    protected IWikiParser createWikiParser()
+    {
+        return new GWikiParser();
+    }
 }

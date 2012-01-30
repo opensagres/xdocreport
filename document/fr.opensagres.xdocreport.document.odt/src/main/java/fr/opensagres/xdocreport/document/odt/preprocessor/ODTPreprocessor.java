@@ -33,20 +33,22 @@ import fr.opensagres.xdocreport.template.formatter.FieldsMetadata;
 import fr.opensagres.xdocreport.template.formatter.IDocumentFormatter;
 
 /**
- * Open Office ODT preprocessor to generate lazy Freemarker/Velocity loop
- * directive in the table row which contains a list fields.
- * 
+ * Open Office ODT preprocessor to generate lazy Freemarker/Velocity loop directive in the table row which contains a
+ * list fields.
  */
-public class ODTPreprocessor extends SAXXDocPreprocessor {
+public class ODTPreprocessor
+    extends SAXXDocPreprocessor
+{
 
-	public static final IXDocPreprocessor INSTANCE = new ODTPreprocessor();
+    public static final IXDocPreprocessor INSTANCE = new ODTPreprocessor();
 
-	@Override
-	protected BufferedDocumentContentHandler createBufferedDocumentContentHandler(
-			String entryName, FieldsMetadata fieldsMetadata,
-			IDocumentFormatter formatter, Map<String, Object> sharedContext) {
-		return new ODTBufferedDocumentContentHandler(fieldsMetadata, formatter,
-				sharedContext);
-	}
+    @Override
+    protected BufferedDocumentContentHandler createBufferedDocumentContentHandler( String entryName,
+                                                                                   FieldsMetadata fieldsMetadata,
+                                                                                   IDocumentFormatter formatter,
+                                                                                   Map<String, Object> sharedContext )
+    {
+        return new ODTBufferedDocumentContentHandler( fieldsMetadata, formatter, sharedContext );
+    }
 
 }

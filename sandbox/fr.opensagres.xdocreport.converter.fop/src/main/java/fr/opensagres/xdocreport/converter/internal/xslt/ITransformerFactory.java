@@ -19,9 +19,9 @@ import javax.xml.transform.TransformerFactory;
 
 /**
  * Transformer factory.
- * 
  */
-public interface ITransformerFactory {
+public interface ITransformerFactory
+{
 
-	TransformerFactory createTransformerFactory();
+    TransformerFactory createTransformerFactory();
 }

@@ -29,29 +29,35 @@ import java.util.List;
 
 import javax.xml.bind.annotation.XmlMimeType;
 import javax.xml.bind.annotation.XmlRootElement;
+
 @XmlRootElement
-public class Report  extends ReportId{
+public class Report
+    extends ReportId
+{
 
-	private byte[] document ;
-	
-	private List<String> fieldsMetaData=new ArrayList<String>();
+    private byte[] document;
 
-	@XmlMimeType("application/octet-stream")
-	public byte[] getDocument() {
-		return document;
-	}
+    private List<String> fieldsMetaData = new ArrayList<String>();
 
-	public void setDocument(byte[] document) {
-		this.document = document;
-	}
+    @XmlMimeType( "application/octet-stream" )
+    public byte[] getDocument()
+    {
+        return document;
+    }
 
-	public List<String> getFieldsMetaData() {
-		return fieldsMetaData;
-	}
+    public void setDocument( byte[] document )
+    {
+        this.document = document;
+    }
 
-	public void setFieldsMetaData(List<String> fieldsMetaData) {
-		this.fieldsMetaData = fieldsMetaData;
-	}
-	
-	
+    public List<String> getFieldsMetaData()
+    {
+        return fieldsMetaData;
+    }
+
+    public void setFieldsMetaData( List<String> fieldsMetaData )
+    {
+        this.fieldsMetaData = fieldsMetaData;
+    }
+
 }

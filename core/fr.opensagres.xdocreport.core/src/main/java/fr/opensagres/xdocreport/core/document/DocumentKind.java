@@ -26,9 +26,9 @@ package fr.opensagres.xdocreport.core.document;
 
 /**
  * Document king supported by XDocReport.
- * 
  */
-public enum DocumentKind {
+public enum DocumentKind
+{
 
-	ODT, ODS, ODP, DOCX, PPTX
+    ODT, ODS, ODP, DOCX, PPTX
 }

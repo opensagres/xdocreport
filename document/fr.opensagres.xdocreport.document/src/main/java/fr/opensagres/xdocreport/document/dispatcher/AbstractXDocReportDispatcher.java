@@ -29,30 +29,37 @@ import java.io.InputStream;
 import fr.opensagres.xdocreport.template.formatter.FieldsMetadata;
 
 public abstract class AbstractXDocReportDispatcher<T extends IXDocReportController>
-		implements IXDocReportDispatcher<T> {
+    implements IXDocReportDispatcher<T>
+{
 
-	public InputStream getSourceStream(String reportId) {
-		T controller = getReportController(reportId);
-		if (controller != null) {
-			return controller.getSourceStream();
-		}
-		return null;
-	}
-	
-	public String getTemplateEngineKind(String reportId) {
-		T controller = getReportController(reportId);
-		if (controller != null) {
-			return controller.getTemplateEngineKind();
-		}
-		return null;
-	}
-	
-	public FieldsMetadata getFieldsMetadata(String reportId) {
-		T controller = getReportController(reportId);
-		if (controller != null) {
-			return controller.getFieldsMetadata();
-		}
-		return null;
-	}
+    public InputStream getSourceStream( String reportId )
+    {
+        T controller = getReportController( reportId );
+        if ( controller != null )
+        {
+            return controller.getSourceStream();
+        }
+        return null;
+    }
+
+    public String getTemplateEngineKind( String reportId )
+    {
+        T controller = getReportController( reportId );
+        if ( controller != null )
+        {
+            return controller.getTemplateEngineKind();
+        }
+        return null;
+    }
+
+    public FieldsMetadata getFieldsMetadata( String reportId )
+    {
+        T controller = getReportController( reportId );
+        if ( controller != null )
+        {
+            return controller.getFieldsMetadata();
+        }
+        return null;
+    }
 
 }

@@ -25,18 +25,20 @@
 package fr.opensagres.xdocreport.document.web;
 
 /**
- * Constants for request and session HTTP parameters used in the
- * {@link AbstractProcessXDocReportServlet}.
- * 
+ * Constants for request and session HTTP parameters used in the {@link AbstractProcessXDocReportServlet}.
  */
-public interface XDocProcessServletConstants extends XDocBaseServletConstants {
+public interface XDocProcessServletConstants
+    extends XDocBaseServletConstants
+{
 
-	// HTTP parameters name
-	String CONVERTER_ID_HTTP_PARAM = "converter";
+    // HTTP parameters name
+    String CONVERTER_ID_HTTP_PARAM = "converter";
 
-	// Dispatch values
-	String REMOVE_DISPATCH = "remove";
-	String DOWNLOAD_DISPATCH = "download";
-	String VIEW_DISPATCH = "view";
+    // Dispatch values
+    String REMOVE_DISPATCH = "remove";
+
+    String DOWNLOAD_DISPATCH = "download";
+
+    String VIEW_DISPATCH = "view";
 
 }

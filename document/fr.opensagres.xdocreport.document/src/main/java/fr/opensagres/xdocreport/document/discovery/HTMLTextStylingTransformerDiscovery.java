@@ -29,23 +29,25 @@ import fr.opensagres.xdocreport.document.textstyling.ITextStylingTransformer;
 import fr.opensagres.xdocreport.document.textstyling.html.HTMLTextStylingTransformer;
 
 /**
- * Discovery to register HTML Text styling transformer
- * {@link HTMLTextStylingTransformer}.
- * 
+ * Discovery to register HTML Text styling transformer {@link HTMLTextStylingTransformer}.
  */
-public class HTMLTextStylingTransformerDiscovery implements
-		ITextStylingTransformerDiscovery {
+public class HTMLTextStylingTransformerDiscovery
+    implements ITextStylingTransformerDiscovery
+{
 
-	public String getId() {
-		return SyntaxKind.Html.name();
-	}
+    public String getId()
+    {
+        return SyntaxKind.Html.name();
+    }
 
-	public ITextStylingTransformer getTransformer() {
-		return HTMLTextStylingTransformer.INSTANCE;
-	}
+    public ITextStylingTransformer getTransformer()
+    {
+        return HTMLTextStylingTransformer.INSTANCE;
+    }
 
-	public String getDescription() {
-		return "HTML test styling transformer.";
-	}
+    public String getDescription()
+    {
+        return "HTML test styling transformer.";
+    }
 
 }

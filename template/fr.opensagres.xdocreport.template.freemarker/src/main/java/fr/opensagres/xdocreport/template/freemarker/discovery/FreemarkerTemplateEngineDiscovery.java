@@ -31,22 +31,24 @@ import fr.opensagres.xdocreport.template.freemarker.FreemarkerConstants;
 import fr.opensagres.xdocreport.template.freemarker.FreemarkerTemplateEngine;
 
 /**
- * Freemarker template engine discovery used to returns
- * {@link FreemarkerTemplateEngine} instance.
- * 
+ * Freemarker template engine discovery used to returns {@link FreemarkerTemplateEngine} instance.
  */
-public class FreemarkerTemplateEngineDiscovery implements
-		ITemplateEngineDiscovery, FreemarkerConstants {
+public class FreemarkerTemplateEngineDiscovery
+    implements ITemplateEngineDiscovery, FreemarkerConstants
+{
 
-	public ITemplateEngine createTemplateEngine() {
-		return new FreemarkerTemplateEngine();
-	}
+    public ITemplateEngine createTemplateEngine()
+    {
+        return new FreemarkerTemplateEngine();
+    }
 
-	public String getDescription() {
-		return DESCRIPTION_DISCOVERY;
-	}
+    public String getDescription()
+    {
+        return DESCRIPTION_DISCOVERY;
+    }
 
-	public String getId() {
-		return TemplateEngineKind.Freemarker.name();
-	}
+    public String getId()
+    {
+        return TemplateEngineKind.Freemarker.name();
+    }
 }

@@ -32,20 +32,21 @@ import org.apache.struts2.ServletActionContext;
 
 import com.opensymphony.xwork2.ActionInvocation;
 
-public class ActionInvocationUtils {
+public class ActionInvocationUtils
+{
 
-	public static ServletContext getServletContext(ActionInvocation invocation) {
-		return (ServletContext) invocation.getInvocationContext().get(
-				ServletActionContext.SERVLET_CONTEXT);
-	}
+    public static ServletContext getServletContext( ActionInvocation invocation )
+    {
+        return (ServletContext) invocation.getInvocationContext().get( ServletActionContext.SERVLET_CONTEXT );
+    }
 
-	public static HttpServletRequest getRequest(ActionInvocation invocation) {
-		return (HttpServletRequest) invocation.getInvocationContext().get(
-				ServletActionContext.HTTP_REQUEST);
-	}
+    public static HttpServletRequest getRequest( ActionInvocation invocation )
+    {
+        return (HttpServletRequest) invocation.getInvocationContext().get( ServletActionContext.HTTP_REQUEST );
+    }
 
-	public static HttpServletResponse getResponse(ActionInvocation invocation) {
-		return (HttpServletResponse) invocation.getInvocationContext().get(
-				ServletActionContext.HTTP_RESPONSE);
-	}
+    public static HttpServletResponse getResponse( ActionInvocation invocation )
+    {
+        return (HttpServletResponse) invocation.getInvocationContext().get( ServletActionContext.HTTP_RESPONSE );
+    }
 }

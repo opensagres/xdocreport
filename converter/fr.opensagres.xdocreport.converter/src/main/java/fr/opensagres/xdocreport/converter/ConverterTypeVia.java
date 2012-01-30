@@ -26,9 +26,9 @@ package fr.opensagres.xdocreport.converter;
 
 /**
  * XDocReport available converter via which explains how converter is done.
- * 
  */
-public enum ConverterTypeVia {
+public enum ConverterTypeVia
+{
 
-	FOP, XSL, ITEXT, ODFDOM,XWPF
+    FOP, XSL, ITEXT, ODFDOM, XWPF
 }

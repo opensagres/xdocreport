@@ -28,39 +28,30 @@ import fr.opensagres.xdocreport.core.XDocReportException;
 import fr.opensagres.xdocreport.core.discovery.IBaseDiscovery;
 
 /**
- * Fields metadata serializer used to load {@link FieldsMetadata} from Java
- * {@link Class} model.
- * 
+ * Fields metadata serializer used to load {@link FieldsMetadata} from Java {@link Class} model.
  */
-public interface IFieldsMetadataClassSerializer extends IBaseDiscovery {
+public interface IFieldsMetadataClassSerializer
+    extends IBaseDiscovery
+{
 
-	/**
-	 * Load simple fields metadata in the given fieldsMetadata by using the
-	 * given key and Java Class.
-	 * 
-	 * @param fieldsMetadata
-	 *            the fieldsMetadata where fields metadata must be added.
-	 * @param key
-	 *            the key (first token) to use to generate field name.
-	 * @param clazz
-	 *            the Java class model to use to load fields metadata.
-	 */
-	void load(FieldsMetadata fieldsMetadata, String key, Class<?> clazz)
-			throws XDocReportException;
+    /**
+     * Load simple fields metadata in the given fieldsMetadata by using the given key and Java Class.
+     * 
+     * @param fieldsMetadata the fieldsMetadata where fields metadata must be added.
+     * @param key the key (first token) to use to generate field name.
+     * @param clazz the Java class model to use to load fields metadata.
+     */
+    void load( FieldsMetadata fieldsMetadata, String key, Class<?> clazz )
+        throws XDocReportException;
 
-	/**
-	 * Load simple/list fields metadata in the given fieldsMetadata by using the
-	 * given key and Java Class.
-	 * 
-	 * @param fieldsMetadata
-	 *            the fieldsMetadata where fields metadata must be added.
-	 * @param key
-	 *            the key (first token) to use to generate field name.
-	 * @param clazz
-	 *            the Java class model to use to load fields metadata.
-	 * @param listType
-	 *            true if it's a list and false otherwise.
-	 */
-	void load(FieldsMetadata fieldsMetadata, String key, Class<?> clazz,
-			boolean listType) throws XDocReportException;
+    /**
+     * Load simple/list fields metadata in the given fieldsMetadata by using the given key and Java Class.
+     * 
+     * @param fieldsMetadata the fieldsMetadata where fields metadata must be added.
+     * @param key the key (first token) to use to generate field name.
+     * @param clazz the Java class model to use to load fields metadata.
+     * @param listType true if it's a list and false otherwise.
+     */
+    void load( FieldsMetadata fieldsMetadata, String key, Class<?> clazz, boolean listType )
+        throws XDocReportException;
 }

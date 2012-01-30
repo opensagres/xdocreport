@@ -26,7 +26,8 @@ package fr.opensagres.xdocreport.core.io;
 
 import java.io.InputStream;
 
-public interface IEntryInputStreamProvider {
+public interface IEntryInputStreamProvider
+{
 
-	InputStream getEntryInputStream(String entryName);
+    InputStream getEntryInputStream( String entryName );
 }

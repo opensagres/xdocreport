@@ -28,16 +28,17 @@ import org.odftoolkit.odfdom.converter.internal.itext.styles.Style;
 
 import com.lowagie.text.Element;
 
-public interface IStylableElement {
+public interface IStylableElement
+{
 
-	void applyStyles(Style style);
-	
-	Style getLastStyleApplied();
-	
-	IStylableContainer getParent();
-	
-	Element getElement();
-	
-	//void setParent(IStylableContainer container);
-	
+    void applyStyles( Style style );
+
+    Style getLastStyleApplied();
+
+    IStylableContainer getParent();
+
+    Element getElement();
+
+    // void setParent(IStylableContainer container);
+
 }

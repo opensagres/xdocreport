@@ -33,18 +33,21 @@ import org.junit.Test;
 
 import fr.opensagres.xdocreport.converter.discovery.IConverterDiscovery;
 
-public class ServiceRegistryTest {
+public class ServiceRegistryTest
+{
 
-	@Test
-	public void test() {
-		Iterator<IConverterDiscovery> toto = ServiceRegistry.lookupProviders(IConverterDiscovery.class);
+    @Test
+    public void test()
+    {
+        Iterator<IConverterDiscovery> toto = ServiceRegistry.lookupProviders( IConverterDiscovery.class );
 
-		Assert.assertNotNull(toto);
-		Assert.assertTrue(toto.hasNext());
-		while (toto.hasNext()) {
-			IConverterDiscovery converterDiscovery = (IConverterDiscovery) toto.next();
-			System.out.println(converterDiscovery);
-		}
-	}
+        Assert.assertNotNull( toto );
+        Assert.assertTrue( toto.hasNext() );
+        while ( toto.hasNext() )
+        {
+            IConverterDiscovery converterDiscovery = (IConverterDiscovery) toto.next();
+            System.out.println( converterDiscovery );
+        }
+    }
 
 }

@@ -30,60 +30,76 @@ import com.lowagie.text.Rectangle;
 import com.lowagie.text.pdf.PdfPCell;
 import com.lowagie.text.pdf.PdfPTable;
 
+public class ExtendedParagraph
+    extends Paragraph
+    implements IITextContainer
+{
 
-public class ExtendedParagraph extends Paragraph implements IITextContainer {
+    private PdfPTable table;
 
-	private PdfPTable table;
-	private PdfPCell cell;
-	private IITextContainer container;
+    private PdfPCell cell;
 
-	public ExtendedParagraph() {
-	}
+    private IITextContainer container;
 
-	public ExtendedParagraph(Paragraph paragraph) {
-		super(paragraph);
-	}
-	
-	public void addElement(Element element) {
-		super.add(element);		
-	}
+    public ExtendedParagraph()
+    {
+    }
 
-	public Element getContainer() {
-		if (cell != null) {
-			if (table == null) {
-				table = new PdfPTable(1);
-				table.setWidthPercentage(100f);
-				cell.addElement(this);
-				table.addCell(cell);
-			}
-			return table;
-		}
-		return this;
-	}
+    public ExtendedParagraph( Paragraph paragraph )
+    {
+        super( paragraph );
+    }
 
-	public PdfPCell getPdfPCell() {
-		if (cell != null) {
-			return cell;
-		}
-		cell = createPdfPCell();
-		return cell;
-	}
+    public void addElement( Element element )
+    {
+        super.add( element );
+    }
 
-	private synchronized PdfPCell createPdfPCell() {
-		if (cell != null) {
-			return cell;
-		}
-		PdfPCell cell = new PdfPCell();
-		cell.setBorder(Rectangle.NO_BORDER);
-		// cell.setPadding(0);
-		return cell;
-	}
+    public Element getContainer()
+    {
+        if ( cell != null )
+        {
+            if ( table == null )
+            {
+                table = new PdfPTable( 1 );
+                table.setWidthPercentage( 100f );
+                cell.addElement( this );
+                table.addCell( cell );
+            }
+            return table;
+        }
+        return this;
+    }
 
-	public IITextContainer getITextContainer() {
-		return container;
-	}
-	
-	public void setITextContainer(IITextContainer container) {
-		this.container = container;		
-	}
+    public PdfPCell getPdfPCell()
+    {
+        if ( cell != null )
+        {
+            return cell;
+        }
+        cell = createPdfPCell();
+        return cell;
+    }
+
+    private synchronized PdfPCell createPdfPCell()
+    {
+        if ( cell != null )
+        {
+            return cell;
+        }
+        PdfPCell cell = new PdfPCell();
+        cell.setBorder( Rectangle.NO_BORDER );
+        // cell.setPadding(0);
+        return cell;
+    }
+
+    public IITextContainer getITextContainer()
+    {
+        return container;
+    }
+
+    public void setITextContainer( IITextContainer container )
+    {
+        this.container = container;
+    }
 }

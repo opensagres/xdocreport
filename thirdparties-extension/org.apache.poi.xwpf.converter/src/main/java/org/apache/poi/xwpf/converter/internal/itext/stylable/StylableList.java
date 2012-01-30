@@ -24,7 +24,6 @@
  */
 package org.apache.poi.xwpf.converter.internal.itext.stylable;
 
-
 import org.apache.poi.xwpf.converter.internal.itext.styles.Style;
 
 import com.lowagie.text.Element;
@@ -32,47 +31,57 @@ import com.lowagie.text.List;
 
 import fr.opensagres.xdocreport.itext.extension.IITextContainer;
 
+public class StylableList
+    extends List
+    implements IStylableContainer
+{
 
-public class StylableList extends List implements IStylableContainer {
+    private static final long serialVersionUID = 664309269352903329L;
 
-	private static final long serialVersionUID = 664309269352903329L;
+    private final IStylableFactory ownerDocument;
 
-	private final IStylableFactory ownerDocument;
-	private IStylableContainer parent;
-	private Style lastStyleApplied = null;
+    private IStylableContainer parent;
 
-	public StylableList(IStylableFactory ownerDocument,
-			IStylableContainer parent) {
-		this.ownerDocument = ownerDocument;
-		this.parent = parent;
-	}
+    private Style lastStyleApplied = null;
 
-	public void addElement(Element element) {
-		super.add(element);
-	}
+    public StylableList( IStylableFactory ownerDocument, IStylableContainer parent )
+    {
+        this.ownerDocument = ownerDocument;
+        this.parent = parent;
+    }
 
-	public void applyStyles(Object ele,Style style) {
-		this.lastStyleApplied = style;
-	}
+    public void addElement( Element element )
+    {
+        super.add( element );
+    }
 
-	public Style getLastStyleApplied() {
-		return lastStyleApplied;
-	}
+    public void applyStyles( Object ele, Style style )
+    {
+        this.lastStyleApplied = style;
+    }
 
-	public IStylableContainer getParent() {
-		return parent;
-	}
+    public Style getLastStyleApplied()
+    {
+        return lastStyleApplied;
+    }
 
-	public Element getElement() {
-		return this;
-	}
-	
-	public IITextContainer getITextContainer() {
-		return parent;
-	}
+    public IStylableContainer getParent()
+    {
+        return parent;
+    }
 
-	public void setITextContainer(IITextContainer container) {
-		
-	}
+    public Element getElement()
+    {
+        return this;
+    }
+
+    public IITextContainer getITextContainer()
+    {
+        return parent;
+    }
+
+    public void setITextContainer( IITextContainer container )
+    {
+
+    }
 }
-

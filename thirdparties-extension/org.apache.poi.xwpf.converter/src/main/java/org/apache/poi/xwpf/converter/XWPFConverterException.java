@@ -24,14 +24,17 @@
  */
 package org.apache.poi.xwpf.converter;
 
-public class XWPFConverterException  extends RuntimeException {
+public class XWPFConverterException
+    extends RuntimeException
+{
 
-	/**
+    /**
 	 * 
 	 */
-	private static final long serialVersionUID = -6125316393288240840L;
+    private static final long serialVersionUID = -6125316393288240840L;
 
-	public XWPFConverterException(Throwable t) {
-		super(t);
-	}
+    public XWPFConverterException( Throwable t )
+    {
+        super( t );
+    }
 }

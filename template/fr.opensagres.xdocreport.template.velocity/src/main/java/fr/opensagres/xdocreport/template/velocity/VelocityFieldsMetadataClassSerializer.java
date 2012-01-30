@@ -28,25 +28,29 @@ import fr.opensagres.xdocreport.core.utils.StringUtils;
 import fr.opensagres.xdocreport.template.TemplateEngineKind;
 import fr.opensagres.xdocreport.template.formatter.AbstractFieldsMetadataClassSerializer;
 
-public class VelocityFieldsMetadataClassSerializer extends
-		AbstractFieldsMetadataClassSerializer {
+public class VelocityFieldsMetadataClassSerializer
+    extends AbstractFieldsMetadataClassSerializer
+{
 
-	private static final String DESCRIPTION = "Velocity FieldsMetadata ClassSerializer";
+    private static final String DESCRIPTION = "Velocity FieldsMetadata ClassSerializer";
 
-	public VelocityFieldsMetadataClassSerializer() {
-		super(TemplateEngineKind.Velocity.name(), DESCRIPTION);
-	}
+    public VelocityFieldsMetadataClassSerializer()
+    {
+        super( TemplateEngineKind.Velocity.name(), DESCRIPTION );
+    }
 
-	@Override
-	protected String getFieldName(String key, String getterName) {
-		if (StringUtils.isEmpty(getterName)) {
-			return key;
-		}
-		String firstLetter = getterName.substring(0, 1);
-		StringBuilder fieldName = new StringBuilder(key);
-		fieldName.append('.');
-		fieldName.append(firstLetter.toUpperCase());
-		fieldName.append(getterName.substring(1, getterName.length()));
-		return fieldName.toString();
-	}
+    @Override
+    protected String getFieldName( String key, String getterName )
+    {
+        if ( StringUtils.isEmpty( getterName ) )
+        {
+            return key;
+        }
+        String firstLetter = getterName.substring( 0, 1 );
+        StringBuilder fieldName = new StringBuilder( key );
+        fieldName.append( '.' );
+        fieldName.append( firstLetter.toUpperCase() );
+        fieldName.append( getterName.substring( 1, getterName.length() ) );
+        return fieldName.toString();
+    }
 }

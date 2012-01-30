@@ -30,68 +30,66 @@ import java.util.List;
 import fr.opensagres.xdocreport.core.XDocReportException;
 
 /**
- * Image registry used to store the {@link IImageProvider} used in the
- * "context", copy the binary data of the images in the generated report, modify
- * some entry of the generated report with image information.
- * 
+ * Image registry used to store the {@link IImageProvider} used in the "context", copy the binary data of the images in
+ * the generated report, modify some entry of the generated report with image information.
  */
-public interface IImageRegistry {
+public interface IImageRegistry
+{
 
-	/**
-	 * Register the instance of imageProvider in the registry. This done when
-	 * context model is tracked while processing of the template engine.
-	 * 
-	 * @param imageProvider
-	 * @return
-	 * @throws XDocReportException
-	 */
-	String registerImage(IImageProvider imageProvider)
-			throws XDocReportException;
+    /**
+     * Register the instance of imageProvider in the registry. This done when context model is tracked while processing
+     * of the template engine.
+     * 
+     * @param imageProvider
+     * @return
+     * @throws XDocReportException
+     */
+    String registerImage( IImageProvider imageProvider )
+        throws XDocReportException;
 
-	/**
-	 * Called before processing of the template engine.
-	 * 
-	 * @throws XDocReportException
-	 */
-	void preProcess() throws XDocReportException;
+    /**
+     * Called before processing of the template engine.
+     * 
+     * @throws XDocReportException
+     */
+    void preProcess()
+        throws XDocReportException;
 
-	/**
-	 * Called after processing of the template engine. In this step, list of
-	 * image provider is populated. This method can be implemented to copy the
-	 * binary data of the images in the generated report.
-	 * 
-	 * @throws XDocReportException
-	 */
-	void postProcess() throws XDocReportException;
+    /**
+     * Called after processing of the template engine. In this step, list of image provider is populated. This method
+     * can be implemented to copy the binary data of the images in the generated report.
+     * 
+     * @throws XDocReportException
+     */
+    void postProcess()
+        throws XDocReportException;
 
-	/**
-	 * Returns list of image provider info.
-	 * 
-	 * @return
-	 */
-	List<ImageProviderInfo> getImageProviderInfos();
+    /**
+     * Returns list of image provider info.
+     * 
+     * @return
+     */
+    List<ImageProviderInfo> getImageProviderInfos();
 
-	/**
-	 * Returns the width of the image provider if not null and the given
-	 * defaultWidth otherwise.
-	 * 
-	 * @param imageProvider
-	 * @param defaultWidth
-	 * @return
-	 * @throws IOException
-	 */
-	String getWidth(IImageProvider imageProvider, String defaultWidth)
-			throws IOException;
+    /**
+     * Returns the width of the image provider if not null and the given defaultWidth otherwise.
+     * 
+     * @param imageProvider
+     * @param defaultWidth
+     * @return
+     * @throws IOException
+     */
+    String getWidth( IImageProvider imageProvider, String defaultWidth )
+        throws IOException;
 
-	/**
-	 * Returns the height of the image provider if not null and the given
-	 * defaultHeight otherwise.
-	 * 
-	 * @param imageProvider
-	 * @param defaultWidth
-	 * @return
-	 * @throws IOException
-	 */
-	String getHeight(IImageProvider imageProvider, String defaultHeight)
-			throws IOException;
+    /**
+     * Returns the height of the image provider if not null and the given defaultHeight otherwise.
+     * 
+     * @param imageProvider
+     * @param defaultWidth
+     * @return
+     * @throws IOException
+     */
+    String getHeight( IImageProvider imageProvider, String defaultHeight )
+        throws IOException;
 }

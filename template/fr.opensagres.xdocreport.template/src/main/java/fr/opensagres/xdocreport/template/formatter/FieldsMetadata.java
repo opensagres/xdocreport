@@ -41,398 +41,442 @@ import fr.opensagres.xdocreport.core.utils.StringUtils;
 import fr.opensagres.xdocreport.template.registry.FieldsMetadataClassSerializerRegistry;
 
 /**
- * Fields Metadata is used in the preprocessing step to modify some XML entries
- * like generate script (Freemarker, Velocity...) for loop for Table row,
- * generate script for Image...
- * 
+ * Fields Metadata is used in the preprocessing step to modify some XML entries like generate script (Freemarker,
+ * Velocity...) for loop for Table row, generate script for Image...
  */
-public class FieldsMetadata {
+public class FieldsMetadata
+{
 
-	public static final FieldsMetadata EMPTY = new FieldsMetadata();
-	public static final String DEFAULT_BEFORE_ROW_TOKEN = "@before-row";
-	public static final String DEFAULT_AFTER_ROW_TOKEN = "@after-row";
-	public static final String DEFAULT_BEFORE_TABLE_CELL_TOKEN = "@before-cell";
-	public static final String DEFAULT_AFTER_TABLE_CELL_TOKEN = "@after-cell";
+    public static final FieldsMetadata EMPTY = new FieldsMetadata();
 
-	private IFieldsMetadataClassSerializer serializer;
-	protected final List<FieldMetadata> fields;
-	protected final Map<String, FieldMetadata> fieldsAsList;
-	protected final Map<String, FieldMetadata> fieldsAsImage;
-	protected final Map<String, FieldMetadata> fieldsAsTextStyling;
-	private String beforeRowToken;
-	private String afterRowToken;
-	private String beforeTableCellToken;
-	private String afterTableCellToken;
-	private String description;
-	private String templateEngineKind;
+    public static final String DEFAULT_BEFORE_ROW_TOKEN = "@before-row";
 
-	public FieldsMetadata() {
-		this(null);
-	}
+    public static final String DEFAULT_AFTER_ROW_TOKEN = "@after-row";
 
-	public FieldsMetadata(String templateEngineKind) {
-		this.fields = new ArrayList<FieldMetadata>();
-		this.fieldsAsList = new HashMap<String, FieldMetadata>();
-		this.fieldsAsImage = new HashMap<String, FieldMetadata>();
-		this.fieldsAsTextStyling = new HashMap<String, FieldMetadata>();
-		this.beforeRowToken = DEFAULT_BEFORE_ROW_TOKEN;
-		this.afterRowToken = DEFAULT_AFTER_ROW_TOKEN;
-		this.beforeTableCellToken = DEFAULT_BEFORE_TABLE_CELL_TOKEN;
-		this.afterTableCellToken = DEFAULT_AFTER_TABLE_CELL_TOKEN;
-		setTemplateEngineKind(templateEngineKind);
-	}
+    public static final String DEFAULT_BEFORE_TABLE_CELL_TOKEN = "@before-cell";
 
-	/**
-	 * Add a field name which is considered as an image.
-	 * 
-	 * @param fieldName
-	 */
-	public FieldMetadata addFieldAsImage(String fieldName) {
-		return addFieldAsImage(fieldName, fieldName);
-	}
+    public static final String DEFAULT_AFTER_TABLE_CELL_TOKEN = "@after-cell";
 
-	/**
-	 * Add a field name which is considered as an image.
-	 * 
-	 * @param imageName
-	 * @param fieldName
-	 */
-	public FieldMetadata addFieldAsImage(String imageName, String fieldName) {
-		return addField(fieldName, null, imageName, null);
-	}
+    private IFieldsMetadataClassSerializer serializer;
 
-	/**
-	 * Add a field name which can contains text stylink (Html, Wikipedia,
-	 * etc..).
-	 * 
-	 * @param fieldName
-	 * @param syntaxKind
-	 */
-	public FieldMetadata addFieldAsTextStyling(String fieldName,
-			SyntaxKind syntaxKind) {
-		return addFieldAsTextStyling(fieldName, syntaxKind.name());
-	}
+    protected final List<FieldMetadata> fields;
 
-	/**
-	 * Add a field name which can contains text stylink (Html, Wikipedia,
-	 * etc..).
-	 * 
-	 * @param fieldName
-	 * @param syntaxKind
-	 */
-	public FieldMetadata addFieldAsTextStyling(String fieldName,
-			String syntaxKind) {
-		// Test if it exists fields with the given name
-		return addField(fieldName, null, null, syntaxKind);
-	}
+    protected final Map<String, FieldMetadata> fieldsAsList;
 
-	/**
-	 * Add a field name which belongs to a list.
-	 * 
-	 * @param fieldName
-	 */
-	public FieldMetadata addFieldAsList(String fieldName) {
-		return addField(fieldName, true, null, null);
-	}
+    protected final Map<String, FieldMetadata> fieldsAsImage;
 
-	public FieldMetadata addField(String fieldName, Boolean listType,
-			String imageName, String syntaxKind) {
-		// Test if it exists fields with the given name
-		FieldMetadata exsitingField = fieldsAsImage.get(fieldName);
-		if (exsitingField == null) {
-			exsitingField = fieldsAsList.get(fieldName);
-		}
-		if (exsitingField == null) {
-			exsitingField = fieldsAsTextStyling.get(fieldName);
-		}
+    protected final Map<String, FieldMetadata> fieldsAsTextStyling;
 
-		if (exsitingField == null) {
-			FieldMetadata fieldMetadata = new FieldMetadata(this, fieldName,
-					listType == null ? false : listType, imageName, syntaxKind);
-			return fieldMetadata;
-		} else {
-			if (listType != null) {
-				exsitingField.setListType(listType);
-			}
-			if (imageName != null) {
-				exsitingField.setImageName(imageName);
-			}
-			if (syntaxKind != null) {
-				exsitingField.setSyntaxKind(syntaxKind);
-			}
-			return exsitingField;
-		}
-	}
+    private String beforeRowToken;
 
-	/**
-	 * Returns list of fields name which belongs to a list.
-	 * 
-	 * @return
-	 */
-	public Collection<String> getFieldsAsList() {
-		return Collections.unmodifiableCollection(fieldsAsList.keySet());
-	}
+    private String afterRowToken;
 
-	/**
-	 * Returns list of fields name which are considered as an image.
-	 * 
-	 * @return
-	 */
-	public Collection<FieldMetadata> getFieldsAsImage() {
-		return Collections.unmodifiableCollection(fieldsAsImage.values());
-	}
+    private String beforeTableCellToken;
 
-	/**
-	 * Returns list of fields name which can contains text styling.
-	 * 
-	 * @return
-	 */
-	public Collection<FieldMetadata> getFieldsAsTextStyling() {
-		return Collections.unmodifiableCollection(fieldsAsTextStyling.values());
-	}
+    private String afterTableCellToken;
 
-	/**
-	 * Returns true if there are fields as image and false otherwise.
-	 * 
-	 * @return
-	 */
-	public boolean hasFieldsAsImage() {
-		return fieldsAsImage.size() > 0;
-	}
+    private String description;
 
-	public boolean isFieldAsImage(String fieldName) {
-		if (StringUtils.isEmpty(fieldName)) {
-			return false;
-		}
-		return fieldsAsImage.containsKey(fieldName);
-	}
+    private String templateEngineKind;
 
-	public String getImageFieldName(String fieldName) {
-		if (StringUtils.isEmpty(fieldName)) {
-			return null;
-		}
-		FieldMetadata metadata = fieldsAsImage.get(fieldName);
-		if (metadata != null) {
-			return metadata.getFieldName();
-		}
-		return null;
-	}
+    public FieldsMetadata()
+    {
+        this( null );
+    }
 
-	public String getBeforeRowToken() {
-		return beforeRowToken;
-	}
+    public FieldsMetadata( String templateEngineKind )
+    {
+        this.fields = new ArrayList<FieldMetadata>();
+        this.fieldsAsList = new HashMap<String, FieldMetadata>();
+        this.fieldsAsImage = new HashMap<String, FieldMetadata>();
+        this.fieldsAsTextStyling = new HashMap<String, FieldMetadata>();
+        this.beforeRowToken = DEFAULT_BEFORE_ROW_TOKEN;
+        this.afterRowToken = DEFAULT_AFTER_ROW_TOKEN;
+        this.beforeTableCellToken = DEFAULT_BEFORE_TABLE_CELL_TOKEN;
+        this.afterTableCellToken = DEFAULT_AFTER_TABLE_CELL_TOKEN;
+        setTemplateEngineKind( templateEngineKind );
+    }
 
-	public void setBeforeRowToken(String beforeRowToken) {
-		this.beforeRowToken = beforeRowToken;
-	}
+    /**
+     * Add a field name which is considered as an image.
+     * 
+     * @param fieldName
+     */
+    public FieldMetadata addFieldAsImage( String fieldName )
+    {
+        return addFieldAsImage( fieldName, fieldName );
+    }
 
-	public String getAfterRowToken() {
-		return afterRowToken;
-	}
+    /**
+     * Add a field name which is considered as an image.
+     * 
+     * @param imageName
+     * @param fieldName
+     */
+    public FieldMetadata addFieldAsImage( String imageName, String fieldName )
+    {
+        return addField( fieldName, null, imageName, null );
+    }
 
-	public void setAfterRowToken(String afterRowToken) {
-		this.afterRowToken = afterRowToken;
-	}
+    /**
+     * Add a field name which can contains text stylink (Html, Wikipedia, etc..).
+     * 
+     * @param fieldName
+     * @param syntaxKind
+     */
+    public FieldMetadata addFieldAsTextStyling( String fieldName, SyntaxKind syntaxKind )
+    {
+        return addFieldAsTextStyling( fieldName, syntaxKind.name() );
+    }
 
-	public String getBeforeTableCellToken() {
-		return beforeTableCellToken;
-	}
+    /**
+     * Add a field name which can contains text stylink (Html, Wikipedia, etc..).
+     * 
+     * @param fieldName
+     * @param syntaxKind
+     */
+    public FieldMetadata addFieldAsTextStyling( String fieldName, String syntaxKind )
+    {
+        // Test if it exists fields with the given name
+        return addField( fieldName, null, null, syntaxKind );
+    }
 
-	public void setBeforeTableCellToken(String beforeTableCellToken) {
-		this.beforeTableCellToken = beforeTableCellToken;
-	}
+    /**
+     * Add a field name which belongs to a list.
+     * 
+     * @param fieldName
+     */
+    public FieldMetadata addFieldAsList( String fieldName )
+    {
+        return addField( fieldName, true, null, null );
+    }
 
-	public String getAfterTableCellToken() {
-		return afterTableCellToken;
-	}
+    public FieldMetadata addField( String fieldName, Boolean listType, String imageName, String syntaxKind )
+    {
+        // Test if it exists fields with the given name
+        FieldMetadata exsitingField = fieldsAsImage.get( fieldName );
+        if ( exsitingField == null )
+        {
+            exsitingField = fieldsAsList.get( fieldName );
+        }
+        if ( exsitingField == null )
+        {
+            exsitingField = fieldsAsTextStyling.get( fieldName );
+        }
 
-	public void setAfterTableCellToken(String afterTableCellToken) {
-		this.afterTableCellToken = afterTableCellToken;
-	}
+        if ( exsitingField == null )
+        {
+            FieldMetadata fieldMetadata =
+                new FieldMetadata( this, fieldName, listType == null ? false : listType, imageName, syntaxKind );
+            return fieldMetadata;
+        }
+        else
+        {
+            if ( listType != null )
+            {
+                exsitingField.setListType( listType );
+            }
+            if ( imageName != null )
+            {
+                exsitingField.setImageName( imageName );
+            }
+            if ( syntaxKind != null )
+            {
+                exsitingField.setSyntaxKind( syntaxKind );
+            }
+            return exsitingField;
+        }
+    }
 
-	/**
-	 * Returns list of fields metadata.
-	 * 
-	 * @return
-	 */
-	public List<FieldMetadata> getFields() {
-		return fields;
-	}
+    /**
+     * Returns list of fields name which belongs to a list.
+     * 
+     * @return
+     */
+    public Collection<String> getFieldsAsList()
+    {
+        return Collections.unmodifiableCollection( fieldsAsList.keySet() );
+    }
 
-	/**
-	 * Serialize as XML without indentation the fields metadata to the given XML
-	 * writer.
-	 * 
-	 * Here a sample of XML writer :
-	 * 
-	 * <pre>
-	 * <fields>
-	 * 	<field name="project.Name" imageName="" list="false" />
-	 * 	<field name="developers.Name" imageName="" list="true" />
-	 * <field name="project.Logo" imageName="Logo" list="false" />
-	 * </fields>
-	 * </pre>
-	 * 
-	 * @param writer
-	 * @throws IOException
-	 */
-	public void saveXML(Writer writer) throws IOException {
-		saveXML(writer, false);
-	}
+    /**
+     * Returns list of fields name which are considered as an image.
+     * 
+     * @return
+     */
+    public Collection<FieldMetadata> getFieldsAsImage()
+    {
+        return Collections.unmodifiableCollection( fieldsAsImage.values() );
+    }
 
-	/**
-	 * Serialize as XML the fields metadata to the given XML writer.
-	 * 
-	 * Here a sample of XML writer :
-	 * 
-	 * <pre>
-	 * <fields>
-	 * 	<field name="project.Name" imageName="" list="false" />
-	 * 	<field name="developers.Name" imageName="" list="true" />
-	 * <field name="project.Logo" imageName="Logo" list="false" />
-	 * </fields>
-	 * </pre>
-	 * 
-	 * @param writer
-	 *            XML writer.
-	 * @param indent
-	 *            true if indent must be managed and false otherwise.
-	 * @throws IOException
-	 */
-	public void saveXML(Writer writer, boolean indent) throws IOException {
-		FieldsMetadataXMLSerializer.getInstance().save(this, writer, indent);
-	}
+    /**
+     * Returns list of fields name which can contains text styling.
+     * 
+     * @return
+     */
+    public Collection<FieldMetadata> getFieldsAsTextStyling()
+    {
+        return Collections.unmodifiableCollection( fieldsAsTextStyling.values() );
+    }
 
-	/**
-	 * Serialize as XML without indentation the fields metadata to the given
-	 * {@link OutputStream}.
-	 * 
-	 * Here a sample of XML out:
-	 * 
-	 * <pre>
-	 * <fields>
-	 * 	<field name="project.Name" imageName="" list="false" />
-	 * 	<field name="developers.Name" imageName="" list="true" />
-	 * <field name="project.Logo" imageName="Logo" list="false" />
-	 * </fields>
-	 * </pre>
-	 * 
-	 * @param writer
-	 * @throws IOException
-	 */
-	public void saveXML(OutputStream out) throws IOException {
-		saveXML(out, false);
-	}
+    /**
+     * Returns true if there are fields as image and false otherwise.
+     * 
+     * @return
+     */
+    public boolean hasFieldsAsImage()
+    {
+        return fieldsAsImage.size() > 0;
+    }
 
-	/**
-	 * Serialize as XML the fields metadata to the given {@link OutputStream}.
-	 * 
-	 * Here a sample of XML out :
-	 * 
-	 * <pre>
-	 * <fields>
-	 * 	<field name="project.Name" imageName="" list="false" />
-	 * 	<field name="developers.Name" imageName="" list="true" />
-	 * <field name="project.Logo" imageName="Logo" list="false" />
-	 * </fields>
-	 * </pre>
-	 * 
-	 * @param writer
-	 *            XML writer.
-	 * @param indent
-	 *            true if indent must be managed and false otherwise.
-	 * @throws IOException
-	 */
-	public void saveXML(OutputStream out, boolean indent) throws IOException {
-		FieldsMetadataXMLSerializer.getInstance().save(this, out, indent);
-	}
+    public boolean isFieldAsImage( String fieldName )
+    {
+        if ( StringUtils.isEmpty( fieldName ) )
+        {
+            return false;
+        }
+        return fieldsAsImage.containsKey( fieldName );
+    }
 
-	/**
-	 * Load simple fields metadata in the given fieldsMetadata by using the
-	 * given key and Java Class.
-	 * 
-	 * @param key
-	 *            the key (first token) to use to generate field name.
-	 * @param clazz
-	 *            the Java class model to use to load fields metadata.
-	 * @throws XDocReportException
-	 */
-	public void load(String key, Class<?> clazz) throws XDocReportException {
-		load(key, clazz, false);
-	}
+    public String getImageFieldName( String fieldName )
+    {
+        if ( StringUtils.isEmpty( fieldName ) )
+        {
+            return null;
+        }
+        FieldMetadata metadata = fieldsAsImage.get( fieldName );
+        if ( metadata != null )
+        {
+            return metadata.getFieldName();
+        }
+        return null;
+    }
 
-	/**
-	 * Load simple/list fields metadata in the given fieldsMetadata by using the
-	 * given key and Java Class.
-	 * 
-	 * @param key
-	 *            the key (first token) to use to generate field name.
-	 * @param clazz
-	 *            the Java class model to use to load fields metadata.
-	 * @param listType
-	 *            true if it's a list and false otherwise.
-	 * @throws XDocReportException
-	 */
-	public void load(String key, Class<?> clazz, boolean listType)
-			throws XDocReportException {
-		if (serializer == null) {
-			throw new XDocReportException(
-					"Cannot find serializer. Please set the template engine FieldsMetadata#setTemplateEngineKind(String templateEngineKind) before calling this method.");
-		}
-		serializer.load(this, key, clazz, listType);
-	}
+    public String getBeforeRowToken()
+    {
+        return beforeRowToken;
+    }
 
-	@Override
-	public String toString() {
-		StringWriter xml = new StringWriter();
-		try {
-			saveXML(xml, true);
-		} catch (IOException e) {
-			return super.toString();
-		}
-		return xml.toString();
-	}
+    public void setBeforeRowToken( String beforeRowToken )
+    {
+        this.beforeRowToken = beforeRowToken;
+    }
 
-	/**
-	 * Returns the description of fields metadata.
-	 * 
-	 * @return
-	 */
-	public String getDescription() {
-		return description;
-	}
+    public String getAfterRowToken()
+    {
+        return afterRowToken;
+    }
 
-	/**
-	 * Set the description of fields metadata.
-	 * 
-	 * @param templateEngineKind
-	 */
-	public void setDescription(String description) {
-		this.description = description;
-	}
+    public void setAfterRowToken( String afterRowToken )
+    {
+        this.afterRowToken = afterRowToken;
+    }
 
-	/**
-	 * Returns the template engine kind.
-	 * 
-	 * @return
-	 */
-	public String getTemplateEngineKind() {
-		return templateEngineKind;
-	}
+    public String getBeforeTableCellToken()
+    {
+        return beforeTableCellToken;
+    }
 
-	/**
-	 * Set the template engine kind.
-	 * 
-	 * @param templateEngineKind
-	 */
-	public void setTemplateEngineKind(String templateEngineKind) {
-		this.templateEngineKind = templateEngineKind;
-		if (templateEngineKind == null) {
-			serializer = null;
-		} else {
-			serializer = FieldsMetadataClassSerializerRegistry.getRegistry()
-					.getSerializer(templateEngineKind);
-		}
-	}
+    public void setBeforeTableCellToken( String beforeTableCellToken )
+    {
+        this.beforeTableCellToken = beforeTableCellToken;
+    }
+
+    public String getAfterTableCellToken()
+    {
+        return afterTableCellToken;
+    }
+
+    public void setAfterTableCellToken( String afterTableCellToken )
+    {
+        this.afterTableCellToken = afterTableCellToken;
+    }
+
+    /**
+     * Returns list of fields metadata.
+     * 
+     * @return
+     */
+    public List<FieldMetadata> getFields()
+    {
+        return fields;
+    }
+
+    /**
+     * Serialize as XML without indentation the fields metadata to the given XML writer. Here a sample of XML writer :
+     * 
+     * <pre>
+     * <fields>
+     * 	<field name="project.Name" imageName="" list="false" />
+     * 	<field name="developers.Name" imageName="" list="true" />
+     * <field name="project.Logo" imageName="Logo" list="false" />
+     * </fields>
+     * </pre>
+     * 
+     * @param writer
+     * @throws IOException
+     */
+    public void saveXML( Writer writer )
+        throws IOException
+    {
+        saveXML( writer, false );
+    }
+
+    /**
+     * Serialize as XML the fields metadata to the given XML writer. Here a sample of XML writer :
+     * 
+     * <pre>
+     * <fields>
+     * 	<field name="project.Name" imageName="" list="false" />
+     * 	<field name="developers.Name" imageName="" list="true" />
+     * <field name="project.Logo" imageName="Logo" list="false" />
+     * </fields>
+     * </pre>
+     * 
+     * @param writer XML writer.
+     * @param indent true if indent must be managed and false otherwise.
+     * @throws IOException
+     */
+    public void saveXML( Writer writer, boolean indent )
+        throws IOException
+    {
+        FieldsMetadataXMLSerializer.getInstance().save( this, writer, indent );
+    }
+
+    /**
+     * Serialize as XML without indentation the fields metadata to the given {@link OutputStream}. Here a sample of XML
+     * out:
+     * 
+     * <pre>
+     * <fields>
+     * 	<field name="project.Name" imageName="" list="false" />
+     * 	<field name="developers.Name" imageName="" list="true" />
+     * <field name="project.Logo" imageName="Logo" list="false" />
+     * </fields>
+     * </pre>
+     * 
+     * @param writer
+     * @throws IOException
+     */
+    public void saveXML( OutputStream out )
+        throws IOException
+    {
+        saveXML( out, false );
+    }
+
+    /**
+     * Serialize as XML the fields metadata to the given {@link OutputStream}. Here a sample of XML out :
+     * 
+     * <pre>
+     * <fields>
+     * 	<field name="project.Name" imageName="" list="false" />
+     * 	<field name="developers.Name" imageName="" list="true" />
+     * <field name="project.Logo" imageName="Logo" list="false" />
+     * </fields>
+     * </pre>
+     * 
+     * @param writer XML writer.
+     * @param indent true if indent must be managed and false otherwise.
+     * @throws IOException
+     */
+    public void saveXML( OutputStream out, boolean indent )
+        throws IOException
+    {
+        FieldsMetadataXMLSerializer.getInstance().save( this, out, indent );
+    }
+
+    /**
+     * Load simple fields metadata in the given fieldsMetadata by using the given key and Java Class.
+     * 
+     * @param key the key (first token) to use to generate field name.
+     * @param clazz the Java class model to use to load fields metadata.
+     * @throws XDocReportException
+     */
+    public void load( String key, Class<?> clazz )
+        throws XDocReportException
+    {
+        load( key, clazz, false );
+    }
+
+    /**
+     * Load simple/list fields metadata in the given fieldsMetadata by using the given key and Java Class.
+     * 
+     * @param key the key (first token) to use to generate field name.
+     * @param clazz the Java class model to use to load fields metadata.
+     * @param listType true if it's a list and false otherwise.
+     * @throws XDocReportException
+     */
+    public void load( String key, Class<?> clazz, boolean listType )
+        throws XDocReportException
+    {
+        if ( serializer == null )
+        {
+            throw new XDocReportException(
+                                           "Cannot find serializer. Please set the template engine FieldsMetadata#setTemplateEngineKind(String templateEngineKind) before calling this method." );
+        }
+        serializer.load( this, key, clazz, listType );
+    }
+
+    @Override
+    public String toString()
+    {
+        StringWriter xml = new StringWriter();
+        try
+        {
+            saveXML( xml, true );
+        }
+        catch ( IOException e )
+        {
+            return super.toString();
+        }
+        return xml.toString();
+    }
+
+    /**
+     * Returns the description of fields metadata.
+     * 
+     * @return
+     */
+    public String getDescription()
+    {
+        return description;
+    }
+
+    /**
+     * Set the description of fields metadata.
+     * 
+     * @param templateEngineKind
+     */
+    public void setDescription( String description )
+    {
+        this.description = description;
+    }
+
+    /**
+     * Returns the template engine kind.
+     * 
+     * @return
+     */
+    public String getTemplateEngineKind()
+    {
+        return templateEngineKind;
+    }
+
+    /**
+     * Set the template engine kind.
+     * 
+     * @param templateEngineKind
+     */
+    public void setTemplateEngineKind( String templateEngineKind )
+    {
+        this.templateEngineKind = templateEngineKind;
+        if ( templateEngineKind == null )
+        {
+            serializer = null;
+        }
+        else
+        {
+            serializer = FieldsMetadataClassSerializerRegistry.getRegistry().getSerializer( templateEngineKind );
+        }
+    }
 
 }

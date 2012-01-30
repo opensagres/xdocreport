@@ -34,40 +34,45 @@ import fr.opensagres.xdocreport.core.XDocReportException;
 import fr.opensagres.xdocreport.document.IXDocReport;
 import fr.opensagres.xdocreport.template.IContext;
 
-public class XDocReportResult extends AbstractXDocReportResult {
+public class XDocReportResult
+    extends AbstractXDocReportResult
+{
 
-	private static final Map<Class, Boolean> isPopulateContextAwareClassCache = new HashMap<Class, Boolean>();
-	
-	@Override
-	protected void populateContext(IXDocReport report, IContext context,
-			String finalLocation, ActionInvocation invocation) throws Exception {
-		ValueStack stack = invocation.getStack();
-		Object action = stack.findValue(ACTION_KEY);
-		if (action == null) {
-			throw new XDocReportException(
-					"Cannot retrieve action instance in value stack with key="
-							+ ACTION_KEY);
-		}
-		PopulateContextAware populateContextAware = getPopulateContextAware(action);
-		if (populateContextAware == null) {
-			throw new XDocReportException("Action "
-					+ action.getClass().getName() + " doesn't implement "
-					+ PopulateContextAware.class.getName());
-		}
-		populateContextAware.populateContext(report, context);
+    private static final Map<Class, Boolean> isPopulateContextAwareClassCache = new HashMap<Class, Boolean>();
 
-	}
+    @Override
+    protected void populateContext( IXDocReport report, IContext context, String finalLocation,
+                                    ActionInvocation invocation )
+        throws Exception
+    {
+        ValueStack stack = invocation.getStack();
+        Object action = stack.findValue( ACTION_KEY );
+        if ( action == null )
+        {
+            throw new XDocReportException( "Cannot retrieve action instance in value stack with key=" + ACTION_KEY );
+        }
+        PopulateContextAware populateContextAware = getPopulateContextAware( action );
+        if ( populateContextAware == null )
+        {
+            throw new XDocReportException( "Action " + action.getClass().getName() + " doesn't implement "
+                + PopulateContextAware.class.getName() );
+        }
+        populateContextAware.populateContext( report, context );
 
-	protected PopulateContextAware getPopulateContextAware(Object action) {
-		Boolean result = isPopulateContextAwareClassCache
-				.get(action.getClass());
-		if (result == null) {
-			result = (action instanceof PopulateContextAware);
-			isPopulateContextAwareClassCache.put(action.getClass(), result);
-		}
-		if (result) {
-			return ((PopulateContextAware) action);
-		}
-		return null;
-	}
+    }
+
+    protected PopulateContextAware getPopulateContextAware( Object action )
+    {
+        Boolean result = isPopulateContextAwareClassCache.get( action.getClass() );
+        if ( result == null )
+        {
+            result = ( action instanceof PopulateContextAware );
+            isPopulateContextAwareClassCache.put( action.getClass(), result );
+        }
+        if ( result )
+        {
+            return ( (PopulateContextAware) action );
+        }
+        return null;
+    }
 }

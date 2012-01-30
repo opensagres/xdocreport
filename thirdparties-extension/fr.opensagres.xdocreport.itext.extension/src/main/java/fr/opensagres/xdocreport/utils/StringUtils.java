@@ -26,87 +26,85 @@ package fr.opensagres.xdocreport.utils;
 
 /**
  * String Utilities.
- * 
  */
-public class StringUtils {
+public class StringUtils
+{
 
-	public static final String[] EMPTY_STRING_ARRAY = new String[0];
+    public static final String[] EMPTY_STRING_ARRAY = new String[0];
 
-	/**
-	 * Replace the oldString by the newString in the line and returns the
-	 * result.
-	 * 
-	 * @param line
-	 *            the line to replace.
-	 * @param oldString
-	 *            old token to replace.
-	 * @param newString
-	 *            new token to replace.
-	 * @return
-	 */
-	public static final String replaceAll(String line, String oldString,
-			String newString) {
-		int i = 0;
-		if ((i = line.indexOf(oldString, i)) >= 0) {
-			char line2[] = line.toCharArray();
-			char newString2[] = newString.toCharArray();
-			int oLength = oldString.length();
-			StringBuilder buf = new StringBuilder(line2.length);
-			buf.append(line2, 0, i).append(newString2);
-			i += oLength;
-			int j;
-			for (j = i; (i = line.indexOf(oldString, i)) > 0; j = i) {
-				buf.append(line2, j, i - j).append(newString2);
-				i += oLength;
-			}
+    /**
+     * Replace the oldString by the newString in the line and returns the result.
+     * 
+     * @param line the line to replace.
+     * @param oldString old token to replace.
+     * @param newString new token to replace.
+     * @return
+     */
+    public static final String replaceAll( String line, String oldString, String newString )
+    {
+        int i = 0;
+        if ( ( i = line.indexOf( oldString, i ) ) >= 0 )
+        {
+            char line2[] = line.toCharArray();
+            char newString2[] = newString.toCharArray();
+            int oLength = oldString.length();
+            StringBuilder buf = new StringBuilder( line2.length );
+            buf.append( line2, 0, i ).append( newString2 );
+            i += oLength;
+            int j;
+            for ( j = i; ( i = line.indexOf( oldString, i ) ) > 0; j = i )
+            {
+                buf.append( line2, j, i - j ).append( newString2 );
+                i += oLength;
+            }
 
-			buf.append(line2, j, line2.length - j);
-			return buf.toString();
-		} else {
-			return line;
-		}
-	}
+            buf.append( line2, j, line2.length - j );
+            return buf.toString();
+        }
+        else
+        {
+            return line;
+        }
+    }
 
-	/**
-	 * <p>
-	 * Checks if a String is empty ("") or null.
-	 * </p>
-	 * 
-	 * <pre>
-	 * StringUtils.isEmpty(null) = true StringUtils.isEmpty(&quot;&quot;) = true
-	 * StringUtils.isEmpty(&quot; &quot;) = false StringUtils.isEmpty(&quot;bob&quot;) = false
-	 * StringUtils.isEmpty(&quot; bob &quot;) = false
-	 * </pre>
-	 * 
-	 * 
-	 * @param str
-	 *            the String to check, may be null
-	 * 
-	 * @return <code>true</code> if the String is empty or null
-	 */
-	public static boolean isEmpty(String str) {
-		return str == null || str.length() == 0;
-	}
+    /**
+     * <p>
+     * Checks if a String is empty ("") or null.
+     * </p>
+     * 
+     * <pre>
+     * StringUtils.isEmpty(null) = true StringUtils.isEmpty(&quot;&quot;) = true
+     * StringUtils.isEmpty(&quot; &quot;) = false StringUtils.isEmpty(&quot;bob&quot;) = false
+     * StringUtils.isEmpty(&quot; bob &quot;) = false
+     * </pre>
+     * 
+     * @param str the String to check, may be null
+     * @return <code>true</code> if the String is empty or null
+     */
+    public static boolean isEmpty( String str )
+    {
+        return str == null || str.length() == 0;
+    }
 
-	/**
-	 * <p>
-	 * Checks if a String is not empty ("") and not null.
-	 * </p>
-	 * 
-	 * <pre>
-	 * StringUtils.isNotEmpty(null) = false
-	 * StringUtils.isNotEmpty(&quot;&quot;) = false
-	 * StringUtils.isNotEmpty(&quot; &quot;) = true
-	 * StringUtils.isNotEmpty(&quot;bob&quot;) = true
-	 * StringUtils.isNotEmpty(&quot; bob &quot;) = true
-	 * </pre>
-	 * 
-	 * @param str
-	 *            the String to check, may be null
-	 * @return <code>true</code> if the String is not empty and not null
-	 */
-	public static boolean isNotEmpty(String str) {
-		return str != null && str.length() > 0;
-	}
+    /**
+     * <p>
+     * Checks if a String is not empty ("") and not null.
+     * </p>
+     * 
+     * <pre>
+     * StringUtils.isNotEmpty(null) = false
+     * StringUtils.isNotEmpty(&quot;&quot;) = false
+     * StringUtils.isNotEmpty(&quot; &quot;) = true
+     * StringUtils.isNotEmpty(&quot;bob&quot;) = true
+     * StringUtils.isNotEmpty(&quot; bob &quot;) = true
+     * </pre>
+     * 
+     * @param str the String to check, may be null
+     * @return <code>true</code> if the String is not empty and not null
+     */
+    public static boolean isNotEmpty( String str )
+    {
+        return str != null && str.length() > 0;
+    }
 
 }

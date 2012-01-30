@@ -26,26 +26,31 @@ package fr.opensagres.xdocreport.template.freemarker;
 
 import junit.framework.TestCase;
 
-public class FreemarkerTemplateEngineDiscoveryTestCase extends TestCase {
+public class FreemarkerTemplateEngineDiscoveryTestCase
+    extends TestCase
+{
 
-	public void testTemplateEngineNoExists() throws Exception {
-		//FIXME PLQ
-//		boolean exists = TemplateEngineRegistry.getRegistry().exists("Unknown",
-//				null);
-//		assertFalse("ITemplateEngine with id='Unknown' must not exists", exists);
-//
-//		ITemplateEngine templateEngine = TemplateEngineRegistry.getRegistry()
-//				.getTemplateEngine("Unknown", null);
-//		assertNull("ITemplateEngine with id='Unknown' must be null.",
-//				templateEngine);
-	}
+    public void testTemplateEngineNoExists()
+        throws Exception
+    {
+        // FIXME PLQ
+        // boolean exists = TemplateEngineRegistry.getRegistry().exists("Unknown",
+        // null);
+        // assertFalse("ITemplateEngine with id='Unknown' must not exists", exists);
+        //
+        // ITemplateEngine templateEngine = TemplateEngineRegistry.getRegistry()
+        // .getTemplateEngine("Unknown", null);
+        // assertNull("ITemplateEngine with id='Unknown' must be null.",
+        // templateEngine);
+    }
 
-	public void testGetTemplateEngine() {
-		//FIXME PLQ
-//		TemplateEngineKind kind = TemplateEngineKind.Freemarker;
-//		ITemplateEngine templateEngine = TemplateEngineRegistry.getRegistry()
-//				.getTemplateEngine(kind, null);
-//		assertNotNull("Cannot retrieve template engine with kind=" + kind.name(),
-//				templateEngine);
-	}
+    public void testGetTemplateEngine()
+    {
+        // FIXME PLQ
+        // TemplateEngineKind kind = TemplateEngineKind.Freemarker;
+        // ITemplateEngine templateEngine = TemplateEngineRegistry.getRegistry()
+        // .getTemplateEngine(kind, null);
+        // assertNotNull("Cannot retrieve template engine with kind=" + kind.name(),
+        // templateEngine);
+    }
 }

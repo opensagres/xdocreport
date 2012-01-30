@@ -28,17 +28,20 @@ import fr.opensagres.xdocreport.core.XDocReportException;
 
 /**
  * XDocReport converter exception.
- * 
  */
-public class XDocConverterException extends XDocReportException {
- 
-	private static final long serialVersionUID = -9057368714731490207L;
+public class XDocConverterException
+    extends XDocReportException
+{
 
-	public XDocConverterException(String message) {
-		super(message);
-	}
+    private static final long serialVersionUID = -9057368714731490207L;
 
-	public XDocConverterException(Throwable cause) {
-		super(cause);
-	}
+    public XDocConverterException( String message )
+    {
+        super( message );
+    }
+
+    public XDocConverterException( Throwable cause )
+    {
+        super( cause );
+    }
 }

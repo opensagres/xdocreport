@@ -27,30 +27,37 @@ package fr.opensagres.xdocreport.template;
 import java.util.ArrayList;
 import java.util.List;
 
-public class FieldsExtractor<T extends FieldExtractor> {
+public class FieldsExtractor<T extends FieldExtractor>
+{
 
-	private List<T> fields = new ArrayList<T>();
+    private List<T> fields = new ArrayList<T>();
 
-	public T addFieldName(String fieldName) {
-		for (T field : fields) {
-			if (fieldName.equals(field.getName())) {
-				return null;
-			}
-		}
-		T field = createField(fieldName);
-		fields.add(field);
-		return field;
-	}
+    public T addFieldName( String fieldName )
+    {
+        for ( T field : fields )
+        {
+            if ( fieldName.equals( field.getName() ) )
+            {
+                return null;
+            }
+        }
+        T field = createField( fieldName );
+        fields.add( field );
+        return field;
+    }
 
-	public List<T> getFields() {
-		return fields;
-	}
+    public List<T> getFields()
+    {
+        return fields;
+    }
 
-	protected T createField(String fieldName) {
-		return (T) new FieldExtractor(fieldName);
-	}
+    protected T createField( String fieldName )
+    {
+        return (T) new FieldExtractor( fieldName );
+    }
 
-	public static FieldsExtractor<FieldExtractor> create() {
-		return new FieldsExtractor<FieldExtractor>();
-	}
+    public static FieldsExtractor<FieldExtractor> create()
+    {
+        return new FieldsExtractor<FieldExtractor>();
+    }
 }

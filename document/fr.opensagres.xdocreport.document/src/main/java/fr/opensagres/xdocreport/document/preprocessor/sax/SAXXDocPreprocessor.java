@@ -41,41 +41,49 @@ import fr.opensagres.xdocreport.template.formatter.IDocumentFormatter;
 
 /**
  * SAX preprocessor to modify XML entry with SAX.
- * 
  */
-public abstract class SAXXDocPreprocessor extends AbstractXDocPreprocessor {
+public abstract class SAXXDocPreprocessor
+    extends AbstractXDocPreprocessor
+{
 
-	@Override
-	public boolean preprocess(String entryName, Reader reader, Writer writer,
-			Writer debugWriter, FieldsMetadata fieldsMetadata,
-			IDocumentFormatter formater, Map<String, Object> sharedContext)
-			throws XDocReportException, IOException {
-		try {
-			XMLReader xmlReader = XMLReaderFactory.createXMLReader();
-			BufferedDocumentContentHandler<?> contentHandler = createBufferedDocumentContentHandler(
-					entryName, fieldsMetadata, formater, sharedContext);
-			xmlReader.setContentHandler(contentHandler);
-			xmlReader.parse(new InputSource(reader));
-			BufferedDocument document = contentHandler.getBufferedDocument();
-			if (document != null) {
-				document.save(writer);
-				if (debugWriter != null) {
-					document.save(debugWriter);
-				}
-//				StringWriter s = new StringWriter();
-//				document.save(s);
-//				System.err.println(s);
-				return true;
-			}
+    @Override
+    public boolean preprocess( String entryName, Reader reader, Writer writer, Writer debugWriter,
+                               FieldsMetadata fieldsMetadata, IDocumentFormatter formater,
+                               Map<String, Object> sharedContext )
+        throws XDocReportException, IOException
+    {
+        try
+        {
+            XMLReader xmlReader = XMLReaderFactory.createXMLReader();
+            BufferedDocumentContentHandler<?> contentHandler =
+                createBufferedDocumentContentHandler( entryName, fieldsMetadata, formater, sharedContext );
+            xmlReader.setContentHandler( contentHandler );
+            xmlReader.parse( new InputSource( reader ) );
+            BufferedDocument document = contentHandler.getBufferedDocument();
+            if ( document != null )
+            {
+                document.save( writer );
+                if ( debugWriter != null )
+                {
+                    document.save( debugWriter );
+                }
+                // StringWriter s = new StringWriter();
+                // document.save(s);
+                // System.err.println(s);
+                return true;
+            }
 
-			return false;
-		} catch (SAXException e) {
-			throw new XDocReportException(e);
-		}
-	}
+            return false;
+        }
+        catch ( SAXException e )
+        {
+            throw new XDocReportException( e );
+        }
+    }
 
-	protected abstract BufferedDocumentContentHandler<?> createBufferedDocumentContentHandler(
-			String entryName, FieldsMetadata fieldsMetadata,
-			IDocumentFormatter formatter, Map<String, Object> sharedContext);
+    protected abstract BufferedDocumentContentHandler<?> createBufferedDocumentContentHandler( String entryName,
+                                                                                               FieldsMetadata fieldsMetadata,
+                                                                                               IDocumentFormatter formatter,
+                                                                                               Map<String, Object> sharedContext );
 
 }

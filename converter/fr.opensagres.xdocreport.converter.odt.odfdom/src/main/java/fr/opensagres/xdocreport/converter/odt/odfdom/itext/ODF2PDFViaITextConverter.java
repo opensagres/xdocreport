@@ -38,37 +38,51 @@ import fr.opensagres.xdocreport.converter.Options;
 import fr.opensagres.xdocreport.converter.XDocConverterException;
 import fr.opensagres.xdocreport.converter.internal.AbstractConverterNoEntriesSupport;
 
-public class ODF2PDFViaITextConverter extends AbstractConverterNoEntriesSupport
-		implements MimeMappingConstants {
+public class ODF2PDFViaITextConverter
+    extends AbstractConverterNoEntriesSupport
+    implements MimeMappingConstants
+{
 
-	private static final ODF2PDFViaITextConverter INSTANCE = new ODF2PDFViaITextConverter();
+    private static final ODF2PDFViaITextConverter INSTANCE = new ODF2PDFViaITextConverter();
 
-	public static ODF2PDFViaITextConverter getInstance() {
-		return INSTANCE;
-	}
-	
-	public void convert(InputStream in, OutputStream out, Options options)
-			throws XDocConverterException {
-		try {
-			OdfTextDocument odfDocument = OdfTextDocument.loadDocument(in);
-			org.odftoolkit.odfdom.converter.itext.ODF2PDFViaITextConverter
-					.getInstance().convert(odfDocument, out, getPDFViaITextOptions(options));
-		} catch (ODFConverterException e) {
-			throw new XDocConverterException(e);
-		} catch (IOException e) {
-			throw new XDocConverterException(e);
-		} catch (Exception e) {
-			throw new XDocConverterException(e);
-		}
-	}
-	
-	private PDFViaITextOptions getPDFViaITextOptions(Options options) {
-		Object value = options.getSubOptions(PDFViaITextOptions.class);
-		return value instanceof PDFViaITextOptions ? (PDFViaITextOptions) value : null;
-	}
+    public static ODF2PDFViaITextConverter getInstance()
+    {
+        return INSTANCE;
+    }
 
-	public MimeMapping getMimeMapping() {
-		return PDF_MIME_MAPPING;
-	}
+    public void convert( InputStream in, OutputStream out, Options options )
+        throws XDocConverterException
+    {
+        try
+        {
+            OdfTextDocument odfDocument = OdfTextDocument.loadDocument( in );
+            org.odftoolkit.odfdom.converter.itext.ODF2PDFViaITextConverter.getInstance().convert( odfDocument,
+                                                                                                  out,
+                                                                                                  getPDFViaITextOptions( options ) );
+        }
+        catch ( ODFConverterException e )
+        {
+            throw new XDocConverterException( e );
+        }
+        catch ( IOException e )
+        {
+            throw new XDocConverterException( e );
+        }
+        catch ( Exception e )
+        {
+            throw new XDocConverterException( e );
+        }
+    }
+
+    private PDFViaITextOptions getPDFViaITextOptions( Options options )
+    {
+        Object value = options.getSubOptions( PDFViaITextOptions.class );
+        return value instanceof PDFViaITextOptions ? (PDFViaITextOptions) value : null;
+    }
+
+    public MimeMapping getMimeMapping()
+    {
+        return PDF_MIME_MAPPING;
+    }
 
 }

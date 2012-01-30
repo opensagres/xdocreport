@@ -28,21 +28,25 @@ import java.awt.Color;
 
 import fr.opensagres.xdocreport.itext.extension.color.AbstractColorRegistry;
 
-public class ColorRegistry extends AbstractColorRegistry {
+public class ColorRegistry
+    extends AbstractColorRegistry
+{
 
-	private static ColorRegistry INSTANCE = new ColorRegistry();
+    private static ColorRegistry INSTANCE = new ColorRegistry();
 
-	public static ColorRegistry getInstance() {
-		return INSTANCE;
-	}
+    public static ColorRegistry getInstance()
+    {
+        return INSTANCE;
+    }
 
-	@Override
-	protected Color createColor(String hexColor) {
-		if (hexColor != null && !"0xauto".equals(hexColor)
-				&& !"0xtransparent".equals(hexColor)) {
-			return Color.decode(hexColor);
-		}
-		return null;
-	}
+    @Override
+    protected Color createColor( String hexColor )
+    {
+        if ( hexColor != null && !"0xauto".equals( hexColor ) && !"0xtransparent".equals( hexColor ) )
+        {
+            return Color.decode( hexColor );
+        }
+        return null;
+    }
 
 }

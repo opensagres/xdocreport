@@ -28,12 +28,14 @@ import java.io.File;
 
 /**
  * File URI resolver.
- * 
  */
-public class FileURIResolver extends BasicURIResolver {
+public class FileURIResolver
+    extends BasicURIResolver
+{
 
-	public FileURIResolver(File baseURL) {
-		super(baseURL.getAbsolutePath());
-	}
+    public FileURIResolver( File baseURL )
+    {
+        super( baseURL.getAbsolutePath() );
+    }
 
 }

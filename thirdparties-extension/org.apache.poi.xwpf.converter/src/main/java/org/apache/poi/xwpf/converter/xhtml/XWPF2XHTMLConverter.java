@@ -35,34 +35,42 @@ import org.apache.poi.xwpf.converter.internal.AbstractXWPFConverter;
 import org.apache.poi.xwpf.converter.internal.xhtml.XHTMLMapper;
 import org.apache.poi.xwpf.usermodel.XWPFDocument;
 
-public class XWPF2XHTMLConverter extends AbstractXWPFConverter<XHTMLOptions> {
+public class XWPF2XHTMLConverter
+    extends AbstractXWPFConverter<XHTMLOptions>
+{
 
-	private static final IXWPFConverter<XHTMLOptions> INSTANCE = new XWPF2XHTMLConverter();
+    private static final IXWPFConverter<XHTMLOptions> INSTANCE = new XWPF2XHTMLConverter();
 
-	public static IXWPFConverter<XHTMLOptions> getInstance() {
-		return INSTANCE;
-	}
+    public static IXWPFConverter<XHTMLOptions> getInstance()
+    {
+        return INSTANCE;
+    }
 
-	@Override
-	protected void doConvert(XWPFDocument document, OutputStream out,
-			Writer writer, XHTMLOptions options) throws XWPFConverterException,
-			IOException {
+    @Override
+    protected void doConvert( XWPFDocument document, OutputStream out, Writer writer, XHTMLOptions options )
+        throws XWPFConverterException, IOException
+    {
 
-		int indent = 0;
-		IURIResolver resolver = IURIResolver.DEFAULT;
-		if (options != null) {
-			indent = options.getIndent();
-			if (options.getURIResolver() != null) {
-				resolver = options.getURIResolver();
-			}
-		}
-		XHTMLMapper mapper = new XHTMLMapper(document, indent, resolver);
-		try {
-			mapper.visit(out);
-		} catch (Exception e) {
-			throw new XWPFConverterException(e);
-		}
+        int indent = 0;
+        IURIResolver resolver = IURIResolver.DEFAULT;
+        if ( options != null )
+        {
+            indent = options.getIndent();
+            if ( options.getURIResolver() != null )
+            {
+                resolver = options.getURIResolver();
+            }
+        }
+        XHTMLMapper mapper = new XHTMLMapper( document, indent, resolver );
+        try
+        {
+            mapper.visit( out );
+        }
+        catch ( Exception e )
+        {
+            throw new XWPFConverterException( e );
+        }
 
-	}
+    }
 
 }

@@ -26,20 +26,24 @@ package fr.opensagres.xdocreport.itext.extension;
 
 import com.lowagie.text.Paragraph;
 
+public class ParagraphFactory
+    implements IParagraphFactory
+{
 
-public class ParagraphFactory implements IParagraphFactory {
+    private static final IParagraphFactory INSTANCE = new ParagraphFactory();
 
-	private static final IParagraphFactory INSTANCE = new ParagraphFactory();
+    public static IParagraphFactory getDefault()
+    {
+        return INSTANCE;
+    }
 
-	public static IParagraphFactory getDefault() {
-		return INSTANCE;
-	}
+    public Paragraph createParagraph()
+    {
+        return new ExtendedParagraph();
+    }
 
-	public Paragraph createParagraph() {
-		return new ExtendedParagraph();
-	}
-
-	public Paragraph createParagraph(Paragraph title) {
-		return new ExtendedParagraph(title);
-	}
+    public Paragraph createParagraph( Paragraph title )
+    {
+        return new ExtendedParagraph( title );
+    }
 }

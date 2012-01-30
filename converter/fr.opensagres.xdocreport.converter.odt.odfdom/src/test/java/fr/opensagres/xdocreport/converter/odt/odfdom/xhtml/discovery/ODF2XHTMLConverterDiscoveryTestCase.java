@@ -33,24 +33,26 @@ import fr.opensagres.xdocreport.converter.Options;
 import fr.opensagres.xdocreport.converter.odt.odfdom.xhtml.ODF2XHTMLConverter;
 import fr.opensagres.xdocreport.core.document.DocumentKind;
 
-public class ODF2XHTMLConverterDiscoveryTestCase extends TestCase {
+public class ODF2XHTMLConverterDiscoveryTestCase
+    extends TestCase
+{
 
-	/**
-	 * Test converter is well registered in the ConverterRegistry by using
-	 * "converter-discovery.properties".
-	 * 
-	 * @throws Exception
-	 */
-	public void testDiscovery() throws Exception {
-		Options o = Options.getFrom(DocumentKind.ODT).to(ConverterTypeTo.XHTML)
-				.via(ConverterTypeVia.ODFDOM);
+    /**
+     * Test converter is well registered in the ConverterRegistry by using "converter-discovery.properties".
+     * 
+     * @throws Exception
+     */
+    public void testDiscovery()
+        throws Exception
+    {
+        Options o = Options.getFrom( DocumentKind.ODT ).to( ConverterTypeTo.XHTML ).via( ConverterTypeVia.ODFDOM );
 
-		// Test if converter is not null
-		IConverter converter = ConverterRegistry.getRegistry().getConverter(o);
-		assertNotNull(converter);
+        // Test if converter is not null
+        IConverter converter = ConverterRegistry.getRegistry().getConverter( o );
+        assertNotNull( converter );
 
-		// Test instance class of the converter
-		assertEquals(ODF2XHTMLConverter.class, converter.getClass());
-	}
+        // Test instance class of the converter
+        assertEquals( ODF2XHTMLConverter.class, converter.getClass() );
+    }
 
 }

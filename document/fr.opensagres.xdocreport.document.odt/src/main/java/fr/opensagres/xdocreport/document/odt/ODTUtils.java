@@ -46,112 +46,122 @@ import fr.opensagres.xdocreport.core.io.XDocArchive;
 /**
  * Utilities for Open Office ODT.
  */
-public class ODTUtils {
+public class ODTUtils
+{
 
-	/**
-	 * Returns true if the given document archive is a ODT and false otherwise.
-	 * 
-	 * @param documentArchive
-	 * @return
-	 */
-	public static boolean isODT(XDocArchive documentArchive) {
-		try {
-			// test if document archive has 'mimetype' entry.
-			if (!documentArchive.hasEntry(MIMETYPE)) {
-				return false;
-			}
-			// test if 'mimetype' entry contains
-			// 'application/vnd.oasis.opendocument.text'
-			return ODT_MIMETYPE.equals(IOUtils.toString(documentArchive
-					.getEntryReader(MIMETYPE)));
-		} catch (IOException e) {
-		}
-		return false;
-	}
+    /**
+     * Returns true if the given document archive is a ODT and false otherwise.
+     * 
+     * @param documentArchive
+     * @return
+     */
+    public static boolean isODT( XDocArchive documentArchive )
+    {
+        try
+        {
+            // test if document archive has 'mimetype' entry.
+            if ( !documentArchive.hasEntry( MIMETYPE ) )
+            {
+                return false;
+            }
+            // test if 'mimetype' entry contains
+            // 'application/vnd.oasis.opendocument.text'
+            return ODT_MIMETYPE.equals( IOUtils.toString( documentArchive.getEntryReader( MIMETYPE ) ) );
+        }
+        catch ( IOException e )
+        {
+        }
+        return false;
+    }
 
-	/**
-	 * Returns true if element is table:table and false otherwise.
-	 * 
-	 * @param uri
-	 * @param localName
-	 * @param name
-	 * @return
-	 */
-	public static boolean isTable(String uri, String localName, String name) {
-		return TABLE_NS.equals(uri) && TABLE_ELT.equals(localName);
-	}
+    /**
+     * Returns true if element is table:table and false otherwise.
+     * 
+     * @param uri
+     * @param localName
+     * @param name
+     * @return
+     */
+    public static boolean isTable( String uri, String localName, String name )
+    {
+        return TABLE_NS.equals( uri ) && TABLE_ELT.equals( localName );
+    }
 
-	/**
-	 * Returns true if element is table:table-row and false otherwise.
-	 * 
-	 * @param uri
-	 * @param localName
-	 * @param name
-	 * @return
-	 */
-	public static boolean isTableRow(String uri, String localName, String name) {
-		return TABLE_NS.equals(uri) && TABLE_ROW_ELT.equals(localName);
-	}
+    /**
+     * Returns true if element is table:table-row and false otherwise.
+     * 
+     * @param uri
+     * @param localName
+     * @param name
+     * @return
+     */
+    public static boolean isTableRow( String uri, String localName, String name )
+    {
+        return TABLE_NS.equals( uri ) && TABLE_ROW_ELT.equals( localName );
+    }
 
-	/**
-	 * Returns true if element is text:text-input and false otherwise.
-	 * 
-	 * @param uri
-	 * @param localName
-	 * @param name
-	 * @return
-	 */
-	public static boolean isTextInput(String uri, String localName, String name) {
-		return TEXT_NS.equals(uri) && TEXT_INPUT_ELT.equals(localName);
-	}
+    /**
+     * Returns true if element is text:text-input and false otherwise.
+     * 
+     * @param uri
+     * @param localName
+     * @param name
+     * @return
+     */
+    public static boolean isTextInput( String uri, String localName, String name )
+    {
+        return TEXT_NS.equals( uri ) && TEXT_INPUT_ELT.equals( localName );
+    }
 
-	/**
-	 * Returns true if element is draw:frame and false otherwise.
-	 * 
-	 * @param uri
-	 * @param localName
-	 * @param name
-	 * @return
-	 */
-	public static boolean isDrawFrame(String uri, String localName, String name) {
-		return DRAW_NS.equals(uri) && DRAW_FRAME_ELT.equals(localName);
-	}
+    /**
+     * Returns true if element is draw:frame and false otherwise.
+     * 
+     * @param uri
+     * @param localName
+     * @param name
+     * @return
+     */
+    public static boolean isDrawFrame( String uri, String localName, String name )
+    {
+        return DRAW_NS.equals( uri ) && DRAW_FRAME_ELT.equals( localName );
+    }
 
-	/**
-	 * Returns true if element is draw:image and false otherwise.
-	 * 
-	 * @param uri
-	 * @param localName
-	 * @param name
-	 * @return
-	 */
-	public static boolean isDrawImage(String uri, String localName, String name) {
-		return DRAW_NS.equals(uri) && DRAW_IMAGE_ELT.equals(localName);
-	}
+    /**
+     * Returns true if element is draw:image and false otherwise.
+     * 
+     * @param uri
+     * @param localName
+     * @param name
+     * @return
+     */
+    public static boolean isDrawImage( String uri, String localName, String name )
+    {
+        return DRAW_NS.equals( uri ) && DRAW_IMAGE_ELT.equals( localName );
+    }
 
-	/**
-	 * Returns true if element is text:a and false otherwise.
-	 * 
-	 * @param uri
-	 * @param localName
-	 * @param name
-	 * @return
-	 */
-	public static boolean isTextA(String uri, String localName, String name) {
-		return TEXT_NS.equals(uri) && TEXT_A_ELT.equals(localName);
-	}
+    /**
+     * Returns true if element is text:a and false otherwise.
+     * 
+     * @param uri
+     * @param localName
+     * @param name
+     * @return
+     */
+    public static boolean isTextA( String uri, String localName, String name )
+    {
+        return TEXT_NS.equals( uri ) && TEXT_A_ELT.equals( localName );
+    }
 
-	/**
-	 * Returns true if element is office:automatic-styles and false otherwise.
-	 * 
-	 * @param uri
-	 * @param localName
-	 * @param name
-	 * @return
-	 */
-	public static boolean isOfficeAutomaticStyles(String uri, String localName,
-			String name) {
-		return OFFICE_NS.equals(uri)
-				&& OFFICE_AUTOMATIC_STYLES_ELT.equals(localName);
-	}
+    /**
+     * Returns true if element is office:automatic-styles and false otherwise.
+     * 
+     * @param uri
+     * @param localName
+     * @param name
+     * @return
+     */
+    public static boolean isOfficeAutomaticStyles( String uri, String localName, String name )
+    {
+        return OFFICE_NS.equals( uri ) && OFFICE_AUTOMATIC_STYLES_ELT.equals( localName );
+    }
 }

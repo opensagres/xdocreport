@@ -41,52 +41,57 @@ import fr.opensagres.xdocreport.document.pptx.preprocessor.PPTXSlidePreprocessor
 
 /**
  * Open Office ODS report.
- * 
  */
-public class PPTXReport extends AbstractXDocReport {
+public class PPTXReport
+    extends AbstractXDocReport
+{
 
-	private static final String PPT_REGEXP = "ppt*";
+    private static final String PPT_REGEXP = "ppt*";
 
-	private static final long serialVersionUID = -8323654563409226895L;
+    private static final long serialVersionUID = -8323654563409226895L;
 
-	private static final String[] DEFAULT_XML_ENTRIES = {
-			PRESENTATION_PRESENTATION_XML_ENTRY, PRESENTATION_SLIDES_XML_ENTRY };
+    private static final String[] DEFAULT_XML_ENTRIES = { PRESENTATION_PRESENTATION_XML_ENTRY,
+        PRESENTATION_SLIDES_XML_ENTRY };
 
-	public String getKind() {
-		return DocumentKind.PPTX.name();
-	}
+    public String getKind()
+    {
+        return DocumentKind.PPTX.name();
+    }
 
-	@Override
-	protected void registerPreprocessors() {
-		super.addPreprocessor(PRESENTATION_SLIDES_XML_ENTRY,
-				PPTXSlidePreprocessor.INSTANCE);
-	}
+    @Override
+    protected void registerPreprocessors()
+    {
+        super.addPreprocessor( PRESENTATION_SLIDES_XML_ENTRY, PPTXSlidePreprocessor.INSTANCE );
+    }
 
-	@Override
-	protected String[] getDefaultXMLEntries() {
-		return DEFAULT_XML_ENTRIES;
-	}
+    @Override
+    protected String[] getDefaultXMLEntries()
+    {
+        return DEFAULT_XML_ENTRIES;
+    }
 
-	public MimeMapping getMimeMapping() {
-		return MIME_MAPPING;
-	}
+    public MimeMapping getMimeMapping()
+    {
+        return MIME_MAPPING;
+    }
 
-	public static boolean isPPTX(XDocArchive documentArchive) {
-		if (!documentArchive.hasEntry(CONTENT_TYPES_XML)) {
-			return false;
-		}
-		// <Override PartName="/ppt/presentation.xml"
-		// ContentType="application/vnd.openxmlformats-officedocument.presentationml.presentation.main+xml"
-		// />
-		return documentArchive.getEntryNames(PPT_REGEXP).size() > 0;
-	}
+    public static boolean isPPTX( XDocArchive documentArchive )
+    {
+        if ( !documentArchive.hasEntry( CONTENT_TYPES_XML ) )
+        {
+            return false;
+        }
+        // <Override PartName="/ppt/presentation.xml"
+        // ContentType="application/vnd.openxmlformats-officedocument.presentationml.presentation.main+xml"
+        // />
+        return documentArchive.getEntryNames( PPT_REGEXP ).size() > 0;
+    }
 
-	@Override
-	protected IImageRegistry createImageRegistry(
-			IEntryReaderProvider readerProvider,
-			IEntryWriterProvider writerProvider,
-			IEntryOutputStreamProvider outputStreamProvider) {
-		return new PPTXImageRegistry(readerProvider, writerProvider,
-				outputStreamProvider);
-	}
+    @Override
+    protected IImageRegistry createImageRegistry( IEntryReaderProvider readerProvider,
+                                                  IEntryWriterProvider writerProvider,
+                                                  IEntryOutputStreamProvider outputStreamProvider )
+    {
+        return new PPTXImageRegistry( readerProvider, writerProvider, outputStreamProvider );
+    }
 }

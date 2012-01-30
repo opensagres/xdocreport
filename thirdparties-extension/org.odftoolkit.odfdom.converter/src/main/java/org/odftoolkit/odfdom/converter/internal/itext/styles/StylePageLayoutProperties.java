@@ -26,43 +26,55 @@ package org.odftoolkit.odfdom.converter.internal.itext.styles;
 
 import fr.opensagres.xdocreport.itext.extension.PageOrientation;
 
-public class StylePageLayoutProperties {
+public class StylePageLayoutProperties
+{
 
-	private Float width;
-	private Float height;
-	private StyleMargin margin;
-	private PageOrientation orientation;
+    private Float width;
 
-	public Float getWidth() {
-		return width;
-	}
+    private Float height;
 
-	public void setWidth(Float width) {
-		this.width = width;
-	}
+    private StyleMargin margin;
 
-	public Float getHeight() {
-		return height;
-	}
+    private PageOrientation orientation;
 
-	public void setHeight(Float height) {
-		this.height = height;
-	}
+    public Float getWidth()
+    {
+        return width;
+    }
 
-	public StyleMargin getMargin() {
-		return margin;
-	}
-	
-	public void setMargin(StyleMargin margin) {
-		this.margin = margin;
-	}
-	
-	public void setOrientation(PageOrientation orientation) {
-		this.orientation = orientation;
-	}
-	
-	public PageOrientation getOrientation() {
-		return orientation;
-	}
+    public void setWidth( Float width )
+    {
+        this.width = width;
+    }
+
+    public Float getHeight()
+    {
+        return height;
+    }
+
+    public void setHeight( Float height )
+    {
+        this.height = height;
+    }
+
+    public StyleMargin getMargin()
+    {
+        return margin;
+    }
+
+    public void setMargin( StyleMargin margin )
+    {
+        this.margin = margin;
+    }
+
+    public void setOrientation( PageOrientation orientation )
+    {
+        this.orientation = orientation;
+    }
+
+    public PageOrientation getOrientation()
+    {
+        return orientation;
+    }
 
 }

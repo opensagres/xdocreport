@@ -26,7 +26,9 @@ package fr.opensagres.xdocreport.itext.extension;
 
 import com.lowagie.text.Element;
 
-public interface IITextContainer extends IITextElement {
+public interface IITextContainer
+    extends IITextElement
+{
 
-	void addElement(Element element);
+    void addElement( Element element );
 }

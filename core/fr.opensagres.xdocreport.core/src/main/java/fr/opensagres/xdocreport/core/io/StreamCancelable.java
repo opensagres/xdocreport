@@ -27,7 +27,8 @@ package fr.opensagres.xdocreport.core.io;
 /**
  * Stream cancelable used to not close writer.
  */
-public interface StreamCancelable {
+public interface StreamCancelable
+{
 
-	void cancel();
+    void cancel();
 }

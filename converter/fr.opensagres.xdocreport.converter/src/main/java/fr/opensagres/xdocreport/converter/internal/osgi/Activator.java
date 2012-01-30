@@ -30,45 +30,49 @@ import org.osgi.framework.BundleContext;
 import fr.opensagres.xdocreport.converter.ConverterRegistry;
 
 /**
- * OSGi Activator to initialize/dispose converter registry when bundle
- * start/stop.
- * 
+ * OSGi Activator to initialize/dispose converter registry when bundle start/stop.
  */
-public class Activator implements BundleActivator {
+public class Activator
+    implements BundleActivator
+{
 
-	public void start(BundleContext context) throws Exception {
-		ClassLoader backup = Thread.currentThread().getContextClassLoader();
-        Thread.currentThread().setContextClassLoader(getClass().getClassLoader());
-		ConverterRegistry.getRegistry().initialize();
-		Thread.currentThread().setContextClassLoader(backup);
-//TODO : discuss with Angelo to behave that way under OSGi context :
-//		Collection<String> froms = ConverterRegistry.getRegistry().getFroms();
-//		for (String from : froms) {
-//			ConverterFrom converterFrom = ConverterRegistry.getRegistry()
-//					.getConverterFrom(from);
-//			Collection<ConverterTo> tos = converterFrom.getConvertersTo();
-//			for (ConverterTo to : tos) {
-//				Collection<String> vias = to.getVias();
-//				for (String via : vias) {
-//					Dictionary<String, String> properties=new java.util.Hashtable<String,String>();
-//					properties.put("From", from);
-//					properties.put("to", to.getTo());
-//					properties.put("via", via);
-//				ServiceRegistration registration=	context.registerService(IConverter.class.getName(), 
-//							ConverterRegistry.getRegistry().findConverter(from, to.getTo(), via), 
-//							properties);
-//				
-//				}
-//
-//			}
-//		}
+    public void start( BundleContext context )
+        throws Exception
+    {
+        ClassLoader backup = Thread.currentThread().getContextClassLoader();
+        Thread.currentThread().setContextClassLoader( getClass().getClassLoader() );
+        ConverterRegistry.getRegistry().initialize();
+        Thread.currentThread().setContextClassLoader( backup );
+        // TODO : discuss with Angelo to behave that way under OSGi context :
+        // Collection<String> froms = ConverterRegistry.getRegistry().getFroms();
+        // for (String from : froms) {
+        // ConverterFrom converterFrom = ConverterRegistry.getRegistry()
+        // .getConverterFrom(from);
+        // Collection<ConverterTo> tos = converterFrom.getConvertersTo();
+        // for (ConverterTo to : tos) {
+        // Collection<String> vias = to.getVias();
+        // for (String via : vias) {
+        // Dictionary<String, String> properties=new java.util.Hashtable<String,String>();
+        // properties.put("From", from);
+        // properties.put("to", to.getTo());
+        // properties.put("via", via);
+        // ServiceRegistration registration= context.registerService(IConverter.class.getName(),
+        // ConverterRegistry.getRegistry().findConverter(from, to.getTo(), via),
+        // properties);
+        //
+        // }
+        //
+        // }
+        // }
 
-	}
+    }
 
-	public void stop(BundleContext context) throws Exception {
-		ConverterRegistry.getRegistry().dispose();
-		//later :
-		//registration.unregister();
-	}
+    public void stop( BundleContext context )
+        throws Exception
+    {
+        ConverterRegistry.getRegistry().dispose();
+        // later :
+        // registration.unregister();
+    }
 
 }

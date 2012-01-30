@@ -24,6 +24,7 @@
  */
 package org.odftoolkit.odfdom.converter;
 
-public class Data {
+public class Data
+{
 
 }

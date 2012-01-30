@@ -30,18 +30,22 @@ import org.osgi.framework.BundleContext;
 import fr.opensagres.xdocreport.template.registry.TemplateEngineRegistry;
 
 /**
- * OSGi Activator to initialize/dispose template engine registry when bundle
- * start/stop.
- * 
+ * OSGi Activator to initialize/dispose template engine registry when bundle start/stop.
  */
-public class Activator implements BundleActivator {
+public class Activator
+    implements BundleActivator
+{
 
-	public void start(BundleContext context) throws Exception {
-		TemplateEngineRegistry.getRegistry().initialize();
+    public void start( BundleContext context )
+        throws Exception
+    {
+        TemplateEngineRegistry.getRegistry().initialize();
 
-	}
+    }
 
-	public void stop(BundleContext context) throws Exception {
-		TemplateEngineRegistry.getRegistry().dispose();
-	}
+    public void stop( BundleContext context )
+        throws Exception
+    {
+        TemplateEngineRegistry.getRegistry().dispose();
+    }
 }

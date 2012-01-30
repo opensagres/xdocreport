@@ -31,50 +31,60 @@ import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTRPrDefault;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTStyle;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.STHexColor;
 
-public class XWPFUtils {
+public class XWPFUtils
+{
 
-	/**
-	 * Returns CTRPr from default.
-	 * 
-	 * @param defaults
-	 * @return
-	 */
-	public static CTRPr getRPr(CTDocDefaults defaults) {
-		if (defaults == null) {
-			return null;
-		}
-		CTRPrDefault rprDefault = defaults.getRPrDefault();
-		if (rprDefault == null) {
-			return null;
-		}
-		return rprDefault.getRPr();
-	}
+    /**
+     * Returns CTRPr from default.
+     * 
+     * @param defaults
+     * @return
+     */
+    public static CTRPr getRPr( CTDocDefaults defaults )
+    {
+        if ( defaults == null )
+        {
+            return null;
+        }
+        CTRPrDefault rprDefault = defaults.getRPrDefault();
+        if ( rprDefault == null )
+        {
+            return null;
+        }
+        return rprDefault.getRPr();
+    }
 
-	/**
-	 * Returns CTRPr from style.
-	 * 
-	 * @param style
-	 * @return
-	 */
-	public static CTRPr getRPr(XWPFStyle style) {
-		if (style == null) {
-			return null;
-		}
+    /**
+     * Returns CTRPr from style.
+     * 
+     * @param style
+     * @return
+     */
+    public static CTRPr getRPr( XWPFStyle style )
+    {
+        if ( style == null )
+        {
+            return null;
+        }
 
-		CTStyle ctStyle = style.getCTStyle();
-		if (ctStyle == null) {
-			return null;
-		}
-		return ctStyle.getRPr();
-	}
-	
-	public static String getColor(STHexColor color) {
-		if (color != null) {
-			if (!"auto".equals(color.getStringValue())) {
-				return color.getStringValue();
-			}
-		}
-		return null;
-	}
-	
+        CTStyle ctStyle = style.getCTStyle();
+        if ( ctStyle == null )
+        {
+            return null;
+        }
+        return ctStyle.getRPr();
+    }
+
+    public static String getColor( STHexColor color )
+    {
+        if ( color != null )
+        {
+            if ( !"auto".equals( color.getStringValue() ) )
+            {
+                return color.getStringValue();
+            }
+        }
+        return null;
+    }
+
 }

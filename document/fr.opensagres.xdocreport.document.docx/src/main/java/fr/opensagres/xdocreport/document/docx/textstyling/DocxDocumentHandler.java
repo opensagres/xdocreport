@@ -32,160 +32,201 @@ import fr.opensagres.xdocreport.document.textstyling.AbstractDocumentHandler;
 import fr.opensagres.xdocreport.template.IContext;
 
 /**
- * 
  * Document handler implementation to build docx fragment content.
- * 
  */
-public class DocxDocumentHandler extends AbstractDocumentHandler {
+public class DocxDocumentHandler
+    extends AbstractDocumentHandler
+{
 
-	private boolean bolding;
-	private boolean italicsing;
-	private Stack<Boolean> paragraphsStack;
+    private boolean bolding;
 
-	public DocxDocumentHandler(BufferedElement parent, IContext context) {
-		super(parent, context);
-	}
+    private boolean italicsing;
 
-	public void startDocument() {
-		this.bolding = false;
-		this.italicsing = false;
-		this.paragraphsStack = new Stack<Boolean>();
-	}
+    private Stack<Boolean> paragraphsStack;
 
-	public void endDocument() throws IOException {
-		if (!paragraphsStack.isEmpty()) {
-			paragraphsStack.size();
-			for (int i = 0; i < paragraphsStack.size(); i++) {
-				internalEndParagraph();
-			}
-		}
-	}
+    public DocxDocumentHandler( BufferedElement parent, IContext context )
+    {
+        super( parent, context );
+    }
 
-	public void startBold() {
-		this.bolding = true;
-	}
+    public void startDocument()
+    {
+        this.bolding = false;
+        this.italicsing = false;
+        this.paragraphsStack = new Stack<Boolean>();
+    }
 
-	public void endBold() {
-		this.bolding = false;
-	}
+    public void endDocument()
+        throws IOException
+    {
+        if ( !paragraphsStack.isEmpty() )
+        {
+            paragraphsStack.size();
+            for ( int i = 0; i < paragraphsStack.size(); i++ )
+            {
+                internalEndParagraph();
+            }
+        }
+    }
 
-	public void startItalics() {
-		this.italicsing = true;
-	}
+    public void startBold()
+    {
+        this.bolding = true;
+    }
 
-	public void endItalics() {
-		this.italicsing = false;
-	}
+    public void endBold()
+    {
+        this.bolding = false;
+    }
 
-	@Override
-	public void handleString(String content) throws IOException {
-		// startParagraphIfNeeded();
-		super.write("<w:r>");
-		if (bolding || italicsing) {
-			super.write("<w:rPr>");
-			if (bolding) {
-				super.write("<w:b />");
-			}
-			if (italicsing) {
-				super.write("<w:i />");
-			}
-			super.write("</w:rPr>");
-		}
-		super.write("<w:t xml:space=\"preserve\" >");
-		super.write(content);
-		super.write("</w:t>");
-		super.write("</w:r>");
-	}
+    public void startItalics()
+    {
+        this.italicsing = true;
+    }
 
-	private void startParagraphIfNeeded() throws IOException {
-		if (paragraphsStack.isEmpty()) {
-			internalStartParagraph(false);
-		}
-	}
+    public void endItalics()
+    {
+        this.italicsing = false;
+    }
 
-	private void internalStartParagraph(boolean containerIsList)
-			throws IOException {
-		super.write("<w:p>");
-		paragraphsStack.push(containerIsList);
-	}
+    @Override
+    public void handleString( String content )
+        throws IOException
+    {
+        // startParagraphIfNeeded();
+        super.write( "<w:r>" );
+        if ( bolding || italicsing )
+        {
+            super.write( "<w:rPr>" );
+            if ( bolding )
+            {
+                super.write( "<w:b />" );
+            }
+            if ( italicsing )
+            {
+                super.write( "<w:i />" );
+            }
+            super.write( "</w:rPr>" );
+        }
+        super.write( "<w:t xml:space=\"preserve\" >" );
+        super.write( content );
+        super.write( "</w:t>" );
+        super.write( "</w:r>" );
+    }
 
-	private void internalEndParagraph() throws IOException {
-		super.write("</w:p>");
-		paragraphsStack.pop();
-	}
+    private void startParagraphIfNeeded()
+        throws IOException
+    {
+        if ( paragraphsStack.isEmpty() )
+        {
+            internalStartParagraph( false );
+        }
+    }
 
-	public void startListItem() throws IOException {
-		// if (!paragraphsStack.isEmpty() && !paragraphsStack.peek()) {
-		// internalEndParagraph();
-		// }
-		internalStartParagraph(true);
-		boolean ordered = super.getCurrentListOrder();
-		super.write("<w:pPr>");
-		super.write("<w:pStyle w:val=\"Paragraphedeliste\" />");
-		super.write("<w:numPr>");
+    private void internalStartParagraph( boolean containerIsList )
+        throws IOException
+    {
+        super.write( "<w:p>" );
+        paragraphsStack.push( containerIsList );
+    }
 
-		// <w:ilvl w:val="0" />
-		int ilvlVal = super.getCurrentListIndex();
-		super.write("<w:ilvl w:val=\"");
-		super.write(String.valueOf(ilvlVal));
-		super.write("\" />");
+    private void internalEndParagraph()
+        throws IOException
+    {
+        super.write( "</w:p>" );
+        paragraphsStack.pop();
+    }
 
-		// "<w:numId w:val="1" />"
-		int numIdVal = ordered ? 2 : 1;
-		super.write("<w:numId w:val=\"");
-		// super.write(String.valueOf(numIdVal));
-		super.write(String.valueOf(numIdVal));
-		super.write("\" />");
+    public void startListItem()
+        throws IOException
+    {
+        // if (!paragraphsStack.isEmpty() && !paragraphsStack.peek()) {
+        // internalEndParagraph();
+        // }
+        internalStartParagraph( true );
+        boolean ordered = super.getCurrentListOrder();
+        super.write( "<w:pPr>" );
+        super.write( "<w:pStyle w:val=\"Paragraphedeliste\" />" );
+        super.write( "<w:numPr>" );
 
-		super.write("</w:numPr>");
-		super.write("</w:pPr>");
+        // <w:ilvl w:val="0" />
+        int ilvlVal = super.getCurrentListIndex();
+        super.write( "<w:ilvl w:val=\"" );
+        super.write( String.valueOf( ilvlVal ) );
+        super.write( "\" />" );
 
-	}
+        // "<w:numId w:val="1" />"
+        int numIdVal = ordered ? 2 : 1;
+        super.write( "<w:numId w:val=\"" );
+        // super.write(String.valueOf(numIdVal));
+        super.write( String.valueOf( numIdVal ) );
+        super.write( "\" />" );
 
-	public void endListItem() throws IOException {
-		internalEndParagraph();
-	}
+        super.write( "</w:numPr>" );
+        super.write( "</w:pPr>" );
 
-	public void startParagraph() throws IOException {
-		internalStartParagraph(false);
-	}
+    }
 
-	public void endParagraph() throws IOException {
-		internalEndParagraph();
-	}
+    public void endListItem()
+        throws IOException
+    {
+        internalEndParagraph();
+    }
 
-	public void startHeading(int level) {
-		// TODO Auto-generated method stub
+    public void startParagraph()
+        throws IOException
+    {
+        internalStartParagraph( false );
+    }
 
-	}
+    public void endParagraph()
+        throws IOException
+    {
+        internalEndParagraph();
+    }
 
-	public void endHeading(int level) {
-		// TODO Auto-generated method stub
+    public void startHeading( int level )
+    {
+        // TODO Auto-generated method stub
 
-	}
+    }
 
-	@Override
-	protected void doEndUnorderedList() throws IOException {
-		// TODO Auto-generated method stub
-		
-	}
+    public void endHeading( int level )
+    {
+        // TODO Auto-generated method stub
 
-	@Override
-	protected void doEndOrderedList() throws IOException {
-		// TODO Auto-generated method stub
-		
-	}
+    }
 
-	@Override
-	protected void doStartUnorderedList() throws IOException {
-		// TODO Auto-generated method stub
-		
-	}
+    @Override
+    protected void doEndUnorderedList()
+        throws IOException
+    {
+        // TODO Auto-generated method stub
 
-	@Override
-	protected void doStartOrderedList() throws IOException {
-		// TODO Auto-generated method stub
-		
-	}
+    }
+
+    @Override
+    protected void doEndOrderedList()
+        throws IOException
+    {
+        // TODO Auto-generated method stub
+
+    }
+
+    @Override
+    protected void doStartUnorderedList()
+        throws IOException
+    {
+        // TODO Auto-generated method stub
+
+    }
+
+    @Override
+    protected void doStartOrderedList()
+        throws IOException
+    {
+        // TODO Auto-generated method stub
+
+    }
 
 }

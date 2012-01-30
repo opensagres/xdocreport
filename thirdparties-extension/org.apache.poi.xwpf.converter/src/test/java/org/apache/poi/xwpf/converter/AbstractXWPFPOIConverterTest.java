@@ -28,75 +28,101 @@ import java.io.IOException;
 
 import org.junit.Test;
 
-public abstract class AbstractXWPFPOIConverterTest {
+public abstract class AbstractXWPFPOIConverterTest
+{
 
-	
-	
-	@Test
-	public void convertCV() throws IOException {
-		doGenerate("CV.docx");
-	}
+    @Test
+    public void convertCV()
+        throws IOException
+    {
+        doGenerate( "CV.docx" );
+    }
 
-	@Test
-	public void generateCV2() throws IOException {
-		doGenerate("CV2.docx");
-	}
+    @Test
+    public void generateCV2()
+        throws IOException
+    {
+        doGenerate( "CV2.docx" );
+    }
 
-	@Test
-	public void convertDocxBig() throws IOException {
-		doGenerate("DocxBig.docx");
-	}
+    @Test
+    public void convertDocxBig()
+        throws IOException
+    {
+        doGenerate( "DocxBig.docx" );
+    }
 
-	@Test
-	public void testDocxLettreRelance() throws IOException {
-		doGenerate("DocxLettreRelance.docx");
-	}
+    @Test
+    public void testDocxLettreRelance()
+        throws IOException
+    {
+        doGenerate( "DocxLettreRelance.docx" );
+    }
 
-	@Test
-	public void testDocxStructures() throws IOException {
-		doGenerate("DocxStructures.docx");
-	}
+    @Test
+    public void testDocxStructures()
+        throws IOException
+    {
+        doGenerate( "DocxStructures.docx" );
+    }
 
-	@Test
-	public void testColor() throws IOException {
-		doGenerate("TestColor.docx");
-	}
-	
-	@Test
-	public void testComplexTable() throws IOException {
-		doGenerate("TestComplexTable.docx");
-	}
-	
-	@Test
-	public void testFonts() throws IOException {
-		doGenerate("TestFonts.docx");
-	}
+    @Test
+    public void testColor()
+        throws IOException
+    {
+        doGenerate( "TestColor.docx" );
+    }
 
-	@Test
-	public void testHeaderFooterPage() throws IOException {
-		doGenerate("TestHeaderFooterPage.docx");
-	}
+    @Test
+    public void testComplexTable()
+        throws IOException
+    {
+        doGenerate( "TestComplexTable.docx" );
+    }
 
-	@Test
-	public void testLandscapeFormat() throws IOException {
-		doGenerate("TestLandscapeFormat.docx");
-	}
-	
-	@Test
-	public void testTable() throws IOException {
-		doGenerate("TestTable.docx");
-	}
+    @Test
+    public void testFonts()
+        throws IOException
+    {
+        doGenerate( "TestFonts.docx" );
+    }
 
-	@Test
-	public void testTitle() throws IOException {
-		doGenerate("TestTitle.docx");
-	}
+    @Test
+    public void testHeaderFooterPage()
+        throws IOException
+    {
+        doGenerate( "TestHeaderFooterPage.docx" );
+    }
 
-	@Test
-	public void convertPersAngaben() throws IOException {
-		doGenerate("PersAngaben.docx");
-	}
+    @Test
+    public void testLandscapeFormat()
+        throws IOException
+    {
+        doGenerate( "TestLandscapeFormat.docx" );
+    }
 
-	protected abstract void doGenerate(String fileName) throws IOException;
+    @Test
+    public void testTable()
+        throws IOException
+    {
+        doGenerate( "TestTable.docx" );
+    }
+
+    @Test
+    public void testTitle()
+        throws IOException
+    {
+        doGenerate( "TestTitle.docx" );
+    }
+
+    @Test
+    public void convertPersAngaben()
+        throws IOException
+    {
+        doGenerate( "PersAngaben.docx" );
+    }
+
+    protected abstract void doGenerate( String fileName )
+        throws IOException;
 
 }

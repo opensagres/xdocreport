@@ -25,18 +25,16 @@
 package fr.opensagres.xdocreport.document.timing;
 
 /**
- *
- *
- *A listener for timer events.
+ * A listener for timer events.
  */
 
-public interface AlarmTimerListener 
+public interface AlarmTimerListener
 {
     /**
-     *Notify the instance of an alarm coming from a timer.
-     *
-     *@param timer The timer raising the alarm.
+     * Notify the instance of an alarm coming from a timer.
+     * 
+     * @param timer The timer raising the alarm.
      */
 
-    public void alarm(AlarmTimer timer);
+    public void alarm( AlarmTimer timer );
 }

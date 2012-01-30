@@ -26,25 +26,29 @@ package fr.opensagres.xdocreport.converter;
 
 /**
  * Mime mapping constants used for converter and process template generation.
- * 
  */
-public interface MimeMappingConstants {
+public interface MimeMappingConstants
+{
 
-	String XHTML_MIME_TYPE = "text/html";
-	String XML_MIME_TYPE = "application/xml";
-	String PDF_MIME_TYPE = "application/pdf";
+    String XHTML_MIME_TYPE = "text/html";
 
-	// FO Mime mapping
-	String FO_EXTENSION = "fo";
-	MimeMapping FO_MIME_MAPPING = new MimeMapping(FO_EXTENSION, XML_MIME_TYPE);
+    String XML_MIME_TYPE = "application/xml";
 
-	// PDF Mime mapping
-	String PDF_EXTENSION = "pdf";
-	MimeMapping PDF_MIME_MAPPING = new MimeMapping(PDF_EXTENSION, PDF_MIME_TYPE);
+    String PDF_MIME_TYPE = "application/pdf";
 
-	// XHTML Mime mapping
-	String XHTML_EXTENSION = "html";
-	MimeMapping XHTML_MIME_MAPPING = new MimeMapping(XHTML_EXTENSION,
-			XHTML_MIME_TYPE);
+    // FO Mime mapping
+    String FO_EXTENSION = "fo";
+
+    MimeMapping FO_MIME_MAPPING = new MimeMapping( FO_EXTENSION, XML_MIME_TYPE );
+
+    // PDF Mime mapping
+    String PDF_EXTENSION = "pdf";
+
+    MimeMapping PDF_MIME_MAPPING = new MimeMapping( PDF_EXTENSION, PDF_MIME_TYPE );
+
+    // XHTML Mime mapping
+    String XHTML_EXTENSION = "html";
+
+    MimeMapping XHTML_MIME_MAPPING = new MimeMapping( XHTML_EXTENSION, XHTML_MIME_TYPE );
 
 }

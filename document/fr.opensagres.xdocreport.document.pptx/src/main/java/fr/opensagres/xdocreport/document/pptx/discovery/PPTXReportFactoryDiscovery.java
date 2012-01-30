@@ -36,37 +36,42 @@ import fr.opensagres.xdocreport.document.pptx.PPTXReport;
 import fr.opensagres.xdocreport.document.registry.XDocReportRegistry;
 
 /**
- * Open Office ODP discovery used by the
- * {@link XDocReportRegistry#loadReport(java.io.InputStream)} to create an
+ * Open Office ODP discovery used by the {@link XDocReportRegistry#loadReport(java.io.InputStream)} to create an
  * instance of {@link PPTXReport} if input stream to load is an ODP.
- * 
  */
-public class PPTXReportFactoryDiscovery extends
-		AbstractXDocReportFactoryDiscovery implements
-		IXDocReportFactoryDiscovery {
+public class PPTXReportFactoryDiscovery
+    extends AbstractXDocReportFactoryDiscovery
+    implements IXDocReportFactoryDiscovery
+{
 
-	public boolean isAdaptFor(XDocArchive archive) {
-		return PPTXReport.isPPTX(archive);
-	}
+    public boolean isAdaptFor( XDocArchive archive )
+    {
+        return PPTXReport.isPPTX( archive );
+    }
 
-	public IXDocReport createReport() {
-		return new PPTXReport();
-	}
+    public IXDocReport createReport()
+    {
+        return new PPTXReport();
+    }
 
-	public MimeMapping getMimeMapping() {
-		return MIME_MAPPING;
-	}
+    public MimeMapping getMimeMapping()
+    {
+        return MIME_MAPPING;
+    }
 
-	public String getDescription() {
-		return DESCRIPTION_DISCOVERY;
-	}
+    public String getDescription()
+    {
+        return DESCRIPTION_DISCOVERY;
+    }
 
-	public String getId() {
-		return ID_DISCOVERY;
-	}
+    public String getId()
+    {
+        return ID_DISCOVERY;
+    }
 
-	public Class<?> getReportClass() {
-		return PPTXReport.class;
-	}
+    public Class<?> getReportClass()
+    {
+        return PPTXReport.class;
+    }
 
 }

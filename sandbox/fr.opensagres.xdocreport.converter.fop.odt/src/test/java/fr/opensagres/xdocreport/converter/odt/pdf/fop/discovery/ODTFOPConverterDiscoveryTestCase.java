@@ -37,26 +37,27 @@ import fr.opensagres.xdocreport.converter.Options;
 import fr.opensagres.xdocreport.converter.odt.pdf.fop.ODTFOPConverter;
 import fr.opensagres.xdocreport.core.document.DocumentKind;
 
-public class ODTFOPConverterDiscoveryTestCase {
+public class ODTFOPConverterDiscoveryTestCase
+{
 
-	/**
-	 * Test converter is well registered in the ConverterRegistry by using
-	 * "converter-discovery.properties".
-	 * 
-	 * @throws Exception
-	 */
-	@Ignore("sandbox")
-	@Test
-	public void testDiscovery() throws Exception {
-		Options o = Options.getFrom(DocumentKind.ODT).to(ConverterTypeTo.PDF)
-				.via(ConverterTypeVia.FOP);
+    /**
+     * Test converter is well registered in the ConverterRegistry by using "converter-discovery.properties".
+     * 
+     * @throws Exception
+     */
+    @Ignore( "sandbox" )
+    @Test
+    public void testDiscovery()
+        throws Exception
+    {
+        Options o = Options.getFrom( DocumentKind.ODT ).to( ConverterTypeTo.PDF ).via( ConverterTypeVia.FOP );
 
-		// Test if converter is not null
-		IConverter converter = ConverterRegistry.getRegistry().getConverter(o);
-		assertNotNull(converter);
+        // Test if converter is not null
+        IConverter converter = ConverterRegistry.getRegistry().getConverter( o );
+        assertNotNull( converter );
 
-		// Test instance class of the converter
-		assertEquals(ODTFOPConverter.class, converter.getClass());
-	}
+        // Test instance class of the converter
+        assertEquals( ODTFOPConverter.class, converter.getClass() );
+    }
 
 }

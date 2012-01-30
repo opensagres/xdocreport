@@ -21,38 +21,45 @@ import javax.xml.transform.URIResolver;
 
 import fr.opensagres.xdocreport.converter.internal.xslfo.AbstractXSLFOConverter;
 
-public class ODTXSLFOConverter extends AbstractXSLFOConverter implements
-		ODTXSLFOConstants {
+public class ODTXSLFOConverter
+    extends AbstractXSLFOConverter
+    implements ODTXSLFOConstants
+{
 
-	private static ODTXSLFOConverter INSTANCE = new ODTXSLFOConverter();
+    private static ODTXSLFOConverter INSTANCE = new ODTXSLFOConverter();
 
-	public static ODTXSLFOConverter getInstance() {
-		return INSTANCE;
-	}
+    public static ODTXSLFOConverter getInstance()
+    {
+        return INSTANCE;
+    }
 
-	@Override
-	protected InputStream getXSLFOStream() {
-		return XSLFOURIResolver.class
-				.getResourceAsStream(getXSLFOTemplateURI());
-	}
+    @Override
+    protected InputStream getXSLFOStream()
+    {
+        return XSLFOURIResolver.class.getResourceAsStream( getXSLFOTemplateURI() );
+    }
 
-	@Override
-	protected String getXSLFOTemplateURI() {
-		return XSL_FO_TEMPLATE_URI;
-	}
+    @Override
+    protected String getXSLFOTemplateURI()
+    {
+        return XSL_FO_TEMPLATE_URI;
+    }
 
-	@Override
-	protected URIResolver getXSLFOURIResolver() {
-		return XSLFOURIResolver.INSTANCE;
-	}
+    @Override
+    protected URIResolver getXSLFOURIResolver()
+    {
+        return XSLFOURIResolver.INSTANCE;
+    }
 
-	@Override
-	protected String getMainEntryName() {
-		return CONTENT_XML_ENTRY;
-	}
+    @Override
+    protected String getMainEntryName()
+    {
+        return CONTENT_XML_ENTRY;
+    }
 
-	@Override
-	protected String[] getEntryNames() {
-		return XML_ENTRIES;
-	}
+    @Override
+    protected String[] getEntryNames()
+    {
+        return XML_ENTRIES;
+    }
 }

@@ -26,19 +26,18 @@ package fr.opensagres.xdocreport.core.internal;
 
 /**
  * XML Pretty Printer interface.
- * 
  */
-public interface IXMLPrettyPrinter {
+public interface IXMLPrettyPrinter
+{
 
-	/**
-	 * Indent the given xml with the given indent number.
-	 * 
-	 * @param xml
-	 *            XML to indent
-	 * @param indent
-	 *            the indent number.
-	 * @return
-	 * @throws Exception
-	 */
-	String prettyPrint(String xml, int indent) throws Exception;
+    /**
+     * Indent the given xml with the given indent number.
+     * 
+     * @param xml XML to indent
+     * @param indent the indent number.
+     * @return
+     * @throws Exception
+     */
+    String prettyPrint( String xml, int indent )
+        throws Exception;
 }

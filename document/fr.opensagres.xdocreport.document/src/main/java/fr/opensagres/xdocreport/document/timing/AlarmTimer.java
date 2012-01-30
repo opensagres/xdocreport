@@ -29,16 +29,18 @@ package fr.opensagres.xdocreport.document.timing;
  * 
  * @author Lars J. Nilsson
  */
-public interface AlarmTimer extends Runnable {
+public interface AlarmTimer
+    extends Runnable
+{
 
-	public long getTimeout();
+    public long getTimeout();
 
-	public boolean isActive();
+    public boolean isActive();
 
-	public void stop();
+    public void stop();
 
-	public void addAlarmTimerListener(AlarmTimerListener lstnr);
+    public void addAlarmTimerListener( AlarmTimerListener lstnr );
 
-	public void removeAlarmTimerListener(AlarmTimerListener lstnr);
+    public void removeAlarmTimerListener( AlarmTimerListener lstnr );
 
 }

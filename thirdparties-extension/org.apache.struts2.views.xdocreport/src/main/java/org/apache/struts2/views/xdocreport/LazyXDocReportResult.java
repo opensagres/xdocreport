@@ -31,37 +31,41 @@ import fr.opensagres.xdocreport.core.XDocReportException;
 import fr.opensagres.xdocreport.document.IXDocReport;
 import fr.opensagres.xdocreport.template.IContext;
 
-public class LazyXDocReportResult extends AbstractXDocReportResult {
+public class LazyXDocReportResult
+    extends AbstractXDocReportResult
+{
 
-	private static final long serialVersionUID = 835566903011262523L;
+    private static final long serialVersionUID = 835566903011262523L;
 
-	/**
-	 * 
-	 * @param report
-	 * @param finalLocation
-	 * @param invocation
-	 * @return
-	 * @throws XDocReportException
-	 */
-	@Override
-	protected void populateContext(IXDocReport report, IContext context,
-			String finalLocation, ActionInvocation invocation) throws Exception {
-		String[] expressions = getExpressions();
-		for (int i = 0; i < expressions.length; i++) {
-			populateContext(report, context, expressions[i], finalLocation,
-					invocation);
-		}
-	}
+    /**
+     * @param report
+     * @param finalLocation
+     * @param invocation
+     * @return
+     * @throws XDocReportException
+     */
+    @Override
+    protected void populateContext( IXDocReport report, IContext context, String finalLocation,
+                                    ActionInvocation invocation )
+        throws Exception
+    {
+        String[] expressions = getExpressions();
+        for ( int i = 0; i < expressions.length; i++ )
+        {
+            populateContext( report, context, expressions[i], finalLocation, invocation );
+        }
+    }
 
-	protected void populateContext(IXDocReport report, IContext context,
-			String expression, String finalLocation, ActionInvocation invocation)
-			throws Exception {
+    protected void populateContext( IXDocReport report, IContext context, String expression, String finalLocation,
+                                    ActionInvocation invocation )
+        throws Exception
+    {
 
-		ValueStack stack = invocation.getStack();
-		stack.findValue("#action");
-		Object action = stack.findValue(expression);
-		LazyPopulateContext.getInstance().populate(context, action);
+        ValueStack stack = invocation.getStack();
+        stack.findValue( "#action" );
+        Object action = stack.findValue( expression );
+        LazyPopulateContext.getInstance().populate( context, action );
 
-	}
+    }
 
 }

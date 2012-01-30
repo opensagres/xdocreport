@@ -29,94 +29,102 @@ import java.io.StringWriter;
 
 import junit.framework.TestCase;
 
-public class SAXXDocPreprocessorTestCase extends TestCase {
+public class SAXXDocPreprocessorTestCase
+    extends TestCase
+{
 
-	public void testLT() throws Exception {
-		MockSAXXDocPreprocessor preprocessor = new MockSAXXDocPreprocessor();
-		StringReader reader = new StringReader(
-				"<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?><p>&lt;</p>");
-		StringWriter writer = new StringWriter();
-		preprocessor.preprocess("test", reader, writer, null, null, null, null);
-		assertEquals(
-				"<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?><p>&lt;</p>",
-				writer.toString());
-	}
+    public void testLT()
+        throws Exception
+    {
+        MockSAXXDocPreprocessor preprocessor = new MockSAXXDocPreprocessor();
+        StringReader reader =
+            new StringReader( "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?><p>&lt;</p>" );
+        StringWriter writer = new StringWriter();
+        preprocessor.preprocess( "test", reader, writer, null, null, null, null );
+        assertEquals( "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?><p>&lt;</p>", writer.toString() );
+    }
 
-	public void testAPOS() throws Exception {
-		MockSAXXDocPreprocessor preprocessor = new MockSAXXDocPreprocessor();
-		StringReader reader = new StringReader(
-				"<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?><p>It&apos;s a document <span>to test</span></p>");
-		StringWriter writer = new StringWriter();
-		preprocessor.preprocess("test", reader, writer, null, null, null, null);
-		assertEquals(
-				"<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?><p>It&apos;s a document <span>to test</span></p>",
-				writer.toString());
-	}
+    public void testAPOS()
+        throws Exception
+    {
+        MockSAXXDocPreprocessor preprocessor = new MockSAXXDocPreprocessor();
+        StringReader reader =
+            new StringReader(
+                              "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?><p>It&apos;s a document <span>to test</span></p>" );
+        StringWriter writer = new StringWriter();
+        preprocessor.preprocess( "test", reader, writer, null, null, null, null );
+        assertEquals( "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?><p>It&apos;s a document <span>to test</span></p>",
+                      writer.toString() );
+    }
 
-	public void testAMP() throws Exception {
-		MockSAXXDocPreprocessor preprocessor = new MockSAXXDocPreprocessor();
-		StringReader reader = new StringReader(
-				"<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?><p>a&amp;b</p>");
-		StringWriter writer = new StringWriter();
-		preprocessor.preprocess("test", reader, writer, null, null, null, null);
-		assertEquals(
-				"<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?><p>a&amp;b</p>",
-				writer.toString());
-	}
-	
-	public void testElementWithTextContent() throws Exception {
-		MockSAXXDocPreprocessor preprocessor = new MockSAXXDocPreprocessor();
-		StringReader reader = new StringReader(
-				"<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?><a>aaa</a>");
-		StringWriter writer = new StringWriter();
-		preprocessor.preprocess("test", reader, writer, null, null, null, null);
-		assertEquals(
-				"<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?><a>aaa</a>",
-				writer.toString());
-	}
+    public void testAMP()
+        throws Exception
+    {
+        MockSAXXDocPreprocessor preprocessor = new MockSAXXDocPreprocessor();
+        StringReader reader =
+            new StringReader( "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?><p>a&amp;b</p>" );
+        StringWriter writer = new StringWriter();
+        preprocessor.preprocess( "test", reader, writer, null, null, null, null );
+        assertEquals( "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?><p>a&amp;b</p>", writer.toString() );
+    }
 
-	public void testElementClosed() throws Exception {
-		MockSAXXDocPreprocessor preprocessor = new MockSAXXDocPreprocessor();
-		StringReader reader = new StringReader(
-				"<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?><a/>");
-		StringWriter writer = new StringWriter();
-		preprocessor.preprocess("test", reader, writer, null, null, null, null);
-		assertEquals(
-				"<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?><a/>",
-				writer.toString());
-	}
+    public void testElementWithTextContent()
+        throws Exception
+    {
+        MockSAXXDocPreprocessor preprocessor = new MockSAXXDocPreprocessor();
+        StringReader reader =
+            new StringReader( "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?><a>aaa</a>" );
+        StringWriter writer = new StringWriter();
+        preprocessor.preprocess( "test", reader, writer, null, null, null, null );
+        assertEquals( "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?><a>aaa</a>", writer.toString() );
+    }
 
-	public void testSeveralElements() throws Exception {
-		MockSAXXDocPreprocessor preprocessor = new MockSAXXDocPreprocessor();
-		StringReader reader = new StringReader(
-				"<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?><root><a><b/></a><c>vvvvv<d/>jjjj</c></root>");
-		StringWriter writer = new StringWriter();
-		preprocessor.preprocess("test", reader, writer, null, null, null, null);
-		assertEquals(
-				"<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?><root><a><b/></a><c>vvvvv<d/>jjjj</c></root>",
-				writer.toString());
-	}
+    public void testElementClosed()
+        throws Exception
+    {
+        MockSAXXDocPreprocessor preprocessor = new MockSAXXDocPreprocessor();
+        StringReader reader = new StringReader( "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?><a/>" );
+        StringWriter writer = new StringWriter();
+        preprocessor.preprocess( "test", reader, writer, null, null, null, null );
+        assertEquals( "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?><a/>", writer.toString() );
+    }
 
-	public void testSeveralElements2() throws Exception {
-		MockSAXXDocPreprocessor preprocessor = new MockSAXXDocPreprocessor();
-		StringReader reader = new StringReader(
-				"<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?><root><p><span>Name</span>:<span>$d.Name</span></p></root>");
-		StringWriter writer = new StringWriter();
-		preprocessor.preprocess("test", reader, writer, null, null, null, null);
-		assertEquals(
-				"<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?><root><p><span>Name</span>:<span>$d.Name</span></p></root>",
-				writer.toString());
-	}
+    public void testSeveralElements()
+        throws Exception
+    {
+        MockSAXXDocPreprocessor preprocessor = new MockSAXXDocPreprocessor();
+        StringReader reader =
+            new StringReader(
+                              "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?><root><a><b/></a><c>vvvvv<d/>jjjj</c></root>" );
+        StringWriter writer = new StringWriter();
+        preprocessor.preprocess( "test", reader, writer, null, null, null, null );
+        assertEquals( "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?><root><a><b/></a><c>vvvvv<d/>jjjj</c></root>",
+                      writer.toString() );
+    }
 
-	public void testSpecialCharsInAttr() throws Exception {
-		MockSAXXDocPreprocessor preprocessor = new MockSAXXDocPreprocessor();
-		StringReader reader = new StringReader(
-				"<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?><root attr=\"a&amp;b\"/>");
-		StringWriter writer = new StringWriter();
-		preprocessor.preprocess("test", reader, writer, null, null, null, null);
-		assertEquals(
-				"<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?><root attr=\"a&amp;b\"/>",
-				writer.toString());
-	}
+    public void testSeveralElements2()
+        throws Exception
+    {
+        MockSAXXDocPreprocessor preprocessor = new MockSAXXDocPreprocessor();
+        StringReader reader =
+            new StringReader(
+                              "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?><root><p><span>Name</span>:<span>$d.Name</span></p></root>" );
+        StringWriter writer = new StringWriter();
+        preprocessor.preprocess( "test", reader, writer, null, null, null, null );
+        assertEquals( "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?><root><p><span>Name</span>:<span>$d.Name</span></p></root>",
+                      writer.toString() );
+    }
+
+    public void testSpecialCharsInAttr()
+        throws Exception
+    {
+        MockSAXXDocPreprocessor preprocessor = new MockSAXXDocPreprocessor();
+        StringReader reader =
+            new StringReader( "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?><root attr=\"a&amp;b\"/>" );
+        StringWriter writer = new StringWriter();
+        preprocessor.preprocess( "test", reader, writer, null, null, null, null );
+        assertEquals( "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?><root attr=\"a&amp;b\"/>",
+                      writer.toString() );
+    }
 
 }

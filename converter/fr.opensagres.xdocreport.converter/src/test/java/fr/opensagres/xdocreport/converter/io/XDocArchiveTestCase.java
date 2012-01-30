@@ -36,80 +36,91 @@ import fr.opensagres.xdocreport.core.io.XDocArchive;
 
 /**
  * Test case for {@link XDocArchive}.
- * 
  */
-public class XDocArchiveTestCase extends TestCase {
+public class XDocArchiveTestCase
+    extends TestCase
+{
 
-	/**
-	 * Read non existing zip file.
-	 * 
-	 * @throws IOException
-	 */
-	public void testReadZipNotFound() throws IOException {
-		IOException e = null;
-		InputStream input = XDocArchiveTestCase.class
-				.getResourceAsStream("not_found.odt");
-		try {
-			XDocArchive.readZip(input);
-		} catch (IOException ex) {
-			e = ex;
-		}
-		assertNotNull(e);
-		assertEquals("InputStream cannot be null.", e.getMessage());
-	}
+    /**
+     * Read non existing zip file.
+     * 
+     * @throws IOException
+     */
+    public void testReadZipNotFound()
+        throws IOException
+    {
+        IOException e = null;
+        InputStream input = XDocArchiveTestCase.class.getResourceAsStream( "not_found.odt" );
+        try
+        {
+            XDocArchive.readZip( input );
+        }
+        catch ( IOException ex )
+        {
+            e = ex;
+        }
+        assertNotNull( e );
+        assertEquals( "InputStream cannot be null.", e.getMessage() );
+    }
 
-	/**
-	 * Read file which is not a Zip.
-	 * 
-	 * @throws IOException
-	 */
-	public void testReadNotZip() throws IOException {
-		IOException e = null;
-		InputStream input = XDocArchiveTestCase.class
-				.getResourceAsStream("notZip.txt");
-		try {
-			XDocArchive.readZip(input);
-		} catch (IOException ex) {
-			e = ex;
-		}
-		assertNotNull(e);
-		assertEquals("InputStream is not a zip.", e.getMessage());
-	}
+    /**
+     * Read file which is not a Zip.
+     * 
+     * @throws IOException
+     */
+    public void testReadNotZip()
+        throws IOException
+    {
+        IOException e = null;
+        InputStream input = XDocArchiveTestCase.class.getResourceAsStream( "notZip.txt" );
+        try
+        {
+            XDocArchive.readZip( input );
+        }
+        catch ( IOException ex )
+        {
+            e = ex;
+        }
+        assertNotNull( e );
+        assertEquals( "InputStream is not a zip.", e.getMessage() );
+    }
 
-	/**
-	 * Read existing file.
-	 * 
-	 * @throws IOException
-	 */
-	public void testReadODT() throws IOException {
+    /**
+     * Read existing file.
+     * 
+     * @throws IOException
+     */
+    public void testReadODT()
+        throws IOException
+    {
 
-		InputStream input = XDocArchiveTestCase.class
-				.getResourceAsStream("empty.odt");
-		XDocArchive archive = XDocArchive.readZip(input);
+        InputStream input = XDocArchiveTestCase.class.getResourceAsStream( "empty.odt" );
+        XDocArchive archive = XDocArchive.readZip( input );
 
-		assertNotNull("null archive", archive);
-		Set<String> entryNames = archive.getEntryNames();
-		assertFalse("no entries", entryNames.isEmpty());
+        assertNotNull( "null archive", archive );
+        Set<String> entryNames = archive.getEntryNames();
+        assertFalse( "no entries", entryNames.isEmpty() );
 
-		String mimetypeString = IOUtils.toString(archive
-				.getEntryReader("mimetype"));
-		assertEquals("application/vnd.oasis.opendocument.text", mimetypeString);
-	}
+        String mimetypeString = IOUtils.toString( archive.getEntryReader( "mimetype" ) );
+        assertEquals( "application/vnd.oasis.opendocument.text", mimetypeString );
+    }
 
-	public void testWrite() throws IOException {
+    public void testWrite()
+        throws IOException
+    {
 
-		XDocArchive archive = new XDocArchive();
-		Writer contentWriter = archive.getEntryWriter("content.xml");
-		contentWriter.write("bla bla bla");
-		contentWriter.close();
+        XDocArchive archive = new XDocArchive();
+        Writer contentWriter = archive.getEntryWriter( "content.xml" );
+        contentWriter.write( "bla bla bla" );
+        contentWriter.close();
 
-		Reader contentReader = archive.getEntryReader("content.xml");
-		String s1 = IOUtils.toString(contentReader);
+        Reader contentReader = archive.getEntryReader( "content.xml" );
+        String s1 = IOUtils.toString( contentReader );
 
-		contentWriter = archive.getEntryWriter("content.xml");
+        contentWriter = archive.getEntryWriter( "content.xml" );
 
-		// Application du moteur de template
-		contentWriter.write("bla bla bla2");
-		contentWriter.close();
-	}
+        // Application du moteur de template
+        contentWriter.write( "bla bla bla2" );
+        contentWriter.close();
+    }
 }

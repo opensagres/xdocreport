@@ -25,22 +25,27 @@
 package fr.opensagres.xdocreport.document.web;
 
 /**
- * Constants for request and session HTTP parameters used in the
- * {@link BaseXDocReportServlet}.
- * 
+ * Constants for request and session HTTP parameters used in the {@link BaseXDocReportServlet}.
  */
-public interface XDocBaseServletConstants {
+public interface XDocBaseServletConstants
+{
 
-	// HTTP parameters name
-	String REPORT_ID_HTTP_PARAM = "reportId";
-	String TEMPLATE_ENGINE_KIND_HTTP_PARAM = "templateEngineKind";
-	String TEMPLATE_ENGINE_ID_HTTP_PARAM = "templateEngineId";
-	String ENTRY_NAME_HTTP_PARAM = "entryName";
-	String PROCESS_STATE_HTTP_PARAM = "processState";
-	String DISPATCH_HTTP_PARAM = "dispatch";
+    // HTTP parameters name
+    String REPORT_ID_HTTP_PARAM = "reportId";
 
-	// HTTP session keys
-	String XDOCREPORTREGISTRY_SESSION_KEY = "XDocReportRegistry_session";
-	String XDOCREPORT_ATTR_KEY = "XDocReport";
+    String TEMPLATE_ENGINE_KIND_HTTP_PARAM = "templateEngineKind";
+
+    String TEMPLATE_ENGINE_ID_HTTP_PARAM = "templateEngineId";
+
+    String ENTRY_NAME_HTTP_PARAM = "entryName";
+
+    String PROCESS_STATE_HTTP_PARAM = "processState";
+
+    String DISPATCH_HTTP_PARAM = "dispatch";
+
+    // HTTP session keys
+    String XDOCREPORTREGISTRY_SESSION_KEY = "XDocReportRegistry_session";
+
+    String XDOCREPORT_ATTR_KEY = "XDocReport";
 
 }

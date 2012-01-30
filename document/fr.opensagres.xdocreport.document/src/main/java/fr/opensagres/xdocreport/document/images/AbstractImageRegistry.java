@@ -36,122 +36,146 @@ import fr.opensagres.xdocreport.core.io.IEntryWriterProvider;
 import fr.opensagres.xdocreport.core.io.IOUtils;
 
 /**
- * 
  * Abstract class for {@link IImageRegistry}.
- * 
  */
-public abstract class AbstractImageRegistry implements IImageRegistry {
+public abstract class AbstractImageRegistry
+    implements IImageRegistry
+{
 
-	private static final String XDOCREPORT_PREFIX = "xdocreport_";
+    private static final String XDOCREPORT_PREFIX = "xdocreport_";
 
-	private List<ImageProviderInfo> imageProviderInfos;
+    private List<ImageProviderInfo> imageProviderInfos;
 
-	protected final IEntryReaderProvider readerProvider;
-	protected final IEntryWriterProvider writerProvider;
-	protected final IEntryOutputStreamProvider outputStreamProvider;
+    protected final IEntryReaderProvider readerProvider;
 
-	public AbstractImageRegistry(IEntryReaderProvider readerProvider,
-			IEntryWriterProvider writerProvider,
-			IEntryOutputStreamProvider outputStreamProvider) {
-		this.readerProvider = readerProvider;
-		this.writerProvider = writerProvider;
-		this.outputStreamProvider = outputStreamProvider;
-	}
+    protected final IEntryWriterProvider writerProvider;
 
-	public String registerImage(IImageProvider imageProvider)
-			throws XDocReportException {
-		if (imageProvider == null) {
-			throw new XDocReportException("Image provider cannot be null!");
-		}
-		ImageProviderInfo info = createImageProviderInfo(imageProvider);
-		getImageProviderInfos().add(info);
-		return getPath(info);
-	}
+    protected final IEntryOutputStreamProvider outputStreamProvider;
 
-	public List<ImageProviderInfo> getImageProviderInfos() {
-		if (imageProviderInfos == null) {
-			imageProviderInfos = new ArrayList<ImageProviderInfo>();
-		}
-		return imageProviderInfos;
-	}
+    public AbstractImageRegistry( IEntryReaderProvider readerProvider, IEntryWriterProvider writerProvider,
+                                  IEntryOutputStreamProvider outputStreamProvider )
+    {
+        this.readerProvider = readerProvider;
+        this.writerProvider = writerProvider;
+        this.outputStreamProvider = outputStreamProvider;
+    }
 
-	protected ImageProviderInfo createImageProviderInfo(
-			IImageProvider imageProvider) {
-		String imageId = getImageId();
-		String imageBasePath = getImageBasePath();
-		String imageFileName = imageId + "." + imageProvider.getImageFormat();
-		return new ImageProviderInfo(imageProvider, imageId, imageBasePath,
-				imageFileName);
-	}
+    public String registerImage( IImageProvider imageProvider )
+        throws XDocReportException
+    {
+        if ( imageProvider == null )
+        {
+            throw new XDocReportException( "Image provider cannot be null!" );
+        }
+        ImageProviderInfo info = createImageProviderInfo( imageProvider );
+        getImageProviderInfos().add( info );
+        return getPath( info );
+    }
 
-	protected String getImageId() {
-		return XDOCREPORT_PREFIX + getImageProviderInfos().size();
-	}
+    public List<ImageProviderInfo> getImageProviderInfos()
+    {
+        if ( imageProviderInfos == null )
+        {
+            imageProviderInfos = new ArrayList<ImageProviderInfo>();
+        }
+        return imageProviderInfos;
+    }
 
-	public void preProcess() throws XDocReportException {
-		// Do nothing
-	}
+    protected ImageProviderInfo createImageProviderInfo( IImageProvider imageProvider )
+    {
+        String imageId = getImageId();
+        String imageBasePath = getImageBasePath();
+        String imageFileName = imageId + "." + imageProvider.getImageFormat();
+        return new ImageProviderInfo( imageProvider, imageId, imageBasePath, imageFileName );
+    }
 
-	public void postProcess() throws XDocReportException {
-		if (imageProviderInfos != null) {
-			// There are dynamic images, images binary must be stored in the
-			// document
-			// archive and some XML entries must be modified.
-			// 1) Save binary images
-			saveBinaryImages();
+    protected String getImageId()
+    {
+        return XDOCREPORT_PREFIX + getImageProviderInfos().size();
+    }
 
-			// 3) dispose
-			imageProviderInfos.clear();
-			imageProviderInfos = null;
-		}
-	}
+    public void preProcess()
+        throws XDocReportException
+    {
+        // Do nothing
+    }
 
-	protected void saveBinaryImages() throws XDocReportException {
-		for (ImageProviderInfo imageProviderInfo : imageProviderInfos) {
-			saveBinaryImage(imageProviderInfo);
-		}
-	}
+    public void postProcess()
+        throws XDocReportException
+    {
+        if ( imageProviderInfos != null )
+        {
+            // There are dynamic images, images binary must be stored in the
+            // document
+            // archive and some XML entries must be modified.
+            // 1) Save binary images
+            saveBinaryImages();
 
-	protected void saveBinaryImage(ImageProviderInfo imageProviderInfo)
-			throws XDocReportException {
-		String entryName = getImageEntryName(imageProviderInfo);
-		OutputStream out = outputStreamProvider.getEntryOutputStream(entryName);
-		try {
-			imageProviderInfo.getImageProvider().write(out);
-		} catch (IOException e) {
-			throw new XDocReportException(e);
-		} finally {
-			IOUtils.closeQuietly(out);
-		}
-	}
+            // 3) dispose
+            imageProviderInfos.clear();
+            imageProviderInfos = null;
+        }
+    }
 
-	protected String getImageEntryName(ImageProviderInfo imageProviderInfo) {
-		return imageProviderInfo.getImageBasePath()
-				+ imageProviderInfo.getImageFileName();
-	}
+    protected void saveBinaryImages()
+        throws XDocReportException
+    {
+        for ( ImageProviderInfo imageProviderInfo : imageProviderInfos )
+        {
+            saveBinaryImage( imageProviderInfo );
+        }
+    }
 
-	protected abstract String getImageBasePath();
+    protected void saveBinaryImage( ImageProviderInfo imageProviderInfo )
+        throws XDocReportException
+    {
+        String entryName = getImageEntryName( imageProviderInfo );
+        OutputStream out = outputStreamProvider.getEntryOutputStream( entryName );
+        try
+        {
+            imageProviderInfo.getImageProvider().write( out );
+        }
+        catch ( IOException e )
+        {
+            throw new XDocReportException( e );
+        }
+        finally
+        {
+            IOUtils.closeQuietly( out );
+        }
+    }
 
-	protected abstract String getPath(ImageProviderInfo info);
+    protected String getImageEntryName( ImageProviderInfo imageProviderInfo )
+    {
+        return imageProviderInfo.getImageBasePath() + imageProviderInfo.getImageFileName();
+    }
 
-	public String getWidth(IImageProvider imageProvider, String defaultWidth)
-			throws IOException {
-		Float width = imageProvider.getWidth();
-		if (width != null) {
-			return getSize(width);
-		}
-		return defaultWidth;
-	}
+    protected abstract String getImageBasePath();
 
-	public String getHeight(IImageProvider imageProvider, String defaultHeight)
-			throws IOException {
-		Float height = imageProvider.getHeight();
-		if (height != null) {
-			return getSize(height);
-		}
-		return defaultHeight;
-	}
+    protected abstract String getPath( ImageProviderInfo info );
 
-	protected abstract String getSize(float sizeAsPixel);
+    public String getWidth( IImageProvider imageProvider, String defaultWidth )
+        throws IOException
+    {
+        Float width = imageProvider.getWidth();
+        if ( width != null )
+        {
+            return getSize( width );
+        }
+        return defaultWidth;
+    }
+
+    public String getHeight( IImageProvider imageProvider, String defaultHeight )
+        throws IOException
+    {
+        Float height = imageProvider.getHeight();
+        if ( height != null )
+        {
+            return getSize( height );
+        }
+        return defaultHeight;
+    }
+
+    protected abstract String getSize( float sizeAsPixel );
 
 }

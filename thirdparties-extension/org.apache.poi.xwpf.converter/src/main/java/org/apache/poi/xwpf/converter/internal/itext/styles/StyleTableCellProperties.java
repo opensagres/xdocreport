@@ -28,99 +28,125 @@ import java.awt.Color;
 
 import com.lowagie.text.Element;
 
+public class StyleTableCellProperties
+{
 
+    private Color backgroundColor;
 
-public class StyleTableCellProperties {
+    private StyleBorder border;
 
-	private Color backgroundColor;
+    private StyleBorder borderTop;
 
-	private StyleBorder border;
-	private StyleBorder borderTop;
-	private StyleBorder borderBottom;
-	private StyleBorder borderLeft;
-	private StyleBorder borderRight;
-	private StylePadding padding;
-	private int verticalAlignment = Element.ALIGN_UNDEFINED;
+    private StyleBorder borderBottom;
 
-	public StyleTableCellProperties() {
+    private StyleBorder borderLeft;
 
-	}
+    private StyleBorder borderRight;
 
-	public StyleTableCellProperties(StyleTableCellProperties tableCellProperties) {
-		this.backgroundColor = tableCellProperties.backgroundColor;
-		this.verticalAlignment = tableCellProperties.verticalAlignment;
-	}
+    private StylePadding padding;
 
-	public Color getBackgroundColor() {
-		return backgroundColor;
-	}
+    private int verticalAlignment = Element.ALIGN_UNDEFINED;
 
-	public void setBackgroundColor(Color backgroundColor) {
-		this.backgroundColor = backgroundColor;
-	}
+    public StyleTableCellProperties()
+    {
 
-	public StyleBorder getBorder() {
-		return border;
-	}
+    }
 
-	public void setBorder(StyleBorder border) {
-		this.border = border;
-	}
+    public StyleTableCellProperties( StyleTableCellProperties tableCellProperties )
+    {
+        this.backgroundColor = tableCellProperties.backgroundColor;
+        this.verticalAlignment = tableCellProperties.verticalAlignment;
+    }
 
-	public StyleBorder getBorderBottom() {
-		return borderBottom;
-	}
+    public Color getBackgroundColor()
+    {
+        return backgroundColor;
+    }
 
-	public void setBorderBottom(StyleBorder borderBottom) {
-		this.borderBottom = borderBottom;
-	}
+    public void setBackgroundColor( Color backgroundColor )
+    {
+        this.backgroundColor = backgroundColor;
+    }
 
-	public StyleBorder getBorderTop() {
-		return borderTop;
-	}
+    public StyleBorder getBorder()
+    {
+        return border;
+    }
 
-	public void setBorderTop(StyleBorder borderTop) {
-		this.borderTop = borderTop;
-	}
+    public void setBorder( StyleBorder border )
+    {
+        this.border = border;
+    }
 
-	public StyleBorder getBorderLeft() {
-		return borderLeft;
-	}
+    public StyleBorder getBorderBottom()
+    {
+        return borderBottom;
+    }
 
-	public void setBorderLeft(StyleBorder borderLeft) {
-		this.borderLeft = borderLeft;
-	}
+    public void setBorderBottom( StyleBorder borderBottom )
+    {
+        this.borderBottom = borderBottom;
+    }
 
-	public StyleBorder getBorderRight() {
-		return borderRight;
-	}
+    public StyleBorder getBorderTop()
+    {
+        return borderTop;
+    }
 
-	public void setBorderRight(StyleBorder borderRight) {
-		this.borderRight = borderRight;
-	}
+    public void setBorderTop( StyleBorder borderTop )
+    {
+        this.borderTop = borderTop;
+    }
 
-	public StylePadding getPadding() {
-		return padding;
-	}
+    public StyleBorder getBorderLeft()
+    {
+        return borderLeft;
+    }
 
-	public void setPadding(StylePadding padding) {
-		this.padding = padding;
-	}
+    public void setBorderLeft( StyleBorder borderLeft )
+    {
+        this.borderLeft = borderLeft;
+    }
 
-	public void setVerticalAlignment(int verticalAlignment) {
-		this.verticalAlignment = verticalAlignment;
-	}
+    public StyleBorder getBorderRight()
+    {
+        return borderRight;
+    }
 
-	public int getVerticalAlignment() {
-		return verticalAlignment;
-	}
+    public void setBorderRight( StyleBorder borderRight )
+    {
+        this.borderRight = borderRight;
+    }
 
-	public void merge(StyleTableCellProperties tableCellProperties) {
-		if (tableCellProperties.getBackgroundColor() != null) {
-			backgroundColor = tableCellProperties.getBackgroundColor();
-		}
-		if (tableCellProperties.getVerticalAlignment() != Element.ALIGN_UNDEFINED) {
-			verticalAlignment = tableCellProperties.getVerticalAlignment();
-		}
-	}
+    public StylePadding getPadding()
+    {
+        return padding;
+    }
+
+    public void setPadding( StylePadding padding )
+    {
+        this.padding = padding;
+    }
+
+    public void setVerticalAlignment( int verticalAlignment )
+    {
+        this.verticalAlignment = verticalAlignment;
+    }
+
+    public int getVerticalAlignment()
+    {
+        return verticalAlignment;
+    }
+
+    public void merge( StyleTableCellProperties tableCellProperties )
+    {
+        if ( tableCellProperties.getBackgroundColor() != null )
+        {
+            backgroundColor = tableCellProperties.getBackgroundColor();
+        }
+        if ( tableCellProperties.getVerticalAlignment() != Element.ALIGN_UNDEFINED )
+        {
+            verticalAlignment = tableCellProperties.getVerticalAlignment();
+        }
+    }
 }

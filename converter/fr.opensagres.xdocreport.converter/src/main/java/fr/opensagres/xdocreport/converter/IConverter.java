@@ -30,47 +30,44 @@ import java.io.OutputStream;
 import fr.opensagres.xdocreport.core.io.IEntryInputStreamProvider;
 
 /**
- * Converter API to convert source stream (docx, odt...) to another format (PDF,
- * FO...)
- * 
+ * Converter API to convert source stream (docx, odt...) to another format (PDF, FO...)
  */
-public interface IConverter {
+public interface IConverter
+{
 
-	/**
-	 * Convert the given entry input stream provider document to another format.
-	 * 
-	 * @param inProvider
-	 * @param out
-	 * @param options
-	 * @throws XDocConverterException
-	 */
-	void convert(IEntryInputStreamProvider inProvider, OutputStream out,
-			Options options) throws XDocConverterException;
+    /**
+     * Convert the given entry input stream provider document to another format.
+     * 
+     * @param inProvider
+     * @param out
+     * @param options
+     * @throws XDocConverterException
+     */
+    void convert( IEntryInputStreamProvider inProvider, OutputStream out, Options options )
+        throws XDocConverterException;
 
-	/**
-	 * Convert the given entry input stream document zipped (odt, docx...) to
-	 * another format.
-	 * 
-	 * @param inProvider
-	 * @param out
-	 * @param options
-	 * @throws XDocConverterException
-	 */
-	void convert(InputStream in, OutputStream out, Options options)
-			throws XDocConverterException;
+    /**
+     * Convert the given entry input stream document zipped (odt, docx...) to another format.
+     * 
+     * @param inProvider
+     * @param out
+     * @param options
+     * @throws XDocConverterException
+     */
+    void convert( InputStream in, OutputStream out, Options options )
+        throws XDocConverterException;
 
-	/**
-	 * Returns mime mapping switch the kind of the converter (pdf, fo...).
-	 * 
-	 * @return
-	 */
-	MimeMapping getMimeMapping();
+    /**
+     * Returns mime mapping switch the kind of the converter (pdf, fo...).
+     * 
+     * @return
+     */
+    MimeMapping getMimeMapping();
 
-	/**
-	 * Returns true if converter can support input stream entry provider and
-	 * false otherwise.
-	 * 
-	 * @return
-	 */
-	boolean canSupportEntries();
+    /**
+     * Returns true if converter can support input stream entry provider and false otherwise.
+     * 
+     * @return
+     */
+    boolean canSupportEntries();
 }

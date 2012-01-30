@@ -28,43 +28,46 @@ import javax.servlet.http.HttpServletRequest;
 
 import fr.opensagres.xdocreport.converter.IURIResolver;
 
-public class WEBURIResolver implements IURIResolver,
-		XDocProcessServletConstants {
+public class WEBURIResolver
+    implements IURIResolver, XDocProcessServletConstants
+{
 
-	private final String baseURL;
+    private final String baseURL;
 
-	public WEBURIResolver(String reportId, HttpServletRequest request) {
-		baseURL = createBaseURL(reportId, request);
-	}
+    public WEBURIResolver( String reportId, HttpServletRequest request )
+    {
+        baseURL = createBaseURL( reportId, request );
+    }
 
-	private static String createBaseURL(String reportId,
-			HttpServletRequest request) {
-		StringBuilder baseURL = new StringBuilder();
-		baseURL.append(request.getContextPath());
-		baseURL.append(request.getServletPath());
+    private static String createBaseURL( String reportId, HttpServletRequest request )
+    {
+        StringBuilder baseURL = new StringBuilder();
+        baseURL.append( request.getContextPath() );
+        baseURL.append( request.getServletPath() );
 
-		// reportId=report ID
-		baseURL.append("?");
-		baseURL.append(REPORT_ID_HTTP_PARAM);
-		baseURL.append("=");
-		baseURL.append(reportId);
+        // reportId=report ID
+        baseURL.append( "?" );
+        baseURL.append( REPORT_ID_HTTP_PARAM );
+        baseURL.append( "=" );
+        baseURL.append( reportId );
 
-		// dispatch=download
-		baseURL.append("&");
-		baseURL.append(DISPATCH_HTTP_PARAM);
-		baseURL.append("=");
-		baseURL.append(DOWNLOAD_DISPATCH);
+        // dispatch=download
+        baseURL.append( "&" );
+        baseURL.append( DISPATCH_HTTP_PARAM );
+        baseURL.append( "=" );
+        baseURL.append( DOWNLOAD_DISPATCH );
 
-		return baseURL.toString();
-	}
+        return baseURL.toString();
+    }
 
-	public String resolve(String uri) {
-		StringBuilder url = new StringBuilder(baseURL);
-		url.append("&");
-		url.append(ENTRY_NAME_HTTP_PARAM);
-		url.append("=");
-		url.append(uri);
-		return url.toString();
-	}
+    public String resolve( String uri )
+    {
+        StringBuilder url = new StringBuilder( baseURL );
+        url.append( "&" );
+        url.append( ENTRY_NAME_HTTP_PARAM );
+        url.append( "=" );
+        url.append( uri );
+        return url.toString();
+    }
 
 }

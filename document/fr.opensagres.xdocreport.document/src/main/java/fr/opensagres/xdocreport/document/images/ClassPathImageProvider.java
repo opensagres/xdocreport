@@ -31,50 +31,60 @@ import fr.opensagres.xdocreport.core.document.ImageFormat;
 
 /**
  * Image provider implementation with image input stream coming from ClassPath.
- * 
  */
-public class ClassPathImageProvider extends AbstractInputStreamImageProvider {
+public class ClassPathImageProvider
+    extends AbstractInputStreamImageProvider
+{
 
-	private final ClassLoader classLoader;
-	private final Class<?> clazz;
-	private final String resourceName;
-	private final ImageFormat imageFormat;
+    private final ClassLoader classLoader;
 
-	public ClassPathImageProvider(ClassLoader classLoader, String resourceName) {
-		this(classLoader, resourceName, false);
-	}
+    private final Class<?> clazz;
 
-	public ClassPathImageProvider(ClassLoader classLoader, String resourceName,
-			boolean useImageSize) {
-		super(useImageSize);
-		this.classLoader = classLoader;
-		this.resourceName = resourceName;
-		this.clazz = null;
-		this.imageFormat = ImageFormat.getFormatByResourceName(resourceName);
-	}
+    private final String resourceName;
 
-	public ClassPathImageProvider(Class<?> clazz, String resourceName) {
-		this(clazz, resourceName, false);
-	}
+    private final ImageFormat imageFormat;
 
-	public ClassPathImageProvider(Class<?> clazz, String resourceName,
-			boolean useImageSize) {
-		super(useImageSize);
-		this.clazz = clazz;
-		this.resourceName = resourceName;
-		this.classLoader = null;
-		this.imageFormat = ImageFormat.getFormatByResourceName(resourceName);
-	}
+    public ClassPathImageProvider( ClassLoader classLoader, String resourceName )
+    {
+        this( classLoader, resourceName, false );
+    }
 
-	@Override
-	protected InputStream getInputStream() throws IOException {
-		if (clazz != null) {
-			return clazz.getResourceAsStream(resourceName);
-		}
-		return classLoader.getResourceAsStream(resourceName);
-	}
+    public ClassPathImageProvider( ClassLoader classLoader, String resourceName, boolean useImageSize )
+    {
+        super( useImageSize );
+        this.classLoader = classLoader;
+        this.resourceName = resourceName;
+        this.clazz = null;
+        this.imageFormat = ImageFormat.getFormatByResourceName( resourceName );
+    }
 
-	public ImageFormat getImageFormat() {
-		return imageFormat;
-	}
+    public ClassPathImageProvider( Class<?> clazz, String resourceName )
+    {
+        this( clazz, resourceName, false );
+    }
+
+    public ClassPathImageProvider( Class<?> clazz, String resourceName, boolean useImageSize )
+    {
+        super( useImageSize );
+        this.clazz = clazz;
+        this.resourceName = resourceName;
+        this.classLoader = null;
+        this.imageFormat = ImageFormat.getFormatByResourceName( resourceName );
+    }
+
+    @Override
+    protected InputStream getInputStream()
+        throws IOException
+    {
+        if ( clazz != null )
+        {
+            return clazz.getResourceAsStream( resourceName );
+        }
+        return classLoader.getResourceAsStream( resourceName );
+    }
+
+    public ImageFormat getImageFormat()
+    {
+        return imageFormat;
+    }
 }

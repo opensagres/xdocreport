@@ -28,18 +28,19 @@ import fr.opensagres.xdocreport.core.document.DocumentKind;
 import fr.opensagres.xdocreport.document.dispatcher.AbstractXDocReportController;
 import fr.opensagres.xdocreport.template.TemplateEngineKind;
 
-public abstract class AbstractXDocReportWEBController extends
-		AbstractXDocReportController implements IXDocReportWEBController {
+public abstract class AbstractXDocReportWEBController
+    extends AbstractXDocReportController
+    implements IXDocReportWEBController
+{
 
-	public AbstractXDocReportWEBController(String templateEngineKind,
-			String converterTypeFrom) {
-		super(templateEngineKind, converterTypeFrom);
-	}
+    public AbstractXDocReportWEBController( String templateEngineKind, String converterTypeFrom )
+    {
+        super( templateEngineKind, converterTypeFrom );
+    }
 
-	public AbstractXDocReportWEBController(
-			TemplateEngineKind templateEngineKind,
-			DocumentKind converterTypeFrom) {
-		super(templateEngineKind, converterTypeFrom);
-	}
+    public AbstractXDocReportWEBController( TemplateEngineKind templateEngineKind, DocumentKind converterTypeFrom )
+    {
+        super( templateEngineKind, converterTypeFrom );
+    }
 
 }

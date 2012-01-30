@@ -24,22 +24,27 @@
  */
 package fr.opensagres.xdocreport.template.formatter;
 
-public class FieldMetadataImage {
+public class FieldMetadataImage
+{
 
-	private final String fieldName;
-	private final String imageName;
+    private final String fieldName;
 
-	public FieldMetadataImage(String imageName, String fieldName) {
-		this.imageName = imageName;
-		this.fieldName = fieldName;
-	}
-	
-	public String getFieldName() {
-		return fieldName;
-	}
-	
-	public String getImageName() {
-		return imageName;
-	}
+    private final String imageName;
+
+    public FieldMetadataImage( String imageName, String fieldName )
+    {
+        this.imageName = imageName;
+        this.fieldName = fieldName;
+    }
+
+    public String getFieldName()
+    {
+        return fieldName;
+    }
+
+    public String getImageName()
+    {
+        return imageName;
+    }
 
 }

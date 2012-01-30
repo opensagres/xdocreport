@@ -27,11 +27,15 @@ package fr.opensagres.xdocreport.core.internal;
 /**
  * XML Pretty Printer which doesn't indent the XML source.
  */
-public class NoPrettyPrinter implements IXMLPrettyPrinter {
+public class NoPrettyPrinter
+    implements IXMLPrettyPrinter
+{
 
-	public static final IXMLPrettyPrinter INSTANCE = new NoPrettyPrinter();
+    public static final IXMLPrettyPrinter INSTANCE = new NoPrettyPrinter();
 
-	public String prettyPrint(String xml, int indent) throws Exception {
-		return xml;
-	}
+    public String prettyPrint( String xml, int indent )
+        throws Exception
+    {
+        return xml;
+    }
 }

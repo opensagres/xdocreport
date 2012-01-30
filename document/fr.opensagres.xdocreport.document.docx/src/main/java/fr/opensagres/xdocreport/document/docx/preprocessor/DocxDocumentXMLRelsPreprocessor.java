@@ -33,8 +33,8 @@ import fr.opensagres.xdocreport.template.formatter.FieldsMetadata;
 import fr.opensagres.xdocreport.template.formatter.IDocumentFormatter;
 
 /**
- * This processor modify the XML entry word/_rels/document.xml.rels to add
- * Relationship for dynamic image and hyperlink :
+ * This processor modify the XML entry word/_rels/document.xml.rels to add Relationship for dynamic image and hyperlink
+ * :
  * 
  * <pre>
  *   <?xml version="1.0" encoding="UTF-8" standalone="yes" ?> 
@@ -86,16 +86,19 @@ import fr.opensagres.xdocreport.template.formatter.IDocumentFormatter;
  * </Relationships>
  * </pre>
  */
-public class DocxDocumentXMLRelsPreprocessor extends SAXXDocPreprocessor {
+public class DocxDocumentXMLRelsPreprocessor
+    extends SAXXDocPreprocessor
+{
 
-	public static final IXDocPreprocessor INSTANCE = new DocxDocumentXMLRelsPreprocessor();
+    public static final IXDocPreprocessor INSTANCE = new DocxDocumentXMLRelsPreprocessor();
 
-	@Override
-	protected BufferedDocumentContentHandler createBufferedDocumentContentHandler(
-			String entryName, FieldsMetadata fieldsMetadata, IDocumentFormatter formater,
-			Map<String, Object> context) {
-		return new DocxDocumentXMLRelsDocumentContentHandler(entryName, fieldsMetadata,
-				formater, context);
-	}
+    @Override
+    protected BufferedDocumentContentHandler createBufferedDocumentContentHandler( String entryName,
+                                                                                   FieldsMetadata fieldsMetadata,
+                                                                                   IDocumentFormatter formater,
+                                                                                   Map<String, Object> context )
+    {
+        return new DocxDocumentXMLRelsDocumentContentHandler( entryName, fieldsMetadata, formater, context );
+    }
 
 }

@@ -26,17 +26,20 @@ package fr.opensagres.xdocreport.core;
 
 /**
  * XDocReport exception.
- * 
  */
-public class XDocReportException extends Exception {
+public class XDocReportException
+    extends Exception
+{
 
-	private static final long serialVersionUID = -9057368714731490207L;
+    private static final long serialVersionUID = -9057368714731490207L;
 
-	public XDocReportException(String message) {
-		super(message);
-	}
+    public XDocReportException( String message )
+    {
+        super( message );
+    }
 
-	public XDocReportException(Throwable cause) {
-		super(cause);
-	}
+    public XDocReportException( Throwable cause )
+    {
+        super( cause );
+    }
 }

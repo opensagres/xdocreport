@@ -37,152 +37,171 @@ import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
-public class JULLogUtilsTest{
-private static Class backupLoggerClass;
-	@BeforeClass
-	public static void initialize(){
-		backupLoggerClass=LogUtils.getLoggerClass();
-		LogUtils.setLoggerClass(null);
-		
-	}
-	@AfterClass
-	public static void finish(){
-		LogUtils.setLoggerClass(backupLoggerClass);
-	}
-	
-	@Test
-	public void testGetLogger() {
-		Logger logger=  LogUtils.getLogger(JULLogUtilsTest.class);
-		assertNotNull(logger);
-		System.out.println(logger);
-	}
+public class JULLogUtilsTest
+{
+    private static Class backupLoggerClass;
 
+    @BeforeClass
+    public static void initialize()
+    {
+        backupLoggerClass = LogUtils.getLoggerClass();
+        LogUtils.setLoggerClass( null );
 
- 
+    }
 
-   
+    @AfterClass
+    public static void finish()
+    {
+        LogUtils.setLoggerClass( backupLoggerClass );
+    }
+
     @Test
-    public void testHandleMessage() throws Exception {
-        Logger log = LogUtils.getLogger(JULLogUtilsTest.class);
+    public void testGetLogger()
+    {
+        Logger logger = LogUtils.getLogger( JULLogUtilsTest.class );
+        assertNotNull( logger );
+        System.out.println( logger );
+    }
+
+    @Test
+    public void testHandleMessage()
+        throws Exception
+    {
+        Logger log = LogUtils.getLogger( JULLogUtilsTest.class );
         Handler handler = new ConsoleHandler();
-        log.addHandler(handler);
+        log.addHandler( handler );
         // handler called *before* localization of message
-        LogRecord record = new LogRecord(Level.WARNING, "FOOBAR_MSG");
-        record.setResourceBundle(log.getResourceBundle());
-     
-        handler.publish(record);
-      
-        log.log(Level.WARNING, "FOOBAR_MSG");
+        LogRecord record = new LogRecord( Level.WARNING, "FOOBAR_MSG" );
+        record.setResourceBundle( log.getResourceBundle() );
 
-        log.removeHandler(handler);
+        handler.publish( record );
+
+        log.log( Level.WARNING, "FOOBAR_MSG" );
+
+        log.removeHandler( handler );
     }
-   
+
     @Test
-    public void testLogNoParamsOrThrowable() {
-        Logger log = LogUtils.getLogger(JULLogUtilsTest.class);
+    public void testLogNoParamsOrThrowable()
+    {
+        Logger log = LogUtils.getLogger( JULLogUtilsTest.class );
         Handler handler = new ConsoleHandler();
-        log.addHandler(handler);
+        log.addHandler( handler );
         // handler called *after* localization of message
-        LogRecord record = new LogRecord(Level.SEVERE, "subbed in {0} only");
-      
-        handler.publish(record);
-       
-        LogUtils.log(log, Level.SEVERE, "SUB1_MSG");
-     
-        log.removeHandler(handler);
+        LogRecord record = new LogRecord( Level.SEVERE, "subbed in {0} only" );
+
+        handler.publish( record );
+
+        LogUtils.log( log, Level.SEVERE, "SUB1_MSG" );
+
+        log.removeHandler( handler );
     }
-    
+
     @Test
-    public void testLogNoParamsWithThrowable() {
-        Logger log = LogUtils.getLogger(JULLogUtilsTest.class);
+    public void testLogNoParamsWithThrowable()
+    {
+        Logger log = LogUtils.getLogger( JULLogUtilsTest.class );
         Handler handler = new ConsoleHandler();
-        Exception ex = new Exception("x");
-        LogRecord record = new LogRecord(Level.SEVERE, "subbed in {0} only");
-        record.setThrown(ex);
-       
-        handler.publish(record);
-       
-        synchronized (log) {
-            log.addHandler(handler);
+        Exception ex = new Exception( "x" );
+        LogRecord record = new LogRecord( Level.SEVERE, "subbed in {0} only" );
+        record.setThrown( ex );
+
+        handler.publish( record );
+
+        synchronized ( log )
+        {
+            log.addHandler( handler );
             // handler called *after* localization of message
-            LogUtils.log(log, Level.SEVERE, "SUB1_MSG", ex);
-       
-            log.removeHandler(handler);
+            LogUtils.log( log, Level.SEVERE, "SUB1_MSG", ex );
+
+            log.removeHandler( handler );
         }
     }
-    
+
     @Test
-    public void testLogParamSubstitutionWithThrowable() throws Exception {
-        Logger log = LogUtils.getLogger(JULLogUtilsTest.class);
+    public void testLogParamSubstitutionWithThrowable()
+        throws Exception
+    {
+        Logger log = LogUtils.getLogger( JULLogUtilsTest.class );
         Handler handler = new ConsoleHandler();
         Exception ex = new Exception();
-        LogRecord record = new LogRecord(Level.SEVERE, "subbed in 1 only");
-        record.setThrown(ex);
-        
-        handler.publish(record);
-     
-        synchronized (log) {
-            log.addHandler(handler);
-            LogUtils.log(log, Level.SEVERE, "SUB1_MSG", ex, 1);
-       
-            log.removeHandler(handler);
+        LogRecord record = new LogRecord( Level.SEVERE, "subbed in 1 only" );
+        record.setThrown( ex );
+
+        handler.publish( record );
+
+        synchronized ( log )
+        {
+            log.addHandler( handler );
+            LogUtils.log( log, Level.SEVERE, "SUB1_MSG", ex, 1 );
+
+            log.removeHandler( handler );
         }
     }
-   
+
     @Test
-    public void testLogParamsSubstitutionWithThrowable() throws Exception {
-        Logger log = LogUtils.getLogger(JULLogUtilsTest.class);
+    public void testLogParamsSubstitutionWithThrowable()
+        throws Exception
+    {
+        Logger log = LogUtils.getLogger( JULLogUtilsTest.class );
         Handler handler = new ConsoleHandler();
         Exception ex = new Exception();
-        LogRecord record = new LogRecord(Level.SEVERE, "subbed in 4 & 3");
-        record.setThrown(ex);
-    
-        handler.publish(record);
-     
-        synchronized (log) {
-            log.addHandler(handler);
-            LogUtils.log(log, Level.SEVERE, "SUB2_MSG", ex, new Object[] {3, 4});
-          
-            log.removeHandler(handler);
+        LogRecord record = new LogRecord( Level.SEVERE, "subbed in 4 & 3" );
+        record.setThrown( ex );
+
+        handler.publish( record );
+
+        synchronized ( log )
+        {
+            log.addHandler( handler );
+            LogUtils.log( log, Level.SEVERE, "SUB2_MSG", ex, new Object[] { 3, 4 } );
+
+            log.removeHandler( handler );
         }
     }
-    
-    
+
     @Test
-    public void testClassMethodNames() throws Exception {
-        Logger log = LogUtils.getLogger(JULLogUtilsTest.class);
+    public void testClassMethodNames()
+        throws Exception
+    {
+        Logger log = LogUtils.getLogger( JULLogUtilsTest.class );
         TestLogHandler handler = new TestLogHandler();
-        log.addHandler(handler);
+        log.addHandler( handler );
 
         // logger called directly
-        log.warning("hello");
-        
+        log.warning( "hello" );
+
         String cname = handler.cname;
         String mname = handler.mname;
-        
+
         // logger called through LogUtils
-        LogUtils.log(log, Level.WARNING,  "FOOBAR_MSG");
-        
-        assertEquals(cname, handler.cname);
-        assertEquals(mname, handler.mname);
+        LogUtils.log( log, Level.WARNING, "FOOBAR_MSG" );
+
+        assertEquals( cname, handler.cname );
+        assertEquals( mname, handler.mname );
     }
-    
-    private static final class TestLogHandler extends Handler {
+
+    private static final class TestLogHandler
+        extends Handler
+    {
         String cname;
+
         String mname;
 
-        public void close() throws SecurityException {
-        }
-        public void flush() {
+        public void close()
+            throws SecurityException
+        {
         }
 
-        public void publish(LogRecord record) {
+        public void flush()
+        {
+        }
+
+        public void publish( LogRecord record )
+        {
             cname = record.getSourceClassName();
             mname = record.getSourceMethodName();
-        }       
+        }
     }
-    
- 
-
 
 }

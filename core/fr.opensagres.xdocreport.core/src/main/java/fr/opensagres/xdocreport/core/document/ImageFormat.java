@@ -26,58 +26,64 @@ package fr.opensagres.xdocreport.core.document;
 
 /**
  * Image format.
- * 
  */
-public enum ImageFormat {
+public enum ImageFormat
+{
 
-	bmp("bmp"), jpg("jpeg"), jpeg("jpeg"), jpe("jpeg"), jfif("jpeg"), gif("gif"), tif(
-			"tiff"), tiff("tiff"), png("png");
+    bmp( "bmp" ), jpg( "jpeg" ), jpeg( "jpeg" ), jpe( "jpeg" ), jfif( "jpeg" ), gif( "gif" ), tif( "tiff" ), tiff(
+        "tiff" ), png( "png" );
 
-	private final String type;
+    private final String type;
 
-	ImageFormat(String type) {
-		this.type = type;
-	}
+    ImageFormat( String type )
+    {
+        this.type = type;
+    }
 
-	public String getType() {
-		return type;
-	}
+    public String getType()
+    {
+        return type;
+    }
 
-	/**
-	 * Returns the image format retrieved by the given extension (bmp, jpeg...).
-	 * 
-	 * @param extension
-	 * @return
-	 */
-	public static ImageFormat getFormatByExtension(String extension) {
-		if (extension == null) {
-			return null;
-		}
-		extension = extension.toLowerCase();
-		ImageFormat format = null;
-		for (int i = 0; i < values().length; i++) {
-			format = values()[i];
-			if (format.name().equals(extension)) {
-				return format;
-			}
-		}
-		return null;
-	}
+    /**
+     * Returns the image format retrieved by the given extension (bmp, jpeg...).
+     * 
+     * @param extension
+     * @return
+     */
+    public static ImageFormat getFormatByExtension( String extension )
+    {
+        if ( extension == null )
+        {
+            return null;
+        }
+        extension = extension.toLowerCase();
+        ImageFormat format = null;
+        for ( int i = 0; i < values().length; i++ )
+        {
+            format = values()[i];
+            if ( format.name().equals( extension ) )
+            {
+                return format;
+            }
+        }
+        return null;
+    }
 
-	/**
-	 * Returns the image format retrieved by the extension of the given resource
-	 * name.
-	 * 
-	 * @param resourceName
-	 * @return
-	 */
-	public static ImageFormat getFormatByResourceName(String resourceName) {
-		String extension = resourceName;
-		int extensionIndex = resourceName.lastIndexOf('.');
-		if (extensionIndex != -1) {
-			extension = resourceName.substring(extensionIndex + 1,
-					resourceName.length());
-		}
-		return ImageFormat.getFormatByExtension(extension);
-	}
+    /**
+     * Returns the image format retrieved by the extension of the given resource name.
+     * 
+     * @param resourceName
+     * @return
+     */
+    public static ImageFormat getFormatByResourceName( String resourceName )
+    {
+        String extension = resourceName;
+        int extensionIndex = resourceName.lastIndexOf( '.' );
+        if ( extensionIndex != -1 )
+        {
+            extension = resourceName.substring( extensionIndex + 1, resourceName.length() );
+        }
+        return ImageFormat.getFormatByExtension( extension );
+    }
 }

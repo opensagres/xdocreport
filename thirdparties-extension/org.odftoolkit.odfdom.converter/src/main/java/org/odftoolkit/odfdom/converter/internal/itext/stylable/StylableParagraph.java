@@ -39,135 +39,165 @@ import fr.opensagres.xdocreport.itext.extension.ExtendedParagraph;
 /**
  * fixes for paragraph pdf conversion by Leszek Piotrowicz <leszekp@safe-mail.net>
  */
-public class StylableParagraph extends ExtendedParagraph implements
-        IStylableContainer {
+public class StylableParagraph
+    extends ExtendedParagraph
+    implements IStylableContainer
+{
 
     private static final long serialVersionUID = 664309269352903329L;
+
     private static final float DEFAULT_LINE_HEIGHT = 1.15f;
-    
+
     private final StylableDocument ownerDocument;
+
     private IStylableContainer parent;
+
     private Style lastStyleApplied = null;
 
-    public StylableParagraph(StylableDocument ownerDocument,
-            IStylableContainer parent) {
+    public StylableParagraph( StylableDocument ownerDocument, IStylableContainer parent )
+    {
         super();
         this.ownerDocument = ownerDocument;
         this.parent = parent;
-        super.setMultipliedLeading(DEFAULT_LINE_HEIGHT);
+        super.setMultipliedLeading( DEFAULT_LINE_HEIGHT );
     }
 
-    public StylableParagraph(StylableDocument ownerDocument, Paragraph title,
-            IStylableContainer parent) {
-        super(title);
+    public StylableParagraph( StylableDocument ownerDocument, Paragraph title, IStylableContainer parent )
+    {
+        super( title );
         this.ownerDocument = ownerDocument;
         this.parent = parent;
-        super.setMultipliedLeading(DEFAULT_LINE_HEIGHT);
+        super.setMultipliedLeading( DEFAULT_LINE_HEIGHT );
     }
 
-    public void addElement(Element element) {
-        super.add(element);
+    public void addElement( Element element )
+    {
+        super.add( element );
     }
 
-    public void applyStyles(Style style) {
+    public void applyStyles( Style style )
+    {
         this.lastStyleApplied = style;
 
         StyleTextProperties textProperties = style.getTextProperties();
-        if (textProperties != null) {
+        if ( textProperties != null )
+        {
             // Font
             Font font = textProperties.getFont();
-            if (font != null) {
-                super.setFont(font);
+            if ( font != null )
+            {
+                super.setFont( font );
             }
         }
 
         StyleParagraphProperties paragraphProperties = style.getParagraphProperties();
-        if (paragraphProperties != null) {
+        if ( paragraphProperties != null )
+        {
 
             boolean breakBeforePage = paragraphProperties.isBreakBeforePage();
-            if (breakBeforePage) {
+            if ( breakBeforePage )
+            {
                 ownerDocument.newPage();
             }
 
             // alignment
             int alignment = paragraphProperties.getAlignment();
-            if (alignment != Element.ALIGN_UNDEFINED) {
-                super.setAlignment(alignment);
+            if ( alignment != Element.ALIGN_UNDEFINED )
+            {
+                super.setAlignment( alignment );
             }
 
             // paragraph indentation
             Float margin = paragraphProperties.getMargin();
-            if (margin != null) {
-                super.setIndentationLeft(margin);
-                super.setIndentationRight(margin);
-                super.setSpacingBefore(margin);
-                super.setSpacingAfter(margin);
+            if ( margin != null )
+            {
+                super.setIndentationLeft( margin );
+                super.setIndentationRight( margin );
+                super.setSpacingBefore( margin );
+                super.setSpacingAfter( margin );
             }
             Float marginLeft = paragraphProperties.getMarginLeft();
-            if (marginLeft != null) {
-                super.setIndentationLeft(marginLeft);
+            if ( marginLeft != null )
+            {
+                super.setIndentationLeft( marginLeft );
             }
             Float marginRight = paragraphProperties.getMarginRight();
-            if (marginRight != null) {
-                super.setIndentationRight(marginRight);
+            if ( marginRight != null )
+            {
+                super.setIndentationRight( marginRight );
             }
             Float marginTop = paragraphProperties.getMarginTop();
-            if (marginTop != null) {
-                super.setSpacingBefore(marginTop);
+            if ( marginTop != null )
+            {
+                super.setSpacingBefore( marginTop );
             }
             Float marginBottom = paragraphProperties.getMarginBottom();
-            if (marginBottom != null) {
-                super.setSpacingAfter(marginBottom);
+            if ( marginBottom != null )
+            {
+                super.setSpacingAfter( marginBottom );
             }
 
             // first line indentation
             boolean autoTextIndent = paragraphProperties.isAutoTextIndent();
-            if (autoTextIndent) {
+            if ( autoTextIndent )
+            {
                 float fontSize = font != null ? font.getCalculatedSize() : Font.DEFAULTSIZE;
-                super.setFirstLineIndent(1.3f * fontSize);
-            } else {
+                super.setFirstLineIndent( 1.3f * fontSize );
+            }
+            else
+            {
                 Float textIndent = paragraphProperties.getTextIndent();
-                if (textIndent != null) {
-                    super.setFirstLineIndent(textIndent);
+                if ( textIndent != null )
+                {
+                    super.setFirstLineIndent( textIndent );
                 }
             }
 
             // line height
             Float lineHeight = paragraphProperties.getLineHeight();
-            if (lineHeight != null) {
+            if ( lineHeight != null )
+            {
                 boolean lineHeightProportional = paragraphProperties.isLineHeightProportional();
-                if (lineHeightProportional) {
-                    super.setMultipliedLeading(lineHeight);
-                } else {
-                    super.setLeading(lineHeight);
+                if ( lineHeightProportional )
+                {
+                    super.setMultipliedLeading( lineHeight );
+                }
+                else
+                {
+                    super.setLeading( lineHeight );
                 }
             }
 
             // keep together on the same page
             boolean keepTogether = paragraphProperties.isKeepTogether();
-            super.setKeepTogether(keepTogether);
+            super.setKeepTogether( keepTogether );
 
             Color backgroundColor = paragraphProperties.getBackgroundColor();
-            if (backgroundColor != null) {
-                super.getPdfPCell().setBackgroundColor(backgroundColor);
+            if ( backgroundColor != null )
+            {
+                super.getPdfPCell().setBackgroundColor( backgroundColor );
             }
         }
 
     }
 
-    public Style getLastStyleApplied() {
+    public Style getLastStyleApplied()
+    {
         return lastStyleApplied;
     }
 
-    public IStylableContainer getParent() {
+    public IStylableContainer getParent()
+    {
         return parent;
     }
 
-    public StylableDocument getOwnerDocument() {
+    public StylableDocument getOwnerDocument()
+    {
         return ownerDocument;
     }
 
-    public Element getElement() {
+    public Element getElement()
+    {
         return this;// super.getContainer();
     }
 }

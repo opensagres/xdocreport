@@ -37,81 +37,95 @@ import fr.opensagres.xdocreport.itext.extension.ExtendedSection;
 import fr.opensagres.xdocreport.itext.extension.IITextContainer;
 import fr.opensagres.xdocreport.itext.extension.IParagraphFactory;
 
-public class StylableSection extends ExtendedSection implements
-		IStylableContainer {
+public class StylableSection
+    extends ExtendedSection
+    implements IStylableContainer
+{
 
-	private static final long serialVersionUID = 664309269352903329L;
+    private static final long serialVersionUID = 664309269352903329L;
 
-	private final StylableDocument ownerDocument;
-	private final IStylableContainer parent;
-	private Style lastStyleApplied = null;
+    private final StylableDocument ownerDocument;
 
-	public StylableSection(StylableDocument ownerDocument,
-			IStylableContainer parent, StylableParagraph title, int numberDepth) {
-		super(title, numberDepth);
-		this.ownerDocument = ownerDocument;
-		this.parent = parent;
-	}
+    private final IStylableContainer parent;
 
-	public void addElement(Element element) {
-		super.add(element);
-	}
+    private Style lastStyleApplied = null;
 
-	public void applyStyles(Style style) {
-		this.lastStyleApplied = style;
-		StyleParagraphProperties paragraphProperties = style
-				.getParagraphProperties();
-		if (paragraphProperties != null) {
+    public StylableSection( StylableDocument ownerDocument, IStylableContainer parent, StylableParagraph title,
+                            int numberDepth )
+    {
+        super( title, numberDepth );
+        this.ownerDocument = ownerDocument;
+        this.parent = parent;
+    }
 
-			Color backgroundColor = paragraphProperties.getBackgroundColor();
-			if (backgroundColor != null) {
-				super.getPdfPCell().setBackgroundColor(backgroundColor);
-			}
-			
-			// border
-			StyleBorder border = paragraphProperties.getBorder();
-			StyleUtils.applyStyles(border, this.getPdfPCell());
+    public void addElement( Element element )
+    {
+        super.add( element );
+    }
 
-			// border-top
-			StyleBorder borderTop = paragraphProperties.getBorderTop();
-			StyleUtils.applyStyles(borderTop, this.getPdfPCell());
+    public void applyStyles( Style style )
+    {
+        this.lastStyleApplied = style;
+        StyleParagraphProperties paragraphProperties = style.getParagraphProperties();
+        if ( paragraphProperties != null )
+        {
 
-			// border-bottom
-			StyleBorder borderBottom = paragraphProperties.getBorderBottom();
-			StyleUtils.applyStyles(borderBottom, this.getPdfPCell());
-			
-			// border-left
-			StyleBorder borderLeft = paragraphProperties.getBorderLeft();
-			StyleUtils.applyStyles(borderLeft, this.getPdfPCell());
+            Color backgroundColor = paragraphProperties.getBackgroundColor();
+            if ( backgroundColor != null )
+            {
+                super.getPdfPCell().setBackgroundColor( backgroundColor );
+            }
 
-			// border-right
-			StyleBorder borderRight = paragraphProperties.getBorderRight();
-			StyleUtils.applyStyles(borderRight, this.getPdfPCell());
-		}
-	}
+            // border
+            StyleBorder border = paragraphProperties.getBorder();
+            StyleUtils.applyStyles( border, this.getPdfPCell() );
 
-	public Style getLastStyleApplied() {
-		return lastStyleApplied;
-	}
+            // border-top
+            StyleBorder borderTop = paragraphProperties.getBorderTop();
+            StyleUtils.applyStyles( borderTop, this.getPdfPCell() );
 
-	public IStylableContainer getParent() {
-		return parent;
-	}
+            // border-bottom
+            StyleBorder borderBottom = paragraphProperties.getBorderBottom();
+            StyleUtils.applyStyles( borderBottom, this.getPdfPCell() );
 
-	public Element getElement() {
-		return this;
-	}
+            // border-left
+            StyleBorder borderLeft = paragraphProperties.getBorderLeft();
+            StyleUtils.applyStyles( borderLeft, this.getPdfPCell() );
 
-	@Override
-	protected IParagraphFactory getParagraphFactory() {
-		return ownerDocument;
-	}
-	
-	public IITextContainer getITextContainer() {
-		return parent;
-	}
+            // border-right
+            StyleBorder borderRight = paragraphProperties.getBorderRight();
+            StyleUtils.applyStyles( borderRight, this.getPdfPCell() );
+        }
+    }
 
-	public void setITextContainer(IITextContainer container) {
-		
-	}
+    public Style getLastStyleApplied()
+    {
+        return lastStyleApplied;
+    }
+
+    public IStylableContainer getParent()
+    {
+        return parent;
+    }
+
+    public Element getElement()
+    {
+        return this;
+    }
+
+    @Override
+    protected IParagraphFactory getParagraphFactory()
+    {
+        return ownerDocument;
+    }
+
+    public IITextContainer getITextContainer()
+    {
+        return parent;
+    }
+
+    public void setITextContainer( IITextContainer container )
+    {
+
+    }
 }

@@ -31,45 +31,57 @@ import com.lowagie.text.List;
 
 import fr.opensagres.xdocreport.itext.extension.IITextContainer;
 
-public class StylableList extends List implements IStylableContainer {
+public class StylableList
+    extends List
+    implements IStylableContainer
+{
 
-	private static final long serialVersionUID = 664309269352903329L;
+    private static final long serialVersionUID = 664309269352903329L;
 
-	private final IStylableFactory ownerDocument;
-	private IStylableContainer parent;
-	private Style lastStyleApplied = null;
+    private final IStylableFactory ownerDocument;
 
-	public StylableList(IStylableFactory ownerDocument,
-			IStylableContainer parent) {
-		this.ownerDocument = ownerDocument;
-		this.parent = parent;
-	}
+    private IStylableContainer parent;
 
-	public void addElement(Element element) {
-		super.add(element);
-	}
+    private Style lastStyleApplied = null;
 
-	public void applyStyles(Style style) {
-		this.lastStyleApplied = style;
-	}
+    public StylableList( IStylableFactory ownerDocument, IStylableContainer parent )
+    {
+        this.ownerDocument = ownerDocument;
+        this.parent = parent;
+    }
 
-	public Style getLastStyleApplied() {
-		return lastStyleApplied;
-	}
+    public void addElement( Element element )
+    {
+        super.add( element );
+    }
 
-	public IStylableContainer getParent() {
-		return parent;
-	}
+    public void applyStyles( Style style )
+    {
+        this.lastStyleApplied = style;
+    }
 
-	public Element getElement() {
-		return this;
-	}
-	
-	public IITextContainer getITextContainer() {
-		return parent;
-	}
+    public Style getLastStyleApplied()
+    {
+        return lastStyleApplied;
+    }
 
-	public void setITextContainer(IITextContainer container) {
-		
-	}
+    public IStylableContainer getParent()
+    {
+        return parent;
+    }
+
+    public Element getElement()
+    {
+        return this;
+    }
+
+    public IITextContainer getITextContainer()
+    {
+        return parent;
+    }
+
+    public void setITextContainer( IITextContainer container )
+    {
+
+    }
 }

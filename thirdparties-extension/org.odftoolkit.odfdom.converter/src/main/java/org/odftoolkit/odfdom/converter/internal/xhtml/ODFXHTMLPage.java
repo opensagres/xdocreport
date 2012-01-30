@@ -27,21 +27,26 @@ package org.odftoolkit.odfdom.converter.internal.xhtml;
 import fr.opensagres.xdocreport.xhtml.extension.CSSStyleSheet;
 import fr.opensagres.xdocreport.xhtml.extension.XHTMLPage;
 
-public class ODFXHTMLPage extends XHTMLPage {
+public class ODFXHTMLPage
+    extends XHTMLPage
+{
 
-	private final StyleEngineForXHTML styleEngine;
+    private final StyleEngineForXHTML styleEngine;
 
-	public ODFXHTMLPage(StyleEngineForXHTML styleEngine, int indent) {
-		super(indent);
-		this.styleEngine = styleEngine;
-	}
+    public ODFXHTMLPage( StyleEngineForXHTML styleEngine, int indent )
+    {
+        super( indent );
+        this.styleEngine = styleEngine;
+    }
 
-	public StyleEngineForXHTML getStyleEngine() {
-		return styleEngine;
-	}
+    public StyleEngineForXHTML getStyleEngine()
+    {
+        return styleEngine;
+    }
 
-	@Override
-	public CSSStyleSheet getCSSStyleSheet() {
-		return styleEngine.getCSSStyleSheet();
-	}
+    @Override
+    public CSSStyleSheet getCSSStyleSheet()
+    {
+        return styleEngine.getCSSStyleSheet();
+    }
 }

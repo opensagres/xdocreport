@@ -1,21 +1,26 @@
 package fr.opensagres.xdocreport.document.tools;
 
-public abstract class AbstractDataProviderFactory implements
-		IDataProviderFactory {
+public abstract class AbstractDataProviderFactory
+    implements IDataProviderFactory
+{
 
-	private final String id;
-	private final String description;
+    private final String id;
 
-	public AbstractDataProviderFactory(String id, String description) {
-		this.id = id;
-		this.description = description;
-	}
+    private final String description;
 
-	public String getId() {
-		return id;
-	}
+    public AbstractDataProviderFactory( String id, String description )
+    {
+        this.id = id;
+        this.description = description;
+    }
 
-	public String getDescription() {
-		return description;
-	}
+    public String getId()
+    {
+        return id;
+    }
+
+    public String getDescription()
+    {
+        return description;
+    }
 }

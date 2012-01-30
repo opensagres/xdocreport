@@ -21,13 +21,16 @@ import javax.xml.transform.URIResolver;
 
 import fr.opensagres.xdocreport.converter.internal.xslt.AbstractURIResolver;
 
-public class XSLFOURIResolver extends AbstractURIResolver {
+public class XSLFOURIResolver
+    extends AbstractURIResolver
+{
 
-	public static final URIResolver INSTANCE = new XSLFOURIResolver();
+    public static final URIResolver INSTANCE = new XSLFOURIResolver();
 
-	@Override
-	protected InputStream getInputStream(String href, String base) {	
-		return XSLFOURIResolver.class.getResourceAsStream(href);
-	}
+    @Override
+    protected InputStream getInputStream( String href, String base )
+    {
+        return XSLFOURIResolver.class.getResourceAsStream( href );
+    }
 
 }

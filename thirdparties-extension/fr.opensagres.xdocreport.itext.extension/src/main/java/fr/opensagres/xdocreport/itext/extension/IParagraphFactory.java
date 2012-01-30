@@ -26,11 +26,11 @@ package fr.opensagres.xdocreport.itext.extension;
 
 import com.lowagie.text.Paragraph;
 
+public interface IParagraphFactory
+{
 
-public interface IParagraphFactory {
+    Paragraph createParagraph();
 
-	Paragraph createParagraph();
-	
-	Paragraph createParagraph(Paragraph title);
-	
+    Paragraph createParagraph( Paragraph title );
+
 }

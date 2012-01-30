@@ -24,17 +24,19 @@
  */
 package org.apache.poi.xwpf.converter.internal.itext.styles;
 
-public class StyleTableRowProperties {
+public class StyleTableRowProperties
+{
 
-	private Float rowHeight = null;
+    private Float rowHeight = null;
 
-	public Float getRowHeight() {
-		return rowHeight;
-	}
+    public Float getRowHeight()
+    {
+        return rowHeight;
+    }
 
-	public void setRowHeight(Float rowHeight) {
-		this.rowHeight = rowHeight;
-	}
-	
+    public void setRowHeight( Float rowHeight )
+    {
+        this.rowHeight = rowHeight;
+    }
 
 }

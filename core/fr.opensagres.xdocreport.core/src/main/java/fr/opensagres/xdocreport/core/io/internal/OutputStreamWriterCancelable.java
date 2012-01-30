@@ -32,30 +32,35 @@ import java.nio.charset.Charset;
 import fr.opensagres.xdocreport.core.io.StreamCancelable;
 
 /**
- * Extends {@link OutputStreamWriter} to implements {@link StreamCancelable}.
- * This writer doesn't close the writer when {@link StreamCancelable#cancel()} is
- * called.
- * 
+ * Extends {@link OutputStreamWriter} to implements {@link StreamCancelable}. This writer doesn't close the writer when
+ * {@link StreamCancelable#cancel()} is called.
  */
-public class OutputStreamWriterCancelable extends OutputStreamWriter implements
-		StreamCancelable {
+public class OutputStreamWriterCancelable
+    extends OutputStreamWriter
+    implements StreamCancelable
+{
 
-	private boolean canceled;
+    private boolean canceled;
 
-	public OutputStreamWriterCancelable(OutputStream out, Charset charset) {
-		super(out, charset);
-		this.canceled = false;
-	}
+    public OutputStreamWriterCancelable( OutputStream out, Charset charset )
+    {
+        super( out, charset );
+        this.canceled = false;
+    }
 
-	public void cancel() {
-		this.canceled = true;
-	}
+    public void cancel()
+    {
+        this.canceled = true;
+    }
 
-	@Override
-	public void close() throws IOException {
-		if (!canceled) {
-			super.close();
-		}
-	}
+    @Override
+    public void close()
+        throws IOException
+    {
+        if ( !canceled )
+        {
+            super.close();
+        }
+    }
 
 }

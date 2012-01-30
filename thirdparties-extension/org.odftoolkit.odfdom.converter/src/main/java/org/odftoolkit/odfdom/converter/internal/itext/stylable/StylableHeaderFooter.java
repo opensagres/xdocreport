@@ -34,65 +34,71 @@ import fr.opensagres.xdocreport.itext.extension.IMasterPageHeaderFooter;
 /**
  * fixes for pdf conversion by Leszek Piotrowicz <leszekp@safe-mail.net>
  */
-public class StylableHeaderFooter extends StylableTable implements IMasterPageHeaderFooter {
+public class StylableHeaderFooter
+    extends StylableTable
+    implements IMasterPageHeaderFooter
+{
 
     private final boolean header;
+
     private final StylableTableCell tableCell;
 
-    public StylableHeaderFooter(StylableDocument ownerDocument, boolean header) {
-        super(ownerDocument, null, 1);
+    public StylableHeaderFooter( StylableDocument ownerDocument, boolean header )
+    {
+        super( ownerDocument, null, 1 );
         this.header = header;
-        tableCell = ownerDocument.createTableCell(this);
-        tableCell.disableBorderSide(Rectangle.TOP | Rectangle.BOTTOM
-                | Rectangle.LEFT | Rectangle.RIGHT);
+        tableCell = ownerDocument.createTableCell( this );
+        tableCell.disableBorderSide( Rectangle.TOP | Rectangle.BOTTOM | Rectangle.LEFT | Rectangle.RIGHT );
         // set padding to zero for proper alignment
-        tableCell.setPaddingLeft(0.0f);
-        tableCell.setPaddingRight(0.0f);
-        tableCell.setPaddingTop(0.0f);
-        tableCell.setPaddingBottom(0.0f);
+        tableCell.setPaddingLeft( 0.0f );
+        tableCell.setPaddingRight( 0.0f );
+        tableCell.setPaddingTop( 0.0f );
+        tableCell.setPaddingBottom( 0.0f );
         // compute width as page width - margins
-        float headerFooterWidth = ownerDocument.getPageSize().getWidth() - ownerDocument.getOriginMarginLeft() - ownerDocument.getOriginMarginRight();
-        setTotalWidth(headerFooterWidth);
+        float headerFooterWidth =
+            ownerDocument.getPageSize().getWidth() - ownerDocument.getOriginMarginLeft()
+                - ownerDocument.getOriginMarginRight();
+        setTotalWidth( headerFooterWidth );
     }
 
-    public StylableTableCell getTableCell() {
+    public StylableTableCell getTableCell()
+    {
         return tableCell;
     }
 
     @Override
-    public void applyStyles(Style style) {
-        super.applyStyles(style);
+    public void applyStyles( Style style )
+    {
+        super.applyStyles( style );
 
-        /* unecessary as width computed in costructor
-        StylePageLayoutProperties pageLayoutProperties = style.getPageLayoutProperties();
-        if (pageLayoutProperties != null) {
+        /*
+         * unecessary as width computed in costructor StylePageLayoutProperties pageLayoutProperties =
+         * style.getPageLayoutProperties(); if (pageLayoutProperties != null) { // width/height Float width =
+         * pageLayoutProperties.getWidth(); if (width != null) { super.setTotalWidth(width); } // Float height =
+         * pageLayoutProperties.getHeight(); // if (width != null && height != null) { // super.setPageSize(new
+         * Rectangle(width, height)); // } }
+         */
 
-            // width/height
-            Float width = pageLayoutProperties.getWidth();
-            if (width != null) {
-                super.setTotalWidth(width);
-            }
-            // Float height = pageLayoutProperties.getHeight();
-            // if (width != null && height != null) {
-            // super.setPageSize(new Rectangle(width, height));
-            // }
-        }*/
-
-        StyleHeaderFooterProperties headerFooterProperties = header ? style.getHeaderProperties() : style.getFooterProperties();
-        if (headerFooterProperties != null) {
+        StyleHeaderFooterProperties headerFooterProperties =
+            header ? style.getHeaderProperties() : style.getFooterProperties();
+        if ( headerFooterProperties != null )
+        {
             Float minHeight = headerFooterProperties.getMinHeight();
-            if (minHeight != null) {
-                tableCell.setMinimumHeight(minHeight);
+            if ( minHeight != null )
+            {
+                tableCell.setMinimumHeight( minHeight );
             }
         }
 
     }
 
-    public float getTotalHeight() {
-        return super.getRowHeight(0);
+    public float getTotalHeight()
+    {
+        return super.getRowHeight( 0 );
     }
 
-    public void flush() {
-        super.addCell(tableCell);
+    public void flush()
+    {
+        super.addCell( tableCell );
     }
 }

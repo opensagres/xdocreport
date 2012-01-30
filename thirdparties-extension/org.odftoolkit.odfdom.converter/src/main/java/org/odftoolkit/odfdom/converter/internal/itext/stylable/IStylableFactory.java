@@ -24,30 +24,29 @@
  */
 package org.odftoolkit.odfdom.converter.internal.itext.stylable;
 
-public interface IStylableFactory {
+public interface IStylableFactory
+{
 
-	StylableParagraph createParagraph(IStylableContainer parent);
+    StylableParagraph createParagraph( IStylableContainer parent );
 
-	StylablePhrase createPhrase(IStylableContainer parent);
+    StylablePhrase createPhrase( IStylableContainer parent );
 
-	StylableAnchor createAnchor(IStylableContainer parent);
+    StylableAnchor createAnchor( IStylableContainer parent );
 
-	StylableList createList(IStylableContainer parent);
+    StylableList createList( IStylableContainer parent );
 
-	StylableListItem createListItem(IStylableContainer parent);
+    StylableListItem createListItem( IStylableContainer parent );
 
-	StylableTable createTable(IStylableContainer parent, int numColumns);
+    StylableTable createTable( IStylableContainer parent, int numColumns );
 
-	StylableTableCell createTableCell(IStylableContainer parent);
+    StylableTableCell createTableCell( IStylableContainer parent );
 
-	StylableChapter createChapter(IStylableContainer parent,
-			StylableParagraph title);
+    StylableChapter createChapter( IStylableContainer parent, StylableParagraph title );
 
-	StylableChunk createChunk(IStylableContainer parent, String textContent);
+    StylableChunk createChunk( IStylableContainer parent, String textContent );
 
-	StylableSection createSection(IStylableContainer parent,
-			StylableParagraph title, int numberDepth);
+    StylableSection createSection( IStylableContainer parent, StylableParagraph title, int numberDepth );
 
-	StylableChapter getCurrentChapter();
+    StylableChapter getCurrentChapter();
 
 }

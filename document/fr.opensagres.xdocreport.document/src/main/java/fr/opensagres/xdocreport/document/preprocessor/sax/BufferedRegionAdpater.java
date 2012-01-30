@@ -30,64 +30,79 @@ import java.io.Writer;
 
 /**
  * Base buffered region.
- * 
- * 
  */
-public class BufferedRegionAdpater implements IBufferedRegion {
+public class BufferedRegionAdpater
+    implements IBufferedRegion
+{
 
-	private final BufferedElement ownerElement;
-	private final IBufferedRegion parent;
+    private final BufferedElement ownerElement;
 
-	public BufferedRegionAdpater(BufferedElement ownerElement,
-			IBufferedRegion parent) {
-		this.ownerElement = ownerElement;
-		this.parent = parent;
-		if (parent != null) {
-			parent.addRegion(this);
-		}
-	}
+    private final IBufferedRegion parent;
 
-	public void save(Writer writer) throws IOException {
+    public BufferedRegionAdpater( BufferedElement ownerElement, IBufferedRegion parent )
+    {
+        this.ownerElement = ownerElement;
+        this.parent = parent;
+        if ( parent != null )
+        {
+            parent.addRegion( this );
+        }
+    }
 
-	}
+    public void save( Writer writer )
+        throws IOException
+    {
 
-	public boolean isString() {
-		return false;
-	}
+    }
 
-	public void append(String content) {
+    public boolean isString()
+    {
+        return false;
+    }
 
-	}
+    public void append( String content )
+    {
 
-	public void append(char[] ch, int start, int length) {
+    }
 
-	}
+    public void append( char[] ch, int start, int length )
+    {
 
-	public void append(char c) {
+    }
 
-	}
+    public void append( char c )
+    {
 
-	public void addRegion(ISavable region) {
+    }
 
-	}
+    public void addRegion( ISavable region )
+    {
 
-	public IBufferedRegion getParent() {
-		return parent;
-	}
+    }
 
-	public BufferedElement getOwnerElement() {
-		return ownerElement;
-	}
-	
-	@Override
-	public String toString() {
-		StringWriter writer = new StringWriter();
-		try {
-			save(writer);
-		} catch (IOException e) {
-			// Do nothing
-		}
-		return writer.toString();
-	}
+    public IBufferedRegion getParent()
+    {
+        return parent;
+    }
+
+    public BufferedElement getOwnerElement()
+    {
+        return ownerElement;
+    }
+
+    @Override
+    public String toString()
+    {
+        StringWriter writer = new StringWriter();
+        try
+        {
+            save( writer );
+        }
+        catch ( IOException e )
+        {
+            // Do nothing
+        }
+        return writer.toString();
+    }
 
 }

@@ -26,79 +26,99 @@ package org.apache.poi.xwpf.converter.internal.itext.styles;
 
 import java.awt.Color;
 
+public class StyleTableProperties
+{
 
-public class StyleTableProperties {
+    private StyleBorder borderTop;
 
-	private StyleBorder borderTop;
-	private StyleBorder borderBottom;
-	private StyleBorder borderLeft;
-	private StyleBorder borderRight;
+    private StyleBorder borderBottom;
 
-	private Color backgroundColor;
-	private Float width;
+    private StyleBorder borderLeft;
 
-	public StyleTableProperties() {
+    private StyleBorder borderRight;
 
-	}
+    private Color backgroundColor;
 
-	public StyleTableProperties(StyleTableProperties tableProperties) {
-		this.backgroundColor = tableProperties.backgroundColor;
-	}
+    private Float width;
 
-	public Color getBackgroundColor() {
-		return backgroundColor;
-	}
+    public StyleTableProperties()
+    {
 
-	public void setBackgroundColor(Color backgroundColor) {
-		this.backgroundColor = backgroundColor;
-	}
-	
-	public Float getWidth() {
-		return width;
-	}
-	
-	public void setWidth(Float width) {
-		this.width = width;
-	}
+    }
 
-	public void merge(StyleTableProperties tableProperties) {
-		if (tableProperties.getBackgroundColor() != null) {
-			backgroundColor = tableProperties.getBackgroundColor();
-		}
-	}
+    public StyleTableProperties( StyleTableProperties tableProperties )
+    {
+        this.backgroundColor = tableProperties.backgroundColor;
+    }
 
-	public void setBorderBottom(StyleBorder borderBottom) {
-		this.borderBottom=borderBottom;
-	}
+    public Color getBackgroundColor()
+    {
+        return backgroundColor;
+    }
 
-	public void setBorderLeft(StyleBorder borderLeft) {
-		this.borderLeft=borderLeft;
-	}
+    public void setBackgroundColor( Color backgroundColor )
+    {
+        this.backgroundColor = backgroundColor;
+    }
 
-	public void setBorderRight(StyleBorder borderRight) {
-		this.borderRight=borderRight;
-		
-	}
+    public Float getWidth()
+    {
+        return width;
+    }
 
-	public void setBorderTop(StyleBorder borderTop) {
-		this.borderTop=borderTop;
-		
-	}
+    public void setWidth( Float width )
+    {
+        this.width = width;
+    }
 
-	public StyleBorder getBorderTop() {
-		return borderTop;
-	}
+    public void merge( StyleTableProperties tableProperties )
+    {
+        if ( tableProperties.getBackgroundColor() != null )
+        {
+            backgroundColor = tableProperties.getBackgroundColor();
+        }
+    }
 
-	public StyleBorder getBorderBottom() {
-		return borderBottom;
-	}
+    public void setBorderBottom( StyleBorder borderBottom )
+    {
+        this.borderBottom = borderBottom;
+    }
 
-	public StyleBorder getBorderLeft() {
-		return borderLeft;
-	}
+    public void setBorderLeft( StyleBorder borderLeft )
+    {
+        this.borderLeft = borderLeft;
+    }
 
-	public StyleBorder getBorderRight() {
-		return borderRight;
-	}
+    public void setBorderRight( StyleBorder borderRight )
+    {
+        this.borderRight = borderRight;
+
+    }
+
+    public void setBorderTop( StyleBorder borderTop )
+    {
+        this.borderTop = borderTop;
+
+    }
+
+    public StyleBorder getBorderTop()
+    {
+        return borderTop;
+    }
+
+    public StyleBorder getBorderBottom()
+    {
+        return borderBottom;
+    }
+
+    public StyleBorder getBorderLeft()
+    {
+        return borderLeft;
+    }
+
+    public StyleBorder getBorderRight()
+    {
+        return borderRight;
+    }
 
 }

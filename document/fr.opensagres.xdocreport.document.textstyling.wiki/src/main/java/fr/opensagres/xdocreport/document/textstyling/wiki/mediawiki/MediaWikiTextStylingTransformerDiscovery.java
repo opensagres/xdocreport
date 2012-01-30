@@ -29,23 +29,25 @@ import fr.opensagres.xdocreport.document.discovery.ITextStylingTransformerDiscov
 import fr.opensagres.xdocreport.document.textstyling.ITextStylingTransformer;
 
 /**
- * Discovery to register MediaWiki Text styling transformer
- * {@link MediaWikiTextStylingTransformer}.
- * 
+ * Discovery to register MediaWiki Text styling transformer {@link MediaWikiTextStylingTransformer}.
  */
-public class MediaWikiTextStylingTransformerDiscovery implements
-		ITextStylingTransformerDiscovery {
+public class MediaWikiTextStylingTransformerDiscovery
+    implements ITextStylingTransformerDiscovery
+{
 
-	public String getId() {
-		return SyntaxKind.MediaWiki.name();
-	}
+    public String getId()
+    {
+        return SyntaxKind.MediaWiki.name();
+    }
 
-	public ITextStylingTransformer getTransformer() {
-		return MediaWikiTextStylingTransformer.INSTANCE;
-	}
+    public ITextStylingTransformer getTransformer()
+    {
+        return MediaWikiTextStylingTransformer.INSTANCE;
+    }
 
-	public String getDescription() {
-		return "Media Wiki test styling transformer.";
-	}
+    public String getDescription()
+    {
+        return "Media Wiki test styling transformer.";
+    }
 
 }

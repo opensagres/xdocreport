@@ -15,13 +15,15 @@
  */
 package fr.opensagres.xdocreport.converter.docx.xslfo;
 
-public interface DocxXSLFOConstants {
+public interface DocxXSLFOConstants
+{
 
-	String XSL_FO_TEMPLATE_URI = "docx2fo.xsl";
+    String XSL_FO_TEMPLATE_URI = "docx2fo.xsl";
 
-	String WORD_DOCUMENT_XML_ENTRY = "word/document.xml";
-	String WORD_STYLES_XML_ENTRY = "word/styles.xml";
+    String WORD_DOCUMENT_XML_ENTRY = "word/document.xml";
 
-	String[] XML_ENTRIES = { WORD_DOCUMENT_XML_ENTRY, WORD_STYLES_XML_ENTRY };
+    String WORD_STYLES_XML_ENTRY = "word/styles.xml";
+
+    String[] XML_ENTRIES = { WORD_DOCUMENT_XML_ENTRY, WORD_STYLES_XML_ENTRY };
 
 }

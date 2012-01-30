@@ -26,13 +26,14 @@ package fr.opensagres.xdocreport.document.preprocessor.sax;
 
 /**
  * Buffer for start tag element.
- *
  */
-public class BufferedStartTagElement extends BufferedTagElement {
+public class BufferedStartTagElement
+    extends BufferedTagElement
+{
 
-	public BufferedStartTagElement(BufferedElement parent) {
-		super(parent);
-	}
-
+    public BufferedStartTagElement( BufferedElement parent )
+    {
+        super( parent );
+    }
 
 }

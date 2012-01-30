@@ -26,43 +26,49 @@ package fr.opensagres.xdocreport.converter;
 
 /**
  * Mime mapping of the report to generate.
- * 
  */
-public class MimeMapping {
+public class MimeMapping
+{
 
-	public final String extension;
-	public final String mimeType;
+    public final String extension;
 
-	public MimeMapping(final String extension, final String mimeType) {
-		this.extension = extension;
-		this.mimeType = mimeType;
-	}
+    public final String mimeType;
 
-	/**
-	 * Returns default extension of the report (odt, docx...)
-	 * 
-	 * @return
-	 */
-	public String getExtension() {
-		return extension;
-	}
+    public MimeMapping( final String extension, final String mimeType )
+    {
+        this.extension = extension;
+        this.mimeType = mimeType;
+    }
 
-	/**
-	 * Returns mime type of the report.
-	 * 
-	 * @return
-	 */
-	public String getMimeType() {
-		return mimeType;
-	}
+    /**
+     * Returns default extension of the report (odt, docx...)
+     * 
+     * @return
+     */
+    public String getExtension()
+    {
+        return extension;
+    }
 
-	public String formatFileName(String reportId) {
-		if (reportId.endsWith(extension)) {
-			return reportId;
-		}
-		StringBuilder result = new StringBuilder(reportId);
-		result.append('.');
-		result.append(extension);
-		return result.toString();
-	}
+    /**
+     * Returns mime type of the report.
+     * 
+     * @return
+     */
+    public String getMimeType()
+    {
+        return mimeType;
+    }
+
+    public String formatFileName( String reportId )
+    {
+        if ( reportId.endsWith( extension ) )
+        {
+            return reportId;
+        }
+        StringBuilder result = new StringBuilder( reportId );
+        result.append( '.' );
+        result.append( extension );
+        return result.toString();
+    }
 }

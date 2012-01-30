@@ -34,45 +34,56 @@ import junit.framework.TestCase;
 import fr.opensagres.xdocreport.converter.XDocConverterException;
 import fr.opensagres.xdocreport.core.io.IEntryInputStreamProvider;
 
-public class DocxFOPConverterTest extends TestCase {
+public class DocxFOPConverterTest
+    extends TestCase
+{
 
-	public void testNo() throws Exception {
+    public void testNo()
+        throws Exception
+    {
 
-	}
+    }
 
-	public static void main(String[] args) {
-		long startTime = System.currentTimeMillis();
+    public static void main( String[] args )
+    {
+        long startTime = System.currentTimeMillis();
 
-		DocxFOPConverter converter = DocxFOPConverter.getInstance();
+        DocxFOPConverter converter = DocxFOPConverter.getInstance();
 
-		IEntryInputStreamProvider provider = new IEntryInputStreamProvider() {
+        IEntryInputStreamProvider provider = new IEntryInputStreamProvider()
+        {
 
-			public InputStream getEntryInputStream(String entryName) {
-				if (entryName.equals("word/document.xml")) {
-					return DocxFOPConverterTest.class
-							.getResourceAsStream("HelloWorld.document.xml");
-				}
-				if (entryName.equals("word/styles.xml")) {
-					return DocxFOPConverterTest.class
-							.getResourceAsStream("HelloWorld.styles.xml");
-				}
-				return null;
-			}
-		};
+            public InputStream getEntryInputStream( String entryName )
+            {
+                if ( entryName.equals( "word/document.xml" ) )
+                {
+                    return DocxFOPConverterTest.class.getResourceAsStream( "HelloWorld.document.xml" );
+                }
+                if ( entryName.equals( "word/styles.xml" ) )
+                {
+                    return DocxFOPConverterTest.class.getResourceAsStream( "HelloWorld.styles.xml" );
+                }
+                return null;
+            }
+        };
 
-		try {
-			OutputStream outputStream = new FileOutputStream(new File(
-					"docx.pdf"));
-			converter.convert(provider, outputStream, System.out, null);
-		} catch (XDocConverterException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+        try
+        {
+            OutputStream outputStream = new FileOutputStream( new File( "docx.pdf" ) );
+            converter.convert( provider, outputStream, System.out, null );
+        }
+        catch ( XDocConverterException e )
+        {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+        catch ( IOException e )
+        {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
 
-		System.out.println(System.currentTimeMillis() - startTime + "(ms)");
+        System.out.println( System.currentTimeMillis() - startTime + "(ms)" );
 
-	}
+    }
 }

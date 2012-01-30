@@ -28,44 +28,53 @@ import fr.opensagres.xdocreport.core.document.DocumentKind;
 import fr.opensagres.xdocreport.template.TemplateEngineKind;
 import fr.opensagres.xdocreport.template.formatter.FieldsMetadata;
 
-public abstract class AbstractXDocReportController implements
-		IXDocReportController {
+public abstract class AbstractXDocReportController
+    implements IXDocReportController
+{
 
-	private final String templateEngineKind;
-	private final String converterTypeFrom;
-	private final String fileExtension;
-	private FieldsMetadata fieldsMetadata;
+    private final String templateEngineKind;
 
-	public AbstractXDocReportController(TemplateEngineKind templateEngineKind,
-			DocumentKind converterTypeFrom) {
-		this(templateEngineKind.name(), converterTypeFrom.name());
-	}
+    private final String converterTypeFrom;
 
-	public AbstractXDocReportController(String templateEngineKind,
-			String converterTypeFrom) {
-		this.templateEngineKind = templateEngineKind;
-		this.converterTypeFrom = converterTypeFrom;
-		this.fileExtension = converterTypeFrom.toLowerCase();
-	}
+    private final String fileExtension;
 
-	public String getTemplateEngineKind() {
-		return templateEngineKind;
-	}
+    private FieldsMetadata fieldsMetadata;
 
-	public String getConverterTypeFrom() {
-		return converterTypeFrom;
-	}
+    public AbstractXDocReportController( TemplateEngineKind templateEngineKind, DocumentKind converterTypeFrom )
+    {
+        this( templateEngineKind.name(), converterTypeFrom.name() );
+    }
 
-	public String getFileExtension() {
-		return fileExtension;
-	}
+    public AbstractXDocReportController( String templateEngineKind, String converterTypeFrom )
+    {
+        this.templateEngineKind = templateEngineKind;
+        this.converterTypeFrom = converterTypeFrom;
+        this.fileExtension = converterTypeFrom.toLowerCase();
+    }
 
-	public FieldsMetadata getFieldsMetadata() {
-		if (fieldsMetadata == null) {
-			fieldsMetadata = createFieldsMetadata();
-		}
-		return fieldsMetadata;
-	}
+    public String getTemplateEngineKind()
+    {
+        return templateEngineKind;
+    }
 
-	protected abstract FieldsMetadata createFieldsMetadata();
+    public String getConverterTypeFrom()
+    {
+        return converterTypeFrom;
+    }
+
+    public String getFileExtension()
+    {
+        return fileExtension;
+    }
+
+    public FieldsMetadata getFieldsMetadata()
+    {
+        if ( fieldsMetadata == null )
+        {
+            fieldsMetadata = createFieldsMetadata();
+        }
+        return fieldsMetadata;
+    }
+
+    protected abstract FieldsMetadata createFieldsMetadata();
 }

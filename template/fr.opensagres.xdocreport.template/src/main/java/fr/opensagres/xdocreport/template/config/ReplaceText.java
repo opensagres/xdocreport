@@ -24,21 +24,26 @@
  */
 package fr.opensagres.xdocreport.template.config;
 
-public class ReplaceText {
+public class ReplaceText
+{
 
-	private final String oldText;
-	private final String newText;
-	
-	public ReplaceText(String oldText, String newText) {
-		this.oldText = oldText;
-		this.newText = newText;
-	}
-	
-	public String getOldText() {
-		return oldText;
-	}
-	
-	public String getNewText() {
-		return newText;
-	}
+    private final String oldText;
+
+    private final String newText;
+
+    public ReplaceText( String oldText, String newText )
+    {
+        this.oldText = oldText;
+        this.newText = newText;
+    }
+
+    public String getOldText()
+    {
+        return oldText;
+    }
+
+    public String getNewText()
+    {
+        return newText;
+    }
 }

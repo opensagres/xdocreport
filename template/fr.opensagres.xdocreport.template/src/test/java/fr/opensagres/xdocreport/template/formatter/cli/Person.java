@@ -3,47 +3,55 @@ package fr.opensagres.xdocreport.template.formatter.cli;
 import java.util.Date;
 import java.util.List;
 
-public class Person {
+public class Person
+{
 
-	private String firstname;
-	
-	private String lastName;
-	
-	private Date birthDate;
-	
-	private List<Skill> skills;
+    private String firstname;
 
-	public String getFirstname() {
-		return firstname;
-	}
+    private String lastName;
 
-	public void setFirstname(String firstname) {
-		this.firstname = firstname;
-	}
+    private Date birthDate;
 
-	public String getLastName() {
-		return lastName;
-	}
+    private List<Skill> skills;
 
-	public void setLastName(String lastName) {
-		this.lastName = lastName;
-	}
+    public String getFirstname()
+    {
+        return firstname;
+    }
 
-	public Date getBirthDate() {
-		return birthDate;
-	}
+    public void setFirstname( String firstname )
+    {
+        this.firstname = firstname;
+    }
 
-	public void setBirthDate(Date birthDate) {
-		this.birthDate = birthDate;
-	}
+    public String getLastName()
+    {
+        return lastName;
+    }
 
-	public List<Skill> getSkills() {
-		return skills;
-	}
+    public void setLastName( String lastName )
+    {
+        this.lastName = lastName;
+    }
 
-	public void setSkills(List<Skill> skills) {
-		this.skills = skills;
-	}
-	
-	
+    public Date getBirthDate()
+    {
+        return birthDate;
+    }
+
+    public void setBirthDate( Date birthDate )
+    {
+        this.birthDate = birthDate;
+    }
+
+    public List<Skill> getSkills()
+    {
+        return skills;
+    }
+
+    public void setSkills( List<Skill> skills )
+    {
+        this.skills = skills;
+    }
+
 }

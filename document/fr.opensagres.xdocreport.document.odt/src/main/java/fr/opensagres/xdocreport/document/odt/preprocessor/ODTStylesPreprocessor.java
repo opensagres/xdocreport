@@ -8,15 +8,19 @@ import fr.opensagres.xdocreport.document.preprocessor.sax.SAXXDocPreprocessor;
 import fr.opensagres.xdocreport.template.formatter.FieldsMetadata;
 import fr.opensagres.xdocreport.template.formatter.IDocumentFormatter;
 
-public class ODTStylesPreprocessor extends SAXXDocPreprocessor {
+public class ODTStylesPreprocessor
+    extends SAXXDocPreprocessor
+{
 
-	public static final IXDocPreprocessor INSTANCE = new ODTStylesPreprocessor();
+    public static final IXDocPreprocessor INSTANCE = new ODTStylesPreprocessor();
 
-	@Override
-	protected BufferedDocumentContentHandler<?> createBufferedDocumentContentHandler(
-			String entryName, FieldsMetadata fieldsMetadata,
-			IDocumentFormatter formatter, Map<String, Object> sharedContext) {
-		return new ODTStyleContentHandler();
-	}
+    @Override
+    protected BufferedDocumentContentHandler<?> createBufferedDocumentContentHandler( String entryName,
+                                                                                      FieldsMetadata fieldsMetadata,
+                                                                                      IDocumentFormatter formatter,
+                                                                                      Map<String, Object> sharedContext )
+    {
+        return new ODTStyleContentHandler();
+    }
 
 }

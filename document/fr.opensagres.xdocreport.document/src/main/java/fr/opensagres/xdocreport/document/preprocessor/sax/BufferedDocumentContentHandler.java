@@ -41,270 +41,329 @@ import org.xml.sax.helpers.DefaultHandler;
 import fr.opensagres.xdocreport.core.utils.StringUtils;
 
 /**
- * SAX Content Handler which build a {@link BufferedDocument} from the XML
- * source stream.
- * 
+ * SAX Content Handler which build a {@link BufferedDocument} from the XML source stream.
  */
 public class BufferedDocumentContentHandler<Document extends BufferedDocument>
-		extends DefaultHandler  {
+    extends DefaultHandler
+{
 
-	private static final String XML_DECLARATION = "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>";
-	public static final String CDATA_TYPE = "CDATA";
+    private static final String XML_DECLARATION = "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>";
 
-	private final List<PrefixMapping> prefixs;
+    public static final String CDATA_TYPE = "CDATA";
 
-	protected final Document bufferedDocument;
-	// protected IBufferedRegion currentRegion;
-	private final StringBuilder currentCharacters = new StringBuilder();
-	private boolean startingElement = false;
+    private final List<PrefixMapping> prefixs;
 
-	public BufferedDocumentContentHandler() {
-		this.bufferedDocument = createDocument();
-		this.prefixs = new ArrayList<PrefixMapping>();
-	}
+    protected final Document bufferedDocument;
 
-	@SuppressWarnings("unchecked")
-	protected Document createDocument() {
-		return (Document) new BufferedDocument();
-	}
+    // protected IBufferedRegion currentRegion;
+    private final StringBuilder currentCharacters = new StringBuilder();
 
-	public Document getBufferedDocument() {
-		return bufferedDocument;
-	}
+    private boolean startingElement = false;
 
-	@Override
-	public void startDocument() throws SAXException {
-		this.bufferedDocument.append(XML_DECLARATION);
-	}
+    public BufferedDocumentContentHandler()
+    {
+        this.bufferedDocument = createDocument();
+        this.prefixs = new ArrayList<PrefixMapping>();
+    }
 
-	@Override
-	public void startPrefixMapping(String prefix, String uri)
-			throws SAXException {
-		String xmlnsPrefix = StringUtils.isEmpty(prefix) ? "xmlns" : "xmlns:"
-				+ prefix;
-		prefixs.add(new PrefixMapping(xmlnsPrefix, uri));
-	}
+    @SuppressWarnings( "unchecked" )
+    protected Document createDocument()
+    {
+        return (Document) new BufferedDocument();
+    }
 
-	@Override
-	public final void startElement(String uri, String localName, String name,
-			Attributes attributes) throws SAXException {
-		if (startingElement) {
-			getCurrentElement().append(">");
-		}
-		if (currentCharacters.length() > 0) {
-			flushCharacters(currentCharacters.toString());
-			resetCharacters();
-		}
-		BufferedElement element = null;
-		try {
-			// Start of start element to create element
-			element = bufferedDocument.onStartStartElement(uri, localName,
-					name, attributes);
-			// Generate content of the start element
-			startingElement = doStartElement(uri, localName, name,
-					element.getAttributes());
-		} finally {
-			// End of start element
-			bufferedDocument.onEndStartElement(element, uri, localName, name,
-					attributes);
-		}
-	}
+    public Document getBufferedDocument()
+    {
+        return bufferedDocument;
+    }
 
-	public BufferedElement getCurrentElement() {
-		return bufferedDocument.getCurrentElement();
-	}
+    @Override
+    public void startDocument()
+        throws SAXException
+    {
+        this.bufferedDocument.append( XML_DECLARATION );
+    }
 
-	protected BufferedElement findParentElementInfo(String name) {
-		return findParentElementInfo(getCurrentElement(), name);
-	}
+    @Override
+    public void startPrefixMapping( String prefix, String uri )
+        throws SAXException
+    {
+        String xmlnsPrefix = StringUtils.isEmpty( prefix ) ? "xmlns" : "xmlns:" + prefix;
+        prefixs.add( new PrefixMapping( xmlnsPrefix, uri ) );
+    }
 
-	protected BufferedElement findParentElementInfo(
-			BufferedElement elementInfo, String name) {
-		if (elementInfo == null) {
-			return null;
-		}
-		if (elementInfo.match(name)) {
-			return elementInfo;
-		}
-		return findParentElementInfo(elementInfo.getParent(), name);
-	}
+    @Override
+    public final void startElement( String uri, String localName, String name, Attributes attributes )
+        throws SAXException
+    {
+        if ( startingElement )
+        {
+            getCurrentElement().append( ">" );
+        }
+        if ( currentCharacters.length() > 0 )
+        {
+            flushCharacters( currentCharacters.toString() );
+            resetCharacters();
+        }
+        BufferedElement element = null;
+        try
+        {
+            // Start of start element to create element
+            element = bufferedDocument.onStartStartElement( uri, localName, name, attributes );
+            // Generate content of the start element
+            startingElement = doStartElement( uri, localName, name, element.getAttributes() );
+        }
+        finally
+        {
+            // End of start element
+            bufferedDocument.onEndStartElement( element, uri, localName, name, attributes );
+        }
+    }
 
-	public boolean doStartElement(String uri, String localName, String name,
-			Attributes attributes) throws SAXException {
-		BufferedElement currentRegion = getCurrentElement();
-		currentRegion.append("<");
-		currentRegion.append(name);
-		String attrName = null;
-		String attrValue = null;
-		// prefix mapping
-		if (prefixs.size() > 0) {
-			for (PrefixMapping prefix : prefixs) {
-				attrName = prefix.getPrefix();
-				attrValue = prefix.getURI();
-				currentRegion.append(' ');
-				currentRegion.append(attrName);
-				currentRegion.append("=\"");
-				currentRegion.append(attrValue);
-				currentRegion.append("\"");
-			}
-			prefixs.clear();
-		}
-		// static attributes
-		int length = attributes.getLength();
-		if (length > 0) {
-			for (int i = 0; i < length; i++) {
-				currentRegion.append(' ');
-				attrName = attributes.getQName(i);
-				attrValue = attributes.getValue(i);
-				currentRegion.append(attrName);
-				currentRegion.append("=\"");
-				printEscaped(attrValue, currentRegion);
-				currentRegion.append("\"");
-			}
-		}
-		// register dynamic attributes region if needed.
-		currentRegion.registerDynamicAttributes();
-		return true;
-	}
+    public BufferedElement getCurrentElement()
+    {
+        return bufferedDocument.getCurrentElement();
+    }
 
-	@Override
-	public final void endElement(String uri, String localName, String name)
-			throws SAXException {
-		if (currentCharacters.length() > 0) {
-			// Flush caracters
-			flushCharacters(currentCharacters.toString());
-			resetCharacters();
-		}
-		try {
-			// Start of end element
-			bufferedDocument.onStartEndElement(uri, localName, name);
-			if (startingElement) {
-				IBufferedRegion currentRegion = getCurrentElement();
-				currentRegion.append("/>");
-				startingElement = false;
-			} else {
-				doEndElement(uri, localName, name);
-			}
-		} finally {
-			// End of end element
-			bufferedDocument.onEndEndElement(uri, localName, name);
-		}
-	}
+    protected BufferedElement findParentElementInfo( String name )
+    {
+        return findParentElementInfo( getCurrentElement(), name );
+    }
 
-	public void doEndElement(String uri, String localName, String name)
-			throws SAXException {
-		IBufferedRegion currentRegion = getCurrentElement();
-		currentRegion.append("</");
-		currentRegion.append(name);
-		currentRegion.append(">");
-	}
+    protected BufferedElement findParentElementInfo( BufferedElement elementInfo, String name )
+    {
+        if ( elementInfo == null )
+        {
+            return null;
+        }
+        if ( elementInfo.match( name ) )
+        {
+            return elementInfo;
+        }
+        return findParentElementInfo( elementInfo.getParent(), name );
+    }
 
-	@Override
-	public final void characters(char[] ch, int start, int length)
-			throws SAXException {
-		if (startingElement) {
-			IBufferedRegion currentRegion = getCurrentElement();
-			currentRegion.append(">");
-		}
-		startingElement = false;
-		char c;
-		for (int i = start; i < start + length; i++) {
-			c = ch[i];
-			if (mustEncodeCharachers()) {
-				if (c == '<') {
-					currentCharacters.append(LT);
-				} else if (c == '>') {
-					currentCharacters.append(GT);
-				} else if (c == '\'') {
-					currentCharacters.append(APOS);
-				} else if (c == '&') {
-					currentCharacters.append(AMP);
-				} else {
-					currentCharacters.append(c);
-				}
-			} else {
-				currentCharacters.append(c);
-			}
-		}
-	}
+    public boolean doStartElement( String uri, String localName, String name, Attributes attributes )
+        throws SAXException
+    {
+        BufferedElement currentRegion = getCurrentElement();
+        currentRegion.append( "<" );
+        currentRegion.append( name );
+        String attrName = null;
+        String attrValue = null;
+        // prefix mapping
+        if ( prefixs.size() > 0 )
+        {
+            for ( PrefixMapping prefix : prefixs )
+            {
+                attrName = prefix.getPrefix();
+                attrValue = prefix.getURI();
+                currentRegion.append( ' ' );
+                currentRegion.append( attrName );
+                currentRegion.append( "=\"" );
+                currentRegion.append( attrValue );
+                currentRegion.append( "\"" );
+            }
+            prefixs.clear();
+        }
+        // static attributes
+        int length = attributes.getLength();
+        if ( length > 0 )
+        {
+            for ( int i = 0; i < length; i++ )
+            {
+                currentRegion.append( ' ' );
+                attrName = attributes.getQName( i );
+                attrValue = attributes.getValue( i );
+                currentRegion.append( attrName );
+                currentRegion.append( "=\"" );
+                printEscaped( attrValue, currentRegion );
+                currentRegion.append( "\"" );
+            }
+        }
+        // register dynamic attributes region if needed.
+        currentRegion.registerDynamicAttributes();
+        return true;
+    }
 
-	protected boolean mustEncodeCharachers() {
-		return true;
-	}
+    @Override
+    public final void endElement( String uri, String localName, String name )
+        throws SAXException
+    {
+        if ( currentCharacters.length() > 0 )
+        {
+            // Flush caracters
+            flushCharacters( currentCharacters.toString() );
+            resetCharacters();
+        }
+        try
+        {
+            // Start of end element
+            bufferedDocument.onStartEndElement( uri, localName, name );
+            if ( startingElement )
+            {
+                IBufferedRegion currentRegion = getCurrentElement();
+                currentRegion.append( "/>" );
+                startingElement = false;
+            }
+            else
+            {
+                doEndElement( uri, localName, name );
+            }
+        }
+        finally
+        {
+            // End of end element
+            bufferedDocument.onEndEndElement( uri, localName, name );
+        }
+    }
 
-	protected void flushCharacters(String characters) {
-		IBufferedRegion currentRegion = getCurrentElement();
-		currentRegion.append(characters);
-	}
+    public void doEndElement( String uri, String localName, String name )
+        throws SAXException
+    {
+        IBufferedRegion currentRegion = getCurrentElement();
+        currentRegion.append( "</" );
+        currentRegion.append( name );
+        currentRegion.append( ">" );
+    }
 
-	protected void resetCharacters() {
-		currentCharacters.setLength(0);
-	}
+    @Override
+    public final void characters( char[] ch, int start, int length )
+        throws SAXException
+    {
+        if ( startingElement )
+        {
+            IBufferedRegion currentRegion = getCurrentElement();
+            currentRegion.append( ">" );
+        }
+        startingElement = false;
+        char c;
+        for ( int i = start; i < start + length; i++ )
+        {
+            c = ch[i];
+            if ( mustEncodeCharachers() )
+            {
+                if ( c == '<' )
+                {
+                    currentCharacters.append( LT );
+                }
+                else if ( c == '>' )
+                {
+                    currentCharacters.append( GT );
+                }
+                else if ( c == '\'' )
+                {
+                    currentCharacters.append( APOS );
+                }
+                else if ( c == '&' )
+                {
+                    currentCharacters.append( AMP );
+                }
+                else
+                {
+                    currentCharacters.append( c );
+                }
+            }
+            else
+            {
+                currentCharacters.append( c );
+            }
+        }
+    }
 
-	/**
-	 * Get the SAX {@link AttributesImpl} of teh given attributes to modify
-	 * attribute values.
-	 * 
-	 * @param attributes
-	 * @return
-	 */
-	public static AttributesImpl toAttributesImpl(Attributes attributes) {
-		if (attributes instanceof AttributesImpl) {
-			return (AttributesImpl) attributes;
-		}
-		// Another SAX Implementation, create a new instance.
-		AttributesImpl attributesImpl = new AttributesImpl();
-		int length = attributes.getLength();
-		for (int i = 0; i < length; i++) {
-			attributesImpl.addAttribute(attributes.getURI(i),
-					attributes.getLocalName(i), attributes.getQName(i),
-					attributes.getType(i), attributes.getValue(i));
-		}
-		return attributesImpl;
-	}
+    protected boolean mustEncodeCharachers()
+    {
+        return true;
+    }
 
-	//
-	// Printing attribute value
-	//
-	protected void printEscaped(String source, IBufferedRegion region) {
-		int length = source.length();
-		for (int i = 0; i < length; ++i) {
-			int ch = source.charAt(i);
-			// if (!XMLChar.isValid(ch)) {
-			// if (++i < length) {
-			// surrogates(ch, source.charAt(i));
-			// } else {
-			// fatalError("The character '" + (char) ch +
-			// "' is an invalid XML character");
-			// }
-			// continue;
-			// }
-			// escape NL, CR, TAB
-			if (ch == '\n' || ch == '\r' || ch == '\t') {
-				printHex(ch, region);
-			} else if (ch == '<') {
-				region.append(LT);
-			} else if (ch == '&') {
-				region.append(AMP);
-			} else if (ch == '"') {
-				region.append(QUOT);
-			} else {
-				region.append((char) ch);
-			}
-			// else if ((ch >= ' ' && _encodingInfo.isPrintable((char) ch))) {
-			// _printer.printText((char) ch);
-			// } else {
-			// printHex(ch, region);
-			// }
-		}
-	}
+    protected void flushCharacters( String characters )
+    {
+        IBufferedRegion currentRegion = getCurrentElement();
+        currentRegion.append( characters );
+    }
 
-	/**
-	 * Escapes chars
-	 */
-	final void printHex(int ch, IBufferedRegion region) {
-		region.append("&#x");
-		region.append(Integer.toHexString(ch));
-		region.append(';');
-	}
+    protected void resetCharacters()
+    {
+        currentCharacters.setLength( 0 );
+    }
+
+    /**
+     * Get the SAX {@link AttributesImpl} of teh given attributes to modify attribute values.
+     * 
+     * @param attributes
+     * @return
+     */
+    public static AttributesImpl toAttributesImpl( Attributes attributes )
+    {
+        if ( attributes instanceof AttributesImpl )
+        {
+            return (AttributesImpl) attributes;
+        }
+        // Another SAX Implementation, create a new instance.
+        AttributesImpl attributesImpl = new AttributesImpl();
+        int length = attributes.getLength();
+        for ( int i = 0; i < length; i++ )
+        {
+            attributesImpl.addAttribute( attributes.getURI( i ), attributes.getLocalName( i ),
+                                         attributes.getQName( i ), attributes.getType( i ), attributes.getValue( i ) );
+        }
+        return attributesImpl;
+    }
+
+    //
+    // Printing attribute value
+    //
+    protected void printEscaped( String source, IBufferedRegion region )
+    {
+        int length = source.length();
+        for ( int i = 0; i < length; ++i )
+        {
+            int ch = source.charAt( i );
+            // if (!XMLChar.isValid(ch)) {
+            // if (++i < length) {
+            // surrogates(ch, source.charAt(i));
+            // } else {
+            // fatalError("The character '" + (char) ch +
+            // "' is an invalid XML character");
+            // }
+            // continue;
+            // }
+            // escape NL, CR, TAB
+            if ( ch == '\n' || ch == '\r' || ch == '\t' )
+            {
+                printHex( ch, region );
+            }
+            else if ( ch == '<' )
+            {
+                region.append( LT );
+            }
+            else if ( ch == '&' )
+            {
+                region.append( AMP );
+            }
+            else if ( ch == '"' )
+            {
+                region.append( QUOT );
+            }
+            else
+            {
+                region.append( (char) ch );
+            }
+            // else if ((ch >= ' ' && _encodingInfo.isPrintable((char) ch))) {
+            // _printer.printText((char) ch);
+            // } else {
+            // printHex(ch, region);
+            // }
+        }
+    }
+
+    /**
+     * Escapes chars
+     */
+    final void printHex( int ch, IBufferedRegion region )
+    {
+        region.append( "&#x" );
+        region.append( Integer.toHexString( ch ) );
+        region.append( ';' );
+    }
 }

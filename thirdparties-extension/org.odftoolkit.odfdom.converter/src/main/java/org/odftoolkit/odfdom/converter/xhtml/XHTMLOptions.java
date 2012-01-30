@@ -27,43 +27,55 @@ package org.odftoolkit.odfdom.converter.xhtml;
 import org.odftoolkit.odfdom.converter.IURIResolver;
 import org.odftoolkit.odfdom.converter.Options;
 
-public class XHTMLOptions extends Options {
+public class XHTMLOptions
+    extends Options
+{
 
-	private int indent;
-	private boolean generateCSSComments;
-	private IURIResolver resolver = IURIResolver.DEFAULT;
+    private int indent;
 
-	private XHTMLOptions() {
-	}
+    private boolean generateCSSComments;
 
-	public static XHTMLOptions create() {
-		return new XHTMLOptions();
-	}
+    private IURIResolver resolver = IURIResolver.DEFAULT;
 
-	public int getIndent() {
-		return indent;
-	}
+    private XHTMLOptions()
+    {
+    }
 
-	public XHTMLOptions indent(int indent) {
-		this.indent = indent;
-		return this;
-	}
+    public static XHTMLOptions create()
+    {
+        return new XHTMLOptions();
+    }
 
-	public boolean isGenerateCSSComments() {
-		return generateCSSComments;
-	}
+    public int getIndent()
+    {
+        return indent;
+    }
 
-	public XHTMLOptions generateCSSComments(boolean generateCSSComments) {
-		this.generateCSSComments = generateCSSComments;
-		return this;
-	}
+    public XHTMLOptions indent( int indent )
+    {
+        this.indent = indent;
+        return this;
+    }
 
-	public IURIResolver getURIResolver() {
-		return resolver;
-	}
+    public boolean isGenerateCSSComments()
+    {
+        return generateCSSComments;
+    }
 
-	public XHTMLOptions URIResolver(IURIResolver resolver) {
-		this.resolver = resolver;
-		return this;
-	}
+    public XHTMLOptions generateCSSComments( boolean generateCSSComments )
+    {
+        this.generateCSSComments = generateCSSComments;
+        return this;
+    }
+
+    public IURIResolver getURIResolver()
+    {
+        return resolver;
+    }
+
+    public XHTMLOptions URIResolver( IURIResolver resolver )
+    {
+        this.resolver = resolver;
+        return this;
+    }
 }

@@ -37,26 +37,27 @@ import fr.opensagres.xdocreport.converter.Options;
 import fr.opensagres.xdocreport.converter.docx.pdf.fop.DocxFOPConverter;
 import fr.opensagres.xdocreport.core.document.DocumentKind;
 
-public class DocxFOPConverterDiscoveryTestCase  {
+public class DocxFOPConverterDiscoveryTestCase
+{
 
-	/**
-	 * Test converter is well registered in the ConverterRegistry by using
-	 * "converter-discovery.properties".
-	 * 
-	 * @throws Exception
-	 */
-	@Ignore
-	@Test
-	public void testDiscovery() throws Exception {
-		Options o = Options.getFrom(DocumentKind.DOCX).to(ConverterTypeTo.PDF)
-				.via(ConverterTypeVia.FOP);
+    /**
+     * Test converter is well registered in the ConverterRegistry by using "converter-discovery.properties".
+     * 
+     * @throws Exception
+     */
+    @Ignore
+    @Test
+    public void testDiscovery()
+        throws Exception
+    {
+        Options o = Options.getFrom( DocumentKind.DOCX ).to( ConverterTypeTo.PDF ).via( ConverterTypeVia.FOP );
 
-		// Test if converter is not null
-		IConverter converter = ConverterRegistry.getRegistry().getConverter(o);
-		assertNotNull(converter);
+        // Test if converter is not null
+        IConverter converter = ConverterRegistry.getRegistry().getConverter( o );
+        assertNotNull( converter );
 
-		// Test instance class of the converter
-		assertEquals(DocxFOPConverter.class, converter.getClass());
-	}
+        // Test instance class of the converter
+        assertEquals( DocxFOPConverter.class, converter.getClass() );
+    }
 
 }

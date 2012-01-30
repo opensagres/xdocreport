@@ -32,39 +32,45 @@ import fr.opensagres.xdocreport.document.images.ImageProviderInfo;
 
 /**
  * Docx image registry.
- * 
  */
-public class DocxImageRegistry extends AbstractImageRegistry {
+public class DocxImageRegistry
+    extends AbstractImageRegistry
+{
 
-	public static final String MEDIA_PATH = "media/";
-	private static final String IMAGE_BASE_PATH = "word/" + MEDIA_PATH;
+    public static final String MEDIA_PATH = "media/";
 
-	public DocxImageRegistry(IEntryReaderProvider readerProvider,
-			IEntryWriterProvider writerProvider,
-			IEntryOutputStreamProvider outputStreamProvider) {
-		super(readerProvider, writerProvider, outputStreamProvider);
-	}
+    private static final String IMAGE_BASE_PATH = "word/" + MEDIA_PATH;
 
-	protected String getImageBasePath() {
-		return IMAGE_BASE_PATH;
-	}
+    public DocxImageRegistry( IEntryReaderProvider readerProvider, IEntryWriterProvider writerProvider,
+                              IEntryOutputStreamProvider outputStreamProvider )
+    {
+        super( readerProvider, writerProvider, outputStreamProvider );
+    }
 
-	@Override
-	protected String getPath(ImageProviderInfo info) {
-		return info.getImageId();
-	}
+    protected String getImageBasePath()
+    {
+        return IMAGE_BASE_PATH;
+    }
 
-	@Override
-	protected String getSize(float sizeAsPixel) {		
-		float sizeAsDxa = sizeAsPixel / 96 * 914400;
-		String s = Float.toString(sizeAsDxa);
-		// TODO Use DecimalFormat.getIntegerInstance()to format the float to
-		// String.
-		int dotindex = s.indexOf('.');
-		if (dotindex != -1) {
-			return s.substring(0, dotindex);
-		}
-		return s;
-	}
+    @Override
+    protected String getPath( ImageProviderInfo info )
+    {
+        return info.getImageId();
+    }
+
+    @Override
+    protected String getSize( float sizeAsPixel )
+    {
+        float sizeAsDxa = sizeAsPixel / 96 * 914400;
+        String s = Float.toString( sizeAsDxa );
+        // TODO Use DecimalFormat.getIntegerInstance()to format the float to
+        // String.
+        int dotindex = s.indexOf( '.' );
+        if ( dotindex != -1 )
+        {
+            return s.substring( 0, dotindex );
+        }
+        return s;
+    }
 
 }

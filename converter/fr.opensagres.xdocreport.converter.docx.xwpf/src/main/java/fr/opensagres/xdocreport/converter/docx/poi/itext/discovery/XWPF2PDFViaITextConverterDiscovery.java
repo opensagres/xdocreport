@@ -31,30 +31,38 @@ import fr.opensagres.xdocreport.converter.discovery.IConverterDiscovery;
 import fr.opensagres.xdocreport.converter.docx.poi.itext.XWPF2PDFViaITextConverter;
 import fr.opensagres.xdocreport.core.document.DocumentKind;
 
-public class XWPF2PDFViaITextConverterDiscovery implements IConverterDiscovery {
+public class XWPF2PDFViaITextConverterDiscovery
+    implements IConverterDiscovery
+{
 
-	public String getId() {
-		return "Docx2PDFViaIText";
-	}
+    public String getId()
+    {
+        return "Docx2PDFViaIText";
+    }
 
-	public String getDescription() {
-		return "Convert Docx 2 PDF via IText";
-	}
+    public String getDescription()
+    {
+        return "Convert Docx 2 PDF via IText";
+    }
 
-	public String getFrom() {
-		return DocumentKind.DOCX.name();
-	}
+    public String getFrom()
+    {
+        return DocumentKind.DOCX.name();
+    }
 
-	public String getTo() {
-		return ConverterTypeTo.PDF.name();
-	}
+    public String getTo()
+    {
+        return ConverterTypeTo.PDF.name();
+    }
 
-	public String getVia() {
-		return ConverterTypeVia.ITEXT.name();
-	}
+    public String getVia()
+    {
+        return ConverterTypeVia.ITEXT.name();
+    }
 
-	public IConverter getConverter() {
-		return XWPF2PDFViaITextConverter.getInstance();
-	}
+    public IConverter getConverter()
+    {
+        return XWPF2PDFViaITextConverter.getInstance();
+    }
 
 }

@@ -33,24 +33,26 @@ import fr.opensagres.xdocreport.converter.Options;
 import fr.opensagres.xdocreport.converter.odt.odfdom.itext.ODF2PDFViaITextConverter;
 import fr.opensagres.xdocreport.core.document.DocumentKind;
 
-public class ODF2PDFViaITextConverterDiscoveryTestCase extends TestCase {
+public class ODF2PDFViaITextConverterDiscoveryTestCase
+    extends TestCase
+{
 
-	/**
-	 * Test converter is well registered in the ConverterRegistry by using
-	 * "converter-discovery.properties".
-	 * 
-	 * @throws Exception
-	 */
-	public void testDiscovery() throws Exception {
-		Options o = Options.getFrom(DocumentKind.ODT).to(ConverterTypeTo.PDF)
-				.via(ConverterTypeVia.ITEXT);
+    /**
+     * Test converter is well registered in the ConverterRegistry by using "converter-discovery.properties".
+     * 
+     * @throws Exception
+     */
+    public void testDiscovery()
+        throws Exception
+    {
+        Options o = Options.getFrom( DocumentKind.ODT ).to( ConverterTypeTo.PDF ).via( ConverterTypeVia.ITEXT );
 
-		// Test if converter is not null
-		IConverter converter = ConverterRegistry.getRegistry().getConverter(o);
-		assertNotNull(converter);
+        // Test if converter is not null
+        IConverter converter = ConverterRegistry.getRegistry().getConverter( o );
+        assertNotNull( converter );
 
-		// Test instance class of the converter
-		assertEquals(ODF2PDFViaITextConverter.class, converter.getClass());
-	}
+        // Test instance class of the converter
+        assertEquals( ODF2PDFViaITextConverter.class, converter.getClass() );
+    }
 
 }

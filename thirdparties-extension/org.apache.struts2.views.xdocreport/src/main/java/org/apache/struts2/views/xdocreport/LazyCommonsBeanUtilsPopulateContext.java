@@ -28,22 +28,28 @@ import java.beans.PropertyDescriptor;
 
 import org.apache.commons.beanutils.PropertyUtils;
 
-public class LazyCommonsBeanUtilsPopulateContext extends AbstractPopulateContext {
+public class LazyCommonsBeanUtilsPopulateContext
+    extends AbstractPopulateContext
+{
 
-	private static final LazyCommonsBeanUtilsPopulateContext INSTANCE = new LazyCommonsBeanUtilsPopulateContext();
+    private static final LazyCommonsBeanUtilsPopulateContext INSTANCE = new LazyCommonsBeanUtilsPopulateContext();
 
-	public static LazyCommonsBeanUtilsPopulateContext getInstance() {
-		return INSTANCE;
-	}
-	
-	@Override
-	protected PropertyDescriptor[] getPropertyDescriptors(Object pojo)
-			throws Exception {
-		return PropertyUtils.getPropertyDescriptors(pojo.getClass());
-	}
-	
-	protected Object getSimpleProperty(Object pojo, PropertyDescriptor descriptor) throws Exception{
-		return PropertyUtils.getSimpleProperty(pojo, descriptor.getName());
-	}
+    public static LazyCommonsBeanUtilsPopulateContext getInstance()
+    {
+        return INSTANCE;
+    }
+
+    @Override
+    protected PropertyDescriptor[] getPropertyDescriptors( Object pojo )
+        throws Exception
+    {
+        return PropertyUtils.getPropertyDescriptors( pojo.getClass() );
+    }
+
+    protected Object getSimpleProperty( Object pojo, PropertyDescriptor descriptor )
+        throws Exception
+    {
+        return PropertyUtils.getSimpleProperty( pojo, descriptor.getName() );
+    }
 
 }

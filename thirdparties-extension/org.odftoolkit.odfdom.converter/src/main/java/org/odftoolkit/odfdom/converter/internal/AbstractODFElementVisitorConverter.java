@@ -33,23 +33,29 @@ import org.odftoolkit.odfdom.converter.Options;
 import org.odftoolkit.odfdom.doc.OdfDocument;
 
 public abstract class AbstractODFElementVisitorConverter<T extends Options>
-		extends AbstractODFConverter<T> {
+    extends AbstractODFConverter<T>
+{
 
-	protected void doConvert(OdfDocument document, OutputStream out,
-			Writer writer, T options) throws ODFConverterException, IOException {
-		ElementVisitorConverter visitor = null;
+    protected void doConvert( OdfDocument document, OutputStream out, Writer writer, T options )
+        throws ODFConverterException, IOException
+    {
+        ElementVisitorConverter visitor = null;
 
-		visitor = createElementVisitorConverter(document, out, writer, options);
-		if (visitor != null) {
-			try {
-				document.getContentRoot().accept(visitor);
-			} catch (Exception e) {
-				throw new ODFConverterException(e);
-			}
-			visitor.save();
-		}
-	}
+        visitor = createElementVisitorConverter( document, out, writer, options );
+        if ( visitor != null )
+        {
+            try
+            {
+                document.getContentRoot().accept( visitor );
+            }
+            catch ( Exception e )
+            {
+                throw new ODFConverterException( e );
+            }
+            visitor.save();
+        }
+    }
 
-	protected abstract ElementVisitorConverter createElementVisitorConverter(
-			OdfDocument document, OutputStream out, Writer writer, T options);
+    protected abstract ElementVisitorConverter createElementVisitorConverter( OdfDocument document, OutputStream out,
+                                                                              Writer writer, T options );
 }

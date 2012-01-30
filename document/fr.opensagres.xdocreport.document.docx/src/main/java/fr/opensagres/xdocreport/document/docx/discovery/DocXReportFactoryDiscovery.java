@@ -34,36 +34,41 @@ import fr.opensagres.xdocreport.document.docx.DocxUtils;
 import fr.opensagres.xdocreport.document.registry.XDocReportRegistry;
 
 /**
- * MS Word DOCX discovery used by the
- * {@link XDocReportRegistry#loadReport(java.io.InputStream)} to create an
- * instance of {@link DocxReport} if input stream to load is an ODS.
- * 
+ * MS Word DOCX discovery used by the {@link XDocReportRegistry#loadReport(java.io.InputStream)} to create an instance
+ * of {@link DocxReport} if input stream to load is an ODS.
  */
-public class DocXReportFactoryDiscovery extends
-		AbstractXDocReportFactoryDiscovery {
+public class DocXReportFactoryDiscovery
+    extends AbstractXDocReportFactoryDiscovery
+{
 
-	public boolean isAdaptFor(XDocArchive documentArchive) {
-		return DocxUtils.isDocx(documentArchive);
-	}
+    public boolean isAdaptFor( XDocArchive documentArchive )
+    {
+        return DocxUtils.isDocx( documentArchive );
+    }
 
-	public IXDocReport createReport() {
-		return new DocXReport();
-	}
+    public IXDocReport createReport()
+    {
+        return new DocXReport();
+    }
 
-	public MimeMapping getMimeMapping() {
-		return DocXConstants.MIME_MAPPING;
-	}
+    public MimeMapping getMimeMapping()
+    {
+        return DocXConstants.MIME_MAPPING;
+    }
 
-	public String getDescription() {
-		return DocXConstants.DESCRIPTION_DISCOVERY;
-	}
+    public String getDescription()
+    {
+        return DocXConstants.DESCRIPTION_DISCOVERY;
+    }
 
-	public String getId() {
-		return DocXConstants.ID_DISCOVERY;
-	}
+    public String getId()
+    {
+        return DocXConstants.ID_DISCOVERY;
+    }
 
-	public Class<?> getReportClass() {
-		return DocXReport.class;
-	}
+    public Class<?> getReportClass()
+    {
+        return DocXReport.class;
+    }
 
 }

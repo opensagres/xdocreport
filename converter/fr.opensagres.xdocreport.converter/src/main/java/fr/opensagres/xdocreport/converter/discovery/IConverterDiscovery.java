@@ -27,14 +27,16 @@ package fr.opensagres.xdocreport.converter.discovery;
 import fr.opensagres.xdocreport.converter.IConverter;
 import fr.opensagres.xdocreport.core.discovery.IBaseDiscovery;
 
-public interface IConverterDiscovery extends IBaseDiscovery {
+public interface IConverterDiscovery
+    extends IBaseDiscovery
+{
 
-	String getFrom();
+    String getFrom();
 
-	String getTo();
+    String getTo();
 
-	String getVia();
+    String getVia();
 
-	IConverter getConverter();
+    IConverter getConverter();
 
 }

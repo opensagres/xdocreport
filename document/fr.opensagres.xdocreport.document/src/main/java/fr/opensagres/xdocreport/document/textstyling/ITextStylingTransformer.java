@@ -27,25 +27,21 @@ package fr.opensagres.xdocreport.document.textstyling;
 import fr.opensagres.xdocreport.core.XDocReportException;
 
 /**
- * Text styling transformer is used to transform some syntax (HTML, Mediawiki,
- * etc) to another syntax (docx, odt, etc).
- * 
+ * Text styling transformer is used to transform some syntax (HTML, Mediawiki, etc) to another syntax (docx, odt, etc).
  */
-public interface ITextStylingTransformer {
+public interface ITextStylingTransformer
+{
 
-	/**
-	 * Transform the given content (with some syntax like HTML, MediaWiki, etc)
-	 * to another syntax (docx, odt, etc). The given visitor can be used to
-	 * process the transformation.
-	 * 
-	 * @param content
-	 *            the content to transform.
-	 * @param documentHandler
-	 *            the document visitor used for the transformation.
-	 * @return the result of text styling transform.
-	 * @throws XDocReportException
-	 */
-	ITransformResult transform(String content, IDocumentHandler documentHandler)
-			throws XDocReportException;
+    /**
+     * Transform the given content (with some syntax like HTML, MediaWiki, etc) to another syntax (docx, odt, etc). The
+     * given visitor can be used to process the transformation.
+     * 
+     * @param content the content to transform.
+     * @param documentHandler the document visitor used for the transformation.
+     * @return the result of text styling transform.
+     * @throws XDocReportException
+     */
+    ITransformResult transform( String content, IDocumentHandler documentHandler )
+        throws XDocReportException;
 
 }

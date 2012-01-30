@@ -29,61 +29,77 @@ import java.io.Writer;
 
 /**
  * Multiple writer used to write for several writer.
- * 
  */
-public class MultiWriter extends Writer implements StreamCancelable {
+public class MultiWriter
+    extends Writer
+    implements StreamCancelable
+{
 
-	private Writer[] writers;
+    private Writer[] writers;
 
-	/**
-	 * New MultiWriter for specified writers. Note that flush is only done on
-	 * explicit call.
-	 */
-	public MultiWriter(Writer... writers) {
-		this.writers = new Writer[writers.length];
-		for (int i = 0; i < writers.length; i++) {
-			this.writers[i] = writers[i];
-		}
-	}
+    /**
+     * New MultiWriter for specified writers. Note that flush is only done on explicit call.
+     */
+    public MultiWriter( Writer... writers )
+    {
+        this.writers = new Writer[writers.length];
+        for ( int i = 0; i < writers.length; i++ )
+        {
+            this.writers[i] = writers[i];
+        }
+    }
 
-	@Override
-	public void write(char[] cbuf, int off, int len) throws IOException {
-		for (Writer w : writers) {
-			w.write(cbuf, off, len);
-			w.flush();
-		}
-	}
+    @Override
+    public void write( char[] cbuf, int off, int len )
+        throws IOException
+    {
+        for ( Writer w : writers )
+        {
+            w.write( cbuf, off, len );
+            w.flush();
+        }
+    }
 
-	@Override
-	public void flush() throws IOException {
-		for (Writer w : writers) {
-			w.flush();
-		}
-	}
+    @Override
+    public void flush()
+        throws IOException
+    {
+        for ( Writer w : writers )
+        {
+            w.flush();
+        }
+    }
 
-	@Override
-	public void close() throws IOException {
-		for (Writer w : writers) {
-			w.close();
-		}
-	}
-	
-	public void cancel() {
-		for (Writer w : writers) {
-			if (w instanceof StreamCancelable) {
-				((StreamCancelable)w).cancel();
-			}
-		}
-		
-	}
+    @Override
+    public void close()
+        throws IOException
+    {
+        for ( Writer w : writers )
+        {
+            w.close();
+        }
+    }
 
-	/**
-	 * Returns writer by index.
-	 * 
-	 * @param index
-	 * @return
-	 */
-	public Writer getWriter(int index) {
-		return this.writers[index];
-	}
+    public void cancel()
+    {
+        for ( Writer w : writers )
+        {
+            if ( w instanceof StreamCancelable )
+            {
+                ( (StreamCancelable) w ).cancel();
+            }
+        }
+
+    }
+
+    /**
+     * Returns writer by index.
+     * 
+     * @param index
+     * @return
+     */
+    public Writer getWriter( int index )
+    {
+        return this.writers[index];
+    }
 }

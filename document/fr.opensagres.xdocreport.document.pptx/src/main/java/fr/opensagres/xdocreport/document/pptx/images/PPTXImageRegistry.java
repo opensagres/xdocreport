@@ -34,37 +34,42 @@ import fr.opensagres.xdocreport.document.images.ImageProviderInfo;
  * PPTX image registry.
  * 
  * @author Angelo ZERR
- * 
  */
-public class PPTXImageRegistry extends AbstractImageRegistry {
+public class PPTXImageRegistry
+    extends AbstractImageRegistry
+{
 
-	private static final String IMAGE_BASE_PATH = "media/";
+    private static final String IMAGE_BASE_PATH = "media/";
 
-	public PPTXImageRegistry(IEntryReaderProvider readerProvider,
-			IEntryWriterProvider writerProvider,
-			IEntryOutputStreamProvider outputStreamProvider) {
-		super(readerProvider, writerProvider, outputStreamProvider);
-	}
+    public PPTXImageRegistry( IEntryReaderProvider readerProvider, IEntryWriterProvider writerProvider,
+                              IEntryOutputStreamProvider outputStreamProvider )
+    {
+        super( readerProvider, writerProvider, outputStreamProvider );
+    }
 
-	protected String getImageBasePath() {
-		return IMAGE_BASE_PATH;
-	}
+    protected String getImageBasePath()
+    {
+        return IMAGE_BASE_PATH;
+    }
 
-	@Override
-	protected String getPath(ImageProviderInfo info) {
-		return info.getImageId();
-	}
+    @Override
+    protected String getPath( ImageProviderInfo info )
+    {
+        return info.getImageId();
+    }
 
-	@Override
-	protected String getSize(float sizeAsPixel) {
-		float sizeAsDxa = sizeAsPixel / 96 * 914400;
-		String s = Float.toString(sizeAsDxa);
-		// TODO Use DecimalFormat.getIntegerInstance()to format the float to
-		// String.
-		int dotindex = s.indexOf('.');
-		if (dotindex != -1) {
-			return s.substring(0, dotindex);
-		}
-		return s;
-	}
+    @Override
+    protected String getSize( float sizeAsPixel )
+    {
+        float sizeAsDxa = sizeAsPixel / 96 * 914400;
+        String s = Float.toString( sizeAsDxa );
+        // TODO Use DecimalFormat.getIntegerInstance()to format the float to
+        // String.
+        int dotindex = s.indexOf( '.' );
+        if ( dotindex != -1 )
+        {
+            return s.substring( 0, dotindex );
+        }
+        return s;
+    }
 }

@@ -29,152 +29,181 @@ import java.io.OutputStream;
 import java.io.StringWriter;
 import java.io.Writer;
 
-public abstract class XHTMLPageContentBuffer extends AbstractContentBuffer
-		implements XHTMLConstants {
+public abstract class XHTMLPageContentBuffer
+    extends AbstractContentBuffer
+    implements XHTMLConstants
+{
 
-	protected StringBuilder currentBuffer = null;
-	protected int currentElementIndex;
+    protected StringBuilder currentBuffer = null;
 
-	public XHTMLPageContentBuffer(int indent) {
-		super(indent);
-		this.currentBuffer = new StringBuilder();
-	}
+    protected int currentElementIndex;
 
-	public void startEndElement(String elementName) {
-		startElementNotEnclosed(elementName);
-		currentBuffer.append('/');	
-		currentBuffer.append('>');	
-	}
-	
-	public void startElement(String elementName) {
-		startElement(elementName, true, getCurrentBuffer(), currentElementIndex);
-		currentElementIndex++;
-	}
+    public XHTMLPageContentBuffer( int indent )
+    {
+        super( indent );
+        this.currentBuffer = new StringBuilder();
+    }
 
-	public void startElementNotEnclosed(String elementName) {
-		startElement(elementName, false, getCurrentBuffer(),
-				currentElementIndex);
-		currentElementIndex++;
-	}
+    public void startEndElement( String elementName )
+    {
+        startElementNotEnclosed( elementName );
+        currentBuffer.append( '/' );
+        currentBuffer.append( '>' );
+    }
 
-	public void endElementNotEnclosed() {
-		getCurrentBuffer().append('>');
-	}
+    public void startElement( String elementName )
+    {
+        startElement( elementName, true, getCurrentBuffer(), currentElementIndex );
+        currentElementIndex++;
+    }
 
-	public XHTMLPageContentBuffer setAttribute(String name, String value) {
-		startAttribute(name).addAttributeValue(value, true).endAttribute();
-		return this;
-	}
+    public void startElementNotEnclosed( String elementName )
+    {
+        startElement( elementName, false, getCurrentBuffer(), currentElementIndex );
+        currentElementIndex++;
+    }
 
-	public XHTMLPageContentBuffer setAttribute(String name, Integer value) {
-		setAttribute(name, String.valueOf(value));
-		return this;
-	}
-	
-	public XHTMLPageContentBuffer addAttributeValue(String value,
-			boolean firstValue) {
-		if (!firstValue) {
-			getCurrentBuffer().append(' ');
-		}
-		getCurrentBuffer().append(value);
-		return this;
-	}
+    public void endElementNotEnclosed()
+    {
+        getCurrentBuffer().append( '>' );
+    }
 
-	public XHTMLPageContentBuffer startAttribute(String name) {
-		getCurrentBuffer().append(' ').append(name).append("=\"");
-		return this;
-	}
+    public XHTMLPageContentBuffer setAttribute( String name, String value )
+    {
+        startAttribute( name ).addAttributeValue( value, true ).endAttribute();
+        return this;
+    }
 
-	public XHTMLPageContentBuffer endAttribute() {
-		getCurrentBuffer().append("\"");
-		return this;
-	}
+    public XHTMLPageContentBuffer setAttribute( String name, Integer value )
+    {
+        setAttribute( name, String.valueOf( value ) );
+        return this;
+    }
 
-	protected StringBuilder startElement(String elementName,
-			boolean endsElement, StringBuilder buffer, int index) {
-		doIndentIfNeeded(buffer, index);
-		buffer.append('<');
-		buffer.append(elementName);
-		if (endsElement) {
-			buffer.append('>');
-		}
-		return buffer;
-	}
+    public XHTMLPageContentBuffer addAttributeValue( String value, boolean firstValue )
+    {
+        if ( !firstValue )
+        {
+            getCurrentBuffer().append( ' ' );
+        }
+        getCurrentBuffer().append( value );
+        return this;
+    }
 
-	protected void startElement(String elementName, boolean endsElement,
-			Writer writer, int index) throws IOException {
-		doIndentIfNeeded(writer, index);
-		writer.write('<');
-		writer.write(elementName);
-		if (endsElement) {
-			writer.write('>');
-		}
-	}
+    public XHTMLPageContentBuffer startAttribute( String name )
+    {
+        getCurrentBuffer().append( ' ' ).append( name ).append( "=\"" );
+        return this;
+    }
 
-	protected void startElement(String elementName, boolean endsElement,
-			OutputStream out, int index) throws IOException {
-		doIndentIfNeeded(out, index);
-		out.write('<');
-		out.write(elementName.getBytes());
-		if (endsElement) {
-			out.write('>');
-		}
-	}
+    public XHTMLPageContentBuffer endAttribute()
+    {
+        getCurrentBuffer().append( "\"" );
+        return this;
+    }
 
-	public void endElement(String elementName) {
-		currentElementIndex--;
-		endElement(elementName, getCurrentBuffer(), currentElementIndex);
-	}
+    protected StringBuilder startElement( String elementName, boolean endsElement, StringBuilder buffer, int index )
+    {
+        doIndentIfNeeded( buffer, index );
+        buffer.append( '<' );
+        buffer.append( elementName );
+        if ( endsElement )
+        {
+            buffer.append( '>' );
+        }
+        return buffer;
+    }
 
-	protected StringBuilder endElement(String elementName,
-			StringBuilder buffer, int index) {
-		doIndentIfNeeded(buffer, index);
-		buffer.append('<');
-		buffer.append('/');
-		buffer.append(elementName);
-		buffer.append('>');
-		return buffer;
-	}
+    protected void startElement( String elementName, boolean endsElement, Writer writer, int index )
+        throws IOException
+    {
+        doIndentIfNeeded( writer, index );
+        writer.write( '<' );
+        writer.write( elementName );
+        if ( endsElement )
+        {
+            writer.write( '>' );
+        }
+    }
 
-	protected void endElement(String elementName, Writer writer, int index)
-			throws IOException {
-		doIndentIfNeeded(writer, index);
-		writer.write('<');
-		writer.write('/');
-		writer.write(elementName);
-		writer.write('>');
-	}
+    protected void startElement( String elementName, boolean endsElement, OutputStream out, int index )
+        throws IOException
+    {
+        doIndentIfNeeded( out, index );
+        out.write( '<' );
+        out.write( elementName.getBytes() );
+        if ( endsElement )
+        {
+            out.write( '>' );
+        }
+    }
 
-	protected void endElement(String elementName, OutputStream out, int index)
-			throws IOException {
-		doIndentIfNeeded(out, index);
-		out.write('<');
-		out.write('/');
-		out.write(elementName.getBytes());
-		out.write('>');
-	}
+    public void endElement( String elementName )
+    {
+        currentElementIndex--;
+        endElement( elementName, getCurrentBuffer(), currentElementIndex );
+    }
 
-	@Override
-	protected StringBuilder getCurrentBuffer() {
-		return currentBuffer;
-	}
+    protected StringBuilder endElement( String elementName, StringBuilder buffer, int index )
+    {
+        doIndentIfNeeded( buffer, index );
+        buffer.append( '<' );
+        buffer.append( '/' );
+        buffer.append( elementName );
+        buffer.append( '>' );
+        return buffer;
+    }
 
-	public void save(Writer writer) throws IOException {
-		writer.write(getCurrentBuffer().toString());
-	}
+    protected void endElement( String elementName, Writer writer, int index )
+        throws IOException
+    {
+        doIndentIfNeeded( writer, index );
+        writer.write( '<' );
+        writer.write( '/' );
+        writer.write( elementName );
+        writer.write( '>' );
+    }
 
-	public void save(OutputStream out) throws IOException {
-		out.write(getCurrentBuffer().toString().getBytes());
-	}
+    protected void endElement( String elementName, OutputStream out, int index )
+        throws IOException
+    {
+        doIndentIfNeeded( out, index );
+        out.write( '<' );
+        out.write( '/' );
+        out.write( elementName.getBytes() );
+        out.write( '>' );
+    }
 
-	@Override
-	public String toString() {
-		StringWriter writer = new StringWriter();
-		try {
-			save(writer);
-		} catch (IOException e) {
-			// Do nothing
-		}
-		return writer.toString();
-	}
+    @Override
+    protected StringBuilder getCurrentBuffer()
+    {
+        return currentBuffer;
+    }
+
+    public void save( Writer writer )
+        throws IOException
+    {
+        writer.write( getCurrentBuffer().toString() );
+    }
+
+    public void save( OutputStream out )
+        throws IOException
+    {
+        out.write( getCurrentBuffer().toString().getBytes() );
+    }
+
+    @Override
+    public String toString()
+    {
+        StringWriter writer = new StringWriter();
+        try
+        {
+            save( writer );
+        }
+        catch ( IOException e )
+        {
+            // Do nothing
+        }
+        return writer.toString();
+    }
 }

@@ -29,39 +29,49 @@ import fr.opensagres.xdocreport.converter.MimeMapping;
 /**
  * Open Office ODS constants. For mime mapping please see {@see
  * http://framework.openoffice.org/documentation/mimetypes/mimetypes.html}.
- * 
  */
-public class PPTXConstants {
+public class PPTXConstants
+{
 
-	public static final String PRESENTATION_PRESENTATION_XML_ENTRY = "ppt/presentation.xml";
-	public static final String PRESENTATION_SLIDES_XML_ENTRY = "ppt/slides/slide*.xml";
+    public static final String PRESENTATION_PRESENTATION_XML_ENTRY = "ppt/presentation.xml";
 
-	// Mime type
-	public static final String MIMETYPE = "mimetype";
-	// [Content_Types].xml
-	public static final String CONTENT_TYPES_XML = "[Content_Types].xml";
-	public static final String PRESENTATIONML_PRESENTATION = "application/vnd.openxmlformats-officedocument.presentationml.presentation.main+xml";
-	public static final String PPTX_EXTENSION = "pptx";
+    public static final String PRESENTATION_SLIDES_XML_ENTRY = "ppt/slides/slide*.xml";
 
-	// Namespaces
-	public static final String P_NS = "http://schemas.openxmlformats.org/presentationml/2006/main";
-	public static final String A_NS = "http://schemas.openxmlformats.org/drawingml/2006/main";
-	
-	// Element
-	public static final String P_ELT = "p";
-	public static final String PPR_ELT = "pPr";
-	public static final String R_ELT = "r";
-	public static final String T_ELT = "t";
-	public static final String TXBODY_ELT = "txBody";
+    // Mime type
+    public static final String MIMETYPE = "mimetype";
 
-	// Attributes 
-	public static final String LVL_ATTR = "lvl";
-	
-	// Mime mapping
-	public static final MimeMapping MIME_MAPPING = new MimeMapping(
-			PPTX_EXTENSION, PRESENTATIONML_PRESENTATION);
+    // [Content_Types].xml
+    public static final String CONTENT_TYPES_XML = "[Content_Types].xml";
 
-	// Meta data for discovery
-	public static final String ID_DISCOVERY = "pptx";
-	public static final String DESCRIPTION_DISCOVERY = "Manage Microsoft Office pptx document.";
+    public static final String PRESENTATIONML_PRESENTATION =
+        "application/vnd.openxmlformats-officedocument.presentationml.presentation.main+xml";
+
+    public static final String PPTX_EXTENSION = "pptx";
+
+    // Namespaces
+    public static final String P_NS = "http://schemas.openxmlformats.org/presentationml/2006/main";
+
+    public static final String A_NS = "http://schemas.openxmlformats.org/drawingml/2006/main";
+
+    // Element
+    public static final String P_ELT = "p";
+
+    public static final String PPR_ELT = "pPr";
+
+    public static final String R_ELT = "r";
+
+    public static final String T_ELT = "t";
+
+    public static final String TXBODY_ELT = "txBody";
+
+    // Attributes
+    public static final String LVL_ATTR = "lvl";
+
+    // Mime mapping
+    public static final MimeMapping MIME_MAPPING = new MimeMapping( PPTX_EXTENSION, PRESENTATIONML_PRESENTATION );
+
+    // Meta data for discovery
+    public static final String ID_DISCOVERY = "pptx";
+
+    public static final String DESCRIPTION_DISCOVERY = "Manage Microsoft Office pptx document.";
 }

@@ -33,25 +33,26 @@ import fr.opensagres.xdocreport.document.textstyling.IDocumentHandler;
 
 /**
  * Abstract class styling transformer for Wiki Syntax.
- * 
  */
-public abstract class AbstractWikiTextStylingTransformer extends
-		AbstractTextStylingTransformer {
+public abstract class AbstractWikiTextStylingTransformer
+    extends AbstractTextStylingTransformer
+{
 
-	@Override
-	protected void doTransform(String content, IDocumentHandler handler)
-			throws Exception {
-		// 1) Create an instance of {@link IWikiParser}.
-		IWikiParser parser = createWikiParser();
-		// 2) Parser the wiki content and call the well method of the document handler.
-		parser.parse(new StringReader(content), new WemListenerAdapter(handler));
-	}
+    @Override
+    protected void doTransform( String content, IDocumentHandler handler )
+        throws Exception
+    {
+        // 1) Create an instance of {@link IWikiParser}.
+        IWikiParser parser = createWikiParser();
+        // 2) Parser the wiki content and call the well method of the document handler.
+        parser.parse( new StringReader( content ), new WemListenerAdapter( handler ) );
+    }
 
-	/**
-	 * Create an instance of {@link IWikiParser}.
-	 * 
-	 * @return
-	 */
-	protected abstract IWikiParser createWikiParser();
+    /**
+     * Create an instance of {@link IWikiParser}.
+     * 
+     * @return
+     */
+    protected abstract IWikiParser createWikiParser();
 
 }

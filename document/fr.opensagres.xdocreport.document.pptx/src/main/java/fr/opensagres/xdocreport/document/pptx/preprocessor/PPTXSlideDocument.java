@@ -15,104 +15,125 @@ import fr.opensagres.xdocreport.document.preprocessor.sax.TransformedBufferedDoc
 import fr.opensagres.xdocreport.template.formatter.FieldsMetadata;
 import fr.opensagres.xdocreport.template.formatter.IDocumentFormatter;
 
-public class PPTXSlideDocument extends TransformedBufferedDocument {
+public class PPTXSlideDocument
+    extends TransformedBufferedDocument
+{
 
-	private APBufferedRegion currentAPRegion;
-	private ARBufferedRegion currentARRegion;
-	private PTxBodyBufferedRegion currentTtxBodyRegion;
+    private APBufferedRegion currentAPRegion;
 
-	private final PPTXSlideContentHandler handler;
+    private ARBufferedRegion currentARRegion;
 
-	public PPTXSlideDocument(PPTXSlideContentHandler handler) {
-		this.handler = handler;
-	}
+    private PTxBodyBufferedRegion currentTtxBodyRegion;
 
-	@Override
-	protected boolean isTable(String arg0, String arg1, String arg2) {
-		return false;
-	}
+    private final PPTXSlideContentHandler handler;
 
-	@Override
-	protected boolean isTableRow(String arg0, String arg1, String arg2) {
-		return false;
-	}
+    public PPTXSlideDocument( PPTXSlideContentHandler handler )
+    {
+        this.handler = handler;
+    }
 
-	@Override
-	protected BufferedElement createElement(BufferedElement parent, String uri,
-			String localName, String name, Attributes attributes)
-			throws SAXException {
-		if (isPTxBody(uri, localName, name)) {
-			currentTtxBodyRegion = new PTxBodyBufferedRegion(parent, uri,
-					localName, name, attributes);
-			return currentTtxBodyRegion;
-		}
-		if (isAP(uri, localName, name)) {
-			currentAPRegion = new APBufferedRegion(this, parent, uri,
-					localName, name, attributes);
-			if (currentTtxBodyRegion != null) {
-				currentTtxBodyRegion.addRegion(currentAPRegion);
-			}
-			return currentAPRegion;
-		}
-		if (isAPPr(uri, localName, name)) {
-			if (currentAPRegion != null) {
-				Integer level = getLevel(attributes);
-				currentAPRegion.setLevel(level);
-			}
-		}
-		if (isAR(uri, localName, name)) {
-			currentARRegion = new ARBufferedRegion(parent, uri, localName,
-					name, attributes);
-			if (currentAPRegion != null) {
-				currentAPRegion.addRegion(currentARRegion);
-			}
-			return currentARRegion;
-		}
-		return super.createElement(parent, uri, localName, name, attributes);
-	}
+    @Override
+    protected boolean isTable( String arg0, String arg1, String arg2 )
+    {
+        return false;
+    }
 
-	private Integer getLevel(Attributes attributes) {
-		if (attributes == null) {
-			return null;
-		}
-		return StringUtils.asInteger(attributes
-				.getValue(PPTXConstants.LVL_ATTR));
-	}
+    @Override
+    protected boolean isTableRow( String arg0, String arg1, String arg2 )
+    {
+        return false;
+    }
 
-	@Override
-	public void onEndEndElement(String uri, String localName, String name) {
-		if (isPTxBody(uri, localName, name) && currentTtxBodyRegion != null) {
-			super.onEndEndElement(uri, localName, name);
-			currentTtxBodyRegion.process();
-			currentTtxBodyRegion = null;
-			return;
-		}
-		if (isAP(uri, localName, name) && currentAPRegion != null) {
-			super.onEndEndElement(uri, localName, name);
-			currentAPRegion = null;
-			return;
-		}
-		if (isAR(uri, localName, name) && currentAPRegion != null) {
-			super.onEndEndElement(uri, localName, name);
-			currentARRegion = null;
-			return;
-		}
-		super.onEndEndElement(uri, localName, name);
-	}
+    @Override
+    protected BufferedElement createElement( BufferedElement parent, String uri, String localName, String name,
+                                             Attributes attributes )
+        throws SAXException
+    {
+        if ( isPTxBody( uri, localName, name ) )
+        {
+            currentTtxBodyRegion = new PTxBodyBufferedRegion( parent, uri, localName, name, attributes );
+            return currentTtxBodyRegion;
+        }
+        if ( isAP( uri, localName, name ) )
+        {
+            currentAPRegion = new APBufferedRegion( this, parent, uri, localName, name, attributes );
+            if ( currentTtxBodyRegion != null )
+            {
+                currentTtxBodyRegion.addRegion( currentAPRegion );
+            }
+            return currentAPRegion;
+        }
+        if ( isAPPr( uri, localName, name ) )
+        {
+            if ( currentAPRegion != null )
+            {
+                Integer level = getLevel( attributes );
+                currentAPRegion.setLevel( level );
+            }
+        }
+        if ( isAR( uri, localName, name ) )
+        {
+            currentARRegion = new ARBufferedRegion( parent, uri, localName, name, attributes );
+            if ( currentAPRegion != null )
+            {
+                currentAPRegion.addRegion( currentARRegion );
+            }
+            return currentARRegion;
+        }
+        return super.createElement( parent, uri, localName, name, attributes );
+    }
 
-	public APBufferedRegion getCurrentAPRegion() {
-		return currentAPRegion;
-	}
+    private Integer getLevel( Attributes attributes )
+    {
+        if ( attributes == null )
+        {
+            return null;
+        }
+        return StringUtils.asInteger( attributes.getValue( PPTXConstants.LVL_ATTR ) );
+    }
 
-	public ARBufferedRegion getCurrentARRegion() {
-		return currentARRegion;
-	}
+    @Override
+    public void onEndEndElement( String uri, String localName, String name )
+    {
+        if ( isPTxBody( uri, localName, name ) && currentTtxBodyRegion != null )
+        {
+            super.onEndEndElement( uri, localName, name );
+            currentTtxBodyRegion.process();
+            currentTtxBodyRegion = null;
+            return;
+        }
+        if ( isAP( uri, localName, name ) && currentAPRegion != null )
+        {
+            super.onEndEndElement( uri, localName, name );
+            currentAPRegion = null;
+            return;
+        }
+        if ( isAR( uri, localName, name ) && currentAPRegion != null )
+        {
+            super.onEndEndElement( uri, localName, name );
+            currentARRegion = null;
+            return;
+        }
+        super.onEndEndElement( uri, localName, name );
+    }
 
-	public FieldsMetadata getFieldsMetadata() {
-		return handler.getFieldsMetadata();
-	}
+    public APBufferedRegion getCurrentAPRegion()
+    {
+        return currentAPRegion;
+    }
 
-	public IDocumentFormatter getFormatter() {
-		return handler.getFormatter();
-	}
+    public ARBufferedRegion getCurrentARRegion()
+    {
+        return currentARRegion;
+    }
+
+    public FieldsMetadata getFieldsMetadata()
+    {
+        return handler.getFieldsMetadata();
+    }
+
+    public IDocumentFormatter getFormatter()
+    {
+        return handler.getFormatter();
+    }
 }

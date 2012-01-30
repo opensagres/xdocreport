@@ -31,55 +31,69 @@ import org.odftoolkit.odfdom.converter.internal.utils.ODFUtils;
 
 import fr.opensagres.xdocreport.utils.BorderType;
 
-public class StyleBorder {
+public class StyleBorder
+{
 
-	private final BorderType borderType;
-	private boolean noBorder = false;
-	private Color color;
-	private Float width;
+    private final BorderType borderType;
 
-	public StyleBorder(String border, BorderType borderType) {
-		this.borderType = borderType;
-		noBorder = "none".equals(border);
-		if (noBorder) {
-			return;
-		}
+    private boolean noBorder = false;
 
-		// ex : 0.035cm, solid, #ff0000
-		String[] s = border.split(" ");
-		for (int i = 0; i < s.length; i++) {
-			switch (i) {
-			case 0:
-				width = ODFUtils.getDimensionAsPoint(s[i]);
-				break;
-			case 2:
-				color = ColorRegistry.getInstance().getColor(s[i]);
-				break;
-			}
-		}
-	}
+    private Color color;
 
-	public Color getColor() {
-		return color;
-	}
+    private Float width;
 
-	public void setColor(Color color) {
-		this.color = color;
-	}
+    public StyleBorder( String border, BorderType borderType )
+    {
+        this.borderType = borderType;
+        noBorder = "none".equals( border );
+        if ( noBorder )
+        {
+            return;
+        }
 
-	public Float getWidth() {
-		return width;
-	}
+        // ex : 0.035cm, solid, #ff0000
+        String[] s = border.split( " " );
+        for ( int i = 0; i < s.length; i++ )
+        {
+            switch ( i )
+            {
+                case 0:
+                    width = ODFUtils.getDimensionAsPoint( s[i] );
+                    break;
+                case 2:
+                    color = ColorRegistry.getInstance().getColor( s[i] );
+                    break;
+            }
+        }
+    }
 
-	public void setWidth(Float width) {
-		this.width = width;
-	}
+    public Color getColor()
+    {
+        return color;
+    }
 
-	public boolean isNoBorder() {
-		return noBorder;
-	}
+    public void setColor( Color color )
+    {
+        this.color = color;
+    }
 
-	public BorderType getBorderType() {
-		return borderType;
-	}
+    public Float getWidth()
+    {
+        return width;
+    }
+
+    public void setWidth( Float width )
+    {
+        this.width = width;
+    }
+
+    public boolean isNoBorder()
+    {
+        return noBorder;
+    }
+
+    public BorderType getBorderType()
+    {
+        return borderType;
+    }
 }

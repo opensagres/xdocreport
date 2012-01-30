@@ -64,127 +64,137 @@ import fr.opensagres.xdocreport.template.IContext;
 
 /**
  * MS Word DOCX report.
- * 
  */
-public class DocXReport extends AbstractXDocReport {
+public class DocXReport
+    extends AbstractXDocReport
+{
 
-	private static final long serialVersionUID = -2323716817951928168L;
+    private static final long serialVersionUID = -2323716817951928168L;
 
-	private static final String[] DEFAULT_XML_ENTRIES = {
-			WORD_DOCUMENT_XML_ENTRY, WORD_STYLES_XML_ENTRY,
-			WORD_HEADER_XML_ENTRY, WORD_FOOTER_XML_ENTRY,
-			WORD_RELS_XMLRELS_XML_ENTRY };
+    private static final String[] DEFAULT_XML_ENTRIES = { WORD_DOCUMENT_XML_ENTRY, WORD_STYLES_XML_ENTRY,
+        WORD_HEADER_XML_ENTRY, WORD_FOOTER_XML_ENTRY, WORD_RELS_XMLRELS_XML_ENTRY };
 
-	private Set<String> allEntryNamesHyperlinks;
-	private Set<String> modifiedEntryNamesHyperlinks;
+    private Set<String> allEntryNamesHyperlinks;
 
-	public String getKind() {
-		return DocumentKind.DOCX.name();
-	}
+    private Set<String> modifiedEntryNamesHyperlinks;
 
-	@Override
-	protected void registerPreprocessors() {
-		super.addPreprocessor(WORD_DOCUMENT_XML_ENTRY,
-				DocXPreprocessor.INSTANCE);
-		super.addPreprocessor(WORD_HEADER_XML_ENTRY, DocXPreprocessor.INSTANCE);
-		super.addPreprocessor(WORD_FOOTER_XML_ENTRY, DocXPreprocessor.INSTANCE);
-		super.addPreprocessor(CONTENT_TYPES_XML_ENTRY,
-				DocxContentTypesPreprocessor.INSTANCE);
-		super.addPreprocessor(WORD_RELS_XMLRELS_XML_ENTRY,
-				DocxDocumentXMLRelsPreprocessor.INSTANCE);
-	}
+    public String getKind()
+    {
+        return DocumentKind.DOCX.name();
+    }
 
-	@Override
-	protected String[] getDefaultXMLEntries() {
-		return DEFAULT_XML_ENTRIES;
-	}
+    @Override
+    protected void registerPreprocessors()
+    {
+        super.addPreprocessor( WORD_DOCUMENT_XML_ENTRY, DocXPreprocessor.INSTANCE );
+        super.addPreprocessor( WORD_HEADER_XML_ENTRY, DocXPreprocessor.INSTANCE );
+        super.addPreprocessor( WORD_FOOTER_XML_ENTRY, DocXPreprocessor.INSTANCE );
+        super.addPreprocessor( CONTENT_TYPES_XML_ENTRY, DocxContentTypesPreprocessor.INSTANCE );
+        super.addPreprocessor( WORD_RELS_XMLRELS_XML_ENTRY, DocxDocumentXMLRelsPreprocessor.INSTANCE );
+    }
 
-	public MimeMapping getMimeMapping() {
-		return MIME_MAPPING;
-	}
+    @Override
+    protected String[] getDefaultXMLEntries()
+    {
+        return DEFAULT_XML_ENTRIES;
+    }
 
-	@Override
-	protected IImageRegistry createImageRegistry(
-			IEntryReaderProvider readerProvider,
-			IEntryWriterProvider writerProvider,
-			IEntryOutputStreamProvider outputStreamProvider) {
-		return new DocxImageRegistry(readerProvider, writerProvider,
-				outputStreamProvider);
-	}
+    public MimeMapping getMimeMapping()
+    {
+        return MIME_MAPPING;
+    }
 
-	@Override
-	protected void onBeforePreprocessing(Map<String, Object> sharedContext,
-			XDocArchive preprocessedArchive) throws XDocReportException {
-		super.onBeforePreprocessing(sharedContext, preprocessedArchive);
-		// Before starting preprocessing, Hyperlink must be getted from
-		// the whole entries (*.xml.rels like "word/_rels/document.xml.rels") in
-		// the shared
-		// context.
-		Set<String> xmlRelsEntryNames = preprocessedArchive
-				.getEntryNames(WORD_RELS_XMLRELS_XML_ENTRY);
-		this.allEntryNamesHyperlinks = new HashSet<String>();
-		String entryName = null;
-		// Loop for each entries *.xml.rels
-		for (String relsEntryName : xmlRelsEntryNames) {
-			HyperlinkContentHandler contentHandler = new HyperlinkContentHandler();
-			Reader reader = preprocessedArchive.getEntryReader(relsEntryName);
-			try {
-				XMLReader xmlReader = XMLReaderFactory.createXMLReader();
-				xmlReader.setContentHandler(contentHandler);
-				xmlReader.parse(new InputSource(reader));
-				if (contentHandler.getHyperlinks() != null) {
-					// Current *.xml.rels document has hyperlinks, store it in
-					// the
-					// sharedContext with the key *.xml (ex : if the current
-					// entry is "word/_rels/document.xml.rels", key used will be
-					// * "word/document.xml").
-					entryName = HyperlinkUtils
-							.getEntryNameWithoutRels(relsEntryName);
-					HyperlinkUtils.putInitialHyperlinkMap(entryName,
-							sharedContext, contentHandler.getHyperlinks());
-					allEntryNamesHyperlinks.add(entryName);
-				}
-			} catch (SAXException e) {
-				throw new XDocReportException(e);
-			} catch (IOException e) {
-				throw new XDocReportException(e);
-			}
-		}
-	}
+    @Override
+    protected IImageRegistry createImageRegistry( IEntryReaderProvider readerProvider,
+                                                  IEntryWriterProvider writerProvider,
+                                                  IEntryOutputStreamProvider outputStreamProvider )
+    {
+        return new DocxImageRegistry( readerProvider, writerProvider, outputStreamProvider );
+    }
 
-	@Override
-	protected void onAfterPreprocessing(Map<String, Object> sharedContext,
-			XDocArchive preprocessedArchive) throws XDocReportException {
-		super.onAfterPreprocessing(sharedContext, preprocessedArchive);
-		// Compute if the docx has dynamic hyperlink
-		if (sharedContext != null) {
-			InitialHyperlinkMap hyperlinkMap = null;
-			modifiedEntryNamesHyperlinks = new HashSet<String>();
-			for (String entryName : allEntryNamesHyperlinks) {
-				hyperlinkMap = HyperlinkUtils.getInitialHyperlinkMap(entryName,
-						sharedContext);
-				if (hyperlinkMap != null && hyperlinkMap.isModified()) {
-					modifiedEntryNamesHyperlinks.add(entryName);
-				}
-			}
-		}
-	}
+    @Override
+    protected void onBeforePreprocessing( Map<String, Object> sharedContext, XDocArchive preprocessedArchive )
+        throws XDocReportException
+    {
+        super.onBeforePreprocessing( sharedContext, preprocessedArchive );
+        // Before starting preprocessing, Hyperlink must be getted from
+        // the whole entries (*.xml.rels like "word/_rels/document.xml.rels") in
+        // the shared
+        // context.
+        Set<String> xmlRelsEntryNames = preprocessedArchive.getEntryNames( WORD_RELS_XMLRELS_XML_ENTRY );
+        this.allEntryNamesHyperlinks = new HashSet<String>();
+        String entryName = null;
+        // Loop for each entries *.xml.rels
+        for ( String relsEntryName : xmlRelsEntryNames )
+        {
+            HyperlinkContentHandler contentHandler = new HyperlinkContentHandler();
+            Reader reader = preprocessedArchive.getEntryReader( relsEntryName );
+            try
+            {
+                XMLReader xmlReader = XMLReaderFactory.createXMLReader();
+                xmlReader.setContentHandler( contentHandler );
+                xmlReader.parse( new InputSource( reader ) );
+                if ( contentHandler.getHyperlinks() != null )
+                {
+                    // Current *.xml.rels document has hyperlinks, store it in
+                    // the
+                    // sharedContext with the key *.xml (ex : if the current
+                    // entry is "word/_rels/document.xml.rels", key used will be
+                    // * "word/document.xml").
+                    entryName = HyperlinkUtils.getEntryNameWithoutRels( relsEntryName );
+                    HyperlinkUtils.putInitialHyperlinkMap( entryName, sharedContext, contentHandler.getHyperlinks() );
+                    allEntryNamesHyperlinks.add( entryName );
+                }
+            }
+            catch ( SAXException e )
+            {
+                throw new XDocReportException( e );
+            }
+            catch ( IOException e )
+            {
+                throw new XDocReportException( e );
+            }
+        }
+    }
 
-	@Override
-	protected void onBeforeProcessTemplateEngine(IContext context,
-			XDocArchive outputArchive) throws XDocReportException {
-		super.onBeforeProcessTemplateEngine(context, outputArchive);
-		for (String entryName : modifiedEntryNamesHyperlinks) {
-			// docx has dynamic hyperlink, put an instance of HyperlinkRegistry
-			// in the context.
-			context.put(HyperlinkUtils.getHyperlinkRegistryKey(entryName),
-					new HyperlinkRegistry());
-		}
-	}
+    @Override
+    protected void onAfterPreprocessing( Map<String, Object> sharedContext, XDocArchive preprocessedArchive )
+        throws XDocReportException
+    {
+        super.onAfterPreprocessing( sharedContext, preprocessedArchive );
+        // Compute if the docx has dynamic hyperlink
+        if ( sharedContext != null )
+        {
+            InitialHyperlinkMap hyperlinkMap = null;
+            modifiedEntryNamesHyperlinks = new HashSet<String>();
+            for ( String entryName : allEntryNamesHyperlinks )
+            {
+                hyperlinkMap = HyperlinkUtils.getInitialHyperlinkMap( entryName, sharedContext );
+                if ( hyperlinkMap != null && hyperlinkMap.isModified() )
+                {
+                    modifiedEntryNamesHyperlinks.add( entryName );
+                }
+            }
+        }
+    }
 
-	@Override
-	protected void onAfterProcessTemplateEngine(IContext context,
-			XDocArchive outputArchive) throws XDocReportException {
-		super.onAfterProcessTemplateEngine(context, outputArchive);
-	}
+    @Override
+    protected void onBeforeProcessTemplateEngine( IContext context, XDocArchive outputArchive )
+        throws XDocReportException
+    {
+        super.onBeforeProcessTemplateEngine( context, outputArchive );
+        for ( String entryName : modifiedEntryNamesHyperlinks )
+        {
+            // docx has dynamic hyperlink, put an instance of HyperlinkRegistry
+            // in the context.
+            context.put( HyperlinkUtils.getHyperlinkRegistryKey( entryName ), new HyperlinkRegistry() );
+        }
+    }
+
+    @Override
+    protected void onAfterProcessTemplateEngine( IContext context, XDocArchive outputArchive )
+        throws XDocReportException
+    {
+        super.onAfterProcessTemplateEngine( context, outputArchive );
+    }
 }

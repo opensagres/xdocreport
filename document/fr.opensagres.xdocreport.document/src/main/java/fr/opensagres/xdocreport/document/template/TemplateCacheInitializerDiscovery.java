@@ -30,32 +30,36 @@ import fr.opensagres.xdocreport.template.ITemplateEngine;
 import fr.opensagres.xdocreport.template.cache.ITemplateCacheInfoProvider;
 
 /**
- * Initializer template engine to set XDocReportRegistry.getRegistry() as
- * template cache {@link ITemplateCacheInfoProvider}.
- * 
+ * Initializer template engine to set XDocReportRegistry.getRegistry() as template cache
+ * {@link ITemplateCacheInfoProvider}.
  */
-public class TemplateCacheInitializerDiscovery implements
-		ITemplateEngineInitializerDiscovery {
+public class TemplateCacheInitializerDiscovery
+    implements ITemplateEngineInitializerDiscovery
+{
 
-	private static final String ID = TemplateCacheInitializerDiscovery.class
-			.getSimpleName();
-	private static final String DESCRIPTION = "Initializer template engine to set XDocReportRegistry.getRegistry() as template cache";
+    private static final String ID = TemplateCacheInitializerDiscovery.class.getSimpleName();
 
-	public String getId() {
-		return ID;
-	}
+    private static final String DESCRIPTION =
+        "Initializer template engine to set XDocReportRegistry.getRegistry() as template cache";
 
-	public String getDescription() {
-		return DESCRIPTION;
-	}
+    public String getId()
+    {
+        return ID;
+    }
 
-	public String getDocumentKind() {
-		// returns null to initialize the whole template engine.
-		return null;
-	}
+    public String getDescription()
+    {
+        return DESCRIPTION;
+    }
 
-	public void initialize(ITemplateEngine templateEngine) {
-		templateEngine.setTemplateCacheInfoProvider(XDocReportRegistry
-				.getRegistry());
-	}
+    public String getDocumentKind()
+    {
+        // returns null to initialize the whole template engine.
+        return null;
+    }
+
+    public void initialize( ITemplateEngine templateEngine )
+    {
+        templateEngine.setTemplateCacheInfoProvider( XDocReportRegistry.getRegistry() );
+    }
 }

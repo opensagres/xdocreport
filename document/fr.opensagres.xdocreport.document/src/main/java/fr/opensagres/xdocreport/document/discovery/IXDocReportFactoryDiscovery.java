@@ -30,16 +30,12 @@ import fr.opensagres.xdocreport.core.io.XDocArchive;
 import fr.opensagres.xdocreport.document.IXDocReport;
 
 /**
- * Discovery used to register report factory in the {@link XDocReportLoader}.
- * When report is loaded with
- * {@link XDocReportLoader#loadReport(java.io.InputStream)} discovery is used to
- * create the well instance report (ODTReport, DocxReport...) switch the type of
- * ziped XML document coming from teh stream.
- * 
+ * Discovery used to register report factory in the {@link XDocReportLoader}. When report is loaded with
+ * {@link XDocReportLoader#loadReport(java.io.InputStream)} discovery is used to create the well instance report
+ * (ODTReport, DocxReport...) switch the type of ziped XML document coming from teh stream.
  * <p>
- * An implementation report factory discovery is declared in the
- * xdocreport-discovery.properties with 'class' property. Example for ODT report
- * factory :
+ * An implementation report factory discovery is declared in the xdocreport-discovery.properties with 'class' property.
+ * Example for ODT report factory :
  * 
  * <pre>
  * -------------------------
@@ -48,47 +44,46 @@ import fr.opensagres.xdocreport.document.IXDocReport;
  * </pre>
  * 
  * </p>
- * 
  */
-public interface IXDocReportFactoryDiscovery extends IBaseDiscovery {
+public interface IXDocReportFactoryDiscovery
+    extends IBaseDiscovery
+{
 
-	/**
-	 * Returns true if loaded document archive support this discovery and false
-	 * otherwise.
-	 * 
-	 * @param archive
-	 * @return
-	 */
-	boolean isAdaptFor(XDocArchive archive);
+    /**
+     * Returns true if loaded document archive support this discovery and false otherwise.
+     * 
+     * @param archive
+     * @return
+     */
+    boolean isAdaptFor( XDocArchive archive );
 
-	/**
-	 * Returns true if file extension support this discovery and false
-	 * otherwise.
-	 * 
-	 * @param archive
-	 * @return
-	 */
-	boolean isAdaptFor(String fileExtension);
-	
-	/**
-	 * Create a new instance of {@link IXDocReport}.
-	 * 
-	 * @return
-	 */
-	IXDocReport createReport();
+    /**
+     * Returns true if file extension support this discovery and false otherwise.
+     * 
+     * @param archive
+     * @return
+     */
+    boolean isAdaptFor( String fileExtension );
 
-	/**
-	 * Returns mime mapping switch the kind of the report (odt, docx...).
-	 * 
-	 * @return
-	 */
-	MimeMapping getMimeMapping();
+    /**
+     * Create a new instance of {@link IXDocReport}.
+     * 
+     * @return
+     */
+    IXDocReport createReport();
 
-	/**
-	 * Returns class report created with this factory.
-	 * 
-	 * @return
-	 */
-	Class<?> getReportClass();
+    /**
+     * Returns mime mapping switch the kind of the report (odt, docx...).
+     * 
+     * @return
+     */
+    MimeMapping getMimeMapping();
+
+    /**
+     * Returns class report created with this factory.
+     * 
+     * @return
+     */
+    Class<?> getReportClass();
 
 }

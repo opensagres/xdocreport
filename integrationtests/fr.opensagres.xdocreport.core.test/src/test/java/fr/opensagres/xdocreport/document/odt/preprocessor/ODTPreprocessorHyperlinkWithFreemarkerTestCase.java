@@ -32,115 +32,109 @@ import fr.opensagres.xdocreport.template.formatter.FieldsMetadata;
 import fr.opensagres.xdocreport.template.formatter.IDocumentFormatter;
 import fr.opensagres.xdocreport.template.freemarker.FreemarkerDocumentFormatter;
 
-public class ODTPreprocessorHyperlinkWithFreemarkerTestCase extends TestCase {
+public class ODTPreprocessorHyperlinkWithFreemarkerTestCase
+    extends TestCase
+{
 
-	public void testYperlinkWithListFieldInTable() throws Exception {
-		ODTPreprocessor preprocessor = new ODTPreprocessor();
-		StringReader reader = new StringReader(
-				"<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>"
-						+ "<office:document-content xmlns:office=\"urn:oasis:names:tc:opendocument:xmlns:office:1.0\" "
-						+ "xmlns:text=\"urn:oasis:names:tc:opendocument:xmlns:text:1.0\" "
-						+ "xmlns:table=\"urn:oasis:names:tc:opendocument:xmlns:table:1.0\" "
-						+ "xmlns:svg=\"urn:oasis:names:tc:opendocument:xmlns:svg-compatible:1.0\" "
-						+ "xmlns:xlink=\"http://www.w3.org/1999/xlink\" "
-						+ "xmlns:draw=\"urn:oasis:names:tc:opendocument:xmlns:drawing:1.0\">"
-						+ "<table:table table:name=\"Tableau1\" table:style-name=\"Tableau1\">"
-						+ "<table:table-column table:style-name=\"Tableau1.A\"/>"
-						+ "<table:table-column table:style-name=\"Tableau1.B\"/>"
-						+ "<table:table-column table:style-name=\"Tableau1.C\"/>"
-						+ "<table:table-column table:style-name=\"Tableau1.D\"/>"
-						+ "<table:table-row table:style-name=\"Tableau1.1\">"
-						+ "<table:table-cell table:style-name=\"Tableau1.A1\" office:value-type=\"string\">"
-						+ "<text:p text:style-name=\"P1\">Name</text:p>"
-						+ "</table:table-cell>"
-						+ "<table:table-cell table:style-name=\"Tableau1.A1\" office:value-type=\"string\">"
-						+ "<text:p text:style-name=\"P2\">Last name</text:p>"
-						+ "</table:table-cell>"
-						+ "<table:table-cell table:style-name=\"Tableau1.A1\" office:value-type=\"string\">"
-						+ "<text:p text:style-name=\"P1\">Mail</text:p>"
-						+ "</table:table-cell>"
-						+ "</table:table-row>"
-						+ "<table:table-row table:style-name=\"Tableau1.1\">"
-						+ "<table:table-cell table:style-name=\"Tableau1.A2\" office:value-type=\"string\">"
-						+ "<text:p text:style-name=\"Standard\">"
-						+ "<text:text-input text:description=\"\">$developers.Name</text:text-input>"
-						+ "</text:p>"
-						+ "</table:table-cell>"
-						+ "<table:table-cell table:style-name=\"Tableau1.A2\" office:value-type=\"string\">"
-						+ "<text:p text:style-name=\"Standard\">"
-						+ "<text:text-input text:description=\"\">$developers.LastName</text:text-input>"
-						+ "</text:p>"
-						+ "</table:table-cell>"
-						+ "<table:table-cell table:style-name=\"Tableau1.A2\" office:value-type=\"string\">"
-						+ "<text:p text:style-name=\"Standard\">"
-						+ "<text:a xlink:type=\"simple\" xlink:href=\"mailto:${developers.mail}\">${developers.mail}</text:a>"
-						+ "</text:p>" + "</table:table-cell>"
-						+ "</table:table-row>" + "</table:table>"
-						+ "</office:document-content>");
-		StringWriter writer = new StringWriter();
+    public void testYperlinkWithListFieldInTable()
+        throws Exception
+    {
+        ODTPreprocessor preprocessor = new ODTPreprocessor();
+        StringReader reader =
+            new StringReader( "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>"
+                + "<office:document-content xmlns:office=\"urn:oasis:names:tc:opendocument:xmlns:office:1.0\" "
+                + "xmlns:text=\"urn:oasis:names:tc:opendocument:xmlns:text:1.0\" "
+                + "xmlns:table=\"urn:oasis:names:tc:opendocument:xmlns:table:1.0\" "
+                + "xmlns:svg=\"urn:oasis:names:tc:opendocument:xmlns:svg-compatible:1.0\" "
+                + "xmlns:xlink=\"http://www.w3.org/1999/xlink\" "
+                + "xmlns:draw=\"urn:oasis:names:tc:opendocument:xmlns:drawing:1.0\">"
+                + "<table:table table:name=\"Tableau1\" table:style-name=\"Tableau1\">"
+                + "<table:table-column table:style-name=\"Tableau1.A\"/>"
+                + "<table:table-column table:style-name=\"Tableau1.B\"/>"
+                + "<table:table-column table:style-name=\"Tableau1.C\"/>"
+                + "<table:table-column table:style-name=\"Tableau1.D\"/>"
+                + "<table:table-row table:style-name=\"Tableau1.1\">"
+                + "<table:table-cell table:style-name=\"Tableau1.A1\" office:value-type=\"string\">"
+                + "<text:p text:style-name=\"P1\">Name</text:p>" + "</table:table-cell>"
+                + "<table:table-cell table:style-name=\"Tableau1.A1\" office:value-type=\"string\">"
+                + "<text:p text:style-name=\"P2\">Last name</text:p>" + "</table:table-cell>"
+                + "<table:table-cell table:style-name=\"Tableau1.A1\" office:value-type=\"string\">"
+                + "<text:p text:style-name=\"P1\">Mail</text:p>" + "</table:table-cell>" + "</table:table-row>"
+                + "<table:table-row table:style-name=\"Tableau1.1\">"
+                + "<table:table-cell table:style-name=\"Tableau1.A2\" office:value-type=\"string\">"
+                + "<text:p text:style-name=\"Standard\">"
+                + "<text:text-input text:description=\"\">$developers.Name</text:text-input>" + "</text:p>"
+                + "</table:table-cell>"
+                + "<table:table-cell table:style-name=\"Tableau1.A2\" office:value-type=\"string\">"
+                + "<text:p text:style-name=\"Standard\">"
+                + "<text:text-input text:description=\"\">$developers.LastName</text:text-input>" + "</text:p>"
+                + "</table:table-cell>"
+                + "<table:table-cell table:style-name=\"Tableau1.A2\" office:value-type=\"string\">"
+                + "<text:p text:style-name=\"Standard\">"
+                + "<text:a xlink:type=\"simple\" xlink:href=\"mailto:${developers.mail}\">${developers.mail}</text:a>"
+                + "</text:p>" + "</table:table-cell>" + "</table:table-row>" + "</table:table>"
+                + "</office:document-content>" );
+        StringWriter writer = new StringWriter();
 
-		FieldsMetadata metadata = new FieldsMetadata();
-		metadata.addFieldAsList("developers.mail");
-		IDocumentFormatter formatter = new FreemarkerDocumentFormatter();
+        FieldsMetadata metadata = new FieldsMetadata();
+        metadata.addFieldAsList( "developers.mail" );
+        IDocumentFormatter formatter = new FreemarkerDocumentFormatter();
 
-		preprocessor.preprocess("test", reader, writer, null, metadata,
-				formatter, null);
+        preprocessor.preprocess( "test", reader, writer, null, metadata, formatter, null );
 
-		assertEquals(
-				"<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>"
-						+ "<office:document-content xmlns:office=\"urn:oasis:names:tc:opendocument:xmlns:office:1.0\" "
-						+ "xmlns:text=\"urn:oasis:names:tc:opendocument:xmlns:text:1.0\" "
-						+ "xmlns:table=\"urn:oasis:names:tc:opendocument:xmlns:table:1.0\" "
-						+ "xmlns:svg=\"urn:oasis:names:tc:opendocument:xmlns:svg-compatible:1.0\" "
-						+ "xmlns:xlink=\"http://www.w3.org/1999/xlink\" "
-						+ "xmlns:draw=\"urn:oasis:names:tc:opendocument:xmlns:drawing:1.0\">"
-						+ "<table:table table:name=\"Tableau1\" table:style-name=\"Tableau1\">"
-						+ "<table:table-column table:style-name=\"Tableau1.A\"/>"
-						+ "<table:table-column table:style-name=\"Tableau1.B\"/>"
-						+ "<table:table-column table:style-name=\"Tableau1.C\"/>"
-						+ "<table:table-column table:style-name=\"Tableau1.D\"/>"
-						+ "<table:table-row table:style-name=\"Tableau1.1\">"
-						+ "<table:table-cell table:style-name=\"Tableau1.A1\" office:value-type=\"string\">"
-						+ "<text:p text:style-name=\"P1\">Name</text:p>"
-						+ "</table:table-cell>"
-						+ "<table:table-cell table:style-name=\"Tableau1.A1\" office:value-type=\"string\">"
-						+ "<text:p text:style-name=\"P2\">Last name</text:p>"
-						+ "</table:table-cell>"
-						+ "<table:table-cell table:style-name=\"Tableau1.A1\" office:value-type=\"string\">"
-						+ "<text:p text:style-name=\"P1\">Mail</text:p>"
-						+ "</table:table-cell>"
-						+ "</table:table-row>"
+        assertEquals( "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>"
+                          + "<office:document-content xmlns:office=\"urn:oasis:names:tc:opendocument:xmlns:office:1.0\" "
+                          + "xmlns:text=\"urn:oasis:names:tc:opendocument:xmlns:text:1.0\" "
+                          + "xmlns:table=\"urn:oasis:names:tc:opendocument:xmlns:table:1.0\" "
+                          + "xmlns:svg=\"urn:oasis:names:tc:opendocument:xmlns:svg-compatible:1.0\" "
+                          + "xmlns:xlink=\"http://www.w3.org/1999/xlink\" "
+                          + "xmlns:draw=\"urn:oasis:names:tc:opendocument:xmlns:drawing:1.0\">"
+                          + "<table:table table:name=\"Tableau1\" table:style-name=\"Tableau1\">"
+                          + "<table:table-column table:style-name=\"Tableau1.A\"/>"
+                          + "<table:table-column table:style-name=\"Tableau1.B\"/>"
+                          + "<table:table-column table:style-name=\"Tableau1.C\"/>"
+                          + "<table:table-column table:style-name=\"Tableau1.D\"/>"
+                          + "<table:table-row table:style-name=\"Tableau1.1\">"
+                          + "<table:table-cell table:style-name=\"Tableau1.A1\" office:value-type=\"string\">"
+                          + "<text:p text:style-name=\"P1\">Name</text:p>"
+                          + "</table:table-cell>"
+                          + "<table:table-cell table:style-name=\"Tableau1.A1\" office:value-type=\"string\">"
+                          + "<text:p text:style-name=\"P2\">Last name</text:p>"
+                          + "</table:table-cell>"
+                          + "<table:table-cell table:style-name=\"Tableau1.A1\" office:value-type=\"string\">"
+                          + "<text:p text:style-name=\"P1\">Mail</text:p>"
+                          + "</table:table-cell>"
+                          + "</table:table-row>"
 
-						+ "[#list developers as item_developers]"
+                          + "[#list developers as item_developers]"
 
-						+ "<table:table-row table:style-name=\"Tableau1.1\">"
-						+ "<table:table-cell table:style-name=\"Tableau1.A2\" office:value-type=\"string\">"
-						+ "<text:p text:style-name=\"Standard\">"
-						// +
-						// "<text:text-input text:description=\"\">$developers.Name</text:text-input>"
-						+ "$developers.Name"
-						+ "</text:p>"
-						+ "</table:table-cell>"
-						+ "<table:table-cell table:style-name=\"Tableau1.A2\" office:value-type=\"string\">"
-						+ "<text:p text:style-name=\"Standard\">"
-						// +
-						// "<text:text-input text:description=\"\">$developers.LastName</text:text-input>"
-						+ "$developers.LastName"
-						+ "</text:p>"
-						+ "</table:table-cell>"
-						+ "<table:table-cell table:style-name=\"Tableau1.A2\" office:value-type=\"string\">"
-						+ "<text:p text:style-name=\"Standard\">"
-						// +
-						// "<text:a xlink:type=\"simple\" xlink:href=\"mailto:${developers.mail}\">${developers.mail}</text:a>"
-						+ "<text:a xlink:type=\"simple\" xlink:href=\"mailto:${item_developers.mail}\">${item_developers.mail}</text:a>"
-						+ "</text:p>" + "</table:table-cell>"
+                          + "<table:table-row table:style-name=\"Tableau1.1\">"
+                          + "<table:table-cell table:style-name=\"Tableau1.A2\" office:value-type=\"string\">"
+                          + "<text:p text:style-name=\"Standard\">"
+                          // +
+                          // "<text:text-input text:description=\"\">$developers.Name</text:text-input>"
+                          + "$developers.Name"
+                          + "</text:p>"
+                          + "</table:table-cell>"
+                          + "<table:table-cell table:style-name=\"Tableau1.A2\" office:value-type=\"string\">"
+                          + "<text:p text:style-name=\"Standard\">"
+                          // +
+                          // "<text:text-input text:description=\"\">$developers.LastName</text:text-input>"
+                          + "$developers.LastName"
+                          + "</text:p>"
+                          + "</table:table-cell>"
+                          + "<table:table-cell table:style-name=\"Tableau1.A2\" office:value-type=\"string\">"
+                          + "<text:p text:style-name=\"Standard\">"
+                          // +
+                          // "<text:a xlink:type=\"simple\" xlink:href=\"mailto:${developers.mail}\">${developers.mail}</text:a>"
+                          + "<text:a xlink:type=\"simple\" xlink:href=\"mailto:${item_developers.mail}\">${item_developers.mail}</text:a>"
+                          + "</text:p>" + "</table:table-cell>"
 
-						+ "</table:table-row>"
+                          + "</table:table-row>"
 
-						+ "[/#list]"
+                          + "[/#list]"
 
-						+ "</table:table>" + "</office:document-content>",
-				writer.toString());
+                          + "</table:table>" + "</office:document-content>", writer.toString() );
 
-	}
+    }
 }

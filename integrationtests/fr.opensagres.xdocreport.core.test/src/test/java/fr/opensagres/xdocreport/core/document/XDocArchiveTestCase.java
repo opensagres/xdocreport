@@ -44,93 +44,108 @@ import fr.opensagres.xdocreport.core.io.XDocArchive;
 import fr.opensagres.xdocreport.core.logging.LogUtils;
 import fr.opensagres.xdocreport.core.logging.Slf4jLogger;
 
-
 /**
  * Test case for {@link XDocArchive}.
- * 
  */
-public class XDocArchiveTestCase {
-   
-	Logger  logger =LogUtils.getLogger(XDocArchiveTestCase.class);
-   @BeforeClass
-	public static void setUp() throws Exception {
-	//	LogUtils.setLoggerClass(Slf4jLogger.class);
-	}
-	/**
-	 * Read non existing zip file.
-	 * 
-	 * @throws IOException
-	 */
-   @Test
-	public void testReadZipNotFound() throws IOException {
-	//	LogUtils.setLoggerClass(Slf4jLogger.class);
-		
-		logger.severe("test");
-		logger.fine("fine");
-		IOException e = null;
-		InputStream input = XDocArchiveTestCase.class
-				.getResourceAsStream("not_found.odt");
-		try {
-			XDocArchive.readZip(input);
-		} catch (IOException ex) {
-			e = ex;
-		}
-		assertNotNull(e);
-		assertEquals("InputStream cannot be null.", e.getMessage());
-	}
+public class XDocArchiveTestCase
+{
 
-	/**
-	 * Read file which is not a Zip.
-	 * 
-	 * @throws IOException
-	 */
-   @Test
-	public void testReadNotZip() throws IOException {
-		IOException e = null;
-		InputStream input = XDocArchiveTestCase.class
-				.getResourceAsStream("notZip.txt");
-		try {
-			XDocArchive.readZip(input);
-		} catch (IOException ex) {
-			e = ex;
-		}
-		assertNotNull(e);
-		assertEquals("InputStream is not a zip.", e.getMessage());
-	}
+    Logger logger = LogUtils.getLogger( XDocArchiveTestCase.class );
 
-	/**
-	 * Read existing file.
-	 * 
-	 * @throws IOException
-	 */
-   @Test
-	public void testReadODT() throws IOException {
-		InputStream input = new FileInputStream("src/test/resources/empty.odt");
-		XDocArchive archive = XDocArchive.readZip(input);
+    @BeforeClass
+    public static void setUp()
+        throws Exception
+    {
+        // LogUtils.setLoggerClass(Slf4jLogger.class);
+    }
 
-		assertNotNull("null archive", archive);
-		Set<String> entryNames = archive.getEntryNames();
-		assertFalse("no entries", entryNames.isEmpty());
+    /**
+     * Read non existing zip file.
+     * 
+     * @throws IOException
+     */
+    @Test
+    public void testReadZipNotFound()
+        throws IOException
+    {
+        // LogUtils.setLoggerClass(Slf4jLogger.class);
 
-		String mimetypeString = IOUtils.toString(archive
-				.getEntryReader("mimetype"));
-		assertEquals("application/vnd.oasis.opendocument.text", mimetypeString);
-	}
-   @Test
-	public void testWrite() throws IOException {
-	
-		XDocArchive archive = new XDocArchive();
-		Writer contentWriter = archive.getEntryWriter("content.xml");
-		contentWriter.write("bla bla bla");
-		contentWriter.close();
-		
-		Reader contentReader = archive.getEntryReader("content.xml");
-		String s1 = IOUtils.toString(contentReader);
-		
-		contentWriter = archive.getEntryWriter("content.xml");
-		
-		// Application du moteur de template
-		contentWriter.write("bla bla bla2");
-		contentWriter.close();
-	}
+        logger.severe( "test" );
+        logger.fine( "fine" );
+        IOException e = null;
+        InputStream input = XDocArchiveTestCase.class.getResourceAsStream( "not_found.odt" );
+        try
+        {
+            XDocArchive.readZip( input );
+        }
+        catch ( IOException ex )
+        {
+            e = ex;
+        }
+        assertNotNull( e );
+        assertEquals( "InputStream cannot be null.", e.getMessage() );
+    }
+
+    /**
+     * Read file which is not a Zip.
+     * 
+     * @throws IOException
+     */
+    @Test
+    public void testReadNotZip()
+        throws IOException
+    {
+        IOException e = null;
+        InputStream input = XDocArchiveTestCase.class.getResourceAsStream( "notZip.txt" );
+        try
+        {
+            XDocArchive.readZip( input );
+        }
+        catch ( IOException ex )
+        {
+            e = ex;
+        }
+        assertNotNull( e );
+        assertEquals( "InputStream is not a zip.", e.getMessage() );
+    }
+
+    /**
+     * Read existing file.
+     * 
+     * @throws IOException
+     */
+    @Test
+    public void testReadODT()
+        throws IOException
+    {
+        InputStream input = new FileInputStream( "src/test/resources/empty.odt" );
+        XDocArchive archive = XDocArchive.readZip( input );
+
+        assertNotNull( "null archive", archive );
+        Set<String> entryNames = archive.getEntryNames();
+        assertFalse( "no entries", entryNames.isEmpty() );
+
+        String mimetypeString = IOUtils.toString( archive.getEntryReader( "mimetype" ) );
+        assertEquals( "application/vnd.oasis.opendocument.text", mimetypeString );
+    }
+
+    @Test
+    public void testWrite()
+        throws IOException
+    {
+
+        XDocArchive archive = new XDocArchive();
+        Writer contentWriter = archive.getEntryWriter( "content.xml" );
+        contentWriter.write( "bla bla bla" );
+        contentWriter.close();
+
+        Reader contentReader = archive.getEntryReader( "content.xml" );
+        String s1 = IOUtils.toString( contentReader );
+
+        contentWriter = archive.getEntryWriter( "content.xml" );
+
+        // Application du moteur de template
+        contentWriter.write( "bla bla bla2" );
+        contentWriter.close();
+    }
 }

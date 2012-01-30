@@ -46,65 +46,66 @@ import org.osgi.framework.BundleContext;
 import fr.opensagres.xdocreport.document.discovery.IXDocReportFactoryDiscovery;
 import fr.opensagres.xdocreport.document.registry.XDocReportRegistry;
 
-@RunWith(JUnit4TestRunner.class)
-public class DocumentTest {
+@RunWith( JUnit4TestRunner.class )
+public class DocumentTest
+{
 
-	@Inject
-	BundleContext bundleContext = null;
+    @Inject
+    BundleContext bundleContext = null;
 
-	@Configuration
-	public static Option[] configure() {
-		return options(
+    @Configuration
+    public static Option[] configure()
+    {
+        return options(
 
-				PaxRunnerOptions.cleanCaches(),
-				//
-				// PaxRunnerOptions.vmOption("-Xrunjdwp:transport=dt_socket,server=y,suspend=y,address=5006"),
-				// equinox(),
+                        PaxRunnerOptions.cleanCaches(),
+                        //
+                        // PaxRunnerOptions.vmOption("-Xrunjdwp:transport=dt_socket,server=y,suspend=y,address=5006"),
+                        // equinox(),
 
-				// logProfile(),
-				// this is how you set the default log level when using pax
-				// logging (logProfile)
-				systemProperty("org.ops4j.pax.logging.DefaultServiceLog.level")
-						.value("WARN"),
-				mavenBundle("fr.opensagres.xdocreport","fr.opensagres.xdocreport.core").versionAsInProject(),
-				// converter api
-				mavenBundle("fr.opensagres.xdocreport","fr.opensagres.xdocreport.converter").versionAsInProject(),
+                        // logProfile(),
+                        // this is how you set the default log level when using pax
+                        // logging (logProfile)
+                        systemProperty( "org.ops4j.pax.logging.DefaultServiceLog.level" ).value( "WARN" ),
+                        mavenBundle( "fr.opensagres.xdocreport", "fr.opensagres.xdocreport.core" ).versionAsInProject(),
+                        // converter api
+                        mavenBundle( "fr.opensagres.xdocreport", "fr.opensagres.xdocreport.converter" ).versionAsInProject(),
 
-				// template API
-				mavenBundle("fr.opensagres.xdocreport","fr.opensagres.xdocreport.template").versionAsInProject(),
-				// document API
-				mavenBundle("fr.opensagres.xdocreport","fr.opensagres.xdocreport.document").versionAsInProject().noStart(),
+                        // template API
+                        mavenBundle( "fr.opensagres.xdocreport", "fr.opensagres.xdocreport.template" ).versionAsInProject(),
+                        // document API
+                        mavenBundle( "fr.opensagres.xdocreport", "fr.opensagres.xdocreport.document" ).versionAsInProject().noStart(),
 
-				// document Impl
-				mavenBundle("fr.opensagres.xdocreport","fr.opensagres.xdocreport.document.docx").versionAsInProject().noStart(),
-				// document Impl
-				mavenBundle("fr.opensagres.xdocreport","fr.opensagres.xdocreport.document.odt").versionAsInProject().noStart(),
-				
-				mavenBundle("fr.opensagres.xdocreport","fr.opensagres.xdocreport.document.odp").versionAsInProject().noStart(),
-				mavenBundle("fr.opensagres.xdocreport","fr.opensagres.xdocreport.document.ods").versionAsInProject().noStart(),
-				mavenBundle("fr.opensagres.xdocreport","fr.opensagres.xdocreport.document.pptx").versionAsInProject().noStart(),
-				new Customizer() {
+                        // document Impl
+                        mavenBundle( "fr.opensagres.xdocreport", "fr.opensagres.xdocreport.document.docx" ).versionAsInProject().noStart(),
+                        // document Impl
+                        mavenBundle( "fr.opensagres.xdocreport", "fr.opensagres.xdocreport.document.odt" ).versionAsInProject().noStart(),
 
-					
-					@Override
-					public void customizeEnvironment(File workingFolder) {
-						
-						System.out.println("Hello World: "
-								+ workingFolder.getAbsolutePath());
-					}
-				});
-	}
+                        mavenBundle( "fr.opensagres.xdocreport", "fr.opensagres.xdocreport.document.odp" ).versionAsInProject().noStart(),
+                        mavenBundle( "fr.opensagres.xdocreport", "fr.opensagres.xdocreport.document.ods" ).versionAsInProject().noStart(),
+                        mavenBundle( "fr.opensagres.xdocreport", "fr.opensagres.xdocreport.document.pptx" ).versionAsInProject().noStart(),
+                        new Customizer()
+                        {
 
-	@Test
-	public void countDiscoveries() throws Exception {
-		
-	
-			Collection<IXDocReportFactoryDiscovery> discoveries = XDocReportRegistry
-					.getRegistry().getReportFactoryDiscoveries();
-			assertNotNull(discoveries);
-		
-			assertEquals(5, discoveries.size());
-		
-		
-	}
+                            @Override
+                            public void customizeEnvironment( File workingFolder )
+                            {
+
+                                System.out.println( "Hello World: " + workingFolder.getAbsolutePath() );
+                            }
+                        } );
+    }
+
+    @Test
+    public void countDiscoveries()
+        throws Exception
+    {
+
+        Collection<IXDocReportFactoryDiscovery> discoveries =
+            XDocReportRegistry.getRegistry().getReportFactoryDiscoveries();
+        assertNotNull( discoveries );
+
+        assertEquals( 5, discoveries.size() );
+
+    }
 }

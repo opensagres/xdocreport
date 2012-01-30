@@ -33,49 +33,53 @@ import org.odftoolkit.odfdom.converter.Data;
 import org.odftoolkit.odfdom.converter.FileURIResolver;
 import org.odftoolkit.odfdom.doc.OdfTextDocument;
 
-public class ODFDOM2XHTMLConverterTest extends AbstractODFDOMConverterTest {
+public class ODFDOM2XHTMLConverterTest
+    extends AbstractODFDOMConverterTest
+{
 
-	protected void doGenerate(String fileInName) throws Exception {
-		doGenerateSysOut(fileInName);
-		doGenerateHTMLFile(fileInName);
-	}
+    protected void doGenerate( String fileInName )
+        throws Exception
+    {
+        doGenerateSysOut( fileInName );
+        doGenerateHTMLFile( fileInName );
+    }
 
-	protected void doGenerateSysOut(String fileInName) throws Exception {
+    protected void doGenerateSysOut( String fileInName )
+        throws Exception
+    {
 
-		long startTime = System.currentTimeMillis();
+        long startTime = System.currentTimeMillis();
 
-		OdfTextDocument document = OdfTextDocument.loadDocument(Data.class
-				.getResourceAsStream(fileInName));
-		XHTMLOptions options = XHTMLOptions.create();
-		options.indent(1);
-		options.generateCSSComments(true);
-		options.URIResolver(new FileURIResolver(new File("Pictures")));
+        OdfTextDocument document = OdfTextDocument.loadDocument( Data.class.getResourceAsStream( fileInName ) );
+        XHTMLOptions options = XHTMLOptions.create();
+        options.indent( 1 );
+        options.generateCSSComments( true );
+        options.URIResolver( new FileURIResolver( new File( "Pictures" ) ) );
 
-		OutputStream out = System.out;
-		ODF2XHTMLConverter.getInstance().convert(document, out, options);
+        OutputStream out = System.out;
+        ODF2XHTMLConverter.getInstance().convert( document, out, options );
 
-		System.out.println("Elapsed time="
-				+ (System.currentTimeMillis() - startTime));
-	}
+        System.out.println( "Elapsed time=" + ( System.currentTimeMillis() - startTime ) );
+    }
 
-	protected void doGenerateHTMLFile(String fileInName) throws Exception {
+    protected void doGenerateHTMLFile( String fileInName )
+        throws Exception
+    {
 
-		String root = "target";
-		String fileOutName = root + "/" + fileInName + ".html";
+        String root = "target";
+        String fileOutName = root + "/" + fileInName + ".html";
 
-		long startTime = System.currentTimeMillis();
+        long startTime = System.currentTimeMillis();
 
-		OdfTextDocument document = OdfTextDocument.loadDocument(Data.class
-				.getResourceAsStream(fileInName));
-		XHTMLOptions options = XHTMLOptions.create();
-		options.indent(1);
-		options.generateCSSComments(true);
-		options.URIResolver(new FileURIResolver(new File("Pictures")));
+        OdfTextDocument document = OdfTextDocument.loadDocument( Data.class.getResourceAsStream( fileInName ) );
+        XHTMLOptions options = XHTMLOptions.create();
+        options.indent( 1 );
+        options.generateCSSComments( true );
+        options.URIResolver( new FileURIResolver( new File( "Pictures" ) ) );
 
-		OutputStream out = new FileOutputStream(new File(fileOutName));
-		ODF2XHTMLConverter.getInstance().convert(document, out, options);
+        OutputStream out = new FileOutputStream( new File( fileOutName ) );
+        ODF2XHTMLConverter.getInstance().convert( document, out, options );
 
-		System.out.println("Generate " + fileOutName + " with "
-				+ (System.currentTimeMillis() - startTime) + " ms.");
-	}
+        System.out.println( "Generate " + fileOutName + " with " + ( System.currentTimeMillis() - startTime ) + " ms." );
+    }
 }

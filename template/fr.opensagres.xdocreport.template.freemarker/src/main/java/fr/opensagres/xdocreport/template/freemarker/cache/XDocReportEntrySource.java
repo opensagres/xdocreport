@@ -27,26 +27,25 @@ package fr.opensagres.xdocreport.template.freemarker.cache;
 import fr.opensagres.xdocreport.core.io.XDocArchive;
 
 /**
- * Store the entry name of the {@link XDocArchive} which must be managed with
- * Freemarker template loader.
- * 
+ * Store the entry name of the {@link XDocArchive} which must be managed with Freemarker template loader.
  */
-public class XDocReportEntrySource {
+public class XDocReportEntrySource
+{
 
-	//private final IXDocReport report;
-	//private final String entryName;
+    // private final IXDocReport report;
+    // private final String entryName;
 
-//	public XDocReportEntrySource(final IXDocReport report,
-//			final String entryName) {
-//		this.report = report;
-//		this.entryName = entryName;
-//	}
-//
-//	public IXDocReport getReport() {
-//		return report;
-//	}
-//
-//	public String getEntryName() {
-//		return entryName;
-//	}
+    // public XDocReportEntrySource(final IXDocReport report,
+    // final String entryName) {
+    // this.report = report;
+    // this.entryName = entryName;
+    // }
+    //
+    // public IXDocReport getReport() {
+    // return report;
+    // }
+    //
+    // public String getEntryName() {
+    // return entryName;
+    // }
 }

@@ -30,8 +30,9 @@ import fr.opensagres.xdocreport.core.XDocReportException;
 import fr.opensagres.xdocreport.document.IXDocReport;
 import fr.opensagres.xdocreport.template.IContext;
 
-public interface IDataProvider {
+public interface IDataProvider
+{
 
-	void populateContext(IXDocReport report, IContext context)
-			throws IOException, XDocReportException;
+    void populateContext( IXDocReport report, IContext context )
+        throws IOException, XDocReportException;
 }

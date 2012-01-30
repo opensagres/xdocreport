@@ -2,29 +2,31 @@ package fr.opensagres.xdocreport.template.formatter.cli;
 
 import java.util.List;
 
-public class Project {
+public class Project
+{
 
-	private Person manager;
+    private Person manager;
 
-	private List<Person> resources;
-	
-	
-	public List<Person> getResources() {
-		return resources;
-	}
+    private List<Person> resources;
 
-	public void setResources(List<Person> resources) {
-		this.resources = resources;
-	}
+    public List<Person> getResources()
+    {
+        return resources;
+    }
 
-	public Person getManager() {
-		return manager;
-	}
+    public void setResources( List<Person> resources )
+    {
+        this.resources = resources;
+    }
 
-	public void setManager(Person manager) {
-		this.manager = manager;
-	}
-	
-	
-	
+    public Person getManager()
+    {
+        return manager;
+    }
+
+    public void setManager( Person manager )
+    {
+        this.manager = manager;
+    }
+
 }

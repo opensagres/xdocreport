@@ -26,7 +26,8 @@ package fr.opensagres.xdocreport.core.io;
 
 import java.io.Reader;
 
-public interface IEntryReaderProvider {
+public interface IEntryReaderProvider
+{
 
-	Reader getEntryReader(String entryName);
+    Reader getEntryReader( String entryName );
 }

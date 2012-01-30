@@ -33,18 +33,22 @@ import java.nio.charset.Charset;
 
 import fr.opensagres.xdocreport.core.io.IOUtils;
 
+public class Writer2InputStream
+    extends CharArrayWriter
+{
 
-public class Writer2InputStream extends CharArrayWriter {
+    private final Charset charset;
 
-	private final Charset charset;
+    public Writer2InputStream( Charset charset )
+    {
+        this.charset = charset;
+    }
 
-	public Writer2InputStream(Charset charset) {
-		this.charset = charset;
-	}
-
-	public InputStream getInputStream() throws IOException {
-		ByteArrayOutputStream o = new ByteArrayOutputStream();
-		IOUtils.write(super.toCharArray(), o, charset.name());
-		return new ByteArrayInputStream(o.toByteArray());
-	}
+    public InputStream getInputStream()
+        throws IOException
+    {
+        ByteArrayOutputStream o = new ByteArrayOutputStream();
+        IOUtils.write( super.toCharArray(), o, charset.name() );
+        return new ByteArrayInputStream( o.toByteArray() );
+    }
 }

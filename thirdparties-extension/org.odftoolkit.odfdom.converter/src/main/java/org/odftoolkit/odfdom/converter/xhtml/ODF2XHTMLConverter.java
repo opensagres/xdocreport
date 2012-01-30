@@ -39,72 +39,79 @@ import org.odftoolkit.odfdom.dom.OdfContentDom;
 import org.odftoolkit.odfdom.dom.OdfStylesDom;
 import org.odftoolkit.odfdom.incubator.doc.office.OdfOfficeMasterStyles;
 
-public class ODF2XHTMLConverter extends AbstractODFConverter<XHTMLOptions> {
+public class ODF2XHTMLConverter
+    extends AbstractODFConverter<XHTMLOptions>
+{
 
-	private static final ODF2XHTMLConverter INSTANCE = new ODF2XHTMLConverter();
+    private static final ODF2XHTMLConverter INSTANCE = new ODF2XHTMLConverter();
 
-	public static ODF2XHTMLConverter getInstance() {
-		return INSTANCE;
-	}
+    public static ODF2XHTMLConverter getInstance()
+    {
+        return INSTANCE;
+    }
 
-	@Override
-	protected void doConvert(OdfDocument odfDocument, OutputStream out,
-			Writer writer, XHTMLOptions options) throws ODFConverterException,
-			IOException {
-		// 1) Get configuration
-		boolean generateCSSComments = false;
-		IURIResolver resolver = IURIResolver.DEFAULT;
-		int indent = 0;
-		if (options != null) {
-			generateCSSComments = options.isGenerateCSSComments();
-			resolver = options.getURIResolver();
-			indent = options.getIndent();
-		}
+    @Override
+    protected void doConvert( OdfDocument odfDocument, OutputStream out, Writer writer, XHTMLOptions options )
+        throws ODFConverterException, IOException
+    {
+        // 1) Get configuration
+        boolean generateCSSComments = false;
+        IURIResolver resolver = IURIResolver.DEFAULT;
+        int indent = 0;
+        if ( options != null )
+        {
+            generateCSSComments = options.isGenerateCSSComments();
+            resolver = options.getURIResolver();
+            indent = options.getIndent();
+        }
 
-		StyleEngineForXHTML styleEngine = new StyleEngineForXHTML(odfDocument,
-				generateCSSComments, indent, resolver);
-		ODFXHTMLPage xhtml = new ODFXHTMLPage(styleEngine, indent);
-		try {
+        StyleEngineForXHTML styleEngine = new StyleEngineForXHTML( odfDocument, generateCSSComments, indent, resolver );
+        ODFXHTMLPage xhtml = new ODFXHTMLPage( styleEngine, indent );
+        try
+        {
 
-			OdfStylesDom stylesDom = odfDocument.getStylesDom();
-			OdfContentDom contentDom = odfDocument.getContentDom();
+            OdfStylesDom stylesDom = odfDocument.getStylesDom();
+            OdfContentDom contentDom = odfDocument.getContentDom();
 
-			// 1) Compute CSS styles declaration
+            // 1) Compute CSS styles declaration
 
-			// 1.1) Parse styles.xml//office:document-styles/office:styles
-			stylesDom.getOfficeStyles().accept(styleEngine);
-			;
-			// 1.2) Parse
-			// styles.xml//office:document-styles/office:automatic-styles
-			stylesDom.getAutomaticStyles().accept(styleEngine);
-			// 1.3) Parse
-			// content.xml//office:document-content/office:automatic-styles
-			contentDom.getAutomaticStyles().accept(styleEngine);
+            // 1.1) Parse styles.xml//office:document-styles/office:styles
+            stylesDom.getOfficeStyles().accept( styleEngine );
+            ;
+            // 1.2) Parse
+            // styles.xml//office:document-styles/office:automatic-styles
+            stylesDom.getAutomaticStyles().accept( styleEngine );
+            // 1.3) Parse
+            // content.xml//office:document-content/office:automatic-styles
+            contentDom.getAutomaticStyles().accept( styleEngine );
 
-			ElementVisitorForXHTML visitorForXHTML = new ElementVisitorForXHTML(
-					xhtml, odfDocument, out, writer);
+            ElementVisitorForXHTML visitorForXHTML = new ElementVisitorForXHTML( xhtml, odfDocument, out, writer );
 
-			// 2) Generate XHTML Page
+            // 2) Generate XHTML Page
 
-			// 2.1) Parse
-			// styles.xml//office:document-styles/office:master-styles
-			OdfOfficeMasterStyles masterStyles = odfDocument
-					.getOfficeMasterStyles();
-			masterStyles.accept(visitorForXHTML);
+            // 2.1) Parse
+            // styles.xml//office:document-styles/office:master-styles
+            OdfOfficeMasterStyles masterStyles = odfDocument.getOfficeMasterStyles();
+            masterStyles.accept( visitorForXHTML );
 
-			// 2) Compute meta
-			// TODO
-			odfDocument.getContentRoot().accept(visitorForXHTML);
+            // 2) Compute meta
+            // TODO
+            odfDocument.getContentRoot().accept( visitorForXHTML );
 
-			if (writer != null) {
-				xhtml.save(writer);
-			} else {
-				xhtml.save(out);
-			}
+            if ( writer != null )
+            {
+                xhtml.save( writer );
+            }
+            else
+            {
+                xhtml.save( out );
+            }
 
-		} catch (Exception e) {
-			throw new ODFConverterException(e);
-		}
-	}
+        }
+        catch ( Exception e )
+        {
+            throw new ODFConverterException( e );
+        }
+    }
 
 }

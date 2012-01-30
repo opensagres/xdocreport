@@ -26,7 +26,8 @@ package fr.opensagres.xdocreport.core.io;
 
 import java.io.Writer;
 
-public interface IEntryWriterProvider {
+public interface IEntryWriterProvider
+{
 
-	Writer getEntryWriter(String entryName);
+    Writer getEntryWriter( String entryName );
 }

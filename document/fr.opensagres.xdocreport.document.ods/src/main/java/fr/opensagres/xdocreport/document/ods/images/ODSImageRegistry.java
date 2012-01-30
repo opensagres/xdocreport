@@ -34,38 +34,43 @@ import fr.opensagres.xdocreport.document.images.ImageProviderInfo;
  * ODP image registry.
  * 
  * @author Angelo ZERR
- * 
  */
-public class ODSImageRegistry extends AbstractImageRegistry {
+public class ODSImageRegistry
+    extends AbstractImageRegistry
+{
 
-	private static final String IMAGE_BASE_PATH = "Pictures/";
+    private static final String IMAGE_BASE_PATH = "Pictures/";
 
-	public ODSImageRegistry(IEntryReaderProvider readerProvider,
-			IEntryWriterProvider writerProvider,
-			IEntryOutputStreamProvider outputStreamProvider) {
-		super(readerProvider, writerProvider, outputStreamProvider);
-	}
+    public ODSImageRegistry( IEntryReaderProvider readerProvider, IEntryWriterProvider writerProvider,
+                             IEntryOutputStreamProvider outputStreamProvider )
+    {
+        super( readerProvider, writerProvider, outputStreamProvider );
+    }
 
-	@Override
-	protected String getImageBasePath() {
-		return IMAGE_BASE_PATH;
-	}
+    @Override
+    protected String getImageBasePath()
+    {
+        return IMAGE_BASE_PATH;
+    }
 
-	@Override
-	protected String getPath(ImageProviderInfo info) {
-		return info.getImageBasePath() + info.getImageFileName();
-	}
-	
-	@Override
-	protected String getSize(float sizeAsPixel) {		
-		float sizeAsDxa = sizeAsPixel / 96 * 914400;
-		String s = Float.toString(sizeAsDxa);
-		// TODO Use DecimalFormat.getIntegerInstance()to format the float to
-		// String.
-		int dotindex = s.indexOf('.');
-		if (dotindex != -1) {
-			return s.substring(0, dotindex);
-		}
-		return s;
-	}
+    @Override
+    protected String getPath( ImageProviderInfo info )
+    {
+        return info.getImageBasePath() + info.getImageFileName();
+    }
+
+    @Override
+    protected String getSize( float sizeAsPixel )
+    {
+        float sizeAsDxa = sizeAsPixel / 96 * 914400;
+        String s = Float.toString( sizeAsDxa );
+        // TODO Use DecimalFormat.getIntegerInstance()to format the float to
+        // String.
+        int dotindex = s.indexOf( '.' );
+        if ( dotindex != -1 )
+        {
+            return s.substring( 0, dotindex );
+        }
+        return s;
+    }
 }

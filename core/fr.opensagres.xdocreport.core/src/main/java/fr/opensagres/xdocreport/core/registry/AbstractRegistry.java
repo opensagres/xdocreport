@@ -40,35 +40,42 @@ public abstract class AbstractRegistry<Discovery extends IBaseDiscovery>
     /**
      * Logger for this class
      */
-    private static final Logger LOGGER = LogUtils.getLogger(AbstractRegistry.class.getName());
+    private static final Logger LOGGER = LogUtils.getLogger( AbstractRegistry.class.getName() );
 
     private boolean initialized;
 
     private final Class<Discovery> registryType;
 
-    public AbstractRegistry(Class<Discovery> registryType) {
+    public AbstractRegistry( Class<Discovery> registryType )
+    {
         this.registryType = registryType;
     }
 
-    public void initialize() {
+    public void initialize()
+    {
         initializeIfNeeded();
     }
 
-    protected void initializeIfNeeded() {
-        if (!initialized) {
+    protected void initializeIfNeeded()
+    {
+        if ( !initialized )
+        {
             onStartInitialization();
             // getClass().getClassLoader() to work under OSGi context
-            Iterator<Discovery> discoveries = ServiceRegistry
-                    .lookupProviders(registryType, getClass().getClassLoader());
-            if (LOGGER.isLoggable(Level.FINE)) {
-                LOGGER.fine("discoveries found ? " + discoveries.hasNext());
+            Iterator<Discovery> discoveries =
+                ServiceRegistry.lookupProviders( registryType, getClass().getClassLoader() );
+            if ( LOGGER.isLoggable( Level.FINE ) )
+            {
+                LOGGER.fine( "discoveries found ? " + discoveries.hasNext() );
             }
 
-            while (discoveries.hasNext()) {
+            while ( discoveries.hasNext() )
+            {
                 Discovery instance = discoveries.next();
-                boolean result = registerInstance(instance);
-                if (LOGGER.isLoggable(Level.FINE)) {
-                    LOGGER.fine("Registered Discovery instance  " + instance + " " + result);
+                boolean result = registerInstance( instance );
+                if ( LOGGER.isLoggable( Level.FINE ) )
+                {
+                    LOGGER.fine( "Registered Discovery instance  " + instance + " " + result );
                 }
             }
             onEndInitialization();
@@ -79,14 +86,16 @@ public abstract class AbstractRegistry<Discovery extends IBaseDiscovery>
     /**
      * Method called when registry start initialization.
      */
-    protected void onStartInitialization() {
+    protected void onStartInitialization()
+    {
 
     }
 
     /**
      * Method called when registry end initialization.
      */
-    protected void onEndInitialization() {
+    protected void onEndInitialization()
+    {
 
     }
 
@@ -96,12 +105,13 @@ public abstract class AbstractRegistry<Discovery extends IBaseDiscovery>
      * @param instance
      * @return true if instance cannot be registered and false otherwise.
      */
-    protected abstract boolean registerInstance(Discovery instance);
+    protected abstract boolean registerInstance( Discovery instance );
 
     /**
      * Dispose the registry.
      */
-    public final void dispose() {
+    public final void dispose()
+    {
         doDispose();
         this.initialized = false;
     }

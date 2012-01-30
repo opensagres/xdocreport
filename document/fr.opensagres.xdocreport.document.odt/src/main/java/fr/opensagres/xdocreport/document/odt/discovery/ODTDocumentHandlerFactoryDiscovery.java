@@ -7,20 +7,23 @@ import fr.opensagres.xdocreport.document.preprocessor.sax.BufferedElement;
 import fr.opensagres.xdocreport.document.textstyling.IDocumentHandler;
 import fr.opensagres.xdocreport.template.IContext;
 
-public class ODTDocumentHandlerFactoryDiscovery implements
-		ITextStylingDocumentHandlerFactoryDiscovery {
+public class ODTDocumentHandlerFactoryDiscovery
+    implements ITextStylingDocumentHandlerFactoryDiscovery
+{
 
-	public String getId() {
-		return DocumentKind.ODT.name();
-	}
+    public String getId()
+    {
+        return DocumentKind.ODT.name();
+    }
 
-	public IDocumentHandler createDocumentHandler(BufferedElement parent,
-			IContext context) {
-		return new ODTDocumentHandler(parent, context);
-	}
+    public IDocumentHandler createDocumentHandler( BufferedElement parent, IContext context )
+    {
+        return new ODTDocumentHandler( parent, context );
+    }
 
-	public String getDescription() {
-		return "ODT document handler factory.";
-	}
+    public String getDescription()
+    {
+        return "ODT document handler factory.";
+    }
 
 }

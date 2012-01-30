@@ -15,12 +15,14 @@
  */
 package fr.opensagres.xdocreport.converter.odt.xhtml;
 
-public interface ODTXHTMLConstants {
+public interface ODTXHTMLConstants
+{
 
-	String XSL_XHTML_TEMPLATE_URI = "odt2xhtml.xsl";
+    String XSL_XHTML_TEMPLATE_URI = "odt2xhtml.xsl";
 
-	String CONTENT_XML_ENTRY = "content.xml";
-	String STYLES_XML_ENTRY = "styles.xml";
+    String CONTENT_XML_ENTRY = "content.xml";
 
-	String[] XML_ENTRIES = { CONTENT_XML_ENTRY, STYLES_XML_ENTRY };
+    String STYLES_XML_ENTRY = "styles.xml";
+
+    String[] XML_ENTRIES = { CONTENT_XML_ENTRY, STYLES_XML_ENTRY };
 }

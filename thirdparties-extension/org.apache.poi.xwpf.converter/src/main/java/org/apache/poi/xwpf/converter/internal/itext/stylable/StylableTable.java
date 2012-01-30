@@ -24,7 +24,6 @@
  */
 package org.apache.poi.xwpf.converter.internal.itext.stylable;
 
-
 import org.apache.poi.xwpf.converter.internal.itext.styles.Style;
 import org.apache.poi.xwpf.converter.internal.itext.styles.StyleBorder;
 import org.apache.poi.xwpf.converter.internal.itext.styles.StyleTableProperties;
@@ -34,83 +33,107 @@ import com.lowagie.text.Element;
 
 import fr.opensagres.xdocreport.itext.extension.ExtendedPdfPTable;
 
-public class StylableTable extends ExtendedPdfPTable implements IStylableContainer<XWPFTable>  {
+public class StylableTable
+    extends ExtendedPdfPTable
+    implements IStylableContainer<XWPFTable>
+{
 
-	private StyleBorder borderTop;
-	private StyleBorder borderBottom;
-	private StyleBorder borderLeft;
-	private StyleBorder borderRight;
+    private StyleBorder borderTop;
 
-	private final StylableDocument ownerDocument;
-	private IStylableContainer parent;
-	private Style lastStyleApplied = null;
+    private StyleBorder borderBottom;
 
-	public StylableTable(StylableDocument ownerDocument,
-			IStylableContainer parent, int numColumns) {
-		super(numColumns);
-		this.ownerDocument = ownerDocument;
-		this.parent = parent;
-	}
+    private StyleBorder borderLeft;
 
-	public void applyStyles(XWPFTable ele,Style style) {
-		this.lastStyleApplied = style;
-		if (style != null) {
-			StyleTableProperties tableProperties = style.getTableProperties();
-			if (tableProperties != null) {
-				if (tableProperties.getWidth() != null) {
-					super.setTotalWidth(tableProperties.getWidth());
-					super.setLockedWidth(true);
-				}
-			}
-		}
-		
-	}
+    private StyleBorder borderRight;
 
-	public Style getLastStyleApplied() {
-		return lastStyleApplied;
-	}
+    private final StylableDocument ownerDocument;
 
-	public IStylableContainer getParent() {
-		return parent;
-	}
+    private IStylableContainer parent;
 
-	public StylableDocument getOwnerDocument() {
-		return ownerDocument;
-	}
+    private Style lastStyleApplied = null;
 
-	public Element getElement() {
-		return this;
-	}
+    public StylableTable( StylableDocument ownerDocument, IStylableContainer parent, int numColumns )
+    {
+        super( numColumns );
+        this.ownerDocument = ownerDocument;
+        this.parent = parent;
+    }
 
-	public StyleBorder getBorderTop() {
-		return borderTop;
-	}
+    public void applyStyles( XWPFTable ele, Style style )
+    {
+        this.lastStyleApplied = style;
+        if ( style != null )
+        {
+            StyleTableProperties tableProperties = style.getTableProperties();
+            if ( tableProperties != null )
+            {
+                if ( tableProperties.getWidth() != null )
+                {
+                    super.setTotalWidth( tableProperties.getWidth() );
+                    super.setLockedWidth( true );
+                }
+            }
+        }
 
-	public void setBorderTop(StyleBorder borderTop) {
-		this.borderTop = borderTop;
-	}
+    }
 
-	public StyleBorder getBorderBottom() {
-		return borderBottom;
-	}
+    public Style getLastStyleApplied()
+    {
+        return lastStyleApplied;
+    }
 
-	public void setBorderBottom(StyleBorder borderBottom) {
-		this.borderBottom = borderBottom;
-	}
+    public IStylableContainer getParent()
+    {
+        return parent;
+    }
 
-	public StyleBorder getBorderLeft() {
-		return borderLeft;
-	}
+    public StylableDocument getOwnerDocument()
+    {
+        return ownerDocument;
+    }
 
-	public void setBorderLeft(StyleBorder borderLeft) {
-		this.borderLeft = borderLeft;
-	}
+    public Element getElement()
+    {
+        return this;
+    }
 
-	public StyleBorder getBorderRight() {
-		return borderRight;
-	}
+    public StyleBorder getBorderTop()
+    {
+        return borderTop;
+    }
 
-	public void setBorderRight(StyleBorder borderRight) {
-		this.borderRight = borderRight;
-	}
+    public void setBorderTop( StyleBorder borderTop )
+    {
+        this.borderTop = borderTop;
+    }
+
+    public StyleBorder getBorderBottom()
+    {
+        return borderBottom;
+    }
+
+    public void setBorderBottom( StyleBorder borderBottom )
+    {
+        this.borderBottom = borderBottom;
+    }
+
+    public StyleBorder getBorderLeft()
+    {
+        return borderLeft;
+    }
+
+    public void setBorderLeft( StyleBorder borderLeft )
+    {
+        this.borderLeft = borderLeft;
+    }
+
+    public StyleBorder getBorderRight()
+    {
+        return borderRight;
+    }
+
+    public void setBorderRight( StyleBorder borderRight )
+    {
+        this.borderRight = borderRight;
+    }
 }

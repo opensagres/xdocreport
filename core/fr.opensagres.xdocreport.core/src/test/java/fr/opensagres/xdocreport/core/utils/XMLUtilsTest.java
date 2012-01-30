@@ -35,37 +35,39 @@ import org.junit.Test;
 public class XMLUtilsTest
 {
 
-    private static final String LINE_SEPARATOR = System.getProperty("line.separator");
+    private static final String LINE_SEPARATOR = System.getProperty( "line.separator" );
 
     @Test
-    public void testPrettyPrint() {
+    public void testPrettyPrint()
+    {
         String xml = "<a><b>c</b></a>";
 
-        System.out.println(prettyPrint(xml));
+        System.out.println( prettyPrint( xml ) );
 
         long start = System.currentTimeMillis();
         char[] padding = new char[4];
-        Arrays.fill(padding, ' ');
-        assertEquals("<a>" + LINE_SEPARATOR + String.copyValueOf(padding) + "<b>c</b>" + LINE_SEPARATOR + "</a>"
-                + LINE_SEPARATOR, prettyPrint(xml));
+        Arrays.fill( padding, ' ' );
+        assertEquals( "<a>" + LINE_SEPARATOR + String.copyValueOf( padding ) + "<b>c</b>" + LINE_SEPARATOR + "</a>"
+            + LINE_SEPARATOR, prettyPrint( xml ) );
 
-        System.out.println("time spent " + (System.currentTimeMillis() - start));
+        System.out.println( "time spent " + ( System.currentTimeMillis() - start ) );
     }
 
     @Test
-    public void testPrettyPrint2Indent() {
+    public void testPrettyPrint2Indent()
+    {
         int ident = 2;
         String xml = "<a><b>c</b></a>";
 
-        System.out.println(prettyPrint(xml, 2));
+        System.out.println( prettyPrint( xml, 2 ) );
 
         long start = System.currentTimeMillis();
 
         char[] padding = new char[ident];
-        Arrays.fill(padding, ' ');
-        assertEquals("<a>" + LINE_SEPARATOR + String.copyValueOf(padding) + "<b>c</b>" + LINE_SEPARATOR + "</a>"
-                + LINE_SEPARATOR, prettyPrint(xml, ident));
+        Arrays.fill( padding, ' ' );
+        assertEquals( "<a>" + LINE_SEPARATOR + String.copyValueOf( padding ) + "<b>c</b>" + LINE_SEPARATOR + "</a>"
+            + LINE_SEPARATOR, prettyPrint( xml, ident ) );
 
-        System.out.println("time spent " + (System.currentTimeMillis() - start));
+        System.out.println( "time spent " + ( System.currentTimeMillis() - start ) );
     }
 }

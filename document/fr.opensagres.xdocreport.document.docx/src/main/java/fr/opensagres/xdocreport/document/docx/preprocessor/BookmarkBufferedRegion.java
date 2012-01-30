@@ -77,27 +77,31 @@ import fr.opensagres.xdocreport.document.preprocessor.sax.BufferedElement;
  * 			</w:r>
  * 			<w:bookmarkEnd w:id="0" />
  * </pre>
- * 
  */
-public class BookmarkBufferedRegion extends BufferedElement {
+public class BookmarkBufferedRegion
+    extends BufferedElement
+{
 
-	private final String bookmarkName;
-	private final String imageFieldName;
+    private final String bookmarkName;
 
-	public BookmarkBufferedRegion(String bookmarkName, String imageFieldName,
-			BufferedElement parent, String uri, String localName, String name,
-			Attributes attributes) {
-		super(parent, uri, localName, name, attributes);
-		this.bookmarkName = bookmarkName;
-		this.imageFieldName = imageFieldName;
-	}
+    private final String imageFieldName;
 
-	public String getBookmarkName() {
-		return bookmarkName;
-	}
+    public BookmarkBufferedRegion( String bookmarkName, String imageFieldName, BufferedElement parent, String uri,
+                                   String localName, String name, Attributes attributes )
+    {
+        super( parent, uri, localName, name, attributes );
+        this.bookmarkName = bookmarkName;
+        this.imageFieldName = imageFieldName;
+    }
 
-	public String getImageFieldName() {
-		return imageFieldName;
-	}
+    public String getBookmarkName()
+    {
+        return bookmarkName;
+    }
+
+    public String getImageFieldName()
+    {
+        return imageFieldName;
+    }
 
 }

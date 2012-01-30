@@ -33,12 +33,16 @@ import com.lowagie.text.pdf.PdfWriter;
 /**
  * fixes for pdf conversion by Leszek Piotrowicz <leszekp@safe-mail.net>
  */
-public class ExtendedHeaderFooter extends PdfPageEventHelper {
+public class ExtendedHeaderFooter
+    extends PdfPageEventHelper
+{
 
     private final LinkedList<MasterPage> masterPagesStack = new LinkedList<MasterPage>();
+
     private final ExtendedDocument document;
 
-    public ExtendedHeaderFooter(ExtendedDocument document) {
+    public ExtendedHeaderFooter( ExtendedDocument document )
+    {
         this.document = document;
     }
 
@@ -48,60 +52,67 @@ public class ExtendedHeaderFooter extends PdfPageEventHelper {
      * @see com.itextpdf.text.pdf.PdfPageEventHelper#onEndPage(com.itextpdf.text.pdf.PdfWriter,
      *      com.itextpdf.text.Document)
      */
-    public void onStartPage(PdfWriter writer, Document doc) {
+    public void onStartPage( PdfWriter writer, Document doc )
+    {
         MasterPage masterPage = null;
-        if (!masterPagesStack.isEmpty()) {
+        if ( !masterPagesStack.isEmpty() )
+        {
             masterPage = masterPagesStack.removeLast();
         }
 
-        if (masterPage == null) {
+        if ( masterPage == null )
+        {
             masterPage = document.getDefaultMasterPage();
         }
 
-        if (masterPage != null) {
+        if ( masterPage != null )
+        {
             // Master page is defined
 
             IMasterPageHeaderFooter header = masterPage.getHeader();
             IMasterPageHeaderFooter footer = masterPage.getFooter();
 
             // Add header
-            if (header != null) {
+            if ( header != null )
+            {
                 // compute upper-left corner coordinates
                 float x = document.getOriginMarginLeft();
                 float y = document.getPageSize().getHeight() - document.getOriginMarginTop();
 
-                header.writeSelectedRows(0, -1, x, y,
-                        writer.getDirectContentUnder());
+                header.writeSelectedRows( 0, -1, x, y, writer.getDirectContentUnder() );
             }
 
             // Add footer
-            if (footer != null) {
+            if ( footer != null )
+            {
                 // compute upper-left corner coordinates
                 float x = document.getOriginMarginLeft();
                 float y = document.getOriginMarginBottom() + footer.getTotalHeight();
 
-                footer.writeSelectedRows(0, -1, x, y,
-                        writer.getDirectContentUnder());
+                footer.writeSelectedRows( 0, -1, x, y, writer.getDirectContentUnder() );
             }
         }
     }
 
-    public void setMasterPage(MasterPage masterPage) {
+    public void setMasterPage( MasterPage masterPage )
+    {
         IMasterPageHeaderFooter header = masterPage.getHeader();
         IMasterPageHeaderFooter footer = masterPage.getFooter();
 
         float marginLeft = document.getOriginMarginLeft();
         float marginRight = document.getOriginMarginRight();
         float marginTop = document.getOriginMarginTop();
-        if (header != null) {
+        if ( header != null )
+        {
             marginTop += header.getTotalHeight();
         }
         float marginBottom = document.getOriginMarginBottom();
-        if (footer != null) {
+        if ( footer != null )
+        {
             marginBottom += footer.getTotalHeight();
         }
-        document.setMargins(marginLeft, marginRight, marginTop, marginBottom);
+        document.setMargins( marginLeft, marginRight, marginTop, marginBottom );
 
-        this.masterPagesStack.addFirst(masterPage);
+        this.masterPagesStack.addFirst( masterPage );
     }
 }

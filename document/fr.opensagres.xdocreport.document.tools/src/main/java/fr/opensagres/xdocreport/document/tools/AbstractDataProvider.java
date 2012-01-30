@@ -6,28 +6,36 @@ import java.io.InputStream;
 import fr.opensagres.xdocreport.core.io.IOUtils;
 import fr.opensagres.xdocreport.document.tools.internal.StringBuilderOutputStream;
 
-public abstract class AbstractDataProvider implements IDataProvider {
+public abstract class AbstractDataProvider
+    implements IDataProvider
+{
 
-	private final InputStream data;
-	private final InputStream properties;
+    private final InputStream data;
 
-	public AbstractDataProvider(InputStream data, InputStream properties) {
-		this.data = data;
-		this.properties = properties;
-	}
+    private final InputStream properties;
 
-	public InputStream getData() {
-		return data;
-	}
+    public AbstractDataProvider( InputStream data, InputStream properties )
+    {
+        this.data = data;
+        this.properties = properties;
+    }
 
-	public InputStream getProperties() {
-		return properties;
-	}
+    public InputStream getData()
+    {
+        return data;
+    }
 
-	public String getDataAsString() throws IOException {
-		StringBuilderOutputStream writer = new StringBuilderOutputStream();
-		IOUtils.copy(getData(), writer);
-		return writer.toString();
-	}
+    public InputStream getProperties()
+    {
+        return properties;
+    }
+
+    public String getDataAsString()
+        throws IOException
+    {
+        StringBuilderOutputStream writer = new StringBuilderOutputStream();
+        IOUtils.copy( getData(), writer );
+        return writer.toString();
+    }
 
 }

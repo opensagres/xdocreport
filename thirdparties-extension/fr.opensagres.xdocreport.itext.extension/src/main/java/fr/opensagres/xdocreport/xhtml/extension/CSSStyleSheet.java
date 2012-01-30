@@ -28,82 +28,96 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.io.Writer;
 
-public class CSSStyleSheet extends AbstractContentBuffer implements XHTMLConstants, CSSStylePropertyConstants {
+public class CSSStyleSheet
+    extends AbstractContentBuffer
+    implements XHTMLConstants, CSSStylePropertyConstants
+{
 
-	private StringBuilder cssStyles = new StringBuilder();
+    private StringBuilder cssStyles = new StringBuilder();
 
-	public CSSStyleSheet(int indent) {
-		super(indent);
-		// By default p element are no margin top/bottom
-		startCSSStyleDeclaration(P_ELEMENT);
-		setCSSProperty(MARGIN_TOP, "0");
-		setCSSProperty(MARGIN_BOTTOM, "0");
-		endCSSStyleDeclaration();
-		
-		// By default ol element are no margin top/bottom
-		startCSSStyleDeclaration(OL_ELEMENT);
-		setCSSProperty(MARGIN_TOP, "0");
-		setCSSProperty(MARGIN_BOTTOM, "0");
-		endCSSStyleDeclaration();
-		
-		// By default ul element are no margin top/bottom
-		startCSSStyleDeclaration(UL_ELEMENT);
-		setCSSProperty(MARGIN_TOP, "0");
-		setCSSProperty(MARGIN_BOTTOM, "0");
-		endCSSStyleDeclaration();
-		
-	}
+    public CSSStyleSheet( int indent )
+    {
+        super( indent );
+        // By default p element are no margin top/bottom
+        startCSSStyleDeclaration( P_ELEMENT );
+        setCSSProperty( MARGIN_TOP, "0" );
+        setCSSProperty( MARGIN_BOTTOM, "0" );
+        endCSSStyleDeclaration();
 
-	public void save(Writer writer) throws IOException {
-		writer.write(cssStyles.toString());
-	}
+        // By default ol element are no margin top/bottom
+        startCSSStyleDeclaration( OL_ELEMENT );
+        setCSSProperty( MARGIN_TOP, "0" );
+        setCSSProperty( MARGIN_BOTTOM, "0" );
+        endCSSStyleDeclaration();
 
-	public void save(OutputStream out) throws IOException {
-		out.write(cssStyles.toString().getBytes());
-	}
+        // By default ul element are no margin top/bottom
+        startCSSStyleDeclaration( UL_ELEMENT );
+        setCSSProperty( MARGIN_TOP, "0" );
+        setCSSProperty( MARGIN_BOTTOM, "0" );
+        endCSSStyleDeclaration();
 
-	public boolean isEmpty() {
-		return cssStyles.length() == 0;
-	}
+    }
 
-	public void setComment(String comment) {
-		doIndentIfNeeded(1);
-		cssStyles.append('/');
-		cssStyles.append('*');
-		cssStyles.append(comment);
-		cssStyles.append('*');
-		cssStyles.append('/');
+    public void save( Writer writer )
+        throws IOException
+    {
+        writer.write( cssStyles.toString() );
+    }
 
-	}
+    public void save( OutputStream out )
+        throws IOException
+    {
+        out.write( cssStyles.toString().getBytes() );
+    }
 
-	@Override
-	protected StringBuilder getCurrentBuffer() {
-		return cssStyles;
-	}
+    public boolean isEmpty()
+    {
+        return cssStyles.length() == 0;
+    }
 
-	public void startCSSStyleDeclaration(String selector) {
-		doIndentIfNeeded(1);
-		cssStyles.append(selector);
-		cssStyles.append(' ');
-		cssStyles.append('{');
-	}
+    public void setComment( String comment )
+    {
+        doIndentIfNeeded( 1 );
+        cssStyles.append( '/' );
+        cssStyles.append( '*' );
+        cssStyles.append( comment );
+        cssStyles.append( '*' );
+        cssStyles.append( '/' );
 
-	public void endCSSStyleDeclaration() {
-		doIndentIfNeeded(1);
-		cssStyles.append('}');
-	}
+    }
 
-	public void setCSSProperty(String name, String value) {
-		doIndentIfNeeded(2);
-		cssStyles.append(name);
-		cssStyles.append(':');
-		cssStyles.append(value);
-		cssStyles.append(';');
-	}
+    @Override
+    protected StringBuilder getCurrentBuffer()
+    {
+        return cssStyles;
+    }
 
-	protected void doIndentIfNeeded(int subIndent) {
-		doIndentIfNeeded(getCurrentBuffer(), indent > 0 ? indent + subIndent
-				: 0);
-	}
+    public void startCSSStyleDeclaration( String selector )
+    {
+        doIndentIfNeeded( 1 );
+        cssStyles.append( selector );
+        cssStyles.append( ' ' );
+        cssStyles.append( '{' );
+    }
+
+    public void endCSSStyleDeclaration()
+    {
+        doIndentIfNeeded( 1 );
+        cssStyles.append( '}' );
+    }
+
+    public void setCSSProperty( String name, String value )
+    {
+        doIndentIfNeeded( 2 );
+        cssStyles.append( name );
+        cssStyles.append( ':' );
+        cssStyles.append( value );
+        cssStyles.append( ';' );
+    }
+
+    protected void doIndentIfNeeded( int subIndent )
+    {
+        doIndentIfNeeded( getCurrentBuffer(), indent > 0 ? indent + subIndent : 0 );
+    }
 
 }

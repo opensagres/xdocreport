@@ -33,180 +33,269 @@ import org.xml.sax.helpers.DefaultHandler;
 import fr.opensagres.xdocreport.document.textstyling.IDocumentHandler;
 
 /**
- * SAX content handler used to parse HTML content and call the right method of
- * {@link IDocumentHandler} according the HTML content.
- * 
+ * SAX content handler used to parse HTML content and call the right method of {@link IDocumentHandler} according the
+ * HTML content.
  */
-public class HTMLTextStylingContentHandler extends DefaultHandler {
+public class HTMLTextStylingContentHandler
+    extends DefaultHandler
+{
 
-	// HTML elements for Bold style
-	private static final String STRONG_ELT = "strong";
-	private static final String B_ELT = "b";
+    // HTML elements for Bold style
+    private static final String STRONG_ELT = "strong";
 
-	// HTML elements for Italic style
-	private static final String EM_ELT = "em";
-	private static final String I_ELT = "i";
+    private static final String B_ELT = "b";
 
-	// HTML elements for list
-	private static final String OL_ELT = "ol";
-	private static final String UL_ELT = "ul";
-	private static final String LI_ELT = "li";
+    // HTML elements for Italic style
+    private static final String EM_ELT = "em";
 
-	// HTML elements for paragraph
-	private static final String P_ELT = "p";
+    private static final String I_ELT = "i";
 
-	// HTML elements for Titles
-	private static final String H1_ELT = "h1";
-	private static final String H2_ELT = "h2";
-	private static final String H3_ELT = "h3";
-	private static final String H4_ELT = "h4";
-	private static final String H5_ELT = "h5";
-	private static final String H6_ELT = "h6";
+    // HTML elements for list
+    private static final String OL_ELT = "ol";
 
-	private final IDocumentHandler documentHandler;
+    private static final String UL_ELT = "ul";
 
-	public HTMLTextStylingContentHandler(IDocumentHandler visitor) {
-		this.documentHandler = visitor;
-	}
+    private static final String LI_ELT = "li";
 
-	@Override
-	public void startDocument() throws SAXException {
-		super.startDocument();
-		try {
-			documentHandler.startDocument();
-		} catch (IOException e) {
-			throw new SAXException(e);
-		}
-	}
+    // HTML elements for paragraph
+    private static final String P_ELT = "p";
 
-	@Override
-	public void endDocument() throws SAXException {
-		super.endDocument();
-		try {
-			documentHandler.endDocument();
-		} catch (IOException e) {
-			throw new SAXException(e);
-		}
-	}
+    // HTML elements for Titles
+    private static final String H1_ELT = "h1";
 
-	@Override
-	public void startElement(String uri, String localName, String name,
-			Attributes attributes) throws SAXException {
-		try {
-			if (STRONG_ELT.equals(name) || B_ELT.equals(name)) {
-				// Bold
-				documentHandler.startBold();
-			} else if (EM_ELT.equals(name) || I_ELT.equals(name)) {
-				// Italic
-				documentHandler.startItalics();
-			} else if (UL_ELT.equals(name)) {
-				// Unordered List
-				startList(false);
-			} else if (OL_ELT.equals(name)) {
-				// Orderer List
-				startList(true);
-			} else if (LI_ELT.equals(name)) {
-				// List item
-				documentHandler.startListItem();
-			} else if (P_ELT.equals(name)) {
-				// Paragraph
-				documentHandler.startParagraph();
-			} else if (H1_ELT.equals(name)) {
-				// Header 1
-				documentHandler.startHeading(1);
-			} else if (H2_ELT.equals(name)) {
-				// Header 2
-				documentHandler.startHeading(2);
-			} else if (H3_ELT.equals(name)) {
-				// Header 3
-				documentHandler.startHeading(3);
-			} else if (H4_ELT.equals(name)) {
-				// Header 4
-				documentHandler.startHeading(4);
-			} else if (H5_ELT.equals(name)) {
-				// Header 5
-				documentHandler.startHeading(5);
-			} else if (H6_ELT.equals(name)) {
-				// Header 6
-				documentHandler.startHeading(6);
-			}
-		} catch (IOException e) {
-			throw new SAXException(e);
-		}
-		super.startElement(uri, localName, name, attributes);
-	}
+    private static final String H2_ELT = "h2";
 
-	@Override
-	public void endElement(String uri, String localName, String name)
-			throws SAXException {
-		try {
-			if (STRONG_ELT.equals(name) || B_ELT.equals(name)) {
-				// Bold
-				documentHandler.endBold();
-			} else if (EM_ELT.equals(name) || I_ELT.equals(name)) {
-				// Italic
-				documentHandler.endItalics();
-			} else if (UL_ELT.equals(name)) {
-				// Unordered List
-				endList(false);
-			} else if (OL_ELT.equals(name)) {
-				// Orderer List
-				endList(true);
-			} else if (LI_ELT.equals(name)) {
-				// List item
-				documentHandler.endListItem();
-			} else if (P_ELT.equals(name)) {
-				// Paragraph
-				documentHandler.endParagraph();
-			} else if (H1_ELT.equals(name)) {
-				// Header 1
-				documentHandler.endHeading(1);
-			} else if (H2_ELT.equals(name)) {
-				// Header 2
-				documentHandler.endHeading(2);
-			} else if (H3_ELT.equals(name)) {
-				// Header 3
-				documentHandler.endHeading(3);
-			} else if (H4_ELT.equals(name)) {
-				// Header 4
-				documentHandler.endHeading(4);
-			} else if (H5_ELT.equals(name)) {
-				// Header 5
-				documentHandler.endHeading(5);
-			} else if (H6_ELT.equals(name)) {
-				// Header 6
-				documentHandler.endHeading(6);
-			}
-		} catch (IOException e) {
-			throw new SAXException(e);
-		}
-		super.endElement(uri, localName, name);
-	}
+    private static final String H3_ELT = "h3";
 
-	@Override
-	public void characters(char[] ch, int start, int length)
-			throws SAXException {
-		try {
-			documentHandler.handleString(String.valueOf(ch, start, length));
-		} catch (IOException e) {
-			throw new SAXException(e);
-		}
-		super.characters(ch, start, length);
-	}
+    private static final String H4_ELT = "h4";
 
-	private void startList(boolean ordered) throws IOException {
-		if (ordered) {
-			documentHandler.startOrderedList();
-		} else {
-			documentHandler.startUnorderedList();
-		}
-	}
+    private static final String H5_ELT = "h5";
 
-	private void endList(boolean ordered) throws IOException {
-		if (ordered) {
-			documentHandler.endOrderedList();
-		} else {
-			documentHandler.endUnorderedList();
-		}
-	}
+    private static final String H6_ELT = "h6";
+
+    private final IDocumentHandler documentHandler;
+
+    public HTMLTextStylingContentHandler( IDocumentHandler visitor )
+    {
+        this.documentHandler = visitor;
+    }
+
+    @Override
+    public void startDocument()
+        throws SAXException
+    {
+        super.startDocument();
+        try
+        {
+            documentHandler.startDocument();
+        }
+        catch ( IOException e )
+        {
+            throw new SAXException( e );
+        }
+    }
+
+    @Override
+    public void endDocument()
+        throws SAXException
+    {
+        super.endDocument();
+        try
+        {
+            documentHandler.endDocument();
+        }
+        catch ( IOException e )
+        {
+            throw new SAXException( e );
+        }
+    }
+
+    @Override
+    public void startElement( String uri, String localName, String name, Attributes attributes )
+        throws SAXException
+    {
+        try
+        {
+            if ( STRONG_ELT.equals( name ) || B_ELT.equals( name ) )
+            {
+                // Bold
+                documentHandler.startBold();
+            }
+            else if ( EM_ELT.equals( name ) || I_ELT.equals( name ) )
+            {
+                // Italic
+                documentHandler.startItalics();
+            }
+            else if ( UL_ELT.equals( name ) )
+            {
+                // Unordered List
+                startList( false );
+            }
+            else if ( OL_ELT.equals( name ) )
+            {
+                // Orderer List
+                startList( true );
+            }
+            else if ( LI_ELT.equals( name ) )
+            {
+                // List item
+                documentHandler.startListItem();
+            }
+            else if ( P_ELT.equals( name ) )
+            {
+                // Paragraph
+                documentHandler.startParagraph();
+            }
+            else if ( H1_ELT.equals( name ) )
+            {
+                // Header 1
+                documentHandler.startHeading( 1 );
+            }
+            else if ( H2_ELT.equals( name ) )
+            {
+                // Header 2
+                documentHandler.startHeading( 2 );
+            }
+            else if ( H3_ELT.equals( name ) )
+            {
+                // Header 3
+                documentHandler.startHeading( 3 );
+            }
+            else if ( H4_ELT.equals( name ) )
+            {
+                // Header 4
+                documentHandler.startHeading( 4 );
+            }
+            else if ( H5_ELT.equals( name ) )
+            {
+                // Header 5
+                documentHandler.startHeading( 5 );
+            }
+            else if ( H6_ELT.equals( name ) )
+            {
+                // Header 6
+                documentHandler.startHeading( 6 );
+            }
+        }
+        catch ( IOException e )
+        {
+            throw new SAXException( e );
+        }
+        super.startElement( uri, localName, name, attributes );
+    }
+
+    @Override
+    public void endElement( String uri, String localName, String name )
+        throws SAXException
+    {
+        try
+        {
+            if ( STRONG_ELT.equals( name ) || B_ELT.equals( name ) )
+            {
+                // Bold
+                documentHandler.endBold();
+            }
+            else if ( EM_ELT.equals( name ) || I_ELT.equals( name ) )
+            {
+                // Italic
+                documentHandler.endItalics();
+            }
+            else if ( UL_ELT.equals( name ) )
+            {
+                // Unordered List
+                endList( false );
+            }
+            else if ( OL_ELT.equals( name ) )
+            {
+                // Orderer List
+                endList( true );
+            }
+            else if ( LI_ELT.equals( name ) )
+            {
+                // List item
+                documentHandler.endListItem();
+            }
+            else if ( P_ELT.equals( name ) )
+            {
+                // Paragraph
+                documentHandler.endParagraph();
+            }
+            else if ( H1_ELT.equals( name ) )
+            {
+                // Header 1
+                documentHandler.endHeading( 1 );
+            }
+            else if ( H2_ELT.equals( name ) )
+            {
+                // Header 2
+                documentHandler.endHeading( 2 );
+            }
+            else if ( H3_ELT.equals( name ) )
+            {
+                // Header 3
+                documentHandler.endHeading( 3 );
+            }
+            else if ( H4_ELT.equals( name ) )
+            {
+                // Header 4
+                documentHandler.endHeading( 4 );
+            }
+            else if ( H5_ELT.equals( name ) )
+            {
+                // Header 5
+                documentHandler.endHeading( 5 );
+            }
+            else if ( H6_ELT.equals( name ) )
+            {
+                // Header 6
+                documentHandler.endHeading( 6 );
+            }
+        }
+        catch ( IOException e )
+        {
+            throw new SAXException( e );
+        }
+        super.endElement( uri, localName, name );
+    }
+
+    @Override
+    public void characters( char[] ch, int start, int length )
+        throws SAXException
+    {
+        try
+        {
+            documentHandler.handleString( String.valueOf( ch, start, length ) );
+        }
+        catch ( IOException e )
+        {
+            throw new SAXException( e );
+        }
+        super.characters( ch, start, length );
+    }
+
+    private void startList( boolean ordered )
+        throws IOException
+    {
+        if ( ordered )
+        {
+            documentHandler.startOrderedList();
+        }
+        else
+        {
+            documentHandler.startUnorderedList();
+        }
+    }
+
+    private void endList( boolean ordered )
+        throws IOException
+    {
+        if ( ordered )
+        {
+            documentHandler.endOrderedList();
+        }
+        else
+        {
+            documentHandler.endUnorderedList();
+        }
+    }
 }

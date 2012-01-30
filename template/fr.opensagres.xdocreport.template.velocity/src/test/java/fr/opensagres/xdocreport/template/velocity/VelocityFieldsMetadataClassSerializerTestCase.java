@@ -33,106 +33,123 @@ import org.junit.Test;
 import fr.opensagres.xdocreport.core.XDocReportException;
 import fr.opensagres.xdocreport.template.formatter.FieldsMetadata;
 
-public class VelocityFieldsMetadataClassSerializerTestCase {
+public class VelocityFieldsMetadataClassSerializerTestCase
+{
 
-	private class Project {
+    private class Project
+    {
 
-		private final String name;
+        private final String name;
 
-		public Project(String name) {
-			this.name = name;
-		}
+        public Project( String name )
+        {
+            this.name = name;
+        }
 
-		public String getName() {
-			return name;
-		}
-	}
+        public String getName()
+        {
+            return name;
+        }
+    }
 
-	private class Role {
+    private class Role
+    {
 
-		private final String name;
+        private final String name;
 
-		public Role(String name) {
-			this.name = name;
-		}
+        public Role( String name )
+        {
+            this.name = name;
+        }
 
-		public String getName() {
-			return name;
-		}
-	}
+        public String getName()
+        {
+            return name;
+        }
+    }
 
-	private static class Developer {
+    private static class Developer
+    {
 
-		private final String name;
-		private final String lastName;
-		private final String mail;
-		private final List<Role> roles;
+        private final String name;
 
-		public Developer(String name, String lastName, String mail) {
-			this.name = name;
-			this.lastName = lastName;
-			this.mail = mail;
-			this.roles = new ArrayList<Role>();
-		}
+        private final String lastName;
 
-		public String getName() {
-			return name;
-		}
+        private final String mail;
 
-		public String getLastName() {
-			return lastName;
-		}
+        private final List<Role> roles;
 
-		public String getMail() {
-			return mail;
-		}
+        public Developer( String name, String lastName, String mail )
+        {
+            this.name = name;
+            this.lastName = lastName;
+            this.mail = mail;
+            this.roles = new ArrayList<Role>();
+        }
 
-		public Developer addRole(Role role) {
-			roles.add(role);
-			return this;
-		}
+        public String getName()
+        {
+            return name;
+        }
 
-		public List<Role> getRoles() {
-			return roles;
-		}
+        public String getLastName()
+        {
+            return lastName;
+        }
 
-	}
+        public String getMail()
+        {
+            return mail;
+        }
 
-	@Test
-	public void testSimplePOJO() throws XDocReportException {
-		FieldsMetadata fieldsMetadata = new FieldsMetadata();
-		VelocityFieldsMetadataClassSerializer serializer = new VelocityFieldsMetadataClassSerializer();
-		serializer.load(fieldsMetadata, "project", Project.class);
+        public Developer addRole( Role role )
+        {
+            roles.add( role );
+            return this;
+        }
 
-		Assert.assertEquals(1, fieldsMetadata.getFields().size());
-		Assert.assertEquals("project.Name", fieldsMetadata.getFields().get(0)
-				.getFieldName());
-	}
+        public List<Role> getRoles()
+        {
+            return roles;
+        }
 
-	@Test
-	public void testListPOJO() throws Exception {
-		FieldsMetadata fieldsMetadata = new FieldsMetadata();
-		VelocityFieldsMetadataClassSerializer serializer = new VelocityFieldsMetadataClassSerializer();
-		serializer.load(fieldsMetadata, "developers", Developer.class, true);
+    }
 
-		Assert.assertEquals(4, fieldsMetadata.getFields().size());
-		Assert.assertEquals("developers.LastName", fieldsMetadata.getFields()
-				.get(0).getFieldName());
-		Assert.assertTrue(fieldsMetadata.getFields().get(0).isListType());
-		Assert.assertEquals("developers.Mail", fieldsMetadata.getFields()
-				.get(1).getFieldName());
-		Assert.assertTrue(fieldsMetadata.getFields().get(1).isListType());
-		Assert.assertEquals("developers.Name", fieldsMetadata.getFields()
-				.get(2).getFieldName());
-		Assert.assertTrue(fieldsMetadata.getFields().get(2).isListType());
-		Assert.assertEquals("developers.Roles.Name", fieldsMetadata.getFields()
-				.get(3).getFieldName());
-		Assert.assertTrue(fieldsMetadata.getFields().get(3).isListType());
-	}
+    @Test
+    public void testSimplePOJO()
+        throws XDocReportException
+    {
+        FieldsMetadata fieldsMetadata = new FieldsMetadata();
+        VelocityFieldsMetadataClassSerializer serializer = new VelocityFieldsMetadataClassSerializer();
+        serializer.load( fieldsMetadata, "project", Project.class );
 
-	@Test
-	public void testSimpleImage() {
-		// Problem IImageProvider is in the document package
-		// IImageProvider
-	}
+        Assert.assertEquals( 1, fieldsMetadata.getFields().size() );
+        Assert.assertEquals( "project.Name", fieldsMetadata.getFields().get( 0 ).getFieldName() );
+    }
+
+    @Test
+    public void testListPOJO()
+        throws Exception
+    {
+        FieldsMetadata fieldsMetadata = new FieldsMetadata();
+        VelocityFieldsMetadataClassSerializer serializer = new VelocityFieldsMetadataClassSerializer();
+        serializer.load( fieldsMetadata, "developers", Developer.class, true );
+
+        Assert.assertEquals( 4, fieldsMetadata.getFields().size() );
+        Assert.assertEquals( "developers.LastName", fieldsMetadata.getFields().get( 0 ).getFieldName() );
+        Assert.assertTrue( fieldsMetadata.getFields().get( 0 ).isListType() );
+        Assert.assertEquals( "developers.Mail", fieldsMetadata.getFields().get( 1 ).getFieldName() );
+        Assert.assertTrue( fieldsMetadata.getFields().get( 1 ).isListType() );
+        Assert.assertEquals( "developers.Name", fieldsMetadata.getFields().get( 2 ).getFieldName() );
+        Assert.assertTrue( fieldsMetadata.getFields().get( 2 ).isListType() );
+        Assert.assertEquals( "developers.Roles.Name", fieldsMetadata.getFields().get( 3 ).getFieldName() );
+        Assert.assertTrue( fieldsMetadata.getFields().get( 3 ).isListType() );
+    }
+
+    @Test
+    public void testSimpleImage()
+    {
+        // Problem IImageProvider is in the document package
+        // IImageProvider
+    }
 }

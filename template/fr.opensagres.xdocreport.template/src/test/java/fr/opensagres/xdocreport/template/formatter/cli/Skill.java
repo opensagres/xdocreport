@@ -1,16 +1,18 @@
 package fr.opensagres.xdocreport.template.formatter.cli;
 
-public class Skill {
+public class Skill
+{
 
-	private String label;
+    private String label;
 
-	public String getLabel() {
-		return label;
-	}
+    public String getLabel()
+    {
+        return label;
+    }
 
-	public void setLabel(String label) {
-		this.label = label;
-	}
-	
-	
+    public void setLabel( String label )
+    {
+        this.label = label;
+    }
+
 }

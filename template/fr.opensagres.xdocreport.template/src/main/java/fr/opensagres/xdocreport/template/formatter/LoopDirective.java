@@ -1,27 +1,34 @@
 package fr.opensagres.xdocreport.template.formatter;
 
-public class LoopDirective extends Directive {
+public class LoopDirective
+    extends Directive
+{
 
-	private final String sequence;
-	private final String item;
+    private final String sequence;
 
-	public LoopDirective(Directive parent, String startLoopDirective, String endLoopDirective,
-			String sequence, String item) {
-		super(parent, startLoopDirective, endLoopDirective);
-		this.sequence = sequence;
-		this.item = item;
-	}
+    private final String item;
 
-	public String getSequence() {
-		return sequence;
-	}
+    public LoopDirective( Directive parent, String startLoopDirective, String endLoopDirective, String sequence,
+                          String item )
+    {
+        super( parent, startLoopDirective, endLoopDirective );
+        this.sequence = sequence;
+        this.item = item;
+    }
 
-	public String getItem() {
-		return item;
-	}
+    public String getSequence()
+    {
+        return sequence;
+    }
 
-	@Override
-	public DirectiveType getType() {
-		return DirectiveType.LOOP;
-	}
+    public String getItem()
+    {
+        return item;
+    }
+
+    @Override
+    public DirectiveType getType()
+    {
+        return DirectiveType.LOOP;
+    }
 }

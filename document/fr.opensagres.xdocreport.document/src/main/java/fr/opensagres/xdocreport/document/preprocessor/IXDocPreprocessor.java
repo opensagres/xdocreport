@@ -33,36 +33,28 @@ import fr.opensagres.xdocreport.template.formatter.FieldsMetadata;
 import fr.opensagres.xdocreport.template.formatter.IDocumentFormatter;
 
 /**
- * XML document preprocessor is used to modify the content of the original
- * document from the archive of the XML document (odt, docx...). For instance
- * loop management in table managed with {@link FieldsMetadata} implements an
- * {@link IXDocPreprocessor} to add directive template engine (#foreach for
- * velocity, [#list for freemarker) in the table row.
- * 
+ * XML document preprocessor is used to modify the content of the original document from the archive of the XML document
+ * (odt, docx...). For instance loop management in table managed with {@link FieldsMetadata} implements an
+ * {@link IXDocPreprocessor} to add directive template engine (#foreach for velocity, [#list for freemarker) in the
+ * table row.
  */
-public interface IXDocPreprocessor {
+public interface IXDocPreprocessor
+{
 
-	/**
-	 * Modify the XML file identify withe entry name from the archive.
-	 * 
-	 * @param entryName
-	 *            Zip entry name fo the XML file to modify.
-	 * @param outputArchive
-	 *            the zip of the XML document.
-	 * @param fieldsMetadata
-	 *            metdata fields.
-	 * @param formater
-	 *            used to generate directive template engine
-	 * @param sharedContext
-	 *            shared context between the whole processor to execute. This
-	 *            Map can be used to share information between processors
-	 *            (according the order of the processor registration).
-	 * @throws XDocReportException
-	 * @throws IOException
-	 */
-	void preprocess(String entryName, XDocArchive outputArchive,
-			FieldsMetadata fieldsMetadata, IDocumentFormatter formater,
-			 Map<String, Object> sharedContext)
-			throws XDocReportException, IOException;
+    /**
+     * Modify the XML file identify withe entry name from the archive.
+     * 
+     * @param entryName Zip entry name fo the XML file to modify.
+     * @param outputArchive the zip of the XML document.
+     * @param fieldsMetadata metdata fields.
+     * @param formater used to generate directive template engine
+     * @param sharedContext shared context between the whole processor to execute. This Map can be used to share
+     *            information between processors (according the order of the processor registration).
+     * @throws XDocReportException
+     * @throws IOException
+     */
+    void preprocess( String entryName, XDocArchive outputArchive, FieldsMetadata fieldsMetadata,
+                     IDocumentFormatter formater, Map<String, Object> sharedContext )
+        throws XDocReportException, IOException;
 
 }

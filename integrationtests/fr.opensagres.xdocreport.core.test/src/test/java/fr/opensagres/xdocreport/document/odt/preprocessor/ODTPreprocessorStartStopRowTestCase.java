@@ -29,56 +29,48 @@ import java.io.StringWriter;
 
 import junit.framework.TestCase;
 
-public class ODTPreprocessorStartStopRowTestCase extends TestCase {
+public class ODTPreprocessorStartStopRowTestCase
+    extends TestCase
+{
 
-	private static final String START_STOP_XML = "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>"
-							+ "<office:document-content xmlns:office=\"urn:oasis:names:tc:opendocument:xmlns:office:1.0\" "
-							+ "xmlns:text=\"urn:oasis:names:tc:opendocument:xmlns:text:1.0\" "
-							+ "xmlns:table=\"urn:oasis:names:tc:opendocument:xmlns:table:1.0\">"
-							+ "<table:table table:name=\"Tableau1\" table:style-name=\"Tableau1\">"
-							+ "<table:table-column table:style-name=\"Tableau1.A\"/>"
-							+ "<table:table-row>"
-								+ "<table:table-cell table:style-name=\"Tableau1.A1\" office:value-type=\"string\">"
-									+ "<text:p text:style-name=\"Table_20_Contents\">"
-										+ "<text:text-input text:description=\"\">@before-rowAAAAAAAAAA</text:text-input>"
-										+ "<text:text-input text:description=\"\">@after-rowZZZZZZZZZZ</text:text-input>"
-									+ "</text:p>"
-								+ "</table:table-cell>"
-							+ "</table:table-row>"
-						+ "</table:table>"
-						+ "</office:document-content>";
+    private static final String START_STOP_XML = "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>"
+        + "<office:document-content xmlns:office=\"urn:oasis:names:tc:opendocument:xmlns:office:1.0\" "
+        + "xmlns:text=\"urn:oasis:names:tc:opendocument:xmlns:text:1.0\" "
+        + "xmlns:table=\"urn:oasis:names:tc:opendocument:xmlns:table:1.0\">"
+        + "<table:table table:name=\"Tableau1\" table:style-name=\"Tableau1\">"
+        + "<table:table-column table:style-name=\"Tableau1.A\"/>" + "<table:table-row>"
+        + "<table:table-cell table:style-name=\"Tableau1.A1\" office:value-type=\"string\">"
+        + "<text:p text:style-name=\"Table_20_Contents\">"
+        + "<text:text-input text:description=\"\">@before-rowAAAAAAAAAA</text:text-input>"
+        + "<text:text-input text:description=\"\">@after-rowZZZZZZZZZZ</text:text-input>" + "</text:p>"
+        + "</table:table-cell>" + "</table:table-row>" + "</table:table>" + "</office:document-content>";
 
-	public void testNestedTable() throws Exception {
-		ODTPreprocessor preprocessor = new ODTPreprocessor();
-		StringReader reader = new StringReader(
-				START_STOP_XML);
-		StringWriter writer = new StringWriter();
+    public void testNestedTable()
+        throws Exception
+    {
+        ODTPreprocessor preprocessor = new ODTPreprocessor();
+        StringReader reader = new StringReader( START_STOP_XML );
+        StringWriter writer = new StringWriter();
 
-		preprocessor.preprocess("test", reader, writer, null, null, null, null);
+        preprocessor.preprocess( "test", reader, writer, null, null, null, null );
 
-		assertEquals(
-				"<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>"
-						+ "<office:document-content xmlns:office=\"urn:oasis:names:tc:opendocument:xmlns:office:1.0\" "
-						+ "xmlns:text=\"urn:oasis:names:tc:opendocument:xmlns:text:1.0\" "
-						+ "xmlns:table=\"urn:oasis:names:tc:opendocument:xmlns:table:1.0\">"
-						+ "<table:table table:name=\"Tableau1\" table:style-name=\"Tableau1\">"
-						+ "<table:table-column table:style-name=\"Tableau1.A\"/>"
-						
-						+ "AAAAAAAAAA"
-						
-						+ "<table:table-row>"
-							+ "<table:table-cell table:style-name=\"Tableau1.A1\" office:value-type=\"string\">"
-								+ "<text:p text:style-name=\"Table_20_Contents\">"
-									//+ "<text:text-input text:description=\"\">@before-rowAAAAAAAAAA</text:text-input>"
-									//+ "<text:text-input text:description=\"\">@after-rowZZZZZZZZZZ</text:text-input>"
-								+ "</text:p>"
-							+ "</table:table-cell>"
-						+ "</table:table-row>"
-							
-						+ "ZZZZZZZZZZ"
+        assertEquals( "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>"
+            + "<office:document-content xmlns:office=\"urn:oasis:names:tc:opendocument:xmlns:office:1.0\" "
+            + "xmlns:text=\"urn:oasis:names:tc:opendocument:xmlns:text:1.0\" "
+            + "xmlns:table=\"urn:oasis:names:tc:opendocument:xmlns:table:1.0\">"
+            + "<table:table table:name=\"Tableau1\" table:style-name=\"Tableau1\">"
+            + "<table:table-column table:style-name=\"Tableau1.A\"/>"
 
-					+ "</table:table>"
-					+ "</office:document-content>",
-				writer.toString());
-	}
+            + "AAAAAAAAAA"
+
+            + "<table:table-row>" + "<table:table-cell table:style-name=\"Tableau1.A1\" office:value-type=\"string\">"
+            + "<text:p text:style-name=\"Table_20_Contents\">"
+            // + "<text:text-input text:description=\"\">@before-rowAAAAAAAAAA</text:text-input>"
+            // + "<text:text-input text:description=\"\">@after-rowZZZZZZZZZZ</text:text-input>"
+            + "</text:p>" + "</table:table-cell>" + "</table:table-row>"
+
+            + "ZZZZZZZZZZ"
+
+            + "</table:table>" + "</office:document-content>", writer.toString() );
+    }
 }

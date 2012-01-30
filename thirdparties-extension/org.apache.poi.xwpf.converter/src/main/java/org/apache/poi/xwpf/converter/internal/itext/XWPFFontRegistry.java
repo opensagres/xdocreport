@@ -24,51 +24,66 @@
  */
 package org.apache.poi.xwpf.converter.internal.itext;
 
-
-
 import com.lowagie.text.pdf.BaseFont;
 
 import fr.opensagres.xdocreport.itext.extension.font.AbstractFontRegistry;
 
-public class XWPFFontRegistry extends AbstractFontRegistry {
+public class XWPFFontRegistry
+    extends AbstractFontRegistry
+{
 
-	private static final String TIMES_NEW_ROMAN_FONT_FAMILY_NAME = "Times New Roman";
-	private static final String COURRIER_NEW_FONT_FAMILY_NAME = "Courier New";
-	
-	private static final XWPFFontRegistry INSTANCE = new XWPFFontRegistry();
+    private static final String TIMES_NEW_ROMAN_FONT_FAMILY_NAME = "Times New Roman";
 
-	public static XWPFFontRegistry getRegistry() {
-		return INSTANCE;
-	}
+    private static final String COURRIER_NEW_FONT_FAMILY_NAME = "Courier New";
 
-	@Override
-	protected String resolveFamilyName(String familyName, int style) {
-		boolean bold = isBold(style);
-		boolean italic = isItalic(style);
-		
-		if (COURRIER_NEW_FONT_FAMILY_NAME.equals(familyName)) {
-			if (bold && italic) {
-				return BaseFont.COURIER_BOLDOBLIQUE;
-			} else if (bold) {
-				return BaseFont.COURIER_BOLD;
-			} else if (italic) {
-				return BaseFont.COURIER_OBLIQUE;
-			}
-			return BaseFont.COURIER;
-		}
+    private static final XWPFFontRegistry INSTANCE = new XWPFFontRegistry();
 
-		if (TIMES_NEW_ROMAN_FONT_FAMILY_NAME.equals(familyName)) {
-			if (bold && italic) {
-				return BaseFont.TIMES_BOLDITALIC;
-			} else if (bold) {
-				return BaseFont.TIMES_BOLD;
-			} else if (italic) {
-				return BaseFont.TIMES_ITALIC;
-			}
-			return BaseFont.TIMES_ROMAN;
-		}
-		
-		return familyName;
-	}
+    public static XWPFFontRegistry getRegistry()
+    {
+        return INSTANCE;
+    }
+
+    @Override
+    protected String resolveFamilyName( String familyName, int style )
+    {
+        boolean bold = isBold( style );
+        boolean italic = isItalic( style );
+
+        if ( COURRIER_NEW_FONT_FAMILY_NAME.equals( familyName ) )
+        {
+            if ( bold && italic )
+            {
+                return BaseFont.COURIER_BOLDOBLIQUE;
+            }
+            else if ( bold )
+            {
+                return BaseFont.COURIER_BOLD;
+            }
+            else if ( italic )
+            {
+                return BaseFont.COURIER_OBLIQUE;
+            }
+            return BaseFont.COURIER;
+        }
+
+        if ( TIMES_NEW_ROMAN_FONT_FAMILY_NAME.equals( familyName ) )
+        {
+            if ( bold && italic )
+            {
+                return BaseFont.TIMES_BOLDITALIC;
+            }
+            else if ( bold )
+            {
+                return BaseFont.TIMES_BOLD;
+            }
+            else if ( italic )
+            {
+                return BaseFont.TIMES_ITALIC;
+            }
+            return BaseFont.TIMES_ROMAN;
+        }
+
+        return familyName;
+    }
 
 }

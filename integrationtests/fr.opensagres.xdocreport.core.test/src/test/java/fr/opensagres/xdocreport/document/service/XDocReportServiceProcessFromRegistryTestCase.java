@@ -26,8 +26,12 @@ package fr.opensagres.xdocreport.document.service;
 
 import junit.framework.TestCase;
 
-public class XDocReportServiceProcessFromRegistryTestCase extends TestCase {
-	public void testname() throws Exception {
-	
-}
+public class XDocReportServiceProcessFromRegistryTestCase
+    extends TestCase
+{
+    public void testname()
+        throws Exception
+    {
+
+    }
 }

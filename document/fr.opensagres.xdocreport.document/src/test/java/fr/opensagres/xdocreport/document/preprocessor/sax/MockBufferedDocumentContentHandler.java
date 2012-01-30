@@ -24,8 +24,8 @@
  */
 package fr.opensagres.xdocreport.document.preprocessor.sax;
 
-
-public class MockBufferedDocumentContentHandler extends
-		BufferedDocumentContentHandler {
+public class MockBufferedDocumentContentHandler
+    extends BufferedDocumentContentHandler
+{
 
 }

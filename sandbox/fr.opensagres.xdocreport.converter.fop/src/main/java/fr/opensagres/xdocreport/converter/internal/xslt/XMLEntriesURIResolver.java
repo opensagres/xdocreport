@@ -22,21 +22,23 @@ import javax.xml.transform.URIResolver;
 import fr.opensagres.xdocreport.core.io.IEntryInputStreamProvider;
 
 /**
- * {@link URIResolver} XML document (when you write in xsl
- * document('styles.xml')).
- * 
+ * {@link URIResolver} XML document (when you write in xsl document('styles.xml')).
  */
-public class XMLEntriesURIResolver extends AbstractURIResolver {
+public class XMLEntriesURIResolver
+    extends AbstractURIResolver
+{
 
-	private final IEntryInputStreamProvider inProvider;
+    private final IEntryInputStreamProvider inProvider;
 
-	public XMLEntriesURIResolver(IEntryInputStreamProvider inProvider) {
-		this.inProvider = inProvider;
-	}
+    public XMLEntriesURIResolver( IEntryInputStreamProvider inProvider )
+    {
+        this.inProvider = inProvider;
+    }
 
-	@Override
-	protected InputStream getInputStream(String href, String base) {
-		return inProvider.getEntryInputStream(href);
-	}
+    @Override
+    protected InputStream getInputStream( String href, String base )
+    {
+        return inProvider.getEntryInputStream( href );
+    }
 
 }

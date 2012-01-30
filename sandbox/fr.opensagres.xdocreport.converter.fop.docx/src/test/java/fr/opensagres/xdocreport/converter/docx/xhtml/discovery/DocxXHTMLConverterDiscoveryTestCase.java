@@ -38,26 +38,27 @@ import fr.opensagres.xdocreport.converter.Options;
 import fr.opensagres.xdocreport.converter.docx.xhtml.DocxXHTMLConverter;
 import fr.opensagres.xdocreport.core.document.DocumentKind;
 
-public class DocxXHTMLConverterDiscoveryTestCase  {
+public class DocxXHTMLConverterDiscoveryTestCase
+{
 
-	/**
-	 * Test converter is well registered in the ConverterRegistry by using
-	 * "converter-discovery.properties".
-	 * 
-	 * @throws Exception
-	 */
-	@Ignore("sandbox")
-	@Test
-	public void testDiscovery() throws Exception {
-		Options o = Options.getFrom(DocumentKind.DOCX)
-				.to(ConverterTypeTo.XHTML).via(ConverterTypeVia.XSL);
+    /**
+     * Test converter is well registered in the ConverterRegistry by using "converter-discovery.properties".
+     * 
+     * @throws Exception
+     */
+    @Ignore( "sandbox" )
+    @Test
+    public void testDiscovery()
+        throws Exception
+    {
+        Options o = Options.getFrom( DocumentKind.DOCX ).to( ConverterTypeTo.XHTML ).via( ConverterTypeVia.XSL );
 
-		// Test if converter is not null
-		IConverter converter = ConverterRegistry.getRegistry().getConverter(o);
-		assertNotNull(converter);
+        // Test if converter is not null
+        IConverter converter = ConverterRegistry.getRegistry().getConverter( o );
+        assertNotNull( converter );
 
-		// Test instance class of the converter
-		assertEquals(DocxXHTMLConverter.class, converter.getClass());
-	}
+        // Test instance class of the converter
+        assertEquals( DocxXHTMLConverter.class, converter.getClass() );
+    }
 
 }

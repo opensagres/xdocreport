@@ -29,32 +29,42 @@ import com.lowagie.text.List;
 import com.lowagie.text.ListItem;
 import com.lowagie.text.pdf.PdfPCell;
 
+public class ExtendedPdfPCell
+    extends PdfPCell
+    implements IITextContainer
+{
 
-public class ExtendedPdfPCell extends PdfPCell implements IITextContainer {
+    private IITextContainer container;
 
-	private IITextContainer container;
+    public ExtendedPdfPCell()
+    {
 
-	public ExtendedPdfPCell() {
-		
-		//disableBorderSide(BOTTOM|TOP|LEFT|RIGHT);
-	}
-	@Override
-	public void addElement(Element element) {
-		if (element instanceof ListItem) {
-			List aList = new List();
-			aList.setIndentationLeft(((ListItem) element).getIndentationLeft());
-			aList.add(element);
-			super.addElement(aList);
-		} else {
-			super.addElement(element);
-		}
-	}
+        // disableBorderSide(BOTTOM|TOP|LEFT|RIGHT);
+    }
 
-	public IITextContainer getITextContainer() {
-		return container;
-	}
+    @Override
+    public void addElement( Element element )
+    {
+        if ( element instanceof ListItem )
+        {
+            List aList = new List();
+            aList.setIndentationLeft( ( (ListItem) element ).getIndentationLeft() );
+            aList.add( element );
+            super.addElement( aList );
+        }
+        else
+        {
+            super.addElement( element );
+        }
+    }
 
-	public void setITextContainer(IITextContainer container) {
-		this.container = container;
-	}
+    public IITextContainer getITextContainer()
+    {
+        return container;
+    }
+
+    public void setITextContainer( IITextContainer container )
+    {
+        this.container = container;
+    }
 }

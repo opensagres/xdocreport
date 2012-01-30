@@ -24,62 +24,73 @@
  */
 package org.apache.poi.xwpf.converter.internal.itext.styles;
 
-
 import java.awt.Color;
 import java.math.BigInteger;
 
 import fr.opensagres.xdocreport.utils.BorderType;
 
-public class StyleBorder {
+public class StyleBorder
+{
 
-	private final BorderType borderType;
-	private boolean noBorder = false;
-	//default...
-	private Color color=Color.BLACK;
-	private BigInteger width=BigInteger.valueOf(0);
+    private final BorderType borderType;
 
-	public StyleBorder(String border, BorderType borderType) {
-		this.borderType = borderType;
-		noBorder = "none".equals(border);
-		if (noBorder) {
-			return;
-		}
+    private boolean noBorder = false;
 
-		// ex : 0.035cm, solid, #ff0000
-//		String[] s = border.split(" ");
-//		for (int i = 0; i < s.length; i++) {
-//			switch (i) {
-//			case 0:
-//				//FIXME : width = ODFUtils.getDimensionAsPoint(s[i]);
-//				break;
-//			case 2:
-//				color = ColorRegistry.getInstance().getColor(s[i]);
-//				break;
-//			}
-//		}
-	}
+    // default...
+    private Color color = Color.BLACK;
 
-	public Color getColor() {
-		return color;
-	}
+    private BigInteger width = BigInteger.valueOf( 0 );
 
-	public void setColor(Color color) {
-		this.color = color;
-	}
+    public StyleBorder( String border, BorderType borderType )
+    {
+        this.borderType = borderType;
+        noBorder = "none".equals( border );
+        if ( noBorder )
+        {
+            return;
+        }
 
-	public BigInteger getWidth() {
-		return width;
-	}
+        // ex : 0.035cm, solid, #ff0000
+        // String[] s = border.split(" ");
+        // for (int i = 0; i < s.length; i++) {
+        // switch (i) {
+        // case 0:
+        // //FIXME : width = ODFUtils.getDimensionAsPoint(s[i]);
+        // break;
+        // case 2:
+        // color = ColorRegistry.getInstance().getColor(s[i]);
+        // break;
+        // }
+        // }
+    }
 
-	public void setWidth(BigInteger width) {
-		this.width = width;
-	}
+    public Color getColor()
+    {
+        return color;
+    }
 
-	public boolean isNoBorder() {
-		return noBorder;
-	}
+    public void setColor( Color color )
+    {
+        this.color = color;
+    }
 
-	public BorderType getBorderType() {
-		return borderType;
-	}
+    public BigInteger getWidth()
+    {
+        return width;
+    }
+
+    public void setWidth( BigInteger width )
+    {
+        this.width = width;
+    }
+
+    public boolean isNoBorder()
+    {
+        return noBorder;
+    }
+
+    public BorderType getBorderType()
+    {
+        return borderType;
+    }
 }

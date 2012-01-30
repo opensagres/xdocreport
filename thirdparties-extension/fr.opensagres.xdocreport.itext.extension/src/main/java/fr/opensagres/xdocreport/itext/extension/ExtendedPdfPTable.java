@@ -29,129 +29,142 @@ import com.lowagie.text.pdf.PdfPCell;
 import com.lowagie.text.pdf.PdfPRow;
 import com.lowagie.text.pdf.PdfPTable;
 
-public class ExtendedPdfPTable extends PdfPTable implements IITextContainer {
+public class ExtendedPdfPTable
+    extends PdfPTable
+    implements IITextContainer
+{
 
-	private IITextContainer container;
+    private IITextContainer container;
 
-	public ExtendedPdfPTable(int numColumns) {
-		super(numColumns);
-		// Ugly code to resolve this problem : When Paragraph is before
-		// PDFTable, space before paragraph and table is
-		// too little and paragraph content cut the table.
-		// Add spacing before to resolve that.
-		super.setSpacingBefore(5f);
-	}
+    public ExtendedPdfPTable( int numColumns )
+    {
+        super( numColumns );
+        // Ugly code to resolve this problem : When Paragraph is before
+        // PDFTable, space before paragraph and table is
+        // too little and paragraph content cut the table.
+        // Add spacing before to resolve that.
+        super.setSpacingBefore( 5f );
+    }
 
-	public void addElement(Element element) {
-		if (element instanceof PdfPCell) {
-			super.addCell((PdfPCell) element);
-		}
-	}
+    public void addElement( Element element )
+    {
+        if ( element instanceof PdfPCell )
+        {
+            super.addCell( (PdfPCell) element );
+        }
+    }
 
-	public IITextContainer getITextContainer() {
-		return container;
-	}
+    public IITextContainer getITextContainer()
+    {
+        return container;
+    }
 
-	public void setITextContainer(IITextContainer container) {
-		this.container = container;
-	}
+    public void setITextContainer( IITextContainer container )
+    {
+        this.container = container;
+    }
 
-	/**
-	 * Gets the height of a particular row.
-	 * 
-	 * @param idx
-	 *            the row index (starts at 0)
-	 * @param firsttime
-	 *            is this the first time the row heigh is calculated?
-	 * @return the height of a particular row
-	 * @since 3.0.0
-	 */
-	public float getRowHeight(int idx, boolean firsttime) {
-		if (totalWidth <= 0 || idx < 0 || idx >= rows.size())
-			return 0;
-		PdfPRow row = (PdfPRow) rows.get(idx);
-		if (row == null)
-			return 0;
-		if (firsttime)
-			row.setWidths(absoluteWidths);
-		float height = row.getMaxHeights();
-		PdfPCell cell;
-		PdfPRow tmprow;
-		for (int i = 0; i < relativeWidths.length; i++) {
-			if (!rowSpanAbove(idx, i))
-				continue;
-			int rs = 1;
-			while (rowSpanAbove(idx - rs, i)) {
-				rs++;
-			}
-			tmprow = (PdfPRow) rows.get(idx - rs);
-			cell = tmprow.getCells()[i];
-			float tmp = 0;
-			// AZERR patch : sometimes cell is null????
-			if (cell != null) {
-				if (cell.getRowspan() == rs + 1) {
-					tmp = cell.getMaxHeight();
-					while (rs > 0) {
-						tmp -= getRowHeight(idx - rs);
-						rs--;
-					}
-				}
-			}
-			if (tmp > height)
-				height = tmp;
-		}
-		row.setMaxHeights(height);
-		return height;
-	}
+    /**
+     * Gets the height of a particular row.
+     * 
+     * @param idx the row index (starts at 0)
+     * @param firsttime is this the first time the row heigh is calculated?
+     * @return the height of a particular row
+     * @since 3.0.0
+     */
+    public float getRowHeight( int idx, boolean firsttime )
+    {
+        if ( totalWidth <= 0 || idx < 0 || idx >= rows.size() )
+            return 0;
+        PdfPRow row = (PdfPRow) rows.get( idx );
+        if ( row == null )
+            return 0;
+        if ( firsttime )
+            row.setWidths( absoluteWidths );
+        float height = row.getMaxHeights();
+        PdfPCell cell;
+        PdfPRow tmprow;
+        for ( int i = 0; i < relativeWidths.length; i++ )
+        {
+            if ( !rowSpanAbove( idx, i ) )
+                continue;
+            int rs = 1;
+            while ( rowSpanAbove( idx - rs, i ) )
+            {
+                rs++;
+            }
+            tmprow = (PdfPRow) rows.get( idx - rs );
+            cell = tmprow.getCells()[i];
+            float tmp = 0;
+            // AZERR patch : sometimes cell is null????
+            if ( cell != null )
+            {
+                if ( cell.getRowspan() == rs + 1 )
+                {
+                    tmp = cell.getMaxHeight();
+                    while ( rs > 0 )
+                    {
+                        tmp -= getRowHeight( idx - rs );
+                        rs--;
+                    }
+                }
+            }
+            if ( tmp > height )
+                height = tmp;
+        }
+        row.setMaxHeights( height );
+        return height;
+    }
 
-	/**
-	 * Checks if there are rows above belonging to a rowspan.
-	 * 
-	 * @param currRow
-	 *            the current row to check
-	 * @param currCol
-	 *            the current column to check
-	 * @return true if there's a cell above that belongs to a rowspan
-	 * @since 2.1.6
-	 */
-	boolean rowSpanAbove(int currRow, int currCol) {
+    /**
+     * Checks if there are rows above belonging to a rowspan.
+     * 
+     * @param currRow the current row to check
+     * @param currCol the current column to check
+     * @return true if there's a cell above that belongs to a rowspan
+     * @since 2.1.6
+     */
+    boolean rowSpanAbove( int currRow, int currCol )
+    {
 
-		if ((currCol >= getNumberOfColumns()) || (currCol < 0)
-				|| (currRow == 0))
-			return false;
+        if ( ( currCol >= getNumberOfColumns() ) || ( currCol < 0 ) || ( currRow == 0 ) )
+            return false;
 
-		int row = currRow - 1;
-		PdfPRow aboveRow = (PdfPRow) rows.get(row);
-		if (aboveRow == null)
-			return false;
-		PdfPCell aboveCell = (PdfPCell) aboveRow.getCells()[currCol];
-		while ((aboveCell == null) && (row > 0)) {
-			aboveRow = (PdfPRow) rows.get(--row);
-			if (aboveRow == null)
-				return false;
-			aboveCell = (PdfPCell) aboveRow.getCells()[currCol];
-		}
+        int row = currRow - 1;
+        PdfPRow aboveRow = (PdfPRow) rows.get( row );
+        if ( aboveRow == null )
+            return false;
+        PdfPCell aboveCell = (PdfPCell) aboveRow.getCells()[currCol];
+        while ( ( aboveCell == null ) && ( row > 0 ) )
+        {
+            aboveRow = (PdfPRow) rows.get( --row );
+            if ( aboveRow == null )
+                return false;
+            aboveCell = (PdfPCell) aboveRow.getCells()[currCol];
+        }
 
-		int distance = currRow - row;
+        int distance = currRow - row;
 
-		if (aboveCell == null) {
-			int col = currCol - 1;
-			aboveCell = (PdfPCell) aboveRow.getCells()[col];
-			while ((aboveCell == null) && (row > 0))
-				aboveCell = (PdfPCell) aboveRow.getCells()[--col];
-			return aboveCell != null && aboveCell.getRowspan() > distance;
-		}
+        if ( aboveCell == null )
+        {
+            int col = currCol - 1;
+            aboveCell = (PdfPCell) aboveRow.getCells()[col];
+            while ( ( aboveCell == null ) && ( row > 0 ) )
+                aboveCell = (PdfPCell) aboveRow.getCells()[--col];
+            return aboveCell != null && aboveCell.getRowspan() > distance;
+        }
 
-		if ((aboveCell.getRowspan() == 1) && (distance > 1)) {
-			int col = currCol - 1;
-			aboveRow = (PdfPRow) rows.get(row + 1);
-			distance--;
-			aboveCell = (PdfPCell) aboveRow.getCells()[col];
-			while ((aboveCell == null) && (col > 0))
-				aboveCell = (PdfPCell) aboveRow.getCells()[--col];
-		}
+        if ( ( aboveCell.getRowspan() == 1 ) && ( distance > 1 ) )
+        {
+            int col = currCol - 1;
+            aboveRow = (PdfPRow) rows.get( row + 1 );
+            distance--;
+            aboveCell = (PdfPCell) aboveRow.getCells()[col];
+            while ( ( aboveCell == null ) && ( col > 0 ) )
+                aboveCell = (PdfPCell) aboveRow.getCells()[--col];
+        }
 
-		return aboveCell != null && aboveCell.getRowspan() > distance;
-	}
+        return aboveCell != null && aboveCell.getRowspan() > distance;
+    }
 
 }

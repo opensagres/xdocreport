@@ -31,55 +31,67 @@ import fr.opensagres.xdocreport.document.preprocessor.sax.StringBufferedRegion;
 import fr.opensagres.xdocreport.document.preprocessor.sax.TransformedBufferedDocumentContentHandler;
 import fr.opensagres.xdocreport.template.formatter.FieldMetadata;
 
-public class RBufferedRegion extends MergefieldBufferedRegion {
+public class RBufferedRegion
+    extends MergefieldBufferedRegion
+{
 
-	private String fldCharType;
-	private StringBufferedRegion tContentRegion = null;
-	private String originalInstrText;
-	private FieldMetadata fieldAsTextStyling;
+    private String fldCharType;
 
-	public RBufferedRegion(TransformedBufferedDocumentContentHandler handler,
-			BufferedElement parent, String uri, String localName, String name,
-			Attributes attributes) {
-		super(handler, parent, uri, localName, name, attributes);
-		this.originalInstrText = null;
-	}
+    private StringBufferedRegion tContentRegion = null;
 
-	public void setFldCharType(String fldCharType) {
-		this.fldCharType = fldCharType;
-	}
+    private String originalInstrText;
 
-	public String getFldCharType() {
-		return fldCharType;
-	}
+    private FieldMetadata fieldAsTextStyling;
 
-	public void setTContent(String tContent) {
-		getTRegion().setTextContent(tContent);
-	}
+    public RBufferedRegion( TransformedBufferedDocumentContentHandler handler, BufferedElement parent, String uri,
+                            String localName, String name, Attributes attributes )
+    {
+        super( handler, parent, uri, localName, name, attributes );
+        this.originalInstrText = null;
+    }
 
-	@Override
-	public String setInstrText(String instrText,
-			FieldMetadata fieldAsTextStyling) {
-		this.originalInstrText = instrText;
-		this.fieldAsTextStyling = fieldAsTextStyling;
-		instrText = super.setInstrText(instrText, fieldAsTextStyling);
-		super.append(instrText);
-		return instrText;
-	}
+    public void setFldCharType( String fldCharType )
+    {
+        this.fldCharType = fldCharType;
+    }
 
-	public String getOriginalInstrText() {
-		return originalInstrText;
-	}
+    public String getFldCharType()
+    {
+        return fldCharType;
+    }
 
-	public boolean hasInstrText() {
-		return originalInstrText != null;
-	}
+    public void setTContent( String tContent )
+    {
+        getTRegion().setTextContent( tContent );
+    }
 
-	public String getTContent() {
-		return getTRegion().getTextContent();
-	}
+    @Override
+    public String setInstrText( String instrText, FieldMetadata fieldAsTextStyling )
+    {
+        this.originalInstrText = instrText;
+        this.fieldAsTextStyling = fieldAsTextStyling;
+        instrText = super.setInstrText( instrText, fieldAsTextStyling );
+        super.append( instrText );
+        return instrText;
+    }
 
-	public FieldMetadata getFieldAsTextStyling() {
-		return fieldAsTextStyling;
-	}
+    public String getOriginalInstrText()
+    {
+        return originalInstrText;
+    }
+
+    public boolean hasInstrText()
+    {
+        return originalInstrText != null;
+    }
+
+    public String getTContent()
+    {
+        return getTRegion().getTextContent();
+    }
+
+    public FieldMetadata getFieldAsTextStyling()
+    {
+        return fieldAsTextStyling;
+    }
 }

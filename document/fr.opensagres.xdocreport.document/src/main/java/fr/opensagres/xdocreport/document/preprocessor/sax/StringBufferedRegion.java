@@ -29,51 +29,62 @@ import java.io.Writer;
 
 /**
  * String buffered region.
- * 
  */
-public class StringBufferedRegion extends BufferedRegionAdpater {
+public class StringBufferedRegion
+    extends BufferedRegionAdpater
+{
 
-	private final StringBuilder buffer = new StringBuilder();
+    private final StringBuilder buffer = new StringBuilder();
 
-	public StringBufferedRegion(BufferedElement ownerElement, IBufferedRegion parent) {
-		super(ownerElement, parent);
-	}
+    public StringBufferedRegion( BufferedElement ownerElement, IBufferedRegion parent )
+    {
+        super( ownerElement, parent );
+    }
 
-	@Override
-	public boolean isString() {
-		return true;
-	}
+    @Override
+    public boolean isString()
+    {
+        return true;
+    }
 
-	@Override
-	public void save(Writer writer) throws IOException {
-		writer.write(buffer.toString());
-	}
+    @Override
+    public void save( Writer writer )
+        throws IOException
+    {
+        writer.write( buffer.toString() );
+    }
 
-	@Override
-	public void append(String content) {
-		buffer.append(content);
-	}
+    @Override
+    public void append( String content )
+    {
+        buffer.append( content );
+    }
 
-	@Override
-	public void append(char[] ch, int start, int length) {
-		buffer.append(ch, start, length);
-	}
+    @Override
+    public void append( char[] ch, int start, int length )
+    {
+        buffer.append( ch, start, length );
+    }
 
-	@Override
-	public void append(char c) {
-		buffer.append(c);
-	}
+    @Override
+    public void append( char c )
+    {
+        buffer.append( c );
+    }
 
-	@Override
-	public String toString() {
-		if (buffer == null) {
-			return null;
-		}
-		return buffer.toString();
-	}
+    @Override
+    public String toString()
+    {
+        if ( buffer == null )
+        {
+            return null;
+        }
+        return buffer.toString();
+    }
 
-	public void clear() {
-		buffer.setLength(0);
-	}
+    public void clear()
+    {
+        buffer.setLength( 0 );
+    }
 
 }

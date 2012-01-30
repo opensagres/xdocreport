@@ -21,39 +21,46 @@ import javax.xml.transform.URIResolver;
 
 import fr.opensagres.xdocreport.converter.internal.xhtml.AbstractXHTMLConverter;
 
-public class ODTXHTMLConverter extends AbstractXHTMLConverter implements
-		ODTXHTMLConstants {
+public class ODTXHTMLConverter
+    extends AbstractXHTMLConverter
+    implements ODTXHTMLConstants
+{
 
-	private static ODTXHTMLConverter INSTANCE = new ODTXHTMLConverter();
+    private static ODTXHTMLConverter INSTANCE = new ODTXHTMLConverter();
 
-	public static ODTXHTMLConverter getInstance() {
-		return INSTANCE;
-	}
+    public static ODTXHTMLConverter getInstance()
+    {
+        return INSTANCE;
+    }
 
-	@Override
-	protected String getMainEntryName() {
-		return CONTENT_XML_ENTRY;
-	}
+    @Override
+    protected String getMainEntryName()
+    {
+        return CONTENT_XML_ENTRY;
+    }
 
-	@Override
-	protected String[] getEntryNames() {
-		return XML_ENTRIES;
-	}
+    @Override
+    protected String[] getEntryNames()
+    {
+        return XML_ENTRIES;
+    }
 
-	@Override
-	protected String getXHTMLTemplateURI() {
-		return XSL_XHTML_TEMPLATE_URI;
-	}
+    @Override
+    protected String getXHTMLTemplateURI()
+    {
+        return XSL_XHTML_TEMPLATE_URI;
+    }
 
-	@Override
-	protected InputStream getXHTMLStream() {
-		return ODTXHTMLConverter.class
-				.getResourceAsStream(getXHTMLTemplateURI());
-	}
+    @Override
+    protected InputStream getXHTMLStream()
+    {
+        return ODTXHTMLConverter.class.getResourceAsStream( getXHTMLTemplateURI() );
+    }
 
-	@Override
-	protected URIResolver getXHTMLURIResolver() {
-		return XHTMLURIResolver.INSTANCE;
-	}
+    @Override
+    protected URIResolver getXHTMLURIResolver()
+    {
+        return XHTMLURIResolver.INSTANCE;
+    }
 
 }

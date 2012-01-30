@@ -26,52 +26,53 @@ package fr.opensagres.xdocreport.document.preprocessor.sax;
 
 /**
  * Interface for buffered region.
- * 
  */
-public interface IBufferedRegion extends ISavable {
+public interface IBufferedRegion
+    extends ISavable
+{
 
-	/**
-	 * Returns true if buffered region is a String and false otherwise.
-	 * 
-	 * @return
-	 */
-	boolean isString();
+    /**
+     * Returns true if buffered region is a String and false otherwise.
+     * 
+     * @return
+     */
+    boolean isString();
 
-	/**
-	 * Append the given content to the buffer.
-	 * 
-	 * @param content
-	 */
-	void append(String content);
+    /**
+     * Append the given content to the buffer.
+     * 
+     * @param content
+     */
+    void append( String content );
 
-	/**
-	 * Append the given char array to the buffer.
-	 * 
-	 * @param ch
-	 * @param start
-	 * @param length
-	 */
-	void append(char[] ch, int start, int length);
+    /**
+     * Append the given char array to the buffer.
+     * 
+     * @param ch
+     * @param start
+     * @param length
+     */
+    void append( char[] ch, int start, int length );
 
-	/**
-	 * Append the given content to the buffer.
-	 * 
-	 * @param content
-	 */
-	void append(char c);
+    /**
+     * Append the given content to the buffer.
+     * 
+     * @param content
+     */
+    void append( char c );
 
-	/**
-	 * Add a the given buffered region to the buffer.
-	 * 
-	 * @param region
-	 */
-	void addRegion(ISavable region);
+    /**
+     * Add a the given buffered region to the buffer.
+     * 
+     * @param region
+     */
+    void addRegion( ISavable region );
 
-	/**
-	 * Returns the parent buffered region.
-	 * 
-	 * @return
-	 */
-	IBufferedRegion getParent();
+    /**
+     * Returns the parent buffered region.
+     * 
+     * @return
+     */
+    IBufferedRegion getParent();
 
 }

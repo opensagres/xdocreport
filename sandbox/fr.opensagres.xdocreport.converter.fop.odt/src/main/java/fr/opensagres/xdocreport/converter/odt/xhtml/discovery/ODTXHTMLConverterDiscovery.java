@@ -22,30 +22,38 @@ import fr.opensagres.xdocreport.converter.discovery.IConverterDiscovery;
 import fr.opensagres.xdocreport.converter.odt.xhtml.ODTXHTMLConverter;
 import fr.opensagres.xdocreport.core.document.DocumentKind;
 
-public class ODTXHTMLConverterDiscovery implements IConverterDiscovery {
+public class ODTXHTMLConverterDiscovery
+    implements IConverterDiscovery
+{
 
-	public String getId() {
-		return "ODT2XHTMLViaXSL";
-	}
+    public String getId()
+    {
+        return "ODT2XHTMLViaXSL";
+    }
 
-	public String getDescription() {
-		return "Convert ODT 2 XHTML via XSL";
-	}
+    public String getDescription()
+    {
+        return "Convert ODT 2 XHTML via XSL";
+    }
 
-	public String getFrom() {
-		return DocumentKind.ODT.name();
-	}
+    public String getFrom()
+    {
+        return DocumentKind.ODT.name();
+    }
 
-	public String getTo() {
-		return ConverterTypeTo.XHTML.name();
-	}
+    public String getTo()
+    {
+        return ConverterTypeTo.XHTML.name();
+    }
 
-	public String getVia() {
-		return ConverterTypeVia.XSL.name();
-	}
+    public String getVia()
+    {
+        return ConverterTypeVia.XSL.name();
+    }
 
-	public IConverter getConverter() {
-		return ODTXHTMLConverter.getInstance();
-	}
+    public IConverter getConverter()
+    {
+        return ODTXHTMLConverter.getInstance();
+    }
 
 }

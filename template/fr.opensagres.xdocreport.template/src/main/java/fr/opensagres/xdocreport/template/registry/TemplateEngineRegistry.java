@@ -36,83 +36,100 @@ import fr.opensagres.xdocreport.template.ITemplateEngine;
 import fr.opensagres.xdocreport.template.discovery.ITemplateEngineDiscovery;
 
 /**
- * Template engine registry stores instance of {@link ITemplateEngine} for
- * template engine kind (Freemarker, Velocity) and document kind (odt, docx..)
- * 
+ * Template engine registry stores instance of {@link ITemplateEngine} for template engine kind (Freemarker, Velocity)
+ * and document kind (odt, docx..)
  */
-public class TemplateEngineRegistry extends
-		AbstractRegistry<ITemplateEngineDiscovery> implements Serializable {
+public class TemplateEngineRegistry
+    extends AbstractRegistry<ITemplateEngineDiscovery>
+    implements Serializable
+{
 
-	private static final long serialVersionUID = -7686229087661483932L;
+    private static final long serialVersionUID = -7686229087661483932L;
 
-	private static final TemplateEngineRegistry INSTANCE = new TemplateEngineRegistry();
+    private static final TemplateEngineRegistry INSTANCE = new TemplateEngineRegistry();
 
-	//
+    //
 
-	private final Map<String, ITemplateEngine> templateEnginesCache = new HashMap<String, ITemplateEngine>();
-	private final Map<String, ITemplateEngineDiscovery> templateEnginesDiscoveryCache = new HashMap<String, ITemplateEngineDiscovery>();
-	private ITemplateEngine defaultTemplateEngine;
-	private final Collection<String> templateEngineKinds = new ArrayList<String>();
+    private final Map<String, ITemplateEngine> templateEnginesCache = new HashMap<String, ITemplateEngine>();
 
-	public static TemplateEngineRegistry getRegistry() {
-		return INSTANCE;
-	}
+    private final Map<String, ITemplateEngineDiscovery> templateEnginesDiscoveryCache =
+        new HashMap<String, ITemplateEngineDiscovery>();
 
-	public TemplateEngineRegistry() {
-		super(ITemplateEngineDiscovery.class);
-	}
+    private ITemplateEngine defaultTemplateEngine;
 
-	@Override
-	protected boolean registerInstance(ITemplateEngineDiscovery instance) {
+    private final Collection<String> templateEngineKinds = new ArrayList<String>();
 
-		ITemplateEngineDiscovery discovery = instance;
-		templateEnginesDiscoveryCache.put(discovery.getId(), discovery);
-		ITemplateEngine templateEngine = discovery.createTemplateEngine();
-		register(templateEngine);
-		return true;
+    public static TemplateEngineRegistry getRegistry()
+    {
+        return INSTANCE;
+    }
 
-	}
+    public TemplateEngineRegistry()
+    {
+        super( ITemplateEngineDiscovery.class );
+    }
 
-	private void register(ITemplateEngine templateEngine) {
-		templateEnginesCache.put(templateEngine.getKind(), templateEngine);
-	}
+    @Override
+    protected boolean registerInstance( ITemplateEngineDiscovery instance )
+    {
 
-	public boolean isDefault(ITemplateEngine templateEngine) {
-		initializeIfNeeded();
-		if (templateEngine == null) {
-			return false;
-		}
-		return templateEngine.equals(defaultTemplateEngine);
-	}
+        ITemplateEngineDiscovery discovery = instance;
+        templateEnginesDiscoveryCache.put( discovery.getId(), discovery );
+        ITemplateEngine templateEngine = discovery.createTemplateEngine();
+        register( templateEngine );
+        return true;
 
-	public ITemplateEngine getDefaultTemplateEngine() {
-		initializeIfNeeded();
-		return defaultTemplateEngine;
-	}
+    }
 
-	public void setDefaultTemplateEngine(ITemplateEngine defaultTemplateEngine) {
-		this.defaultTemplateEngine = defaultTemplateEngine;
-	}
+    private void register( ITemplateEngine templateEngine )
+    {
+        templateEnginesCache.put( templateEngine.getKind(), templateEngine );
+    }
 
-	public Collection<ITemplateEngine> getTemplateEngines() {
-		initializeIfNeeded();
-		return templateEnginesCache.values();
-	}
+    public boolean isDefault( ITemplateEngine templateEngine )
+    {
+        initializeIfNeeded();
+        if ( templateEngine == null )
+        {
+            return false;
+        }
+        return templateEngine.equals( defaultTemplateEngine );
+    }
 
-	public Collection<String> getTemplateEngineKinds() {
-		initializeIfNeeded();
-		return templateEnginesCache.keySet();
-	}
+    public ITemplateEngine getDefaultTemplateEngine()
+    {
+        initializeIfNeeded();
+        return defaultTemplateEngine;
+    }
 
-	public Map<String, ITemplateEngineDiscovery> getTemplateEnginesDiscoveryCache() {
-		return templateEnginesDiscoveryCache;
-	}
+    public void setDefaultTemplateEngine( ITemplateEngine defaultTemplateEngine )
+    {
+        this.defaultTemplateEngine = defaultTemplateEngine;
+    }
 
-	@Override
-	protected void doDispose() {
-		this.templateEnginesDiscoveryCache.clear();
-		this.defaultTemplateEngine = null;
-		this.templateEngineKinds.clear();
-	}
+    public Collection<ITemplateEngine> getTemplateEngines()
+    {
+        initializeIfNeeded();
+        return templateEnginesCache.values();
+    }
+
+    public Collection<String> getTemplateEngineKinds()
+    {
+        initializeIfNeeded();
+        return templateEnginesCache.keySet();
+    }
+
+    public Map<String, ITemplateEngineDiscovery> getTemplateEnginesDiscoveryCache()
+    {
+        return templateEnginesDiscoveryCache;
+    }
+
+    @Override
+    protected void doDispose()
+    {
+        this.templateEnginesDiscoveryCache.clear();
+        this.defaultTemplateEngine = null;
+        this.templateEngineKinds.clear();
+    }
 
 }

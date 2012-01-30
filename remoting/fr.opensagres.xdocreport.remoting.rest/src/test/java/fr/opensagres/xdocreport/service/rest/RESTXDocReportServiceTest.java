@@ -49,117 +49,120 @@ import fr.opensagres.xdocreport.document.service.Report;
 import fr.opensagres.xdocreport.document.service.ReportId;
 import fr.opensagres.xdocreport.document.service.WSOptions;
 
-public class RESTXDocReportServiceTest {
+public class RESTXDocReportServiceTest
+{
 
-	private static final int PORT = 9999;
-	private static Server server;
+    private static final int PORT = 9999;
 
-	private static final String BASE_ADDRESS = "http://localhost:" + PORT ;
+    private static Server server;
 
-	@BeforeClass
-	public static void startServer() throws Exception {
+    private static final String BASE_ADDRESS = "http://localhost:" + PORT;
 
-		ServletHolder servlet = new ServletHolder(CXFNonSpringJaxrsServlet.class);
+    @BeforeClass
+    public static void startServer()
+        throws Exception
+    {
 
-		servlet.setInitParameter(Application.class.getName(), fr.opensagres.xdocreport.service.rest.XDocreportApplication.class.getName());
-		servlet.setInitParameter("jaxrs.serviceClasses", RESTXDocReportService.class.getName());
-		server = new Server(PORT);
-		ServletContextHandler context = new ServletContextHandler(server, "/", ServletContextHandler.SESSIONS);
+        ServletHolder servlet = new ServletHolder( CXFNonSpringJaxrsServlet.class );
 
-		context.addServlet(servlet, "/*");
-		server.start();
-	}
-	
+        servlet.setInitParameter( Application.class.getName(),
+                                  fr.opensagres.xdocreport.service.rest.XDocreportApplication.class.getName() );
+        servlet.setInitParameter( "jaxrs.serviceClasses", RESTXDocReportService.class.getName() );
+        server = new Server( PORT );
+        ServletContextHandler context = new ServletContextHandler( server, "/", ServletContextHandler.SESSIONS );
 
+        context.addServlet( servlet, "/*" );
+        server.start();
+    }
 
-	
-	@Test
-	public void upload() throws IOException {
-		
-		
-        WebClient client = WebClient.create(BASE_ADDRESS);
-        client.path("upload");
-		Report report = new Report();
-		
-		InputStream in=RESTXDocReportServiceTest.class.getClassLoader().getResourceAsStream("bo.docx");
-		report.setReportID("reportID1");
-		report.setDocument(fr.opensagres.xdocreport.core.io.IOUtils.toByteArray(in));
-		report.setTemplateEngine("Velocity");
-		report.getFieldsMetaData().add("test");
-		report.setTemplateEngine("Velocity");
-		
-		client.post(report);
-		
-	}
+    @Test
+    public void upload()
+        throws IOException
+    {
 
-	
-	@Test
-	public void listReports() throws Exception {
+        WebClient client = WebClient.create( BASE_ADDRESS );
+        client.path( "upload" );
+        Report report = new Report();
 
-	
-		WebClient client = WebClient.create(BASE_ADDRESS);
-        client.path("listReports");
+        InputStream in = RESTXDocReportServiceTest.class.getClassLoader().getResourceAsStream( "bo.docx" );
+        report.setReportID( "reportID1" );
+        report.setDocument( fr.opensagres.xdocreport.core.io.IOUtils.toByteArray( in ) );
+        report.setTemplateEngine( "Velocity" );
+        report.getFieldsMetaData().add( "test" );
+        report.setTemplateEngine( "Velocity" );
 
-		@SuppressWarnings("unchecked")
-		Collection<ReportId> reports = (Collection<ReportId>) client.getCollection(ReportId.class);
-		System.out.println(reports);
-		assertEquals(1, reports.size());
-		assertEquals("reportID1", reports.iterator().next().getReportID());
-		
+        client.post( report );
 
-	}
-	@Ignore
-	@Test
-	public void processReport() throws IOException {
-		
-		
-        WebClient client = WebClient.create(BASE_ADDRESS);
-        client.path("processReport");
-		Report report = new Report();
-		//client.accept("multipart/related");
-		//client=client.type("multipart/form-data");
-	//	client=client.accept("multipart/form-data");
-		InputStream in=RESTXDocReportServiceTest.class.getClassLoader().getResourceAsStream("bo.docx");
-		report.setReportID("reportID1");
-		report.setDocument(fr.opensagres.xdocreport.core.io.IOUtils.toByteArray(in));
-		report.setTemplateEngine("Velocity");
-		report.getFieldsMetaData().add("test");
-		report.setTemplateEngine("Velocity");
-		
-		Form aForm =new Form();
-		aForm.set("report", report);
-		aForm.set("dataContext", new ArrayList<DataContext>());
-		WSOptions options=new WSOptions();
-		options.setFrom("A");
-		options.setTo("B");
-		options.setVia("C");
-		aForm.set("wsOptions", options);
-		
-		
-//		List one = new ArrayList();
-//		one.add( report);
-//		map.put("report", one);
-//		List two = new ArrayList();
-//		two.add( new ArrayList<DataContext>());
-//		map.put("dataContext", two);
-//		List three = new ArrayList();
-//		three.add(new WSOptions())
-//;		map.put("report", three);
-//		
-//		Map<String, List<Object>> objects = new MultiValued<String, List<Object>>();
-//		List toto = new ArrayList();
-//        objects.put("report", new ArrayList());
-//        objects.put("dataContext", new ArrayList());
-//        objects.put("wsOptions", new ArrayList());
-		//client.form(aForm);
-		
-		
-		client.form(aForm);
-	}
-	
+    }
 
-	@AfterClass
-	public static void stopServer() throws Exception {
-		server.stop();
-	}
+    @Test
+    public void listReports()
+        throws Exception
+    {
+
+        WebClient client = WebClient.create( BASE_ADDRESS );
+        client.path( "listReports" );
+
+        @SuppressWarnings( "unchecked" )
+        Collection<ReportId> reports = (Collection<ReportId>) client.getCollection( ReportId.class );
+        System.out.println( reports );
+        assertEquals( 1, reports.size() );
+        assertEquals( "reportID1", reports.iterator().next().getReportID() );
+
+    }
+
+    @Ignore
+    @Test
+    public void processReport()
+        throws IOException
+    {
+
+        WebClient client = WebClient.create( BASE_ADDRESS );
+        client.path( "processReport" );
+        Report report = new Report();
+        // client.accept("multipart/related");
+        // client=client.type("multipart/form-data");
+        // client=client.accept("multipart/form-data");
+        InputStream in = RESTXDocReportServiceTest.class.getClassLoader().getResourceAsStream( "bo.docx" );
+        report.setReportID( "reportID1" );
+        report.setDocument( fr.opensagres.xdocreport.core.io.IOUtils.toByteArray( in ) );
+        report.setTemplateEngine( "Velocity" );
+        report.getFieldsMetaData().add( "test" );
+        report.setTemplateEngine( "Velocity" );
+
+        Form aForm = new Form();
+        aForm.set( "report", report );
+        aForm.set( "dataContext", new ArrayList<DataContext>() );
+        WSOptions options = new WSOptions();
+        options.setFrom( "A" );
+        options.setTo( "B" );
+        options.setVia( "C" );
+        aForm.set( "wsOptions", options );
+
+        // List one = new ArrayList();
+        // one.add( report);
+        // map.put("report", one);
+        // List two = new ArrayList();
+        // two.add( new ArrayList<DataContext>());
+        // map.put("dataContext", two);
+        // List three = new ArrayList();
+        // three.add(new WSOptions())
+        // ; map.put("report", three);
+        //
+        // Map<String, List<Object>> objects = new MultiValued<String, List<Object>>();
+        // List toto = new ArrayList();
+        // objects.put("report", new ArrayList());
+        // objects.put("dataContext", new ArrayList());
+        // objects.put("wsOptions", new ArrayList());
+        // client.form(aForm);
+
+        client.form( aForm );
+    }
+
+    @AfterClass
+    public static void stopServer()
+        throws Exception
+    {
+        server.stop();
+    }
 }

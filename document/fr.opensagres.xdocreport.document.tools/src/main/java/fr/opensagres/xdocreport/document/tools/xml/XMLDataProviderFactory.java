@@ -7,23 +7,29 @@ import fr.opensagres.xdocreport.document.tools.AbstractDataProviderFactory;
 import fr.opensagres.xdocreport.document.tools.IDataProvider;
 import fr.opensagres.xdocreport.template.formatter.FieldsMetadata;
 
-public class XMLDataProviderFactory extends AbstractDataProviderFactory {
+public class XMLDataProviderFactory
+    extends AbstractDataProviderFactory
+{
 
-	private static final String ID = "xml";
-	private static final String DESCRIPTION = "XML Data Provider";
+    private static final String ID = "xml";
 
-	public XMLDataProviderFactory() {
-		super(ID, DESCRIPTION);
-	}
+    private static final String DESCRIPTION = "XML Data Provider";
 
-	public IDataProvider create(InputStream data, InputStream properties)
-			throws Exception {
-		return new XMLDataProvider(data, properties);
-	}
+    public XMLDataProviderFactory()
+    {
+        super( ID, DESCRIPTION );
+    }
 
-	public void generateDefaultData(FieldsMetadata fieldsMetadata,
-			OutputStream out) throws Exception {
-		// TODO Auto-generated method stub
-		
-	}
+    public IDataProvider create( InputStream data, InputStream properties )
+        throws Exception
+    {
+        return new XMLDataProvider( data, properties );
+    }
+
+    public void generateDefaultData( FieldsMetadata fieldsMetadata, OutputStream out )
+        throws Exception
+    {
+        // TODO Auto-generated method stub
+
+    }
 }

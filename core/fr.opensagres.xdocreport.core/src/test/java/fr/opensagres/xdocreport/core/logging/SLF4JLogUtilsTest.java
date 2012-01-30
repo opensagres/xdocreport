@@ -31,21 +31,16 @@ import java.util.logging.Logger;
 
 import org.junit.Test;
 
-public class SLF4JLogUtilsTest{
+public class SLF4JLogUtilsTest
+{
 
-	
-	@Test
-	public void testGetLogger() {
-		Logger logger=  LogUtils.getLogger(SLF4JLogUtilsTest.class);
-		assertNotNull(logger);
-		
-		assertEquals(Slf4jLogger.class, LogUtils.getLoggerClass());
-	}
+    @Test
+    public void testGetLogger()
+    {
+        Logger logger = LogUtils.getLogger( SLF4JLogUtilsTest.class );
+        assertNotNull( logger );
 
-
- 
-    
- 
-
+        assertEquals( Slf4jLogger.class, LogUtils.getLoggerClass() );
+    }
 
 }

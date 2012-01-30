@@ -24,44 +24,67 @@
  */
 package org.apache.poi.xwpf.converter.internal.itext.styles;
 
-public class StylePadding {
+public class StylePadding
+{
 
-	private Float padding;
-	private Float paddingTop;
-	private Float paddingBottom;
-	private Float paddingRight;
-	private Float paddingLeft;
-	
-	public Float getPadding() {
-		return padding;
-	}
-	public void setPadding(Float padding) {
-		this.padding = padding;
-	}
-	public Float getPaddingTop() {
-		return paddingTop;
-	}
-	public void setPaddingTop(Float paddingTop) {
-		this.paddingTop = paddingTop;
-	}
-	public Float getPaddingBottom() {
-		return paddingBottom;
-	}
-	public void setPaddingBottom(Float paddingBottom) {
-		this.paddingBottom = paddingBottom;
-	}
-	public Float getPaddingRight() {
-		return paddingRight;
-	}
-	public void setPaddingRight(Float paddingRight) {
-		this.paddingRight = paddingRight;
-	}
-	public Float getPaddingLeft() {
-		return paddingLeft;
-	}
-	public void setPaddingLeft(Float paddingLeft) {
-		this.paddingLeft = paddingLeft;
-	}
-	
-	
+    private Float padding;
+
+    private Float paddingTop;
+
+    private Float paddingBottom;
+
+    private Float paddingRight;
+
+    private Float paddingLeft;
+
+    public Float getPadding()
+    {
+        return padding;
+    }
+
+    public void setPadding( Float padding )
+    {
+        this.padding = padding;
+    }
+
+    public Float getPaddingTop()
+    {
+        return paddingTop;
+    }
+
+    public void setPaddingTop( Float paddingTop )
+    {
+        this.paddingTop = paddingTop;
+    }
+
+    public Float getPaddingBottom()
+    {
+        return paddingBottom;
+    }
+
+    public void setPaddingBottom( Float paddingBottom )
+    {
+        this.paddingBottom = paddingBottom;
+    }
+
+    public Float getPaddingRight()
+    {
+        return paddingRight;
+    }
+
+    public void setPaddingRight( Float paddingRight )
+    {
+        this.paddingRight = paddingRight;
+    }
+
+    public Float getPaddingLeft()
+    {
+        return paddingLeft;
+    }
+
+    public void setPaddingLeft( Float paddingLeft )
+    {
+        this.paddingLeft = paddingLeft;
+    }
+
 }

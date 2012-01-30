@@ -24,166 +24,214 @@
  */
 package org.odftoolkit.odfdom.converter.internal.itext.styles;
 
-public class Style {
+public class Style
+{
 
-	private final String styleName;
-	private final String familyName;
-	private String masterPageName;
+    private final String styleName;
 
-	private StylePageLayoutProperties pageLayoutProperties;
-	private StyleHeaderFooterProperties headerProperties;
-	private StyleHeaderFooterProperties footerProperties;
-	private StyleParagraphProperties paragraphProperties;
-	private StyleTextProperties textProperties;
-	private StyleTableProperties tableProperties;
-	private StyleTableRowProperties tableRowProperties;
-	private StyleTableCellProperties tableCellProperties;
-	private StyleSectionProperties sectionProperties;
+    private final String familyName;
 
-	public Style(String styleName, String familyName, String masterPageName) {
-		this.styleName = styleName;
-		this.familyName = familyName;
-		this.masterPageName = masterPageName;
-	}
+    private String masterPageName;
 
-	public void merge(Style style) {
-		// Merge paragraph properties
-		if (paragraphProperties == null) {
-			if (style.getParagraphProperties() != null) {
-				paragraphProperties = new StyleParagraphProperties(
-						style.getParagraphProperties());
-			}
-		} else {
-			if (style.getParagraphProperties() != null) {
-				paragraphProperties.merge(style.getParagraphProperties());
-			}
-		}
+    private StylePageLayoutProperties pageLayoutProperties;
 
-		// Merge text properties
-		if (textProperties == null) {
-			if (style.getTextProperties() != null) {
-				textProperties = new StyleTextProperties(
-						style.getTextProperties());
-			}
-		} else {
-			if (style.getTextProperties() != null) {
-				textProperties.merge(style.getTextProperties());
-			}
-		}
+    private StyleHeaderFooterProperties headerProperties;
 
-		// Merge table-cell properties
-		if (tableProperties == null) {
-			if (style.getTableProperties() != null) {
-				tableProperties = new StyleTableProperties(
-						style.getTableProperties());
-			}
-		} else {
-			if (style.getTableProperties() != null) {
-				tableProperties.merge(style.getTableProperties());
-			}
-		}
+    private StyleHeaderFooterProperties footerProperties;
 
-		// Merge table-cell properties
-		if (tableCellProperties == null) {
-			if (style.getTableCellProperties() != null) {
-				tableCellProperties = new StyleTableCellProperties(
-						style.getTableCellProperties());
-			}
-		} else {
-			if (style.getTableCellProperties() != null) {
-				tableCellProperties.merge(style.getTableCellProperties());
-			}
-		}
-	}
+    private StyleParagraphProperties paragraphProperties;
 
-	public StyleParagraphProperties getParagraphProperties() {
-		return paragraphProperties;
-	}
+    private StyleTextProperties textProperties;
 
-	public void setParagraphProperties(
-			StyleParagraphProperties paragraphProperties) {
-		this.paragraphProperties = paragraphProperties;
-	}
+    private StyleTableProperties tableProperties;
 
-	public StyleTextProperties getTextProperties() {
-		return textProperties;
-	}
+    private StyleTableRowProperties tableRowProperties;
 
-	public void setTextProperties(StyleTextProperties textProperties) {
-		this.textProperties = textProperties;
-	}
+    private StyleTableCellProperties tableCellProperties;
 
-	public StyleTableProperties getTableProperties() {
-		return tableProperties;
-	}
+    private StyleSectionProperties sectionProperties;
 
-	public void setTableProperties(StyleTableProperties tableProperties) {
-		this.tableProperties = tableProperties;
-	}
+    public Style( String styleName, String familyName, String masterPageName )
+    {
+        this.styleName = styleName;
+        this.familyName = familyName;
+        this.masterPageName = masterPageName;
+    }
 
-	public StyleTableRowProperties getTableRowProperties() {
-		return tableRowProperties;
-	}
+    public void merge( Style style )
+    {
+        // Merge paragraph properties
+        if ( paragraphProperties == null )
+        {
+            if ( style.getParagraphProperties() != null )
+            {
+                paragraphProperties = new StyleParagraphProperties( style.getParagraphProperties() );
+            }
+        }
+        else
+        {
+            if ( style.getParagraphProperties() != null )
+            {
+                paragraphProperties.merge( style.getParagraphProperties() );
+            }
+        }
 
-	public void setTableRowProperties(StyleTableRowProperties tableRowProperties) {
-		this.tableRowProperties = tableRowProperties;
-	}
+        // Merge text properties
+        if ( textProperties == null )
+        {
+            if ( style.getTextProperties() != null )
+            {
+                textProperties = new StyleTextProperties( style.getTextProperties() );
+            }
+        }
+        else
+        {
+            if ( style.getTextProperties() != null )
+            {
+                textProperties.merge( style.getTextProperties() );
+            }
+        }
 
-	public StyleTableCellProperties getTableCellProperties() {
-		return tableCellProperties;
-	}
+        // Merge table-cell properties
+        if ( tableProperties == null )
+        {
+            if ( style.getTableProperties() != null )
+            {
+                tableProperties = new StyleTableProperties( style.getTableProperties() );
+            }
+        }
+        else
+        {
+            if ( style.getTableProperties() != null )
+            {
+                tableProperties.merge( style.getTableProperties() );
+            }
+        }
 
-	public void setTableCellProperties(
-			StyleTableCellProperties tableCellProperties) {
-		this.tableCellProperties = tableCellProperties;
-	}
+        // Merge table-cell properties
+        if ( tableCellProperties == null )
+        {
+            if ( style.getTableCellProperties() != null )
+            {
+                tableCellProperties = new StyleTableCellProperties( style.getTableCellProperties() );
+            }
+        }
+        else
+        {
+            if ( style.getTableCellProperties() != null )
+            {
+                tableCellProperties.merge( style.getTableCellProperties() );
+            }
+        }
+    }
 
-	public StyleSectionProperties getSectionProperties() {
-		return sectionProperties;
-	}
+    public StyleParagraphProperties getParagraphProperties()
+    {
+        return paragraphProperties;
+    }
 
-	public void setSectionProperties(StyleSectionProperties sectionProperties) {
-		this.sectionProperties = sectionProperties;
-	}
+    public void setParagraphProperties( StyleParagraphProperties paragraphProperties )
+    {
+        this.paragraphProperties = paragraphProperties;
+    }
 
-	public StylePageLayoutProperties getPageLayoutProperties() {
-		return pageLayoutProperties;
-	}
+    public StyleTextProperties getTextProperties()
+    {
+        return textProperties;
+    }
 
-	public void setPageLayoutProperties(
-			StylePageLayoutProperties pageLayoutProperties) {
-		this.pageLayoutProperties = pageLayoutProperties;
-	}
+    public void setTextProperties( StyleTextProperties textProperties )
+    {
+        this.textProperties = textProperties;
+    }
 
-	public StyleHeaderFooterProperties getHeaderProperties() {
-		return headerProperties;
-	}
+    public StyleTableProperties getTableProperties()
+    {
+        return tableProperties;
+    }
 
-	public void setHeaderProperties(StyleHeaderFooterProperties headerProperties) {
-		this.headerProperties = headerProperties;
-	}
+    public void setTableProperties( StyleTableProperties tableProperties )
+    {
+        this.tableProperties = tableProperties;
+    }
 
-	public StyleHeaderFooterProperties getFooterProperties() {
-		return footerProperties;
-	}
+    public StyleTableRowProperties getTableRowProperties()
+    {
+        return tableRowProperties;
+    }
 
-	public void setFooterProperties(StyleHeaderFooterProperties footerProperties) {
-		this.footerProperties = footerProperties;
-	}
+    public void setTableRowProperties( StyleTableRowProperties tableRowProperties )
+    {
+        this.tableRowProperties = tableRowProperties;
+    }
 
-	public void setMasterPageName(String masterPageName) {
-		this.masterPageName = masterPageName;
-	}
+    public StyleTableCellProperties getTableCellProperties()
+    {
+        return tableCellProperties;
+    }
 
-	public String getStyleName() {
-		return styleName;
-	}
+    public void setTableCellProperties( StyleTableCellProperties tableCellProperties )
+    {
+        this.tableCellProperties = tableCellProperties;
+    }
 
-	public String getFamilyName() {
-		return familyName;
-	}
+    public StyleSectionProperties getSectionProperties()
+    {
+        return sectionProperties;
+    }
 
-	public String getMasterPageName() {
-		return masterPageName;
-	}
+    public void setSectionProperties( StyleSectionProperties sectionProperties )
+    {
+        this.sectionProperties = sectionProperties;
+    }
+
+    public StylePageLayoutProperties getPageLayoutProperties()
+    {
+        return pageLayoutProperties;
+    }
+
+    public void setPageLayoutProperties( StylePageLayoutProperties pageLayoutProperties )
+    {
+        this.pageLayoutProperties = pageLayoutProperties;
+    }
+
+    public StyleHeaderFooterProperties getHeaderProperties()
+    {
+        return headerProperties;
+    }
+
+    public void setHeaderProperties( StyleHeaderFooterProperties headerProperties )
+    {
+        this.headerProperties = headerProperties;
+    }
+
+    public StyleHeaderFooterProperties getFooterProperties()
+    {
+        return footerProperties;
+    }
+
+    public void setFooterProperties( StyleHeaderFooterProperties footerProperties )
+    {
+        this.footerProperties = footerProperties;
+    }
+
+    public void setMasterPageName( String masterPageName )
+    {
+        this.masterPageName = masterPageName;
+    }
+
+    public String getStyleName()
+    {
+        return styleName;
+    }
+
+    public String getFamilyName()
+    {
+        return familyName;
+    }
+
+    public String getMasterPageName()
+    {
+        return masterPageName;
+    }
 }

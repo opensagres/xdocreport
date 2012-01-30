@@ -52,131 +52,145 @@ import fr.opensagres.xdocreport.template.velocity.internal.XDocVelocityContext;
 
 /**
  * Velocity template engine implementation.
- * 
  */
-public class VelocityTemplateEngine extends AbstractTemplateEngine implements
-		VelocityConstants {
+public class VelocityTemplateEngine
+    extends AbstractTemplateEngine
+    implements VelocityConstants
+{
 
-	private static String ID = TemplateEngineKind.Velocity.name();
+    private static String ID = TemplateEngineKind.Velocity.name();
 
-	private VelocityDocumentFormatter formatter = new VelocityDocumentFormatter();
-	private VelocityEngine velocityEngine;
+    private VelocityDocumentFormatter formatter = new VelocityDocumentFormatter();
 
-	private Properties velocityEngineProperties;
+    private VelocityEngine velocityEngine;
 
-	public String getKind() {
-		return TemplateEngineKind.Velocity.name();
-	}
+    private Properties velocityEngineProperties;
 
-	public String getId() {
-		return ID;
-	}
+    public String getKind()
+    {
+        return TemplateEngineKind.Velocity.name();
+    }
 
-	public IContext createContext() {
-		return new XDocVelocityContext();
-	}
+    public String getId()
+    {
+        return ID;
+    }
 
-	@Override
-	protected void processWithCache(String templateName, IContext context,
-			Writer writer) throws XDocReportException, IOException {
-		VelocityEngine velocityEngine = getVelocityEngine();
-		Template template = velocityEngine.getTemplate(templateName,
-				EncodingConstants.UTF_8.name());
-		if (template != null) {
-			template.merge((VelocityContext) context, writer);
-		}
-	}
+    public IContext createContext()
+    {
+        return new XDocVelocityContext();
+    }
 
-	@Override
-	protected void processNoCache(String entryName, IContext context,
-			Reader reader, Writer writer) throws XDocReportException,
-			IOException {
-		VelocityEngine velocityEngine = getVelocityEngine();
-		velocityEngine.evaluate((VelocityContext) context, writer, "", reader);
-	}
+    @Override
+    protected void processWithCache( String templateName, IContext context, Writer writer )
+        throws XDocReportException, IOException
+    {
+        VelocityEngine velocityEngine = getVelocityEngine();
+        Template template = velocityEngine.getTemplate( templateName, EncodingConstants.UTF_8.name() );
+        if ( template != null )
+        {
+            template.merge( (VelocityContext) context, writer );
+        }
+    }
 
-	protected synchronized VelocityEngine getVelocityEngine()
-			throws XDocReportException {
-		if (velocityEngine == null) {
-			velocityEngine = new VelocityEngine();
-			Properties velocityEngineProperties = getVelocityEngineProperties();
+    @Override
+    protected void processNoCache( String entryName, IContext context, Reader reader, Writer writer )
+        throws XDocReportException, IOException
+    {
+        VelocityEngine velocityEngine = getVelocityEngine();
+        velocityEngine.evaluate( (VelocityContext) context, writer, "", reader );
+    }
 
-			ITemplateEngineConfiguration configuration = super
-					.getConfiguration();
-			if (configuration != null && configuration.escapeXML()) {
-				velocityEngineProperties.setProperty(
-						"eventhandler.referenceinsertion.class",
-						XDocReportEscapeReference.class.getName());
-			}
+    protected synchronized VelocityEngine getVelocityEngine()
+        throws XDocReportException
+    {
+        if ( velocityEngine == null )
+        {
+            velocityEngine = new VelocityEngine();
+            Properties velocityEngineProperties = getVelocityEngineProperties();
 
-			ClassLoader backupCL = Thread.currentThread()
-					.getContextClassLoader();
-			Thread.currentThread().setContextClassLoader(
-					VelocityTemplateEngine.class.getClassLoader());
-			try {
-				velocityEngine.setProperty(VELOCITY_TEMPLATE_ENGINE_KEY, this);
-				velocityEngine.init(velocityEngineProperties);
-			} catch (Exception e) {
-				throw new XDocReportException(e);
-			}
-			Thread.currentThread().setContextClassLoader(backupCL);
-		}
-		return velocityEngine;
-	}
+            ITemplateEngineConfiguration configuration = super.getConfiguration();
+            if ( configuration != null && configuration.escapeXML() )
+            {
+                velocityEngineProperties.setProperty( "eventhandler.referenceinsertion.class",
+                                                      XDocReportEscapeReference.class.getName() );
+            }
 
-	/**
-	 * Returns the {@link Properties} used to initialize Velocity Engine.
-	 * 
-	 * @return
-	 */
-	public synchronized Properties getVelocityEngineProperties() {
-		if (velocityEngineProperties != null) {
-			return velocityEngineProperties;
-		}
-		velocityEngineProperties = new Properties();
+            ClassLoader backupCL = Thread.currentThread().getContextClassLoader();
+            Thread.currentThread().setContextClassLoader( VelocityTemplateEngine.class.getClassLoader() );
+            try
+            {
+                velocityEngine.setProperty( VELOCITY_TEMPLATE_ENGINE_KEY, this );
+                velocityEngine.init( velocityEngineProperties );
+            }
+            catch ( Exception e )
+            {
+                throw new XDocReportException( e );
+            }
+            Thread.currentThread().setContextClassLoader( backupCL );
+        }
+        return velocityEngine;
+    }
 
-		// Initialize properties to use XDocReportEntryResourceLoader to
-		// load template from entry name of XDocArchive.
-		velocityEngineProperties.setProperty("resource.loader",
-				"file, class, jar ,report");
-		velocityEngineProperties.setProperty("report.resource.loader.class",
-				XDocReportEntryResourceLoader.class.getName());
-		velocityEngineProperties.setProperty("report.resource.loader.cache",
-				"true");
-		velocityEngineProperties.setProperty(
-				"report.resource.loader.modificationCheckInterval", "1");
+    /**
+     * Returns the {@link Properties} used to initialize Velocity Engine.
+     * 
+     * @return
+     */
+    public synchronized Properties getVelocityEngineProperties()
+    {
+        if ( velocityEngineProperties != null )
+        {
+            return velocityEngineProperties;
+        }
+        velocityEngineProperties = new Properties();
 
-		// Disable log for Velocity to avoid to generate velocity.log (by
-		// default)
-		try {
-			if (Class.forName("org.apache.velocity.runtime.log.NullLogChute") != null) {
-				// Don't crash Velocity if NullLogChute doesn't exist
-				velocityEngineProperties.setProperty(
-						RuntimeConstants.RUNTIME_LOG_LOGSYSTEM_CLASS,
-						"org.apache.velocity.runtime.log.NullLogChute");
-			}
-		} catch (Throwable e) {
-			// Do nothing
-		}
-		return velocityEngineProperties;
-	}
+        // Initialize properties to use XDocReportEntryResourceLoader to
+        // load template from entry name of XDocArchive.
+        velocityEngineProperties.setProperty( "resource.loader", "file, class, jar ,report" );
+        velocityEngineProperties.setProperty( "report.resource.loader.class",
+                                              XDocReportEntryResourceLoader.class.getName() );
+        velocityEngineProperties.setProperty( "report.resource.loader.cache", "true" );
+        velocityEngineProperties.setProperty( "report.resource.loader.modificationCheckInterval", "1" );
 
-	public IDocumentFormatter getDocumentFormatter() {
-		return formatter;
-	}
+        // Disable log for Velocity to avoid to generate velocity.log (by
+        // default)
+        try
+        {
+            if ( Class.forName( "org.apache.velocity.runtime.log.NullLogChute" ) != null )
+            {
+                // Don't crash Velocity if NullLogChute doesn't exist
+                velocityEngineProperties.setProperty( RuntimeConstants.RUNTIME_LOG_LOGSYSTEM_CLASS,
+                                                      "org.apache.velocity.runtime.log.NullLogChute" );
+            }
+        }
+        catch ( Throwable e )
+        {
+            // Do nothing
+        }
+        return velocityEngineProperties;
+    }
 
-	public void extractFields(Reader reader, String entryName,
-			FieldsExtractor extractor) throws XDocReportException {
-		try {
-			SimpleNode document = RuntimeSingleton.parse(reader, entryName);
-			ExtractVariablesVelocityVisitor visitor = new ExtractVariablesVelocityVisitor(
-					extractor);
-			visitor.setContext(null);
-			// visitor.setWriter(new PrintWriter(System.out));
-			document.jjtAccept(visitor, null);
+    public IDocumentFormatter getDocumentFormatter()
+    {
+        return formatter;
+    }
 
-		} catch (ParseException e) {
-			throw new XDocReportException(e);
-		}
-	}
+    public void extractFields( Reader reader, String entryName, FieldsExtractor extractor )
+        throws XDocReportException
+    {
+        try
+        {
+            SimpleNode document = RuntimeSingleton.parse( reader, entryName );
+            ExtractVariablesVelocityVisitor visitor = new ExtractVariablesVelocityVisitor( extractor );
+            visitor.setContext( null );
+            // visitor.setWriter(new PrintWriter(System.out));
+            document.jjtAccept( visitor, null );
+
+        }
+        catch ( ParseException e )
+        {
+            throw new XDocReportException( e );
+        }
+    }
 }

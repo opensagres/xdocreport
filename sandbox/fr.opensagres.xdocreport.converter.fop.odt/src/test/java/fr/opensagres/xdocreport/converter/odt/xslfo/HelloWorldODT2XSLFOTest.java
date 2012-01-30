@@ -34,57 +34,68 @@ import fr.opensagres.xdocreport.converter.XDocConverterException;
 import fr.opensagres.xdocreport.converter.odt.XMLUtils;
 import fr.opensagres.xdocreport.core.io.IEntryInputStreamProvider;
 
-public class HelloWorldODT2XSLFOTest extends TestCase {
+public class HelloWorldODT2XSLFOTest
+    extends TestCase
+{
 
-	public void testNo() throws Exception {
+    public void testNo()
+        throws Exception
+    {
 
-	}
+    }
 
-	public static void main(String[] args) {
-		long startTime = System.currentTimeMillis();
+    public static void main( String[] args )
+    {
+        long startTime = System.currentTimeMillis();
 
-		ODTXSLFOConverter converter = ODTXSLFOConverter.getInstance();
+        ODTXSLFOConverter converter = ODTXSLFOConverter.getInstance();
 
-		IEntryInputStreamProvider inProvider = new IEntryInputStreamProvider() {
+        IEntryInputStreamProvider inProvider = new IEntryInputStreamProvider()
+        {
 
-			public InputStream getEntryInputStream(String entryName) {
-				return HelloWorldODT2XSLFOTest.class
-				.getResourceAsStream("HelloWorld." + entryName);
-			}
-		};
+            public InputStream getEntryInputStream( String entryName )
+            {
+                return HelloWorldODT2XSLFOTest.class.getResourceAsStream( "HelloWorld." + entryName );
+            }
+        };
 
-		// OutputStream outputStream = new StringBuilderOutputStream();
-		DOMResult result = new DOMResult();
-		try {
-			converter.convert2FO(inProvider, result, null);
-			System.err.println(XMLUtils.toString(result.getNode()));
-		} catch (XDocConverterException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+        // OutputStream outputStream = new StringBuilderOutputStream();
+        DOMResult result = new DOMResult();
+        try
+        {
+            converter.convert2FO( inProvider, result, null );
+            System.err.println( XMLUtils.toString( result.getNode() ) );
+        }
+        catch ( XDocConverterException e )
+        {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+        catch ( IOException e )
+        {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
 
-		System.out.println(System.currentTimeMillis() - startTime + "(ms)");
+        System.out.println( System.currentTimeMillis() - startTime + "(ms)" );
 
-		// startTime = System.currentTimeMillis() ;
-		// inputStream = ODTXSLFOConverterTest.class
-		// .getResourceAsStream("HelloWorld.content.xml");
-		// // OutputStream outputStream = new StringBuilderOutputStream();
-		// result = new DOMResult();
-		// try {
-		// converter.convert2FO(new StreamSource(inputStream), result);
-		// System.err.println(XMLUtils.toString(result.getNode()));
-		// } catch (XDocConverterException e) {
-		// // TODO Auto-generated catch block
-		// e.printStackTrace();
-		// } catch (IOException e) {
-		// // TODO Auto-generated catch block
-		// e.printStackTrace();
-		// }
-		//
-		// System.out.println(System.currentTimeMillis() - startTime + "(ms)");
+        // startTime = System.currentTimeMillis() ;
+        // inputStream = ODTXSLFOConverterTest.class
+        // .getResourceAsStream("HelloWorld.content.xml");
+        // // OutputStream outputStream = new StringBuilderOutputStream();
+        // result = new DOMResult();
+        // try {
+        // converter.convert2FO(new StreamSource(inputStream), result);
+        // System.err.println(XMLUtils.toString(result.getNode()));
+        // } catch (XDocConverterException e) {
+        // // TODO Auto-generated catch block
+        // e.printStackTrace();
+        // } catch (IOException e) {
+        // // TODO Auto-generated catch block
+        // e.printStackTrace();
+        // }
+        //
+        // System.out.println(System.currentTimeMillis() - startTime + "(ms)");
 
-	}
+    }
 }

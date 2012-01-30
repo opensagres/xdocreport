@@ -30,111 +30,139 @@ import org.odftoolkit.odfdom.converter.internal.itext.styles.StyleBorder;
 
 import com.lowagie.text.pdf.PdfPCell;
 
+public class StyleUtils
+{
 
-public class StyleUtils {
+    public static void applyStyles( StyleBorder border, PdfPCell cell )
+    {
+        if ( border == null )
+        {
+            return;
+        }
+        switch ( border.getBorderType() )
+        {
+            case ALL:
+                // border
+                if ( border.isNoBorder() )
+                {
+                    cell.disableBorderSide( PdfPCell.TOP );
+                    cell.disableBorderSide( PdfPCell.BOTTOM );
+                    cell.disableBorderSide( PdfPCell.RIGHT );
+                    cell.disableBorderSide( PdfPCell.LEFT );
+                }
+                else
+                {
+                    cell.enableBorderSide( PdfPCell.TOP );
+                    cell.enableBorderSide( PdfPCell.BOTTOM );
+                    cell.enableBorderSide( PdfPCell.RIGHT );
+                    cell.enableBorderSide( PdfPCell.LEFT );
+                    // border-color
+                    Color color = border.getColor();
+                    if ( color != null )
+                    {
+                        cell.setBorderColor( color );
+                    }
+                    // border-width
+                    Float width = border.getWidth();
+                    if ( width != null )
+                    {
+                        cell.setBorderWidth( width );
+                    }
+                }
+                break;
+            case BOTTOM:
+                // border-bottom
+                if ( border.isNoBorder() )
+                {
+                    cell.disableBorderSide( PdfPCell.BOTTOM );
+                }
+                else
+                {
+                    cell.enableBorderSide( PdfPCell.BOTTOM );
+                    // border-bottom-color
+                    Color color = border.getColor();
+                    if ( color != null )
+                    {
+                        cell.setBorderColorBottom( color );
+                    }
+                    // border-bottom-width
+                    Float width = border.getWidth();
+                    if ( width != null )
+                    {
+                        cell.setBorderWidthBottom( width );
+                    }
+                }
+                break;
+            case LEFT:
+                // border-left
+                if ( border.isNoBorder() )
+                {
+                    cell.disableBorderSide( PdfPCell.LEFT );
+                }
+                else
+                {
+                    cell.enableBorderSide( PdfPCell.LEFT );
+                    // border-left-color
+                    Color color = border.getColor();
+                    if ( color != null )
+                    {
+                        cell.setBorderColorLeft( color );
+                    }
+                    // border-left-width
+                    Float width = border.getWidth();
+                    if ( width != null )
+                    {
+                        cell.setBorderWidthLeft( width );
+                    }
+                }
+                break;
+            case RIGHT:
+                // border-right
+                if ( border.isNoBorder() )
+                {
+                    cell.disableBorderSide( PdfPCell.RIGHT );
+                }
+                else
+                {
+                    cell.enableBorderSide( PdfPCell.RIGHT );
+                    // border-right-color
+                    Color color = border.getColor();
+                    if ( color != null )
+                    {
+                        cell.setBorderColorRight( color );
+                    }
+                    // border-right-width
+                    Float width = border.getWidth();
+                    if ( width != null )
+                    {
+                        cell.setBorderWidthRight( width );
+                    }
+                }
+                break;
+            case TOP:
+                // border-top
+                if ( border.isNoBorder() )
+                {
+                    cell.disableBorderSide( PdfPCell.TOP );
+                }
+                else
+                {
+                    cell.enableBorderSide( PdfPCell.TOP );
+                    // border-top-color
+                    Color color = border.getColor();
+                    if ( color != null )
+                    {
+                        cell.setBorderColorTop( color );
+                    }
+                    // border-top-width
+                    Float width = border.getWidth();
+                    if ( width != null )
+                    {
+                        cell.setBorderWidthTop( width );
+                    }
+                }
+                break;
+        }
 
-	public static void applyStyles(StyleBorder border, PdfPCell cell) {
-		if (border == null) {
-			return;
-		}
-		switch (border.getBorderType()) {
-		case ALL:
-			// border
-			if (border.isNoBorder()) {
-				cell.disableBorderSide(PdfPCell.TOP);
-				cell.disableBorderSide(PdfPCell.BOTTOM);
-				cell.disableBorderSide(PdfPCell.RIGHT);
-				cell.disableBorderSide(PdfPCell.LEFT);
-			} else {
-				cell.enableBorderSide(PdfPCell.TOP);
-				cell.enableBorderSide(PdfPCell.BOTTOM);
-				cell.enableBorderSide(PdfPCell.RIGHT);
-				cell.enableBorderSide(PdfPCell.LEFT);
-				// border-color
-				Color color = border.getColor();
-				if (color != null) {
-					cell.setBorderColor(color);
-				}
-				// border-width
-				Float width = border.getWidth();
-				if (width != null) {
-					cell.setBorderWidth(width);
-				}
-			}
-			break;
-		case BOTTOM:
-			// border-bottom
-			if (border.isNoBorder()) {
-				cell.disableBorderSide(PdfPCell.BOTTOM);
-			} else {
-				cell.enableBorderSide(PdfPCell.BOTTOM);
-				// border-bottom-color
-				Color color = border.getColor();
-				if (color != null) {
-					cell.setBorderColorBottom(color);
-				}
-				// border-bottom-width
-				Float width = border.getWidth();
-				if (width != null) {
-					cell.setBorderWidthBottom(width);
-				}
-			}
-			break;
-		case LEFT:
-			// border-left
-			if (border.isNoBorder()) {
-				cell.disableBorderSide(PdfPCell.LEFT);
-			} else {
-				cell.enableBorderSide(PdfPCell.LEFT);
-				// border-left-color
-				Color color = border.getColor();
-				if (color != null) {
-					cell.setBorderColorLeft(color);
-				}
-				// border-left-width
-				Float width = border.getWidth();
-				if (width != null) {
-					cell.setBorderWidthLeft(width);
-				}
-			}
-			break;
-		case RIGHT:
-			// border-right
-			if (border.isNoBorder()) {
-				cell.disableBorderSide(PdfPCell.RIGHT);
-			} else {
-				cell.enableBorderSide(PdfPCell.RIGHT);
-				// border-right-color
-				Color color = border.getColor();
-				if (color != null) {
-					cell.setBorderColorRight(color);
-				}
-				// border-right-width
-				Float width = border.getWidth();
-				if (width != null) {
-					cell.setBorderWidthRight(width);
-				}
-			}
-			break;
-		case TOP:
-			// border-top
-			if (border.isNoBorder()) {
-				cell.disableBorderSide(PdfPCell.TOP);
-			} else {
-				cell.enableBorderSide(PdfPCell.TOP);
-				// border-top-color
-				Color color = border.getColor();
-				if (color != null) {
-					cell.setBorderColorTop(color);
-				}
-				// border-top-width
-				Float width = border.getWidth();
-				if (width != null) {
-					cell.setBorderWidthTop(width);
-				}
-			}
-			break;
-		}
-
-	}
+    }
 }

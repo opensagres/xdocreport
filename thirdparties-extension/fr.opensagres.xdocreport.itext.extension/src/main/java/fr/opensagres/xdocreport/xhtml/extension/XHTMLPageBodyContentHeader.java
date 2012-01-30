@@ -24,10 +24,13 @@
  */
 package fr.opensagres.xdocreport.xhtml.extension;
 
-public class XHTMLPageBodyContentHeader extends XHTMLPageContentBuffer {
+public class XHTMLPageBodyContentHeader
+    extends XHTMLPageContentBuffer
+{
 
-	public XHTMLPageBodyContentHeader(int indent) {
-		super(indent);
-	}
+    public XHTMLPageBodyContentHeader( int indent )
+    {
+        super( indent );
+    }
 
 }

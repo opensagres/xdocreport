@@ -34,46 +34,51 @@ import org.apache.poi.xwpf.converter.internal.AbstractXWPFConverter;
 import org.apache.poi.xwpf.converter.internal.itext.PDFMapper;
 import org.apache.poi.xwpf.usermodel.XWPFDocument;
 
-public class XWPF2PDFViaITextConverter extends
-		AbstractXWPFConverter<PDFViaITextOptions> {
+public class XWPF2PDFViaITextConverter
+    extends AbstractXWPFConverter<PDFViaITextOptions>
+{
 
-	private static final IXWPFConverter<PDFViaITextOptions> INSTANCE = new XWPF2PDFViaITextConverter();
+    private static final IXWPFConverter<PDFViaITextOptions> INSTANCE = new XWPF2PDFViaITextConverter();
 
-	public static IXWPFConverter<PDFViaITextOptions> getInstance() {
-		return INSTANCE;
-	}
-	
-	
-	// redefining method here  might solve classloading issues 
-	@Override
-	public void convert(XWPFDocument XWPFDocument, OutputStream out,
-			PDFViaITextOptions options) throws XWPFConverterException,
-			IOException {
-		// TODO Auto-generated method stub
-		super.convert(XWPFDocument, out, options);
-	}
-	
-	// redefining method here  might solve classloading issues
-	@Override
-	public void convert(XWPFDocument XWPFDocument, Writer writer,
-			PDFViaITextOptions options) throws XWPFConverterException,
-			IOException {
-		// TODO Auto-generated method stub
-		super.convert(XWPFDocument, writer, options);
-	}
-	@Override
-	protected void doConvert(XWPFDocument document, OutputStream out,
-			Writer writer, PDFViaITextOptions options)
-			throws XWPFConverterException, IOException {
+    public static IXWPFConverter<PDFViaITextOptions> getInstance()
+    {
+        return INSTANCE;
+    }
 
-		//Mapper mapper = new Mapper(document);
-		PDFMapper mapper = new PDFMapper(document, options);
-		try {
-			mapper.visit(out);
-		} catch (Exception e) {
-			throw new XWPFConverterException(e);
-		}
+    // redefining method here might solve classloading issues
+    @Override
+    public void convert( XWPFDocument XWPFDocument, OutputStream out, PDFViaITextOptions options )
+        throws XWPFConverterException, IOException
+    {
+        // TODO Auto-generated method stub
+        super.convert( XWPFDocument, out, options );
+    }
 
-	}
+    // redefining method here might solve classloading issues
+    @Override
+    public void convert( XWPFDocument XWPFDocument, Writer writer, PDFViaITextOptions options )
+        throws XWPFConverterException, IOException
+    {
+        // TODO Auto-generated method stub
+        super.convert( XWPFDocument, writer, options );
+    }
+
+    @Override
+    protected void doConvert( XWPFDocument document, OutputStream out, Writer writer, PDFViaITextOptions options )
+        throws XWPFConverterException, IOException
+    {
+
+        // Mapper mapper = new Mapper(document);
+        PDFMapper mapper = new PDFMapper( document, options );
+        try
+        {
+            mapper.visit( out );
+        }
+        catch ( Exception e )
+        {
+            throw new XWPFConverterException( e );
+        }
+
+    }
 
 }

@@ -36,22 +36,25 @@ import javax.xml.transform.stream.StreamSource;
 /**
  * XML Pretty Printer implemented with NOT "indent-number".
  */
-public class NoIndentNumberPrettyPrinter implements IXMLPrettyPrinter {
+public class NoIndentNumberPrettyPrinter
+    implements IXMLPrettyPrinter
+{
 
-	private static final String YES = "yes";
+    private static final String YES = "yes";
 
-	public static final IXMLPrettyPrinter INSTANCE = new NoIndentNumberPrettyPrinter();
+    public static final IXMLPrettyPrinter INSTANCE = new NoIndentNumberPrettyPrinter();
 
-	public String prettyPrint(String xml, int indent) throws Exception {
-		TransformerFactory factory = TransformerFactory.newInstance();
-		Transformer transformer = factory.newTransformer();
+    public String prettyPrint( String xml, int indent )
+        throws Exception
+    {
+        TransformerFactory factory = TransformerFactory.newInstance();
+        Transformer transformer = factory.newTransformer();
 
-		transformer.setOutputProperty(OutputKeys.OMIT_XML_DECLARATION, YES);
-		transformer.setOutputProperty(OutputKeys.INDENT, YES);
+        transformer.setOutputProperty( OutputKeys.OMIT_XML_DECLARATION, YES );
+        transformer.setOutputProperty( OutputKeys.INDENT, YES );
 
-		final StringWriter out = new StringWriter();
-		transformer.transform(new StreamSource(new StringReader(xml)),
-				new StreamResult(out));
-		return out.toString();
-	}
+        final StringWriter out = new StringWriter();
+        transformer.transform( new StreamSource( new StringReader( xml ) ), new StreamResult( out ) );
+        return out.toString();
+    }
 }

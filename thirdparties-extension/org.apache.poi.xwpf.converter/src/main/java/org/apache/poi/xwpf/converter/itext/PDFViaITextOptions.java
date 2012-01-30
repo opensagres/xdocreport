@@ -28,45 +28,52 @@ import org.apache.poi.xwpf.converter.Options;
 
 import com.lowagie.text.FontFactory;
 
-public class PDFViaITextOptions extends Options {
+public class PDFViaITextOptions
+    extends Options
+{
 
-	private String fontEncoding = determineSystemEncoding();
+    private String fontEncoding = determineSystemEncoding();
 
-	private String determineSystemEncoding() {
-		// don't rely on file.encoding property because
-		// it may be changed if application is launched inside an ide
-		String systemEncoding = System.getProperty("sun.jnu.encoding");
-		if (systemEncoding != null && systemEncoding.length() > 0) {
-			return systemEncoding;
-		}
-		systemEncoding = System.getProperty("ibm.system.encoding");
-		if (systemEncoding != null && systemEncoding.length() > 0) {
-			return systemEncoding;
-		}
-		return FontFactory.defaultEncoding;
-	}
+    private String determineSystemEncoding()
+    {
+        // don't rely on file.encoding property because
+        // it may be changed if application is launched inside an ide
+        String systemEncoding = System.getProperty( "sun.jnu.encoding" );
+        if ( systemEncoding != null && systemEncoding.length() > 0 )
+        {
+            return systemEncoding;
+        }
+        systemEncoding = System.getProperty( "ibm.system.encoding" );
+        if ( systemEncoding != null && systemEncoding.length() > 0 )
+        {
+            return systemEncoding;
+        }
+        return FontFactory.defaultEncoding;
+    }
 
-	private PDFViaITextOptions() {
-	}
+    private PDFViaITextOptions()
+    {
+    }
 
-	public static PDFViaITextOptions create() {
-		return new PDFViaITextOptions();
-	}
+    public static PDFViaITextOptions create()
+    {
+        return new PDFViaITextOptions();
+    }
 
-	public String getFontEncoding() {
-		return fontEncoding;
-	}
+    public String getFontEncoding()
+    {
+        return fontEncoding;
+    }
 
-	/**
-	 * Set font encoding to use when retrieving fonts. The default value is
-	 * underlying operating system encoding
-	 * 
-	 * @param fontEncoding
-	 *            font encoding to use
-	 * @return this instance
-	 */
-	public PDFViaITextOptions fontEncoding(String fontEncoding) {
-		this.fontEncoding = fontEncoding;
-		return this;
-	}
+    /**
+     * Set font encoding to use when retrieving fonts. The default value is underlying operating system encoding
+     * 
+     * @param fontEncoding font encoding to use
+     * @return this instance
+     */
+    public PDFViaITextOptions fontEncoding( String fontEncoding )
+    {
+        this.fontEncoding = fontEncoding;
+        return this;
+    }
 }

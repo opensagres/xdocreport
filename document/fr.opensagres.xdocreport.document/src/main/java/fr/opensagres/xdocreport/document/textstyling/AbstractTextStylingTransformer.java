@@ -32,49 +32,52 @@ import fr.opensagres.xdocreport.core.logging.LogUtils;
 
 /**
  * Abstract class for text styling transformer.
- * 
  */
-public abstract class AbstractTextStylingTransformer implements
-		ITextStylingTransformer {
+public abstract class AbstractTextStylingTransformer
+    implements ITextStylingTransformer
+{
 
-	/**
-	 * Logger for this class
-	 */
-	private static final Logger LOGGER = LogUtils
-			.getLogger(AbstractTextStylingTransformer.class.getName());
+    /**
+     * Logger for this class
+     */
+    private static final Logger LOGGER = LogUtils.getLogger( AbstractTextStylingTransformer.class.getName() );
 
-	public ITransformResult transform(String content, IDocumentHandler handler)
-			throws XDocReportException {
-		try {
-			doTransform(content, handler);
-			ITransformResult result = handler;
-			if (LOGGER.isLoggable(Level.FINE)) {
-				LOGGER.fine(result.toString());
-			}
-			return result;
-		} catch (Throwable e) {
-			if (LOGGER.isLoggable(Level.SEVERE)) {
-				LOGGER.severe(e.getMessage());
-			}
-			if (e instanceof XDocReportException) {
-				throw (XDocReportException) e;
-			}
-			throw new XDocReportException(e);
-		}
-	}
+    public ITransformResult transform( String content, IDocumentHandler handler )
+        throws XDocReportException
+    {
+        try
+        {
+            doTransform( content, handler );
+            ITransformResult result = handler;
+            if ( LOGGER.isLoggable( Level.FINE ) )
+            {
+                LOGGER.fine( result.toString() );
+            }
+            return result;
+        }
+        catch ( Throwable e )
+        {
+            if ( LOGGER.isLoggable( Level.SEVERE ) )
+            {
+                LOGGER.severe( e.getMessage() );
+            }
+            if ( e instanceof XDocReportException )
+            {
+                throw (XDocReportException) e;
+            }
+            throw new XDocReportException( e );
+        }
+    }
 
-	/**
-	 * Transform the given content (with some syntax like HTML, Mediawiki, etc)
-	 * to another syntax (docx, odt, etc). The given visitor can be used to
-	 * process the transformation.
-	 * 
-	 * @param content
-	 *            the content to transform.
-	 * @param documentHandler
-	 *            the document handler used for the transformation.
-	 * @return the transformed content.
-	 * @throws Exception
-	 */
-	protected abstract void doTransform(String content,
-			IDocumentHandler documentHandler) throws Exception;
+    /**
+     * Transform the given content (with some syntax like HTML, Mediawiki, etc) to another syntax (docx, odt, etc). The
+     * given visitor can be used to process the transformation.
+     * 
+     * @param content the content to transform.
+     * @param documentHandler the document handler used for the transformation.
+     * @return the transformed content.
+     * @throws Exception
+     */
+    protected abstract void doTransform( String content, IDocumentHandler documentHandler )
+        throws Exception;
 }

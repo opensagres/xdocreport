@@ -32,47 +32,57 @@ import org.odftoolkit.odfdom.converter.internal.itext.styles.StyleTextProperties
 import com.lowagie.text.Chunk;
 import com.lowagie.text.Element;
 
+public class StylableChunk
+    extends Chunk
+    implements IStylableElement
+{
 
-public class StylableChunk extends Chunk implements IStylableElement {
+    private static final long serialVersionUID = 664309269352903329L;
 
-	private static final long serialVersionUID = 664309269352903329L;
+    private final IStylableFactory ownerDocument;
 
-	private final IStylableFactory ownerDocument;
-	private final IStylableContainer parent;
-	private Style lastStyleApplied = null;
+    private final IStylableContainer parent;
 
-	public StylableChunk(IStylableFactory ownerDocument,
-			IStylableContainer parent, String textContent) {
-		super(textContent);
-		this.ownerDocument = ownerDocument;
-		this.parent = parent;
-	}
+    private Style lastStyleApplied = null;
 
-	public void applyStyles(Style style) {
-		this.lastStyleApplied = style;
+    public StylableChunk( IStylableFactory ownerDocument, IStylableContainer parent, String textContent )
+    {
+        super( textContent );
+        this.ownerDocument = ownerDocument;
+        this.parent = parent;
+    }
 
-		StyleTextProperties textProperties = style.getTextProperties();
-		if (textProperties != null) {
+    public void applyStyles( Style style )
+    {
+        this.lastStyleApplied = style;
 
-			// background-color
-			Color backgroundColor = textProperties.getBackgroundColor();
-			if (backgroundColor != null) {
-				super.setBackground(backgroundColor);
-			}
+        StyleTextProperties textProperties = style.getTextProperties();
+        if ( textProperties != null )
+        {
 
-		}
+            // background-color
+            Color backgroundColor = textProperties.getBackgroundColor();
+            if ( backgroundColor != null )
+            {
+                super.setBackground( backgroundColor );
+            }
 
-	}
+        }
 
-	public Style getLastStyleApplied() {
-		return lastStyleApplied;
-	}
+    }
 
-	public IStylableContainer getParent() {
-		return parent;
-	}
+    public Style getLastStyleApplied()
+    {
+        return lastStyleApplied;
+    }
 
-	public Element getElement() {
-		return this;
-	}
+    public IStylableContainer getParent()
+    {
+        return parent;
+    }
+
+    public Element getElement()
+    {
+        return this;
+    }
 }

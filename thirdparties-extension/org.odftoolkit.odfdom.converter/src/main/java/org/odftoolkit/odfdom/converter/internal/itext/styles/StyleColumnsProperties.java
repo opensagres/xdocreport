@@ -30,25 +30,31 @@ import java.util.List;
 /**
  * fixes for pdf conversion by Leszek Piotrowicz <leszekp@safe-mail.net>
  */
-public class StyleColumnsProperties {
+public class StyleColumnsProperties
+{
 
-	// attributes
-	private Integer columnCount;
-	// child nodes
-	private List<StyleColumnProperties> columnProperties = new ArrayList<StyleColumnProperties>();
+    // attributes
+    private Integer columnCount;
 
-	public StyleColumnsProperties() {
-	}
+    // child nodes
+    private List<StyleColumnProperties> columnProperties = new ArrayList<StyleColumnProperties>();
 
-	public Integer getColumnCount() {
-		return columnCount;
-	}
+    public StyleColumnsProperties()
+    {
+    }
 
-	public void setColumnCount(Integer columnCount) {
-		this.columnCount = columnCount;
-	}
+    public Integer getColumnCount()
+    {
+        return columnCount;
+    }
 
-	public List<StyleColumnProperties> getColumnProperties() {
-		return columnProperties;
-	}
+    public void setColumnCount( Integer columnCount )
+    {
+        this.columnCount = columnCount;
+    }
+
+    public List<StyleColumnProperties> getColumnProperties()
+    {
+        return columnProperties;
+    }
 }

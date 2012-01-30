@@ -39,48 +39,49 @@ import fr.opensagres.xdocreport.document.textstyling.IDocumentHandler;
 import fr.opensagres.xdocreport.document.textstyling.ITextStylingTransformer;
 
 /**
- * 
- * HTML text styling transformer to transform HTML to another document kind
- * (odt, docx, etc) syntax. The ODT, DOCX is represented with the given
- * {@link IDocumentHandler}.
- * 
+ * HTML text styling transformer to transform HTML to another document kind (odt, docx, etc) syntax. The ODT, DOCX is
+ * represented with the given {@link IDocumentHandler}.
  */
-public class HTMLTextStylingTransformer extends AbstractTextStylingTransformer {
+public class HTMLTextStylingTransformer
+    extends AbstractTextStylingTransformer
+{
 
-	public static final ITextStylingTransformer INSTANCE = new HTMLTextStylingTransformer();
+    public static final ITextStylingTransformer INSTANCE = new HTMLTextStylingTransformer();
 
-	/**
-	 * Logger for this class
-	 */
-	private static final Logger LOGGER = LogUtils
-			.getLogger(HTMLTextStylingTransformer.class.getName());
+    /**
+     * Logger for this class
+     */
+    private static final Logger LOGGER = LogUtils.getLogger( HTMLTextStylingTransformer.class.getName() );
 
-	private static final String[] searchList = { "\r", "\n", "\t" };
-	private static final String[] replacementList = { "", "", "" };
+    private static final String[] searchList = { "\r", "\n", "\t" };
 
-	@Override
-	protected void doTransform(String content, IDocumentHandler documentHandler)
-			throws Exception {
-	    
-	    // pre-process content : can be used to integrate a markup based html generator like markdown
-	    content = generateXhtmlFromContent(content);
-	    
-		// remove special characters \n, \r
-		String xml = StringUtils.replaceEach(content, searchList,
-				replacementList);
-		// add root element if xml doesn't contaisn xml root element.
-		xml = "<root>" + xml + "</root>";
-		if (LOGGER.isLoggable(Level.FINE)) {
-			LOGGER.fine(xml);
-		}
-		XMLReader xmlReader = XMLReaderFactory.createXMLReader();
-		xmlReader.setContentHandler(new HTMLTextStylingContentHandler(
-				documentHandler));
-		xmlReader.parse(new InputSource(new StringReader(xml)));
-	}	
-	
-	protected String generateXhtmlFromContent(String content) throws Exception {
-	    return content;
-	}
+    private static final String[] replacementList = { "", "", "" };
+
+    @Override
+    protected void doTransform( String content, IDocumentHandler documentHandler )
+        throws Exception
+    {
+
+        // pre-process content : can be used to integrate a markup based html generator like markdown
+        content = generateXhtmlFromContent( content );
+
+        // remove special characters \n, \r
+        String xml = StringUtils.replaceEach( content, searchList, replacementList );
+        // add root element if xml doesn't contaisn xml root element.
+        xml = "<root>" + xml + "</root>";
+        if ( LOGGER.isLoggable( Level.FINE ) )
+        {
+            LOGGER.fine( xml );
+        }
+        XMLReader xmlReader = XMLReaderFactory.createXMLReader();
+        xmlReader.setContentHandler( new HTMLTextStylingContentHandler( documentHandler ) );
+        xmlReader.parse( new InputSource( new StringReader( xml ) ) );
+    }
+
+    protected String generateXhtmlFromContent( String content )
+        throws Exception
+    {
+        return content;
+    }
 
 }

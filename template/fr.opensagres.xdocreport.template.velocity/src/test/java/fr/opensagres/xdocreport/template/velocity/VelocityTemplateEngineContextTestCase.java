@@ -37,61 +37,69 @@ import fr.opensagres.xdocreport.template.ITemplateEngine;
 
 /**
  * Velocity context test case.
- * 
  */
-public class VelocityTemplateEngineContextTestCase extends TestCase {
+public class VelocityTemplateEngineContextTestCase
+    extends TestCase
+{
 
-	public void testSimpleContext() throws Exception {
-		ITemplateEngine templateEngine = new VelocityTemplateEngine();
+    public void testSimpleContext()
+        throws Exception
+    {
+        ITemplateEngine templateEngine = new VelocityTemplateEngine();
 
-		Reader reader = new StringReader("Project: $projectName.");
-		Writer writer = new StringWriter();
-		IContext context = templateEngine.createContext();
-		context.put("projectName", "XDocReport");
+        Reader reader = new StringReader( "Project: $projectName." );
+        Writer writer = new StringWriter();
+        IContext context = templateEngine.createContext();
+        context.put( "projectName", "XDocReport" );
 
-		templateEngine.process("", context, reader, writer);
-		assertEquals("Project: XDocReport.", writer.toString());
-	}
+        templateEngine.process( "", context, reader, writer );
+        assertEquals( "Project: XDocReport.", writer.toString() );
+    }
 
-	public void testContextWithOneDot() throws Exception {
-		ITemplateEngine templateEngine = new VelocityTemplateEngine();
+    public void testContextWithOneDot()
+        throws Exception
+    {
+        ITemplateEngine templateEngine = new VelocityTemplateEngine();
 
-		Reader reader = new StringReader("Project: $project.name.");
-		Writer writer = new StringWriter();
-		IContext context = templateEngine.createContext();
-		context.put("project.name", "XDocReport");
+        Reader reader = new StringReader( "Project: $project.name." );
+        Writer writer = new StringWriter();
+        IContext context = templateEngine.createContext();
+        context.put( "project.name", "XDocReport" );
 
-		templateEngine.process("", context, reader, writer);
-		assertEquals("Project: XDocReport.", writer.toString());
-	}
+        templateEngine.process( "", context, reader, writer );
+        assertEquals( "Project: XDocReport.", writer.toString() );
+    }
 
-	public void testContextWithTwoDot() throws Exception {
-		ITemplateEngine templateEngine = new VelocityTemplateEngine();
+    public void testContextWithTwoDot()
+        throws Exception
+    {
+        ITemplateEngine templateEngine = new VelocityTemplateEngine();
 
-		Reader reader = new StringReader("Project: $project.meta.name.");
-		Writer writer = new StringWriter();
-		IContext context = templateEngine.createContext();
-		context.put("project.meta.name", "XDocReport");
+        Reader reader = new StringReader( "Project: $project.meta.name." );
+        Writer writer = new StringWriter();
+        IContext context = templateEngine.createContext();
+        context.put( "project.meta.name", "XDocReport" );
 
-		templateEngine.process("", context, reader, writer);
-		assertEquals("Project: XDocReport.", writer.toString());
-	}
+        templateEngine.process( "", context, reader, writer );
+        assertEquals( "Project: XDocReport.", writer.toString() );
+    }
 
-	public void testTwoContextWithTwoDot() throws Exception {
-		ITemplateEngine templateEngine = new VelocityTemplateEngine();
+    public void testTwoContextWithTwoDot()
+        throws Exception
+    {
+        ITemplateEngine templateEngine = new VelocityTemplateEngine();
 
-		Reader reader = new StringReader(
-				"Project: $project.meta.name. Users: #foreach ($user in $project.meta.users)$user #end");
-		Writer writer = new StringWriter();
-		IContext context = templateEngine.createContext();
-		context.put("project.meta.name", "XDocReport");
-		List<String> users = new ArrayList<String>();
-		users.add("Angelo");
-		users.add("Pascal");
-		context.put("project.meta.users", users);
+        Reader reader =
+            new StringReader( "Project: $project.meta.name. Users: #foreach ($user in $project.meta.users)$user #end" );
+        Writer writer = new StringWriter();
+        IContext context = templateEngine.createContext();
+        context.put( "project.meta.name", "XDocReport" );
+        List<String> users = new ArrayList<String>();
+        users.add( "Angelo" );
+        users.add( "Pascal" );
+        context.put( "project.meta.users", users );
 
-		templateEngine.process("", context, reader, writer);
-		assertEquals("Project: XDocReport. Users: Angelo Pascal ",
-				writer.toString());
-	}
+        templateEngine.process( "", context, reader, writer );
+        assertEquals( "Project: XDocReport. Users: Angelo Pascal ", writer.toString() );
+    }
 }

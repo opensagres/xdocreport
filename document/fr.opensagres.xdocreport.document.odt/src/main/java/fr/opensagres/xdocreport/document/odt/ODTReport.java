@@ -44,53 +44,55 @@ import fr.opensagres.xdocreport.document.odt.preprocessor.ODTStylesPreprocessor;
  * Open Office ODT report. For mime mapping please see {@see
  * http://framework.openoffice.org/documentation/mimetypes/mimetypes.html}.
  */
-public class ODTReport extends AbstractXDocReport {
+public class ODTReport
+    extends AbstractXDocReport
+{
 
-	private static final long serialVersionUID = 5974669564624835649L;
+    private static final long serialVersionUID = 5974669564624835649L;
 
-	private static final String[] DEFAULT_XML_ENTRIES = { CONTENT_XML_ENTRY,
-			STYLES_XML_ENTRY, METAINF_MANIFEST_XML_ENTRY };
+    private static final String[] DEFAULT_XML_ENTRIES = { CONTENT_XML_ENTRY, STYLES_XML_ENTRY,
+        METAINF_MANIFEST_XML_ENTRY };
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see fr.opensagres.xdocreport.document.IXDocReport#getKind()
-	 */
-	public String getKind() {
-		return DocumentKind.ODT.name();
-	}
+    /*
+     * (non-Javadoc)
+     * @see fr.opensagres.xdocreport.document.IXDocReport#getKind()
+     */
+    public String getKind()
+    {
+        return DocumentKind.ODT.name();
+    }
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see fr.opensagres.xdocreport.document.IXDocReport#getMimeMapping()
-	 */
-	public MimeMapping getMimeMapping() {
-		return MIME_MAPPING;
-	}
+    /*
+     * (non-Javadoc)
+     * @see fr.opensagres.xdocreport.document.IXDocReport#getMimeMapping()
+     */
+    public MimeMapping getMimeMapping()
+    {
+        return MIME_MAPPING;
+    }
 
-	@Override
-	protected void registerPreprocessors() {
-		// processor to modify content.xml
-		super.addPreprocessor(CONTENT_XML_ENTRY, ODTPreprocessor.INSTANCE);
-		// processor to modify META-INF/manifest.xml
-		super.addPreprocessor(METAINF_MANIFEST_XML_ENTRY,
-				ODTManifestXMLProcessor.INSTANCE);
-		// processor to modify global styles
-		super.addPreprocessor(STYLES_XML_ENTRY, ODTStylesPreprocessor.INSTANCE);
-	}
+    @Override
+    protected void registerPreprocessors()
+    {
+        // processor to modify content.xml
+        super.addPreprocessor( CONTENT_XML_ENTRY, ODTPreprocessor.INSTANCE );
+        // processor to modify META-INF/manifest.xml
+        super.addPreprocessor( METAINF_MANIFEST_XML_ENTRY, ODTManifestXMLProcessor.INSTANCE );
+        // processor to modify global styles
+        super.addPreprocessor( STYLES_XML_ENTRY, ODTStylesPreprocessor.INSTANCE );
+    }
 
-	@Override
-	protected String[] getDefaultXMLEntries() {
-		return DEFAULT_XML_ENTRIES;
-	}
+    @Override
+    protected String[] getDefaultXMLEntries()
+    {
+        return DEFAULT_XML_ENTRIES;
+    }
 
-	@Override
-	protected IImageRegistry createImageRegistry(
-			IEntryReaderProvider readerProvider,
-			IEntryWriterProvider writerProvider,
-			IEntryOutputStreamProvider outputStreamProvider) {
-		return new ODTImageRegistry(readerProvider, writerProvider,
-				outputStreamProvider);
-	}
+    @Override
+    protected IImageRegistry createImageRegistry( IEntryReaderProvider readerProvider,
+                                                  IEntryWriterProvider writerProvider,
+                                                  IEntryOutputStreamProvider outputStreamProvider )
+    {
+        return new ODTImageRegistry( readerProvider, writerProvider, outputStreamProvider );
+    }
 }

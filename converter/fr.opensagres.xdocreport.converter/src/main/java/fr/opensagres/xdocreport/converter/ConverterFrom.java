@@ -30,36 +30,43 @@ import java.util.Map;
 
 /**
  * Converter from.
- * 
  */
-public class ConverterFrom {
+public class ConverterFrom
+{
 
-	private final String from;
-	private final Map<String, ConverterTo> convertersTo;
+    private final String from;
 
-	public ConverterFrom(String from) {
-		this.from = from;
-		this.convertersTo = new HashMap<String, ConverterTo>();
-	}
+    private final Map<String, ConverterTo> convertersTo;
 
-	public String getFrom() {
-		return from;
-	}
+    public ConverterFrom( String from )
+    {
+        this.from = from;
+        this.convertersTo = new HashMap<String, ConverterTo>();
+    }
 
-	public Collection<ConverterTo> getConvertersTo() {
-		return convertersTo.values();
-	}
+    public String getFrom()
+    {
+        return from;
+    }
 
-	public ConverterTo getConverterTo(String to) {
-		return convertersTo.get(to);
-	}
+    public Collection<ConverterTo> getConvertersTo()
+    {
+        return convertersTo.values();
+    }
 
-	public void addConverter(String to, String via, IConverter converter) {
-		ConverterTo converterTo = getConverterTo(to);
-		if (converterTo == null) {
-			converterTo = new ConverterTo(to);
-			convertersTo.put(to, converterTo);
-		}
-		converterTo.addConverter(via, converter);
-	}
+    public ConverterTo getConverterTo( String to )
+    {
+        return convertersTo.get( to );
+    }
+
+    public void addConverter( String to, String via, IConverter converter )
+    {
+        ConverterTo converterTo = getConverterTo( to );
+        if ( converterTo == null )
+        {
+            converterTo = new ConverterTo( to );
+            convertersTo.put( to, converterTo );
+        }
+        converterTo.addConverter( via, converter );
+    }
 }

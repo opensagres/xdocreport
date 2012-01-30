@@ -24,7 +24,6 @@
  */
 package org.apache.poi.xwpf.converter.internal.itext.stylable;
 
-
 import org.apache.poi.xwpf.converter.internal.itext.styles.Style;
 import org.apache.poi.xwpf.converter.internal.itext.styles.StyleParagraphProperties;
 
@@ -36,73 +35,83 @@ import fr.opensagres.xdocreport.itext.extension.ExtendedChapter;
 import fr.opensagres.xdocreport.itext.extension.IITextContainer;
 import fr.opensagres.xdocreport.itext.extension.IParagraphFactory;
 
+public class StylableChapter
+    extends ExtendedChapter
+    implements IStylableContainer
+{
 
-public class StylableChapter extends ExtendedChapter implements
-		IStylableContainer {
+    private final StylableDocument ownerDocument;
 
-	private final StylableDocument ownerDocument;
-	private final IStylableContainer parent;
-	private Style lastStyleApplied = null;
+    private final IStylableContainer parent;
 
-	public StylableChapter(StylableDocument ownerDocument,
-			IStylableContainer parent, StylableParagraph title, int number) {
-		super(title, number);
-		this.ownerDocument = ownerDocument;
-		this.parent = parent;
-		super.setTriggerNewPage(false);
-	}
+    private Style lastStyleApplied = null;
 
-	public void applyStyles(Object ele,Style style) {
-		this.lastStyleApplied = style;
+    public StylableChapter( StylableDocument ownerDocument, IStylableContainer parent, StylableParagraph title,
+                            int number )
+    {
+        super( title, number );
+        this.ownerDocument = ownerDocument;
+        this.parent = parent;
+        super.setTriggerNewPage( false );
+    }
 
-		StyleParagraphProperties paragraphProperties = style
-				.getParagraphProperties();
-		if (paragraphProperties != null) {
+    public void applyStyles( Object ele, Style style )
+    {
+        this.lastStyleApplied = style;
 
-		}
-		
-	}
+        StyleParagraphProperties paragraphProperties = style.getParagraphProperties();
+        if ( paragraphProperties != null )
+        {
 
-	public Style getLastStyleApplied() {
-		return lastStyleApplied;
-	}
+        }
 
-	public void addElement(Element element) {
-		super.add(element);
-	}
+    }
 
-	public Section addSection(float indentation, Paragraph title,
-			int numberDepth) {
-		if (isAddedCompletely()) {
-			throw new IllegalStateException(
-					"This LargeElement has already been added to the Document.");
-		}
-		StylableSection section = ownerDocument.createSection(this,
-				(StylableParagraph) title, numberDepth);
-		section.setIndentation(indentation);
-		add(section);
-		return section;
-	}
+    public Style getLastStyleApplied()
+    {
+        return lastStyleApplied;
+    }
 
-	public IStylableContainer getParent() {
-		return parent;
-	}
+    public void addElement( Element element )
+    {
+        super.add( element );
+    }
 
-	public Element getElement() {
-		return this;
-	}
+    public Section addSection( float indentation, Paragraph title, int numberDepth )
+    {
+        if ( isAddedCompletely() )
+        {
+            throw new IllegalStateException( "This LargeElement has already been added to the Document." );
+        }
+        StylableSection section = ownerDocument.createSection( this, (StylableParagraph) title, numberDepth );
+        section.setIndentation( indentation );
+        add( section );
+        return section;
+    }
 
-	@Override
-	protected IParagraphFactory getParagraphFactory() {
-		return ownerDocument;
-	}
-	
-	public IITextContainer getITextContainer() {
-		return parent;
-	}
+    public IStylableContainer getParent()
+    {
+        return parent;
+    }
 
-	public void setITextContainer(IITextContainer container) {
-		
-	}
+    public Element getElement()
+    {
+        return this;
+    }
+
+    @Override
+    protected IParagraphFactory getParagraphFactory()
+    {
+        return ownerDocument;
+    }
+
+    public IITextContainer getITextContainer()
+    {
+        return parent;
+    }
+
+    public void setITextContainer( IITextContainer container )
+    {
+
+    }
 }
-

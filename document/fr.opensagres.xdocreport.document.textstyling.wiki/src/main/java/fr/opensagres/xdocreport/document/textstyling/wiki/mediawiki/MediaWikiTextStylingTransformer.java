@@ -32,18 +32,18 @@ import fr.opensagres.xdocreport.document.textstyling.ITextStylingTransformer;
 import fr.opensagres.xdocreport.document.textstyling.wiki.AbstractWikiTextStylingTransformer;
 
 /**
- * MediaWiki text styling transformer to transform MediaWiki syntax to another
- * document kind (odt, docx, etc) syntax. The ODT, DOCX is represented with the
- * given {@link IDocumentHandler}.
- * 
+ * MediaWiki text styling transformer to transform MediaWiki syntax to another document kind (odt, docx, etc) syntax.
+ * The ODT, DOCX is represented with the given {@link IDocumentHandler}.
  */
-public class MediaWikiTextStylingTransformer extends
-		AbstractWikiTextStylingTransformer {
+public class MediaWikiTextStylingTransformer
+    extends AbstractWikiTextStylingTransformer
+{
 
-	public static final ITextStylingTransformer INSTANCE = new MediaWikiTextStylingTransformer();
+    public static final ITextStylingTransformer INSTANCE = new MediaWikiTextStylingTransformer();
 
-	@Override
-	protected IWikiParser createWikiParser() {
-		return new MediaWikiParser();
-	}
+    @Override
+    protected IWikiParser createWikiParser()
+    {
+        return new MediaWikiParser();
+    }
 }

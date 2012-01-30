@@ -42,189 +42,207 @@ import fr.opensagres.xdocreport.document.registry.XDocReportRegistry;
 import fr.opensagres.xdocreport.template.IContext;
 import fr.opensagres.xdocreport.template.formatter.FieldsMetadata;
 
-public class XDocReportService {
+public class XDocReportService
+{
 
-	public static final XDocReportService INSTANCE = new XDocReportService();
+    public static final XDocReportService INSTANCE = new XDocReportService();
 
-	private boolean cacheOriginalDocument;
+    private boolean cacheOriginalDocument;
 
-	public List<ReportId> listReports() {
-		XDocReportRegistry registry = getXDocReportRegistry();
-		Collection<IXDocReport> reports = registry.getCachedReports();
+    public List<ReportId> listReports()
+    {
+        XDocReportRegistry registry = getXDocReportRegistry();
+        Collection<IXDocReport> reports = registry.getCachedReports();
 
-		List<ReportId> reportIDs = new ArrayList<ReportId>();
-		for (IXDocReport docReport : reports) {
-			ReportId aReport=new ReportId(docReport.getId(), docReport.getTemplateEngine().getId(),new Date(docReport.getLastModified()));
-			
-			reportIDs.add(aReport);
-		}
-		return reportIDs;
-	}
+        List<ReportId> reportIDs = new ArrayList<ReportId>();
+        for ( IXDocReport docReport : reports )
+        {
+            ReportId aReport =
+                new ReportId( docReport.getId(), docReport.getTemplateEngine().getId(),
+                              new Date( docReport.getLastModified() ) );
 
-	/**
-	 * @param reportID
-	 *            the report ID which was registered in the registry.
-	 * @param dataContext
-	 *            "live" data to be merged in the template
-	 * @param options
-	 *            optional, used to customize the output in the case if
-	 *            convertion must be done.
-	 * @return the merged content eventually converted in another format (PDF or
-	 *         HTML)
-	 */
-	public byte[] process(String reportId, List<DataContext> dataContext,
-			Options options) throws XDocReportException {
-		XDocReportRegistry registry = getXDocReportRegistry();
+            reportIDs.add( aReport );
+        }
+        return reportIDs;
+    }
 
-		IXDocReport report = registry.getReport(reportId);
-		if (report == null) {
-			throw new XDocReportException("Cannot find report with the id="
-					+ reportId);
-		}
-		return process(report, dataContext, options);
-	}
+    /**
+     * @param reportID the report ID which was registered in the registry.
+     * @param dataContext "live" data to be merged in the template
+     * @param options optional, used to customize the output in the case if convertion must be done.
+     * @return the merged content eventually converted in another format (PDF or HTML)
+     */
+    public byte[] process( String reportId, List<DataContext> dataContext, Options options )
+        throws XDocReportException
+    {
+        XDocReportRegistry registry = getXDocReportRegistry();
 
-	/**
-	 * @param document
-	 *            the template in a binary form
-	 * @param fieldsMetadatas
-	 *            fields metadata used to generate for instance lzy loop for
-	 *            ODT, Docx..row table.
-	 * @param templateEngineID
-	 *            the template engine ID....
-	 * @param dataContext
-	 *            "live" data to be merged in the template
-	 * @param options
-	 *            optional, used to customize the output in the case if
-	 *            convertion must be done.
-	 * @return the merged content eventually converted in another format (PDF or
-	 *         HTML)
-	 */
-	public byte[] process(byte[] document, FieldsMetadata fieldsMetadata,
-			String templateEngineId, List<DataContext> dataContext, Options options)
-			throws XDocReportException {
+        IXDocReport report = registry.getReport( reportId );
+        if ( report == null )
+        {
+            throw new XDocReportException( "Cannot find report with the id=" + reportId );
+        }
+        return process( report, dataContext, options );
+    }
 
-		// 1) Load report without cache it to the registry
-		IXDocReport report = loadReport(getXDocReportRegistry(), "", document,
-				fieldsMetadata, templateEngineId, false,
-				isCacheOriginalDocument());
-		// 2) Create context + Process report generation
-		return process(report, dataContext, options);
-	}
+    /**
+     * @param document the template in a binary form
+     * @param fieldsMetadatas fields metadata used to generate for instance lzy loop for ODT, Docx..row table.
+     * @param templateEngineID the template engine ID....
+     * @param dataContext "live" data to be merged in the template
+     * @param options optional, used to customize the output in the case if convertion must be done.
+     * @return the merged content eventually converted in another format (PDF or HTML)
+     */
+    public byte[] process( byte[] document, FieldsMetadata fieldsMetadata, String templateEngineId,
+                           List<DataContext> dataContext, Options options )
+        throws XDocReportException
+    {
 
-	private byte[] process(IXDocReport report, List<DataContext> dataContext,
-			Options options) throws XDocReportException {
-		try {
-			// 2) Create context
-			IContext context = createContext(report, dataContext);
-			// 3) Process report generation
-			ByteArrayOutputStream out = new ByteArrayOutputStream();
-			if (options == null) {
-				// Process
-				report.process(context, out);
-			} else {
-				// Converter
-				report.convert(context, options, out);
-			}
-			return out.toByteArray();
-		} catch (Throwable e) {
-			throw new XDocReportException(e);
-		}
-	}
+        // 1) Load report without cache it to the registry
+        IXDocReport report =
+            loadReport( getXDocReportRegistry(), "", document, fieldsMetadata, templateEngineId, false,
+                        isCacheOriginalDocument() );
+        // 2) Create context + Process report generation
+        return process( report, dataContext, options );
+    }
 
-	private IContext createContext(IXDocReport report, List<DataContext> dataContexts)
-			throws XDocReportException {
-		IContext context;
-		try {
-			context = report.createContext();
-			for (DataContext dataContext : dataContexts) {
-				context.put(dataContext.getKey(), dataContext.getValue());
-			}
-			
-			return context;
-		} catch (XDocReportException e) {
-			throw new XDocReportException(e);
-		}
-	}
+    private byte[] process( IXDocReport report, List<DataContext> dataContext, Options options )
+        throws XDocReportException
+    {
+        try
+        {
+            // 2) Create context
+            IContext context = createContext( report, dataContext );
+            // 3) Process report generation
+            ByteArrayOutputStream out = new ByteArrayOutputStream();
+            if ( options == null )
+            {
+                // Process
+                report.process( context, out );
+            }
+            else
+            {
+                // Converter
+                report.convert( context, options, out );
+            }
+            return out.toByteArray();
+        }
+        catch ( Throwable e )
+        {
+            throw new XDocReportException( e );
+        }
+    }
 
-	public void registerReport(String reportId, byte[] document,
-			FieldsMetadata fieldsMetadata, String templateEngineId)
-			throws XDocReportException {
-		// Load report and cache it to the registry
-		loadReport(getXDocReportRegistry(), reportId, document, fieldsMetadata,
-				templateEngineId, true, isCacheOriginalDocument());
-		
-		System.out.println(getXDocReportRegistry().getCachedReports());
-	}
+    private IContext createContext( IXDocReport report, List<DataContext> dataContexts )
+        throws XDocReportException
+    {
+        IContext context;
+        try
+        {
+            context = report.createContext();
+            for ( DataContext dataContext : dataContexts )
+            {
+                context.put( dataContext.getKey(), dataContext.getValue() );
+            }
 
-	private IXDocReport loadReport(XDocReportRegistry registry,
-			String reportId, byte[] document, FieldsMetadata fieldsMetadata,
-			String templateEngineId, boolean cacheReport,
-			boolean cacheOriginalDocument) throws XDocReportException {
-		// 1) Get sourceStream
-		InputStream sourceStream = getInputStream(document);
-		// 2) Load report
-		IXDocReport report = null;
-		try {
-			report = registry.loadReport(sourceStream, reportId,
-					templateEngineId, cacheReport);
-		} catch (Throwable e) {
-			throw new XDocReportException(e);
-		}
+            return context;
+        }
+        catch ( XDocReportException e )
+        {
+            throw new XDocReportException( e );
+        }
+    }
 
-		// 6) Set FieldsMetaData
-		report.setFieldsMetadata(fieldsMetadata);
+    public void registerReport( String reportId, byte[] document, FieldsMetadata fieldsMetadata, String templateEngineId )
+        throws XDocReportException
+    {
+        // Load report and cache it to the registry
+        loadReport( getXDocReportRegistry(), reportId, document, fieldsMetadata, templateEngineId, true,
+                    isCacheOriginalDocument() );
 
-		// 7) Set cache
-		report.setCacheOriginalDocument(cacheOriginalDocument);
-		return report;
+        System.out.println( getXDocReportRegistry().getCachedReports() );
+    }
 
-	}
+    private IXDocReport loadReport( XDocReportRegistry registry, String reportId, byte[] document,
+                                    FieldsMetadata fieldsMetadata, String templateEngineId, boolean cacheReport,
+                                    boolean cacheOriginalDocument )
+        throws XDocReportException
+    {
+        // 1) Get sourceStream
+        InputStream sourceStream = getInputStream( document );
+        // 2) Load report
+        IXDocReport report = null;
+        try
+        {
+            report = registry.loadReport( sourceStream, reportId, templateEngineId, cacheReport );
+        }
+        catch ( Throwable e )
+        {
+            throw new XDocReportException( e );
+        }
 
-	private ByteArrayInputStream getInputStream(byte[] document)
-			throws XDocReportException {
-		if (document == null) {
-			throw new XDocReportException(
-					"Byte array of the document cannot be null.");
-		}
-		return new ByteArrayInputStream(document);
-	}
+        // 6) Set FieldsMetaData
+        report.setFieldsMetadata( fieldsMetadata );
 
-	public byte[] convert(byte[] document, Options options)
-			throws XDocReportException {
-		try {
-			IConverter converter = ConverterRegistry.getRegistry()
-					.findConverter(options);
-			InputStream in = getInputStream(document);
-			ByteArrayOutputStream out = new ByteArrayOutputStream();
-			converter.convert(in, out, options);
-			return out.toByteArray();
-		} catch (XDocConverterException e) {
-			throw new XDocReportException(e);
-		}
-	}
+        // 7) Set cache
+        report.setCacheOriginalDocument( cacheOriginalDocument );
+        return report;
 
-	public void unregisterReport(String reportId) {
-		XDocReportRegistry registry = getXDocReportRegistry();
-		registry.unregisterReport(reportId);
-	}
+    }
 
-	public byte[] download(String reportID, String processState)
-			throws XDocReportException {
-		// TODO...
+    private ByteArrayInputStream getInputStream( byte[] document )
+        throws XDocReportException
+    {
+        if ( document == null )
+        {
+            throw new XDocReportException( "Byte array of the document cannot be null." );
+        }
+        return new ByteArrayInputStream( document );
+    }
 
-		return null;
-	}
+    public byte[] convert( byte[] document, Options options )
+        throws XDocReportException
+    {
+        try
+        {
+            IConverter converter = ConverterRegistry.getRegistry().findConverter( options );
+            InputStream in = getInputStream( document );
+            ByteArrayOutputStream out = new ByteArrayOutputStream();
+            converter.convert( in, out, options );
+            return out.toByteArray();
+        }
+        catch ( XDocConverterException e )
+        {
+            throw new XDocReportException( e );
+        }
+    }
 
-	protected XDocReportRegistry getXDocReportRegistry() {
-		return XDocReportRegistry.getRegistry();
-	}
+    public void unregisterReport( String reportId )
+    {
+        XDocReportRegistry registry = getXDocReportRegistry();
+        registry.unregisterReport( reportId );
+    }
 
-	public boolean isCacheOriginalDocument() {
-		return cacheOriginalDocument;
-	}
+    public byte[] download( String reportID, String processState )
+        throws XDocReportException
+    {
+        // TODO...
 
-	public void setCacheOriginalDocument(boolean cacheOriginalDocument) {
-		this.cacheOriginalDocument = cacheOriginalDocument;
-	}
+        return null;
+    }
+
+    protected XDocReportRegistry getXDocReportRegistry()
+    {
+        return XDocReportRegistry.getRegistry();
+    }
+
+    public boolean isCacheOriginalDocument()
+    {
+        return cacheOriginalDocument;
+    }
+
+    public void setCacheOriginalDocument( boolean cacheOriginalDocument )
+    {
+        this.cacheOriginalDocument = cacheOriginalDocument;
+    }
 }

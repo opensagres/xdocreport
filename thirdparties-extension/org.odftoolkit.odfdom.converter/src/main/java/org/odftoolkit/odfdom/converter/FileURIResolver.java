@@ -26,10 +26,13 @@ package org.odftoolkit.odfdom.converter;
 
 import java.io.File;
 
-public class FileURIResolver extends BasicURIResolver {
+public class FileURIResolver
+    extends BasicURIResolver
+{
 
-	public FileURIResolver(File baseURL) {
-		super(baseURL.getAbsolutePath());
-	}
+    public FileURIResolver( File baseURL )
+    {
+        super( baseURL.getAbsolutePath() );
+    }
 
 }

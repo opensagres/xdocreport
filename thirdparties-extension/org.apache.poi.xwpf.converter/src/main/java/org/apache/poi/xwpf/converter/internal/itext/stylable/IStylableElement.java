@@ -28,16 +28,15 @@ import org.apache.poi.xwpf.converter.internal.itext.styles.Style;
 
 import com.lowagie.text.Element;
 
-public interface IStylableElement<T> {
+public interface IStylableElement<T>
+{
 
-	
+    void applyStyles( T ele, Style style );
 
-	void applyStyles(T ele, Style style);
-	
-	Style getLastStyleApplied();
-	
-	IStylableContainer getParent();
-	
-	Element getElement();
+    Style getLastStyleApplied();
+
+    IStylableContainer getParent();
+
+    Element getElement();
 
 }

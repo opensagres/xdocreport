@@ -30,50 +30,65 @@ import org.apache.poi.xwpf.converter.itext.PDFViaITextOptions;
 
 import com.lowagie.text.Font;
 
-public class FontInfos {
-	private String fontFamily = "Arial";
-	private float fontSize = 8;
-	private int fontStyle = Font.NORMAL;
-	private Color fontColor = Color.BLACK;
-	private String fontEncoding = PDFViaITextOptions.create().getFontEncoding();
+public class FontInfos
+{
+    private String fontFamily = "Arial";
 
-	public String getFontFamily() {
-		return fontFamily;
-	}
+    private float fontSize = 8;
 
-	public void setFontFamily(String fontFamily) {
-		this.fontFamily = fontFamily;
-	}
+    private int fontStyle = Font.NORMAL;
 
-	public float getFontSize() {
-		return fontSize;
-	}
+    private Color fontColor = Color.BLACK;
 
-	public void setFontSize(float fontSize) {
-		this.fontSize = fontSize;
-	}
+    private String fontEncoding = PDFViaITextOptions.create().getFontEncoding();
 
-	public int getFontStyle() {
-		return fontStyle;
-	}
+    public String getFontFamily()
+    {
+        return fontFamily;
+    }
 
-	public void setFontStyle(int fontStyle) {
-		this.fontStyle = fontStyle;
-	}
+    public void setFontFamily( String fontFamily )
+    {
+        this.fontFamily = fontFamily;
+    }
 
-	public Color getFontColor() {
-		return fontColor;
-	}
+    public float getFontSize()
+    {
+        return fontSize;
+    }
 
-	public void setFontColor(Color fontColor) {
-		this.fontColor = fontColor;
-	}
+    public void setFontSize( float fontSize )
+    {
+        this.fontSize = fontSize;
+    }
 
-	public String getFontEncoding() {
-		return fontEncoding;
-	}
+    public int getFontStyle()
+    {
+        return fontStyle;
+    }
 
-	public void setFontEncoding(String fontEncoding) {
-		this.fontEncoding = fontEncoding;
-	}
+    public void setFontStyle( int fontStyle )
+    {
+        this.fontStyle = fontStyle;
+    }
+
+    public Color getFontColor()
+    {
+        return fontColor;
+    }
+
+    public void setFontColor( Color fontColor )
+    {
+        this.fontColor = fontColor;
+    }
+
+    public String getFontEncoding()
+    {
+        return fontEncoding;
+    }
+
+    public void setFontEncoding( String fontEncoding )
+    {
+        this.fontEncoding = fontEncoding;
+    }
 }

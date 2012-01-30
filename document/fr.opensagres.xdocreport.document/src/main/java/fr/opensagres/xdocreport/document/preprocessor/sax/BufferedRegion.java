@@ -31,61 +31,73 @@ import java.util.List;
 
 /**
  * Buffered region.
- * 
  */
-public class BufferedRegion extends BufferedRegionAdpater {
+public class BufferedRegion
+    extends BufferedRegionAdpater
+{
 
-	protected final List<ISavable> regions = new ArrayList<ISavable>();
+    protected final List<ISavable> regions = new ArrayList<ISavable>();
 
-	private IBufferedRegion currentRegion;
+    private IBufferedRegion currentRegion;
 
-	public BufferedRegion(BufferedElement ownerElement, IBufferedRegion parent) {
-		super(ownerElement, parent);
-	}
+    public BufferedRegion( BufferedElement ownerElement, IBufferedRegion parent )
+    {
+        super( ownerElement, parent );
+    }
 
-	@Override
-	public void save(Writer writer) throws IOException {
-		for (ISavable region : regions) {
-			region.save(writer);
-		}
-	}
+    @Override
+    public void save( Writer writer )
+        throws IOException
+    {
+        for ( ISavable region : regions )
+        {
+            region.save( writer );
+        }
+    }
 
-	@Override
-	public void addRegion(ISavable region) {
-		currentRegion = ((region instanceof IBufferedRegion) ? (IBufferedRegion) region
-				: currentRegion);
-		regions.add(region);
-	}
+    @Override
+    public void addRegion( ISavable region )
+    {
+        currentRegion = ( ( region instanceof IBufferedRegion ) ? (IBufferedRegion) region : currentRegion );
+        regions.add( region );
+    }
 
-	@Override
-	public void append(String content) {
-		getStringBufferedRegion().append(content);
-	}
+    @Override
+    public void append( String content )
+    {
+        getStringBufferedRegion().append( content );
+    }
 
-	@Override
-	public void append(char c) {
-		getStringBufferedRegion().append(c);
-	}
+    @Override
+    public void append( char c )
+    {
+        getStringBufferedRegion().append( c );
+    }
 
-	@Override
-	public boolean isString() {
-		return false;
-	}
+    @Override
+    public boolean isString()
+    {
+        return false;
+    }
 
-	@Override
-	public void append(char[] ch, int start, int length) {
-		getStringBufferedRegion().append(ch, start, length);
-	}
+    @Override
+    public void append( char[] ch, int start, int length )
+    {
+        getStringBufferedRegion().append( ch, start, length );
+    }
 
-	private StringBufferedRegion getStringBufferedRegion() {
-		if (currentRegion == null || !currentRegion.isString()) {
-			currentRegion = new StringBufferedRegion(getOwnerElement(), this);
-		}
-		return (StringBufferedRegion) currentRegion;
-	}
+    private StringBufferedRegion getStringBufferedRegion()
+    {
+        if ( currentRegion == null || !currentRegion.isString() )
+        {
+            currentRegion = new StringBufferedRegion( getOwnerElement(), this );
+        }
+        return (StringBufferedRegion) currentRegion;
+    }
 
-	public void reset() {
-		regions.clear();
-		currentRegion = null;
-	}
+    public void reset()
+    {
+        regions.clear();
+        currentRegion = null;
+    }
 }

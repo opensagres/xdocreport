@@ -28,107 +28,130 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-public abstract class AbstractDocumentFormatter implements IDocumentFormatter {
+public abstract class AbstractDocumentFormatter
+    implements IDocumentFormatter
+{
 
-	public static final String NO_ESCAPE = "___NoEscape";
-	private String startDocumentDirective;
-	private String endDocumentDirective;
+    public static final String NO_ESCAPE = "___NoEscape";
 
-	protected enum DirectiveToParse {
-		START_LOOP, END_LOOP, START_IF, END_IF
-	}
+    private String startDocumentDirective;
 
-	public String extractItemNameList(String content, String fieldName,
-			boolean forceAsField) {
-		if (!forceAsField && !isModelField(content, fieldName)) {
-			return null;
-		}
-		int dotIndex = fieldName.indexOf('.');
-		if (dotIndex != -1) {
-			return getItemToken() + fieldName.substring(0, dotIndex);
-		}
-		return getItemToken() + fieldName;
-	}
+    private String endDocumentDirective;
 
-	public String getStartDocumentDirective() {
-		return startDocumentDirective;
-	}
+    protected enum DirectiveToParse
+    {
+        START_LOOP, END_LOOP, START_IF, END_IF
+    }
 
-	public void setStartDocumentDirective(String startDocumentDirective) {
-		this.startDocumentDirective = startDocumentDirective;
-	}
+    public String extractItemNameList( String content, String fieldName, boolean forceAsField )
+    {
+        if ( !forceAsField && !isModelField( content, fieldName ) )
+        {
+            return null;
+        }
+        int dotIndex = fieldName.indexOf( '.' );
+        if ( dotIndex != -1 )
+        {
+            return getItemToken() + fieldName.substring( 0, dotIndex );
+        }
+        return getItemToken() + fieldName;
+    }
 
-	public String getEndDocumentDirective() {
-		return endDocumentDirective;
-	}
+    public String getStartDocumentDirective()
+    {
+        return startDocumentDirective;
+    }
 
-	public void setEndDocumentDirective(String endDocumentDirective) {
-		this.endDocumentDirective = endDocumentDirective;
-	}
+    public void setStartDocumentDirective( String startDocumentDirective )
+    {
+        this.startDocumentDirective = startDocumentDirective;
+    }
 
-	public String getStartLoopDirective(String itemNameList) {
-		return getStartLoopDirective(itemNameList,
-				itemNameList.substring(getItemToken().length()));
-	}
+    public String getEndDocumentDirective()
+    {
+        return endDocumentDirective;
+    }
 
-	public int extractListDirectiveInfo(String content,
-			DirectivesStack directives) {
-		return extractListDirectiveInfo(content, directives, false);
-	}
+    public void setEndDocumentDirective( String endDocumentDirective )
+    {
+        this.endDocumentDirective = endDocumentDirective;
+    }
 
-	protected abstract String getItemToken();
+    public String getStartLoopDirective( String itemNameList )
+    {
+        return getStartLoopDirective( itemNameList, itemNameList.substring( getItemToken().length() ) );
+    }
 
-	protected abstract boolean isModelField(String content, String fieldName);
+    public int extractListDirectiveInfo( String content, DirectivesStack directives )
+    {
+        return extractListDirectiveInfo( content, directives, false );
+    }
 
-	protected DirectiveToParse getDirectiveToParse(int startLoopIndex,
-			int endLoopIndex, int startIfIndex, int endIfIndex) {
-		int minIndex = getMinIndex(startLoopIndex, endLoopIndex, startIfIndex,
-				endIfIndex);
-		if (minIndex == -1) {
-			return null;
-		}
-		if (minIndex == startLoopIndex) {
-			return DirectiveToParse.START_LOOP;
-		}
-		if (minIndex == endLoopIndex) {
-			return DirectiveToParse.END_LOOP;
-		}
-		if (minIndex == startIfIndex) {
-			return DirectiveToParse.START_IF;
-		}
-		if (minIndex == endIfIndex) {
-			return DirectiveToParse.END_IF;
-		}
-		return null;
-	}
+    protected abstract String getItemToken();
 
-	public int getMinIndex(int startLoopIndex, int endLoopIndex,
-			int startIfIndex, int endIfIndex) {
-		List<Integer> coll = new ArrayList<Integer>();
-		if (startLoopIndex != -1) {
-			coll.add(startLoopIndex);
-		}
-		if (endLoopIndex != -1) {
-			coll.add(endLoopIndex);
-		}
-		if (startIfIndex != -1) {
-			coll.add(startIfIndex);
-		}
-		if (endIfIndex != -1) {
-			coll.add(endIfIndex);
-		}
-		if (coll.size() == 0) {
-			return -1;
-		}
-		if (coll.size() == 1) {
-			return coll.get(0);
-		}
-		return Collections.min(coll);
-	}
+    protected abstract boolean isModelField( String content, String fieldName );
 
-	protected String getVariableName(long variableIndex) {
-		StringBuilder key = new StringBuilder(NO_ESCAPE);
-		key.append(variableIndex);
-		return key.toString();
-	}
+    protected DirectiveToParse getDirectiveToParse( int startLoopIndex, int endLoopIndex, int startIfIndex,
+                                                    int endIfIndex )
+    {
+        int minIndex = getMinIndex( startLoopIndex, endLoopIndex, startIfIndex, endIfIndex );
+        if ( minIndex == -1 )
+        {
+            return null;
+        }
+        if ( minIndex == startLoopIndex )
+        {
+            return DirectiveToParse.START_LOOP;
+        }
+        if ( minIndex == endLoopIndex )
+        {
+            return DirectiveToParse.END_LOOP;
+        }
+        if ( minIndex == startIfIndex )
+        {
+            return DirectiveToParse.START_IF;
+        }
+        if ( minIndex == endIfIndex )
+        {
+            return DirectiveToParse.END_IF;
+        }
+        return null;
+    }
+
+    public int getMinIndex( int startLoopIndex, int endLoopIndex, int startIfIndex, int endIfIndex )
+    {
+        List<Integer> coll = new ArrayList<Integer>();
+        if ( startLoopIndex != -1 )
+        {
+            coll.add( startLoopIndex );
+        }
+        if ( endLoopIndex != -1 )
+        {
+            coll.add( endLoopIndex );
+        }
+        if ( startIfIndex != -1 )
+        {
+            coll.add( startIfIndex );
+        }
+        if ( endIfIndex != -1 )
+        {
+            coll.add( endIfIndex );
+        }
+        if ( coll.size() == 0 )
+        {
+            return -1;
+        }
+        if ( coll.size() == 1 )
+        {
+            return coll.get( 0 );
+        }
+        return Collections.min( coll );
+    }
+
+    protected String getVariableName( long variableIndex )
+    {
+        StringBuilder key = new StringBuilder( NO_ESCAPE );
+        key.append( variableIndex );
+        return key.toString();
+    }
 }

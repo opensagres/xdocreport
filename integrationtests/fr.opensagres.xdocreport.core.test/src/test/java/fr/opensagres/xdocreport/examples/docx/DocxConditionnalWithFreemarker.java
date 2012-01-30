@@ -36,34 +36,38 @@ import fr.opensagres.xdocreport.document.registry.XDocReportRegistry;
 import fr.opensagres.xdocreport.template.IContext;
 import fr.opensagres.xdocreport.template.TemplateEngineKind;
 
-public class DocxConditionnalWithFreemarker {
+public class DocxConditionnalWithFreemarker
+{
 
-	@Test
-	public void testOne() {
-		try {
+    @Test
+    public void testOne()
+    {
+        try
+        {
 
-			// 2) Load Docx file by filling Freemarker template engine and cache
-			// it
-			// to the registry
-			IXDocReport report = XDocReportRegistry
-					.getRegistry()
-					.loadReport(
-							DocxConditionnalWithFreemarker.class
-									.getResourceAsStream("DocxConditionnalWithFreemarker.docx"),
-							TemplateEngineKind.Freemarker);
+            // 2) Load Docx file by filling Freemarker template engine and cache
+            // it
+            // to the registry
+            IXDocReport report =
+                XDocReportRegistry.getRegistry().loadReport( DocxConditionnalWithFreemarker.class.getResourceAsStream( "DocxConditionnalWithFreemarker.docx" ),
+                                                             TemplateEngineKind.Freemarker );
 
-			// 3) Create context Java model
-			IContext context = report.createContext();
-			context.put("name", "world");
+            // 3) Create context Java model
+            IContext context = report.createContext();
+            context.put( "name", "world" );
 
-			// 4) Merge Java model with the ODT
-			File file = new File("DocxConditionnalWithFreemarker_Out.docx");
-			report.process(context, new FileOutputStream(file));
+            // 4) Merge Java model with the ODT
+            File file = new File( "DocxConditionnalWithFreemarker_Out.docx" );
+            report.process( context, new FileOutputStream( file ) );
 
-		} catch (IOException e) {
-			e.printStackTrace();
-		} catch (XDocReportException e) {
-			e.printStackTrace();
-		}
-	}
+        }
+        catch ( IOException e )
+        {
+            e.printStackTrace();
+        }
+        catch ( XDocReportException e )
+        {
+            e.printStackTrace();
+        }
+    }
 }

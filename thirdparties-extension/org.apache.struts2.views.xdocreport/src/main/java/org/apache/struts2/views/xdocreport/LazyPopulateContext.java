@@ -30,88 +30,98 @@ import java.beans.PropertyDescriptor;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 
-public class LazyPopulateContext extends AbstractPopulateContext {
+public class LazyPopulateContext
+    extends AbstractPopulateContext
+{
 
-	private static final Object[] EMPTY_OBJECT_ARRAY = new Object[0];
+    private static final Object[] EMPTY_OBJECT_ARRAY = new Object[0];
 
-	private static final LazyPopulateContext INSTANCE = new LazyPopulateContext();
+    private static final LazyPopulateContext INSTANCE = new LazyPopulateContext();
 
-	public static LazyPopulateContext getInstance() {
-		return INSTANCE;
-	}
+    public static LazyPopulateContext getInstance()
+    {
+        return INSTANCE;
+    }
 
-	@Override
-	protected PropertyDescriptor[] getPropertyDescriptors(Object pojo)
-			throws Exception {
-		BeanInfo info = Introspector.getBeanInfo(pojo.getClass());
-		return info.getPropertyDescriptors();
-	}
+    @Override
+    protected PropertyDescriptor[] getPropertyDescriptors( Object pojo )
+        throws Exception
+    {
+        BeanInfo info = Introspector.getBeanInfo( pojo.getClass() );
+        return info.getPropertyDescriptors();
+    }
 
-	@Override
-	protected Object getSimpleProperty(Object pojo,
-			PropertyDescriptor descriptor) throws Exception {
-		Method readMethod = getReadMethod(pojo.getClass(), descriptor);
-		if (readMethod == null) {
-			return null;
-		}
-		return readMethod.invoke(pojo, EMPTY_OBJECT_ARRAY);
-	}
+    @Override
+    protected Object getSimpleProperty( Object pojo, PropertyDescriptor descriptor )
+        throws Exception
+    {
+        Method readMethod = getReadMethod( pojo.getClass(), descriptor );
+        if ( readMethod == null )
+        {
+            return null;
+        }
+        return readMethod.invoke( pojo, EMPTY_OBJECT_ARRAY );
+    }
 
-	protected Method getReadMethod(Class clazz, PropertyDescriptor descriptor) {
-		return (getAccessibleMethod(clazz, descriptor.getReadMethod()));
-	}
+    protected Method getReadMethod( Class clazz, PropertyDescriptor descriptor )
+    {
+        return ( getAccessibleMethod( clazz, descriptor.getReadMethod() ) );
+    }
 
-	/**
-	 * <p>
-	 * Return an accessible method (that is, one that can be invoked via
-	 * reflection) that implements the specified Method. If no such method can
-	 * be found, return <code>null</code>.
-	 * </p>
-	 * 
-	 * @param clazz
-	 *            The class of the object
-	 * @param method
-	 *            The method that we wish to call
-	 * @return The accessible method
-	 * @since 1.8.0
-	 */
-	protected Method getAccessibleMethod(Class clazz, Method method) {
+    /**
+     * <p>
+     * Return an accessible method (that is, one that can be invoked via reflection) that implements the specified
+     * Method. If no such method can be found, return <code>null</code>.
+     * </p>
+     * 
+     * @param clazz The class of the object
+     * @param method The method that we wish to call
+     * @return The accessible method
+     * @since 1.8.0
+     */
+    protected Method getAccessibleMethod( Class clazz, Method method )
+    {
 
-		// Make sure we have a method to check
-		if (method == null) {
-			return (null);
-		}
+        // Make sure we have a method to check
+        if ( method == null )
+        {
+            return ( null );
+        }
 
-		// If the requested method is not public we cannot call it
-		if (!Modifier.isPublic(method.getModifiers())) {
-			return (null);
-		}
+        // If the requested method is not public we cannot call it
+        if ( !Modifier.isPublic( method.getModifiers() ) )
+        {
+            return ( null );
+        }
 
-		boolean sameClass = true;
-		if (clazz == null) {
-			clazz = method.getDeclaringClass();
-		} else {
-			sameClass = clazz.equals(method.getDeclaringClass());
-			if (!method.getDeclaringClass().isAssignableFrom(clazz)) {
-				throw new IllegalArgumentException(clazz.getName()
-						+ " is not assignable from "
-						+ method.getDeclaringClass().getName());
-			}
-		}
+        boolean sameClass = true;
+        if ( clazz == null )
+        {
+            clazz = method.getDeclaringClass();
+        }
+        else
+        {
+            sameClass = clazz.equals( method.getDeclaringClass() );
+            if ( !method.getDeclaringClass().isAssignableFrom( clazz ) )
+            {
+                throw new IllegalArgumentException( clazz.getName() + " is not assignable from "
+                    + method.getDeclaringClass().getName() );
+            }
+        }
 
-		// If the class is public, we are done
-		if (Modifier.isPublic(clazz.getModifiers())) {
-			if (!sameClass
-					&& !Modifier.isPublic(method.getDeclaringClass()
-							.getModifiers())) {
-				// setMethodAccessible(method); // Default access superclass
-				// workaround
-			}
-			return (method);
-		}
+        // If the class is public, we are done
+        if ( Modifier.isPublic( clazz.getModifiers() ) )
+        {
+            if ( !sameClass && !Modifier.isPublic( method.getDeclaringClass().getModifiers() ) )
+            {
+                // setMethodAccessible(method); // Default access superclass
+                // workaround
+            }
+            return ( method );
+        }
 
-		return (method);
+        return ( method );
 
-	}
+    }
 
 }

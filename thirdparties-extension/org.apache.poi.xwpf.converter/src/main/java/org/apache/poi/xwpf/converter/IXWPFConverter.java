@@ -29,12 +29,13 @@ import java.io.OutputStream;
 
 import org.apache.poi.xwpf.usermodel.XWPFDocument;
 
-public interface IXWPFConverter<T extends Options> {
+public interface IXWPFConverter<T extends Options>
+{
 
-	void convert(XWPFDocument document, OutputStream out, T options)
-			throws XWPFConverterException, IOException;
+    void convert( XWPFDocument document, OutputStream out, T options )
+        throws XWPFConverterException, IOException;
 
-//	void convert(XWPFDocument document, Writer writer, T options)
-//			throws XWPFConverterException, IOException;
+    // void convert(XWPFDocument document, Writer writer, T options)
+    // throws XWPFConverterException, IOException;
 
 }

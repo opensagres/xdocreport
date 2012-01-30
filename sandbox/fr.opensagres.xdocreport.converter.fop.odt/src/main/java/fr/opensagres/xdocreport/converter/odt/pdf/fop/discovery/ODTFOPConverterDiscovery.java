@@ -22,30 +22,38 @@ import fr.opensagres.xdocreport.converter.discovery.IConverterDiscovery;
 import fr.opensagres.xdocreport.converter.odt.pdf.fop.ODTFOPConverter;
 import fr.opensagres.xdocreport.core.document.DocumentKind;
 
-public class ODTFOPConverterDiscovery implements IConverterDiscovery {
+public class ODTFOPConverterDiscovery
+    implements IConverterDiscovery
+{
 
-	public String getId() {
-		return "ODT2PDFViaFOP";
-	}
+    public String getId()
+    {
+        return "ODT2PDFViaFOP";
+    }
 
-	public String getDescription() {
-		return "Convert ODT 2 PDF via FOP";
-	}
+    public String getDescription()
+    {
+        return "Convert ODT 2 PDF via FOP";
+    }
 
-	public String getFrom() {
-		return DocumentKind.ODT.name();
-	}
+    public String getFrom()
+    {
+        return DocumentKind.ODT.name();
+    }
 
-	public String getTo() {
-		return ConverterTypeTo.PDF.name();
-	}
+    public String getTo()
+    {
+        return ConverterTypeTo.PDF.name();
+    }
 
-	public String getVia() {
-		return ConverterTypeVia.FOP.name();
-	}
+    public String getVia()
+    {
+        return ConverterTypeVia.FOP.name();
+    }
 
-	public IConverter getConverter() {
-		return ODTFOPConverter.getInstance();
-	}
+    public IConverter getConverter()
+    {
+        return ODTFOPConverter.getInstance();
+    }
 
 }

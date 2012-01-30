@@ -34,22 +34,27 @@ import fr.opensagres.xdocreport.converter.XDocConverterException;
 import fr.opensagres.xdocreport.core.io.XDocArchive;
 
 /**
- * Abstract class for {@link IConverter} which support entries input stream
- * provider.
- * 
+ * Abstract class for {@link IConverter} which support entries input stream provider.
  */
-public abstract class AbstractConverterEntriesSupport implements IConverter {
+public abstract class AbstractConverterEntriesSupport
+    implements IConverter
+{
 
-	public void convert(InputStream in, OutputStream out, Options options)
-			throws XDocConverterException {
-		try {
-			convert(XDocArchive.readZip(in), out, options);
-		} catch (IOException e) {
-			throw new XDocConverterException(e);
-		}
-	}
+    public void convert( InputStream in, OutputStream out, Options options )
+        throws XDocConverterException
+    {
+        try
+        {
+            convert( XDocArchive.readZip( in ), out, options );
+        }
+        catch ( IOException e )
+        {
+            throw new XDocConverterException( e );
+        }
+    }
 
-	public boolean canSupportEntries() {
-		return true;
-	}
+    public boolean canSupportEntries()
+    {
+        return true;
+    }
 }

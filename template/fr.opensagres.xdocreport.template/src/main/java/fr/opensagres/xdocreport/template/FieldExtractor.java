@@ -24,16 +24,19 @@
  */
 package fr.opensagres.xdocreport.template;
 
-public class FieldExtractor {
+public class FieldExtractor
+{
 
-	private final String name;
-	
-	public FieldExtractor(String name) {
-		this.name = name;
-	}
-	
-	public String getName() {
-		return name;
-	}
-	
+    private final String name;
+
+    public FieldExtractor( String name )
+    {
+        this.name = name;
+    }
+
+    public String getName()
+    {
+        return name;
+    }
+
 }

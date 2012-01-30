@@ -27,15 +27,19 @@ package org.odftoolkit.odfdom.converter.internal;
 import org.odftoolkit.odfdom.doc.OdfDocument;
 import org.w3c.dom.Text;
 
-public abstract class AbstractStyleEngine extends ElementVisitorConverter
-		implements IStyleEngine {
+public abstract class AbstractStyleEngine
+    extends ElementVisitorConverter
+    implements IStyleEngine
+{
 
-	public AbstractStyleEngine(OdfDocument odfDocument) {
-		super(odfDocument, null, null);
-	}
+    public AbstractStyleEngine( OdfDocument odfDocument )
+    {
+        super( odfDocument, null, null );
+    }
 
-	@Override
-	protected void processTextNode(Text node) {
-		// Do Nothing
-	}
+    @Override
+    protected void processTextNode( Text node )
+    {
+        // Do Nothing
+    }
 }

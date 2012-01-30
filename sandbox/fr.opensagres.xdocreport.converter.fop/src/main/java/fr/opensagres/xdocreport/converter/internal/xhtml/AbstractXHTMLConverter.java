@@ -31,48 +31,56 @@ import fr.opensagres.xdocreport.core.io.IEntryInputStreamProvider;
 
 /**
  * Abstract converter for XHTML which use XSLT.
- * 
  */
-public abstract class AbstractXHTMLConverter extends AbstractXSLTConverter
-		implements IXHTMLConverter, MimeMappingConstants {
+public abstract class AbstractXHTMLConverter
+    extends AbstractXSLTConverter
+    implements IXHTMLConverter, MimeMappingConstants
+{
 
-	public void convert(IEntryInputStreamProvider inProvider, OutputStream out,
-			Options options) throws XDocConverterException {
-		convert2XHTML(inProvider, out, options);
-	}
+    public void convert( IEntryInputStreamProvider inProvider, OutputStream out, Options options )
+        throws XDocConverterException
+    {
+        convert2XHTML( inProvider, out, options );
+    }
 
-	public void convert2XHTML(IEntryInputStreamProvider inProvider,
-			OutputStream out, Options options) throws XDocConverterException {
-		super.convert(inProvider, new StreamResult(out), options);
-	}
+    public void convert2XHTML( IEntryInputStreamProvider inProvider, OutputStream out, Options options )
+        throws XDocConverterException
+    {
+        super.convert( inProvider, new StreamResult( out ), options );
+    }
 
-	public void convert2XHTML(IEntryInputStreamProvider inProvider,
-			Result result, Options options) throws XDocConverterException {
-		super.convert(inProvider, result, options);
-	}
+    public void convert2XHTML( IEntryInputStreamProvider inProvider, Result result, Options options )
+        throws XDocConverterException
+    {
+        super.convert( inProvider, result, options );
+    }
 
-	@Override
-	protected String getXSLTemplateURI() {
-		return getXHTMLTemplateURI();
-	}
+    @Override
+    protected String getXSLTemplateURI()
+    {
+        return getXHTMLTemplateURI();
+    }
 
-	@Override
-	protected InputStream getXSLTStream() {
-		return getXHTMLStream();
-	}
+    @Override
+    protected InputStream getXSLTStream()
+    {
+        return getXHTMLStream();
+    }
 
-	@Override
-	protected URIResolver getXSLTURIResolver() {
-		return getXHTMLURIResolver();
-	}
+    @Override
+    protected URIResolver getXSLTURIResolver()
+    {
+        return getXHTMLURIResolver();
+    }
 
-	public MimeMapping getMimeMapping() {
-		return XHTML_MIME_MAPPING;
-	}
+    public MimeMapping getMimeMapping()
+    {
+        return XHTML_MIME_MAPPING;
+    }
 
-	protected abstract String getXHTMLTemplateURI();
+    protected abstract String getXHTMLTemplateURI();
 
-	protected abstract InputStream getXHTMLStream();
+    protected abstract InputStream getXHTMLStream();
 
-	protected abstract URIResolver getXHTMLURIResolver();
+    protected abstract URIResolver getXHTMLURIResolver();
 }

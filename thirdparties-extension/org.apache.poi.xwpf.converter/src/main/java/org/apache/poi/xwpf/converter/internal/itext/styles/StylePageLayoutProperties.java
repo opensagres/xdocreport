@@ -24,34 +24,43 @@
  */
 package org.apache.poi.xwpf.converter.internal.itext.styles;
 
-public class StylePageLayoutProperties {
+public class StylePageLayoutProperties
+{
 
-	private Float width;
-	private Float height;
-	private StyleMargin margin;
+    private Float width;
 
-	public Float getWidth() {
-		return width;
-	}
+    private Float height;
 
-	public void setWidth(Float width) {
-		this.width = width;
-	}
+    private StyleMargin margin;
 
-	public Float getHeight() {
-		return height;
-	}
+    public Float getWidth()
+    {
+        return width;
+    }
 
-	public void setHeight(Float height) {
-		this.height = height;
-	}
+    public void setWidth( Float width )
+    {
+        this.width = width;
+    }
 
-	public StyleMargin getMargin() {
-		return margin;
-	}
-	
-	public void setMargin(StyleMargin margin) {
-		this.margin = margin;
-	}
+    public Float getHeight()
+    {
+        return height;
+    }
+
+    public void setHeight( Float height )
+    {
+        this.height = height;
+    }
+
+    public StyleMargin getMargin()
+    {
+        return margin;
+    }
+
+    public void setMargin( StyleMargin margin )
+    {
+        this.margin = margin;
+    }
 
 }

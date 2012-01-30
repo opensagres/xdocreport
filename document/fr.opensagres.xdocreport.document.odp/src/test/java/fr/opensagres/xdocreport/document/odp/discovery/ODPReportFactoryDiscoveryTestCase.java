@@ -29,93 +29,91 @@ import fr.opensagres.xdocreport.document.IXDocReport;
 import fr.opensagres.xdocreport.document.odp.ODPReport;
 import fr.opensagres.xdocreport.document.registry.XDocReportRegistry;
 
-public class ODPReportFactoryDiscoveryTestCase extends TestCase  {
+public class ODPReportFactoryDiscoveryTestCase
+    extends TestCase
+{
 
-	public void testReportNoExists() throws Exception {
-		// Tests no existence with XDocReportRegistry#existsReport
-		boolean exists = XDocReportRegistry.getRegistry().existsReport(
-				"Unknown");
-		assertFalse("IXDocReport with id='Unknown' must not exists", exists);
+    public void testReportNoExists()
+        throws Exception
+    {
+        // Tests no existence with XDocReportRegistry#existsReport
+        boolean exists = XDocReportRegistry.getRegistry().existsReport( "Unknown" );
+        assertFalse( "IXDocReport with id='Unknown' must not exists", exists );
 
-		// Tests no existence with XDocReportRegistry#getReport
-		IXDocReport report = XDocReportRegistry.getRegistry().getReport(
-				"Unknown");
-		assertNull("IXDocReport with id='Unknown' must be null.", report);
-	}
+        // Tests no existence with XDocReportRegistry#getReport
+        IXDocReport report = XDocReportRegistry.getRegistry().getReport( "Unknown" );
+        assertNull( "IXDocReport with id='Unknown' must be null.", report );
+    }
 
-	public void testRegisterAndUnRegisterReportWithDefaultId() {
-		Exception ex = null;
-		try {
-			IXDocReport report = XDocReportRegistry
-					.getRegistry()
-					.loadReport(
-							ODPReportFactoryDiscoveryTestCase.class
-									.getResourceAsStream("ODPHelloWordWithFreemarker.odp"));
-			// Report is created
-			assertNotNull("Report must ne not null", report);
+    public void testRegisterAndUnRegisterReportWithDefaultId()
+    {
+        Exception ex = null;
+        try
+        {
+            IXDocReport report =
+                XDocReportRegistry.getRegistry().loadReport( ODPReportFactoryDiscoveryTestCase.class.getResourceAsStream( "ODPHelloWordWithFreemarker.odp" ) );
+            // Report is created
+            assertNotNull( "Report must ne not null", report );
 
-			assertTrue(
-					"This is a odp file, ODPReport implementation should have been resolved....",
-					report instanceof ODPReport);
+            assertTrue( "This is a odp file, ODPReport implementation should have been resolved....",
+                        report instanceof ODPReport );
 
-			// Report id by default is toString
-			assertEquals("Report id", report.toString(), report.getId());
+            // Report id by default is toString
+            assertEquals( "Report id", report.toString(), report.getId() );
 
-			// Search report with id in the registry
-			String reportId = report.getId();
-			IXDocReport report2 = XDocReportRegistry.getRegistry().getReport(
-					reportId);
-			assertNotNull("Report from registry must be not null", report2);
-			assertEquals("Report from registry is not equals", report, report2);
+            // Search report with id in the registry
+            String reportId = report.getId();
+            IXDocReport report2 = XDocReportRegistry.getRegistry().getReport( reportId );
+            assertNotNull( "Report from registry must be not null", report2 );
+            assertEquals( "Report from registry is not equals", report, report2 );
 
-			// UnRegister the report
-			XDocReportRegistry.getRegistry().unregisterReport(report);
-			boolean exists = XDocReportRegistry.getRegistry().existsReport(
-					report.getId());
-			assertFalse("IXDocReport must not exists", exists);
+            // UnRegister the report
+            XDocReportRegistry.getRegistry().unregisterReport( report );
+            boolean exists = XDocReportRegistry.getRegistry().existsReport( report.getId() );
+            assertFalse( "IXDocReport must not exists", exists );
 
-		} catch (Exception e) {
-			e.printStackTrace();
-			ex = e;
-		}
-		assertNull("Error while loading report", ex);
-	}
+        }
+        catch ( Exception e )
+        {
+            e.printStackTrace();
+            ex = e;
+        }
+        assertNull( "Error while loading report", ex );
+    }
 
-	public void testRegisterAndUnRegisterReportWithGivenId() {
-		Exception ex = null;
-		try {
-			String reportId = "MyReportId";
-			IXDocReport report = XDocReportRegistry
-					.getRegistry()
-					.loadReport(
-							ODPReportFactoryDiscoveryTestCase.class
-									.getResourceAsStream("ODPHelloWordWithFreemarker.odp"),
-							reportId);
-			// Report is created
-			assertNotNull("Report must ne not null", report);
+    public void testRegisterAndUnRegisterReportWithGivenId()
+    {
+        Exception ex = null;
+        try
+        {
+            String reportId = "MyReportId";
+            IXDocReport report =
+                XDocReportRegistry.getRegistry().loadReport( ODPReportFactoryDiscoveryTestCase.class.getResourceAsStream( "ODPHelloWordWithFreemarker.odp" ),
+                                                             reportId );
+            // Report is created
+            assertNotNull( "Report must ne not null", report );
 
-			assertTrue(
-					"This is a odp file, ODPReport implementation should have been resolved....",
-					report instanceof ODPReport);
+            assertTrue( "This is a odp file, ODPReport implementation should have been resolved....",
+                        report instanceof ODPReport );
 
-			// Report id by default is the given report id
-			assertEquals("Report id", reportId, report.getId());
+            // Report id by default is the given report id
+            assertEquals( "Report id", reportId, report.getId() );
 
-			// Search report with id in the registry
-			IXDocReport report2 = XDocReportRegistry.getRegistry().getReport(
-					reportId);
-			assertNotNull("Report from registry must be not null", report2);
-			assertEquals("Report from registry is not equals", report, report2);
+            // Search report with id in the registry
+            IXDocReport report2 = XDocReportRegistry.getRegistry().getReport( reportId );
+            assertNotNull( "Report from registry must be not null", report2 );
+            assertEquals( "Report from registry is not equals", report, report2 );
 
-			// UnRegister the report
-			XDocReportRegistry.getRegistry().unregisterReport(report);
-			boolean exists = XDocReportRegistry.getRegistry().existsReport(
-					reportId);
-			assertFalse("IXDocReport must not exists", exists);
+            // UnRegister the report
+            XDocReportRegistry.getRegistry().unregisterReport( report );
+            boolean exists = XDocReportRegistry.getRegistry().existsReport( reportId );
+            assertFalse( "IXDocReport must not exists", exists );
 
-		} catch (Exception e) {
-			ex = e;
-		}
-		assertNull("Error while loading report", ex);
-	}
+        }
+        catch ( Exception e )
+        {
+            ex = e;
+        }
+        assertNull( "Error while loading report", ex );
+    }
 }

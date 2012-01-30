@@ -51,189 +51,216 @@ import freemarker.template.TemplateModelException;
 
 /**
  * Freemarker template engine implementation.
- * 
  */
-public class FreemarkerTemplateEngine extends AbstractTemplateEngine implements
-		FreemarkerConstants {
+public class FreemarkerTemplateEngine
+    extends AbstractTemplateEngine
+    implements FreemarkerConstants
+{
 
-	private static final String DOLLAR_VARIABLE = "DollarVariable";
-	private static Configuration DEFAULT_FREEMARKER_CONFIGURATION = null;
-	private FreemarkerDocumentFormatter formatter = new FreemarkerDocumentFormatter();
-	private Configuration freemarkerConfiguration = null;
-	private boolean forceModifyReader = false;
+    private static final String DOLLAR_VARIABLE = "DollarVariable";
 
-	public String getKind() {
-		return TemplateEngineKind.Freemarker.name();
-	}
+    private static Configuration DEFAULT_FREEMARKER_CONFIGURATION = null;
 
-	public String getId() {
-		return ID_DISCOVERY;
-	}
+    private FreemarkerDocumentFormatter formatter = new FreemarkerDocumentFormatter();
 
-	public IContext createContext() {
-		return new XDocFreemarkerContext();
-	}
+    private Configuration freemarkerConfiguration = null;
 
-	@Override
-	protected void processWithCache(String templateName, IContext context,
-			Writer writer) throws XDocReportException, IOException {
-		// Get template from cache.
-		Template template = getFreemarkerConfiguration().getTemplate(
-				templateName);
-		// Merge template with Java model
-		process(context, writer, template);
-	}
+    private boolean forceModifyReader = false;
 
-	protected void processNoCache(String entryName, IContext context,
-			Reader reader, Writer writer) throws XDocReportException,
-			IOException {
-		// Create a new template.
-		Template template = new Template(entryName, getReader(reader),
-				getFreemarkerConfiguration());
-		// Merge template with Java model
-		process(context, writer, template);
-	}
+    public String getKind()
+    {
+        return TemplateEngineKind.Freemarker.name();
+    }
 
-	/**
-	 * Returns Reader to use for process template merge.
-	 * 
-	 * @param reader
-	 * @return
-	 * @throws IOException
-	 */
-	private Reader getReader(Reader reader) throws IOException {
-		if (forceModifyReader && isEscapeTemplate()) {
-			// reader must be modify and escape must be done (add [#escape... at
-			// first of the template
-			StringBuilder newTemplate = new StringBuilder(
-					formatter.getStartDocumentDirective());
-			String oldTemplate = IOUtils.toString(reader);
-			newTemplate.append(oldTemplate);
-			newTemplate.append(formatter.getEndDocumentDirective());
-			return new StringReader(newTemplate.toString());
-		}
-		return reader;
-	}
+    public String getId()
+    {
+        return ID_DISCOVERY;
+    }
 
-	/**
-	 * Merge template with Java model.
-	 * 
-	 * @param context
-	 * @param writer
-	 * @param template
-	 * @throws IOException
-	 * @throws XDocReportException
-	 */
-	private void process(IContext context, Writer writer, Template template)
-			throws IOException, XDocReportException {
-		try {
-			Environment environment = template.createProcessingEnvironment(
-					context, writer);
-			environment.process();
-		} catch (TemplateException e) {
-			throw new XDocReportException(e);
-		}
-	}
+    public IContext createContext()
+    {
+        return new XDocFreemarkerContext();
+    }
 
-	public Configuration getFreemarkerConfiguration() {
-		if (freemarkerConfiguration == null) {
-			return getDefaultConfiguration();
-		}
-		return freemarkerConfiguration;
-	}
+    @Override
+    protected void processWithCache( String templateName, IContext context, Writer writer )
+        throws XDocReportException, IOException
+    {
+        // Get template from cache.
+        Template template = getFreemarkerConfiguration().getTemplate( templateName );
+        // Merge template with Java model
+        process( context, writer, template );
+    }
 
-	public void setFreemarkerConfiguration(Configuration freemarkerConfiguration) {
-		this.freemarkerConfiguration = freemarkerConfiguration;
-		// Force square bracket syntax to write [#list instead of <#list.
-		// Square bracket is used because <#list is not well XML.
-		this.freemarkerConfiguration
-				.setTagSyntax(Configuration.SQUARE_BRACKET_TAG_SYNTAX);
-		this.freemarkerConfiguration
-		// Force template loader with XDocReportEntryLoader to use
-		// XDocReportRegistry.
-				.setTemplateLoader(new XDocReportEntryTemplateLoader(this));
-		// as soon as report changes when source (odt, docx,...) change,
-		// template entry must be refreshed.
-		try {
-			this.freemarkerConfiguration.setSetting(
-					Configuration.TEMPLATE_UPDATE_DELAY_KEY, "0");
-		} catch (TemplateException e) {
-		}
-		this.freemarkerConfiguration.setLocalizedLookup(false);
-	}
+    protected void processNoCache( String entryName, IContext context, Reader reader, Writer writer )
+        throws XDocReportException, IOException
+    {
+        // Create a new template.
+        Template template = new Template( entryName, getReader( reader ), getFreemarkerConfiguration() );
+        // Merge template with Java model
+        process( context, writer, template );
+    }
 
-	public void extractFields(Reader reader, String entryName,
-			FieldsExtractor extractor) throws XDocReportException {
-		try {
-			Template template = new Template(entryName, reader,
-					getFreemarkerConfiguration());
-			TemplateElement templateElement = template.getRootTreeNode();
-			extractVariables(templateElement, extractor);
-			templateElement.getChildNodes();
-		} catch (IOException e) {
-			throw new XDocReportException(e);
-		} catch (TemplateModelException e) {
-			throw new XDocReportException(e);
-		}
-	}
+    /**
+     * Returns Reader to use for process template merge.
+     * 
+     * @param reader
+     * @return
+     * @throws IOException
+     */
+    private Reader getReader( Reader reader )
+        throws IOException
+    {
+        if ( forceModifyReader && isEscapeTemplate() )
+        {
+            // reader must be modify and escape must be done (add [#escape... at
+            // first of the template
+            StringBuilder newTemplate = new StringBuilder( formatter.getStartDocumentDirective() );
+            String oldTemplate = IOUtils.toString( reader );
+            newTemplate.append( oldTemplate );
+            newTemplate.append( formatter.getEndDocumentDirective() );
+            return new StringReader( newTemplate.toString() );
+        }
+        return reader;
+    }
 
-	private void extractVariables(TemplateElement templateElement,
-			FieldsExtractor extractor) throws TemplateModelException {
-		if (DOLLAR_VARIABLE.equals(templateElement.getClass().getSimpleName())) {
-			String fieldName = templateElement.getCanonicalForm();
-			fieldName = fieldName.substring(2, fieldName.length() - 1);
-			extractor.addFieldName(fieldName);
-		}
-		Enumeration<TemplateElement> enums = templateElement.children();
-		while (enums.hasMoreElements()) {
-			TemplateElement element = (TemplateElement) enums.nextElement();
-			extractVariables(element, extractor);
-		}
-	}
+    /**
+     * Merge template with Java model.
+     * 
+     * @param context
+     * @param writer
+     * @param template
+     * @throws IOException
+     * @throws XDocReportException
+     */
+    private void process( IContext context, Writer writer, Template template )
+        throws IOException, XDocReportException
+    {
+        try
+        {
+            Environment environment = template.createProcessingEnvironment( context, writer );
+            environment.process();
+        }
+        catch ( TemplateException e )
+        {
+            throw new XDocReportException( e );
+        }
+    }
 
-	public IDocumentFormatter getDocumentFormatter() {
-		return formatter;
-	}
+    public Configuration getFreemarkerConfiguration()
+    {
+        if ( freemarkerConfiguration == null )
+        {
+            return getDefaultConfiguration();
+        }
+        return freemarkerConfiguration;
+    }
 
-	/**
-	 * Get the default Freemarker configuration
-	 * 
-	 * @return
-	 */
-	private Configuration getDefaultConfiguration() {
-		if (DEFAULT_FREEMARKER_CONFIGURATION == null) {
-			DEFAULT_FREEMARKER_CONFIGURATION = new Configuration();
-			DEFAULT_FREEMARKER_CONFIGURATION
-					.setDefaultEncoding(EncodingConstants.UTF_8.name());
-			DEFAULT_FREEMARKER_CONFIGURATION
-					.setOutputEncoding(EncodingConstants.UTF_8.name());
-			DEFAULT_FREEMARKER_CONFIGURATION
-					.setObjectWrapper(new DefaultObjectWrapper());
-			setFreemarkerConfiguration(DEFAULT_FREEMARKER_CONFIGURATION);
-		}
-		return DEFAULT_FREEMARKER_CONFIGURATION;
-	}
+    public void setFreemarkerConfiguration( Configuration freemarkerConfiguration )
+    {
+        this.freemarkerConfiguration = freemarkerConfiguration;
+        // Force square bracket syntax to write [#list instead of <#list.
+        // Square bracket is used because <#list is not well XML.
+        this.freemarkerConfiguration.setTagSyntax( Configuration.SQUARE_BRACKET_TAG_SYNTAX );
+        this.freemarkerConfiguration
+        // Force template loader with XDocReportEntryLoader to use
+        // XDocReportRegistry.
+        .setTemplateLoader( new XDocReportEntryTemplateLoader( this ) );
+        // as soon as report changes when source (odt, docx,...) change,
+        // template entry must be refreshed.
+        try
+        {
+            this.freemarkerConfiguration.setSetting( Configuration.TEMPLATE_UPDATE_DELAY_KEY, "0" );
+        }
+        catch ( TemplateException e )
+        {
+        }
+        this.freemarkerConfiguration.setLocalizedLookup( false );
+    }
 
-	@Override
-	public void setConfiguration(ITemplateEngineConfiguration configuration) {
-		super.setConfiguration(configuration);
-		if (isEscapeTemplate()) {
-			formatter.setConfiguration(configuration);
-		}
-	}
+    public void extractFields( Reader reader, String entryName, FieldsExtractor extractor )
+        throws XDocReportException
+    {
+        try
+        {
+            Template template = new Template( entryName, reader, getFreemarkerConfiguration() );
+            TemplateElement templateElement = template.getRootTreeNode();
+            extractVariables( templateElement, extractor );
+            templateElement.getChildNodes();
+        }
+        catch ( IOException e )
+        {
+            throw new XDocReportException( e );
+        }
+        catch ( TemplateModelException e )
+        {
+            throw new XDocReportException( e );
+        }
+    }
 
-	private boolean isEscapeTemplate() {
-		return getConfiguration() != null
-				&& (getConfiguration().escapeXML() || (getConfiguration()
-						.getReplacment() != null && getConfiguration()
-						.getReplacment().size() > 0));
-	}
+    private void extractVariables( TemplateElement templateElement, FieldsExtractor extractor )
+        throws TemplateModelException
+    {
+        if ( DOLLAR_VARIABLE.equals( templateElement.getClass().getSimpleName() ) )
+        {
+            String fieldName = templateElement.getCanonicalForm();
+            fieldName = fieldName.substring( 2, fieldName.length() - 1 );
+            extractor.addFieldName( fieldName );
+        }
+        Enumeration<TemplateElement> enums = templateElement.children();
+        while ( enums.hasMoreElements() )
+        {
+            TemplateElement element = (TemplateElement) enums.nextElement();
+            extractVariables( element, extractor );
+        }
+    }
 
-	public void setForceModifyReader(boolean forceModifyReader) {
-		this.forceModifyReader = forceModifyReader;
-	}
+    public IDocumentFormatter getDocumentFormatter()
+    {
+        return formatter;
+    }
 
-	public boolean isForceModifyReader() {
-		return forceModifyReader;
-	}
+    /**
+     * Get the default Freemarker configuration
+     * 
+     * @return
+     */
+    private Configuration getDefaultConfiguration()
+    {
+        if ( DEFAULT_FREEMARKER_CONFIGURATION == null )
+        {
+            DEFAULT_FREEMARKER_CONFIGURATION = new Configuration();
+            DEFAULT_FREEMARKER_CONFIGURATION.setDefaultEncoding( EncodingConstants.UTF_8.name() );
+            DEFAULT_FREEMARKER_CONFIGURATION.setOutputEncoding( EncodingConstants.UTF_8.name() );
+            DEFAULT_FREEMARKER_CONFIGURATION.setObjectWrapper( new DefaultObjectWrapper() );
+            setFreemarkerConfiguration( DEFAULT_FREEMARKER_CONFIGURATION );
+        }
+        return DEFAULT_FREEMARKER_CONFIGURATION;
+    }
+
+    @Override
+    public void setConfiguration( ITemplateEngineConfiguration configuration )
+    {
+        super.setConfiguration( configuration );
+        if ( isEscapeTemplate() )
+        {
+            formatter.setConfiguration( configuration );
+        }
+    }
+
+    private boolean isEscapeTemplate()
+    {
+        return getConfiguration() != null
+            && ( getConfiguration().escapeXML() || ( getConfiguration().getReplacment() != null && getConfiguration().getReplacment().size() > 0 ) );
+    }
+
+    public void setForceModifyReader( boolean forceModifyReader )
+    {
+        this.forceModifyReader = forceModifyReader;
+    }
+
+    public boolean isForceModifyReader()
+    {
+        return forceModifyReader;
+    }
 }

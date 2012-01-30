@@ -24,61 +24,105 @@
  */
 package fr.opensagres.xdocreport.xhtml.extension;
 
-public interface CSSStylePropertyConstants {
+public interface CSSStylePropertyConstants
+{
 
-	String PADDING_TOP = "padding-top";
-	String PADDING_RIGHT = "padding-right";
-	String PADDING_LEFT = "padding-left";
-	String PADDING_BOTTOM = "padding-bottom";
-	String PADDING = "padding";
-	String MARGIN_TOP = "margin-top";
-	String MARGIN_RIGHT = "margin-right";
-	String MARGIN_LEFT = "margin-left";
-	String MARGIN_BOTTOM = "margin-bottom";
-	String MARGIN = "margin";
-	
-	String BORDER_TOP = "border-top";
-	String BORDER_TOP_WIDTH ="border-top-width";
-	String BORDER_TOP_COLOR ="border-top-color";
-	
-	String BORDER_RIGHT = "border-right";
-	String BORDER_RIGHT_WIDTH ="border-right-width";
-	String BORDER_RIGHT_COLOR ="border-right-color";
+    String PADDING_TOP = "padding-top";
 
-	String BORDER_LEFT = "border-left";
-	String BORDER_LEFT_WIDTH ="border-left-width";
-	String BORDER_LEFT_COLOR ="border-left-color";
+    String PADDING_RIGHT = "padding-right";
 
-	String BORDER_BOTTOM = "border-bottom";
-	String BORDER_BOTTOM_WIDTH ="border-bottom-width";
-	String BORDER_BOTTOM_COLOR ="border-bottom-color";
-	
-	String BORDER = "border";
-	String BORDER_COLLAPSE = "border-collapse";
-	String BORDER_COLLAPSE_COLLAPSE = "collapse";
-	String BORDER_COLLAPSE_SEPARATE = "separate";
-	String BACKGROUND_COLOR = "background-color";
-	String FONT_FAMILY = "font-family";
-	String COLOR = "color";
-	String TEXT_INDENT = "text-indent";
-	String TEXT_ALIGN = "text-align";
-	String TEXT_ALIGN_RIGHT = "right";
-	String TEXT_ALIGN_LEFT = "left";
-	String TEXT_ALIGN_CENTER = "center";
-	String TEXT_ALIGN_JUSTIFIED = "justified";
-	String LINE_HEIGHT = "line-height";
-	String WIDTH = "width";
-	String MIN_WIDTH = "min-width";
-	String MAX_WIDTH = "max-width";
-	String MAX_HEIGHT = "max-height";
-	String VERTICAL_ALIGN = "vertical-align";
-	String HEIGHT = "height";
-	String MIN_HEIGHT = "min-height";
-	String TEXT_DECORATION_UNDERLINE = "underline";
-	String TEXT_DECORATION = "text-decoration";
-	String FONT_WEIGHT = "font-weight";
-	String FONT_VARIANT = "font-variant";
-	String FONT_STYLE = "font-style";
-	String FONT_SIZE = "font-size";
+    String PADDING_LEFT = "padding-left";
+
+    String PADDING_BOTTOM = "padding-bottom";
+
+    String PADDING = "padding";
+
+    String MARGIN_TOP = "margin-top";
+
+    String MARGIN_RIGHT = "margin-right";
+
+    String MARGIN_LEFT = "margin-left";
+
+    String MARGIN_BOTTOM = "margin-bottom";
+
+    String MARGIN = "margin";
+
+    String BORDER_TOP = "border-top";
+
+    String BORDER_TOP_WIDTH = "border-top-width";
+
+    String BORDER_TOP_COLOR = "border-top-color";
+
+    String BORDER_RIGHT = "border-right";
+
+    String BORDER_RIGHT_WIDTH = "border-right-width";
+
+    String BORDER_RIGHT_COLOR = "border-right-color";
+
+    String BORDER_LEFT = "border-left";
+
+    String BORDER_LEFT_WIDTH = "border-left-width";
+
+    String BORDER_LEFT_COLOR = "border-left-color";
+
+    String BORDER_BOTTOM = "border-bottom";
+
+    String BORDER_BOTTOM_WIDTH = "border-bottom-width";
+
+    String BORDER_BOTTOM_COLOR = "border-bottom-color";
+
+    String BORDER = "border";
+
+    String BORDER_COLLAPSE = "border-collapse";
+
+    String BORDER_COLLAPSE_COLLAPSE = "collapse";
+
+    String BORDER_COLLAPSE_SEPARATE = "separate";
+
+    String BACKGROUND_COLOR = "background-color";
+
+    String FONT_FAMILY = "font-family";
+
+    String COLOR = "color";
+
+    String TEXT_INDENT = "text-indent";
+
+    String TEXT_ALIGN = "text-align";
+
+    String TEXT_ALIGN_RIGHT = "right";
+
+    String TEXT_ALIGN_LEFT = "left";
+
+    String TEXT_ALIGN_CENTER = "center";
+
+    String TEXT_ALIGN_JUSTIFIED = "justified";
+
+    String LINE_HEIGHT = "line-height";
+
+    String WIDTH = "width";
+
+    String MIN_WIDTH = "min-width";
+
+    String MAX_WIDTH = "max-width";
+
+    String MAX_HEIGHT = "max-height";
+
+    String VERTICAL_ALIGN = "vertical-align";
+
+    String HEIGHT = "height";
+
+    String MIN_HEIGHT = "min-height";
+
+    String TEXT_DECORATION_UNDERLINE = "underline";
+
+    String TEXT_DECORATION = "text-decoration";
+
+    String FONT_WEIGHT = "font-weight";
+
+    String FONT_VARIANT = "font-variant";
+
+    String FONT_STYLE = "font-style";
+
+    String FONT_SIZE = "font-size";
 
 }

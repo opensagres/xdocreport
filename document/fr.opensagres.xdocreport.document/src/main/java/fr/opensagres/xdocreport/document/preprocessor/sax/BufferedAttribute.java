@@ -29,39 +29,46 @@ import java.io.Writer;
 
 /**
  * Attribute buffered region used to manage XML dynamic attribute.
- * 
  */
-public class BufferedAttribute extends BufferedRegionAdpater {
+public class BufferedAttribute
+    extends BufferedRegionAdpater
+{
 
-	private final String name;
-	private String value;
+    private final String name;
 
-	public BufferedAttribute(BufferedElement ownerElement, String name,
-			String value) {
-		super(ownerElement, null);
-		this.name = name;
-		this.value = value;
-	}
+    private String value;
 
-	public void setValue(String value) {
-		this.value = value;
-	}
+    public BufferedAttribute( BufferedElement ownerElement, String name, String value )
+    {
+        super( ownerElement, null );
+        this.name = name;
+        this.value = value;
+    }
 
-	public String getName() {
-		return name;
-	}
+    public void setValue( String value )
+    {
+        this.value = value;
+    }
 
-	public String getValue() {
-		return value;
-	}
+    public String getName()
+    {
+        return name;
+    }
 
-	@Override
-	public void save(Writer writer) throws IOException {
-		writer.write(' ');
-		writer.write(name);
-		writer.write("=\"");
-		writer.write(value);
-		writer.write("\"");
-	}
+    public String getValue()
+    {
+        return value;
+    }
+
+    @Override
+    public void save( Writer writer )
+        throws IOException
+    {
+        writer.write( ' ' );
+        writer.write( name );
+        writer.write( "=\"" );
+        writer.write( value );
+        writer.write( "\"" );
+    }
 
 }

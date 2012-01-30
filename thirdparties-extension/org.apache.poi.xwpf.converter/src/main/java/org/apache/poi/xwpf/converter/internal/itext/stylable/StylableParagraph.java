@@ -40,192 +40,226 @@ import com.lowagie.text.Paragraph;
 import fr.opensagres.xdocreport.itext.extension.ExtendedParagraph;
 
 //TODO: color, underline, verticalAlignement...
-public class StylableParagraph extends ExtendedParagraph implements IStylableContainer<XWPFParagraph> {
+public class StylableParagraph
+    extends ExtendedParagraph
+    implements IStylableContainer<XWPFParagraph>
+{
 
-	private static final long serialVersionUID = 664309269352903329L;
+    private static final long serialVersionUID = 664309269352903329L;
 
-	private final StylableDocument ownerDocument;
-	private IStylableContainer<XWPFParagraph> parent;
-	private Style lastStyleApplied = null;
+    private final StylableDocument ownerDocument;
 
-	public StylableParagraph(StylableDocument ownerDocument, IStylableContainer<XWPFParagraph> parent) {
-		super();
-		this.ownerDocument = ownerDocument;
-		this.parent = parent;
-	}
+    private IStylableContainer<XWPFParagraph> parent;
 
-	public StylableParagraph(StylableDocument ownerDocument, Paragraph title, IStylableContainer<XWPFParagraph> parent) {
-		super(title);
-		this.ownerDocument = ownerDocument;
-		this.parent = parent;
-	}
+    private Style lastStyleApplied = null;
 
-	public void addElement(Element element) {
-		super.add(element);
-	}
+    public StylableParagraph( StylableDocument ownerDocument, IStylableContainer<XWPFParagraph> parent )
+    {
+        super();
+        this.ownerDocument = ownerDocument;
+        this.parent = parent;
+    }
 
-	public void applyStyles(XWPFParagraph p, Style style) {
+    public StylableParagraph( StylableDocument ownerDocument, Paragraph title, IStylableContainer<XWPFParagraph> parent )
+    {
+        super( title );
+        this.ownerDocument = ownerDocument;
+        this.parent = parent;
+    }
 
-		if (style != null) {
-			// first process values from "style"
-			// will be overridden by in-line values if available...
-			StyleParagraphProperties paragraphProperties = style.getParagraphProperties();
-			
+    public void addElement( Element element )
+    {
+        super.add( element );
+    }
 
-			if (paragraphProperties != null) {
-				FontInfos fontInfos = paragraphProperties.getFontInfos();
-				if (fontInfos != null) {
-					Font font = XWPFFontRegistry.getRegistry().getFont(fontInfos.getFontFamily(), fontInfos.getFontEncoding(), fontInfos.getFontSize(), fontInfos.getFontStyle(), fontInfos.getFontColor());
-					setFont(font);
-				}
-				// Alignment
-				int alignment = paragraphProperties.getAlignment();
-				if (alignment != Element.ALIGN_UNDEFINED) {
-					setAlignment(alignment);
-				}
+    public void applyStyles( XWPFParagraph p, Style style )
+    {
 
-				Float lineHeight = paragraphProperties.getLineHeight();
-				if (lineHeight != null) {
-					// super.getPdfPCell().setMinimumHeight(lineHeight);
-					// FIXME : Is it correct???
-					setLeading(lineHeight * super.getTotalLeading());
-				}
-				//System.err.println("IndentationRight "+paragraphProperties.getIndentationRight());
-				setIndentationRight(paragraphProperties.getIndentationRight());
-				setIndentationLeft(paragraphProperties.getIndentationLeft());
-				setFirstLineIndent(paragraphProperties.getIndentationFirstLine());
-			//	StyleBorder borderBottom=	paragraphProperties.getBorderBottom();
-			
-				
-				
-			}
+        if ( style != null )
+        {
+            // first process values from "style"
+            // will be overridden by in-line values if available...
+            StyleParagraphProperties paragraphProperties = style.getParagraphProperties();
 
-		}
+            if ( paragraphProperties != null )
+            {
+                FontInfos fontInfos = paragraphProperties.getFontInfos();
+                if ( fontInfos != null )
+                {
+                    Font font =
+                        XWPFFontRegistry.getRegistry().getFont( fontInfos.getFontFamily(), fontInfos.getFontEncoding(),
+                                                                fontInfos.getFontSize(), fontInfos.getFontStyle(),
+                                                                fontInfos.getFontColor() );
+                    setFont( font );
+                }
+                // Alignment
+                int alignment = paragraphProperties.getAlignment();
+                if ( alignment != Element.ALIGN_UNDEFINED )
+                {
+                    setAlignment( alignment );
+                }
 
-		ParagraphAlignment paragraphAlignment = p.getAlignment();
+                Float lineHeight = paragraphProperties.getLineHeight();
+                if ( lineHeight != null )
+                {
+                    // super.getPdfPCell().setMinimumHeight(lineHeight);
+                    // FIXME : Is it correct???
+                    setLeading( lineHeight * super.getTotalLeading() );
+                }
+                // System.err.println("IndentationRight "+paragraphProperties.getIndentationRight());
+                setIndentationRight( paragraphProperties.getIndentationRight() );
+                setIndentationLeft( paragraphProperties.getIndentationLeft() );
+                setFirstLineIndent( paragraphProperties.getIndentationFirstLine() );
+                // StyleBorder borderBottom= paragraphProperties.getBorderBottom();
 
-		// text-align
+            }
 
-		if (paragraphAlignment != null) {
-			int alignment = Element.ALIGN_UNDEFINED;
-			switch (paragraphAlignment) {
-			case LEFT:
-				alignment = Element.ALIGN_LEFT;
-				break;
-			case RIGHT:
-				alignment = Element.ALIGN_RIGHT;
-				break;
-			case CENTER:
-				alignment = Element.ALIGN_CENTER;
-				break;
-			case BOTH:
-				alignment = Element.ALIGN_JUSTIFIED;
-				break;
-			default:
-				break;
-			}
+        }
 
-			setAlignment(alignment);
-		}
+        ParagraphAlignment paragraphAlignment = p.getAlignment();
 
-		int indentationLeft = p.getIndentationLeft();
-		if (indentationLeft > 0) {
-			setIndentationLeft(indentationLeft);
-		}
+        // text-align
 
-		// text-indent
-		int indentationFirstLine = p.getIndentationFirstLine();
-		if (indentationFirstLine > 0) {
-			setFirstLineIndent(indentationFirstLine);
-		}
+        if ( paragraphAlignment != null )
+        {
+            int alignment = Element.ALIGN_UNDEFINED;
+            switch ( paragraphAlignment )
+            {
+                case LEFT:
+                    alignment = Element.ALIGN_LEFT;
+                    break;
+                case RIGHT:
+                    alignment = Element.ALIGN_RIGHT;
+                    break;
+                case CENTER:
+                    alignment = Element.ALIGN_CENTER;
+                    break;
+                case BOTH:
+                    alignment = Element.ALIGN_JUSTIFIED;
+                    break;
+                default:
+                    break;
+            }
 
-		int indentationRight = p.getIndentationRight();
+            setAlignment( alignment );
+        }
 
-		if (indentationRight > 0) {
-			setIndentationRight(indentationRight);
-		}
-		// verticalAlignment DOES not exists in StyleParagraphProperties iText
-		// TextAlignment textAlignment = p.getVerticalAlignment();
+        int indentationLeft = p.getIndentationLeft();
+        if ( indentationLeft > 0 )
+        {
+            setIndentationLeft( indentationLeft );
+        }
 
-		int left = p.getIndentationLeft();
-		int right = p.getIndentationRight();
+        // text-indent
+        int indentationFirstLine = p.getIndentationFirstLine();
+        if ( indentationFirstLine > 0 )
+        {
+            setFirstLineIndent( indentationFirstLine );
+        }
 
-		if (right > 0) {
-			setIndentationRight(dxa2points(right));
-		}
+        int indentationRight = p.getIndentationRight();
 
-		if (left > 0) {
-			setIndentationLeft(dxa2points(left));
-		}
+        if ( indentationRight > 0 )
+        {
+            setIndentationRight( indentationRight );
+        }
+        // verticalAlignment DOES not exists in StyleParagraphProperties iText
+        // TextAlignment textAlignment = p.getVerticalAlignment();
 
-		int firstLineIndent = p.getIndentationFirstLine();
-		if (firstLineIndent > 0) {
-			setFirstLineIndent(dxa2points(firstLineIndent));
-		}
+        int left = p.getIndentationLeft();
+        int right = p.getIndentationRight();
 
-		int spacingBefore = p.getSpacingBefore();
-		if (spacingBefore > 0) {
-			setSpacingBefore(dxa2points(spacingBefore));
-		}
-		if (p.getSpacingAfter() >= 0) {
-			setSpacingAfter(dxa2points(p.getSpacingAfter()));
+        if ( right > 0 )
+        {
+            setIndentationRight( dxa2points( right ) );
+        }
 
-		} else {
-			// XXX Seems to be a default :
-			setSpacingAfter(10f);
-		}
+        if ( left > 0 )
+        {
+            setIndentationLeft( dxa2points( left ) );
+        }
 
-		if (p.getCTP().getPPr() != null) {
-			if (p.getCTP().getPPr().getSpacing() != null) {
+        int firstLineIndent = p.getIndentationFirstLine();
+        if ( firstLineIndent > 0 )
+        {
+            setFirstLineIndent( dxa2points( firstLineIndent ) );
+        }
 
-				if (p.getCTP().getPPr().getSpacing().getLine() != null) {
+        int spacingBefore = p.getSpacingBefore();
+        if ( spacingBefore > 0 )
+        {
+            setSpacingBefore( dxa2points( spacingBefore ) );
+        }
+        if ( p.getSpacingAfter() >= 0 )
+        {
+            setSpacingAfter( dxa2points( p.getSpacingAfter() ) );
 
-					// XXX PLQ : why 240 ???
-					float leading = (p.getCTP().getPPr().getSpacing().getLine().floatValue() / 240);
-					setMultipliedLeading(leading);
-				}
+        }
+        else
+        {
+            // XXX Seems to be a default :
+            setSpacingAfter( 10f );
+        }
 
-			}
-		}
+        if ( p.getCTP().getPPr() != null )
+        {
+            if ( p.getCTP().getPPr().getSpacing() != null )
+            {
 
-		ParagraphAlignment alignment = p.getAlignment();
-		switch (alignment) {
-		case LEFT:
-			setAlignment(Element.ALIGN_LEFT);
-			break;
-		case RIGHT:
-			setAlignment(Element.ALIGN_RIGHT);
-			break;
+                if ( p.getCTP().getPPr().getSpacing().getLine() != null )
+                {
 
-		case CENTER:
-			setAlignment(Element.ALIGN_CENTER);
-			break;
+                    // XXX PLQ : why 240 ???
+                    float leading = ( p.getCTP().getPPr().getSpacing().getLine().floatValue() / 240 );
+                    setMultipliedLeading( leading );
+                }
 
-		case BOTH:
-			setAlignment(Element.ALIGN_JUSTIFIED);
-			break;
+            }
+        }
 
-		default:
-			break;
-		}
+        ParagraphAlignment alignment = p.getAlignment();
+        switch ( alignment )
+        {
+            case LEFT:
+                setAlignment( Element.ALIGN_LEFT );
+                break;
+            case RIGHT:
+                setAlignment( Element.ALIGN_RIGHT );
+                break;
 
-	}
+            case CENTER:
+                setAlignment( Element.ALIGN_CENTER );
+                break;
 
-	// FIXME check with Angelo the purpose of this method....
-	public Style getLastStyleApplied() {
-		return lastStyleApplied;
-	}
+            case BOTH:
+                setAlignment( Element.ALIGN_JUSTIFIED );
+                break;
 
-	// FIXME check with Angelo the purpose of this method....
-	public IStylableContainer getParent() {
-		return parent;
-	}
+            default:
+                break;
+        }
 
-	public StylableDocument getOwnerDocument() {
-		return ownerDocument;
-	}
+    }
 
-	public Element getElement() {
-		return this;// super.getContainer();
-	}
+    // FIXME check with Angelo the purpose of this method....
+    public Style getLastStyleApplied()
+    {
+        return lastStyleApplied;
+    }
+
+    // FIXME check with Angelo the purpose of this method....
+    public IStylableContainer getParent()
+    {
+        return parent;
+    }
+
+    public StylableDocument getOwnerDocument()
+    {
+        return ownerDocument;
+    }
+
+    public Element getElement()
+    {
+        return this;// super.getContainer();
+    }
 }

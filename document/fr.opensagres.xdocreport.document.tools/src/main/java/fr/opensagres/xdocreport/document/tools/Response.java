@@ -2,16 +2,19 @@ package fr.opensagres.xdocreport.document.tools;
 
 import java.io.OutputStream;
 
-public class Response {
+public class Response
+{
 
-	private final OutputStream out;
+    private final OutputStream out;
 
-	public Response(OutputStream out) {
-		this.out = out;
-	}
+    public Response( OutputStream out )
+    {
+        this.out = out;
+    }
 
-	public OutputStream getOut() {
-		return out;
-	}
+    public OutputStream getOut()
+    {
+        return out;
+    }
 
 }

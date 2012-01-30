@@ -24,9 +24,12 @@
  */
 package org.odftoolkit.odfdom.converter;
 
-public class ODFConverterException extends RuntimeException {
+public class ODFConverterException
+    extends RuntimeException
+{
 
-	public ODFConverterException(Throwable e) {
-		super(e);
-	}
+    public ODFConverterException( Throwable e )
+    {
+        super( e );
+    }
 }

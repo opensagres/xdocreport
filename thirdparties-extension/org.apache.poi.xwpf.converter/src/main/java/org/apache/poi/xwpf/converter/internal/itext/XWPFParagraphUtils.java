@@ -46,172 +46,200 @@ import org.w3c.dom.Attr;
 
 import com.lowagie.text.Paragraph;
 
+public class XWPFParagraphUtils
+{
 
-public class XWPFParagraphUtils {
+    public static void processLayout( XWPFParagraph paragraph, Paragraph pdfParagraph, XWPFStyle style,
+                                      CTDocDefaults defaults )
+    {
 
-	public static void processLayout(XWPFParagraph paragraph,
-			Paragraph pdfParagraph, XWPFStyle style, CTDocDefaults defaults) {
+        float indentationLeft = -1;
+        float indentationRight = -1;
+        float firstLineIndent = -1;
+        float spacingBefore = -1;
+        float spacingAfter = -1;
 
-		float indentationLeft = -1;
-		float indentationRight = -1;
-		float firstLineIndent = -1;
-		float spacingBefore = -1;
-		float spacingAfter = -1;
+        // 1) From style
+        CTPPr ppr = getPPr( style );
+        if ( ppr != null )
+        {
 
-		// 1) From style
-		CTPPr ppr = getPPr(style);
-		if (ppr != null) {
+            // Indentation
+            CTInd ind = ppr.getInd();
+            if ( ind != null )
+            {
 
-			// Indentation
-			CTInd ind = ppr.getInd();
-			if (ind != null) {
+                // Left Indentation
+                BigInteger left = ind.getLeft();
+                if ( left != null )
+                {
+                    indentationLeft = dxa2points( left );
+                }
 
-				// Left Indentation
-				BigInteger left = ind.getLeft();
-				if (left != null) {
-					indentationLeft = dxa2points(left);
-				}
+                // Right Indentation
+                BigInteger right = ind.getRight();
+                if ( right != null )
+                {
+                    indentationRight = dxa2points( right );
+                }
 
-				// Right Indentation
-				BigInteger right = ind.getRight();
-				if (right != null) {
-					indentationRight = dxa2points(right);
-				}
+                // First line Indentation
+                BigInteger firstLine = ind.getFirstLine();
+                if ( firstLine != null )
+                {
+                    firstLineIndent = dxa2points( firstLine );
+                }
+            }
 
-				// First line Indentation
-				BigInteger firstLine = ind.getFirstLine();
-				if (firstLine != null) {
-					firstLineIndent = dxa2points(firstLine);
-				}
-			}
+            // Spacing
+            CTSpacing spacing = ppr.getSpacing();
+            if ( spacing != null )
+            {
 
-			// Spacing
-			CTSpacing spacing = ppr.getSpacing();
-			if (spacing != null) {
+                // Spacing before
+                BigInteger before = spacing.getBefore();
+                if ( before != null )
+                {
+                    spacingBefore = dxa2points( before );
+                }
 
-				// Spacing before
-				BigInteger before = spacing.getBefore();
-				if (before != null) {
-					spacingBefore = dxa2points(before);
-				}
+                // Spacing after
+                BigInteger after = spacing.getAfter();
+                if ( after != null )
+                {
+                    spacingAfter = dxa2points( after );
+                }
+            }
 
-				// Spacing after
-				BigInteger after = spacing.getAfter();
-				if (after != null) {
-					spacingAfter = dxa2points(after);
-				}
-			}
+            // Text aligment
+            CTTextAlignment textAligment = ppr.getTextAlignment();
+            if ( textAligment != null )
+            {
+                // TODO
+            }
 
-			// Text aligment
-			CTTextAlignment textAligment = ppr.getTextAlignment();
-			if (textAligment != null) {
-				// TODO
-			}
+        }
 
-		}
+        // 2) From paragraph
+        if ( indentationLeft == -1 && paragraph.getIndentationLeft() != -1 )
+        {
+            indentationLeft = dxa2points( paragraph.getIndentationLeft() );
 
-		// 2) From paragraph
-		if (indentationLeft == -1 && paragraph.getIndentationLeft() != -1) {
-			indentationLeft = dxa2points(paragraph.getIndentationLeft());
+        }
+        if ( indentationRight == -1 && paragraph.getIndentationRight() != -1 )
+        {
+            indentationRight = dxa2points( paragraph.getIndentationRight() );
+        }
+        if ( firstLineIndent == -1 && paragraph.getIndentationFirstLine() != -1 )
+        {
+            firstLineIndent = dxa2points( paragraph.getIndentationFirstLine() );
+        }
+        if ( spacingBefore == -1 && paragraph.getSpacingBefore() != -1 )
+        {
+            spacingBefore = dxa2points( paragraph.getSpacingBefore() );
+        }
+        if ( spacingAfter == -1 && paragraph.getSpacingAfter() != -1 )
+        {
+            spacingAfter = dxa2points( paragraph.getSpacingAfter() );
+        }
 
-		}
-		if (indentationRight == -1 && paragraph.getIndentationRight() != -1) {
-			indentationRight = dxa2points(paragraph.getIndentationRight());
-		}
-		if (firstLineIndent == -1 && paragraph.getIndentationFirstLine() != -1) {
-			firstLineIndent = dxa2points(paragraph.getIndentationFirstLine());
-		}
-		if (spacingBefore == -1 && paragraph.getSpacingBefore() != -1) {
-			spacingBefore = dxa2points(paragraph.getSpacingBefore());
-		}
-		if (spacingAfter == -1 && paragraph.getSpacingAfter() != -1) {
-			spacingAfter = dxa2points(paragraph.getSpacingAfter());
-		}
+        // 3) From default
+        // TODO
 
-		// 3) From default
-		// TODO
+        // Apply
+        if ( indentationLeft != -1 )
+        {
+            pdfParagraph.setIndentationLeft( indentationLeft );
+        }
+        if ( indentationRight != -1 )
+        {
+            pdfParagraph.setIndentationRight( indentationRight );
+        }
+        if ( firstLineIndent != -1 )
+        {
+            pdfParagraph.setFirstLineIndent( firstLineIndent );
+        }
+        if ( spacingBefore != -1 )
+        {
+            pdfParagraph.setSpacingBefore( spacingBefore );
+        }
+        if ( spacingAfter != -1 )
+        {
+            pdfParagraph.setSpacingAfter( spacingAfter );
+        }
 
-		// Apply
-		if (indentationLeft != -1) {
-			pdfParagraph.setIndentationLeft(indentationLeft);
-		}
-		if (indentationRight != -1) {
-			pdfParagraph.setIndentationRight(indentationRight);
-		}
-		if (firstLineIndent != -1) {
-			pdfParagraph.setFirstLineIndent(firstLineIndent);
-		}
-		if (spacingBefore != -1) {
-			pdfParagraph.setSpacingBefore(spacingBefore);
-		}
-		if (spacingAfter != -1) {
-			pdfParagraph.setSpacingAfter(spacingAfter);
-		}
+        // Aligment
+        ParagraphAlignment alignment = paragraph.getAlignment();
+        switch ( alignment )
+        {
+            case LEFT:
+                pdfParagraph.setAlignment( Paragraph.ALIGN_LEFT );
+                break;
+            case RIGHT:
+                pdfParagraph.setAlignment( Paragraph.ALIGN_RIGHT );
+                break;
 
-		// Aligment
-		ParagraphAlignment alignment = paragraph.getAlignment();
-		switch (alignment) {
-		case LEFT:
-			pdfParagraph.setAlignment(Paragraph.ALIGN_LEFT);
-			break;
-		case RIGHT:
-			pdfParagraph.setAlignment(Paragraph.ALIGN_RIGHT);
-			break;
+            case CENTER:
+                pdfParagraph.setAlignment( Paragraph.ALIGN_CENTER );
+                break;
 
-		case CENTER:
-			pdfParagraph.setAlignment(Paragraph.ALIGN_CENTER);
-			break;
+            case BOTH:
+                pdfParagraph.setAlignment( Paragraph.ALIGN_JUSTIFIED );
+                break;
+        }
+    }
 
-		case BOTH:
-			pdfParagraph.setAlignment(Paragraph.ALIGN_JUSTIFIED);
-			break;
-		}
-	}
+    public static CTPPr getPPr( XWPFStyle style )
+    {
+        if ( style == null )
+        {
+            return null;
+        }
 
-	public static CTPPr getPPr(XWPFStyle style) {
-		if (style == null) {
-			return null;
-		}
+        CTStyle ctStyle = style.getCTStyle();
+        if ( ctStyle == null )
+        {
+            return null;
+        }
+        return ctStyle.getPPr();
+    }
 
-		CTStyle ctStyle = style.getCTStyle();
-		if (ctStyle == null) {
-			return null;
-		}
-		return ctStyle.getPPr();
-	}
+    public static String getBackgroundColor( XWPFParagraph paragraph )
+    {
+        List<XWPFRun> runs = paragraph.getRuns();
+        if ( runs.isEmpty() )
+        {
+            return null;
+        }
+        return getBackgroundColor( runs.get( 0 ) );
+    }
 
-	public static String getBackgroundColor(XWPFParagraph paragraph) {
-		List<XWPFRun> runs = paragraph.getRuns();
-		if (runs.isEmpty()) {
-			return null;
-		}
-		return getBackgroundColor(runs.get(0));
-	}
+    public static String getBackgroundColor( XWPFRun run )
+    {
+        CTR ctr = run.getCTR();
+        if ( ctr == null )
+        {
+            return null;
+        }
+        CTRPr ctrPr = ctr.getRPr();
+        if ( ctrPr == null )
+        {
+            return null;
+        }
+        CTShd ctShd = ctrPr.getShd();
+        if ( ctShd == null )
+        {
+            return null;
+        }
 
-	public static String getBackgroundColor(XWPFRun run) {
-		CTR ctr = run.getCTR();
-		if (ctr == null) {
-			return null;
-		}
-		CTRPr ctrPr = ctr.getRPr();
-		if (ctrPr == null) {
-			return null;
-		}
-		CTShd ctShd = ctrPr.getShd();
-		if (ctShd == null) {
-			return null;
-		}
-
-		Attr attr = (Attr) ctShd
-				.getDomNode()
-				.getAttributes()
-				.getNamedItemNS(
-						"http://schemas.openxmlformats.org/wordprocessingml/2006/main",
-						"fill");
-		if (attr != null) {
-			return attr.getValue();
-		}
-		return null;
-	}
+        Attr attr =
+            (Attr) ctShd.getDomNode().getAttributes().getNamedItemNS( "http://schemas.openxmlformats.org/wordprocessingml/2006/main",
+                                                                      "fill" );
+        if ( attr != null )
+        {
+            return attr.getValue();
+        }
+        return null;
+    }
 
 }

@@ -21,39 +21,46 @@ import javax.xml.transform.URIResolver;
 
 import fr.opensagres.xdocreport.converter.internal.xslfo.AbstractXSLFOConverter;
 
-public class DocxXSLFOConverter extends AbstractXSLFOConverter implements
-		DocxXSLFOConstants {
+public class DocxXSLFOConverter
+    extends AbstractXSLFOConverter
+    implements DocxXSLFOConstants
+{
 
-	private static DocxXSLFOConverter INSTANCE = new DocxXSLFOConverter();
+    private static DocxXSLFOConverter INSTANCE = new DocxXSLFOConverter();
 
-	public static DocxXSLFOConverter getInstance() {
-		return INSTANCE;
-	}
+    public static DocxXSLFOConverter getInstance()
+    {
+        return INSTANCE;
+    }
 
-	@Override
-	protected InputStream getXSLFOStream() {
-		return XSLFOURIResolver.class
-				.getResourceAsStream(getXSLFOTemplateURI());
-	}
+    @Override
+    protected InputStream getXSLFOStream()
+    {
+        return XSLFOURIResolver.class.getResourceAsStream( getXSLFOTemplateURI() );
+    }
 
-	@Override
-	protected String getXSLFOTemplateURI() {
-		return XSL_FO_TEMPLATE_URI;
-	}
+    @Override
+    protected String getXSLFOTemplateURI()
+    {
+        return XSL_FO_TEMPLATE_URI;
+    }
 
-	@Override
-	protected URIResolver getXSLFOURIResolver() {
-		return XSLFOURIResolver.INSTANCE;
-	}
+    @Override
+    protected URIResolver getXSLFOURIResolver()
+    {
+        return XSLFOURIResolver.INSTANCE;
+    }
 
-	@Override
-	protected String getMainEntryName() {
-		return WORD_DOCUMENT_XML_ENTRY;
-	}
+    @Override
+    protected String getMainEntryName()
+    {
+        return WORD_DOCUMENT_XML_ENTRY;
+    }
 
-	@Override
-	protected String[] getEntryNames() {
-		return XML_ENTRIES;
-	}
+    @Override
+    protected String[] getEntryNames()
+    {
+        return XML_ENTRIES;
+    }
 
 }

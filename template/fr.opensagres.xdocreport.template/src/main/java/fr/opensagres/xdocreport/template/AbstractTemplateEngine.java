@@ -44,127 +44,171 @@ import fr.opensagres.xdocreport.core.logging.LogUtils;
 import fr.opensagres.xdocreport.template.cache.ITemplateCacheInfoProvider;
 import fr.opensagres.xdocreport.template.config.ITemplateEngineConfiguration;
 
-public abstract class AbstractTemplateEngine implements ITemplateEngine {
+public abstract class AbstractTemplateEngine
+    implements ITemplateEngine
+{
 
-	private ITemplateCacheInfoProvider templateCacheInfoProvider;
-	private ITemplateEngineConfiguration configuration;
+    private ITemplateCacheInfoProvider templateCacheInfoProvider;
 
-	public ITemplateCacheInfoProvider getTemplateCacheInfoProvider() {
-		return templateCacheInfoProvider;
-	}
+    private ITemplateEngineConfiguration configuration;
 
-	public void setTemplateCacheInfoProvider(ITemplateCacheInfoProvider templateCacheInfoProvider) {
-		this.templateCacheInfoProvider = templateCacheInfoProvider;
-	}
+    public ITemplateCacheInfoProvider getTemplateCacheInfoProvider()
+    {
+        return templateCacheInfoProvider;
+    }
 
-	public ITemplateEngineConfiguration getConfiguration() {
-		return configuration;
-	}
+    public void setTemplateCacheInfoProvider( ITemplateCacheInfoProvider templateCacheInfoProvider )
+    {
+        this.templateCacheInfoProvider = templateCacheInfoProvider;
+    }
 
-	public void setConfiguration(ITemplateEngineConfiguration configuration) {
-		this.configuration = configuration;
-	}
+    public ITemplateEngineConfiguration getConfiguration()
+    {
+        return configuration;
+    }
 
-	public void process(String reportId, String entryName, IEntryReaderProvider readerProvider, IEntryWriterProvider writerProvider, IContext context)
-			throws XDocReportException, IOException {
+    public void setConfiguration( ITemplateEngineConfiguration configuration )
+    {
+        this.configuration = configuration;
+    }
 
-		// Get writer of the entry to merge Java model with template engine
-		Writer writer = writerProvider.getEntryWriter(entryName);
-		process(reportId, entryName, readerProvider, writer, context);
-	}
+    public void process( String reportId, String entryName, IEntryReaderProvider readerProvider,
+                         IEntryWriterProvider writerProvider, IContext context )
+        throws XDocReportException, IOException
+    {
 
-	private static final Logger LOGGER = LogUtils.getLogger(AbstractTemplateEngine.class.getName());
+        // Get writer of the entry to merge Java model with template engine
+        Writer writer = writerProvider.getEntryWriter( entryName );
+        process( reportId, entryName, readerProvider, writer, context );
+    }
 
-	public void process(String reportId, String entryName, IEntryReaderProvider readerProvider, Writer writer, IContext context) throws XDocReportException,
-			IOException {
-		boolean useTemplateCache = isUseTemplateCache(reportId);
-		// 1) Start process template engine
-		long startTime = -1;
-		if (LOGGER.isLoggable(Level.FINE)) {
+    private static final Logger LOGGER = LogUtils.getLogger( AbstractTemplateEngine.class.getName() );
 
-			startTime = System.currentTimeMillis();
-			LOGGER.fine(format("Start template engine id=%s for the entry=%s with template cache=%s", getId(), entryName, useTemplateCache));
+    public void process( String reportId, String entryName, IEntryReaderProvider readerProvider, Writer writer,
+                         IContext context )
+        throws XDocReportException, IOException
+    {
+        boolean useTemplateCache = isUseTemplateCache( reportId );
+        // 1) Start process template engine
+        long startTime = -1;
+        if ( LOGGER.isLoggable( Level.FINE ) )
+        {
 
-		}
+            startTime = System.currentTimeMillis();
+            LOGGER.fine( format( "Start template engine id=%s for the entry=%s with template cache=%s", getId(),
+                                 entryName, useTemplateCache ) );
 
-		Reader reader = null;
-		try {
-			writer = getWriter(writer);
-			if (useTemplateCache) {
-				// cache template is used, process it
-				processWithCache(getCachedTemplateName(reportId, entryName), context, writer);
-			} else {
-				// No cache template is used, get the reader from the entry
-				reader = readerProvider.getEntryReader(entryName);
-				processNoCache(entryName, context, reader, writer);
-			}
-			if (LOGGER.isLoggable(Level.FINE)) {
-				// Debug start preprocess
-				startTime = System.currentTimeMillis();
+        }
 
-				LOGGER.fine(format("Result template engine id=" + getId() + "  for the entry=" + entryName + ": "));
-				LOGGER.fine(prettyPrint(((MultiWriter) writer).getWriter(1).toString()));
+        Reader reader = null;
+        try
+        {
+            writer = getWriter( writer );
+            if ( useTemplateCache )
+            {
+                // cache template is used, process it
+                processWithCache( getCachedTemplateName( reportId, entryName ), context, writer );
+            }
+            else
+            {
+                // No cache template is used, get the reader from the entry
+                reader = readerProvider.getEntryReader( entryName );
+                processNoCache( entryName, context, reader, writer );
+            }
+            if ( LOGGER.isLoggable( Level.FINE ) )
+            {
+                // Debug start preprocess
+                startTime = System.currentTimeMillis();
 
-				LOGGER.fine("End template engine id=" + getId() + " for the entry=" + entryName + " done with " + (System.currentTimeMillis() - startTime)
-						+ "(ms).");
-			}
+                LOGGER.fine( format( "Result template engine id=" + getId() + "  for the entry=" + entryName + ": " ) );
+                LOGGER.fine( prettyPrint( ( (MultiWriter) writer ).getWriter( 1 ).toString() ) );
 
-		} catch (Throwable e) {
-			if (LOGGER.isLoggable(Level.FINE)) {
-				LOGGER.fine(("End template engine id=" + getId() + " for the entry=" + entryName + " done with " + (System.currentTimeMillis() - startTime) + "(ms)."));
-			}
-			if (e instanceof RuntimeException) {
-				throw (RuntimeException) e;
-			}
-			if (e instanceof IOException) {
-				throw (IOException) e;
-			}
-			if (e instanceof XDocReportException) {
-				throw (XDocReportException) e;
-			}
-			throw new XDocReportException(e);
-		} finally {
-			if (reader != null) {
-				IOUtils.closeQuietly(reader);
-			}
-			if (writer != null) {
-				IOUtils.closeQuietly(writer);
-			}
-		}
-	}
+                LOGGER.fine( "End template engine id=" + getId() + " for the entry=" + entryName + " done with "
+                    + ( System.currentTimeMillis() - startTime ) + "(ms)." );
+            }
 
-	public void process(String entryName, IContext context, Reader reader, Writer writer) throws XDocReportException, IOException {
-		try {
-			processNoCache(entryName, context, reader, writer);
-		} finally {
-			if (reader != null) {
-				IOUtils.closeQuietly(reader);
-			}
-			if (writer != null) {
-				IOUtils.closeQuietly(writer);
-			}
-		}
+        }
+        catch ( Throwable e )
+        {
+            if ( LOGGER.isLoggable( Level.FINE ) )
+            {
+                LOGGER.fine( ( "End template engine id=" + getId() + " for the entry=" + entryName + " done with "
+                    + ( System.currentTimeMillis() - startTime ) + "(ms)." ) );
+            }
+            if ( e instanceof RuntimeException )
+            {
+                throw (RuntimeException) e;
+            }
+            if ( e instanceof IOException )
+            {
+                throw (IOException) e;
+            }
+            if ( e instanceof XDocReportException )
+            {
+                throw (XDocReportException) e;
+            }
+            throw new XDocReportException( e );
+        }
+        finally
+        {
+            if ( reader != null )
+            {
+                IOUtils.closeQuietly( reader );
+            }
+            if ( writer != null )
+            {
+                IOUtils.closeQuietly( writer );
+            }
+        }
+    }
 
-	}
+    public void process( String entryName, IContext context, Reader reader, Writer writer )
+        throws XDocReportException, IOException
+    {
+        try
+        {
+            processNoCache( entryName, context, reader, writer );
+        }
+        finally
+        {
+            if ( reader != null )
+            {
+                IOUtils.closeQuietly( reader );
+            }
+            if ( writer != null )
+            {
+                IOUtils.closeQuietly( writer );
+            }
+        }
 
-	public void extractFields(IEntryReaderProvider readerProvider, String entryName, FieldsExtractor extractor) throws XDocReportException {
-		Reader reader = readerProvider.getEntryReader(entryName);
-		extractFields(reader, entryName, extractor);
-	}
+    }
 
-	private Writer getWriter(Writer writer) {
-		if (LOGGER.isLoggable(Level.FINE)) {
-			return new MultiWriter(writer, new StringWriter());
-		}
-		return writer;
-	}
+    public void extractFields( IEntryReaderProvider readerProvider, String entryName, FieldsExtractor extractor )
+        throws XDocReportException
+    {
+        Reader reader = readerProvider.getEntryReader( entryName );
+        extractFields( reader, entryName, extractor );
+    }
 
-	protected boolean isUseTemplateCache(String reportId) {
-		return isNotEmpty(reportId) && getTemplateCacheInfoProvider() != null && getTemplateCacheInfoProvider().existsReport(reportId);
+    private Writer getWriter( Writer writer )
+    {
+        if ( LOGGER.isLoggable( Level.FINE ) )
+        {
+            return new MultiWriter( writer, new StringWriter() );
+        }
+        return writer;
+    }
 
-	}
+    protected boolean isUseTemplateCache( String reportId )
+    {
+        return isNotEmpty( reportId ) && getTemplateCacheInfoProvider() != null
+            && getTemplateCacheInfoProvider().existsReport( reportId );
 
-	protected abstract void processWithCache(String templateName, IContext context, Writer writer) throws XDocReportException, IOException;
+    }
 
-	protected abstract void processNoCache(String entryName, IContext context, Reader reader, Writer writer) throws XDocReportException, IOException;
+    protected abstract void processWithCache( String templateName, IContext context, Writer writer )
+        throws XDocReportException, IOException;
+
+    protected abstract void processNoCache( String entryName, IContext context, Reader reader, Writer writer )
+        throws XDocReportException, IOException;
 }

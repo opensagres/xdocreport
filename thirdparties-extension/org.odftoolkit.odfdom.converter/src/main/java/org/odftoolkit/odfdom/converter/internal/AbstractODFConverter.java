@@ -33,32 +33,42 @@ import org.odftoolkit.odfdom.converter.ODFConverterException;
 import org.odftoolkit.odfdom.converter.Options;
 import org.odftoolkit.odfdom.doc.OdfDocument;
 
-public abstract class AbstractODFConverter<T extends Options> implements
-		IODFConverter<T> {
+public abstract class AbstractODFConverter<T extends Options>
+    implements IODFConverter<T>
+{
 
-	public void convert(OdfDocument odfDocument, OutputStream out, T options)
-			throws ODFConverterException, IOException {
-		try {
-			doConvert(odfDocument, out, null, options);
-		} finally {
-			if (out != null) {
-				out.close();
-			}
-		}
-	}
+    public void convert( OdfDocument odfDocument, OutputStream out, T options )
+        throws ODFConverterException, IOException
+    {
+        try
+        {
+            doConvert( odfDocument, out, null, options );
+        }
+        finally
+        {
+            if ( out != null )
+            {
+                out.close();
+            }
+        }
+    }
 
-	public void convert(OdfDocument odfDocument, Writer writer, T options)
-			throws ODFConverterException, IOException {
-		try {
-			doConvert(odfDocument, null, writer, options);
-		} finally {
-			if (writer != null) {
-				writer.close();
-			}
-		}
-	}
+    public void convert( OdfDocument odfDocument, Writer writer, T options )
+        throws ODFConverterException, IOException
+    {
+        try
+        {
+            doConvert( odfDocument, null, writer, options );
+        }
+        finally
+        {
+            if ( writer != null )
+            {
+                writer.close();
+            }
+        }
+    }
 
-	protected abstract void doConvert(OdfDocument odfDocument,
-			OutputStream out, Writer writer, T options)
-			throws ODFConverterException, IOException;
+    protected abstract void doConvert( OdfDocument odfDocument, OutputStream out, Writer writer, T options )
+        throws ODFConverterException, IOException;
 }

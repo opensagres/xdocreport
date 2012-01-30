@@ -27,22 +27,26 @@ package fr.opensagres.xdocreport.template.config;
 import java.util.ArrayList;
 import java.util.Collection;
 
-public abstract class AbstractTemplateEngineConfiguration implements
-		ITemplateEngineConfiguration {
+public abstract class AbstractTemplateEngineConfiguration
+    implements ITemplateEngineConfiguration
+{
 
-	private Collection<ReplaceText> replacment = null;
-	
-	public boolean escapeXML() {
-		return true;
-	}
-	
-	public Collection<ReplaceText> getReplacment() {
-		if (replacment == null) {
-			replacment = new ArrayList<ReplaceText>();
-			populate(replacment);
-		}
-		return replacment;
-	}
+    private Collection<ReplaceText> replacment = null;
 
-	protected abstract void populate(Collection<ReplaceText> replacment);
+    public boolean escapeXML()
+    {
+        return true;
+    }
+
+    public Collection<ReplaceText> getReplacment()
+    {
+        if ( replacment == null )
+        {
+            replacment = new ArrayList<ReplaceText>();
+            populate( replacment );
+        }
+        return replacment;
+    }
+
+    protected abstract void populate( Collection<ReplaceText> replacment );
 }

@@ -26,11 +26,12 @@ package fr.opensagres.xdocreport.template.freemarker;
 
 /**
  * Freemarker 2.3.x constants.
- * 
  */
-public interface FreemarkerConstants {
+public interface FreemarkerConstants
+{
 
-	// Meta data for discovery
-	String ID_DISCOVERY = "Freemarker_2.3.x";
-	String DESCRIPTION_DISCOVERY = "Manage Freemarker_2.3.x template engine.";
+    // Meta data for discovery
+    String ID_DISCOVERY = "Freemarker_2.3.x";
+
+    String DESCRIPTION_DISCOVERY = "Manage Freemarker_2.3.x template engine.";
 }

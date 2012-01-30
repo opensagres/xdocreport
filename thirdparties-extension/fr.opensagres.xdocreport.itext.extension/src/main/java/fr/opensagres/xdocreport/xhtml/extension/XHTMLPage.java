@@ -28,78 +28,94 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.io.Writer;
 
-public class XHTMLPage {
+public class XHTMLPage
+{
 
-	private final XHTMLPageBeforeBody pageBeforeBody;
-	private final XHTMLPageBodyContentHeader pageBodyContentHeader;
-	private final XHTMLPageBodyContentBody pageBodyContentBody;
-	private final XHTMLPageBodyContentFooter pageBodyContentFooter;
-	private final XHTMLPageAfterBody pageAfterBody;
-	
-	public XHTMLPage(int indent) {
-		this.pageBeforeBody = new XHTMLPageBeforeBody(this, indent);
-		this.pageBodyContentHeader = new XHTMLPageBodyContentHeader(indent);
-		this.pageBodyContentBody = new XHTMLPageBodyContentBody(indent);
-		this.pageBodyContentFooter = new XHTMLPageBodyContentFooter(indent);
-		this.pageAfterBody = new XHTMLPageAfterBody(indent);
-	}
+    private final XHTMLPageBeforeBody pageBeforeBody;
 
-	public void save(Writer writer) throws IOException {
+    private final XHTMLPageBodyContentHeader pageBodyContentHeader;
 
-		getPageBeforeBody().save(writer);
-		getPageBodyContentHeader().save(writer);
-		getPageBodyContentBody().save(writer);
-		getPageBodyContentFooter().save(writer);
-		getPageAfterBody().save(writer);
+    private final XHTMLPageBodyContentBody pageBodyContentBody;
 
-	}
+    private final XHTMLPageBodyContentFooter pageBodyContentFooter;
 
-	public void save(OutputStream out) throws IOException {
-		// // 1) Write XHTML before HTML Head
+    private final XHTMLPageAfterBody pageAfterBody;
 
-		getPageBeforeBody().save(out);
-		getPageBodyContentHeader().save(out);
-		getPageBodyContentBody().save(out);
-		getPageBodyContentFooter().save(out);
-		getPageAfterBody().save(out);
+    public XHTMLPage( int indent )
+    {
+        this.pageBeforeBody = new XHTMLPageBeforeBody( this, indent );
+        this.pageBodyContentHeader = new XHTMLPageBodyContentHeader( indent );
+        this.pageBodyContentBody = new XHTMLPageBodyContentBody( indent );
+        this.pageBodyContentFooter = new XHTMLPageBodyContentFooter( indent );
+        this.pageAfterBody = new XHTMLPageAfterBody( indent );
+    }
 
-		// // 1) Write XHTML before HTML Head
-		// out.write(xhtmlBeforeHTMLHead.toString().getBytes());
-		// // 2) Write CSS Styles declaration
-		// CSSStyleSheet styleSheet = styleEngine.getCSSStyleSheet();
-		// if (!styleSheet.isEmpty()) {
-		// out.write(startElement(STYLE_ELEMENT, true, new StringBuilder(), 1)
-		// .toString().getBytes());
-		// styleSheet.save(out);
-		// out.write(endElement(STYLE_ELEMENT, new StringBuilder(), 1)
-		// .toString().getBytes());
-		// }
-		// // 3) Write XHTML after HTML Head
-		// out.write(xhtmlAfterHTMLHead.toString().getBytes());
-	}
+    public void save( Writer writer )
+        throws IOException
+    {
 
-	public XHTMLPageBeforeBody getPageBeforeBody() {
-		return pageBeforeBody;
-	}
+        getPageBeforeBody().save( writer );
+        getPageBodyContentHeader().save( writer );
+        getPageBodyContentBody().save( writer );
+        getPageBodyContentFooter().save( writer );
+        getPageAfterBody().save( writer );
 
-	public XHTMLPageBodyContentHeader getPageBodyContentHeader() {
-		return pageBodyContentHeader;
-	}
+    }
 
-	public XHTMLPageBodyContentBody getPageBodyContentBody() {
-		return pageBodyContentBody;
-	}
+    public void save( OutputStream out )
+        throws IOException
+    {
+        // // 1) Write XHTML before HTML Head
 
-	public XHTMLPageBodyContentFooter getPageBodyContentFooter() {
-		return pageBodyContentFooter;
-	}
+        getPageBeforeBody().save( out );
+        getPageBodyContentHeader().save( out );
+        getPageBodyContentBody().save( out );
+        getPageBodyContentFooter().save( out );
+        getPageAfterBody().save( out );
 
-	public XHTMLPageAfterBody getPageAfterBody() {
-		return pageAfterBody;
-	}
+        // // 1) Write XHTML before HTML Head
+        // out.write(xhtmlBeforeHTMLHead.toString().getBytes());
+        // // 2) Write CSS Styles declaration
+        // CSSStyleSheet styleSheet = styleEngine.getCSSStyleSheet();
+        // if (!styleSheet.isEmpty()) {
+        // out.write(startElement(STYLE_ELEMENT, true, new StringBuilder(), 1)
+        // .toString().getBytes());
+        // styleSheet.save(out);
+        // out.write(endElement(STYLE_ELEMENT, new StringBuilder(), 1)
+        // .toString().getBytes());
+        // }
+        // // 3) Write XHTML after HTML Head
+        // out.write(xhtmlAfterHTMLHead.toString().getBytes());
+    }
 
-	public CSSStyleSheet getCSSStyleSheet() {
-		return null;
-	}
+    public XHTMLPageBeforeBody getPageBeforeBody()
+    {
+        return pageBeforeBody;
+    }
+
+    public XHTMLPageBodyContentHeader getPageBodyContentHeader()
+    {
+        return pageBodyContentHeader;
+    }
+
+    public XHTMLPageBodyContentBody getPageBodyContentBody()
+    {
+        return pageBodyContentBody;
+    }
+
+    public XHTMLPageBodyContentFooter getPageBodyContentFooter()
+    {
+        return pageBodyContentFooter;
+    }
+
+    public XHTMLPageAfterBody getPageAfterBody()
+    {
+        return pageAfterBody;
+    }
+
+    public CSSStyleSheet getCSSStyleSheet()
+    {
+        return null;
+    }
 
 }

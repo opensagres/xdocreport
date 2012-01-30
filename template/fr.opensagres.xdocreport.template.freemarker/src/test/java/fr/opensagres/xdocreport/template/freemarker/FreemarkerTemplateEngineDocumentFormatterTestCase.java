@@ -26,12 +26,15 @@ package fr.opensagres.xdocreport.template.freemarker;
 
 import junit.framework.TestCase;
 
-public class FreemarkerTemplateEngineDocumentFormatterTestCase extends TestCase {
+public class FreemarkerTemplateEngineDocumentFormatterTestCase
+    extends TestCase
+{
 
-	public void testFormatAsFieldItemList() throws Exception {
-		FreemarkerDocumentFormatter formatter = new FreemarkerDocumentFormatter();
-		String fieldName = formatter.formatAsFieldItemList("${cds.reference}",
-				"cds.reference", false);
-		assertEquals("${item_cds.reference}", fieldName);
-	}
+    public void testFormatAsFieldItemList()
+        throws Exception
+    {
+        FreemarkerDocumentFormatter formatter = new FreemarkerDocumentFormatter();
+        String fieldName = formatter.formatAsFieldItemList( "${cds.reference}", "cds.reference", false );
+        assertEquals( "${item_cds.reference}", fieldName );
+    }
 }

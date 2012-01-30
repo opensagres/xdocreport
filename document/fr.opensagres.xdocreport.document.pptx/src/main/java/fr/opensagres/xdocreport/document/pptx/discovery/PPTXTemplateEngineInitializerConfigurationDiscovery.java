@@ -28,25 +28,28 @@ import fr.opensagres.xdocreport.core.document.DocumentKind;
 import fr.opensagres.xdocreport.document.discovery.ITemplateEngineInitializerDiscovery;
 import fr.opensagres.xdocreport.template.ITemplateEngine;
 
-public class PPTXTemplateEngineInitializerConfigurationDiscovery implements
-		ITemplateEngineInitializerDiscovery {
+public class PPTXTemplateEngineInitializerConfigurationDiscovery
+    implements ITemplateEngineInitializerDiscovery
+{
 
-	public String getId() {
-		return PPTXTemplateEngineInitializerConfigurationDiscovery.class
-				.getSimpleName();
-	}
+    public String getId()
+    {
+        return PPTXTemplateEngineInitializerConfigurationDiscovery.class.getSimpleName();
+    }
 
-	public String getDescription() {
-		return "";
-	}
+    public String getDescription()
+    {
+        return "";
+    }
 
-	public String getDocumentKind() {
-		return DocumentKind.PPTX.name();
-	}
+    public String getDocumentKind()
+    {
+        return DocumentKind.PPTX.name();
+    }
 
-	public void initialize(ITemplateEngine templateEngine) {
-		templateEngine
-				.setConfiguration(PPTXTemplateEngineConfiguration.INSTANCE);
-	}
+    public void initialize( ITemplateEngine templateEngine )
+    {
+        templateEngine.setConfiguration( PPTXTemplateEngineConfiguration.INSTANCE );
+    }
 
 }

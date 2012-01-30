@@ -8,58 +8,71 @@ import java.util.Map;
 import fr.opensagres.xdocreport.core.registry.AbstractRegistry;
 import fr.opensagres.xdocreport.template.formatter.FieldsMetadata;
 
-public class DataProviderFactoryRegistry extends
-		AbstractRegistry<IDataProviderFactory> {
+public class DataProviderFactoryRegistry
+    extends AbstractRegistry<IDataProviderFactory>
+{
 
-	private static final DataProviderFactoryRegistry INSTANCE = new DataProviderFactoryRegistry();
-	private Map<String, IDataProviderFactory> factories = new HashMap<String, IDataProviderFactory>();
+    private static final DataProviderFactoryRegistry INSTANCE = new DataProviderFactoryRegistry();
 
-	public static DataProviderFactoryRegistry getRegistry() {
-		return INSTANCE;
-	}
+    private Map<String, IDataProviderFactory> factories = new HashMap<String, IDataProviderFactory>();
 
-	public DataProviderFactoryRegistry() {
-		super(IDataProviderFactory.class);
-	}
+    public static DataProviderFactoryRegistry getRegistry()
+    {
+        return INSTANCE;
+    }
 
-	@Override
-	protected boolean registerInstance(IDataProviderFactory factory) {
-		factories.put(factory.getId(), factory);
-		return true;
-	}
+    public DataProviderFactoryRegistry()
+    {
+        super( IDataProviderFactory.class );
+    }
 
-	@Override
-	protected void doDispose() {
-		factories.clear();
-	}
+    @Override
+    protected boolean registerInstance( IDataProviderFactory factory )
+    {
+        factories.put( factory.getId(), factory );
+        return true;
+    }
 
-	public IDataProvider create(String id, InputStream data,
-			InputStream properties) throws Exception {
-		if (id == null) {
-			return null;
-		}
-		IDataProviderFactory factory =getFactory(id);
-		if (factory == null) {
-			return null;
-		}
-		return factory.create(data, properties);
-	}
+    @Override
+    protected void doDispose()
+    {
+        factories.clear();
+    }
 
-	public void generateDefaultData(String id, FieldsMetadata fieldsMetadata,
-			OutputStream out) throws Exception {
-		if (id == null) {
-			return;
-		}
-		IDataProviderFactory factory =getFactory(id);
-		if (factory == null) {
-			return;
-		}
-		factory.generateDefaultData(fieldsMetadata, out);
-	}
+    public IDataProvider create( String id, InputStream data, InputStream properties )
+        throws Exception
+    {
+        if ( id == null )
+        {
+            return null;
+        }
+        IDataProviderFactory factory = getFactory( id );
+        if ( factory == null )
+        {
+            return null;
+        }
+        return factory.create( data, properties );
+    }
 
-	public IDataProviderFactory getFactory(String id) {
-		initializeIfNeeded();
-		return factories.get(id);
-	}
+    public void generateDefaultData( String id, FieldsMetadata fieldsMetadata, OutputStream out )
+        throws Exception
+    {
+        if ( id == null )
+        {
+            return;
+        }
+        IDataProviderFactory factory = getFactory( id );
+        if ( factory == null )
+        {
+            return;
+        }
+        factory.generateDefaultData( fieldsMetadata, out );
+    }
+
+    public IDataProviderFactory getFactory( String id )
+    {
+        initializeIfNeeded();
+        return factories.get( id );
+    }
 
 }

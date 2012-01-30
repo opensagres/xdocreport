@@ -24,7 +24,8 @@
  */
 package fr.opensagres.xdocreport.itext.extension;
 
-public enum PageOrientation {
+public enum PageOrientation
+{
 
-	Portrait, Landscape;
+    Portrait, Landscape;
 }

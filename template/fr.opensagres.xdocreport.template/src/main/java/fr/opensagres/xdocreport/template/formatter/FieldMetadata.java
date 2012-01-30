@@ -26,111 +26,137 @@ package fr.opensagres.xdocreport.template.formatter;
 
 /**
  * Field metadata.
- * 
  */
-public class FieldMetadata {
+public class FieldMetadata
+{
 
-	private final FieldsMetadata fieldsMetadata;
-	private final String fieldName;
-	private String imageName;
-	private boolean listType;
-	private boolean imageType;
-	private String syntaxKind;
-	private String description;
+    private final FieldsMetadata fieldsMetadata;
 
-	public FieldMetadata(FieldsMetadata fieldsMetadata, String fieldName,
-			boolean listType, String imageName, String syntaxKind) {
-		this.fieldsMetadata = fieldsMetadata;
-		this.fieldName = fieldName;
-		setListType(listType);
-		setImageName(imageName);
-		this.setSyntaxKind(syntaxKind);
-		fieldsMetadata.fields.add(this);
-	}
+    private final String fieldName;
 
-	/**
-	 * Returns the field name.
-	 * 
-	 * @return
-	 */
-	public String getFieldName() {
-		return fieldName;
-	}
+    private String imageName;
 
-	/**
-	 * Returns the image name.
-	 * 
-	 * @return
-	 */
-	public String getImageName() {
-		return imageName;
-	}
+    private boolean listType;
 
-	/**
-	 * Returns true if field is list type and false otherwise.
-	 * 
-	 * @return
-	 */
-	public boolean isListType() {
-		return listType;
-	}
+    private boolean imageType;
 
-	/**
-	 * Set true if field is list type and false otherwise.
-	 * 
-	 * @param listType
-	 */
-	public void setListType(boolean listType) {
-		this.listType = listType;
-		if (listType) {
-			fieldsMetadata.fieldsAsList.put(getFieldName(), this);
-		} else {
-			fieldsMetadata.fieldsAsList.remove(getFieldName());
-		}
-	}
+    private String syntaxKind;
 
-	/**
-	 * Returns true if field is image type and false otherwise.
-	 * 
-	 * @return
-	 */
-	public boolean isImageType() {
-		return imageType;
-	}
+    private String description;
 
-	/**
-	 * Set image name.
-	 * 
-	 * @param imageName
-	 */
-	public void setImageName(String imageName) {
-		this.imageName = imageName;
-		this.imageType = imageName != null;
-		if (imageType) {
-			fieldsMetadata.fieldsAsImage.put(getImageName(), this);
-		} else {
-			fieldsMetadata.fieldsAsImage.remove(getImageName());
-		}
-	}
+    public FieldMetadata( FieldsMetadata fieldsMetadata, String fieldName, boolean listType, String imageName,
+                          String syntaxKind )
+    {
+        this.fieldsMetadata = fieldsMetadata;
+        this.fieldName = fieldName;
+        setListType( listType );
+        setImageName( imageName );
+        this.setSyntaxKind( syntaxKind );
+        fieldsMetadata.fields.add( this );
+    }
 
-	public String getSyntaxKind() {
-		return syntaxKind;
-	}
+    /**
+     * Returns the field name.
+     * 
+     * @return
+     */
+    public String getFieldName()
+    {
+        return fieldName;
+    }
 
-	public void setSyntaxKind(String syntaxKind) {
-		this.syntaxKind = syntaxKind;
-		if (syntaxKind != null) {
-			fieldsMetadata.fieldsAsTextStyling.put(getFieldName(), this);
-		} else {
-			fieldsMetadata.fieldsAsTextStyling.remove(getFieldName());
-		}
-	}
+    /**
+     * Returns the image name.
+     * 
+     * @return
+     */
+    public String getImageName()
+    {
+        return imageName;
+    }
 
-	public void setDescription(String description) {
-		this.description = description;
-	}
+    /**
+     * Returns true if field is list type and false otherwise.
+     * 
+     * @return
+     */
+    public boolean isListType()
+    {
+        return listType;
+    }
 
-	public String getDescription() {
-		return description;
-	}
+    /**
+     * Set true if field is list type and false otherwise.
+     * 
+     * @param listType
+     */
+    public void setListType( boolean listType )
+    {
+        this.listType = listType;
+        if ( listType )
+        {
+            fieldsMetadata.fieldsAsList.put( getFieldName(), this );
+        }
+        else
+        {
+            fieldsMetadata.fieldsAsList.remove( getFieldName() );
+        }
+    }
+
+    /**
+     * Returns true if field is image type and false otherwise.
+     * 
+     * @return
+     */
+    public boolean isImageType()
+    {
+        return imageType;
+    }
+
+    /**
+     * Set image name.
+     * 
+     * @param imageName
+     */
+    public void setImageName( String imageName )
+    {
+        this.imageName = imageName;
+        this.imageType = imageName != null;
+        if ( imageType )
+        {
+            fieldsMetadata.fieldsAsImage.put( getImageName(), this );
+        }
+        else
+        {
+            fieldsMetadata.fieldsAsImage.remove( getImageName() );
+        }
+    }
+
+    public String getSyntaxKind()
+    {
+        return syntaxKind;
+    }
+
+    public void setSyntaxKind( String syntaxKind )
+    {
+        this.syntaxKind = syntaxKind;
+        if ( syntaxKind != null )
+        {
+            fieldsMetadata.fieldsAsTextStyling.put( getFieldName(), this );
+        }
+        else
+        {
+            fieldsMetadata.fieldsAsTextStyling.remove( getFieldName() );
+        }
+    }
+
+    public void setDescription( String description )
+    {
+        this.description = description;
+    }
+
+    public String getDescription()
+    {
+        return description;
+    }
 }

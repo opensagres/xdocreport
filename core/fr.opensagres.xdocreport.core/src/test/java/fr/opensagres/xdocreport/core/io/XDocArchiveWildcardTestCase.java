@@ -33,86 +33,97 @@ import junit.framework.TestCase;
 
 /**
  * Test case for {@link XDocArchive#getEntryNames(String)} wildcard.
- * 
  */
-public class XDocArchiveWildcardTestCase extends TestCase {
+public class XDocArchiveWildcardTestCase
+    extends TestCase
+{
 
-	private XDocArchive archive;
+    private XDocArchive archive;
 
-	@Override
-	protected void setUp() throws Exception {
-		archive = new XDocArchive();
-		Writer textWriter = archive.getEntryWriter("document.txt");
-		textWriter.write("Text");
-		textWriter.close();
-		Writer documentWriter = archive.getEntryWriter("document.xml");
-		documentWriter.write("Document");
-		documentWriter.close();
-		Writer header1Writer = archive.getEntryWriter("header1.xml");
-		header1Writer.write("Header1");
-		header1Writer.close();
-		Writer header2Writer = archive.getEntryWriter("header2.xml");
-		header2Writer.write("Header2");
-		header2Writer.close();
+    @Override
+    protected void setUp()
+        throws Exception
+    {
+        archive = new XDocArchive();
+        Writer textWriter = archive.getEntryWriter( "document.txt" );
+        textWriter.write( "Text" );
+        textWriter.close();
+        Writer documentWriter = archive.getEntryWriter( "document.xml" );
+        documentWriter.write( "Document" );
+        documentWriter.close();
+        Writer header1Writer = archive.getEntryWriter( "header1.xml" );
+        header1Writer.write( "Header1" );
+        header1Writer.close();
+        Writer header2Writer = archive.getEntryWriter( "header2.xml" );
+        header2Writer.write( "Header2" );
+        header2Writer.close();
 
-		super.setUp();
-	}
+        super.setUp();
+    }
 
-	@Override
-	protected void tearDown() throws Exception {
-		archive.dispose();
-		super.tearDown();
-	}
+    @Override
+    protected void tearDown()
+        throws Exception
+    {
+        archive.dispose();
+        super.tearDown();
+    }
 
-	public void testBadWildcard() throws IOException {
+    public void testBadWildcard()
+        throws IOException
+    {
 
-		// *.zip wildcard
-		assertEquals(0, archive.getEntryNames("*.zip").size());
+        // *.zip wildcard
+        assertEquals( 0, archive.getEntryNames( "*.zip" ).size() );
 
-	}
+    }
 
-	public void testXMLWildcard() throws IOException {
-		Set<String> entries = new HashSet<String>();
-		entries.add("document.xml");
-		entries.add("header1.xml");
-		entries.add("header2.xml");
-		
-		// *.xml wildcard
-		assertEquals(entries, archive.getEntryNames("*.xml"));
-	}
+    public void testXMLWildcard()
+        throws IOException
+    {
+        Set<String> entries = new HashSet<String>();
+        entries.add( "document.xml" );
+        entries.add( "header1.xml" );
+        entries.add( "header2.xml" );
 
-	public void testTxtWildcard() throws IOException {
+        // *.xml wildcard
+        assertEquals( entries, archive.getEntryNames( "*.xml" ) );
+    }
 
-		Set<String> entries = new HashSet<String>();
-		entries.add("document.txt");
-		
-		// *.txt wildcard
-		assertEquals(entries,
-				archive.getEntryNames("*.txt"));
-	}
+    public void testTxtWildcard()
+        throws IOException
+    {
 
-	public void testHeaderXMLWildcard() throws IOException {
-		Set<String> entries = new HashSet<String>();		
-		entries.add("header1.xml");
-		entries.add("header2.xml");
-		
-		// header*.xml wildcard
-		assertEquals(entries,
-				archive.getEntryNames("header*.xml"));
-	}
-	
-	public void testHeaderXMLWildcardCache() throws IOException {
-		Set<String> entries = new HashSet<String>();		
-		entries.add("header1.xml");
-		entries.add("header2.xml");
-		
-		// header*.xml wildcard
-		assertEquals(entries,
-				archive.getEntryNames("header*.xml"));
-		
-		// header*.xml wildcard
-		assertEquals(entries,
-				archive.getEntryNames("header*.xml"));
-		
-	}
+        Set<String> entries = new HashSet<String>();
+        entries.add( "document.txt" );
+
+        // *.txt wildcard
+        assertEquals( entries, archive.getEntryNames( "*.txt" ) );
+    }
+
+    public void testHeaderXMLWildcard()
+        throws IOException
+    {
+        Set<String> entries = new HashSet<String>();
+        entries.add( "header1.xml" );
+        entries.add( "header2.xml" );
+
+        // header*.xml wildcard
+        assertEquals( entries, archive.getEntryNames( "header*.xml" ) );
+    }
+
+    public void testHeaderXMLWildcardCache()
+        throws IOException
+    {
+        Set<String> entries = new HashSet<String>();
+        entries.add( "header1.xml" );
+        entries.add( "header2.xml" );
+
+        // header*.xml wildcard
+        assertEquals( entries, archive.getEntryNames( "header*.xml" ) );
+
+        // header*.xml wildcard
+        assertEquals( entries, archive.getEntryNames( "header*.xml" ) );
+
+    }
 }

@@ -22,30 +22,38 @@ import fr.opensagres.xdocreport.converter.discovery.IConverterDiscovery;
 import fr.opensagres.xdocreport.converter.docx.xslfo.DocxXSLFOConverter;
 import fr.opensagres.xdocreport.core.document.DocumentKind;
 
-public class DocxXSLFOConverterDiscovery implements IConverterDiscovery {
+public class DocxXSLFOConverterDiscovery
+    implements IConverterDiscovery
+{
 
-	public String getId() {
-		return "Docx2FOViaXSL";
-	}
+    public String getId()
+    {
+        return "Docx2FOViaXSL";
+    }
 
-	public String getDescription() {
-		return "Convert Docx 2 FO via XSL";
-	}
+    public String getDescription()
+    {
+        return "Convert Docx 2 FO via XSL";
+    }
 
-	public String getFrom() {
-		return DocumentKind.DOCX.name();
-	}
+    public String getFrom()
+    {
+        return DocumentKind.DOCX.name();
+    }
 
-	public String getTo() {
-		return ConverterTypeTo.FO.name();
-	}
+    public String getTo()
+    {
+        return ConverterTypeTo.FO.name();
+    }
 
-	public String getVia() {
-		return ConverterTypeVia.XSL.name();
-	}
+    public String getVia()
+    {
+        return ConverterTypeVia.XSL.name();
+    }
 
-	public IConverter getConverter() {
-		return DocxXSLFOConverter.getInstance();
-	}
+    public IConverter getConverter()
+    {
+        return DocxXSLFOConverter.getInstance();
+    }
 
 }

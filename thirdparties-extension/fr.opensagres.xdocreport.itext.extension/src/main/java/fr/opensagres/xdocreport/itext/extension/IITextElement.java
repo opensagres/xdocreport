@@ -24,9 +24,10 @@
  */
 package fr.opensagres.xdocreport.itext.extension;
 
-public interface IITextElement {
+public interface IITextElement
+{
 
-	IITextContainer getITextContainer();
-	
-	void setITextContainer(IITextContainer container);
+    IITextContainer getITextContainer();
+
+    void setITextContainer( IITextContainer container );
 }

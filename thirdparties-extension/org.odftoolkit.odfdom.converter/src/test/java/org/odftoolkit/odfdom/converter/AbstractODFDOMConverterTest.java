@@ -26,82 +26,114 @@ package org.odftoolkit.odfdom.converter;
 
 import org.junit.Test;
 
-public abstract class AbstractODFDOMConverterTest {
+public abstract class AbstractODFDOMConverterTest
+{
 
-	@Test
-	public void convertCV() throws Exception {
-		doGenerate("CV.odt");
-	}
+    @Test
+    public void convertCV()
+        throws Exception
+    {
+        doGenerate( "CV.odt" );
+    }
 
-	@Test
-	public void convertHeaderFooterTable() throws Exception {
-		doGenerate("HeaderFooterTable.odt");
-	}
-	
-	@Test
-	public void convertODTBig() throws Exception {
-		doGenerate("ODTBig.odt");
-	}
+    @Test
+    public void convertHeaderFooterTable()
+        throws Exception
+    {
+        doGenerate( "HeaderFooterTable.odt" );
+    }
 
-	@Test
-	public void testODTLettreRelance() throws Exception {
-		doGenerate("ODTLettreRelance.odt");
-	}
+    @Test
+    public void convertODTBig()
+        throws Exception
+    {
+        doGenerate( "ODTBig.odt" );
+    }
 
-	@Test
-	public void testODTStructures() throws Exception {
-		doGenerate("ODTStructures.odt");
-	}
+    @Test
+    public void testODTLettreRelance()
+        throws Exception
+    {
+        doGenerate( "ODTLettreRelance.odt" );
+    }
 
-	@Test
-	public void testParagraphFomatting() throws Exception {
-		doGenerate("ParagraphFomatting.odt");
-	}
-	
-	@Test
-	public void testColor() throws Exception {
-		doGenerate("TestColor.odt");
-	}
-	
-	@Test
-	public void testComplexTable() throws Exception {
-		doGenerate("TestComplexTable.odt");
-	}
+    @Test
+    public void testODTStructures()
+        throws Exception
+    {
+        doGenerate( "ODTStructures.odt" );
+    }
 
-	@Test
-	public void testFonts() throws Exception {
-		doGenerate("TestFonts.odt");
-	}
+    @Test
+    public void testParagraphFomatting()
+        throws Exception
+    {
+        doGenerate( "ParagraphFomatting.odt" );
+    }
 
-	@Test
-	public void testHeaderFooterPage() throws Exception {
-		doGenerate("TestHeaderFooterPage.odt");
-	}
+    @Test
+    public void testColor()
+        throws Exception
+    {
+        doGenerate( "TestColor.odt" );
+    }
 
-	@Test
-	public void testLandscapeFormat() throws Exception {
-		doGenerate("TestLandscapeFormat.odt");
-	}
+    @Test
+    public void testComplexTable()
+        throws Exception
+    {
+        doGenerate( "TestComplexTable.odt" );
+    }
 
-	@Test
-	public void testSpacingBefore() throws Exception {
-		doGenerate("TestSpacingBefore.odt");
-	}
+    @Test
+    public void testFonts()
+        throws Exception
+    {
+        doGenerate( "TestFonts.odt" );
+    }
 
-	@Test
-	public void testTable() throws Exception {
-		doGenerate("TestTable.odt");
-	}
+    @Test
+    public void testHeaderFooterPage()
+        throws Exception
+    {
+        doGenerate( "TestHeaderFooterPage.odt" );
+    }
 
-	@Test
-	public void testTextSectionsAndTabulators() throws Exception {
-		doGenerate("TestTextSectionsAndTabulators.odt");
-	}
-	
-	@Test
-	public void testTitle() throws Exception {
-		doGenerate("TestTitle.odt");
-	}
-	
-	protected abstract void doGenerate(String fileInName) throws Exception;
+    @Test
+    public void testLandscapeFormat()
+        throws Exception
+    {
+        doGenerate( "TestLandscapeFormat.odt" );
+    }
+
+    @Test
+    public void testSpacingBefore()
+        throws Exception
+    {
+        doGenerate( "TestSpacingBefore.odt" );
+    }
+
+    @Test
+    public void testTable()
+        throws Exception
+    {
+        doGenerate( "TestTable.odt" );
+    }
+
+    @Test
+    public void testTextSectionsAndTabulators()
+        throws Exception
+    {
+        doGenerate( "TestTextSectionsAndTabulators.odt" );
+    }
+
+    @Test
+    public void testTitle()
+        throws Exception
+    {
+        doGenerate( "TestTitle.odt" );
+    }
+
+    protected abstract void doGenerate( String fileInName )
+        throws Exception;
 }

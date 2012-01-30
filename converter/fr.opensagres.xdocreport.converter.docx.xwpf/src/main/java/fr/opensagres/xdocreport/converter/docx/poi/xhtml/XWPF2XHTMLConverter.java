@@ -39,59 +39,56 @@ import fr.opensagres.xdocreport.converter.docx.poi.itext.XWPF2PDFViaITextConvert
 import fr.opensagres.xdocreport.converter.internal.AbstractConverterNoEntriesSupport;
 import fr.opensagres.xdocreport.core.logging.LogUtils;
 
-public class XWPF2XHTMLConverter extends AbstractConverterNoEntriesSupport
-		implements MimeMappingConstants {
+public class XWPF2XHTMLConverter
+    extends AbstractConverterNoEntriesSupport
+    implements MimeMappingConstants
+{
 
-	private static final XWPF2XHTMLConverter INSTANCE = new XWPF2XHTMLConverter();
-	/**
-	 * Logger for this class
-	 */
-	private static final Logger LOGGER = LogUtils
-			.getLogger(XWPF2PDFViaITextConverter.class.getName());
+    private static final XWPF2XHTMLConverter INSTANCE = new XWPF2XHTMLConverter();
 
-	public static XWPF2XHTMLConverter getInstance() {
-		return INSTANCE;
-	}
+    /**
+     * Logger for this class
+     */
+    private static final Logger LOGGER = LogUtils.getLogger( XWPF2PDFViaITextConverter.class.getName() );
 
-	public void convert(InputStream in, OutputStream out, Options options)
-			throws XDocConverterException {
-		try {
-			XWPFDocument document = new XWPFDocument(in);
-			org.apache.poi.xwpf.converter.xhtml.XWPF2XHTMLConverter
-					.getInstance().convert(document, out,
-							getXHTMLOptions(options));
+    public static XWPF2XHTMLConverter getInstance()
+    {
+        return INSTANCE;
+    }
 
-		} catch (Exception e) {
-			LOGGER.severe(e.getMessage());
-			throw new XDocConverterException(e);
-		}
-	}
+    public void convert( InputStream in, OutputStream out, Options options )
+        throws XDocConverterException
+    {
+        try
+        {
+            XWPFDocument document = new XWPFDocument( in );
+            org.apache.poi.xwpf.converter.xhtml.XWPF2XHTMLConverter.getInstance().convert( document, out,
+                                                                                           getXHTMLOptions( options ) );
 
-	private XHTMLOptions getXHTMLOptions(Options options) {
-		Object value = options.getSubOptions(XHTMLOptions.class);
-		return value instanceof XHTMLOptions ? (XHTMLOptions) value : null;
-	}
+        }
+        catch ( Exception e )
+        {
+            LOGGER.severe( e.getMessage() );
+            throw new XDocConverterException( e );
+        }
+    }
 
-	/*
-	private XHTMLOptions toXWPFOptions(Options o) {
-		XHTMLOptions options = new XHTMLOptions();
-		final IURIResolver resolver = (IURIResolver) o
-				.getProperty(IURIResolver.class.getName());
-		if (resolver != null) {
+    private XHTMLOptions getXHTMLOptions( Options options )
+    {
+        Object value = options.getSubOptions( XHTMLOptions.class );
+        return value instanceof XHTMLOptions ? (XHTMLOptions) value : null;
+    }
 
-			options.setURIResolver(new org.apache.poi.xwpf.converter.IURIResolver() {
+    /*
+     * private XHTMLOptions toXWPFOptions(Options o) { XHTMLOptions options = new XHTMLOptions(); final IURIResolver
+     * resolver = (IURIResolver) o .getProperty(IURIResolver.class.getName()); if (resolver != null) {
+     * options.setURIResolver(new org.apache.poi.xwpf.converter.IURIResolver() { public String resolve(String uri) {
+     * return resolver.resolve(uri); } }); } return options; }
+     */
 
-				public String resolve(String uri) {
-					return resolver.resolve(uri);
-				}
-			});
-
-		}
-		return options;
-	}*/
-
-	public MimeMapping getMimeMapping() {
-		return XHTML_MIME_MAPPING;
-	}
+    public MimeMapping getMimeMapping()
+    {
+        return XHTML_MIME_MAPPING;
+    }
 
 }

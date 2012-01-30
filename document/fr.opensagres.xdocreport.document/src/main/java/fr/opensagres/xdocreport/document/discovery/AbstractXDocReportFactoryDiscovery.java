@@ -24,13 +24,16 @@
  */
 package fr.opensagres.xdocreport.document.discovery;
 
-public abstract class AbstractXDocReportFactoryDiscovery implements
-		IXDocReportFactoryDiscovery {
+public abstract class AbstractXDocReportFactoryDiscovery
+    implements IXDocReportFactoryDiscovery
+{
 
-	public boolean isAdaptFor(String fileExtension) {
-		if (fileExtension == null) {
-			return false;
-		}
-		return fileExtension.equals(getMimeMapping().getExtension());
-	}
+    public boolean isAdaptFor( String fileExtension )
+    {
+        if ( fileExtension == null )
+        {
+            return false;
+        }
+        return fileExtension.equals( getMimeMapping().getExtension() );
+    }
 }

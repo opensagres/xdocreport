@@ -36,122 +36,151 @@ import fr.opensagres.xdocreport.core.registry.AbstractRegistry;
 
 /**
  * {@link IConverter} registry.
- * 
  */
-public class ConverterRegistry extends AbstractRegistry<IConverterDiscovery> {
+public class ConverterRegistry
+    extends AbstractRegistry<IConverterDiscovery>
+{
 
-	private static final ConverterRegistry INSTANCE = new ConverterRegistry();
+    private static final ConverterRegistry INSTANCE = new ConverterRegistry();
 
-	/**
-	 * Logger for this class
-	 */
-	private static final Logger LOGGER = LogUtils.getLogger(AbstractRegistry.class.getName());
+    /**
+     * Logger for this class
+     */
+    private static final Logger LOGGER = LogUtils.getLogger( AbstractRegistry.class.getName() );
 
-	private Map<String /* from */, ConverterFrom> converters = new HashMap<String, ConverterFrom>();
+    private Map<String /* from */, ConverterFrom> converters = new HashMap<String, ConverterFrom>();
 
-	public ConverterRegistry() {
+    public ConverterRegistry()
+    {
 
-		super(IConverterDiscovery.class);
+        super( IConverterDiscovery.class );
 
-	}
+    }
 
-	public static ConverterRegistry getRegistry() {
-		return INSTANCE;
-	}
+    public static ConverterRegistry getRegistry()
+    {
+        return INSTANCE;
+    }
 
-	public IConverter findConverter(Options options) throws XDocConverterException {
-		return findConverter(options.getFrom(), options.getTo(), options.getVia());
-	}
+    public IConverter findConverter( Options options )
+        throws XDocConverterException
+    {
+        return findConverter( options.getFrom(), options.getTo(), options.getVia() );
+    }
 
-	public IConverter findConverter(String from, String to, String via) throws XDocConverterException {
-		return internalFindConverter(from, to, via, true);
-	}
+    public IConverter findConverter( String from, String to, String via )
+        throws XDocConverterException
+    {
+        return internalFindConverter( from, to, via, true );
+    }
 
-	public IConverter getConverter(Options options) {
-		return getConverter(options.getFrom(), options.getTo(), options.getVia());
-	}
+    public IConverter getConverter( Options options )
+    {
+        return getConverter( options.getFrom(), options.getTo(), options.getVia() );
+    }
 
-	public IConverter getConverter(String from, String to, String via) {
-		try {
-			return internalFindConverter(from, to, via, false);
-		} catch (XDocConverterException e) {
-			if (LOGGER.isLoggable(Level.FINE)) {
-				LOGGER.fine(e.getMessage());
-			}
-			return null;
-		}
-	}
+    public IConverter getConverter( String from, String to, String via )
+    {
+        try
+        {
+            return internalFindConverter( from, to, via, false );
+        }
+        catch ( XDocConverterException e )
+        {
+            if ( LOGGER.isLoggable( Level.FINE ) )
+            {
+                LOGGER.fine( e.getMessage() );
+            }
+            return null;
+        }
+    }
 
-	public ConverterFrom getConverterFrom(String from) {
-		initializeIfNeeded();
-		return converters.get(from);
-	}
+    public ConverterFrom getConverterFrom( String from )
+    {
+        initializeIfNeeded();
+        return converters.get( from );
+    }
 
-	public Set<String> getFroms() {
-		initializeIfNeeded();
-		return converters.keySet();
-	}
+    public Set<String> getFroms()
+    {
+        initializeIfNeeded();
+        return converters.keySet();
+    }
 
-	private IConverter internalFindConverter(String from, String to, String via, boolean throwError) throws XDocConverterException {
-		initializeIfNeeded();
-		ConverterFrom fromConverters = getConverterFrom(from);
-		if (fromConverters == null) {			
-			if(throwError){
-				String msg = String.format("Cannot find converters from=%s", from);
-				LOGGER.severe(msg);
-				throw new XDocConverterException(msg);	
-			}
-			return null;
-		}
-		ConverterTo toConverters = fromConverters.getConverterTo(to);
-		if (toConverters == null) {
-			if(throwError){
-				String msg = String.format("Cannot find converters for to=%s for from=%s", to, from);
-				LOGGER.severe(msg);
-				throw new XDocConverterException(msg);	
-			}
-			return null;
-		}
-		if (via == null) {
-			IConverter converter = toConverters.getFirstConverter();
-			if (throwError && converter == null) {
-				if(throwError){
-					String msg = String.format("Cannot find converters for to=%s for from=%s", to, from);
-					LOGGER.severe(msg);
-					throw new XDocConverterException(msg);	
-				}
-			}
-			return converter;
-		}
+    private IConverter internalFindConverter( String from, String to, String via, boolean throwError )
+        throws XDocConverterException
+    {
+        initializeIfNeeded();
+        ConverterFrom fromConverters = getConverterFrom( from );
+        if ( fromConverters == null )
+        {
+            if ( throwError )
+            {
+                String msg = String.format( "Cannot find converters from=%s", from );
+                LOGGER.severe( msg );
+                throw new XDocConverterException( msg );
+            }
+            return null;
+        }
+        ConverterTo toConverters = fromConverters.getConverterTo( to );
+        if ( toConverters == null )
+        {
+            if ( throwError )
+            {
+                String msg = String.format( "Cannot find converters for to=%s for from=%s", to, from );
+                LOGGER.severe( msg );
+                throw new XDocConverterException( msg );
+            }
+            return null;
+        }
+        if ( via == null )
+        {
+            IConverter converter = toConverters.getFirstConverter();
+            if ( throwError && converter == null )
+            {
+                if ( throwError )
+                {
+                    String msg = String.format( "Cannot find converters for to=%s for from=%s", to, from );
+                    LOGGER.severe( msg );
+                    throw new XDocConverterException( msg );
+                }
+            }
+            return converter;
+        }
 
-		IConverter converter = toConverters.getConverter(via);
-		if (converter == null) {
-			if(throwError){
-				String msg = String.format("Cannot find converters via %s for to=%s for from=%s", via, to, from);
-				LOGGER.severe(msg);
-				throw new XDocConverterException(msg);	
-			}
-		}
-		return converter;
-	}
+        IConverter converter = toConverters.getConverter( via );
+        if ( converter == null )
+        {
+            if ( throwError )
+            {
+                String msg = String.format( "Cannot find converters via %s for to=%s for from=%s", via, to, from );
+                LOGGER.severe( msg );
+                throw new XDocConverterException( msg );
+            }
+        }
+        return converter;
+    }
 
-	@Override
-	protected void doDispose() {
-		this.converters.clear();
-	}
+    @Override
+    protected void doDispose()
+    {
+        this.converters.clear();
+    }
 
-	@Override
-	protected boolean registerInstance(IConverterDiscovery discovery) {
-		String from = discovery.getFrom();
-		String to = discovery.getTo();
-		String via = discovery.getVia();
-		IConverter converter = discovery.getConverter();
-		ConverterFrom converterFrom = converters.get(from);
-		if (converterFrom == null) {
-			converterFrom = new ConverterFrom(from);
-			converters.put(converterFrom.getFrom(), converterFrom);
-		}
-		converterFrom.addConverter(to, via, converter);
-		return true;
-	}
+    @Override
+    protected boolean registerInstance( IConverterDiscovery discovery )
+    {
+        String from = discovery.getFrom();
+        String to = discovery.getTo();
+        String via = discovery.getVia();
+        IConverter converter = discovery.getConverter();
+        ConverterFrom converterFrom = converters.get( from );
+        if ( converterFrom == null )
+        {
+            converterFrom = new ConverterFrom( from );
+            converters.put( converterFrom.getFrom(), converterFrom );
+        }
+        converterFrom.addConverter( to, via, converter );
+        return true;
+    }
 }

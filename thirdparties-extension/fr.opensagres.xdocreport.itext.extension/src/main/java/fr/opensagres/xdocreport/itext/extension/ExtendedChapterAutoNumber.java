@@ -31,78 +31,90 @@ import com.lowagie.text.Rectangle;
 import com.lowagie.text.Section;
 import com.lowagie.text.pdf.PdfPCell;
 
+public class ExtendedChapterAutoNumber
+    extends ChapterAutoNumber
+{
 
-public class ExtendedChapterAutoNumber extends ChapterAutoNumber {
+    private Paragraph computedTitle = null;
 
-	private Paragraph computedTitle = null;
-	private PdfPCell cell;
-	private Paragraph bookmarkTitleParagraph;
+    private PdfPCell cell;
 
-	public ExtendedChapterAutoNumber(Paragraph para) {
-		super(para);
-	}
+    private Paragraph bookmarkTitleParagraph;
 
-	public ExtendedChapterAutoNumber(String title) {
-		super(title);
-	}
+    public ExtendedChapterAutoNumber( Paragraph para )
+    {
+        super( para );
+    }
 
-	@Override
-	public Paragraph getTitle() {
-		if (computedTitle == null) {
-			bookmarkTitleParagraph = ExtendedSection.ancestorConstructTitle(
-					getParagraphFactory(), title, numbers, numberDepth,
-					numberStyle);
-			computedTitle = ExtendedSection.constructTitle(
-					getParagraphFactory(), bookmarkTitleParagraph, numbers,
-					numberDepth, numberStyle, cell);
-		}
-		return computedTitle;
-	}
+    public ExtendedChapterAutoNumber( String title )
+    {
+        super( title );
+    }
 
-	@Override
-	public Paragraph getBookmarkTitle() {
-		return bookmarkTitleParagraph;
-	}
+    @Override
+    public Paragraph getTitle()
+    {
+        if ( computedTitle == null )
+        {
+            bookmarkTitleParagraph =
+                ExtendedSection.ancestorConstructTitle( getParagraphFactory(), title, numbers, numberDepth, numberStyle );
+            computedTitle =
+                ExtendedSection.constructTitle( getParagraphFactory(), bookmarkTitleParagraph, numbers, numberDepth,
+                                                numberStyle, cell );
+        }
+        return computedTitle;
+    }
 
-	public Section addSection(float indentation, Paragraph title,
-			int numberDepth) {
-		if (isAddedCompletely()) {
-			throw new IllegalStateException(
-					"This LargeElement has already been added to the Document.");
-		}
-		Section section = new ExtendedSection(title, numberDepth);
-		section.setIndentation(indentation);
-		add(section);
-		return section;
-	}
+    @Override
+    public Paragraph getBookmarkTitle()
+    {
+        return bookmarkTitleParagraph;
+    }
 
-	public MarkedSection addMarkedSection() {
-		MarkedSection section = new MarkedSection(new ExtendedSection(null,
-				numberDepth + 1));
-		add(section);
-		return section;
-	}
+    public Section addSection( float indentation, Paragraph title, int numberDepth )
+    {
+        if ( isAddedCompletely() )
+        {
+            throw new IllegalStateException( "This LargeElement has already been added to the Document." );
+        }
+        Section section = new ExtendedSection( title, numberDepth );
+        section.setIndentation( indentation );
+        add( section );
+        return section;
+    }
 
-	public PdfPCell getPdfPCell() {
-		if (cell != null) {
-			return cell;
-		}
-		cell = createPdfPCell();
-		return cell;
-	}
+    public MarkedSection addMarkedSection()
+    {
+        MarkedSection section = new MarkedSection( new ExtendedSection( null, numberDepth + 1 ) );
+        add( section );
+        return section;
+    }
 
-	private synchronized PdfPCell createPdfPCell() {
-		if (cell != null) {
-			return cell;
-		}
-		PdfPCell cell = new PdfPCell();
-		cell.setBorder(Rectangle.NO_BORDER);
-		cell.setPadding(0);
-		return cell;
-	}
+    public PdfPCell getPdfPCell()
+    {
+        if ( cell != null )
+        {
+            return cell;
+        }
+        cell = createPdfPCell();
+        return cell;
+    }
 
-	protected IParagraphFactory getParagraphFactory() {
-		return ParagraphFactory.getDefault();
-	}
+    private synchronized PdfPCell createPdfPCell()
+    {
+        if ( cell != null )
+        {
+            return cell;
+        }
+        PdfPCell cell = new PdfPCell();
+        cell.setBorder( Rectangle.NO_BORDER );
+        cell.setPadding( 0 );
+        return cell;
+    }
+
+    protected IParagraphFactory getParagraphFactory()
+    {
+        return ParagraphFactory.getDefault();
+    }
 
 }

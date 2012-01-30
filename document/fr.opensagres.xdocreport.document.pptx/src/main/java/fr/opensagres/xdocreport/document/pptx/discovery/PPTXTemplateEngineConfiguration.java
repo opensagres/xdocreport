@@ -30,14 +30,16 @@ import fr.opensagres.xdocreport.template.config.AbstractTemplateEngineConfigurat
 import fr.opensagres.xdocreport.template.config.ITemplateEngineConfiguration;
 import fr.opensagres.xdocreport.template.config.ReplaceText;
 
-public class PPTXTemplateEngineConfiguration extends
-		AbstractTemplateEngineConfiguration {
+public class PPTXTemplateEngineConfiguration
+    extends AbstractTemplateEngineConfiguration
+{
 
-	public static final ITemplateEngineConfiguration INSTANCE = new PPTXTemplateEngineConfiguration();
+    public static final ITemplateEngineConfiguration INSTANCE = new PPTXTemplateEngineConfiguration();
 
-	@Override
-	protected void populate(Collection<ReplaceText> replacment) {
+    @Override
+    protected void populate( Collection<ReplaceText> replacment )
+    {
 
-	}
+    }
 
 }

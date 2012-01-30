@@ -32,24 +32,26 @@ import org.odftoolkit.odfdom.converter.AbstractODFDOMConverterTest;
 import org.odftoolkit.odfdom.converter.Data;
 import org.odftoolkit.odfdom.doc.OdfTextDocument;
 
-public class ODFDOM2PDFViaiTextConverterTest extends
-		AbstractODFDOMConverterTest {
+public class ODFDOM2PDFViaiTextConverterTest
+    extends AbstractODFDOMConverterTest
+{
 
-	protected void doGenerate(String fileInName) throws Exception {
+    protected void doGenerate( String fileInName )
+        throws Exception
+    {
 
-		String root = "target";
-		String fileOutName = root + "/" + fileInName + ".pdf";
+        String root = "target";
+        String fileOutName = root + "/" + fileInName + ".pdf";
 
-		long startTime = System.currentTimeMillis();
+        long startTime = System.currentTimeMillis();
 
-		OdfTextDocument document = OdfTextDocument.loadDocument(Data.class
-				.getResourceAsStream(fileInName));
+        OdfTextDocument document = OdfTextDocument.loadDocument( Data.class.getResourceAsStream( fileInName ) );
 
-		OutputStream out = new FileOutputStream(new File(fileOutName));
-		PDFViaITextOptions options = PDFViaITextOptions.create().fontEncoding("windows-1250").preserveSoftPageBreaks(true);
-		ODF2PDFViaITextConverter.getInstance().convert(document, out, options);
+        OutputStream out = new FileOutputStream( new File( fileOutName ) );
+        PDFViaITextOptions options =
+            PDFViaITextOptions.create().fontEncoding( "windows-1250" ).preserveSoftPageBreaks( true );
+        ODF2PDFViaITextConverter.getInstance().convert( document, out, options );
 
-		System.out.println("Generate " + fileOutName + " with "
-				+ (System.currentTimeMillis() - startTime) + " ms.");
-	}
+        System.out.println( "Generate " + fileOutName + " with " + ( System.currentTimeMillis() - startTime ) + " ms." );
+    }
 }

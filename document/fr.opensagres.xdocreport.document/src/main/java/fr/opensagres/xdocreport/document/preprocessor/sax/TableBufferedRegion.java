@@ -28,13 +28,14 @@ import org.xml.sax.Attributes;
 
 /**
  * Table buffered region.
- * 
  */
-public class TableBufferedRegion extends BufferedElement {
+public class TableBufferedRegion
+    extends BufferedElement
+{
 
-	public TableBufferedRegion(BufferedElement parent, String uri, String localName,
-			String name, Attributes attributes) {
-		super(parent, uri, localName, name, attributes);
-	}
+    public TableBufferedRegion( BufferedElement parent, String uri, String localName, String name, Attributes attributes )
+    {
+        super( parent, uri, localName, name, attributes );
+    }
 
 }

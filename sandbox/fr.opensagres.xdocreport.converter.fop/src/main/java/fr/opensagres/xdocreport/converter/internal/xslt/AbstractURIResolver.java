@@ -25,26 +25,29 @@ import javax.xml.transform.stream.StreamSource;
 /**
  * Abstract {@link URIResolver} which check if {@link InputStream} return by
  * {@link AbstractURIResolver#getInputStream(String, String)}is not null.
- * 
  */
-public abstract class AbstractURIResolver implements URIResolver {
+public abstract class AbstractURIResolver
+    implements URIResolver
+{
 
-	public Source resolve(String href, String base) throws TransformerException {
-		InputStream in = getInputStream(href, base);
-		if (in == null) {
-			throw new TransformerException("Resource does not exist. \"" + href
-					+ "\" is not accessible.");
-		}
-		return new StreamSource(in);
-	}
+    public Source resolve( String href, String base )
+        throws TransformerException
+    {
+        InputStream in = getInputStream( href, base );
+        if ( in == null )
+        {
+            throw new TransformerException( "Resource does not exist. \"" + href + "\" is not accessible." );
+        }
+        return new StreamSource( in );
+    }
 
-	/**
-	 * Returns the input stream.
-	 * 
-	 * @param href
-	 * @param base
-	 * @return
-	 */
-	protected abstract InputStream getInputStream(String href, String base);
+    /**
+     * Returns the input stream.
+     * 
+     * @param href
+     * @param base
+     * @return
+     */
+    protected abstract InputStream getInputStream( String href, String base );
 
 }

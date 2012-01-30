@@ -40,85 +40,92 @@ import fr.opensagres.xdocreport.template.utils.TemplateUtils;
 import fr.opensagres.xdocreport.template.velocity.VelocityConstants;
 
 /**
- * Velocity resource loader {@link ResourceLoader} implementation used to cache
- * entry name of {@link XDocArchive} which must be merged with Java model with
- * velocity template engine.
- * 
+ * Velocity resource loader {@link ResourceLoader} implementation used to cache entry name of {@link XDocArchive} which
+ * must be merged with Java model with velocity template engine.
  */
-public class XDocReportEntryResourceLoader extends ResourceLoader implements
-		VelocityConstants {
+public class XDocReportEntryResourceLoader
+    extends ResourceLoader
+    implements VelocityConstants
+{
 
-	private ITemplateEngine templateEngine = null;
+    private ITemplateEngine templateEngine = null;
 
-	@Override
-	public void commonInit(RuntimeServices rs, ExtendedProperties configuration) {
-		super.commonInit(rs, configuration);
-		this.templateEngine = (ITemplateEngine) rs
-				.getProperty(VELOCITY_TEMPLATE_ENGINE_KEY);
-	}
+    @Override
+    public void commonInit( RuntimeServices rs, ExtendedProperties configuration )
+    {
+        super.commonInit( rs, configuration );
+        this.templateEngine = (ITemplateEngine) rs.getProperty( VELOCITY_TEMPLATE_ENGINE_KEY );
+    }
 
-	@Override
-	public void init(ExtendedProperties configuration) {
-		// Do nothing
-	}
+    @Override
+    public void init( ExtendedProperties configuration )
+    {
+        // Do nothing
+    }
 
-	@Override
-	public InputStream getResourceStream(String source)
-			throws ResourceNotFoundException {
-		IEntryInfo cacheInfo = TemplateUtils.getTemplateCacheInfo(
-				templateEngine.getTemplateCacheInfoProvider(), source);
-		if (cacheInfo != null) {
-			InputStream inputStream = cacheInfo.getInputStream();
-			if (inputStream != null) {
-				return inputStream;
-			}
-		}
-		throw new ResourceNotFoundException(
-				"Cannot find input stream for the entry with source=" + source);
-		//
-		//
-		// InputStream inputStream = getEntryInputStream(source);
-		// if (inputStream == null) {
-		// throw new ResourceNotFoundException(
-		// "Cannot find input stream for the entry with source="
-		// + source);
-		// }
-		// return inputStream;
-	}
+    @Override
+    public InputStream getResourceStream( String source )
+        throws ResourceNotFoundException
+    {
+        IEntryInfo cacheInfo =
+            TemplateUtils.getTemplateCacheInfo( templateEngine.getTemplateCacheInfoProvider(), source );
+        if ( cacheInfo != null )
+        {
+            InputStream inputStream = cacheInfo.getInputStream();
+            if ( inputStream != null )
+            {
+                return inputStream;
+            }
+        }
+        throw new ResourceNotFoundException( "Cannot find input stream for the entry with source=" + source );
+        //
+        //
+        // InputStream inputStream = getEntryInputStream(source);
+        // if (inputStream == null) {
+        // throw new ResourceNotFoundException(
+        // "Cannot find input stream for the entry with source="
+        // + source);
+        // }
+        // return inputStream;
+    }
 
-	/**
-	 * Overrides superclass for better performance.
-	 */
-	@Override
-	public boolean resourceExists(String resourceName) {
-		ITemplateCacheInfoProvider templateCacheInfoProvider = templateEngine
-				.getTemplateCacheInfoProvider();
-		if (templateCacheInfoProvider == null) {
-			return false;
-		}
-		IEntryInfo cacheInfo = TemplateUtils.getTemplateCacheInfo(
-				templateEngine.getTemplateCacheInfoProvider(), resourceName);
-		return (cacheInfo != null);
-	}
+    /**
+     * Overrides superclass for better performance.
+     */
+    @Override
+    public boolean resourceExists( String resourceName )
+    {
+        ITemplateCacheInfoProvider templateCacheInfoProvider = templateEngine.getTemplateCacheInfoProvider();
+        if ( templateCacheInfoProvider == null )
+        {
+            return false;
+        }
+        IEntryInfo cacheInfo =
+            TemplateUtils.getTemplateCacheInfo( templateEngine.getTemplateCacheInfoProvider(), resourceName );
+        return ( cacheInfo != null );
+    }
 
-	/**
-	 * @see org.apache.velocity.runtime.resource.loader.ResourceLoader#isSourceModified(org.apache.velocity.runtime.resource.Resource)
-	 */
-	public boolean isSourceModified(Resource resource) {
-		return getLastModified(resource) != resource.getLastModified();
-	}
+    /**
+     * @see org.apache.velocity.runtime.resource.loader.ResourceLoader#isSourceModified(org.apache.velocity.runtime.resource.Resource)
+     */
+    public boolean isSourceModified( Resource resource )
+    {
+        return getLastModified( resource ) != resource.getLastModified();
+    }
 
-	/**
-	 * @see org.apache.velocity.runtime.resource.loader.ResourceLoader#getLastModified(org.apache.velocity.runtime.resource.Resource)
-	 */
-	public long getLastModified(Resource resource) {
-		String resourceName = resource.getName();
-		IEntryInfo cacheInfo = TemplateUtils.getTemplateCacheInfo(
-				templateEngine.getTemplateCacheInfoProvider(), resourceName);
-		if (cacheInfo != null) {
-			return cacheInfo.getLastModified();
-		}
-		return 0;
-	}
+    /**
+     * @see org.apache.velocity.runtime.resource.loader.ResourceLoader#getLastModified(org.apache.velocity.runtime.resource.Resource)
+     */
+    public long getLastModified( Resource resource )
+    {
+        String resourceName = resource.getName();
+        IEntryInfo cacheInfo =
+            TemplateUtils.getTemplateCacheInfo( templateEngine.getTemplateCacheInfoProvider(), resourceName );
+        if ( cacheInfo != null )
+        {
+            return cacheInfo.getLastModified();
+        }
+        return 0;
+    }
 
 }

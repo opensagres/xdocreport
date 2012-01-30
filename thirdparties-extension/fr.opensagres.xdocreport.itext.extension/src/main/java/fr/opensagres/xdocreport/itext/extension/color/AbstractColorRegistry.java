@@ -28,30 +28,36 @@ import java.awt.Color;
 import java.util.HashMap;
 import java.util.Map;
 
-public abstract class AbstractColorRegistry {
+public abstract class AbstractColorRegistry
+{
 
-	private final Map<String, Color> colors = new HashMap<String, Color>();
+    private final Map<String, Color> colors = new HashMap<String, Color>();
 
-	public Color getColor(String style) {
-		Color color = colors.get(style);
-		if (color == null) {
-			color = internalCreateColor(style);
-		}
-		return color;
-	}
+    public Color getColor( String style )
+    {
+        Color color = colors.get( style );
+        if ( color == null )
+        {
+            color = internalCreateColor( style );
+        }
+        return color;
+    }
 
-	private synchronized Color internalCreateColor(String style) {
-		Color color = colors.get(style);
-		if (color != null) {
-			return color;
-		}
-		color = createColor(style);
-		if (color != null) {
-			colors.put(style, color);
-		}
-		return color;
-	}
+    private synchronized Color internalCreateColor( String style )
+    {
+        Color color = colors.get( style );
+        if ( color != null )
+        {
+            return color;
+        }
+        color = createColor( style );
+        if ( color != null )
+        {
+            colors.put( style, color );
+        }
+        return color;
+    }
 
-	protected abstract Color createColor(String style);
+    protected abstract Color createColor( String style );
 
 }

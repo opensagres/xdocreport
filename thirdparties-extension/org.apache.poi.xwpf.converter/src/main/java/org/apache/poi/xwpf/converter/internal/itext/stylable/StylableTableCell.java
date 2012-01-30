@@ -24,7 +24,6 @@
  */
 package org.apache.poi.xwpf.converter.internal.itext.stylable;
 
-
 import java.awt.Color;
 
 import org.apache.poi.xwpf.converter.internal.itext.styles.Style;
@@ -38,123 +37,142 @@ import com.lowagie.text.pdf.PdfPCell;
 
 import fr.opensagres.xdocreport.itext.extension.IITextContainer;
 
+public class StylableTableCell
+    extends PdfPCell
+    implements IStylableContainer
+{
 
-public class StylableTableCell extends PdfPCell implements IStylableContainer {
+    private static final long serialVersionUID = 664309269352903329L;
 
-	private static final long serialVersionUID = 664309269352903329L;
+    private final IStylableFactory ownerDocument;
 
-	private final IStylableFactory ownerDocument;
-	private final IStylableContainer parent;
-	private Style lastStyleApplied = null;
+    private final IStylableContainer parent;
 
-	public StylableTableCell(IStylableFactory ownerDocument,
-			IStylableContainer parent) {
-		this.ownerDocument = ownerDocument;
-		this.parent = parent;
-	}
+    private Style lastStyleApplied = null;
 
-	public void addElement(Element element) {
-		super.addElement(element);
-	}
+    public StylableTableCell( IStylableFactory ownerDocument, IStylableContainer parent )
+    {
+        this.ownerDocument = ownerDocument;
+        this.parent = parent;
+    }
 
-	public void applyStyles(Object ele,Style style) {
-		this.lastStyleApplied = style;
+    public void addElement( Element element )
+    {
+        super.addElement( element );
+    }
 
-		StyleTableRowProperties tableRowProperties = style
-				.getTableRowProperties();
-		if (tableRowProperties != null) {
-			Float rowHeight = tableRowProperties.getRowHeight();
-			if (rowHeight != null) {
-				super.setFixedHeight(rowHeight);
-			}
-		}
-		StyleTableCellProperties tableCellProperties = style
-				.getTableCellProperties();
-		if (tableCellProperties != null) {
+    public void applyStyles( Object ele, Style style )
+    {
+        this.lastStyleApplied = style;
 
-			// background-color
-			Color backgroundColor = tableCellProperties.getBackgroundColor();
-			if (backgroundColor != null) {
-				super.setBackgroundColor(backgroundColor);
-			}
+        StyleTableRowProperties tableRowProperties = style.getTableRowProperties();
+        if ( tableRowProperties != null )
+        {
+            Float rowHeight = tableRowProperties.getRowHeight();
+            if ( rowHeight != null )
+            {
+                super.setFixedHeight( rowHeight );
+            }
+        }
+        StyleTableCellProperties tableCellProperties = style.getTableCellProperties();
+        if ( tableCellProperties != null )
+        {
 
-			// border
-			StyleBorder border = tableCellProperties.getBorder();
-			StyleUtils.applyStyles(border, this);
+            // background-color
+            Color backgroundColor = tableCellProperties.getBackgroundColor();
+            if ( backgroundColor != null )
+            {
+                super.setBackgroundColor( backgroundColor );
+            }
 
-			// border-top
-			StyleBorder borderTop = tableCellProperties.getBorderTop();
-			StyleUtils.applyStyles(borderTop, this);
+            // border
+            StyleBorder border = tableCellProperties.getBorder();
+            StyleUtils.applyStyles( border, this );
 
-			// border-bottom
-			StyleBorder borderBottom = tableCellProperties.getBorderBottom();
-			StyleUtils.applyStyles(borderBottom, this);
-			
-			// border-left
-			StyleBorder borderLeft = tableCellProperties.getBorderLeft();
-			StyleUtils.applyStyles(borderLeft, this);
+            // border-top
+            StyleBorder borderTop = tableCellProperties.getBorderTop();
+            StyleUtils.applyStyles( borderTop, this );
 
-			// border-right
-			StyleBorder borderRight = tableCellProperties.getBorderRight();
-			StyleUtils.applyStyles(borderRight, this);
+            // border-bottom
+            StyleBorder borderBottom = tableCellProperties.getBorderBottom();
+            StyleUtils.applyStyles( borderBottom, this );
 
-			// padding
-			StylePadding padding = tableCellProperties.getPadding();
-			if (padding != null) {
+            // border-left
+            StyleBorder borderLeft = tableCellProperties.getBorderLeft();
+            StyleUtils.applyStyles( borderLeft, this );
 
-				// padding
-				if (padding.getPadding() != null) {
-					super.setPadding(padding.getPadding());
-				}
+            // border-right
+            StyleBorder borderRight = tableCellProperties.getBorderRight();
+            StyleUtils.applyStyles( borderRight, this );
 
-				// padding-top
-				if (padding.getPaddingTop() != null) {
-					super.setPaddingTop(padding.getPaddingTop());
-				}
+            // padding
+            StylePadding padding = tableCellProperties.getPadding();
+            if ( padding != null )
+            {
 
-				// padding-bottom
-				if (padding.getPaddingBottom() != null) {
-					super.setPaddingBottom(padding.getPaddingBottom());
-				}
+                // padding
+                if ( padding.getPadding() != null )
+                {
+                    super.setPadding( padding.getPadding() );
+                }
 
-				// padding-right
-				if (padding.getPaddingRight() != null) {
-					super.setPaddingRight(padding.getPaddingRight());
-				}
+                // padding-top
+                if ( padding.getPaddingTop() != null )
+                {
+                    super.setPaddingTop( padding.getPaddingTop() );
+                }
 
-				// padding-left
-				if (padding.getPaddingLeft() != null) {
-					super.setPaddingLeft(padding.getPaddingLeft());
-				}
-			}
+                // padding-bottom
+                if ( padding.getPaddingBottom() != null )
+                {
+                    super.setPaddingBottom( padding.getPaddingBottom() );
+                }
 
-			// Alignment
-			int verticalAlignment = tableCellProperties.getVerticalAlignment();
-			if (verticalAlignment != Element.ALIGN_UNDEFINED) {
-				super.setVerticalAlignment(verticalAlignment);
-			}
+                // padding-right
+                if ( padding.getPaddingRight() != null )
+                {
+                    super.setPaddingRight( padding.getPaddingRight() );
+                }
 
-		}
-	}
+                // padding-left
+                if ( padding.getPaddingLeft() != null )
+                {
+                    super.setPaddingLeft( padding.getPaddingLeft() );
+                }
+            }
 
-	public Style getLastStyleApplied() {
-		return lastStyleApplied;
-	}
+            // Alignment
+            int verticalAlignment = tableCellProperties.getVerticalAlignment();
+            if ( verticalAlignment != Element.ALIGN_UNDEFINED )
+            {
+                super.setVerticalAlignment( verticalAlignment );
+            }
 
-	public IStylableContainer getParent() {
-		return parent;
-	}
+        }
+    }
 
-	public Element getElement() {
-		return this;
-	}
-	
-	public IITextContainer getITextContainer() {
-		return parent;
-	}
+    public Style getLastStyleApplied()
+    {
+        return lastStyleApplied;
+    }
 
-	public void setITextContainer(IITextContainer container) {
-		
-	}
+    public IStylableContainer getParent()
+    {
+        return parent;
+    }
+
+    public Element getElement()
+    {
+        return this;
+    }
+
+    public IITextContainer getITextContainer()
+    {
+        return parent;
+    }
+
+    public void setITextContainer( IITextContainer container )
+    {
+
+    }
 }
-

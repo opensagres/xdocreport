@@ -38,55 +38,57 @@ import fr.opensagres.xdocreport.converter.Options;
 import fr.opensagres.xdocreport.converter.XDocConverterException;
 import fr.opensagres.xdocreport.converter.internal.AbstractConverterNoEntriesSupport;
 
-public class ODF2XHTMLConverter extends AbstractConverterNoEntriesSupport
-		implements MimeMappingConstants {
+public class ODF2XHTMLConverter
+    extends AbstractConverterNoEntriesSupport
+    implements MimeMappingConstants
+{
 
-	private static final ODF2XHTMLConverter INSTANCE = new ODF2XHTMLConverter();
+    private static final ODF2XHTMLConverter INSTANCE = new ODF2XHTMLConverter();
 
-	public static ODF2XHTMLConverter getInstance() {
-		return INSTANCE;
-	}
+    public static ODF2XHTMLConverter getInstance()
+    {
+        return INSTANCE;
+    }
 
-	public void convert(InputStream in, OutputStream out, Options options)
-			throws XDocConverterException {
-		try {
-			OdfTextDocument odfDocument = OdfTextDocument.loadDocument(in);
-			org.odftoolkit.odfdom.converter.xhtml.ODF2XHTMLConverter
-					.getInstance().convert(odfDocument, out,
-							getXHTMLOptions(options));
-		} catch (ODFConverterException e) {
-			throw new XDocConverterException(e);
-		} catch (IOException e) {
-			throw new XDocConverterException(e);
-		} catch (Exception e) {
-			throw new XDocConverterException(e);
-		}
-	}
+    public void convert( InputStream in, OutputStream out, Options options )
+        throws XDocConverterException
+    {
+        try
+        {
+            OdfTextDocument odfDocument = OdfTextDocument.loadDocument( in );
+            org.odftoolkit.odfdom.converter.xhtml.ODF2XHTMLConverter.getInstance().convert( odfDocument, out,
+                                                                                            getXHTMLOptions( options ) );
+        }
+        catch ( ODFConverterException e )
+        {
+            throw new XDocConverterException( e );
+        }
+        catch ( IOException e )
+        {
+            throw new XDocConverterException( e );
+        }
+        catch ( Exception e )
+        {
+            throw new XDocConverterException( e );
+        }
+    }
 
-	private XHTMLOptions getXHTMLOptions(Options options) {
-		Object value = options.getSubOptions(XHTMLOptions.class);
-		return value instanceof XHTMLOptions ? (XHTMLOptions) value : null;
-	}
+    private XHTMLOptions getXHTMLOptions( Options options )
+    {
+        Object value = options.getSubOptions( XHTMLOptions.class );
+        return value instanceof XHTMLOptions ? (XHTMLOptions) value : null;
+    }
 
-	/*
-	private XHTMLOptions toODFOptions(Options o) {
-		XHTMLOptions options = XHTMLOptions.create();
-		final IURIResolver resolver = (IURIResolver) o
-				.getProperty(IURIResolver.class.getName());
-		if (resolver != null) {
-			options.URIResolver(new org.odftoolkit.odfdom.converter.IURIResolver() {
+    /*
+     * private XHTMLOptions toODFOptions(Options o) { XHTMLOptions options = XHTMLOptions.create(); final IURIResolver
+     * resolver = (IURIResolver) o .getProperty(IURIResolver.class.getName()); if (resolver != null) {
+     * options.URIResolver(new org.odftoolkit.odfdom.converter.IURIResolver() { public String resolve(String uri) {
+     * return resolver.resolve(uri); } }); } return options; }
+     */
 
-				public String resolve(String uri) {
-					return resolver.resolve(uri);
-				}
-			});
-
-		}
-		return options;
-	}*/
-
-	public MimeMapping getMimeMapping() {
-		return XHTML_MIME_MAPPING;
-	}
+    public MimeMapping getMimeMapping()
+    {
+        return XHTML_MIME_MAPPING;
+    }
 
 }

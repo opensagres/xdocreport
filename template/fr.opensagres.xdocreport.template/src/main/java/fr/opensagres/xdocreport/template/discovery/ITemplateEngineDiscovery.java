@@ -29,17 +29,16 @@ import fr.opensagres.xdocreport.template.ITemplateEngine;
 
 /**
  * Discovery used to create template engine instance.
- * 
  */
-public interface ITemplateEngineDiscovery extends IBaseDiscovery {
+public interface ITemplateEngineDiscovery
+    extends IBaseDiscovery
+{
 
-	/**
-	 * Returns the default template engine to use for report generation when an
-	 * {@link IXDocReport} is created with
-	 * {@link XDocReportRegistry#loadReport(java.io.InputStream)} without
-	 * specifying the template engine.
-	 * 
-	 * @return
-	 */
-	ITemplateEngine createTemplateEngine();
+    /**
+     * Returns the default template engine to use for report generation when an {@link IXDocReport} is created with
+     * {@link XDocReportRegistry#loadReport(java.io.InputStream)} without specifying the template engine.
+     * 
+     * @return
+     */
+    ITemplateEngine createTemplateEngine();
 }

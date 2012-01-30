@@ -31,14 +31,17 @@ import junit.framework.TestCase;
 import fr.opensagres.xdocreport.template.FieldExtractor;
 import fr.opensagres.xdocreport.template.FieldsExtractor;
 
-public class FreemarkerTemplateEngineExtractVariablesTestCase extends TestCase {
+public class FreemarkerTemplateEngineExtractVariablesTestCase
+    extends TestCase
+{
 
-	public void testExtractVariables() throws Exception {
-		Reader reader = new StringReader("Hello ${name}!");
-		FieldsExtractor<FieldExtractor> extractor = FieldsExtractor.create();
-		new FreemarkerTemplateEngine()
-				.extractFields(reader, "hello", extractor);
-		assertEquals(1, extractor.getFields().size());
-		assertEquals("name", extractor.getFields().get(0).getName());
-	}
+    public void testExtractVariables()
+        throws Exception
+    {
+        Reader reader = new StringReader( "Hello ${name}!" );
+        FieldsExtractor<FieldExtractor> extractor = FieldsExtractor.create();
+        new FreemarkerTemplateEngine().extractFields( reader, "hello", extractor );
+        assertEquals( 1, extractor.getFields().size() );
+        assertEquals( "name", extractor.getFields().get( 0 ).getName() );
+    }
 }

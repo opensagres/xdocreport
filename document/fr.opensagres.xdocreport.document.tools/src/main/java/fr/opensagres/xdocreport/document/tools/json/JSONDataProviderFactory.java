@@ -7,24 +7,29 @@ import fr.opensagres.xdocreport.document.tools.AbstractDataProviderFactory;
 import fr.opensagres.xdocreport.document.tools.IDataProvider;
 import fr.opensagres.xdocreport.template.formatter.FieldsMetadata;
 
-public class JSONDataProviderFactory extends AbstractDataProviderFactory {
+public class JSONDataProviderFactory
+    extends AbstractDataProviderFactory
+{
 
-	private static final String ID = "json";
-	private static final String DESCRIPTION = "JSON Data Provider";
+    private static final String ID = "json";
 
-	public JSONDataProviderFactory() {
-		super(ID, DESCRIPTION);
-	}
+    private static final String DESCRIPTION = "JSON Data Provider";
 
-	public IDataProvider create(InputStream data, InputStream properties)
-			throws Exception {
-		return new JSONDataProvider(data, properties);
-	}
+    public JSONDataProviderFactory()
+    {
+        super( ID, DESCRIPTION );
+    }
 
-	public void generateDefaultData(FieldsMetadata fieldsMetadata, OutputStream out)
-			throws Exception {
-		// Generate JSON
-		FieldsMetadataJSONSerializer.getInstance().save(fieldsMetadata, out,
-				true);
-	}
+    public IDataProvider create( InputStream data, InputStream properties )
+        throws Exception
+    {
+        return new JSONDataProvider( data, properties );
+    }
+
+    public void generateDefaultData( FieldsMetadata fieldsMetadata, OutputStream out )
+        throws Exception
+    {
+        // Generate JSON
+        FieldsMetadataJSONSerializer.getInstance().save( fieldsMetadata, out, true );
+    }
 }

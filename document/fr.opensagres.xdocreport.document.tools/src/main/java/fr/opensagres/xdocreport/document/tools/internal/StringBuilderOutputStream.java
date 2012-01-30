@@ -23,14 +23,15 @@
  * WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 package fr.opensagres.xdocreport.document.tools.internal;
+
 import java.io.IOException;
 import java.io.OutputStream;
 
-
-public class StringBuilderOutputStream extends OutputStream
+public class StringBuilderOutputStream
+    extends OutputStream
 {
     private StringBuilder textBuffer = new StringBuilder();
-    
+
     /**
      * 
      */
@@ -42,21 +43,21 @@ public class StringBuilderOutputStream extends OutputStream
     /*
      * @see java.io.OutputStream#write(int)
      */
-    public void write(int b) throws IOException
+    public void write( int b )
+        throws IOException
     {
-        char a = (char)b;
-        textBuffer.append(a);
+        char a = (char) b;
+        textBuffer.append( a );
     }
 
     public String toString()
     {
         return textBuffer.toString();
     }
-  
+
     public void clear()
     {
-        textBuffer.delete(0, textBuffer.length());
+        textBuffer.delete( 0, textBuffer.length() );
     }
-
 
 }

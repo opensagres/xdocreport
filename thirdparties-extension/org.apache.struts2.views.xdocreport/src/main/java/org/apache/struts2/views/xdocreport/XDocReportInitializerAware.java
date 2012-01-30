@@ -27,7 +27,9 @@ package org.apache.struts2.views.xdocreport;
 import fr.opensagres.xdocreport.core.XDocReportException;
 import fr.opensagres.xdocreport.document.IXDocReport;
 
-public interface XDocReportInitializerAware {
+public interface XDocReportInitializerAware
+{
 
-	void initialize(IXDocReport report) throws XDocReportException;
+    void initialize( IXDocReport report )
+        throws XDocReportException;
 }

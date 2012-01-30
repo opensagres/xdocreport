@@ -33,54 +33,68 @@ import com.lowagie.text.Phrase;
 
 import fr.opensagres.xdocreport.itext.extension.IITextContainer;
 
-public class StylablePhrase extends Phrase implements IStylableContainer {
+public class StylablePhrase
+    extends Phrase
+    implements IStylableContainer
+{
 
-	private static final long serialVersionUID = 664309269352903329L;
+    private static final long serialVersionUID = 664309269352903329L;
 
-	private final IStylableFactory ownerDocument;
-	private IStylableContainer parent;
-	private Style lastStyleApplied = null;
+    private final IStylableFactory ownerDocument;
 
-	public StylablePhrase(IStylableFactory ownerDocument,
-			IStylableContainer parent) {
-		this.ownerDocument = ownerDocument;
-		this.parent = parent;
-	}
+    private IStylableContainer parent;
 
-	public void addElement(Element element) {
-		super.add(element);
-	}
+    private Style lastStyleApplied = null;
 
-	public void applyStyles(Style style) {
-		this.lastStyleApplied = style;
+    public StylablePhrase( IStylableFactory ownerDocument, IStylableContainer parent )
+    {
+        this.ownerDocument = ownerDocument;
+        this.parent = parent;
+    }
 
-		StyleTextProperties textProperties = style.getTextProperties();
-		if (textProperties != null) {
-			// Font
-			Font font = textProperties.getFont();
-			if (font != null) {
-				super.setFont(font);
-			}
-		}
-	}
+    public void addElement( Element element )
+    {
+        super.add( element );
+    }
 
-	public Style getLastStyleApplied() {
-		return lastStyleApplied;
-	}
+    public void applyStyles( Style style )
+    {
+        this.lastStyleApplied = style;
 
-	public IStylableContainer getParent() {
-		return parent;
-	}
+        StyleTextProperties textProperties = style.getTextProperties();
+        if ( textProperties != null )
+        {
+            // Font
+            Font font = textProperties.getFont();
+            if ( font != null )
+            {
+                super.setFont( font );
+            }
+        }
+    }
 
-	public Element getElement() {
-		return this;
-	}
-	
-	public IITextContainer getITextContainer() {
-		return parent;
-	}
+    public Style getLastStyleApplied()
+    {
+        return lastStyleApplied;
+    }
 
-	public void setITextContainer(IITextContainer container) {
-		
-	}
+    public IStylableContainer getParent()
+    {
+        return parent;
+    }
+
+    public Element getElement()
+    {
+        return this;
+    }
+
+    public IITextContainer getITextContainer()
+    {
+        return parent;
+    }
+
+    public void setITextContainer( IITextContainer container )
+    {
+
+    }
 }

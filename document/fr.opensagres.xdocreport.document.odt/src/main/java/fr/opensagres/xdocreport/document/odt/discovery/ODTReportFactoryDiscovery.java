@@ -35,37 +35,42 @@ import fr.opensagres.xdocreport.document.odt.ODTUtils;
 import fr.opensagres.xdocreport.document.registry.XDocReportRegistry;
 
 /**
- * ODT discovery used by the
- * {@link XDocReportRegistry#loadReport(java.io.InputStream)} to create an
- * instance of {@link ODTReport} if input stream to load is an ODT.
- * 
+ * ODT discovery used by the {@link XDocReportRegistry#loadReport(java.io.InputStream)} to create an instance of
+ * {@link ODTReport} if input stream to load is an ODT.
  */
-public class ODTReportFactoryDiscovery extends
-		AbstractXDocReportFactoryDiscovery implements
-		IXDocReportFactoryDiscovery {
+public class ODTReportFactoryDiscovery
+    extends AbstractXDocReportFactoryDiscovery
+    implements IXDocReportFactoryDiscovery
+{
 
-	public boolean isAdaptFor(XDocArchive archive) {
-		return ODTUtils.isODT(archive);
-	}
+    public boolean isAdaptFor( XDocArchive archive )
+    {
+        return ODTUtils.isODT( archive );
+    }
 
-	public IXDocReport createReport() {
-		return new ODTReport();
-	}
+    public IXDocReport createReport()
+    {
+        return new ODTReport();
+    }
 
-	public MimeMapping getMimeMapping() {
-		return ODTConstants.MIME_MAPPING;
-	}
+    public MimeMapping getMimeMapping()
+    {
+        return ODTConstants.MIME_MAPPING;
+    }
 
-	public String getDescription() {
-		return ODTConstants.DESCRIPTION_DISCOVERY;
-	}
+    public String getDescription()
+    {
+        return ODTConstants.DESCRIPTION_DISCOVERY;
+    }
 
-	public String getId() {
-		return ODTConstants.ID_DISCOVERY;
-	}
+    public String getId()
+    {
+        return ODTConstants.ID_DISCOVERY;
+    }
 
-	public Class<?> getReportClass() {
-		return ODTReport.class;
-	}
+    public Class<?> getReportClass()
+    {
+        return ODTReport.class;
+    }
 
 }

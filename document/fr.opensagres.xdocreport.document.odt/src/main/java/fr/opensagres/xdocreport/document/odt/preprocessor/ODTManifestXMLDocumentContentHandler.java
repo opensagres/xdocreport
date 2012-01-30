@@ -33,77 +33,76 @@ import fr.opensagres.xdocreport.document.preprocessor.sax.BufferedDocumentConten
 import fr.opensagres.xdocreport.template.formatter.FieldsMetadata;
 import fr.opensagres.xdocreport.template.formatter.IDocumentFormatter;
 
-public class ODTManifestXMLDocumentContentHandler extends
-		BufferedDocumentContentHandler<BufferedDocument> {
+public class ODTManifestXMLDocumentContentHandler
+    extends BufferedDocumentContentHandler<BufferedDocument>
+{
 
-	private static final String ITEM_INFO = "___info";
+    private static final String ITEM_INFO = "___info";
 
-	protected final IDocumentFormatter formatter;
+    protected final IDocumentFormatter formatter;
 
-	public ODTManifestXMLDocumentContentHandler(FieldsMetadata fieldsMetadata,
-			IDocumentFormatter formatter) {
-		this.formatter = formatter;
-	}
+    public ODTManifestXMLDocumentContentHandler( FieldsMetadata fieldsMetadata, IDocumentFormatter formatter )
+    {
+        this.formatter = formatter;
+    }
 
-	@Override
-	public void doEndElement(String uri, String localName, String name)
-			throws SAXException {
-		if (MANIFEST_ELT.equals(localName)) {
-			StringBuilder script = new StringBuilder();
+    @Override
+    public void doEndElement( String uri, String localName, String name )
+        throws SAXException
+    {
+        if ( MANIFEST_ELT.equals( localName ) )
+        {
+            StringBuilder script = new StringBuilder();
 
-			String startIf = formatter
-					.getStartIfDirective(IDocumentFormatter.IMAGE_REGISTRY_KEY);
-			script.append(startIf);
+            String startIf = formatter.getStartIfDirective( IDocumentFormatter.IMAGE_REGISTRY_KEY );
+            script.append( startIf );
 
-			// 1) Generate script for dynamic images
-			generateScriptsForDynamicImages(script);
+            // 1) Generate script for dynamic images
+            generateScriptsForDynamicImages( script );
 
-			script.append(formatter
-					.getEndIfDirective(IDocumentFormatter.IMAGE_REGISTRY_KEY));
+            script.append( formatter.getEndIfDirective( IDocumentFormatter.IMAGE_REGISTRY_KEY ) );
 
-			getCurrentElement().append(script.toString());
+            getCurrentElement().append( script.toString() );
 
-		}
-		super.doEndElement(uri, localName, name);
-	}
+        }
+        super.doEndElement( uri, localName, name );
+    }
 
-	private void generateScriptsForDynamicImages(StringBuilder script) {
+    private void generateScriptsForDynamicImages( StringBuilder script )
+    {
 
-		String listInfos = formatter.formatAsSimpleField(false,
-				IDocumentFormatter.IMAGE_REGISTRY_KEY, "ImageProviderInfos");
-		String itemListInfos = formatter.formatAsSimpleField(false, ITEM_INFO);
+        String listInfos =
+            formatter.formatAsSimpleField( false, IDocumentFormatter.IMAGE_REGISTRY_KEY, "ImageProviderInfos" );
+        String itemListInfos = formatter.formatAsSimpleField( false, ITEM_INFO );
 
-		String startLoop = formatter.getStartLoopDirective(itemListInfos,
-				listInfos);
+        String startLoop = formatter.getStartLoopDirective( itemListInfos, listInfos );
 
-		// 1) Start loop
-		script.append(startLoop);
+        // 1) Start loop
+        script.append( startLoop );
 
-		// <Relationship Id="rId4"
-		// Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/image"
-		// Target="media/image1.png"/>
+        // <Relationship Id="rId4"
+        // Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/image"
+        // Target="media/image1.png"/>
 
-		String mediaType = "image/"
-				+ formatter.formatAsSimpleField(true, ITEM_INFO, "ImageType");
-		String fullPath = formatter.formatAsSimpleField(true, ITEM_INFO,
-				"ImageFullPath");
-		generateManifestFileEntry(script, mediaType, fullPath);
+        String mediaType = "image/" + formatter.formatAsSimpleField( true, ITEM_INFO, "ImageType" );
+        String fullPath = formatter.formatAsSimpleField( true, ITEM_INFO, "ImageFullPath" );
+        generateManifestFileEntry( script, mediaType, fullPath );
 
-		// 3) end loop
-		script.append(formatter.getEndLoopDirective(itemListInfos));
+        // 3) end loop
+        script.append( formatter.getEndLoopDirective( itemListInfos ) );
 
-	}
+    }
 
-	protected void generateManifestFileEntry(StringBuilder script,
-			String mediaType, String fullPath) {
+    protected void generateManifestFileEntry( StringBuilder script, String mediaType, String fullPath )
+    {
 
-		// <manifest:file-entry manifest:media-type="image/jpeg"
-		// manifest:full-path="Pictures/1000000000000754000002868739138F.jpg" />
+        // <manifest:file-entry manifest:media-type="image/jpeg"
+        // manifest:full-path="Pictures/1000000000000754000002868739138F.jpg" />
 
-		script.append("<manifest:file-entry manifest:media-type=\"");
-		script.append(mediaType);
-		script.append("\" manifest:full-path=\"");
-		script.append(fullPath);
-		script.append("\" />");
-	}
+        script.append( "<manifest:file-entry manifest:media-type=\"" );
+        script.append( mediaType );
+        script.append( "\" manifest:full-path=\"" );
+        script.append( fullPath );
+        script.append( "\" />" );
+    }
 }

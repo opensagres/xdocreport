@@ -22,30 +22,38 @@ import fr.opensagres.xdocreport.converter.discovery.IConverterDiscovery;
 import fr.opensagres.xdocreport.converter.docx.pdf.fop.DocxFOPConverter;
 import fr.opensagres.xdocreport.core.document.DocumentKind;
 
-public class DocxFOPConverterDiscovery implements IConverterDiscovery {
+public class DocxFOPConverterDiscovery
+    implements IConverterDiscovery
+{
 
-	public String getId() {
-		return "Docx2PDFViaFOP";
-	}
+    public String getId()
+    {
+        return "Docx2PDFViaFOP";
+    }
 
-	public String getDescription() {
-		return "Convert Docx 2 PDF via FOP";
-	}
+    public String getDescription()
+    {
+        return "Convert Docx 2 PDF via FOP";
+    }
 
-	public String getFrom() {
-		return DocumentKind.DOCX.name();
-	}
+    public String getFrom()
+    {
+        return DocumentKind.DOCX.name();
+    }
 
-	public String getTo() {
-		return ConverterTypeTo.PDF.name();
-	}
+    public String getTo()
+    {
+        return ConverterTypeTo.PDF.name();
+    }
 
-	public String getVia() {
-		return ConverterTypeVia.FOP.name();
-	}
+    public String getVia()
+    {
+        return ConverterTypeVia.FOP.name();
+    }
 
-	public IConverter getConverter() {
-		return DocxFOPConverter.getInstance();
-	}
+    public IConverter getConverter()
+    {
+        return DocxFOPConverter.getInstance();
+    }
 
 }

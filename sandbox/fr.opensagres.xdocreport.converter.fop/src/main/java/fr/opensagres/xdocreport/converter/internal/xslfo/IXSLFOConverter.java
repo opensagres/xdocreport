@@ -23,12 +23,11 @@ import fr.opensagres.xdocreport.core.io.IEntryInputStreamProvider;
 
 /**
  * XSL-FO converter interface.
- * 
  */
-public interface IXSLFOConverter {
+public interface IXSLFOConverter
+{
 
-	void convert2FO(IEntryInputStreamProvider inProvider, OutputStream out,
-			Options options) throws XDocConverterException;
+    void convert2FO( IEntryInputStreamProvider inProvider, OutputStream out, Options options )
+        throws XDocConverterException;
 
-	
 }

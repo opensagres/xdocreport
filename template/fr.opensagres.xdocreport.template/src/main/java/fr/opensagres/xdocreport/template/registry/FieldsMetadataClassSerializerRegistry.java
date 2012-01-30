@@ -6,37 +6,46 @@ import java.util.Map;
 import fr.opensagres.xdocreport.core.registry.AbstractRegistry;
 import fr.opensagres.xdocreport.template.formatter.IFieldsMetadataClassSerializer;
 
-public class FieldsMetadataClassSerializerRegistry extends
-		AbstractRegistry<IFieldsMetadataClassSerializer> {
+public class FieldsMetadataClassSerializerRegistry
+    extends AbstractRegistry<IFieldsMetadataClassSerializer>
+{
 
-	private static final FieldsMetadataClassSerializerRegistry INSTANCE = new FieldsMetadataClassSerializerRegistry();
-	private Map<String, IFieldsMetadataClassSerializer> serializers = new HashMap<String, IFieldsMetadataClassSerializer>();
+    private static final FieldsMetadataClassSerializerRegistry INSTANCE = new FieldsMetadataClassSerializerRegistry();
 
-	public static FieldsMetadataClassSerializerRegistry getRegistry() {
-		return INSTANCE;
-	}
+    private Map<String, IFieldsMetadataClassSerializer> serializers =
+        new HashMap<String, IFieldsMetadataClassSerializer>();
 
-	public FieldsMetadataClassSerializerRegistry() {
-		super(IFieldsMetadataClassSerializer.class);
-	}
+    public static FieldsMetadataClassSerializerRegistry getRegistry()
+    {
+        return INSTANCE;
+    }
 
-	@Override
-	protected boolean registerInstance(IFieldsMetadataClassSerializer factory) {
-		serializers.put(factory.getId(), factory);
-		return true;
-	}
+    public FieldsMetadataClassSerializerRegistry()
+    {
+        super( IFieldsMetadataClassSerializer.class );
+    }
 
-	@Override
-	protected void doDispose() {
-		serializers.clear();
-	}
+    @Override
+    protected boolean registerInstance( IFieldsMetadataClassSerializer factory )
+    {
+        serializers.put( factory.getId(), factory );
+        return true;
+    }
 
-	public IFieldsMetadataClassSerializer getSerializer(String id) {
-		if (id == null) {
-			return null;
-		}
-		initializeIfNeeded();
-		return serializers.get(id);
-	}
+    @Override
+    protected void doDispose()
+    {
+        serializers.clear();
+    }
+
+    public IFieldsMetadataClassSerializer getSerializer( String id )
+    {
+        if ( id == null )
+        {
+            return null;
+        }
+        initializeIfNeeded();
+        return serializers.get( id );
+    }
 
 }

@@ -28,22 +28,24 @@ import org.apache.poi.POIXMLDocumentPart;
 import org.apache.poi.xwpf.usermodel.XWPFDocument;
 import org.apache.poi.xwpf.usermodel.XWPFPictureData;
 
-public class XWPFPictureUtil {
+public class XWPFPictureUtil
+{
 
-	/**
-	 * @param blipId
-	 * @return XXX in some case XWPFPicture.getPictureData throw a
-	 *         NullPointerException because the getDocument() of It's paragraph
-	 *         is null
-	 */
-	public static XWPFPictureData getPictureData(XWPFDocument document,
-			String blipId) {
-		for (POIXMLDocumentPart part : document.getRelations()) {
-			if (part.getPackageRelationship().getId().equals(blipId)) {
-				if (part instanceof XWPFPictureData)
-					return (XWPFPictureData) part;
-			}
-		}
-		return null;
-	}
+    /**
+     * @param blipId
+     * @return XXX in some case XWPFPicture.getPictureData throw a NullPointerException because the getDocument() of
+     *         It's paragraph is null
+     */
+    public static XWPFPictureData getPictureData( XWPFDocument document, String blipId )
+    {
+        for ( POIXMLDocumentPart part : document.getRelations() )
+        {
+            if ( part.getPackageRelationship().getId().equals( blipId ) )
+            {
+                if ( part instanceof XWPFPictureData )
+                    return (XWPFPictureData) part;
+            }
+        }
+        return null;
+    }
 }

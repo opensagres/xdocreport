@@ -24,6 +24,7 @@
  */
 package org.odftoolkit.odfdom.converter;
 
-public class Options {
+public class Options
+{
 
 }

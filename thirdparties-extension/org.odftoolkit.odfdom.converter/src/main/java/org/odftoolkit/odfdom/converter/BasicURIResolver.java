@@ -24,23 +24,30 @@
  */
 package org.odftoolkit.odfdom.converter;
 
-public class BasicURIResolver implements IURIResolver {
+public class BasicURIResolver
+    implements IURIResolver
+{
 
-	private static final String SLASH = "/";
-	private final String baseURL;
+    private static final String SLASH = "/";
 
-	public BasicURIResolver(String baseURL) {
-		if (!baseURL.endsWith(SLASH)) {
-			baseURL += SLASH;
-		}
-		this.baseURL = baseURL;
-	}
+    private final String baseURL;
 
-	public String resolve(String uri) {
-		if (uri.startsWith(SLASH)) {
-			return baseURL + uri.substring(1, uri.length());
-		}
-		return baseURL + uri;
-	}
+    public BasicURIResolver( String baseURL )
+    {
+        if ( !baseURL.endsWith( SLASH ) )
+        {
+            baseURL += SLASH;
+        }
+        this.baseURL = baseURL;
+    }
+
+    public String resolve( String uri )
+    {
+        if ( uri.startsWith( SLASH ) )
+        {
+            return baseURL + uri.substring( 1, uri.length() );
+        }
+        return baseURL + uri;
+    }
 
 }

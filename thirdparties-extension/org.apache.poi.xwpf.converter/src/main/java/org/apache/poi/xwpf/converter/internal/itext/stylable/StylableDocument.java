@@ -39,160 +39,187 @@ import com.lowagie.text.Rectangle;
 import fr.opensagres.xdocreport.itext.extension.ExtendedDocument;
 import fr.opensagres.xdocreport.itext.extension.IParagraphFactory;
 
+public class StylableDocument
+    extends ExtendedDocument
+    implements IStylableContainer, IStylableFactory, IParagraphFactory
+{
 
-public class StylableDocument extends ExtendedDocument implements
-		IStylableContainer, IStylableFactory, IParagraphFactory {
+    private final StyleEngineForIText styleEngine;
 
-	private final StyleEngineForIText styleEngine;
-	private Style lastStyleApplied = null;
+    private Style lastStyleApplied = null;
 
-	private int titleNumber = 1;
-	private StylableChapter currentChapter;
+    private int titleNumber = 1;
 
-	public StylableDocument(OutputStream out, StyleEngineForIText styleEngine)
-			throws DocumentException {
-		super(out);
-		this.styleEngine = styleEngine;
-	}
+    private StylableChapter currentChapter;
 
-	public void addElement(Element element) {
-		try {
-			if (!super.isOpen()) {
-				super.open();
-			}
-			super.add(element);
-		} catch (DocumentException e) {
-			e.printStackTrace();
-		}
-	}
+    public StylableDocument( OutputStream out, StyleEngineForIText styleEngine )
+        throws DocumentException
+    {
+        super( out );
+        this.styleEngine = styleEngine;
+    }
 
-	public StylableParagraph createParagraph(IStylableContainer parent) {
-		return new StylableParagraph(this, parent);
-	}
+    public void addElement( Element element )
+    {
+        try
+        {
+            if ( !super.isOpen() )
+            {
+                super.open();
+            }
+            super.add( element );
+        }
+        catch ( DocumentException e )
+        {
+            e.printStackTrace();
+        }
+    }
 
-	public Paragraph createParagraph() {
-		return createParagraph((IStylableContainer) null);
-	}
+    public StylableParagraph createParagraph( IStylableContainer parent )
+    {
+        return new StylableParagraph( this, parent );
+    }
 
-	public Paragraph createParagraph(Paragraph title) {
-		return new StylableParagraph(this, title, null);
-	}
+    public Paragraph createParagraph()
+    {
+        return createParagraph( (IStylableContainer) null );
+    }
 
-	public StylablePhrase createPhrase(IStylableContainer parent) {
-		return new StylablePhrase(this, parent);
-	}
+    public Paragraph createParagraph( Paragraph title )
+    {
+        return new StylableParagraph( this, title, null );
+    }
 
-	public StylableAnchor createAnchor(IStylableContainer parent) {
-		return new StylableAnchor(this, parent);
-	}
+    public StylablePhrase createPhrase( IStylableContainer parent )
+    {
+        return new StylablePhrase( this, parent );
+    }
 
-	public StylableList createList(IStylableContainer parent) {
-		return new StylableList(this, parent);
-	}
+    public StylableAnchor createAnchor( IStylableContainer parent )
+    {
+        return new StylableAnchor( this, parent );
+    }
 
-	public StylableListItem createListItem(IStylableContainer parent) {
-		return new StylableListItem(this, parent);
-	}
+    public StylableList createList( IStylableContainer parent )
+    {
+        return new StylableList( this, parent );
+    }
 
-	public StylableTable createTable(IStylableContainer parent, int numColumns) {
-		return new StylableTable(this, parent, numColumns);
-	}
+    public StylableListItem createListItem( IStylableContainer parent )
+    {
+        return new StylableListItem( this, parent );
+    }
 
-	public StylableTableCell createTableCell(IStylableContainer parent) {
-		return new StylableTableCell(this, parent);
-	}
+    public StylableTable createTable( IStylableContainer parent, int numColumns )
+    {
+        return new StylableTable( this, parent, numColumns );
+    }
 
-	public StylableChapter createChapter(IStylableContainer parent,
-			StylableParagraph title) {
-		currentChapter = new StylableChapter(this, parent, title, titleNumber++);
-		return currentChapter;
-	}
+    public StylableTableCell createTableCell( IStylableContainer parent )
+    {
+        return new StylableTableCell( this, parent );
+    }
 
-	public StylableChunk createChunk(IStylableContainer parent,
-			String textContent) {
-		return new StylableChunk(this, parent, textContent);
-	}
+    public StylableChapter createChapter( IStylableContainer parent, StylableParagraph title )
+    {
+        currentChapter = new StylableChapter( this, parent, title, titleNumber++ );
+        return currentChapter;
+    }
 
-	public StylableSection createSection(IStylableContainer parent,
-			StylableParagraph title, int numberDepth) {
-		return new StylableSection(this, parent, title, numberDepth);
-	}
+    public StylableChunk createChunk( IStylableContainer parent, String textContent )
+    {
+        return new StylableChunk( this, parent, textContent );
+    }
 
-	public StylableChapter getCurrentChapter() {
-		return currentChapter;
-	}
+    public StylableSection createSection( IStylableContainer parent, StylableParagraph title, int numberDepth )
+    {
+        return new StylableSection( this, parent, title, numberDepth );
+    }
 
-	public StyleEngineForIText getStyleEngine() {
-		return styleEngine;
-	}
+    public StylableChapter getCurrentChapter()
+    {
+        return currentChapter;
+    }
 
-	public Style getLastStyleApplied() {
-		return lastStyleApplied;
-	}
+    public StyleEngineForIText getStyleEngine()
+    {
+        return styleEngine;
+    }
 
-	public IStylableContainer getParent() {
-		return null;
-	}
+    public Style getLastStyleApplied()
+    {
+        return lastStyleApplied;
+    }
 
+    public IStylableContainer getParent()
+    {
+        return null;
+    }
 
-	public void applyStyles(Object ele,Style style) {
-		this.lastStyleApplied = style;
+    public void applyStyles( Object ele, Style style )
+    {
+        this.lastStyleApplied = style;
 
-		StylePageLayoutProperties pageLayoutProperties = style
-				.getPageLayoutProperties();
-		if (pageLayoutProperties != null) {
+        StylePageLayoutProperties pageLayoutProperties = style.getPageLayoutProperties();
+        if ( pageLayoutProperties != null )
+        {
 
-			// width/height
-			Float width = pageLayoutProperties.getWidth();
-			Float height = pageLayoutProperties.getHeight();
-			if (width != null && height != null) {
-				super.setPageSize(new Rectangle(width, height));
-			}
+            // width/height
+            Float width = pageLayoutProperties.getWidth();
+            Float height = pageLayoutProperties.getHeight();
+            if ( width != null && height != null )
+            {
+                super.setPageSize( new Rectangle( width, height ) );
+            }
 
-			// margin
-			StyleMargin margin = pageLayoutProperties.getMargin();
-			if (margin != null) {
+            // margin
+            StyleMargin margin = pageLayoutProperties.getMargin();
+            if ( margin != null )
+            {
 
-				if (margin.getMarginTop() != null) {
-					originMarginTop = margin.getMarginTop();
-				}
-				if (margin.getMarginBottom() != null) {
-					originMarginBottom = margin.getMarginBottom();
-				}
-				if (margin.getMarginRight() != null) {
-					originMarginRight = margin.getMarginRight();
-				}
-				if (margin.getMarginLeft() != null) {
-					originMarginLeft = margin.getMarginLeft();
-				}
-				// if (defaultMasterPage != null) {
-				// StylableHeaderFooter header = defaultMasterPage
-				// .getHeader();
-				// if (header != null) {
-				// marginTop += header.getTotalHeight();
-				// }
-				// StylableHeaderFooter footer = defaultMasterPage
-				// .getHeader();
-				// if (footer != null) {
-				// marginBottom += footer.getTotalHeight();
-				// }
-				// }
+                if ( margin.getMarginTop() != null )
+                {
+                    originMarginTop = margin.getMarginTop();
+                }
+                if ( margin.getMarginBottom() != null )
+                {
+                    originMarginBottom = margin.getMarginBottom();
+                }
+                if ( margin.getMarginRight() != null )
+                {
+                    originMarginRight = margin.getMarginRight();
+                }
+                if ( margin.getMarginLeft() != null )
+                {
+                    originMarginLeft = margin.getMarginLeft();
+                }
+                // if (defaultMasterPage != null) {
+                // StylableHeaderFooter header = defaultMasterPage
+                // .getHeader();
+                // if (header != null) {
+                // marginTop += header.getTotalHeight();
+                // }
+                // StylableHeaderFooter footer = defaultMasterPage
+                // .getHeader();
+                // if (footer != null) {
+                // marginBottom += footer.getTotalHeight();
+                // }
+                // }
 
-				super.setMargins(originMarginLeft, originMarginRight,
-						originMarginTop, originMarginBottom);
-			}
+                super.setMargins( originMarginLeft, originMarginRight, originMarginTop, originMarginBottom );
+            }
 
-		}
+        }
 
-	}
+    }
 
-	public Element getElement() {
-		return null;
-	}
-	
-//	@Override
-//	public StylableMasterPage getMasterPage(String masterPageName) {
-//		return (StylableMasterPage)super.getMasterPage(masterPageName);
-//	}
+    public Element getElement()
+    {
+        return null;
+    }
+
+    // @Override
+    // public StylableMasterPage getMasterPage(String masterPageName) {
+    // return (StylableMasterPage)super.getMasterPage(masterPageName);
+    // }
 }
-

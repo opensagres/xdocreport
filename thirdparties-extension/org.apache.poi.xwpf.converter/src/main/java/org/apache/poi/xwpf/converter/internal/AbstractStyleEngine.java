@@ -28,11 +28,14 @@ import org.apache.poi.xwpf.usermodel.XWPFDocument;
 
 import fr.opensagres.xdocreport.itext.extension.IITextContainer;
 
+public abstract class AbstractStyleEngine
+    extends XWPFElementVisitor<IITextContainer>
+    implements IStyleEngine
+{
 
-public abstract class AbstractStyleEngine extends XWPFElementVisitor<IITextContainer> implements IStyleEngine {
-
-	public AbstractStyleEngine(XWPFDocument document) {
-		super(document);
-	}
+    public AbstractStyleEngine( XWPFDocument document )
+    {
+        super( document );
+    }
 
 }

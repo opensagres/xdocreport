@@ -34,46 +34,57 @@ import org.odftoolkit.odfdom.pkg.OdfElement;
 import org.w3c.dom.Node;
 import org.w3c.dom.Text;
 
-public abstract class ElementVisitorConverter extends DefaultElementVisitor {
+public abstract class ElementVisitorConverter
+    extends DefaultElementVisitor
+{
 
-	protected final OdfDocument odfDocument;
-	protected final OutputStream out;
-	protected final Writer writer;
+    protected final OdfDocument odfDocument;
 
-	public ElementVisitorConverter(final OdfDocument odfDocument,
-			final OutputStream out, Writer writer) {
-		this.odfDocument = odfDocument;
-		this.out = out;
-		this.writer = writer;
-	}
+    protected final OutputStream out;
 
-	@Override
-	public void visit(OdfElement ele) {
-		Node node = ele.getFirstChild();
+    protected final Writer writer;
 
-		int nodeType = -1;
-		while (node != null) {
-			nodeType = node.getNodeType();
-			switch (nodeType) {
-			case Node.ELEMENT_NODE:
-				OdfElement element = (OdfElement) node;
-				element.accept(this);
-				break;
-			case Node.TEXT_NODE:
-				processTextNode((Text) node);
-			}
-			node = node.getNextSibling();
-		}
-	}
+    public ElementVisitorConverter( final OdfDocument odfDocument, final OutputStream out, Writer writer )
+    {
+        this.odfDocument = odfDocument;
+        this.out = out;
+        this.writer = writer;
+    }
 
-	protected abstract void processTextNode(Text node);
+    @Override
+    public void visit( OdfElement ele )
+    {
+        Node node = ele.getFirstChild();
 
-	public void save() throws IOException {
-		if (out != null) {
-			out.close();
-		}
-		if (writer != null) {
-			writer.close();
-		}
-	}
+        int nodeType = -1;
+        while ( node != null )
+        {
+            nodeType = node.getNodeType();
+            switch ( nodeType )
+            {
+                case Node.ELEMENT_NODE:
+                    OdfElement element = (OdfElement) node;
+                    element.accept( this );
+                    break;
+                case Node.TEXT_NODE:
+                    processTextNode( (Text) node );
+            }
+            node = node.getNextSibling();
+        }
+    }
+
+    protected abstract void processTextNode( Text node );
+
+    public void save()
+        throws IOException
+    {
+        if ( out != null )
+        {
+            out.close();
+        }
+        if ( writer != null )
+        {
+            writer.close();
+        }
+    }
 }

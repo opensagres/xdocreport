@@ -33,26 +33,27 @@ import org.apache.poi.xwpf.converter.AbstractXWPFPOIConverterTest;
 import org.apache.poi.xwpf.converter.Data;
 import org.apache.poi.xwpf.usermodel.XWPFDocument;
 
-public class XWPFPOI2PDFViaiTextConverterTest extends
-		AbstractXWPFPOIConverterTest {
+public class XWPFPOI2PDFViaiTextConverterTest
+    extends AbstractXWPFPOIConverterTest
+{
 
-	protected void doGenerate(String fileInName) throws IOException {
+    protected void doGenerate( String fileInName )
+        throws IOException
+    {
 
-		// String
-		// root=XWPFPOI2PDFViaiTextConverterTest.class.getClassLoader().getResource(".").getFile();
-		String root = "target";
-		String fileOutName = root + "/" + fileInName + ".pdf";
+        // String
+        // root=XWPFPOI2PDFViaiTextConverterTest.class.getClassLoader().getResource(".").getFile();
+        String root = "target";
+        String fileOutName = root + "/" + fileInName + ".pdf";
 
-		long startTime = System.currentTimeMillis();
+        long startTime = System.currentTimeMillis();
 
-		XWPFDocument document = new XWPFDocument(
-				Data.class.getResourceAsStream(fileInName));
+        XWPFDocument document = new XWPFDocument( Data.class.getResourceAsStream( fileInName ) );
 
-		OutputStream out = new FileOutputStream(new File(fileOutName));
-		PDFViaITextOptions options = PDFViaITextOptions.create().fontEncoding("windows-1250");
-		XWPF2PDFViaITextConverter.getInstance().convert(document, out, options);
+        OutputStream out = new FileOutputStream( new File( fileOutName ) );
+        PDFViaITextOptions options = PDFViaITextOptions.create().fontEncoding( "windows-1250" );
+        XWPF2PDFViaITextConverter.getInstance().convert( document, out, options );
 
-		System.out.println("Generate " + fileOutName + " with "
-				+ (System.currentTimeMillis() - startTime) + " ms.");
-	}
+        System.out.println( "Generate " + fileOutName + " with " + ( System.currentTimeMillis() - startTime ) + " ms." );
+    }
 }

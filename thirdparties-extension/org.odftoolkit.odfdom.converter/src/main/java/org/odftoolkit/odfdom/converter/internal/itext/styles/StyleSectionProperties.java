@@ -29,56 +29,72 @@ import java.awt.Color;
 /**
  * fixes for pdf conversion by Leszek Piotrowicz <leszekp@safe-mail.net>
  */
-public class StyleSectionProperties {
+public class StyleSectionProperties
+{
 
-	// attributes
-	private Color backgroundColor;
-	private Boolean dontBalanceTextColumns;
-	private Float marginLeft;
-	private Float marginRight;	
-	// child nodes
-	private StyleColumnsProperties columnsProperties;
+    // attributes
+    private Color backgroundColor;
 
-	public StyleSectionProperties() {
-	}
+    private Boolean dontBalanceTextColumns;
 
-	public Color getBackgroundColor() {
-		return backgroundColor;
-	}
+    private Float marginLeft;
 
-	public void setBackgroundColor(Color backgroundColor) {
-		this.backgroundColor = backgroundColor;
-	}
+    private Float marginRight;
 
-	public Boolean getDontBalanceTextColumns() {
-		return dontBalanceTextColumns;
-	}
+    // child nodes
+    private StyleColumnsProperties columnsProperties;
 
-	public void setDontBalanceTextColumns(Boolean dontBalanceTextColumns) {
-		this.dontBalanceTextColumns = dontBalanceTextColumns;
-	}
+    public StyleSectionProperties()
+    {
+    }
 
-	public Float getMarginLeft() {
-		return marginLeft;
-	}
+    public Color getBackgroundColor()
+    {
+        return backgroundColor;
+    }
 
-	public void setMarginLeft(Float marginLeft) {
-		this.marginLeft = marginLeft;
-	}
+    public void setBackgroundColor( Color backgroundColor )
+    {
+        this.backgroundColor = backgroundColor;
+    }
 
-	public Float getMarginRight() {
-		return marginRight;
-	}
+    public Boolean getDontBalanceTextColumns()
+    {
+        return dontBalanceTextColumns;
+    }
 
-	public void setMarginRight(Float marginRight) {
-		this.marginRight = marginRight;
-	}
+    public void setDontBalanceTextColumns( Boolean dontBalanceTextColumns )
+    {
+        this.dontBalanceTextColumns = dontBalanceTextColumns;
+    }
 
-	public StyleColumnsProperties getColumnsProperties() {
-		return columnsProperties;
-	}
+    public Float getMarginLeft()
+    {
+        return marginLeft;
+    }
 
-	public void setColumnsProperties(StyleColumnsProperties columnsProperties) {
-		this.columnsProperties = columnsProperties;
-	}
+    public void setMarginLeft( Float marginLeft )
+    {
+        this.marginLeft = marginLeft;
+    }
+
+    public Float getMarginRight()
+    {
+        return marginRight;
+    }
+
+    public void setMarginRight( Float marginRight )
+    {
+        this.marginRight = marginRight;
+    }
+
+    public StyleColumnsProperties getColumnsProperties()
+    {
+        return columnsProperties;
+    }
+
+    public void setColumnsProperties( StyleColumnsProperties columnsProperties )
+    {
+        this.columnsProperties = columnsProperties;
+    }
 }

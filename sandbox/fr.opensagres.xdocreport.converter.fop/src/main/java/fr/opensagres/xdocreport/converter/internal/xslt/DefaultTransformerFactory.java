@@ -19,18 +19,21 @@ import javax.xml.transform.TransformerFactory;
 
 /**
  * Tranformer factory which use standard TransformerFactory.newInstance().
- * 
  */
-public class DefaultTransformerFactory implements ITransformerFactory {
+public class DefaultTransformerFactory
+    implements ITransformerFactory
+{
 
-	private final static ITransformerFactory INSTANCE = new DefaultTransformerFactory();
+    private final static ITransformerFactory INSTANCE = new DefaultTransformerFactory();
 
-	public static ITransformerFactory getInstance() {
-		return INSTANCE;
-	}
+    public static ITransformerFactory getInstance()
+    {
+        return INSTANCE;
+    }
 
-	public TransformerFactory createTransformerFactory() {
-		return TransformerFactory.newInstance();
-	}
+    public TransformerFactory createTransformerFactory()
+    {
+        return TransformerFactory.newInstance();
+    }
 
 }

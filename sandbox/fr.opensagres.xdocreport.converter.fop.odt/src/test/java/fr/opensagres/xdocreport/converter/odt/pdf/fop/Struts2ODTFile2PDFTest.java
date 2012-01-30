@@ -33,55 +33,64 @@ import java.io.OutputStream;
 import junit.framework.TestCase;
 import fr.opensagres.xdocreport.converter.XDocConverterException;
 
-public class Struts2ODTFile2PDFTest extends TestCase {
+public class Struts2ODTFile2PDFTest
+    extends TestCase
+{
 
-	public void testNo() throws Exception {
+    public void testNo()
+        throws Exception
+    {
 
-	}
+    }
 
-	public static void main(String[] args) {
-		doGenerate();
-		doGenerate();
-	}
-	
-	public static void doGenerate() {
-		long startTime = System.currentTimeMillis();
+    public static void main( String[] args )
+    {
+        doGenerate();
+        doGenerate();
+    }
 
-		ODTFOPConverter converter = ODTFOPConverter.getInstance();
-		InputStream inputStream = Struts2ODTFile2PDFTest.class
-		.getResourceAsStream("org.appache.struts2.ide.odt");
-		// OutputStream outputStream = new StringBuilderOutputStream();
-		try {
-			OutputStream out = new FileOutputStream(new File(
-			"Structures.pdf"));
-			converter.convert(inputStream, out, null);
-		} catch (XDocConverterException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+    public static void doGenerate()
+    {
+        long startTime = System.currentTimeMillis();
 
-		System.out.println(System.currentTimeMillis() - startTime + "(ms)");
+        ODTFOPConverter converter = ODTFOPConverter.getInstance();
+        InputStream inputStream = Struts2ODTFile2PDFTest.class.getResourceAsStream( "org.appache.struts2.ide.odt" );
+        // OutputStream outputStream = new StringBuilderOutputStream();
+        try
+        {
+            OutputStream out = new FileOutputStream( new File( "Structures.pdf" ) );
+            converter.convert( inputStream, out, null );
+        }
+        catch ( XDocConverterException e )
+        {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+        catch ( IOException e )
+        {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
 
-		// startTime = System.currentTimeMillis() ;
-		// inputStream = ODTXSLFOConverterTest.class
-		// .getResourceAsStream("HelloWorld.content.xml");
-		// // OutputStream outputStream = new StringBuilderOutputStream();
-		// result = new DOMResult();
-		// try {
-		// converter.convert2FO(new StreamSource(inputStream), result);
-		// System.err.println(XMLUtils.toString(result.getNode()));
-		// } catch (XDocConverterException e) {
-		// // TODO Auto-generated catch block
-		// e.printStackTrace();
-		// } catch (IOException e) {
-		// // TODO Auto-generated catch block
-		// e.printStackTrace();
-		// }
-		//
-		// System.out.println(System.currentTimeMillis() - startTime + "(ms)");
+        System.out.println( System.currentTimeMillis() - startTime + "(ms)" );
 
-	}
+        // startTime = System.currentTimeMillis() ;
+        // inputStream = ODTXSLFOConverterTest.class
+        // .getResourceAsStream("HelloWorld.content.xml");
+        // // OutputStream outputStream = new StringBuilderOutputStream();
+        // result = new DOMResult();
+        // try {
+        // converter.convert2FO(new StreamSource(inputStream), result);
+        // System.err.println(XMLUtils.toString(result.getNode()));
+        // } catch (XDocConverterException e) {
+        // // TODO Auto-generated catch block
+        // e.printStackTrace();
+        // } catch (IOException e) {
+        // // TODO Auto-generated catch block
+        // e.printStackTrace();
+        // }
+        //
+        // System.out.println(System.currentTimeMillis() - startTime + "(ms)");
+
+    }
 }

@@ -30,13 +30,16 @@ import fr.opensagres.xdocreport.template.config.AbstractTemplateEngineConfigurat
 import fr.opensagres.xdocreport.template.config.ITemplateEngineConfiguration;
 import fr.opensagres.xdocreport.template.config.ReplaceText;
 
-public class ODPTemplateEngineConfiguration extends AbstractTemplateEngineConfiguration {
+public class ODPTemplateEngineConfiguration
+    extends AbstractTemplateEngineConfiguration
+{
 
-	public static final ITemplateEngineConfiguration INSTANCE = new ODPTemplateEngineConfiguration();
-	
-	@Override
-	protected void populate(Collection<ReplaceText> replacment) {
-		replacment.add(new ReplaceText("\n", "<text:line-break />"));		
-	}
+    public static final ITemplateEngineConfiguration INSTANCE = new ODPTemplateEngineConfiguration();
+
+    @Override
+    protected void populate( Collection<ReplaceText> replacment )
+    {
+        replacment.add( new ReplaceText( "\n", "<text:line-break />" ) );
+    }
 
 }

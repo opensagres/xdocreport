@@ -31,15 +31,19 @@ import java.io.InputStream;
 
 import fr.opensagres.xdocreport.core.io.IOUtils;
 
+public class OutputStream2InputStream
+    extends ByteArrayOutputStream
+{
 
-public class OutputStream2InputStream extends ByteArrayOutputStream {
+    public OutputStream2InputStream()
+    {
+    }
 
-	public OutputStream2InputStream() {
-	}
-
-	public InputStream getInputStream() throws IOException {
-		ByteArrayOutputStream o = new ByteArrayOutputStream();
-		IOUtils.write(super.toByteArray(), o);
-		return new ByteArrayInputStream(o.toByteArray());
-	}
+    public InputStream getInputStream()
+        throws IOException
+    {
+        ByteArrayOutputStream o = new ByteArrayOutputStream();
+        IOUtils.write( super.toByteArray(), o );
+        return new ByteArrayInputStream( o.toByteArray() );
+    }
 }

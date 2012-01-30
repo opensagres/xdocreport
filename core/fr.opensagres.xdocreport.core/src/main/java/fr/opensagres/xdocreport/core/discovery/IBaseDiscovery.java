@@ -26,21 +26,21 @@ package fr.opensagres.xdocreport.core.discovery;
 
 /**
  * Base interface for discovery.
- * 
  */
-public interface IBaseDiscovery {
+public interface IBaseDiscovery
+{
 
-	/**
-	 * Returns the id of the discovery.
-	 * 
-	 * @return
-	 */
-	String getId();
+    /**
+     * Returns the id of the discovery.
+     * 
+     * @return
+     */
+    String getId();
 
-	/**
-	 * Returns the description of the discovery.
-	 * 
-	 * @return
-	 */
-	String getDescription();
+    /**
+     * Returns the description of the discovery.
+     * 
+     * @return
+     */
+    String getDescription();
 }

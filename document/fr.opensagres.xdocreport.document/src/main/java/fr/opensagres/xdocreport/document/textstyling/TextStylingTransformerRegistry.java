@@ -32,62 +32,66 @@ import fr.opensagres.xdocreport.core.registry.AbstractRegistry;
 import fr.opensagres.xdocreport.document.discovery.ITextStylingTransformerDiscovery;
 
 /**
- * Text styling registry stores instance of {@link ITextStylingTransformer} for
- * text styling kind {@link SyntaxKind} (Html, Mediawiki, etc...).
- * 
+ * Text styling registry stores instance of {@link ITextStylingTransformer} for text styling kind {@link SyntaxKind}
+ * (Html, Mediawiki, etc...).
  * <p>
  * Instance of {@link ITextStylingTransformer} must be declared in files
- * META-INF\services\fr.opensagres.xdocreport.template.discovery.
- * ITextStylingTransformerDiscovery
+ * META-INF\services\fr.opensagres.xdocreport.template.discovery. ITextStylingTransformerDiscovery
  * </p>
  */
-public class TextStylingTransformerRegistry extends
-		AbstractRegistry<ITextStylingTransformerDiscovery> {
+public class TextStylingTransformerRegistry
+    extends AbstractRegistry<ITextStylingTransformerDiscovery>
+{
 
-	private static final TextStylingTransformerRegistry INSTANCE = new TextStylingTransformerRegistry();	
-	private final Map<String, ITextStylingTransformer> transformers = new HashMap<String, ITextStylingTransformer>();
+    private static final TextStylingTransformerRegistry INSTANCE = new TextStylingTransformerRegistry();
 
-	public TextStylingTransformerRegistry() {
-		super(ITextStylingTransformerDiscovery.class);
-	}
+    private final Map<String, ITextStylingTransformer> transformers = new HashMap<String, ITextStylingTransformer>();
 
-	public static TextStylingTransformerRegistry getRegistry() {
-		return INSTANCE;
-	}
+    public TextStylingTransformerRegistry()
+    {
+        super( ITextStylingTransformerDiscovery.class );
+    }
 
-	@Override
-	protected boolean registerInstance(
-			ITextStylingTransformerDiscovery discovery) {
-		transformers.put(discovery.getId(), discovery.getTransformer());
-		return true;
+    public static TextStylingTransformerRegistry getRegistry()
+    {
+        return INSTANCE;
+    }
 
-	}
+    @Override
+    protected boolean registerInstance( ITextStylingTransformerDiscovery discovery )
+    {
+        transformers.put( discovery.getId(), discovery.getTransformer() );
+        return true;
 
-	@Override
-	protected void doDispose() {
-		transformers.clear();
-	}
+    }
 
-	/**
-	 * Returns the text styling transformer for the given syntax kind.
-	 * 
-	 * @param syntaxKind
-	 * @return
-	 */
-	public ITextStylingTransformer getTextStylingTransformer(
-			SyntaxKind syntaxKind) {
-		return getTextStylingTransformer(syntaxKind.name());
-	}
+    @Override
+    protected void doDispose()
+    {
+        transformers.clear();
+    }
 
-	/**
-	 * Returns the text styling transformer for the given syntax kind.
-	 * 
-	 * @param syntaxKind
-	 * @return
-	 */
-	public ITextStylingTransformer getTextStylingTransformer(String syntaxKind) {
-		super.initializeIfNeeded();
-		return transformers.get(syntaxKind);
-	}
+    /**
+     * Returns the text styling transformer for the given syntax kind.
+     * 
+     * @param syntaxKind
+     * @return
+     */
+    public ITextStylingTransformer getTextStylingTransformer( SyntaxKind syntaxKind )
+    {
+        return getTextStylingTransformer( syntaxKind.name() );
+    }
+
+    /**
+     * Returns the text styling transformer for the given syntax kind.
+     * 
+     * @param syntaxKind
+     * @return
+     */
+    public ITextStylingTransformer getTextStylingTransformer( String syntaxKind )
+    {
+        super.initializeIfNeeded();
+        return transformers.get( syntaxKind );
+    }
 
 }

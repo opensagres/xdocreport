@@ -28,45 +28,55 @@ import java.io.IOException;
 import java.io.Writer;
 
 /**
- * Base class for start/end tag element. This buffer stores content of the
- * start/end tag element and is enable to add some content (ex: template engine
- * script) on before/after the content of the start/end tag element.
- * 
+ * Base class for start/end tag element. This buffer stores content of the start/end tag element and is enable to add
+ * some content (ex: template engine script) on before/after the content of the start/end tag element.
  */
-public class BufferedTagElement extends BufferedRegion {
+public class BufferedTagElement
+    extends BufferedRegion
+{
 
-	private String before;
-	private String after;
+    private String before;
 
-	public BufferedTagElement(BufferedElement ownerElement) {
-		super(ownerElement, null);
-	}
+    private String after;
 
-	@Override
-	public void save(Writer writer) throws IOException {
-		if (before != null) {
-			writer.write(before);
-		}
-		super.save(writer);
-		if (after != null) {
-			writer.write(after);
-		}
-	}
+    public BufferedTagElement( BufferedElement ownerElement )
+    {
+        super( ownerElement, null );
+    }
 
-	public void setBefore(String before) {
-		this.before = before;
-	}
+    @Override
+    public void save( Writer writer )
+        throws IOException
+    {
+        if ( before != null )
+        {
+            writer.write( before );
+        }
+        super.save( writer );
+        if ( after != null )
+        {
+            writer.write( after );
+        }
+    }
 
-	public String getBefore() {
-		return before;
-	}
+    public void setBefore( String before )
+    {
+        this.before = before;
+    }
 
-	public void setAfter(String after) {
-		this.after = after;
-	}
+    public String getBefore()
+    {
+        return before;
+    }
 
-	public String getAfter() {
-		return after;
-	}
+    public void setAfter( String after )
+    {
+        this.after = after;
+    }
+
+    public String getAfter()
+    {
+        return after;
+    }
 
 }

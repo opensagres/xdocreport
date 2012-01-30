@@ -26,13 +26,14 @@ package fr.opensagres.xdocreport.template.velocity;
 
 /**
  * Velocity constants.
- * 
  */
-public interface VelocityConstants {
+public interface VelocityConstants
+{
 
-	// Meta data for discovery
-	String ID_DISCOVERY = "Velocity";
-	String DESCRIPTION_DISCOVERY = "Manage Velocity template engine.";
-	
-	String VELOCITY_TEMPLATE_ENGINE_KEY = "velocityTemplateEngine";
+    // Meta data for discovery
+    String ID_DISCOVERY = "Velocity";
+
+    String DESCRIPTION_DISCOVERY = "Manage Velocity template engine.";
+
+    String VELOCITY_TEMPLATE_ENGINE_KEY = "velocityTemplateEngine";
 }

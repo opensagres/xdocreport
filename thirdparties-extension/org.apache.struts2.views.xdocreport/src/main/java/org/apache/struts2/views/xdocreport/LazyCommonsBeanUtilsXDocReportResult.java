@@ -31,35 +31,39 @@ import fr.opensagres.xdocreport.core.XDocReportException;
 import fr.opensagres.xdocreport.document.IXDocReport;
 import fr.opensagres.xdocreport.template.IContext;
 
-public class LazyCommonsBeanUtilsXDocReportResult extends AbstractXDocReportResult {
+public class LazyCommonsBeanUtilsXDocReportResult
+    extends AbstractXDocReportResult
+{
 
-	private static final long serialVersionUID = -5990250569335023528L;
+    private static final long serialVersionUID = -5990250569335023528L;
 
-	/**
-	 * 
-	 * @param report
-	 * @param finalLocation
-	 * @param invocation
-	 * @return
-	 * @throws XDocReportException
-	 */
-	@Override
-	protected void populateContext(IXDocReport report, IContext context,
-			String finalLocation, ActionInvocation invocation) throws Exception {
-		String[] expressions = getExpressions();
-		for (int i = 0; i < expressions.length; i++) {
-			populateContext(report, context, expressions[i], finalLocation,
-					invocation);
-		}
-	}
+    /**
+     * @param report
+     * @param finalLocation
+     * @param invocation
+     * @return
+     * @throws XDocReportException
+     */
+    @Override
+    protected void populateContext( IXDocReport report, IContext context, String finalLocation,
+                                    ActionInvocation invocation )
+        throws Exception
+    {
+        String[] expressions = getExpressions();
+        for ( int i = 0; i < expressions.length; i++ )
+        {
+            populateContext( report, context, expressions[i], finalLocation, invocation );
+        }
+    }
 
-	protected void populateContext(IXDocReport report, IContext context,
-			String expression, String finalLocation, ActionInvocation invocation)
-			throws Exception {
+    protected void populateContext( IXDocReport report, IContext context, String expression, String finalLocation,
+                                    ActionInvocation invocation )
+        throws Exception
+    {
 
-		ValueStack stack = invocation.getStack();
-		Object action = stack.findValue(expression);
-		LazyCommonsBeanUtilsPopulateContext.getInstance().populate(context, action);
-	}
+        ValueStack stack = invocation.getStack();
+        Object action = stack.findValue( expression );
+        LazyCommonsBeanUtilsPopulateContext.getInstance().populate( context, action );
+    }
 
 }

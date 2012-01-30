@@ -28,13 +28,14 @@ import java.io.InputStream;
 
 import fr.opensagres.xdocreport.template.formatter.FieldsMetadata;
 
-public interface IXDocReportDispatcher<T extends IXDocReportController> {
+public interface IXDocReportDispatcher<T extends IXDocReportController>
+{
 
-	public T getReportController(String reportId);
+    public T getReportController( String reportId );
 
-	InputStream getSourceStream(String reportId);
+    InputStream getSourceStream( String reportId );
 
-	String getTemplateEngineKind(String reportId);
+    String getTemplateEngineKind( String reportId );
 
-	FieldsMetadata getFieldsMetadata(String reportId);
+    FieldsMetadata getFieldsMetadata( String reportId );
 }

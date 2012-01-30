@@ -27,27 +27,42 @@ package fr.opensagres.xdocreport.document.service;
 import javax.xml.bind.annotation.XmlRootElement;
 
 @XmlRootElement
-public class WSOptions {
+public class WSOptions
+{
 
-	private String from;
-	private String to;
-	private String via;
-	public String getFrom() {
-		return from;
-	}
-	public void setFrom(String from) {
-		this.from = from;
-	}
-	public String getTo() {
-		return to;
-	}
-	public void setTo(String to) {
-		this.to = to;
-	}
-	public String getVia() {
-		return via;
-	}
-	public void setVia(String via) {
-		this.via = via;
-	}
+    private String from;
+
+    private String to;
+
+    private String via;
+
+    public String getFrom()
+    {
+        return from;
+    }
+
+    public void setFrom( String from )
+    {
+        this.from = from;
+    }
+
+    public String getTo()
+    {
+        return to;
+    }
+
+    public void setTo( String to )
+    {
+        this.to = to;
+    }
+
+    public String getVia()
+    {
+        return via;
+    }
+
+    public void setVia( String via )
+    {
+        this.via = via;
+    }
 }

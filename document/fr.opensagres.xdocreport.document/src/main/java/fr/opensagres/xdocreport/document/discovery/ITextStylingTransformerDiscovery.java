@@ -28,22 +28,21 @@ import fr.opensagres.xdocreport.core.discovery.IBaseDiscovery;
 import fr.opensagres.xdocreport.document.textstyling.ITextStylingTransformer;
 
 /**
- * Discovery used to register text styling transformer
- * {@link ITextStylingTransformer}.
- * 
+ * Discovery used to register text styling transformer {@link ITextStylingTransformer}.
  * <p>
  * Instance of {@link ITextStylingTransformer} must be declared in files
- * META-INF\services\fr.opensagres.xdocreport.template.discovery.
- * ITextStylingTransformerDiscovery
+ * META-INF\services\fr.opensagres.xdocreport.template.discovery. ITextStylingTransformerDiscovery
  * </p>
  */
-public interface ITextStylingTransformerDiscovery extends IBaseDiscovery {
+public interface ITextStylingTransformerDiscovery
+    extends IBaseDiscovery
+{
 
-	/**
-	 * Returns the text styling transformer.
-	 * 
-	 * @return
-	 */
-	ITextStylingTransformer getTransformer();
+    /**
+     * Returns the text styling transformer.
+     * 
+     * @return
+     */
+    ITextStylingTransformer getTransformer();
 
 }

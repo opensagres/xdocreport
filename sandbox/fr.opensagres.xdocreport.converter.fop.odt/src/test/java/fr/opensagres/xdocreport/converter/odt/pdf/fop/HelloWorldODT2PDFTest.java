@@ -34,38 +34,48 @@ import junit.framework.TestCase;
 import fr.opensagres.xdocreport.converter.XDocConverterException;
 import fr.opensagres.xdocreport.core.io.IEntryInputStreamProvider;
 
-public class HelloWorldODT2PDFTest extends TestCase {
+public class HelloWorldODT2PDFTest
+    extends TestCase
+{
 
-	public void testNo() throws Exception {
+    public void testNo()
+        throws Exception
+    {
 
-	}
+    }
 
-	public static void main(String[] args) {
-		long startTime = System.currentTimeMillis();
+    public static void main( String[] args )
+    {
+        long startTime = System.currentTimeMillis();
 
-		ODTFOPConverter converter = ODTFOPConverter.getInstance();
+        ODTFOPConverter converter = ODTFOPConverter.getInstance();
 
-		IEntryInputStreamProvider provider = new IEntryInputStreamProvider() {
+        IEntryInputStreamProvider provider = new IEntryInputStreamProvider()
+        {
 
-			public InputStream getEntryInputStream(String entryName) {
-				return HelloWorldODT2PDFTest.class
-						.getResourceAsStream("HelloWorld." + entryName);
-			}
-		};
+            public InputStream getEntryInputStream( String entryName )
+            {
+                return HelloWorldODT2PDFTest.class.getResourceAsStream( "HelloWorld." + entryName );
+            }
+        };
 
-		try {
-			OutputStream outputStream = new FileOutputStream(
-					new File("HelloWorld.pdf"));
-			converter.convert(provider, outputStream, System.out, null);
-		} catch (XDocConverterException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+        try
+        {
+            OutputStream outputStream = new FileOutputStream( new File( "HelloWorld.pdf" ) );
+            converter.convert( provider, outputStream, System.out, null );
+        }
+        catch ( XDocConverterException e )
+        {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+        catch ( IOException e )
+        {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
 
-		System.out.println(System.currentTimeMillis() - startTime + "(ms)");
+        System.out.println( System.currentTimeMillis() - startTime + "(ms)" );
 
-	}
+    }
 }

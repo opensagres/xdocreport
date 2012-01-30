@@ -26,16 +26,20 @@ package org.apache.poi.xwpf.converter.internal.itext.stylable;
 
 import fr.opensagres.xdocreport.itext.extension.MasterPage;
 
-public class StylableMasterPage extends MasterPage {
-	private final String pageLayoutName;
+public class StylableMasterPage
+    extends MasterPage
+{
+    private final String pageLayoutName;
 
-	public StylableMasterPage(String name, String pageLayoutName) {
-		super(name);
-		this.pageLayoutName = pageLayoutName;
-	}
+    public StylableMasterPage( String name, String pageLayoutName )
+    {
+        super( name );
+        this.pageLayoutName = pageLayoutName;
+    }
 
-	public String getPageLayoutName() {
-		return pageLayoutName;
-	}
+    public String getPageLayoutName()
+    {
+        return pageLayoutName;
+    }
 
 }

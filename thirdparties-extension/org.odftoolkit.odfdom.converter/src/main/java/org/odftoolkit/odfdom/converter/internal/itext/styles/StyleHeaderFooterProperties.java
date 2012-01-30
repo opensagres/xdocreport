@@ -24,16 +24,19 @@
  */
 package org.odftoolkit.odfdom.converter.internal.itext.styles;
 
-public class StyleHeaderFooterProperties {
+public class StyleHeaderFooterProperties
+{
 
-	private Float minHeight;
+    private Float minHeight;
 
-	public Float getMinHeight() {
-		return minHeight;
-	}
+    public Float getMinHeight()
+    {
+        return minHeight;
+    }
 
-	public void setMinHeight(Float minHeight) {
-		this.minHeight = minHeight;
-	}
+    public void setMinHeight( Float minHeight )
+    {
+        this.minHeight = minHeight;
+    }
 
 }

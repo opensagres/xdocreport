@@ -24,44 +24,67 @@
  */
 package org.apache.poi.xwpf.converter.internal.itext.styles;
 
-public class StyleMargin {
+public class StyleMargin
+{
 
-	private Float margin;
-	private Float marginTop;
-	private Float marginBottom;
-	private Float marginRight;
-	private Float marginLeft;
-	
-	public Float getMargin() {
-		return margin;
-	}
-	public void setMargin(Float margin) {
-		this.margin = margin;
-	}
-	public Float getMarginTop() {
-		return marginTop;
-	}
-	public void setMarginTop(Float marginTop) {
-		this.marginTop = marginTop;
-	}
-	public Float getMarginBottom() {
-		return marginBottom;
-	}
-	public void setMarginBottom(Float marginBottom) {
-		this.marginBottom = marginBottom;
-	}
-	public Float getMarginRight() {
-		return marginRight;
-	}
-	public void setMarginRight(Float marginRight) {
-		this.marginRight = marginRight;
-	}
-	public Float getMarginLeft() {
-		return marginLeft;
-	}
-	public void setMarginLeft(Float marginLeft) {
-		this.marginLeft = marginLeft;
-	}
-	
-	
+    private Float margin;
+
+    private Float marginTop;
+
+    private Float marginBottom;
+
+    private Float marginRight;
+
+    private Float marginLeft;
+
+    public Float getMargin()
+    {
+        return margin;
+    }
+
+    public void setMargin( Float margin )
+    {
+        this.margin = margin;
+    }
+
+    public Float getMarginTop()
+    {
+        return marginTop;
+    }
+
+    public void setMarginTop( Float marginTop )
+    {
+        this.marginTop = marginTop;
+    }
+
+    public Float getMarginBottom()
+    {
+        return marginBottom;
+    }
+
+    public void setMarginBottom( Float marginBottom )
+    {
+        this.marginBottom = marginBottom;
+    }
+
+    public Float getMarginRight()
+    {
+        return marginRight;
+    }
+
+    public void setMarginRight( Float marginRight )
+    {
+        this.marginRight = marginRight;
+    }
+
+    public Float getMarginLeft()
+    {
+        return marginLeft;
+    }
+
+    public void setMarginLeft( Float marginLeft )
+    {
+        this.marginLeft = marginLeft;
+    }
+
 }

@@ -39,51 +39,60 @@ import fr.opensagres.xdocreport.document.odp.images.ODPImageRegistry;
 
 /**
  * Open Office ODS report.
- * 
  */
-public class ODPReport extends AbstractXDocReport implements ODPConstants {
+public class ODPReport
+    extends AbstractXDocReport
+    implements ODPConstants
+{
 
-	private static final long serialVersionUID = -8323654563409226895L;
+    private static final long serialVersionUID = -8323654563409226895L;
 
-	private static final String[] DEFAULT_XML_ENTRIES = { CONTENT_XML_ENTRY,
-			STYLES_XML_ENTRY };
+    private static final String[] DEFAULT_XML_ENTRIES = { CONTENT_XML_ENTRY, STYLES_XML_ENTRY };
 
-	public String getKind() {
-		return DocumentKind.ODP.name();
-	}
+    public String getKind()
+    {
+        return DocumentKind.ODP.name();
+    }
 
-	@Override
-	protected void registerPreprocessors() {
+    @Override
+    protected void registerPreprocessors()
+    {
 
-	}
+    }
 
-	@Override
-	protected String[] getDefaultXMLEntries() {
-		return DEFAULT_XML_ENTRIES;
-	}
+    @Override
+    protected String[] getDefaultXMLEntries()
+    {
+        return DEFAULT_XML_ENTRIES;
+    }
 
-	public MimeMapping getMimeMapping() {
-		return MIME_MAPPING;
-	}
+    public MimeMapping getMimeMapping()
+    {
+        return MIME_MAPPING;
+    }
 
-	public static boolean isODP(XDocArchive documentArchive) {
-		try {
-			if (!documentArchive.hasEntry(MIMETYPE)) {
-				return false;
-			}
-			return ODP_MIMETYPE.equals(IOUtils.toString(documentArchive
-					.getEntryReader(MIMETYPE)));
-		} catch (IOException e) {
-		}
-		return false;
-	}
+    public static boolean isODP( XDocArchive documentArchive )
+    {
+        try
+        {
+            if ( !documentArchive.hasEntry( MIMETYPE ) )
+            {
+                return false;
+            }
+            return ODP_MIMETYPE.equals( IOUtils.toString( documentArchive.getEntryReader( MIMETYPE ) ) );
+        }
+        catch ( IOException e )
+        {
+        }
+        return false;
+    }
 
-	@Override
-	protected IImageRegistry createImageRegistry(
-			IEntryReaderProvider readerProvider,
-			IEntryWriterProvider writerProvider,
-			IEntryOutputStreamProvider outputStreamProvider) {
-		return new ODPImageRegistry(readerProvider, writerProvider, outputStreamProvider);
-	}
+    @Override
+    protected IImageRegistry createImageRegistry( IEntryReaderProvider readerProvider,
+                                                  IEntryWriterProvider writerProvider,
+                                                  IEntryOutputStreamProvider outputStreamProvider )
+    {
+        return new ODPImageRegistry( readerProvider, writerProvider, outputStreamProvider );
+    }
 
 }

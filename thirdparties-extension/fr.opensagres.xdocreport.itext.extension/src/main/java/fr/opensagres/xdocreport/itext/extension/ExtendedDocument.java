@@ -34,143 +34,179 @@ import com.lowagie.text.Element;
 import com.lowagie.text.Rectangle;
 import com.lowagie.text.pdf.PdfWriter;
 
+public class ExtendedDocument
+    extends Document
+    implements IITextContainer
+{
 
-public class ExtendedDocument extends Document implements IITextContainer {
+    private Map<String, MasterPage> masterPagesCache = new HashMap<String, MasterPage>();
 
-	private Map<String, MasterPage> masterPagesCache = new HashMap<String, MasterPage>();
-	private MasterPage defaultMasterPage;
-	private final ExtendedHeaderFooter headerFooter;
-	protected final PdfWriter writer;
-	protected float originMarginTop;
-	protected float originMarginBottom;
-	protected float originMarginRight;
-	protected float originMarginLeft;
+    private MasterPage defaultMasterPage;
 
-	private PageOrientation orientation = PageOrientation.Portrait;
-	
-	public ExtendedDocument(OutputStream out, Rectangle rectangle)
-			throws DocumentException {
-		super(rectangle);
-		this.writer = PdfWriter.getInstance(this, out);
-		headerFooter = new ExtendedHeaderFooter(this);
-		
-		writer.setPageEvent(headerFooter);
-		this.originMarginTop = marginTop;
-		this.originMarginBottom = marginBottom;
-		this.originMarginRight = marginRight;
-		this.originMarginLeft = marginLeft;
-	}
+    private final ExtendedHeaderFooter headerFooter;
 
-	public ExtendedDocument(OutputStream out, Rectangle rectangle,
-			float marginLeft, float marginRight, float marginTop,
-			float marginBottom) throws DocumentException {
-		super(rectangle, marginLeft, marginRight, marginTop, marginBottom);
-		this.writer = PdfWriter.getInstance(this, out);
-		headerFooter = new ExtendedHeaderFooter(this);
-		writer.setPageEvent(headerFooter);
-		this.originMarginTop = marginTop;
-		this.originMarginBottom = marginBottom;
-		this.originMarginRight = marginRight;
-		this.originMarginLeft = marginLeft;
-	}
+    protected final PdfWriter writer;
 
-	public ExtendedDocument(OutputStream out) throws DocumentException {
-		this.writer = PdfWriter.getInstance(this, out);
-		headerFooter = new ExtendedHeaderFooter(this);
-		writer.setPageEvent(headerFooter);
-		this.originMarginTop = marginTop;
-		this.originMarginBottom = marginBottom;
-		this.originMarginRight = marginRight;
-		this.originMarginLeft = marginLeft;
-	}
+    protected float originMarginTop;
 
-	public boolean setOriginalMargins(float marginLeft, float marginRight,
-			float marginTop, float marginBottom) {
-		this.originMarginTop = marginTop;
-		this.originMarginBottom = marginBottom;
-		this.originMarginRight = marginRight;
-		this.originMarginLeft = marginLeft;
-		return super.setMargins(marginLeft, marginRight, marginTop,
-				marginBottom);
-	}
+    protected float originMarginBottom;
 
-	public void addElement(Element element) {
-		try {
-			add(element);
-		} catch (DocumentException e) {
-			e.printStackTrace();
-		}
-	}
+    protected float originMarginRight;
 
-	@Override
-	public boolean add(Element element) throws DocumentException {
-		if (!isOpen()) {
-			open();
-		}
-		return super.add(element);
-	}
+    protected float originMarginLeft;
 
-	public MasterPage getDefaultMasterPage() {
-		return defaultMasterPage;
-	}
+    private PageOrientation orientation = PageOrientation.Portrait;
 
-	public float getOriginMarginBottom() {
-		return originMarginBottom;
-	}
+    public ExtendedDocument( OutputStream out, Rectangle rectangle )
+        throws DocumentException
+    {
+        super( rectangle );
+        this.writer = PdfWriter.getInstance( this, out );
+        headerFooter = new ExtendedHeaderFooter( this );
 
-	public float getOriginMarginLeft() {
-		return originMarginLeft;
-	}
+        writer.setPageEvent( headerFooter );
+        this.originMarginTop = marginTop;
+        this.originMarginBottom = marginBottom;
+        this.originMarginRight = marginRight;
+        this.originMarginLeft = marginLeft;
+    }
 
-	public float getOriginMarginRight() {
-		return originMarginRight;
-	}
+    public ExtendedDocument( OutputStream out, Rectangle rectangle, float marginLeft, float marginRight,
+                             float marginTop, float marginBottom )
+        throws DocumentException
+    {
+        super( rectangle, marginLeft, marginRight, marginTop, marginBottom );
+        this.writer = PdfWriter.getInstance( this, out );
+        headerFooter = new ExtendedHeaderFooter( this );
+        writer.setPageEvent( headerFooter );
+        this.originMarginTop = marginTop;
+        this.originMarginBottom = marginBottom;
+        this.originMarginRight = marginRight;
+        this.originMarginLeft = marginLeft;
+    }
 
-	public float getOriginMarginTop() {
-		return originMarginTop;
-	}
+    public ExtendedDocument( OutputStream out )
+        throws DocumentException
+    {
+        this.writer = PdfWriter.getInstance( this, out );
+        headerFooter = new ExtendedHeaderFooter( this );
+        writer.setPageEvent( headerFooter );
+        this.originMarginTop = marginTop;
+        this.originMarginBottom = marginBottom;
+        this.originMarginRight = marginRight;
+        this.originMarginLeft = marginLeft;
+    }
 
-	public void setActiveMasterPage(MasterPage masterPage) {
-		headerFooter.setMasterPage(masterPage);
-	}
+    public boolean setOriginalMargins( float marginLeft, float marginRight, float marginTop, float marginBottom )
+    {
+        this.originMarginTop = marginTop;
+        this.originMarginBottom = marginBottom;
+        this.originMarginRight = marginRight;
+        this.originMarginLeft = marginLeft;
+        return super.setMargins( marginLeft, marginRight, marginTop, marginBottom );
+    }
 
-	public void addMasterPage(MasterPage currentMasterPage) {
-		if (defaultMasterPage == null) {
-			defaultMasterPage = currentMasterPage;
-		}
-		masterPagesCache.put(currentMasterPage.getName(), currentMasterPage);
-	}
+    public void addElement( Element element )
+    {
+        try
+        {
+            add( element );
+        }
+        catch ( DocumentException e )
+        {
+            e.printStackTrace();
+        }
+    }
 
-	public void setActiveMasterPage(String masterPageName) {
-		MasterPage masterPage = getMasterPage(masterPageName);
-		if (masterPage != null) {
-			setActiveMasterPage(masterPage);
-		}
-	}
+    @Override
+    public boolean add( Element element )
+        throws DocumentException
+    {
+        if ( !isOpen() )
+        {
+            open();
+        }
+        return super.add( element );
+    }
 
-	public MasterPage getMasterPage(String masterPageName) {
-		if (masterPageName == null) {
-			return null;
-		}
-		return masterPagesCache.get(masterPageName);
-	}
+    public MasterPage getDefaultMasterPage()
+    {
+        return defaultMasterPage;
+    }
 
-	public IITextContainer getITextContainer() {	
-		return null;
-	}
+    public float getOriginMarginBottom()
+    {
+        return originMarginBottom;
+    }
 
-	public void setITextContainer(IITextContainer container) {
+    public float getOriginMarginLeft()
+    {
+        return originMarginLeft;
+    }
 
-	}
-	
-	public PageOrientation getOrientation() {
-		return orientation;
-	}
-	
-	public void setOrientation(PageOrientation orientation) {
-		if (!this.orientation.equals(orientation)) {
-			super.getPageSize().rotate();
-		}
-		this.orientation = orientation;		
-	}
+    public float getOriginMarginRight()
+    {
+        return originMarginRight;
+    }
+
+    public float getOriginMarginTop()
+    {
+        return originMarginTop;
+    }
+
+    public void setActiveMasterPage( MasterPage masterPage )
+    {
+        headerFooter.setMasterPage( masterPage );
+    }
+
+    public void addMasterPage( MasterPage currentMasterPage )
+    {
+        if ( defaultMasterPage == null )
+        {
+            defaultMasterPage = currentMasterPage;
+        }
+        masterPagesCache.put( currentMasterPage.getName(), currentMasterPage );
+    }
+
+    public void setActiveMasterPage( String masterPageName )
+    {
+        MasterPage masterPage = getMasterPage( masterPageName );
+        if ( masterPage != null )
+        {
+            setActiveMasterPage( masterPage );
+        }
+    }
+
+    public MasterPage getMasterPage( String masterPageName )
+    {
+        if ( masterPageName == null )
+        {
+            return null;
+        }
+        return masterPagesCache.get( masterPageName );
+    }
+
+    public IITextContainer getITextContainer()
+    {
+        return null;
+    }
+
+    public void setITextContainer( IITextContainer container )
+    {
+
+    }
+
+    public PageOrientation getOrientation()
+    {
+        return orientation;
+    }
+
+    public void setOrientation( PageOrientation orientation )
+    {
+        if ( !this.orientation.equals( orientation ) )
+        {
+            super.getPageSize().rotate();
+        }
+        this.orientation = orientation;
+    }
 }

@@ -29,41 +29,35 @@ import java.io.StringWriter;
 
 import junit.framework.TestCase;
 
-public class ODTPreprocessorWithTableTestCase extends TestCase {
+public class ODTPreprocessorWithTableTestCase
+    extends TestCase
+{
 
-	private static final String TABLE_INSIDE_ROW = "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>"
-							+ "<office:document-content xmlns:office=\"urn:oasis:names:tc:opendocument:xmlns:office:1.0\" "
-							+ "xmlns:text=\"urn:oasis:names:tc:opendocument:xmlns:text:1.0\" "
-							+ "xmlns:table=\"urn:oasis:names:tc:opendocument:xmlns:table:1.0\">"
-							+ "<table:table table:name=\"Table1\" table:style-name=\"Table1\">"
-							+ "<table:table-column table:style-name=\"Table1.A\"/>"
-							+ "<table:table-column table:style-name=\"Table1.B\"/>"
-							+ "<table:table-row>"
-							+ "<table:table-cell table:style-name=\"Table1.A1\" office:value-type=\"string\">"
-							+ "<text:p text:style-name=\"P4\"/>"
-							+ "</table:table-cell>"
-							+ "<table:table-cell table:style-name=\"Table1.A1\" office:value-type=\"string\">"
-							+ "<table:table table:name=\"Table2\" table:style-name=\"Table2\">"
-							+ "<table:table-column table:style-name=\"Table2.A\"/>"
-							+ "<table:table-row>"
-							+ "<table:table-cell table:style-name=\"Table2.A1\" office:value-type=\"string\">"
-							+ "<text:p text:style-name=\"P3\">This table is causing problems"
-							+ "</text:p>" + "</table:table-cell>"
-							+ "</table:table-row>" + "</table:table>"
-							+ "<text:p text:style-name=\"P3\"/>"
-							+ "</table:table-cell>" + "</table:table-row>"
-							+ "</table:table>" + "</office:document-content>";
+    private static final String TABLE_INSIDE_ROW = "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>"
+        + "<office:document-content xmlns:office=\"urn:oasis:names:tc:opendocument:xmlns:office:1.0\" "
+        + "xmlns:text=\"urn:oasis:names:tc:opendocument:xmlns:text:1.0\" "
+        + "xmlns:table=\"urn:oasis:names:tc:opendocument:xmlns:table:1.0\">"
+        + "<table:table table:name=\"Table1\" table:style-name=\"Table1\">"
+        + "<table:table-column table:style-name=\"Table1.A\"/>" + "<table:table-column table:style-name=\"Table1.B\"/>"
+        + "<table:table-row>" + "<table:table-cell table:style-name=\"Table1.A1\" office:value-type=\"string\">"
+        + "<text:p text:style-name=\"P4\"/>" + "</table:table-cell>"
+        + "<table:table-cell table:style-name=\"Table1.A1\" office:value-type=\"string\">"
+        + "<table:table table:name=\"Table2\" table:style-name=\"Table2\">"
+        + "<table:table-column table:style-name=\"Table2.A\"/>" + "<table:table-row>"
+        + "<table:table-cell table:style-name=\"Table2.A1\" office:value-type=\"string\">"
+        + "<text:p text:style-name=\"P3\">This table is causing problems" + "</text:p>" + "</table:table-cell>"
+        + "</table:table-row>" + "</table:table>" + "<text:p text:style-name=\"P3\"/>" + "</table:table-cell>"
+        + "</table:table-row>" + "</table:table>" + "</office:document-content>";
 
-	public void testNestedTable() throws Exception {
-		ODTPreprocessor preprocessor = new ODTPreprocessor();
-		StringReader reader = new StringReader(
-				TABLE_INSIDE_ROW);
-		StringWriter writer = new StringWriter();
+    public void testNestedTable()
+        throws Exception
+    {
+        ODTPreprocessor preprocessor = new ODTPreprocessor();
+        StringReader reader = new StringReader( TABLE_INSIDE_ROW );
+        StringWriter writer = new StringWriter();
 
-		preprocessor.preprocess("test", reader, writer, null, null, null, null);
+        preprocessor.preprocess( "test", reader, writer, null, null, null, null );
 
-		assertEquals(
-				TABLE_INSIDE_ROW,
-				writer.toString());
-	}
+        assertEquals( TABLE_INSIDE_ROW, writer.toString() );
+    }
 }

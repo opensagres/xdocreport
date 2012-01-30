@@ -29,23 +29,24 @@ import java.io.Writer;
 
 /**
  * Save content in a given writer.
- * 
  */
-public interface ISavable {
+public interface ISavable
+{
 
-	/**
-	 * Write the content of the buffer in the given writer.
-	 * 
-	 * @param writer
-	 * @throws IOException
-	 */
-	void save(Writer writer) throws IOException;
+    /**
+     * Write the content of the buffer in the given writer.
+     * 
+     * @param writer
+     * @throws IOException
+     */
+    void save( Writer writer )
+        throws IOException;
 
-	/**
-	 * Returns the owner element.
-	 * 
-	 * @return
-	 */
-	BufferedElement getOwnerElement();
-	// void save(Writer writer) throws IOException;
+    /**
+     * Returns the owner element.
+     * 
+     * @return
+     */
+    BufferedElement getOwnerElement();
+    // void save(Writer writer) throws IOException;
 }

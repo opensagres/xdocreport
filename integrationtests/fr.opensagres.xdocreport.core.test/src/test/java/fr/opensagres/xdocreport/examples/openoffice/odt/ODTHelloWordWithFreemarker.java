@@ -35,42 +35,45 @@ import fr.opensagres.xdocreport.template.IContext;
 import fr.opensagres.xdocreport.template.TemplateEngineKind;
 
 /**
- * Example with Open Office ODT which contains the content Hello
- * !${name}. Merge with Freemarker template engine will replace this cell with
- * Hello world!
- * 
+ * Example with Open Office ODT which contains the content Hello !${name}. Merge with Freemarker template engine will
+ * replace this cell with Hello world!
  */
-public class ODTHelloWordWithFreemarker {
+public class ODTHelloWordWithFreemarker
+{
 
-	public static void main(String[] args) {
-		try {
-			
-			// 1) Load ODT file by filling Freemarker template engine and cache
-			// it
-			// to the registry
-			IXDocReport report = XDocReportRegistry
-					.getRegistry()
-					.loadReport(
-							ODTHelloWordWithFreemarker.class
-									.getResourceAsStream("ODTHelloWordWithFreemarker.odt"),
-							TemplateEngineKind.Freemarker);
+    public static void main( String[] args )
+    {
+        try
+        {
 
-			// 2) Create context Java model
-			IContext context = report.createContext();
-			context.put("name", "world&word\nbla bla bla");
+            // 1) Load ODT file by filling Freemarker template engine and cache
+            // it
+            // to the registry
+            IXDocReport report =
+                XDocReportRegistry.getRegistry().loadReport( ODTHelloWordWithFreemarker.class.getResourceAsStream( "ODTHelloWordWithFreemarker.odt" ),
+                                                             TemplateEngineKind.Freemarker );
 
-			// 3) Merge Java model with the ODT
-			File out = new File("out");
-			if (!out.exists()) {
-				out.mkdir();
-			}
-			File file = new File(out,"ODTHelloWordWithFreemarker.odt");
-			report.process(context, new FileOutputStream(file));
+            // 2) Create context Java model
+            IContext context = report.createContext();
+            context.put( "name", "world&word\nbla bla bla" );
 
-		} catch (IOException e) {
-			e.printStackTrace();
-		} catch (XDocReportException e) {
-			e.printStackTrace();
-		}
-	}
+            // 3) Merge Java model with the ODT
+            File out = new File( "out" );
+            if ( !out.exists() )
+            {
+                out.mkdir();
+            }
+            File file = new File( out, "ODTHelloWordWithFreemarker.odt" );
+            report.process( context, new FileOutputStream( file ) );
+
+        }
+        catch ( IOException e )
+        {
+            e.printStackTrace();
+        }
+        catch ( XDocReportException e )
+        {
+            e.printStackTrace();
+        }
+    }
 }

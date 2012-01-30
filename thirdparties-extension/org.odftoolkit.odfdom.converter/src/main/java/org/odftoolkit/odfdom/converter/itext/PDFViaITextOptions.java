@@ -28,63 +28,72 @@ import org.odftoolkit.odfdom.converter.Options;
 
 import com.lowagie.text.FontFactory;
 
-public class PDFViaITextOptions extends Options {
+public class PDFViaITextOptions
+    extends Options
+{
 
-	private String fontEncoding = determineSystemEncoding();
-	private boolean preserveSoftPageBreaks = false;
+    private String fontEncoding = determineSystemEncoding();
 
-	private String determineSystemEncoding() {
-		// don't rely on file.encoding property because
-		// it may be changed if application is launched inside an ide
-		String systemEncoding = System.getProperty("sun.jnu.encoding");
-		if (systemEncoding != null && systemEncoding.length() > 0) {
-			return systemEncoding;
-		}
-		systemEncoding = System.getProperty("ibm.system.encoding");
-		if (systemEncoding != null && systemEncoding.length() > 0) {
-			return systemEncoding;
-		}
-		return FontFactory.defaultEncoding;
-	}
+    private boolean preserveSoftPageBreaks = false;
 
-	private PDFViaITextOptions() {
-	}
+    private String determineSystemEncoding()
+    {
+        // don't rely on file.encoding property because
+        // it may be changed if application is launched inside an ide
+        String systemEncoding = System.getProperty( "sun.jnu.encoding" );
+        if ( systemEncoding != null && systemEncoding.length() > 0 )
+        {
+            return systemEncoding;
+        }
+        systemEncoding = System.getProperty( "ibm.system.encoding" );
+        if ( systemEncoding != null && systemEncoding.length() > 0 )
+        {
+            return systemEncoding;
+        }
+        return FontFactory.defaultEncoding;
+    }
 
-	public static PDFViaITextOptions create() {
-		return new PDFViaITextOptions();
-	}
+    private PDFViaITextOptions()
+    {
+    }
 
-	public String getFontEncoding() {
-		return fontEncoding;
-	}
+    public static PDFViaITextOptions create()
+    {
+        return new PDFViaITextOptions();
+    }
 
-	/**
-	 * Set font encoding to use when retrieving fonts. The default value is
-	 * underlying operating system encoding
-	 * 
-	 * @param fontEncoding
-	 *            font encoding to use
-	 * @return this instance
-	 */
-	public PDFViaITextOptions fontEncoding(String fontEncoding) {
-		this.fontEncoding = fontEncoding;
-		return this;
-	}
+    public String getFontEncoding()
+    {
+        return fontEncoding;
+    }
 
-	public boolean isPreserveSoftPageBreaks() {
-		return preserveSoftPageBreaks;
-	}
+    /**
+     * Set font encoding to use when retrieving fonts. The default value is underlying operating system encoding
+     * 
+     * @param fontEncoding font encoding to use
+     * @return this instance
+     */
+    public PDFViaITextOptions fontEncoding( String fontEncoding )
+    {
+        this.fontEncoding = fontEncoding;
+        return this;
+    }
 
-	/**
-	 * Whether to start a new page in a converted pdf upon encountering soft
-	 * page break in an ODF file. The default value is <code>false</code>.
-	 * 
-	 * @param preserveSoftPageBreaks
-	 * @return this instance
-	 */
-	public PDFViaITextOptions preserveSoftPageBreaks(
-			boolean preserveSoftPageBreaks) {
-		this.preserveSoftPageBreaks = preserveSoftPageBreaks;
-		return this;
-	}
+    public boolean isPreserveSoftPageBreaks()
+    {
+        return preserveSoftPageBreaks;
+    }
+
+    /**
+     * Whether to start a new page in a converted pdf upon encountering soft page break in an ODF file. The default
+     * value is <code>false</code>.
+     * 
+     * @param preserveSoftPageBreaks
+     * @return this instance
+     */
+    public PDFViaITextOptions preserveSoftPageBreaks( boolean preserveSoftPageBreaks )
+    {
+        this.preserveSoftPageBreaks = preserveSoftPageBreaks;
+        return this;
+    }
 }

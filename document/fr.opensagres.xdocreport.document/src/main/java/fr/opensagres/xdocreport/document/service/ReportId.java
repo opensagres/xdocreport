@@ -30,41 +30,57 @@ import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 
 @XmlRootElement
-public class ReportId {
+public class ReportId
+{
 
-	private String reportID;
+    private String reportID;
 
-	private String templateEngine;
-	
-	private Date loadedDate;
-	public ReportId() {}
-	public ReportId(String reportID, String templateEngine, Date loadedDate) {
-		super();
-		this.reportID = reportID;
-		this.templateEngine = templateEngine;
-		this.loadedDate = loadedDate;
-	}
-	@XmlElement(required = true)
-	public String getReportID() {
-		return reportID;
-	}
-	public void setReportID(String reportID) {
-		this.reportID = reportID;
-	}
-	@XmlElement(required = true)
-	public String getTemplateEngine() {
-		return templateEngine;
-	}
-	public void setTemplateEngine(String templateEngine) {
-		this.templateEngine = templateEngine;
-	}
-	public Date getLoadedDate() {
-		return loadedDate;
-	}
-	public void setLoadedDate(Date loadedDate) {
-		this.loadedDate = loadedDate;
-	}
-	
-	
-	
+    private String templateEngine;
+
+    private Date loadedDate;
+
+    public ReportId()
+    {
+    }
+
+    public ReportId( String reportID, String templateEngine, Date loadedDate )
+    {
+        super();
+        this.reportID = reportID;
+        this.templateEngine = templateEngine;
+        this.loadedDate = loadedDate;
+    }
+
+    @XmlElement( required = true )
+    public String getReportID()
+    {
+        return reportID;
+    }
+
+    public void setReportID( String reportID )
+    {
+        this.reportID = reportID;
+    }
+
+    @XmlElement( required = true )
+    public String getTemplateEngine()
+    {
+        return templateEngine;
+    }
+
+    public void setTemplateEngine( String templateEngine )
+    {
+        this.templateEngine = templateEngine;
+    }
+
+    public Date getLoadedDate()
+    {
+        return loadedDate;
+    }
+
+    public void setLoadedDate( Date loadedDate )
+    {
+        this.loadedDate = loadedDate;
+    }
+
 }

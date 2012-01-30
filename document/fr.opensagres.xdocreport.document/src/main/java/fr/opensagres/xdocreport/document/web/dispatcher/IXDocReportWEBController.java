@@ -30,9 +30,10 @@ import fr.opensagres.xdocreport.document.IXDocReport;
 import fr.opensagres.xdocreport.document.dispatcher.IXDocReportController;
 import fr.opensagres.xdocreport.template.IContext;
 
-public interface IXDocReportWEBController extends IXDocReportController {
+public interface IXDocReportWEBController
+    extends IXDocReportController
+{
 
-	void populateContext(IContext context, IXDocReport report,
-			HttpServletRequest request);
+    void populateContext( IContext context, IXDocReport report, HttpServletRequest request );
 
 }

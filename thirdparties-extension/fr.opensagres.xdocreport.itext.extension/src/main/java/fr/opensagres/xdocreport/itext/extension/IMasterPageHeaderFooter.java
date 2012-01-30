@@ -27,16 +27,15 @@ package fr.opensagres.xdocreport.itext.extension;
 import com.lowagie.text.pdf.PdfContentByte;
 import com.lowagie.text.pdf.PdfPCell;
 
+public interface IMasterPageHeaderFooter
+{
 
-public interface IMasterPageHeaderFooter {
+    float getTotalHeight();
 
-	float getTotalHeight();
+    float writeSelectedRows( int rowStart, int rowEnd, float xPos, float yPos, PdfContentByte canvas );
 
-	float writeSelectedRows(int rowStart, int rowEnd, float xPos, float yPos,
-			PdfContentByte canvas);
-	
-	PdfPCell getTableCell();
-	
-	void flush();
+    PdfPCell getTableCell();
+
+    void flush();
 
 }

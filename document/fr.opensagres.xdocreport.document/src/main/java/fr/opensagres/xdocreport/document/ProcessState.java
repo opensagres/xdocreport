@@ -24,7 +24,8 @@
  */
 package fr.opensagres.xdocreport.document;
 
-public enum ProcessState {
+public enum ProcessState
+{
 
-	ORIGINAL, PREPROCESSED, GENERATED
+    ORIGINAL, PREPROCESSED, GENERATED
 }

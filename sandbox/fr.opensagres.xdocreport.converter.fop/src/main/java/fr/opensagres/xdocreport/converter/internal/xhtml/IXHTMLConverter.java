@@ -23,11 +23,11 @@ import fr.opensagres.xdocreport.core.io.IEntryInputStreamProvider;
 
 /**
  * XHTML converter interface.
- * 
  */
-public interface IXHTMLConverter {
+public interface IXHTMLConverter
+{
 
-	void convert2XHTML(IEntryInputStreamProvider inProvider, OutputStream out,
-			Options options) throws XDocConverterException;
+    void convert2XHTML( IEntryInputStreamProvider inProvider, OutputStream out, Options options )
+        throws XDocConverterException;
 
 }

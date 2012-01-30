@@ -31,24 +31,29 @@ import fr.opensagres.xdocreport.template.utils.TemplateUtils;
 
 /**
  * Velocity context.
- * 
  */
-public class XDocVelocityContext extends VelocityContext implements IContext {
+public class XDocVelocityContext
+    extends VelocityContext
+    implements IContext
+{
 
-	/**
-	 * Overridden so that the <code>null</code> values are accepted.
-	 * 
-	 * @see AbstractVelocityContext#put(String,Object)
-	 */
-	public Object put(String key, Object value) {
-		if (key == null) {
-			return null;
-		}
-		Object result = TemplateUtils.putContextForDottedKey(this, key, value);
-		if (result == null) {
-			return super.internalPut(key, value);
-		}
-		return result;
-	}
+    /**
+     * Overridden so that the <code>null</code> values are accepted.
+     * 
+     * @see AbstractVelocityContext#put(String,Object)
+     */
+    public Object put( String key, Object value )
+    {
+        if ( key == null )
+        {
+            return null;
+        }
+        Object result = TemplateUtils.putContextForDottedKey( this, key, value );
+        if ( result == null )
+        {
+            return super.internalPut( key, value );
+        }
+        return result;
+    }
 
 }

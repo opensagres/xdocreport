@@ -29,21 +29,26 @@ import org.apache.velocity.runtime.visitor.BaseVisitor;
 
 import fr.opensagres.xdocreport.template.FieldsExtractor;
 
-public class ExtractVariablesVelocityVisitor extends BaseVisitor {
+public class ExtractVariablesVelocityVisitor
+    extends BaseVisitor
+{
 
-	private final FieldsExtractor extractor;
+    private final FieldsExtractor extractor;
 
-	public ExtractVariablesVelocityVisitor(FieldsExtractor extractor) {
-		this.extractor = extractor;
-	}
+    public ExtractVariablesVelocityVisitor( FieldsExtractor extractor )
+    {
+        this.extractor = extractor;
+    }
 
-	@Override
-	public Object visit(ASTReference node, Object data) {
-		String variableName = node.literal();
-		if (variableName.startsWith("$")) {
-			variableName = variableName.substring(1, variableName.length());
-		}
-		extractor.addFieldName(variableName);
-		return super.visit(node, data);
-	}
+    @Override
+    public Object visit( ASTReference node, Object data )
+    {
+        String variableName = node.literal();
+        if ( variableName.startsWith( "$" ) )
+        {
+            variableName = variableName.substring( 1, variableName.length() );
+        }
+        extractor.addFieldName( variableName );
+        return super.visit( node, data );
+    }
 }

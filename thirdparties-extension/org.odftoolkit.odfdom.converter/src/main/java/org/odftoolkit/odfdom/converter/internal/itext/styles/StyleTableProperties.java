@@ -26,39 +26,49 @@ package org.odftoolkit.odfdom.converter.internal.itext.styles;
 
 import java.awt.Color;
 
-public class StyleTableProperties {
+public class StyleTableProperties
+{
 
-	private Color backgroundColor;
-	private Float width;
+    private Color backgroundColor;
 
-	public StyleTableProperties() {
+    private Float width;
 
-	}
+    public StyleTableProperties()
+    {
 
-	public StyleTableProperties(StyleTableProperties tableProperties) {
-		this.backgroundColor = tableProperties.backgroundColor;
-	}
+    }
 
-	public Color getBackgroundColor() {
-		return backgroundColor;
-	}
+    public StyleTableProperties( StyleTableProperties tableProperties )
+    {
+        this.backgroundColor = tableProperties.backgroundColor;
+    }
 
-	public void setBackgroundColor(Color backgroundColor) {
-		this.backgroundColor = backgroundColor;
-	}
-	
-	public Float getWidth() {
-		return width;
-	}
-	
-	public void setWidth(Float width) {
-		this.width = width;
-	}
+    public Color getBackgroundColor()
+    {
+        return backgroundColor;
+    }
 
-	public void merge(StyleTableProperties tableProperties) {
-		if (tableProperties.getBackgroundColor() != null) {
-			backgroundColor = tableProperties.getBackgroundColor();
-		}
-	}
+    public void setBackgroundColor( Color backgroundColor )
+    {
+        this.backgroundColor = backgroundColor;
+    }
+
+    public Float getWidth()
+    {
+        return width;
+    }
+
+    public void setWidth( Float width )
+    {
+        this.width = width;
+    }
+
+    public void merge( StyleTableProperties tableProperties )
+    {
+        if ( tableProperties.getBackgroundColor() != null )
+        {
+            backgroundColor = tableProperties.getBackgroundColor();
+        }
+    }
 
 }

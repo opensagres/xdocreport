@@ -33,42 +33,46 @@ import org.apache.poi.xwpf.converter.AbstractXWPFPOIConverterTest;
 import org.apache.poi.xwpf.converter.Data;
 import org.apache.poi.xwpf.usermodel.XWPFDocument;
 
-public class XWPFPOI2HTMLConverterTest extends AbstractXWPFPOIConverterTest {
+public class XWPFPOI2HTMLConverterTest
+    extends AbstractXWPFPOIConverterTest
+{
 
-	protected void doGenerate(String fileInName) throws IOException {
-		doGenerateSysOut(fileInName);
-		doGenerateHTMLFile(fileInName);
-	}
+    protected void doGenerate( String fileInName )
+        throws IOException
+    {
+        doGenerateSysOut( fileInName );
+        doGenerateHTMLFile( fileInName );
+    }
 
-	protected void doGenerateSysOut(String fileInName) throws IOException {
+    protected void doGenerateSysOut( String fileInName )
+        throws IOException
+    {
 
-		long startTime = System.currentTimeMillis();
+        long startTime = System.currentTimeMillis();
 
-		XWPFDocument document = new XWPFDocument(
-				Data.class.getResourceAsStream(fileInName));
+        XWPFDocument document = new XWPFDocument( Data.class.getResourceAsStream( fileInName ) );
 
-		OutputStream out = System.out;
-		XWPF2XHTMLConverter.getInstance().convert(document, out, null);
+        OutputStream out = System.out;
+        XWPF2XHTMLConverter.getInstance().convert( document, out, null );
 
-		System.err.println("Elapsed time="
-				+ (System.currentTimeMillis() - startTime) + "(ms)");
-	}
+        System.err.println( "Elapsed time=" + ( System.currentTimeMillis() - startTime ) + "(ms)" );
+    }
 
-	protected void doGenerateHTMLFile(String fileInName) throws IOException {
+    protected void doGenerateHTMLFile( String fileInName )
+        throws IOException
+    {
 
-		String root = "target";
-		String fileOutName = root + "/" + fileInName + ".html";
+        String root = "target";
+        String fileOutName = root + "/" + fileInName + ".html";
 
-		long startTime = System.currentTimeMillis();
+        long startTime = System.currentTimeMillis();
 
-		XWPFDocument document = new XWPFDocument(
-				Data.class.getResourceAsStream(fileInName));
-		// String
-		// root=XWPFPOI2PDFViaiTextConverterTest.class.getClassLoader().getResource(".").getFile();
-		OutputStream out = new FileOutputStream(new File(fileOutName));
-		XWPF2XHTMLConverter.getInstance().convert(document, out, null);
+        XWPFDocument document = new XWPFDocument( Data.class.getResourceAsStream( fileInName ) );
+        // String
+        // root=XWPFPOI2PDFViaiTextConverterTest.class.getClassLoader().getResource(".").getFile();
+        OutputStream out = new FileOutputStream( new File( fileOutName ) );
+        XWPF2XHTMLConverter.getInstance().convert( document, out, null );
 
-		System.out.println("Generate " + fileOutName + " with "
-				+ (System.currentTimeMillis() - startTime) + " ms.");
-	}
+        System.out.println( "Generate " + fileOutName + " with " + ( System.currentTimeMillis() - startTime ) + " ms." );
+    }
 }

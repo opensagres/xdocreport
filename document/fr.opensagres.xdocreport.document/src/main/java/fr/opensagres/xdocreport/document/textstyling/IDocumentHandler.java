@@ -28,146 +28,165 @@ import java.io.IOException;
 
 /**
  * Handler to build a document.
- * 
  */
-public interface IDocumentHandler extends ITransformResult {
+public interface IDocumentHandler
+    extends ITransformResult
+{
 
-	public enum TextLocation {
-		Before, Body, End;
-	}
+    public enum TextLocation
+    {
+        Before, Body, End;
+    }
 
-	/**
-	 * Start the document.
-	 */
-	void startDocument() throws IOException;
+    /**
+     * Start the document.
+     */
+    void startDocument()
+        throws IOException;
 
-	/**
-	 * End the document.
-	 */
-	void endDocument() throws IOException;
+    /**
+     * End the document.
+     */
+    void endDocument()
+        throws IOException;
 
-	/**
-	 * Start paragraph.
-	 */
-	void startParagraph() throws IOException;
+    /**
+     * Start paragraph.
+     */
+    void startParagraph()
+        throws IOException;
 
-	/**
-	 * End paragraph.
-	 */
-	void endParagraph() throws IOException;
+    /**
+     * End paragraph.
+     */
+    void endParagraph()
+        throws IOException;
 
-	/**
-	 * Start bold style.
-	 */
-	void startBold() throws IOException;
+    /**
+     * Start bold style.
+     */
+    void startBold()
+        throws IOException;
 
-	/**
-	 * End bold style.
-	 */
-	void endBold() throws IOException;
+    /**
+     * End bold style.
+     */
+    void endBold()
+        throws IOException;
 
-	/**
-	 * Start italics style.
-	 */
-	void startItalics() throws IOException;
+    /**
+     * Start italics style.
+     */
+    void startItalics()
+        throws IOException;
 
-	/**
-	 * End italics style.
-	 */
-	void endItalics() throws IOException;
+    /**
+     * End italics style.
+     */
+    void endItalics()
+        throws IOException;
 
-	/**
-	 * Start ordered list.
-	 */
-	void startOrderedList() throws IOException;
+    /**
+     * Start ordered list.
+     */
+    void startOrderedList()
+        throws IOException;
 
-	/**
-	 * End ordered list.
-	 */
-	void endOrderedList() throws IOException;
+    /**
+     * End ordered list.
+     */
+    void endOrderedList()
+        throws IOException;
 
-	/**
-	 * Start unordered list.
-	 */
-	void startUnorderedList() throws IOException;
+    /**
+     * Start unordered list.
+     */
+    void startUnorderedList()
+        throws IOException;
 
-	/**
-	 * End unordered list.
-	 */
-	void endUnorderedList() throws IOException;
+    /**
+     * End unordered list.
+     */
+    void endUnorderedList()
+        throws IOException;
 
-	/**
-	 * Start list item.
-	 */
-	void startListItem() throws IOException;
+    /**
+     * Start list item.
+     */
+    void startListItem()
+        throws IOException;
 
-	/**
-	 * End list item.
-	 */
-	void endListItem() throws IOException;
+    /**
+     * End list item.
+     */
+    void endListItem()
+        throws IOException;
 
-	/**
-	 * Text content.
-	 * 
-	 * @param s
-	 */
-	void handleString(String s) throws IOException;
+    /**
+     * Text content.
+     * 
+     * @param s
+     */
+    void handleString( String s )
+        throws IOException;
 
-	void startHeading(int level) throws IOException;
+    void startHeading( int level )
+        throws IOException;
 
-	void endHeading(int level) throws IOException;
+    void endHeading( int level )
+        throws IOException;
 
-	//
-	// void endCaption();
-	// void endDocument();
-	// void endHeading1();
-	// void endHeading2();
-	// void endHeading3();
-	// void endHeading4();
-	// void endHeading5();
-	// void endHeading6();
-	// void endIndent();
-	// void endItalics();
-	// void endLiteral();
-	// void endNormalLinkWithCaption();
-	// void endOrderedList();
-	// void endOrderedListItem();
-	// void endParagraph();
-	// void endPre();
-	// void endSmartLinkWithCaption();
-	// void endTable();
-	// void endTableData();
-	// void endTableHeader();
-	// void endTableRecord();
-	// void endUnorderedList();
-	// void endUnorderedListItem();
-	// void handleNormalLinkWithoutCaption(String string);
-	// void handleNowiki(String nowiki);
-	// void handleSmartLinkWithoutCaption(String string);
-	// void handleString(String s);
-	//
-	// void startCaption(AttributeList captionOptions);
-	// void startDocument();
-	// void startHeading1();
-	// void startHeading2();
-	// void startHeading3();
-	// void startHeading4();
-	// void startHeading5();
-	// void startHeading6();
-	// void startIndent();
-	// void startItalics();
-	// void startLiteral();
-	// void startNormalLinkWithCaption(String s);
-	// void startOrderedList();
-	// void startOrderedListItem();
-	// void startParagraph();
-	// void startPre();
-	// void startSmartLinkWithCaption(String s);
-	// void startTable(AttributeList tableOptions);
-	// void startTableData(AttributeList options);
-	// void startTableHeader(AttributeList list);
-	// void startTableRecord(AttributeList rowOptions);
-	// void startUnorderedList();
-	// void startUnorderedListItem();
+    //
+    // void endCaption();
+    // void endDocument();
+    // void endHeading1();
+    // void endHeading2();
+    // void endHeading3();
+    // void endHeading4();
+    // void endHeading5();
+    // void endHeading6();
+    // void endIndent();
+    // void endItalics();
+    // void endLiteral();
+    // void endNormalLinkWithCaption();
+    // void endOrderedList();
+    // void endOrderedListItem();
+    // void endParagraph();
+    // void endPre();
+    // void endSmartLinkWithCaption();
+    // void endTable();
+    // void endTableData();
+    // void endTableHeader();
+    // void endTableRecord();
+    // void endUnorderedList();
+    // void endUnorderedListItem();
+    // void handleNormalLinkWithoutCaption(String string);
+    // void handleNowiki(String nowiki);
+    // void handleSmartLinkWithoutCaption(String string);
+    // void handleString(String s);
+    //
+    // void startCaption(AttributeList captionOptions);
+    // void startDocument();
+    // void startHeading1();
+    // void startHeading2();
+    // void startHeading3();
+    // void startHeading4();
+    // void startHeading5();
+    // void startHeading6();
+    // void startIndent();
+    // void startItalics();
+    // void startLiteral();
+    // void startNormalLinkWithCaption(String s);
+    // void startOrderedList();
+    // void startOrderedListItem();
+    // void startParagraph();
+    // void startPre();
+    // void startSmartLinkWithCaption(String s);
+    // void startTable(AttributeList tableOptions);
+    // void startTableData(AttributeList options);
+    // void startTableHeader(AttributeList list);
+    // void startTableRecord(AttributeList rowOptions);
+    // void startUnorderedList();
+    // void startUnorderedListItem();
 
 }

@@ -41,98 +41,116 @@ import fr.opensagres.xdocreport.document.web.AbstractProcessXDocReportServlet;
 import fr.opensagres.xdocreport.template.IContext;
 import fr.opensagres.xdocreport.template.formatter.FieldsMetadata;
 
-public class ProcessDispatcherXDocReportServlet extends
-		AbstractProcessXDocReportServlet {
+public class ProcessDispatcherXDocReportServlet
+    extends AbstractProcessXDocReportServlet
+{
 
-	private static final long serialVersionUID = -1568586154827821538L;
+    private static final long serialVersionUID = -1568586154827821538L;
 
-	protected final List<IXDocReportDispatcher<?>> dispatchers = new ArrayList<IXDocReportDispatcher<?>>();
+    protected final List<IXDocReportDispatcher<?>> dispatchers = new ArrayList<IXDocReportDispatcher<?>>();
 
-	@Override
-	public void init(ServletConfig config) throws ServletException {
-		super.init(config);
-		String dispatchers = config.getInitParameter("dispatchers");
-		if (StringUtils.isNotEmpty(dispatchers)) {
-			String clazz = null;
-			String[] classes = dispatchers.split(",");
-			for (int i = 0; i < classes.length; i++) {
-				clazz = classes[i];
-				try {
-					Object instance = getClass().getClassLoader()
-							.loadClass(clazz).newInstance();
-					registerDispatcher((IXDocReportDispatcher<?>) instance);
-				} catch (Throwable e) {
-					// TODO : manage error
-					e.printStackTrace();
-				}
-			}
-		}
-	}
+    @Override
+    public void init( ServletConfig config )
+        throws ServletException
+    {
+        super.init( config );
+        String dispatchers = config.getInitParameter( "dispatchers" );
+        if ( StringUtils.isNotEmpty( dispatchers ) )
+        {
+            String clazz = null;
+            String[] classes = dispatchers.split( "," );
+            for ( int i = 0; i < classes.length; i++ )
+            {
+                clazz = classes[i];
+                try
+                {
+                    Object instance = getClass().getClassLoader().loadClass( clazz ).newInstance();
+                    registerDispatcher( (IXDocReportDispatcher<?>) instance );
+                }
+                catch ( Throwable e )
+                {
+                    // TODO : manage error
+                    e.printStackTrace();
+                }
+            }
+        }
+    }
 
-	public void registerDispatcher(IXDocReportDispatcher<?> dispatcher) {
-		dispatchers.add(dispatcher);
-	}
+    public void registerDispatcher( IXDocReportDispatcher<?> dispatcher )
+    {
+        dispatchers.add( dispatcher );
+    }
 
-	public void unregisterDispatcher(IXDocReportDispatcher<?> dispatcher) {
-		dispatchers.remove(dispatcher);
-	}
+    public void unregisterDispatcher( IXDocReportDispatcher<?> dispatcher )
+    {
+        dispatchers.remove( dispatcher );
+    }
 
-	@Override
-	protected InputStream getSourceStream(String reportId,
-			HttpServletRequest request) throws IOException, XDocReportException {
-		for (IXDocReportDispatcher<?> dispatcher : dispatchers) {
-			InputStream in = dispatcher.getSourceStream(reportId);
-			if (in != null) {
-				return in;
-			}
-		}
-		return null;
-	}
+    @Override
+    protected InputStream getSourceStream( String reportId, HttpServletRequest request )
+        throws IOException, XDocReportException
+    {
+        for ( IXDocReportDispatcher<?> dispatcher : dispatchers )
+        {
+            InputStream in = dispatcher.getSourceStream( reportId );
+            if ( in != null )
+            {
+                return in;
+            }
+        }
+        return null;
+    }
 
-	@Override
-	protected String getTemplateEngineKind(HttpServletRequest request) {
-		for (IXDocReportDispatcher<?> dispatcher : dispatchers) {
-			String templateEngineId = dispatcher
-					.getTemplateEngineKind(getReportId(request));
-			if (StringUtils.isNotEmpty(templateEngineId)) {
-				return templateEngineId;
-			}
-		}
-		// Use default template engine
-		return super.getTemplateEngineKind(request);
-	}
+    @Override
+    protected String getTemplateEngineKind( HttpServletRequest request )
+    {
+        for ( IXDocReportDispatcher<?> dispatcher : dispatchers )
+        {
+            String templateEngineId = dispatcher.getTemplateEngineKind( getReportId( request ) );
+            if ( StringUtils.isNotEmpty( templateEngineId ) )
+            {
+                return templateEngineId;
+            }
+        }
+        // Use default template engine
+        return super.getTemplateEngineKind( request );
+    }
 
-	@Override
-	protected FieldsMetadata getFieldsMetadata(String reportId,
-			HttpServletRequest request) {
-		for (IXDocReportDispatcher<?> dispatcher : dispatchers) {
-			FieldsMetadata fieldsMetadata = dispatcher
-					.getFieldsMetadata(reportId);
-			if (fieldsMetadata != null) {
-				return fieldsMetadata;
-			}
-		}
-		return super.getFieldsMetadata(reportId, request);
-	}
+    @Override
+    protected FieldsMetadata getFieldsMetadata( String reportId, HttpServletRequest request )
+    {
+        for ( IXDocReportDispatcher<?> dispatcher : dispatchers )
+        {
+            FieldsMetadata fieldsMetadata = dispatcher.getFieldsMetadata( reportId );
+            if ( fieldsMetadata != null )
+            {
+                return fieldsMetadata;
+            }
+        }
+        return super.getFieldsMetadata( reportId, request );
+    }
 
-	@Override
-	protected void populateContext(IContext context, String reportId,
-			HttpServletRequest request) throws IOException, XDocReportException {
-		IXDocReport report = super.getRegistry(request).getReport(reportId);
-		if (report != null) {
-			populateContext(context, report, request);
-		}
-	}
+    @Override
+    protected void populateContext( IContext context, String reportId, HttpServletRequest request )
+        throws IOException, XDocReportException
+    {
+        IXDocReport report = super.getRegistry( request ).getReport( reportId );
+        if ( report != null )
+        {
+            populateContext( context, report, request );
+        }
+    }
 
-	protected void populateContext(IContext context, IXDocReport report,
-			HttpServletRequest request) {
-		String reportId = report.getId();
-		for (IXDocReportDispatcher<?> dispatcher : dispatchers) {
-			IXDocReportWEBController controler = (IXDocReportWEBController) dispatcher
-					.getReportController(reportId);
-			if (controler != null) {
-				controler.populateContext(context, report, request);
-			}
-		}
-	}
+    protected void populateContext( IContext context, IXDocReport report, HttpServletRequest request )
+    {
+        String reportId = report.getId();
+        for ( IXDocReportDispatcher<?> dispatcher : dispatchers )
+        {
+            IXDocReportWEBController controler = (IXDocReportWEBController) dispatcher.getReportController( reportId );
+            if ( controler != null )
+            {
+                controler.populateContext( context, report, request );
+            }
+        }
+    }
 }

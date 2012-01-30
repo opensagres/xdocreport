@@ -1,8 +1,12 @@
 package fr.opensagres.xdocreport.document.odt.textstyling;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Stack;
+import java.util.logging.Logger;
 
+import fr.opensagres.xdocreport.core.logging.LogUtils;
 import fr.opensagres.xdocreport.document.odt.preprocessor.ODTBufferedDocumentContentHandler;
 import fr.opensagres.xdocreport.document.preprocessor.sax.BufferedElement;
 import fr.opensagres.xdocreport.document.textstyling.AbstractDocumentHandler;
@@ -13,8 +17,12 @@ public class ODTDocumentHandler extends AbstractDocumentHandler {
 	private boolean bolding;
 	private boolean italicsing;
 	private Stack<Boolean> paragraphsStack;
-	private boolean isHeader = false;
-
+	private boolean insideHeader = false;
+	private int listDepth=0;
+	private List<Boolean> lastItemAlreadyClosed = new ArrayList<Boolean>();
+	
+    private static final Logger LOGGER = LogUtils.getLogger(ODTDocumentHandler.class.getName());
+	   
 	public ODTDocumentHandler(BufferedElement parent, IContext context) {
 		super(parent, context);
 	}
@@ -57,7 +65,7 @@ public class ODTDocumentHandler extends AbstractDocumentHandler {
 
 	@Override
 	public void handleString(String content) throws IOException {
-		if (isHeader) {
+		if (insideHeader) {
 			super.write(content);
 		} else {
 			super.write("<text:span");
@@ -105,42 +113,87 @@ public class ODTDocumentHandler extends AbstractDocumentHandler {
 		super.setTextLocation(TextLocation.End);
 		super.write("<text:h text:style-name=\"Heading_20_" + level
 				+ "\" text:outline-level=\"" + level + "\">");
-		isHeader = true; // XXX nested Headers ?
+		insideHeader = true;
 	}
 
 	public void endHeading(int level) throws IOException {
 		super.write("</text:h>");
-		isHeader = false;
+		insideHeader = false;
 		startParagraph();
 	}
 
-
 	@Override
 	protected void doStartOrderedList() throws IOException {
-		// TODO Auto-generated method stub
+	    internalStartList(ODTBufferedDocumentContentHandler.UL_STYLE_NAME);
 	}
 	
 	@Override
 	protected void doEndOrderedList() throws IOException {
-		// TODO Auto-generated method stub
-	}
-
+	    internalEndList();
+	}	
+	
 	@Override
 	protected void doStartUnorderedList() throws IOException {
-		// TODO Auto-generated method stub
-		
+	    internalStartList(ODTBufferedDocumentContentHandler.UL_STYLE_NAME);
 	}
 
 	@Override
 	protected void doEndUnorderedList() throws IOException {
-		// TODO Auto-generated method stub		
+	    internalEndList();
 	}
-
+	
+	protected String itemStyle="";
+	
+	protected void internalStartList(String style) throws IOException {
+        if (listDepth==0) {
+            endParagraphIfNeeded();
+            lastItemAlreadyClosed.add(listDepth, false);
+        } else {
+            // close item for nested lists
+            super.write("</text:p>");
+            lastItemAlreadyClosed.add(listDepth, true);
+        }
+        if (style!=null) {
+            super.write("<text:list text:style-name=\"" + style + "\">");
+            itemStyle=style;
+        } else {
+            super.write("<text:list>");
+        }
+        listDepth++;	    
+	}
+	
+	protected void internalEndList() throws IOException {
+        super.write("</text:list>");
+        listDepth--;        
+        if (listDepth==0) {
+            startParagraph();
+        }	    
+	}
+	
 	public void startListItem() {
-		// TODO Auto-generated method stub
+	    try {	        
+	        if (itemStyle!=null) {
+	            super.write("<text:list-item text:style-name=\"" + itemStyle + "\">");
+	            super.write("<text:p text:style-name=\"" + itemStyle + ODTBufferedDocumentContentHandler.LIST_P_STYLE_NAME_SUFFIX + "\">");
+	        } else {
+	            super.write("<text:list-item>");
+	            super.write("<text:p>");
+	        }
+        } catch (IOException e) {
+            LOGGER.severe(e.getMessage());
+        }
 	}
 
 	public void endListItem() {
-		// TODO Auto-generated method stub
+        try {
+            if (lastItemAlreadyClosed.size()> listDepth && lastItemAlreadyClosed.get(listDepth)) {
+                lastItemAlreadyClosed.add(listDepth, false);    
+            } else {
+                super.write("</text:p>");                
+            }
+            super.write("</text:list-item>");
+        } catch (IOException e) {
+            LOGGER.severe(e.getMessage());
+        }
 	}
 }

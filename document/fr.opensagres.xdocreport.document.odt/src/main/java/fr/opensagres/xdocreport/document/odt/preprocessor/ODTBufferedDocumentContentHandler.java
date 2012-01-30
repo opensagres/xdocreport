@@ -37,6 +37,8 @@ import static fr.opensagres.xdocreport.document.odt.ODTUtils.isOfficeAutomaticSt
 import static fr.opensagres.xdocreport.document.odt.ODTUtils.isTextA;
 import static fr.opensagres.xdocreport.document.odt.ODTUtils.isTextInput;
 
+import java.text.DecimalFormat;
+import java.text.DecimalFormatSymbols;
 import java.util.Map;
 
 import org.xml.sax.Attributes;
@@ -63,7 +65,12 @@ public class ODTBufferedDocumentContentHandler extends
 	public static final String BOLD_STYLE_NAME = "XDocReport_Bold";
 	public static final String ITALIC_STYLE_NAME = "XDocReport_Italic";
 	public static final String BOLD_ITALIC_STYLE_NAME = "XDocReport_BoldItalic";
-
+	public static final String OL_STYLE_NAME = "XDocReport_OL";
+	public static final String UL_STYLE_NAME = "XDocReport_UL";
+	public static final String LIST_P_STYLE_NAME_SUFFIX = "_P";
+	
+	
+	protected static final double BULLET_STEP = 0.635;
 	private String dynamicImageName;
 	private boolean textInputParsing = false;
 	private int variableIndex = 0;
@@ -185,6 +192,8 @@ public class ODTBufferedDocumentContentHandler extends
 				generateStyle(BOLD_STYLE_NAME, true, false);
 				generateStyle(ITALIC_STYLE_NAME, false, true);
 				generateStyle(BOLD_ITALIC_STYLE_NAME, true, true);
+				generateListStyle(true);
+				generateListStyle(false);				
 			}
 			super.doEndElement(uri, localName, name);
 		}
@@ -205,6 +214,78 @@ public class ODTBufferedDocumentContentHandler extends
 		region.append("/></style:style>");
 	}
 
+
+	private void generateListStyle(boolean ordered) {
+	    IBufferedRegion region = getCurrentElement();
+
+	    String styleName = UL_STYLE_NAME;
+	    if (ordered) {
+	        styleName = OL_STYLE_NAME;
+	    }
+	    
+	    // generate Paragraph styles reference
+	    region.append("<style:style style:name=\"");
+	    region.append( styleName + LIST_P_STYLE_NAME_SUFFIX);
+	    region.append("\" style:family=\"paragraph\" style:parent-style-name=\"Standard\" style:list-style-name=\"");
+	    region.append(styleName);
+	    region.append("\"/>");
+	    
+	    // generate the list style
+        region.append("<text:list-style style:name=\"");
+        region.append(styleName);
+        region.append("\">");
+
+        // generate styles for 10 levels 
+        for (int level=1; level <=10; level++) {
+            generateBulletStyle(level, ordered);                   
+        }
+        region.append("</text:list-style>");
+	}	
+	
+	private void generateBulletStyle(Integer level, boolean ordered) {
+	    IBufferedRegion region = getCurrentElement();
+	    if (ordered) {
+	        region.append("<text:list-level-style-number text:level=\"");
+	    } else {
+	        region.append("<text:list-level-style-bullet text:level=\"");
+	    }
+        region.append(level.toString());
+        region.append("\" text:style-name=\"");
+        if (ordered) {
+            region.append("Numbering_20_Symbols");
+        }
+        else {
+            region.append("Bullet_20_Symbols");
+        }
+        region.append("\" style:num-suffix=\".\" ");
+        if (ordered) {            
+            region.append("style:num-format=\"1\">");
+        }
+        else {
+            region.append("text:bullet-char=\"•\">");
+        }
+        region.append("<style:list-level-properties text:list-level-position-and-space-mode=\"label-alignment\">");
+        region.append("<style:list-level-label-alignment text:label-followed-by=\"listtab\" ");
+        
+        DecimalFormatSymbols decimalFormat = new DecimalFormatSymbols();
+        decimalFormat.setDecimalSeparator('.');        
+        String offset = new DecimalFormat("#.###", decimalFormat).format(BULLET_STEP * (level+1));
+        
+        region.append(" text:list-tab-stop-position=\"");
+        region.append(offset);
+        region.append("cm\" fo:text-indent=\"-0.635cm\" fo:margin-left=\"");
+        region.append(offset);
+        region.append("cm\"/>");
+        
+        region.append("</style:list-level-properties>");
+
+        if (ordered) {
+            region.append("</text:list-level-style-number>");
+        } else {
+            region.append("</text:list-level-style-bullet>");
+        }
+	}
+	
 	@Override
 	protected String getTableRowName() {
 		return "table:table-row";

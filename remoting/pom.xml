@@ -21,5 +21,6 @@
 	<modules>
 		<module>fr.opensagres.xdocreport.remoting.ws</module>
 		<module>fr.opensagres.xdocreport.remoting.rest</module>
+		<module>fr.opensagres.xdocreport.remoting.shared</module>
 	</modules>
 </project>

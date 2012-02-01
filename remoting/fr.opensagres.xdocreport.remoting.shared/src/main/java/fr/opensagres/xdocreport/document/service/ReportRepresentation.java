@@ -31,7 +31,7 @@ import javax.xml.bind.annotation.XmlMimeType;
 import javax.xml.bind.annotation.XmlRootElement;
 
 @XmlRootElement
-public class Report
+public class ReportRepresentation
     extends ReportId
 {
 

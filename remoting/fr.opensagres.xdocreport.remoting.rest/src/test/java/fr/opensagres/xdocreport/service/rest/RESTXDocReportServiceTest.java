@@ -45,7 +45,7 @@ import org.junit.Ignore;
 import org.junit.Test;
 
 import fr.opensagres.xdocreport.document.service.DataContext;
-import fr.opensagres.xdocreport.document.service.Report;
+import fr.opensagres.xdocreport.document.service.ReportRepresentation;
 import fr.opensagres.xdocreport.document.service.ReportId;
 import fr.opensagres.xdocreport.document.service.WSOptions;
 
@@ -82,7 +82,7 @@ public class RESTXDocReportServiceTest
 
         WebClient client = WebClient.create( BASE_ADDRESS );
         client.path( "upload" );
-        Report report = new Report();
+        ReportRepresentation report = new ReportRepresentation();
 
         InputStream in = RESTXDocReportServiceTest.class.getClassLoader().getResourceAsStream( "bo.docx" );
         report.setReportID( "reportID1" );
@@ -119,7 +119,7 @@ public class RESTXDocReportServiceTest
 
         WebClient client = WebClient.create( BASE_ADDRESS );
         client.path( "processReport" );
-        Report report = new Report();
+        ReportRepresentation report = new ReportRepresentation();
         // client.accept("multipart/related");
         // client=client.type("multipart/form-data");
         // client=client.accept("multipart/form-data");

@@ -38,7 +38,7 @@ import javax.ws.rs.core.MediaType;
 import fr.opensagres.xdocreport.converter.Options;
 import fr.opensagres.xdocreport.core.XDocReportException;
 import fr.opensagres.xdocreport.document.service.DataContext;
-import fr.opensagres.xdocreport.document.service.Report;
+import fr.opensagres.xdocreport.document.service.ReportRepresentation;
 import fr.opensagres.xdocreport.document.service.ReportId;
 import fr.opensagres.xdocreport.document.service.WSOptions;
 import fr.opensagres.xdocreport.document.service.XDocReportService;
@@ -78,7 +78,7 @@ public class RESTXDocReportService
     @Produces( { "text/xml", "application/xml", "application/json" } )
     @Consumes( { "application/x-www-form-urlencoded", "multipart/form-data" } )
     public byte[] processReport( @FormParam( "" )
-    Report report, @FormParam( "" )
+    ReportRepresentation report, @FormParam( "" )
     ArrayList<DataContext> dataContext, @FormParam( "" )
     WSOptions wsOptions )
         throws XDocReportException
@@ -107,7 +107,7 @@ public class RESTXDocReportService
 
     @POST
     @Path( "/upload" )
-    public void upload( Report report )
+    public void upload( ReportRepresentation report )
         throws XDocReportException
     {
         System.out.println( report );

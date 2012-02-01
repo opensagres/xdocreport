@@ -39,14 +39,14 @@ public class XDocreportApplication
         singletons.add( new RESTXDocReportService() );
     }
 
-    @Override
+
     public Set<Class<?>> getClasses()
     {
         HashSet<Class<?>> set = new HashSet<Class<?>>();
         return set;
     }
 
-    @Override
+
     public Set<Object> getSingletons()
     {
         return singletons;

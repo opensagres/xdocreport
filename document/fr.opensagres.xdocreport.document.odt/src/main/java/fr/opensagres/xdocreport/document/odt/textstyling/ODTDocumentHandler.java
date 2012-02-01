@@ -191,7 +191,7 @@ public class ODTDocumentHandler
     protected void doStartOrderedList()
         throws IOException
     {
-        internalStartList( ODTBufferedDocumentContentHandler.UL_STYLE_NAME );
+        internalStartList( ODTBufferedDocumentContentHandler.OL_STYLE_NAME );
     }
 
     @Override

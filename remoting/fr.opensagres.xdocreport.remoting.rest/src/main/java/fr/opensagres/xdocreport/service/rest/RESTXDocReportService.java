@@ -45,8 +45,6 @@ import fr.opensagres.xdocreport.document.service.XDocReportService;
 import fr.opensagres.xdocreport.template.formatter.FieldsMetadata;
 
 @Path( "/" )
-@Consumes( { MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML } )
-@Produces( { MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML } )
 public class RESTXDocReportService
 {
 
@@ -68,6 +66,7 @@ public class RESTXDocReportService
 
     @GET
     @Path( "/listReports" )
+    @Produces( { MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML } )
     public List<ReportId> listReports()
     {
         return delegate.listReports();
@@ -107,6 +106,7 @@ public class RESTXDocReportService
 
     @POST
     @Path( "/upload" )
+    @Consumes( { MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML } )
     public void upload( ReportRepresentation report )
         throws XDocReportException
     {

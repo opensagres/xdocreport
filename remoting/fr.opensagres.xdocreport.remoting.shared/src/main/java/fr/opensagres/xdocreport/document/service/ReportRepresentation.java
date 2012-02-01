@@ -25,6 +25,7 @@
 package fr.opensagres.xdocreport.document.service;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import javax.xml.bind.annotation.XmlMimeType;
@@ -32,8 +33,16 @@ import javax.xml.bind.annotation.XmlRootElement;
 
 @XmlRootElement
 public class ReportRepresentation
-    extends ReportId
+
 {
+
+
+    private String reportID;
+
+    private String templateEngine;
+
+    private Date loadedDate;
+
 
     private byte[] document;
 
@@ -59,5 +68,36 @@ public class ReportRepresentation
     {
         this.fieldsMetaData = fieldsMetaData;
     }
+
+    public String getReportID()
+    {
+        return reportID;
+    }
+
+    public void setReportID( String reportID )
+    {
+        this.reportID = reportID;
+    }
+
+    public String getTemplateEngine()
+    {
+        return templateEngine;
+    }
+
+    public void setTemplateEngine( String templateEngine )
+    {
+        this.templateEngine = templateEngine;
+    }
+
+    public Date getLoadedDate()
+    {
+        return loadedDate;
+    }
+
+    public void setLoadedDate( Date loadedDate )
+    {
+        this.loadedDate = loadedDate;
+    }
+
 
 }

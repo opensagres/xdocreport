@@ -42,6 +42,12 @@ public class Tools
     extends Generator<Request, Response>
 {
 
+	private static final Tools INSTANCE = new Tools();
+
+	public static Tools getInstance() {
+		return INSTANCE;
+	}
+
     public void process( File in, File out, TemplateEngineKind templateEngineKind, FieldsMetadata fieldsMetadata,
                          Iterable<IDataProvider> dataProviders )
         throws Exception
@@ -109,14 +115,12 @@ public class Tools
     @Override
     protected void prepareHTTPResponse( String id, MimeMapping mimeMapping, Request request, Response response )
     {
-        // TODO Auto-generated method stub
 
     }
 
     @Override
     protected void prepareHTTPResponse( String reportId, String entryName, Request request, Response response )
     {
-        // TODO Auto-generated method stub
 
     }
 

@@ -26,10 +26,14 @@ package fr.opensagres.xdocreport.document.tools;
 
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
+import java.io.IOException;
 import java.io.PrintStream;
 import java.util.ArrayList;
 import java.util.List;
+
+import org.xml.sax.SAXException;
 
 import fr.opensagres.xdocreport.template.formatter.FieldsMetadata;
 import fr.opensagres.xdocreport.template.formatter.FieldsMetadataXMLSerializer;
@@ -94,6 +98,43 @@ public class Main
             }
         }
 
+        // Err
+        File fileErr = null;
+        if ( err != null )
+        {
+            fileErr = new File( err );
+            if ( fileErr.exists() )
+            {
+                fileErr.delete();
+            }
+            else
+            {
+                fileErr.getParentFile().mkdirs();
+            }
+        }
+
+        if ( fileErr == null )
+        {
+            process( in, out, templateEngineKind, metadataFile, dataDir, dataProviders );
+        }
+        else
+        {
+            try
+            {
+                process( in, out, templateEngineKind, metadataFile, dataDir, dataProviders );
+            }
+            catch ( Throwable e )
+            {
+                e.printStackTrace( new PrintStream( fileErr ) );
+            }
+        }
+
+    }
+
+    private static void process( String in, String out, String templateEngineKind, String metadataFile, String dataDir,
+                                 List<IDataProvider> dataProviders )
+        throws SAXException, IOException, FileNotFoundException, Exception
+    {
         FieldsMetadata fieldsMetadata = null;
         if ( metadataFile != null )
         {
@@ -161,38 +202,8 @@ public class Main
         File fileOut = new File( out );
         fileOut.getParentFile().mkdirs();
 
-        // Err
-        File fileErr = null;
-        if ( err != null )
-        {
-            fileErr = new File( err );
-            if ( fileErr.exists() )
-            {
-                fileErr.delete();
-            }
-            else
-            {
-                fileErr.getParentFile().mkdirs();
-            }
-        }
-
         Tools tools = Tools.getInstance();
-        if ( err == null )
-        {
-            tools.process( new File( in ), fileOut, templateEngineKind, fieldsMetadata, dataProviders );
-        }
-        else
-        {
-            try
-            {
-                tools.process( new File( in ), fileOut, templateEngineKind, fieldsMetadata, dataProviders );
-            }
-            catch ( Throwable e )
-            {
-                e.printStackTrace( new PrintStream( fileErr ) );
-            }
-        }
-
+        tools.process( new File( in ), fileOut, templateEngineKind, fieldsMetadata, dataProviders );
     }
 
     private static String getValue( String[] args, int i )

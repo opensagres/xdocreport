@@ -24,6 +24,8 @@
  */
 package fr.opensagres.xdocreport.template.formatter;
 
+import fr.opensagres.xdocreport.core.utils.StringUtils;
+
 /**
  * Field metadata.
  */
@@ -121,7 +123,7 @@ public class FieldMetadata
     public void setImageName( String imageName )
     {
         this.imageName = imageName;
-        this.imageType = imageName != null;
+        this.imageType = StringUtils.isNotEmpty( imageName ) ;
         if ( imageType )
         {
             fieldsMetadata.fieldsAsImage.put( getImageName(), this );
@@ -140,7 +142,7 @@ public class FieldMetadata
     public void setSyntaxKind( String syntaxKind )
     {
         this.syntaxKind = syntaxKind;
-        if ( syntaxKind != null )
+        if ( StringUtils.isNotEmpty( syntaxKind )  )
         {
             fieldsMetadata.fieldsAsTextStyling.put( getFieldName(), this );
         }

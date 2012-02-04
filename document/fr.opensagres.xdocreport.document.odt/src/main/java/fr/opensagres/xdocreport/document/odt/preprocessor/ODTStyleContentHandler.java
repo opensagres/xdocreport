@@ -26,19 +26,26 @@ package fr.opensagres.xdocreport.document.odt.preprocessor;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
 
-import fr.opensagres.xdocreport.document.preprocessor.sax.BufferedDocument;
-import fr.opensagres.xdocreport.document.preprocessor.sax.BufferedDocumentContentHandler;
 import fr.opensagres.xdocreport.document.preprocessor.sax.IBufferedRegion;
+import fr.opensagres.xdocreport.template.formatter.FieldsMetadata;
+import fr.opensagres.xdocreport.template.formatter.IDocumentFormatter;
 
 public class ODTStyleContentHandler
-    extends BufferedDocumentContentHandler<BufferedDocument>
+    extends ODTBufferedDocumentContentHandler
 {
 
     protected List<Integer> existingStyles = new ArrayList<Integer>();
+
+    protected ODTStyleContentHandler( FieldsMetadata fieldsMetadata, IDocumentFormatter formatter,
+                                                 Map<String, Object> sharedContext )
+    {
+        super( fieldsMetadata, formatter, sharedContext );
+    }
 
     protected static String[] HEADING_STYLES =
         new String[] {

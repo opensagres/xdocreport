@@ -33,6 +33,8 @@ set METADATA_FILE=%3
 if %METADATA_FILE% == "" goto error
 set DATA_DIR=%4
 if %DATA_DIR% == "" goto error
+set ERR=%5
+if %ERR% == "" goto error
 
 set BASE_DIR=%~dp0/../lib
 set XDOCREPORT_VERSION=${project.version}
@@ -51,7 +53,7 @@ set CLASSPATH=%CLASSPATH%;%BASE_DIR%/fr.opensagres.xdocreport.document.docx-%XDO
 set CLASSPATH=%CLASSPATH%;%BASE_DIR%/fr.opensagres.xdocreport.document.odt-%XDOCREPORT_VERSION%.jar
 set CLASSPATH=%CLASSPATH%;%BASE_DIR%/fr.opensagres.xdocreport.document.tools-%XDOCREPORT_VERSION%.jar
 
-java -classpath "%CLASSPATH%" fr.opensagres.xdocreport.document.tools.Main -in %IN% -out %OUT% -dataDir %DATA_DIR% -metadataFile %METADATA_FILE% -autoGenData true
+java -classpath "%CLASSPATH%" fr.opensagres.xdocreport.document.tools.Main -in %IN% -out %OUT% -dataDir %DATA_DIR% -metadataFile %METADATA_FILE% -err %ERR%
 
 goto end
 

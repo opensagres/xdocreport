@@ -26,11 +26,15 @@ package fr.opensagres.xdocreport.document.tools;
 
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.PrintStream;
 import java.util.ArrayList;
 import java.util.List;
 
-import fr.opensagres.xdocreport.core.utils.StringUtils;
+import org.xml.sax.SAXException;
+
 import fr.opensagres.xdocreport.template.formatter.FieldsMetadata;
 import fr.opensagres.xdocreport.template.formatter.FieldsMetadataXMLSerializer;
 
@@ -41,13 +45,12 @@ public class Main
         throws Exception
     {
 
-        String fileIn = null;
-        String fileOut = null;
+        String in = null;
+        String out = null;
+        String err = null;
         String templateEngineKind = null;
-        String jsonData = null;
         String jsonFile = null;
         String metadataFile = null;
-        boolean autoGenData = false;
         String dataDir = null;
 
         List<IDataProvider> dataProviders = new ArrayList<IDataProvider>();
@@ -57,23 +60,33 @@ public class Main
             arg = args[i];
             if ( "-in".equals( arg ) )
             {
-                fileIn = getValue( args, i );
+                in = getValue( args, i );
+                if ( in != null )
+                    i++;
             }
             else if ( "-out".equals( arg ) )
             {
-                fileOut = getValue( args, i );
+                out = getValue( args, i );
+                if ( out != null )
+                    i++;
+            }
+            else if ( "-err".equals( arg ) )
+            {
+                err = getValue( args, i );
+                if ( err != null )
+                    i++;
             }
             else if ( "-engine".equals( arg ) )
             {
                 templateEngineKind = getValue( args, i );
+                if ( templateEngineKind != null )
+                    i++;
             }
             else if ( "-jsonFile".equals( arg ) )
             {
                 jsonFile = getValue( args, i );
-            }
-            else if ( "-autoGenData".equals( arg ) )
-            {
-                autoGenData = StringUtils.asBoolean( getValue( args, i ), false );
+                if ( jsonFile != null )
+                    i++;
             }
             else if ( "-metadataFile".equals( arg ) )
             {
@@ -85,6 +98,43 @@ public class Main
             }
         }
 
+        // Err
+        File fileErr = null;
+        if ( err != null )
+        {
+            fileErr = new File( err );
+            if ( fileErr.exists() )
+            {
+                fileErr.delete();
+            }
+            else
+            {
+                fileErr.getParentFile().mkdirs();
+            }
+        }
+
+        if ( fileErr == null )
+        {
+            process( in, out, templateEngineKind, metadataFile, dataDir, dataProviders );
+        }
+        else
+        {
+            try
+            {
+                process( in, out, templateEngineKind, metadataFile, dataDir, dataProviders );
+            }
+            catch ( Throwable e )
+            {
+                e.printStackTrace( new PrintStream( fileErr ) );
+            }
+        }
+
+    }
+
+    private static void process( String in, String out, String templateEngineKind, String metadataFile, String dataDir,
+                                 List<IDataProvider> dataProviders )
+        throws SAXException, IOException, FileNotFoundException, Exception
+    {
         FieldsMetadata fieldsMetadata = null;
         if ( metadataFile != null )
         {
@@ -148,11 +198,12 @@ public class Main
             }
         }
 
-        Tools tools = new Tools();
-        File out = new File( fileOut );
-        out.getParentFile().mkdirs();
-        tools.process( new File( fileIn ), out, templateEngineKind, fieldsMetadata, dataProviders );
+        // Out
+        File fileOut = new File( out );
+        fileOut.getParentFile().mkdirs();
 
+        Tools tools = Tools.getInstance();
+        tools.process( new File( in ), fileOut, templateEngineKind, fieldsMetadata, dataProviders );
     }
 
     private static String getValue( String[] args, int i )

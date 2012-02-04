@@ -176,11 +176,11 @@ public class FieldsMetadata
             {
                 exsitingField.setListType( listType );
             }
-            if ( imageName != null )
+            if ( StringUtils.isNotEmpty( imageName ))
             {
                 exsitingField.setImageName( imageName );
             }
-            if ( syntaxKind != null )
+            if ( StringUtils.isNotEmpty( syntaxKind ) )
             {
                 exsitingField.setSyntaxKind( syntaxKind );
             }

@@ -25,16 +25,19 @@
 package fr.opensagres.xdocreport.service.rest;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 
+import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Collection;
 
 import javax.ws.rs.core.Application;
+import javax.ws.rs.core.MediaType;
 
 import org.apache.cxf.jaxrs.client.WebClient;
-import org.apache.cxf.jaxrs.ext.form.Form;
 import org.apache.cxf.jaxrs.servlet.CXFNonSpringJaxrsServlet;
 import org.eclipse.jetty.server.Server;
 import org.eclipse.jetty.servlet.ServletContextHandler;
@@ -44,9 +47,13 @@ import org.junit.BeforeClass;
 import org.junit.Ignore;
 import org.junit.Test;
 
+import fr.opensagres.xdocreport.converter.ConverterTypeTo;
+import fr.opensagres.xdocreport.converter.ConverterTypeVia;
+import fr.opensagres.xdocreport.core.document.DocumentKind;
 import fr.opensagres.xdocreport.document.service.DataContext;
-import fr.opensagres.xdocreport.document.service.ReportRepresentation;
+import fr.opensagres.xdocreport.document.service.ReportAndDataRepresentation;
 import fr.opensagres.xdocreport.document.service.ReportId;
+import fr.opensagres.xdocreport.document.service.ReportRepresentation;
 import fr.opensagres.xdocreport.document.service.WSOptions;
 
 public class RESTXDocReportServiceTest
@@ -74,7 +81,7 @@ public class RESTXDocReportServiceTest
         context.addServlet( servlet, "/*" );
         server.start();
     }
-
+    @Ignore
     @Test
     public void upload()
         throws IOException
@@ -94,7 +101,7 @@ public class RESTXDocReportServiceTest
         client.post( report );
 
     }
-
+@Ignore
     @Test
     public void listReports()
         throws Exception
@@ -113,16 +120,16 @@ public class RESTXDocReportServiceTest
 
     @Ignore
     @Test
-    public void processReport()
+    public void processReportWithoutOptions()
         throws IOException
     {
 
         WebClient client = WebClient.create( BASE_ADDRESS );
         client.path( "processReport" );
-        ReportRepresentation report = new ReportRepresentation();
-        // client.accept("multipart/related");
-        // client=client.type("multipart/form-data");
-        // client=client.accept("multipart/form-data");
+        client.accept( MediaType.APPLICATION_XML );
+
+        ReportAndDataRepresentation report = new ReportAndDataRepresentation();
+
         InputStream in = RESTXDocReportServiceTest.class.getClassLoader().getResourceAsStream( "bo.docx" );
         report.setReportID( "reportID1" );
         report.setDocument( fr.opensagres.xdocreport.core.io.IOUtils.toByteArray( in ) );
@@ -130,33 +137,56 @@ public class RESTXDocReportServiceTest
         report.getFieldsMetaData().add( "test" );
         report.setTemplateEngine( "Velocity" );
 
-        Form aForm = new Form();
-        aForm.set( "report", report );
-        aForm.set( "dataContext", new ArrayList<DataContext>() );
+        report.setDataContext( new ArrayList<DataContext>() );
+//        WSOptions options = new WSOptions();
+//        options.setFrom( "DOCX" );
+//        options.setTo( "PDF" );
+//        options.setVia( "iText" );
+
+        report.setOptions( null );
+        //client.post( report);
+        byte[] flux= client.post( report,byte[].class );
+        assertNotNull(flux);
+        File aFile= new File( "result.docx");
+        FileOutputStream fos= new FileOutputStream( aFile );
+        fos.write( flux );
+        fos.close();
+    }
+
+    @Test
+    public void processReportWithOptions()
+        throws IOException
+    {
+
+        WebClient client = WebClient.create( BASE_ADDRESS );
+        client.path( "processReport" );
+        client.accept( MediaType.APPLICATION_XML );
+
+        ReportAndDataRepresentation report = new ReportAndDataRepresentation();
+
+        InputStream in = RESTXDocReportServiceTest.class.getClassLoader().getResourceAsStream( "bo.docx" );
+        report.setReportID( "reportID1" );
+        report.setDocument( fr.opensagres.xdocreport.core.io.IOUtils.toByteArray( in ) );
+        report.setTemplateEngine( "Velocity" );
+        report.getFieldsMetaData().add( "test" );
+        report.setTemplateEngine( "Velocity" );
+
+        report.setDataContext( new ArrayList<DataContext>() );
+
         WSOptions options = new WSOptions();
-        options.setFrom( "A" );
-        options.setTo( "B" );
-        options.setVia( "C" );
-        aForm.set( "wsOptions", options );
+        options.setFrom( DocumentKind.DOCX.name() );
+        options.setTo( ConverterTypeTo.PDF.name() );
+        options.setVia( ConverterTypeVia.ITEXT.name() );
 
-        // List one = new ArrayList();
-        // one.add( report);
-        // map.put("report", one);
-        // List two = new ArrayList();
-        // two.add( new ArrayList<DataContext>());
-        // map.put("dataContext", two);
-        // List three = new ArrayList();
-        // three.add(new WSOptions())
-        // ; map.put("report", three);
-        //
-        // Map<String, List<Object>> objects = new MultiValued<String, List<Object>>();
-        // List toto = new ArrayList();
-        // objects.put("report", new ArrayList());
-        // objects.put("dataContext", new ArrayList());
-        // objects.put("wsOptions", new ArrayList());
-        // client.form(aForm);
+        report.setOptions( options );
+        //client.post( report);
+        byte[] flux= client.post( report,byte[].class );
+        assertNotNull(flux);
 
-        client.form( aForm );
+        File aFile= new File( "result.pdf");
+        FileOutputStream fos= new FileOutputStream( aFile );
+        fos.write( flux );
+        fos.close();
     }
 
     @AfterClass

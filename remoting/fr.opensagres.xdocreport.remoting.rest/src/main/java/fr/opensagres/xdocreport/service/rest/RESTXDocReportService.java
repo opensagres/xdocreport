@@ -24,13 +24,12 @@
  */
 package fr.opensagres.xdocreport.service.rest;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import javax.ws.rs.Consumes;
-import javax.ws.rs.FormParam;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
+import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
@@ -38,8 +37,9 @@ import javax.ws.rs.core.MediaType;
 import fr.opensagres.xdocreport.converter.Options;
 import fr.opensagres.xdocreport.core.XDocReportException;
 import fr.opensagres.xdocreport.document.service.DataContext;
-import fr.opensagres.xdocreport.document.service.ReportRepresentation;
+import fr.opensagres.xdocreport.document.service.ReportAndDataRepresentation;
 import fr.opensagres.xdocreport.document.service.ReportId;
+import fr.opensagres.xdocreport.document.service.ReportRepresentation;
 import fr.opensagres.xdocreport.document.service.WSOptions;
 import fr.opensagres.xdocreport.document.service.XDocReportService;
 import fr.opensagres.xdocreport.template.formatter.FieldsMetadata;
@@ -56,13 +56,13 @@ public class RESTXDocReportService
         return delegate.download( reportID, processState );
     }
 
-    @GET
+    /*@GET
     @Path( "/test" )
     public String get()
     {
 
         return "test";
-    }
+    }*/
 
     @GET
     @Path( "/listReports" )
@@ -72,25 +72,52 @@ public class RESTXDocReportService
         return delegate.listReports();
     }
 
+
+    @POST
+    @Path( "/upload" )
+    @Consumes( { MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML } )
+    public void upload( ReportRepresentation report )
+        throws XDocReportException
+    {
+        System.out.println("%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% "+ report );
+        fr.opensagres.xdocreport.template.formatter.FieldsMetadata fieldsMetadata2 =
+            new fr.opensagres.xdocreport.template.formatter.FieldsMetadata();
+        for ( String field : report.getFieldsMetaData() )
+        {
+            fieldsMetadata2.addFieldAsList( field );
+        }
+
+        delegate.registerReport( report.getReportID(), report.getDocument(), fieldsMetadata2, "Velocity" );
+
+    }
+
     @POST
     @Path( "/processReport" )
-    @Produces( { "text/xml", "application/xml", "application/json" } )
-    @Consumes( { "application/x-www-form-urlencoded", "multipart/form-data" } )
-    public byte[] processReport( @FormParam( "" )
-    ReportRepresentation report, @FormParam( "" )
-    ArrayList<DataContext> dataContext, @FormParam( "" )
-    WSOptions wsOptions )
+    @Consumes(  MediaType.APPLICATION_XML  )
+    @Produces(MediaType.WILDCARD)
+    public byte[] processReport( ReportAndDataRepresentation reportAndDataRepresentation )
         throws XDocReportException
     {
 
+        System.err.println(reportAndDataRepresentation);
         FieldsMetadata fieldsMetadata = new FieldsMetadata();
-        List<String> fields = report.getFieldsMetaData();
+        List<String> fields = reportAndDataRepresentation.getFieldsMetaData();
         for ( String field : fields )
         {
             fieldsMetadata.addFieldAsList( field );
         }
-        Options options = Options.getFrom( wsOptions.getFrom() ).to( wsOptions.getTo() ).via( wsOptions.getVia() );
-        return delegate.process( report.getDocument(), fieldsMetadata, report.getTemplateEngine(), dataContext, options );
+
+        WSOptions wsOptions = reportAndDataRepresentation.getOptions();
+        System.err.println("HHHHHHHHHHH "+wsOptions);
+        Options options=null;
+        if(wsOptions!=null){
+            options = Options.getFrom( wsOptions.getFrom() ).to( wsOptions.getTo() ).via( wsOptions.getVia() );
+        }
+
+        System.err.println("HHHHHHHHHHH "+options);
+        byte[] result= delegate.process( reportAndDataRepresentation.getDocument(), fieldsMetadata, reportAndDataRepresentation.getTemplateEngine(), reportAndDataRepresentation.getDataContext(), options );
+        System.err.println("result "+result);
+        return result;
     }
 
     public byte[] processReport( String reportId, List<DataContext> dataContext, Options options )
@@ -102,24 +129,6 @@ public class RESTXDocReportService
     public void unRegister( String reportId )
     {
         delegate.unregisterReport( reportId );
-    }
-
-    @POST
-    @Path( "/upload" )
-    @Consumes( { MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML } )
-    public void upload( ReportRepresentation report )
-        throws XDocReportException
-    {
-        System.out.println( report );
-        fr.opensagres.xdocreport.template.formatter.FieldsMetadata fieldsMetadata2 =
-            new fr.opensagres.xdocreport.template.formatter.FieldsMetadata();
-        for ( String field : report.getFieldsMetaData() )
-        {
-            fieldsMetadata2.addFieldAsList( field );
-        }
-
-        delegate.registerReport( report.getReportID(), report.getDocument(), fieldsMetadata2, "Velocity" );
-
     }
 
 }

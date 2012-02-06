@@ -56,7 +56,7 @@ import fr.opensagres.xdocreport.template.IContext;
 
 /**
  * Check ODT Styling generation by comparing generated result against the expected XML
- * 
+ *
  * @author <a href="mailto:tdelprat@nuxeo.com">Tiry</a>
  */
 public class TestODTStyling
@@ -72,7 +72,7 @@ public class TestODTStyling
             int read;
             while ( ( read = in.read( buffer ) ) != -1 )
             {
-                sb.append( new String( buffer, 0, read ) );
+                sb.append( new String( buffer, 0, read,"UTF-8" ) );
             }
         }
         finally
@@ -90,9 +90,11 @@ public class TestODTStyling
             DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
             DocumentBuilder db = dbf.newDocumentBuilder();
             InputSource is = new InputSource( new StringReader( unformattedXml ) );
+
             final Document document = db.parse( is );
 
             OutputFormat format = new OutputFormat( document );
+
             format.setLineWidth( 100 );
             format.setIndenting( true );
             format.setIndent( 2 );
@@ -147,18 +149,18 @@ public class TestODTStyling
     public void testODTAutomaticStylesGeneration()
         throws Exception
     {
-        
+
         XMLReader xmlReader = XMLReaderFactory.createXMLReader();
         BufferedDocumentContentHandler<?> contentHandler = new ODTBufferedDocumentContentHandler(null,null,null);
         xmlReader.setContentHandler( contentHandler );
         InputStream odtContent = this.getClass().getClassLoader().getResourceAsStream( "odtcontent.xml" );
-        
-        xmlReader.parse( new InputSource( odtContent ) );        
-        BufferedDocument document = contentHandler.getBufferedDocument();                
-        
+
+        xmlReader.parse( new InputSource( odtContent ) );
+        BufferedDocument document = contentHandler.getBufferedDocument();
+
         String result = document.toString();
         result = formatXML( result  );
-                       
+
         InputStream xmlStream = this.getClass().getClassLoader().getResourceAsStream( "odtcontent_withAutomaticStyles.xml" );
         String expectedXML = formatXML( read( xmlStream ) );
 
@@ -169,43 +171,43 @@ public class TestODTStyling
     public void testODTHeaderStylesGeneration()
         throws Exception
     {
-        
+
         XMLReader xmlReader = XMLReaderFactory.createXMLReader();
-        BufferedDocumentContentHandler<?> contentHandler = new ODTStyleContentHandler(null,null,null);        
+        BufferedDocumentContentHandler<?> contentHandler = new ODTStyleContentHandler(null,null,null);
         xmlReader.setContentHandler( contentHandler );
         InputStream odtContent = this.getClass().getClassLoader().getResourceAsStream( "odtstyles.xml" );
-        
+
         xmlReader.parse( new InputSource( odtContent ) );
-        
-        BufferedDocument document = contentHandler.getBufferedDocument();               
+
+        BufferedDocument document = contentHandler.getBufferedDocument();
         String result = document.toString();
-        
+
         result = formatXML( result  );
-        
+
         InputStream xmlStream = this.getClass().getClassLoader().getResourceAsStream( "odtstyles_withDefaultHeaders.xml" );
         String expectedXML = formatXML( read( xmlStream ) );
 
         Assert.assertEquals( expectedXML, result );
-        
+
         // check override protection
-        
+
         xmlReader = XMLReaderFactory.createXMLReader();
-        contentHandler = new ODTStyleContentHandler(null,null,null);        
+        contentHandler = new ODTStyleContentHandler(null,null,null);
         xmlReader.setContentHandler( contentHandler );
         odtContent = this.getClass().getClassLoader().getResourceAsStream( "odtstyles_withExistingHeaders.xml" );
-        
+
         xmlReader.parse( new InputSource( odtContent ) );
-        
-        document = contentHandler.getBufferedDocument();               
+
+        document = contentHandler.getBufferedDocument();
         result = document.toString();
-        
+
         result = formatXML( result  );
-        
+
         Assert.assertTrue( result.contains("display-name=\"Heading 4\""));
         Assert.assertTrue( result.contains("CustomHeader5"));
         Assert.assertFalse( result.contains("display-name=\"Heading 5\""));
         Assert.assertTrue( result.contains("display-name=\"Heading 6\""));
     }
 
-    
+
 }

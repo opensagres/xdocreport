@@ -31,7 +31,6 @@ import java.util.Stack;
 import java.util.logging.Logger;
 
 import fr.opensagres.xdocreport.core.logging.LogUtils;
-import fr.opensagres.xdocreport.document.odt.preprocessor.ODTBufferedDocumentContentHandler;
 import fr.opensagres.xdocreport.document.preprocessor.sax.BufferedElement;
 import fr.opensagres.xdocreport.document.textstyling.AbstractDocumentHandler;
 import fr.opensagres.xdocreport.template.IContext;
@@ -54,9 +53,12 @@ public class ODTDocumentHandler
 
     private static final Logger LOGGER = LogUtils.getLogger( ODTDocumentHandler.class.getName() );
 
+    protected final ODTStylesGenerator styleGen;
+
     public ODTDocumentHandler( BufferedElement parent, IContext context )
     {
         super( parent, context );
+        styleGen = ODTStylesGeneratorFactory.getStyleGenerator();
     }
 
     public void startDocument()
@@ -122,15 +124,15 @@ public class ODTDocumentHandler
                 super.write( " text:style-name=\"" );
                 if ( bolding && italicsing )
                 {
-                    super.write( ODTBufferedDocumentContentHandler.BOLD_ITALIC_STYLE_NAME );
+                    super.write( styleGen.getBoldItalicStyleName() );
                 }
                 else if ( italicsing )
                 {
-                    super.write( ODTBufferedDocumentContentHandler.ITALIC_STYLE_NAME );
+                    super.write( styleGen.getItalicStyleName() );
                 }
                 else if ( bolding )
                 {
-                    super.write( ODTBufferedDocumentContentHandler.BOLD_STYLE_NAME );
+                    super.write( styleGen.getBoldStyleName() );
                 }
                 super.write( "\" " );
             }
@@ -175,7 +177,8 @@ public class ODTDocumentHandler
     {
         endParagraphIfNeeded();
         super.setTextLocation( TextLocation.End );
-        super.write( "<text:h text:style-name=\"Heading_20_" + level + "\" text:outline-level=\"" + level + "\">" );
+        super.write( "<text:h text:style-name=\"" + styleGen.getHeaderStyleName( level ) + "\" text:outline-level=\""
+            + level + "\">" );
         insideHeader = true;
     }
 
@@ -191,7 +194,7 @@ public class ODTDocumentHandler
     protected void doStartOrderedList()
         throws IOException
     {
-        internalStartList( ODTBufferedDocumentContentHandler.OL_STYLE_NAME );
+        internalStartList( styleGen.getOLStyleName() );
     }
 
     @Override
@@ -205,7 +208,7 @@ public class ODTDocumentHandler
     protected void doStartUnorderedList()
         throws IOException
     {
-        internalStartList( ODTBufferedDocumentContentHandler.UL_STYLE_NAME );
+        internalStartList( styleGen.getULStyleName() );
     }
 
     @Override
@@ -261,8 +264,7 @@ public class ODTDocumentHandler
             if ( itemStyle != null )
             {
                 super.write( "<text:list-item text:style-name=\"" + itemStyle + "\">" );
-                super.write( "<text:p text:style-name=\"" + itemStyle
-                    + ODTBufferedDocumentContentHandler.LIST_P_STYLE_NAME_SUFFIX + "\">" );
+                super.write( "<text:p text:style-name=\"" + itemStyle + styleGen.getListItemParagraphStyleNameSuffix() + "\">" );
             }
             else
             {

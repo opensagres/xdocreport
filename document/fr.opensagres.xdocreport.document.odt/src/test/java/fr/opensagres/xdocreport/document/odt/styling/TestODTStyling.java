@@ -1,8 +1,3 @@
-package fr.opensagres.xdocreport.document.odt.styling;
-
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.StringReader;
 /**
  * Copyright (C) 2011 Angelo Zerr <angelo.zerr@gmail.com> and Pascal Leclercq <pascal.leclercq@gmail.com>
  *
@@ -27,6 +22,12 @@ import java.io.StringReader;
  * OF CONTRACT, TORT OR OTHERWISE,  ARISING FROM, OUT OF OR IN CONNECTION
  * WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
+
+package fr.opensagres.xdocreport.document.odt.styling;
+
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.StringReader;
 import java.io.StringWriter;
 import java.io.Writer;
 
@@ -37,12 +38,17 @@ import org.junit.Assert;
 import org.junit.Test;
 import org.w3c.dom.Document;
 import org.xml.sax.InputSource;
+import org.xml.sax.XMLReader;
+import org.xml.sax.helpers.XMLReaderFactory;
 
 import com.sun.org.apache.xml.internal.serialize.OutputFormat;
 import com.sun.org.apache.xml.internal.serialize.XMLSerializer;
 
+import fr.opensagres.xdocreport.document.odt.preprocessor.ODTBufferedDocumentContentHandler;
+import fr.opensagres.xdocreport.document.odt.preprocessor.ODTStyleContentHandler;
 import fr.opensagres.xdocreport.document.odt.textstyling.ODTDocumentHandler;
 import fr.opensagres.xdocreport.document.preprocessor.sax.BufferedDocument;
+import fr.opensagres.xdocreport.document.preprocessor.sax.BufferedDocumentContentHandler;
 import fr.opensagres.xdocreport.document.textstyling.IDocumentHandler;
 import fr.opensagres.xdocreport.document.textstyling.ITextStylingTransformer;
 import fr.opensagres.xdocreport.document.textstyling.html.HTMLTextStylingTransformer;
@@ -136,4 +142,70 @@ public class TestODTStyling
         Assert.assertEquals( expectedXML, result );
 
     }
+
+    @Test
+    public void testODTAutomaticStylesGeneration()
+        throws Exception
+    {
+        
+        XMLReader xmlReader = XMLReaderFactory.createXMLReader();
+        BufferedDocumentContentHandler<?> contentHandler = new ODTBufferedDocumentContentHandler(null,null,null);
+        xmlReader.setContentHandler( contentHandler );
+        InputStream odtContent = this.getClass().getClassLoader().getResourceAsStream( "odtcontent.xml" );
+        
+        xmlReader.parse( new InputSource( odtContent ) );        
+        BufferedDocument document = contentHandler.getBufferedDocument();                
+        
+        String result = document.toString();
+        result = formatXML( result  );
+                       
+        InputStream xmlStream = this.getClass().getClassLoader().getResourceAsStream( "odtcontent_withAutomaticStyles.xml" );
+        String expectedXML = formatXML( read( xmlStream ) );
+
+        Assert.assertEquals( expectedXML, result );
+    }
+
+    @Test
+    public void testODTHeaderStylesGeneration()
+        throws Exception
+    {
+        
+        XMLReader xmlReader = XMLReaderFactory.createXMLReader();
+        BufferedDocumentContentHandler<?> contentHandler = new ODTStyleContentHandler(null,null,null);        
+        xmlReader.setContentHandler( contentHandler );
+        InputStream odtContent = this.getClass().getClassLoader().getResourceAsStream( "odtstyles.xml" );
+        
+        xmlReader.parse( new InputSource( odtContent ) );
+        
+        BufferedDocument document = contentHandler.getBufferedDocument();               
+        String result = document.toString();
+        
+        result = formatXML( result  );
+        
+        InputStream xmlStream = this.getClass().getClassLoader().getResourceAsStream( "odtstyles_withDefaultHeaders.xml" );
+        String expectedXML = formatXML( read( xmlStream ) );
+
+        Assert.assertEquals( expectedXML, result );
+        
+        // check override protection
+        
+        xmlReader = XMLReaderFactory.createXMLReader();
+        contentHandler = new ODTStyleContentHandler(null,null,null);        
+        xmlReader.setContentHandler( contentHandler );
+        odtContent = this.getClass().getClassLoader().getResourceAsStream( "odtstyles_withExistingHeaders.xml" );
+        
+        xmlReader.parse( new InputSource( odtContent ) );
+        
+        document = contentHandler.getBufferedDocument();               
+        result = document.toString();
+        
+        result = formatXML( result  );
+        
+        Assert.assertTrue( result.contains("display-name=\"Heading 4\""));
+        Assert.assertTrue( result.contains("CustomHeader5"));
+        Assert.assertFalse( result.contains("display-name=\"Heading 5\""));
+        Assert.assertTrue( result.contains("display-name=\"Heading 6\""));
+    }
+
+    
 }

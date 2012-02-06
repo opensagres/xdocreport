@@ -28,6 +28,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -65,6 +66,9 @@ public class RESTXDocReportServiceTest
 
     private static final String BASE_ADDRESS = "http://localhost:" + PORT;
 
+
+    public File tempFolder = new File("target");
+
     @BeforeClass
     public static void startServer()
         throws Exception
@@ -81,27 +85,54 @@ public class RESTXDocReportServiceTest
         context.addServlet( servlet, "/*" );
         server.start();
     }
-    @Ignore
+
     @Test
     public void upload()
         throws IOException
     {
 
+        uploadAFile( "reportID1" );
+
+    }
+
+    private void uploadAFile(String reportID1)
+        throws IOException
+    {
         WebClient client = WebClient.create( BASE_ADDRESS );
         client.path( "upload" );
         ReportRepresentation report = new ReportRepresentation();
 
         InputStream in = RESTXDocReportServiceTest.class.getClassLoader().getResourceAsStream( "bo.docx" );
-        report.setReportID( "reportID1" );
+        report.setReportID( reportID1);
         report.setDocument( fr.opensagres.xdocreport.core.io.IOUtils.toByteArray( in ) );
         report.setTemplateEngine( "Velocity" );
         report.getFieldsMetaData().add( "test" );
         report.setTemplateEngine( "Velocity" );
 
         client.post( report );
+    }
+
+    @Ignore("download is not implemented yet...")
+    @Test
+    public void download()
+        throws IOException
+    {
+        //first upload a file...
+        String reportID = "download";
+        uploadAFile( reportID );
+
+        WebClient client = WebClient.create( BASE_ADDRESS );
+        client.path( "download",reportID,"processState" );
+        client.accept( MediaType.APPLICATION_XML );
+
+
+        byte[] flux= client.get( byte[].class );
+        assertNotNull(flux);
+        createFile( flux,"result.docx" );
 
     }
-@Ignore
+
+
     @Test
     public void listReports()
         throws Exception
@@ -138,19 +169,13 @@ public class RESTXDocReportServiceTest
         report.setTemplateEngine( "Velocity" );
 
         report.setDataContext( new ArrayList<DataContext>() );
-//        WSOptions options = new WSOptions();
-//        options.setFrom( "DOCX" );
-//        options.setTo( "PDF" );
-//        options.setVia( "iText" );
 
         report.setOptions( null );
-        //client.post( report);
+
         byte[] flux= client.post( report,byte[].class );
         assertNotNull(flux);
-//        File aFile= new File( "target/result.docx");
-//        FileOutputStream fos= new FileOutputStream( aFile );
-//        fos.write( flux );
-//        fos.close();
+        createFile( flux,"result.docx" );
+
     }
 
     @Test
@@ -182,11 +207,17 @@ public class RESTXDocReportServiceTest
         //client.post( report);
         byte[] flux= client.post( report,byte[].class );
         assertNotNull(flux);
-//
-//        File aFile= new File( "target/result.pdf");
-//        FileOutputStream fos= new FileOutputStream( aFile );
-//        fos.write( flux );
-//        fos.close();
+
+        createFile( flux,"result.pdf" );
+    }
+
+    private void createFile( byte[] flux ,String filename)
+        throws FileNotFoundException, IOException
+    {
+        File aFile= new File(tempFolder,filename );
+        FileOutputStream fos= new FileOutputStream( aFile );
+        fos.write( flux );
+        fos.close();
     }
 
     @AfterClass

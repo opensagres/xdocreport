@@ -29,8 +29,8 @@ import java.util.List;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
-import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 
@@ -50,19 +50,18 @@ public class RESTXDocReportService
 
     private XDocReportService delegate = XDocReportService.INSTANCE;
 
-    public byte[] download( String reportID, String processState )
+    @GET
+    @Path( "/download/{reportID}/{processState}" )
+    @Consumes( { MediaType.APPLICATION_XML,MediaType.APPLICATION_JSON  })
+    @Produces(MediaType.WILDCARD)
+    public byte[] download( @PathParam("reportID") String reportID, @PathParam("processState")  String processState )
         throws XDocReportException
     {
+        System.err.println("reportId "+reportID);
+        System.err.println("processState "+processState);
         return delegate.download( reportID, processState );
     }
 
-    /*@GET
-    @Path( "/test" )
-    public String get()
-    {
-
-        return "test";
-    }*/
 
     @GET
     @Path( "/listReports" )
@@ -75,11 +74,11 @@ public class RESTXDocReportService
 
     @POST
     @Path( "/upload" )
-    @Consumes( { MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML } )
+    @Consumes( { MediaType.APPLICATION_XML,MediaType.APPLICATION_JSON  })
     public void upload( ReportRepresentation report )
         throws XDocReportException
     {
-        System.out.println("%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% "+ report );
+
         fr.opensagres.xdocreport.template.formatter.FieldsMetadata fieldsMetadata2 =
             new fr.opensagres.xdocreport.template.formatter.FieldsMetadata();
         for ( String field : report.getFieldsMetaData() )
@@ -93,7 +92,7 @@ public class RESTXDocReportService
 
     @POST
     @Path( "/processReport" )
-    @Consumes(  MediaType.APPLICATION_XML  )
+    @Consumes( { MediaType.APPLICATION_XML,MediaType.APPLICATION_JSON  })
     @Produces(MediaType.WILDCARD)
     public byte[] processReport( ReportAndDataRepresentation reportAndDataRepresentation )
         throws XDocReportException
@@ -108,15 +107,15 @@ public class RESTXDocReportService
         }
 
         WSOptions wsOptions = reportAndDataRepresentation.getOptions();
-        System.err.println("HHHHHHHHHHH "+wsOptions);
+
         Options options=null;
         if(wsOptions!=null){
             options = Options.getFrom( wsOptions.getFrom() ).to( wsOptions.getTo() ).via( wsOptions.getVia() );
         }
 
-        System.err.println("HHHHHHHHHHH "+options);
+
         byte[] result= delegate.process( reportAndDataRepresentation.getDocument(), fieldsMetadata, reportAndDataRepresentation.getTemplateEngine(), reportAndDataRepresentation.getDataContext(), options );
-        System.err.println("result "+result);
+
         return result;
     }
 

@@ -118,7 +118,7 @@ public class RESTXDocReportServiceTest
 
     }
 
-    @Ignore
+
     @Test
     public void processReportWithoutOptions()
         throws IOException
@@ -147,10 +147,10 @@ public class RESTXDocReportServiceTest
         //client.post( report);
         byte[] flux= client.post( report,byte[].class );
         assertNotNull(flux);
-        File aFile= new File( "result.docx");
-        FileOutputStream fos= new FileOutputStream( aFile );
-        fos.write( flux );
-        fos.close();
+//        File aFile= new File( "target/result.docx");
+//        FileOutputStream fos= new FileOutputStream( aFile );
+//        fos.write( flux );
+//        fos.close();
     }
 
     @Test
@@ -182,11 +182,11 @@ public class RESTXDocReportServiceTest
         //client.post( report);
         byte[] flux= client.post( report,byte[].class );
         assertNotNull(flux);
-
-        File aFile= new File( "result.pdf");
-        FileOutputStream fos= new FileOutputStream( aFile );
-        fos.write( flux );
-        fos.close();
+//
+//        File aFile= new File( "target/result.pdf");
+//        FileOutputStream fos= new FileOutputStream( aFile );
+//        fos.write( flux );
+//        fos.close();
     }
 
     @AfterClass

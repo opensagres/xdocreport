@@ -28,9 +28,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Stack;
-import java.util.logging.Logger;
 
-import fr.opensagres.xdocreport.core.logging.LogUtils;
 import fr.opensagres.xdocreport.document.preprocessor.sax.BufferedElement;
 import fr.opensagres.xdocreport.document.textstyling.AbstractDocumentHandler;
 import fr.opensagres.xdocreport.template.IContext;
@@ -51,9 +49,7 @@ public class ODTDocumentHandler
 
     private List<Boolean> lastItemAlreadyClosed = new ArrayList<Boolean>();
 
-    private static final Logger LOGGER = LogUtils.getLogger( ODTDocumentHandler.class.getName() );
-
-    protected final ODTStylesGenerator styleGen;
+    protected final IODTStylesGenerator styleGen;
 
     public ODTDocumentHandler( BufferedElement parent, IContext context )
     {
@@ -258,43 +254,52 @@ public class ODTDocumentHandler
     }
 
     public void startListItem()
+        throws IOException
     {
-        try
+        if ( itemStyle != null )
         {
-            if ( itemStyle != null )
-            {
-                super.write( "<text:list-item text:style-name=\"" + itemStyle + "\">" );
-                super.write( "<text:p text:style-name=\"" + itemStyle + styleGen.getListItemParagraphStyleNameSuffix() + "\">" );
-            }
-            else
-            {
-                super.write( "<text:list-item>" );
-                super.write( "<text:p>" );
-            }
+            super.write( "<text:list-item text:style-name=\"" + itemStyle + "\">" );
+            super.write( "<text:p text:style-name=\"" + itemStyle + styleGen.getListItemParagraphStyleNameSuffix()
+                + "\">" );
         }
-        catch ( IOException e )
+        else
         {
-            LOGGER.severe( e.getMessage() );
+            super.write( "<text:list-item>" );
+            super.write( "<text:p>" );
         }
     }
 
     public void endListItem()
+        throws IOException
     {
-        try
+        if ( lastItemAlreadyClosed.size() > listDepth && lastItemAlreadyClosed.get( listDepth ) )
         {
-            if ( lastItemAlreadyClosed.size() > listDepth && lastItemAlreadyClosed.get( listDepth ) )
-            {
-                lastItemAlreadyClosed.add( listDepth, false );
-            }
-            else
-            {
-                super.write( "</text:p>" );
-            }
-            super.write( "</text:list-item>" );
+            lastItemAlreadyClosed.add( listDepth, false );
         }
-        catch ( IOException e )
+        else
         {
-            LOGGER.severe( e.getMessage() );
+            super.write( "</text:p>" );
         }
+        super.write( "</text:list-item>" );
     }
+
+    public void handleReference( String ref, String label )
+        throws IOException
+    {
+        // FIXME: generate text:p only if needed.
+        //startParagraph();
+        super.write( "<text:a xlink:type=\"simple\" xlink:href=\"" );
+        super.write( ref );
+        super.write( "\">" );
+        super.write( label );
+        super.write( "</text:a>" );
+        //endParagraph();
+    }
+
+    public void handleImage( String ref, String label )
+        throws IOException
+    {
+        // TODO: implements
+    }
+
 }

@@ -26,13 +26,16 @@ package fr.opensagres.xdocreport.document.textstyling.wiki;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.logging.Logger;
 
 import org.wikimodel.wem.EmptyWemListener;
 import org.wikimodel.wem.IWemConstants;
 import org.wikimodel.wem.WikiFormat;
 import org.wikimodel.wem.WikiParameters;
+import org.wikimodel.wem.WikiReference;
 import org.wikimodel.wem.WikiStyle;
 
+import fr.opensagres.xdocreport.core.logging.LogUtils;
 import fr.opensagres.xdocreport.document.textstyling.IDocumentHandler;
 
 /**
@@ -41,6 +44,8 @@ import fr.opensagres.xdocreport.document.textstyling.IDocumentHandler;
 public class WemListenerAdapter
     extends EmptyWemListener
 {
+
+    private static final Logger LOGGER = LogUtils.getLogger( WemListenerAdapter.class );
 
     protected final IDocumentHandler documentHandler;
 
@@ -58,7 +63,7 @@ public class WemListenerAdapter
         }
         catch ( IOException e )
         {
-            // Do nothing
+            LOGGER.severe( e.getMessage() );
         }
     }
 
@@ -71,7 +76,7 @@ public class WemListenerAdapter
         }
         catch ( IOException e )
         {
-            // Do nothing
+            LOGGER.severe( e.getMessage() );
         }
     }
 
@@ -94,7 +99,7 @@ public class WemListenerAdapter
             }
             catch ( IOException e )
             {
-                // Do nothing
+                LOGGER.severe( e.getMessage() );
             }
         }
     }
@@ -118,7 +123,7 @@ public class WemListenerAdapter
             }
             catch ( IOException e )
             {
-                // Do nothing
+                LOGGER.severe( e.getMessage() );
             }
         }
     }
@@ -139,7 +144,7 @@ public class WemListenerAdapter
         }
         catch ( IOException e )
         {
-            // Do nothing
+            LOGGER.severe( e.getMessage() );
         }
     }
 
@@ -152,7 +157,7 @@ public class WemListenerAdapter
         }
         catch ( IOException e )
         {
-            // Do nothing
+            LOGGER.severe( e.getMessage() );
         }
     }
 
@@ -165,7 +170,7 @@ public class WemListenerAdapter
         }
         catch ( IOException e )
         {
-            // Do nothing
+            LOGGER.severe( e.getMessage() );
         }
     }
 
@@ -185,7 +190,7 @@ public class WemListenerAdapter
         }
         catch ( IOException e )
         {
-            // Do nothing
+            LOGGER.severe( e.getMessage() );
         }
     }
 
@@ -198,7 +203,7 @@ public class WemListenerAdapter
         }
         catch ( IOException e )
         {
-            // Do nothing
+            LOGGER.severe( e.getMessage() );
         }
     }
 
@@ -211,7 +216,7 @@ public class WemListenerAdapter
         }
         catch ( IOException e )
         {
-            // Do nothing
+            LOGGER.severe( e.getMessage() );
         }
     }
 
@@ -224,7 +229,7 @@ public class WemListenerAdapter
         }
         catch ( IOException e )
         {
-            // Do nothing
+            LOGGER.severe( e.getMessage() );
         }
     }
 
@@ -237,8 +242,34 @@ public class WemListenerAdapter
         }
         catch ( IOException e )
         {
-            // Do nothing
+            LOGGER.severe( e.getMessage() );
         }
     }
 
+    @Override
+    public void onReference( String ref )
+    {
+
+        try
+        {
+            documentHandler.handleReference( ref, ref );
+        }
+        catch ( IOException e )
+        {
+            LOGGER.severe( e.getMessage() );
+        }
+    }
+
+    @Override
+    public void onReference( WikiReference ref )
+    {
+        try
+        {
+            documentHandler.handleReference( ref.getLink(), ref.getLabel() );
+        }
+        catch ( IOException e )
+        {
+            LOGGER.severe( e.getMessage() );
+        }
+    }
 }

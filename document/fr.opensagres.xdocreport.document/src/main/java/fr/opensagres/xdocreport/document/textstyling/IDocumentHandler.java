@@ -130,10 +130,42 @@ public interface IDocumentHandler
     void handleString( String s )
         throws IOException;
 
+    /**
+     * Start heading.
+     * 
+     * @param level
+     * @throws IOException
+     */
     void startHeading( int level )
         throws IOException;
 
+    /**
+     * End heading.
+     * 
+     * @param level
+     * @throws IOException
+     */
     void endHeading( int level )
+        throws IOException;
+
+    /**
+     * Handle image.
+     * 
+     * @param ref
+     * @param label
+     * @throws IOException
+     */
+    void handleImage( String ref, String label )
+        throws IOException;
+
+    /**
+     * Handle reference.
+     * 
+     * @param ref
+     * @param label
+     * @throws IOException
+     */
+    void handleReference( String ref, String label )
         throws IOException;
 
     //

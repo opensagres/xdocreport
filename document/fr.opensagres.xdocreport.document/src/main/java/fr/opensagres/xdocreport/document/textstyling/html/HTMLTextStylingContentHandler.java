@@ -73,11 +73,26 @@ public class HTMLTextStylingContentHandler
 
     private static final String H6_ELT = "h6";
 
+    private static final String A_ELT = "a";
+
+    private static final String IMG_ELT = "img";
+
+    private static final String HREF_ATTR = "href";
+
+    private static final String SRC_ATTR = "src";
+
     private final IDocumentHandler documentHandler;
+
+    // current a href + content parsing
+    private String aHref;
+
+    private StringBuilder aContent;
 
     public HTMLTextStylingContentHandler( IDocumentHandler visitor )
     {
         this.documentHandler = visitor;
+        this.aHref = null;
+        this.aContent = new StringBuilder();
     }
 
     @Override
@@ -176,6 +191,17 @@ public class HTMLTextStylingContentHandler
                 // Header 6
                 documentHandler.startHeading( 6 );
             }
+            else if ( A_ELT.equals( name ) )
+            {
+                // start reference
+                this.aHref = attributes.getValue( HREF_ATTR );
+            }
+            else if ( IMG_ELT.equals( name ) )
+            {
+                // image
+                String src = attributes.getValue( SRC_ATTR );
+                documentHandler.handleImage( src, "" );
+            }
         }
         catch ( IOException e )
         {
@@ -250,6 +276,14 @@ public class HTMLTextStylingContentHandler
                 // Header 6
                 documentHandler.endHeading( 6 );
             }
+            if ( A_ELT.equals( name ) )
+            {
+                // end reference
+                documentHandler.handleReference( aHref, aContent.toString() );
+                this.aHref = null;
+                this.aContent.setLength( 0 );
+
+            }
         }
         catch ( IOException e )
         {
@@ -264,7 +298,14 @@ public class HTMLTextStylingContentHandler
     {
         try
         {
-            documentHandler.handleString( String.valueOf( ch, start, length ) );
+            if ( aHref != null )
+            {
+                aContent.append( ch, start, length );
+            }
+            else
+            {
+                documentHandler.handleString( String.valueOf( ch, start, length ) );
+            }
         }
         catch ( IOException e )
         {

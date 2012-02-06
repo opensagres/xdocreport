@@ -34,7 +34,7 @@ import java.text.DecimalFormatSymbols;
  * @author <a href="mailto:tdelprat@nuxeo.com">Tiry</a>
  */
 public class ODTDefaultStylesGenerator
-    implements ODTStylesGenerator
+    implements IODTStylesGenerator
 {
     protected static final String HEADER_PREFIX = "Heading_20_";
 

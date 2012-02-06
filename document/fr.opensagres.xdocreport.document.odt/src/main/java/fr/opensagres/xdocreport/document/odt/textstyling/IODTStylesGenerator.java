@@ -31,7 +31,7 @@ package fr.opensagres.xdocreport.document.odt.textstyling;
  * @author <a href="mailto:tdelprat@nuxeo.com">Tiry</a>
  *
  */
-public interface ODTStylesGenerator
+public interface IODTStylesGenerator
 {
     /**
      * @param styleName

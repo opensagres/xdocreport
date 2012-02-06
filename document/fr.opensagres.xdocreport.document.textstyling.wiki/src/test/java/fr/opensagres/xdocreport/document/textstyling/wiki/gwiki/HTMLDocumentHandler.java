@@ -145,4 +145,21 @@ public class HTMLDocumentHandler
         super.write( ">" );
     }
 
+    public void handleReference( String ref, String label ) throws IOException
+    {
+        super.write( "<a href=\"" );
+        super.write( ref );
+        super.write( "\" >" );
+        super.write( label );
+        super.write( "</a>" );
+        
+    }
+    
+    public void handleImage( String ref, String label ) throws IOException
+    {
+        super.write( "<img src=\"" );
+        super.write( ref );
+        super.write( "/>" );
+        
+    }
 }

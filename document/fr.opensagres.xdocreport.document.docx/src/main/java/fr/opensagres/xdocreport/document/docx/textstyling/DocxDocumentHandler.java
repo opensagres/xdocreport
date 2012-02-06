@@ -228,5 +228,17 @@ public class DocxDocumentHandler
         // TODO Auto-generated method stub
 
     }
+    
+    public void handleReference( String ref, String label )
+    {
+        // TODO Auto-generated method stub
+        
+    }
+    
+    public void handleImage( String ref, String label )
+    {
+        // TODO Auto-generated method stub
+        
+    }
 
 }

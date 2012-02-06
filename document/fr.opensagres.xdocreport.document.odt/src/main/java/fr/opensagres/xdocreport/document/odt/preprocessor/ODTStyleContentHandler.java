@@ -31,7 +31,7 @@ import java.util.Map;
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
 
-import fr.opensagres.xdocreport.document.odt.textstyling.ODTStylesGenerator;
+import fr.opensagres.xdocreport.document.odt.textstyling.IODTStylesGenerator;
 import fr.opensagres.xdocreport.document.odt.textstyling.ODTStylesGeneratorFactory;
 import fr.opensagres.xdocreport.document.preprocessor.sax.IBufferedRegion;
 import fr.opensagres.xdocreport.document.preprocessor.sax.TransformedBufferedDocumentContentHandler;
@@ -49,7 +49,7 @@ public class ODTStyleContentHandler
 
     protected List<Integer> existingStyles = new ArrayList<Integer>();
 
-    protected final ODTStylesGenerator styleGen;
+    protected final IODTStylesGenerator styleGen;
 
     public ODTStyleContentHandler( FieldsMetadata fieldsMetadata, IDocumentFormatter formatter,
                                       Map<String, Object> sharedContext )

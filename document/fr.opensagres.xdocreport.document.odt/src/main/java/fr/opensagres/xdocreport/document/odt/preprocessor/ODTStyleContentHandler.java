@@ -34,7 +34,6 @@ import org.xml.sax.SAXException;
 import fr.opensagres.xdocreport.document.odt.textstyling.IODTStylesGenerator;
 import fr.opensagres.xdocreport.document.odt.textstyling.ODTStylesGeneratorFactory;
 import fr.opensagres.xdocreport.document.preprocessor.sax.IBufferedRegion;
-import fr.opensagres.xdocreport.document.preprocessor.sax.TransformedBufferedDocumentContentHandler;
 import fr.opensagres.xdocreport.template.formatter.FieldsMetadata;
 import fr.opensagres.xdocreport.template.formatter.IDocumentFormatter;
 
@@ -51,15 +50,16 @@ public class ODTStyleContentHandler
 
     protected final IODTStylesGenerator styleGen;
 
-    public ODTStyleContentHandler( FieldsMetadata fieldsMetadata, IDocumentFormatter formatter,
-                                      Map<String, Object> sharedContext )
+    public ODTStyleContentHandler( String entryName, FieldsMetadata fieldsMetadata, IDocumentFormatter formatter,
+                                   Map<String, Object> sharedContext )
     {
-        super( fieldsMetadata, formatter, sharedContext );
+        super( entryName, fieldsMetadata, formatter, sharedContext );
         styleGen = ODTStylesGeneratorFactory.getStyleGenerator();
     }
-    
+
     @Override
-    protected boolean needToProcessAutomaticStyles() {
+    protected boolean needToProcessAutomaticStyles()
+    {
         return false;
     }
 

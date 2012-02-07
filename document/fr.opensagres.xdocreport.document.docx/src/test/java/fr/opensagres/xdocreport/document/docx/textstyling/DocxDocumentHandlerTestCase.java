@@ -28,6 +28,9 @@ import junit.framework.Assert;
 
 import org.junit.Test;
 
+import fr.opensagres.xdocreport.document.docx.preprocessor.HyperlinkInfo;
+import fr.opensagres.xdocreport.document.docx.preprocessor.HyperlinkRegistry;
+import fr.opensagres.xdocreport.document.docx.preprocessor.HyperlinkUtils;
 import fr.opensagres.xdocreport.document.preprocessor.sax.BufferedElement;
 import fr.opensagres.xdocreport.document.textstyling.IDocumentHandler;
 import fr.opensagres.xdocreport.document.textstyling.ITextStylingTransformer;
@@ -45,7 +48,7 @@ public class DocxDocumentHandlerTestCase
         BufferedElement parent = null;
 
         ITextStylingTransformer formatter = HTMLTextStylingTransformer.INSTANCE;
-        IDocumentHandler handler = new DocxDocumentHandler( parent, context );
+        IDocumentHandler handler = new DocxDocumentHandler( parent, context, "word/document.xml" );
         formatter.transform( "<b>text</b>", handler );
         Assert.assertEquals( "<w:r><w:rPr><w:b /></w:rPr><w:t xml:space=\"preserve\" >text</w:t></w:r>",
                              handler.getTextBody() );
@@ -59,7 +62,7 @@ public class DocxDocumentHandlerTestCase
         BufferedElement parent = null;
 
         ITextStylingTransformer formatter = HTMLTextStylingTransformer.INSTANCE;
-        IDocumentHandler handler = new DocxDocumentHandler( parent, context );
+        IDocumentHandler handler = new DocxDocumentHandler( parent, context, "word/document.xml" );
         formatter.transform( "<strong>text</strong>", handler );
         Assert.assertEquals( "<w:r><w:rPr><w:b /></w:rPr><w:t xml:space=\"preserve\" >text</w:t></w:r>",
                              handler.getTextBody() );
@@ -73,7 +76,7 @@ public class DocxDocumentHandlerTestCase
         BufferedElement parent = null;
 
         ITextStylingTransformer formatter = HTMLTextStylingTransformer.INSTANCE;
-        IDocumentHandler handler = new DocxDocumentHandler( parent, context );
+        IDocumentHandler handler = new DocxDocumentHandler( parent, context, "word/document.xml" );
         formatter.transform( "<i>text</i>", handler );
         Assert.assertEquals( "<w:r><w:rPr><w:i /></w:rPr><w:t xml:space=\"preserve\" >text</w:t></w:r>",
                              handler.getTextBody() );
@@ -87,9 +90,33 @@ public class DocxDocumentHandlerTestCase
         BufferedElement parent = null;
 
         ITextStylingTransformer formatter = HTMLTextStylingTransformer.INSTANCE;
-        IDocumentHandler handler = new DocxDocumentHandler( parent, context );
+        IDocumentHandler handler = new DocxDocumentHandler( parent, context, "word/document.xml" );
         formatter.transform( "<em>text</em>", handler );
         Assert.assertEquals( "<w:r><w:rPr><w:i /></w:rPr><w:t xml:space=\"preserve\" >text</w:t></w:r>",
                              handler.getTextBody() );
+    }
+
+    @Test
+    public void testHyperlink()
+        throws Exception
+    {
+        IContext context = new MockContext();
+        BufferedElement parent = null;
+
+        ITextStylingTransformer formatter = HTMLTextStylingTransformer.INSTANCE;
+        IDocumentHandler handler = new DocxDocumentHandler( parent, context, "word/document.xml" );
+        formatter.transform( "<a href=\"http://code.google.com/p/xdocreport/\" >XDocReport</a>", handler );
+        Assert.assertEquals( "<w:hyperlink r:id=\"___rId0\" w:history=\"1\"> <w:proofErr w:type=\"spellStart\" /><w:r w:rsidRPr=\"001D30B5\"><w:rPr><w:rStyle w:val=\"Lienhypertexte\" /></w:rPr><w:t>XDocReport</w:t></w:r><w:proofErr w:type=\"spellEnd\" /></w:hyperlink>",
+                             handler.getTextBody() );
+
+        String key = HyperlinkUtils.getHyperlinkRegistryKey( "word/document.xml" );
+        HyperlinkRegistry registry = (HyperlinkRegistry) context.get( key );
+        Assert.assertNotNull( registry );
+        Assert.assertEquals( 1, registry.getHyperlinks().size() );
+
+        HyperlinkInfo hyperlinkInfo = registry.getHyperlinks().get( 0 );
+        Assert.assertEquals( "___rId0", hyperlinkInfo.getId() );
+        Assert.assertEquals( "http://code.google.com/p/xdocreport/", hyperlinkInfo.getTarget() );
+        Assert.assertEquals( "External", hyperlinkInfo.getTargetMode() );
     }
 }

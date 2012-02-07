@@ -40,9 +40,9 @@ public class DocxDocumentHandlerFactoryDiscovery
         return DocumentKind.DOCX.name();
     }
 
-    public IDocumentHandler createDocumentHandler( BufferedElement parent, IContext context )
+    public IDocumentHandler createDocumentHandler( BufferedElement parent, IContext context, String entryName )
     {
-        return new DocxDocumentHandler( parent, context );
+        return new DocxDocumentHandler( parent, context, entryName );
     }
 
     public String getDescription()

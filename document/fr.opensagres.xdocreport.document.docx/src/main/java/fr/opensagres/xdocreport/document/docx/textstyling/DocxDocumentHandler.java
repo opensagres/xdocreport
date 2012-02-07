@@ -27,6 +27,8 @@ package fr.opensagres.xdocreport.document.docx.textstyling;
 import java.io.IOException;
 import java.util.Stack;
 
+import fr.opensagres.xdocreport.document.docx.preprocessor.HyperlinkRegistry;
+import fr.opensagres.xdocreport.document.docx.preprocessor.HyperlinkUtils;
 import fr.opensagres.xdocreport.document.preprocessor.sax.BufferedElement;
 import fr.opensagres.xdocreport.document.textstyling.AbstractDocumentHandler;
 import fr.opensagres.xdocreport.template.IContext;
@@ -44,9 +46,12 @@ public class DocxDocumentHandler
 
     private Stack<Boolean> paragraphsStack;
 
-    public DocxDocumentHandler( BufferedElement parent, IContext context )
+    private HyperlinkRegistry hyperlinkRegistry;
+
+    public DocxDocumentHandler( BufferedElement parent, IContext context, String entryName )
     {
-        super( parent, context );
+        super( parent, context, entryName );
+
     }
 
     public void startDocument()
@@ -187,13 +192,11 @@ public class DocxDocumentHandler
 
     public void startHeading( int level )
     {
-        // TODO Auto-generated method stub
 
     }
 
     public void endHeading( int level )
     {
-        // TODO Auto-generated method stub
 
     }
 
@@ -201,7 +204,6 @@ public class DocxDocumentHandler
     protected void doEndUnorderedList()
         throws IOException
     {
-        // TODO Auto-generated method stub
 
     }
 
@@ -209,7 +211,6 @@ public class DocxDocumentHandler
     protected void doEndOrderedList()
         throws IOException
     {
-        // TODO Auto-generated method stub
 
     }
 
@@ -217,7 +218,6 @@ public class DocxDocumentHandler
     protected void doStartUnorderedList()
         throws IOException
     {
-        // TODO Auto-generated method stub
 
     }
 
@@ -225,20 +225,65 @@ public class DocxDocumentHandler
     protected void doStartOrderedList()
         throws IOException
     {
-        // TODO Auto-generated method stub
 
     }
-    
+
     public void handleReference( String ref, String label )
+        throws IOException
     {
-        // TODO Auto-generated method stub
-        
+        // 1) Update the hyperlink registry to modifiy the Hyperlink Relationship in the _rels/document.xml.rels
+        HyperlinkRegistry registry = getHyperlinkRegistry();
+        String rId = registry.registerHyperlink( ref );
+
+        // 2) Generate w:hyperlink
+        // TODO : manage style name hyperlink.
+        String hyperlinkStyleName = "Lienhypertexte";
+        super.write( "<w:hyperlink r:id=\"" );
+        super.write( rId );
+        super.write( "\" w:history=\"1\"> " );
+        super.write( "<w:proofErr w:type=\"spellStart\" />" );
+        super.write( "<w:r w:rsidRPr=\"001D30B5\">" );
+        super.write( "<w:rPr>" );
+        super.write( "<w:rStyle w:val=\"" );
+        super.write( hyperlinkStyleName );
+        super.write( "\" />" );
+        super.write( "</w:rPr>" );
+        super.write( "<w:t>" );
+        super.write( label );
+        super.write( "</w:t>" );
+        super.write( "</w:r>" );
+        super.write( "<w:proofErr w:type=\"spellEnd\" />" );
+        super.write( "</w:hyperlink>" );
     }
-    
+
     public void handleImage( String ref, String label )
+        throws IOException
     {
-        // TODO Auto-generated method stub
-        
+
+    }
+
+    private HyperlinkRegistry getHyperlinkRegistry()
+    {
+        if ( hyperlinkRegistry != null )
+        {
+            return hyperlinkRegistry;
+        }
+
+        IContext context = getContext();
+        if ( context == null )
+        {
+            hyperlinkRegistry = new HyperlinkRegistry();
+            return hyperlinkRegistry;
+        }
+
+        String key = HyperlinkUtils.getHyperlinkRegistryKey( getEntryName() );
+        hyperlinkRegistry = (HyperlinkRegistry) context.get( key );
+        if ( hyperlinkRegistry == null )
+        {
+            hyperlinkRegistry = new HyperlinkRegistry();
+            context.put( key, hyperlinkRegistry );
+        }
+        return hyperlinkRegistry;
     }
 
 }

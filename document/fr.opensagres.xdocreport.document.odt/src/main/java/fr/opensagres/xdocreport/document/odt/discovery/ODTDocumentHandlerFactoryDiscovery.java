@@ -40,9 +40,9 @@ public class ODTDocumentHandlerFactoryDiscovery
         return DocumentKind.ODT.name();
     }
 
-    public IDocumentHandler createDocumentHandler( BufferedElement parent, IContext context )
+    public IDocumentHandler createDocumentHandler( BufferedElement parent, IContext context, String entryName )
     {
-        return new ODTDocumentHandler( parent, context );
+        return new ODTDocumentHandler( parent, context, entryName );
     }
 
     public String getDescription()

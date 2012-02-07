@@ -43,7 +43,7 @@ public class PPTXSlidePreprocessor
                                                                             IDocumentFormatter formater,
                                                                             Map<String, Object> context )
     {
-        return new PPTXSlideContentHandler( fieldsMetadata, formater, context );
+        return new PPTXSlideContentHandler( entryName, fieldsMetadata, formater, context );
     }
 
 }

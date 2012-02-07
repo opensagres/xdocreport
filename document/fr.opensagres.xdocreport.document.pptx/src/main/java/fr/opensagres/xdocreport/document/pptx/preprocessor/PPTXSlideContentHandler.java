@@ -41,10 +41,10 @@ public class PPTXSlideContentHandler
 
     private boolean atParsing;
 
-    protected PPTXSlideContentHandler( FieldsMetadata fieldsMetadata, IDocumentFormatter formater,
+    protected PPTXSlideContentHandler( String entryName, FieldsMetadata fieldsMetadata, IDocumentFormatter formater,
                                        Map<String, Object> sharedContext )
     {
-        super( fieldsMetadata, formater, sharedContext );
+        super( entryName, fieldsMetadata, formater, sharedContext );
         this.atParsing = false;
     }
 

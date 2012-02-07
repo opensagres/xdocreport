@@ -523,15 +523,16 @@ public class FreemarkerDocumentFormatter
         return characters.indexOf( "[#" ) != -1;
     }
 
-    public String formatAsCallTextStyling( long variableIndex, String fieldName, String metafieldName,
-                                           String documentKind, String syntaxKind, String elementId )
+    public String formatAsCallTextStyling( long variableIndex, String fieldName, String documentKind,
+                                           String syntaxKind, String elementId, String entryName )
     {
         StringBuilder newContent = new StringBuilder( "[#assign " );
         newContent.append( getVariableName( variableIndex ) );
         newContent.append( "=" );
         newContent.append( getFunctionDirective( TextStylingConstants.KEY, TextStylingConstants.TRANSFORM_METHOD,
                                                  false, removeInterpolation( fieldName ), "\"" + syntaxKind + "\"",
-                                                 "\"" + documentKind + "\"", "\"" + elementId + "\"", IContext.KEY ) );
+                                                 "\"" + documentKind + "\"", "\"" + elementId + "\"", IContext.KEY,
+                                                 "\"" + entryName + "\"" ) );
         newContent.append( "]" );
         return newContent.toString();
     }

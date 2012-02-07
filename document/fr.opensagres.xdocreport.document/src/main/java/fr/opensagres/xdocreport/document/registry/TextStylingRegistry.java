@@ -84,7 +84,7 @@ public class TextStylingRegistry
      * @return
      */
     public ITransformResult transform( String content, String syntaxKind, String documentKind, String elementId,
-                                       IContext context )
+                                       IContext context, String entryName )
     {
         // 1) Retrieve transformer from the text styling transformer registry.
         ITextStylingTransformer transformer =
@@ -95,7 +95,7 @@ public class TextStylingRegistry
             {
                 // Transformer found, create an instance of document handler
                 // (docx, odt, etc).
-                IDocumentHandler visitor = createDocumentHandler( documentKind, elementId, context );
+                IDocumentHandler visitor = createDocumentHandler( documentKind, elementId, context, entryName );
                 // 3) Process the transformation.
                 return transformer.transform( content, visitor );
             }
@@ -115,7 +115,8 @@ public class TextStylingRegistry
      * @param documentKind
      * @return
      */
-    public IDocumentHandler createDocumentHandler( String documentKind, String elementId, IContext context )
+    public IDocumentHandler createDocumentHandler( String documentKind, String elementId, IContext context,
+                                                   String entryName )
     {
         super.initializeIfNeeded();
         ITextStylingDocumentHandlerFactoryDiscovery factory = documentHandlers.get( documentKind );
@@ -131,7 +132,7 @@ public class TextStylingRegistry
         {
             parent = elements.get( elementId );
         }
-        return factory.createDocumentHandler( parent, context );
+        return factory.createDocumentHandler( parent, context, entryName );
     }
 
 }

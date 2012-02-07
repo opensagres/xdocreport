@@ -37,7 +37,7 @@ public class HTMLDocumentHandler
 
     public HTMLDocumentHandler()
     {
-        super( null, null );
+        super( null, null, null );
     }
 
     public void startDocument()

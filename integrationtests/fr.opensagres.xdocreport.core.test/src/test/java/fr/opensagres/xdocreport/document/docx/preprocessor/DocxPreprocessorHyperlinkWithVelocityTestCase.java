@@ -193,7 +193,7 @@ public class DocxPreprocessorHyperlinkWithVelocityTestCase
                           + "</w:rPr>"
                           + "</w:pPr>"
                           // + "<w:hyperlink w:history=\"1\ r:id=\"rId5\"">""
-                          + "<w:hyperlink w:history=\"1\" r:id=\"${___HyperlinkRegistryword_document_xml.registerHyperlink(\"rId5\",\"$x\",\"External\")}\">"
+                          + "<w:hyperlink w:history=\"1\" r:id=\"${___HyperlinkRegistryword_document_xml.registerHyperlink(\"$x\",\"External\")}\">"
                           + "<w:r w:rsidRPr=\"000F2653\">" + "<w:rPr>"
                           + "<w:rStyle w:val=\"Lienhypertexte\"/>"
                           + "</w:rPr>"

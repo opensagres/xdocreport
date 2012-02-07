@@ -48,7 +48,7 @@ public class ODTPreprocessor
                                                                                    IDocumentFormatter formatter,
                                                                                    Map<String, Object> sharedContext )
     {
-        return new ODTBufferedDocumentContentHandler( fieldsMetadata, formatter, sharedContext );
+        return new ODTBufferedDocumentContentHandler( entryName, fieldsMetadata, formatter, sharedContext );
     }
 
 }

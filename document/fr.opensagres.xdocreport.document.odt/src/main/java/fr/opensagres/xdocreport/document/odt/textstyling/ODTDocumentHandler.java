@@ -51,9 +51,9 @@ public class ODTDocumentHandler
 
     protected final IODTStylesGenerator styleGen;
 
-    public ODTDocumentHandler( BufferedElement parent, IContext context )
+    public ODTDocumentHandler( BufferedElement parent, IContext context, String entryName )
     {
-        super( parent, context );
+        super( parent, context, entryName );
         styleGen = ODTStylesGeneratorFactory.getStyleGenerator();
     }
 
@@ -287,13 +287,13 @@ public class ODTDocumentHandler
         throws IOException
     {
         // FIXME: generate text:p only if needed.
-        //startParagraph();
+        // startParagraph();
         super.write( "<text:a xlink:type=\"simple\" xlink:href=\"" );
         super.write( ref );
         super.write( "\">" );
         super.write( label );
         super.write( "</text:a>" );
-        //endParagraph();
+        // endParagraph();
     }
 
     public void handleImage( String ref, String label )

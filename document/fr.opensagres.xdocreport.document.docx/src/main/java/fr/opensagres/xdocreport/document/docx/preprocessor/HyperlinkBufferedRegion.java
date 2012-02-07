@@ -161,7 +161,7 @@ public class HyperlinkBufferedRegion
                             // r:id="${___HyperlinkRegistry.registerHyperlink("rId5","mailto:${d.mail}","External")}">
                             String id =
                                 formatter.getFunctionDirective( HyperlinkUtils.getHyperlinkRegistryKey( handler.getEntryName() ),
-                                                                "registerHyperlink", "\"" + relationId + "\"", "\""
+                                                                "registerHyperlink", "\""
                                                                     + target + "\"", "\"" + targetMode + "\"" );
                             idAttribute.setValue( id );
                             hyperlinksMap.remove( hyperlink.getId() );

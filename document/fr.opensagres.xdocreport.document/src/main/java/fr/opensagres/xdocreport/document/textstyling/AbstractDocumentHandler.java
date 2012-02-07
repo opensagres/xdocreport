@@ -54,12 +54,15 @@ public abstract class AbstractDocumentHandler
 
     private StringWriter currentWriter;
 
-    public AbstractDocumentHandler( BufferedElement parent, IContext context )
+    private final String entryName;
+
+    public AbstractDocumentHandler( BufferedElement parent, IContext context, String entryName )
     {
         this.parent = parent;
         this.context = context;
         // Stack of boolean (ordered or not) for the ordered/unordered list
         this.listStack = new Stack<Boolean>();
+        this.entryName = entryName;
     }
 
     public void handleString( String s )
@@ -207,6 +210,11 @@ public abstract class AbstractDocumentHandler
             setTextLocation( TextLocation.Body );
         }
         return currentWriter;
+    }
+
+    public String getEntryName()
+    {
+        return entryName;
     }
 
     @Override

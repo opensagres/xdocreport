@@ -58,8 +58,6 @@ public class DocXBufferedDocumentContentHandler
     extends TransformedBufferedDocumentContentHandler<DocxBufferedDocument>
 {
 
-    private final String entryName;
-
     private boolean instrTextParsing;
 
     private boolean tParsing = false;
@@ -67,8 +65,7 @@ public class DocXBufferedDocumentContentHandler
     protected DocXBufferedDocumentContentHandler( String entryName, FieldsMetadata fieldsMetadata,
                                                   IDocumentFormatter formater, Map<String, Object> context )
     {
-        super( fieldsMetadata, formater, context );
-        this.entryName = entryName;
+        super( entryName, fieldsMetadata, formater, context );
     }
 
     @Override
@@ -288,8 +285,4 @@ public class DocXBufferedDocumentContentHandler
         super.extractListDirectiveInfo( mergefield.getFieldName() );
     }
 
-    public String getEntryName()
-    {
-        return entryName;
-    }
 }

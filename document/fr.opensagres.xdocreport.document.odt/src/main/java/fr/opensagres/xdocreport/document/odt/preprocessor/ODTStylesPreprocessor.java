@@ -44,7 +44,7 @@ public class ODTStylesPreprocessor
                                                                                       IDocumentFormatter formatter,
                                                                                       Map<String, Object> sharedContext )
     {
-        return new ODTStyleContentHandler(fieldsMetadata, formatter, sharedContext );
+        return new ODTStyleContentHandler( entryName, fieldsMetadata, formatter, sharedContext );
     }
 
 }

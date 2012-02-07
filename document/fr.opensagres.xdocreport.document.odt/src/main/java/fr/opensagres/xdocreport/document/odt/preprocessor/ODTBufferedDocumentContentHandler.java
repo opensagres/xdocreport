@@ -70,10 +70,10 @@ public class ODTBufferedDocumentContentHandler
 
     protected final IODTStylesGenerator styleGen;
 
-    public ODTBufferedDocumentContentHandler( FieldsMetadata fieldsMetadata, IDocumentFormatter formatter,
-                                                 Map<String, Object> sharedContext )
+    public ODTBufferedDocumentContentHandler( String entryName, FieldsMetadata fieldsMetadata,
+                                              IDocumentFormatter formatter, Map<String, Object> sharedContext )
     {
-        super( fieldsMetadata, formatter, sharedContext );
+        super( entryName, fieldsMetadata, formatter, sharedContext );
         styleGen = ODTStylesGeneratorFactory.getStyleGenerator();
     }
 
@@ -199,9 +199,9 @@ public class ODTBufferedDocumentContentHandler
             {
                 dynamicImageName = null;
             }
-            else if ( isOfficeAutomaticStyles( uri, localName, name )  && needToProcessAutomaticStyles())
+            else if ( isOfficeAutomaticStyles( uri, localName, name ) && needToProcessAutomaticStyles() )
             {
-                IBufferedRegion region = getCurrentElement();                
+                IBufferedRegion region = getCurrentElement();
                 // Add bold, italic, bold+italic styles for text styling.
                 region.append( styleGen.generateTextStyles() );
                 // Add styles for lists
@@ -211,10 +211,11 @@ public class ODTBufferedDocumentContentHandler
         }
     }
 
-    protected boolean needToProcessAutomaticStyles() {
+    protected boolean needToProcessAutomaticStyles()
+    {
         return true;
     }
-    
+
     @Override
     protected String getTableRowName()
     {
@@ -264,9 +265,9 @@ public class ODTBufferedDocumentContentHandler
                 // 1327511861250_id=___TextStylingRegistry.transform(comments_odt,"NoEscape","ODT","1327511861250_id",___context)]
                 long variableIndex = getVariableIndex();
                 String setVariableDirective =
-                    getFormatter().formatAsCallTextStyling( variableIndex, fieldName,
-                                                            fieldAsTextStyling.getFieldName(), DocumentKind.ODT.name(),
-                                                            fieldAsTextStyling.getSyntaxKind(), elementId );
+                    getFormatter().formatAsCallTextStyling( variableIndex, fieldName, DocumentKind.ODT.name(),
+                                                            fieldAsTextStyling.getSyntaxKind(), elementId,
+                                                            super.getEntryName() );
 
                 String textBefore =
                     getFormatter().formatAsTextStylingField( variableIndex, ITransformResult.TEXT_BEFORE_PROPERTY );

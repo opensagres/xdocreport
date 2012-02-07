@@ -35,6 +35,8 @@ public class HyperlinkRegistry
 
     public static final String KEY = "___HyperlinkRegistry";
 
+    private static final String EXTERNAL_TARGET_NODE = "External";
+
     private List<HyperlinkInfo> hyperlinks;
 
     /**
@@ -84,15 +86,26 @@ public class HyperlinkRegistry
      * @param targetMode
      * @return
      */
-    public String registerHyperlink( String id, String target, String targetMode )
+    public String registerHyperlink( String target, String targetMode )
     {
         if ( hyperlinks == null )
         {
             hyperlinks = new ArrayList<HyperlinkInfo>();
         }
-        id = "___rId" + hyperlinks.size();
+        String id = "___rId" + hyperlinks.size();
         hyperlinks.add( new HyperlinkInfo( id, target, targetMode ) );
         return id;
+    }
+
+    /**
+     * Register external hyperlink.
+     * 
+     * @param target
+     * @return
+     */
+    public String registerHyperlink( String target )
+    {
+        return registerHyperlink( target, EXTERNAL_TARGET_NODE );
     }
 
     /**

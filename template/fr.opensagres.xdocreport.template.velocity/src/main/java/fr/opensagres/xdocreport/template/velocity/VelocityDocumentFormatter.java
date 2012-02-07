@@ -477,15 +477,15 @@ public class VelocityDocumentFormatter
         return fieldName.indexOf( "#" );
     }
 
-    public String formatAsCallTextStyling( long variableIndex, String fieldName, String metafieldName,
-                                           String documentKind, String syntaxKind, String elementId )
+    public String formatAsCallTextStyling( long variableIndex, String fieldName, String documentKind,
+                                           String syntaxKind, String elementId, String entryName )
     {
         StringBuilder newContent = new StringBuilder( "#set(" );
         newContent.append( formatAsSimpleField( true, getVariableName( variableIndex ) ) );
         newContent.append( "=" );
         newContent.append( getFunctionDirective( TextStylingConstants.KEY, TextStylingConstants.TRANSFORM_METHOD,
                                                  fieldName, "\"" + syntaxKind + "\"", "\"" + documentKind + "\"", "\""
-                                                     + elementId + "\"", "$" + IContext.KEY ) );
+                                                     + elementId + "\"", "$" + IContext.KEY, "\"" + entryName + "\"" ) );
         newContent.append( ")" );
         return newContent.toString();
     }

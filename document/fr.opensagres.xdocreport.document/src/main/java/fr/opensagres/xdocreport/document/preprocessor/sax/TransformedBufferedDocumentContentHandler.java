@@ -59,14 +59,17 @@ public abstract class TransformedBufferedDocumentContentHandler<Document extends
 
     private int variableIndex;
 
-    protected TransformedBufferedDocumentContentHandler( FieldsMetadata fieldsMetadata, IDocumentFormatter formater,
-                                                         Map<String, Object> sharedContext )
+    private final String entryName;
+
+    protected TransformedBufferedDocumentContentHandler( String entryName, FieldsMetadata fieldsMetadata,
+                                                         IDocumentFormatter formater, Map<String, Object> sharedContext )
     {
         this.fieldsMetadata = fieldsMetadata;
         this.formatter = formater;
         this.sharedContext = sharedContext;
         this.directives = new DirectivesStack();
         this.variableIndex = 0;
+        this.entryName = entryName;
     }
 
     @Override
@@ -459,6 +462,11 @@ public abstract class TransformedBufferedDocumentContentHandler<Document extends
     public long getVariableIndex()
     {
         return variableIndex++;
+    }
+
+    public String getEntryName()
+    {
+        return entryName;
     }
 
     protected abstract Document createDocument();

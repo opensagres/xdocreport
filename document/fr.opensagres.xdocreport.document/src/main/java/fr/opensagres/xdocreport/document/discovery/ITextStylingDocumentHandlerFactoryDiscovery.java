@@ -33,6 +33,6 @@ public interface ITextStylingDocumentHandlerFactoryDiscovery
     extends IBaseDiscovery
 {
 
-    IDocumentHandler createDocumentHandler( BufferedElement parent, IContext context );
+    IDocumentHandler createDocumentHandler( BufferedElement parent, IContext context, String entryName );
 
 }

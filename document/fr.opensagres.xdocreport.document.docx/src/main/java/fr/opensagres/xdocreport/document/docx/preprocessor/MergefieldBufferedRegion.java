@@ -166,7 +166,8 @@ public abstract class MergefieldBufferedRegion
                         // Set
                         String setVariableDirective =
                             formatter.formatAsCallTextStyling( variableIndex, fieldName, DocumentKind.DOCX.name(),
-                                                               fieldAsTextStyling.getSyntaxKind(), elementId,
+                                                               fieldAsTextStyling.getSyntaxKind(),
+                                                               fieldAsTextStyling.isSyntaxWithDirective(), elementId,
                                                                handler.getEntryName() );
 
                         String textBefore =

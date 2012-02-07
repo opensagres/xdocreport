@@ -78,8 +78,8 @@ public abstract class AbstractXDocReport
 
     /**
      * id of the {@link IXDocReport}. This id is used to cache an instance of {@link IXDocReport} with
-     * {@link XDocReportRegistry#loadReport(InputStream) and get instance from cache with
-     * {@link XDocReportRegistry#getReport(String)}.
+     * {@link XDocReportRegistry#loadReport(InputStream) and get instance from cache with {
+     * @link XDocReportRegistry#getReport(String)}.
      */
     private String id;
 
@@ -753,6 +753,9 @@ public abstract class AbstractXDocReport
         {
             context.put( BufferedElement.KEY, elementsCache );
         }
+
+        // 5) Add template engine
+        context.put( ITemplateEngine.KEY, templateEngine );
     }
 
     /**

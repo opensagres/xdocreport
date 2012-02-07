@@ -24,6 +24,8 @@
  */
 package fr.opensagres.xdocreport.document.registry;
 
+import java.io.StringReader;
+import java.io.StringWriter;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -36,6 +38,7 @@ import fr.opensagres.xdocreport.document.textstyling.ITextStylingTransformer;
 import fr.opensagres.xdocreport.document.textstyling.ITransformResult;
 import fr.opensagres.xdocreport.document.textstyling.TextStylingTransformerRegistry;
 import fr.opensagres.xdocreport.template.IContext;
+import fr.opensagres.xdocreport.template.ITemplateEngine;
 
 /**
  * Text styling registry to register {@link IDocumentHandler} and transform some content from syntax (HTML, MediaWiki,
@@ -80,11 +83,12 @@ public class TextStylingRegistry
      * 
      * @param content the content to transform.
      * @param syntaxKind the syntax of the content.
+     * @param syntaxWithDirective true if there is directive in the content and false otherwise.
      * @param documentKind the syntax to obtain after the transformation.
      * @return
      */
-    public ITransformResult transform( String content, String syntaxKind, String documentKind, String elementId,
-                                       IContext context, String entryName )
+    public ITransformResult transform( final String initialContent, String syntaxKind, boolean syntaxWithDirective,
+                                       String documentKind, String elementId, IContext context, String entryName )
     {
         // 1) Retrieve transformer from the text styling transformer registry.
         ITextStylingTransformer transformer =
@@ -93,6 +97,20 @@ public class TextStylingRegistry
         {
             try
             {
+                String content = initialContent;
+                if ( syntaxWithDirective )
+                {
+                    // the content contains some directive (${name} which must be replaced)
+                    // Apply template engine to this content.
+                    ITemplateEngine templateEngine = (ITemplateEngine) context.get( ITemplateEngine.KEY );
+                    if ( templateEngine != null )
+                    {
+                        StringWriter newContent = new StringWriter();
+                        templateEngine.process( entryName, context, new StringReader( initialContent ), newContent );
+                        content = newContent.toString();
+                    }
+                }
+
                 // Transformer found, create an instance of document handler
                 // (docx, odt, etc).
                 IDocumentHandler visitor = createDocumentHandler( documentKind, elementId, context, entryName );
@@ -103,10 +121,10 @@ public class TextStylingRegistry
             {
                 // Error while transformation, returns the original content???
                 e.printStackTrace();
-                return new BasicTransformResult( content );
+                return new BasicTransformResult( initialContent );
             }
         }
-        return new BasicTransformResult( content );
+        return new BasicTransformResult( initialContent );
     }
 
     /**

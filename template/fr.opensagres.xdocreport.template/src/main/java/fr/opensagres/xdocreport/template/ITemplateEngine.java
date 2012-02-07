@@ -41,6 +41,8 @@ import fr.opensagres.xdocreport.template.formatter.IDocumentFormatter;
 public interface ITemplateEngine
 {
 
+    public final String KEY = "___ITemplateEngine";
+
     /**
      * Returns the template engien kind (Freemarker, Velocity..)
      * 

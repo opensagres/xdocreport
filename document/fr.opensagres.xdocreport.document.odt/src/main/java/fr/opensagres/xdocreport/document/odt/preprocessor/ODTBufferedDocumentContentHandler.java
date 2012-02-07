@@ -266,7 +266,8 @@ public class ODTBufferedDocumentContentHandler
                 long variableIndex = getVariableIndex();
                 String setVariableDirective =
                     getFormatter().formatAsCallTextStyling( variableIndex, fieldName, DocumentKind.ODT.name(),
-                                                            fieldAsTextStyling.getSyntaxKind(), elementId,
+                                                            fieldAsTextStyling.getSyntaxKind(),
+                                                            fieldAsTextStyling.isSyntaxWithDirective(), elementId,
                                                             super.getEntryName() );
 
                 String textBefore =

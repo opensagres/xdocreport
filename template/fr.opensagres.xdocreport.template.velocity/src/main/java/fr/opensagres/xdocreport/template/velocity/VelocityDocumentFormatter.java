@@ -478,14 +478,17 @@ public class VelocityDocumentFormatter
     }
 
     public String formatAsCallTextStyling( long variableIndex, String fieldName, String documentKind,
-                                           String syntaxKind, String elementId, String entryName )
+                                           String syntaxKind, boolean syntaxWithDirective, String elementId,
+                                           String entryName )
     {
         StringBuilder newContent = new StringBuilder( "#set(" );
         newContent.append( formatAsSimpleField( true, getVariableName( variableIndex ) ) );
         newContent.append( "=" );
         newContent.append( getFunctionDirective( TextStylingConstants.KEY, TextStylingConstants.TRANSFORM_METHOD,
-                                                 fieldName, "\"" + syntaxKind + "\"", "\"" + documentKind + "\"", "\""
-                                                     + elementId + "\"", "$" + IContext.KEY, "\"" + entryName + "\"" ) );
+                                                 fieldName, "\"" + syntaxKind + "\"",
+                                                 syntaxWithDirective ? StringUtils.TRUE : StringUtils.FALSE, "\""
+                                                     + documentKind + "\"", "\"" + elementId + "\"",
+                                                 "$" + IContext.KEY, "\"" + entryName + "\"" ) );
         newContent.append( ")" );
         return newContent.toString();
     }

@@ -3,7 +3,7 @@
 	<parent>
 		<artifactId>converter</artifactId>
 		<groupId>fr.opensagres.xdocreport</groupId>
-		<version>0.9.5-SNAPSHOT</version>
+		<version>0.9.5</version>
 	</parent>
 	<artifactId>fr.opensagres.xdocreport.converter.docx.xwpf</artifactId>
 	<dependencies>
@@ -11,14 +11,14 @@
 		<dependency>
 			<groupId>fr.opensagres.xdocreport</groupId>
 			<artifactId>fr.opensagres.xdocreport.converter</artifactId>
-			<version>0.9.5-SNAPSHOT</version>
+			<version>0.9.5</version>
 
 		</dependency>
 
 		<dependency>
 			<groupId>fr.opensagres.xdocreport</groupId>
 			<artifactId>org.apache.poi.xwpf.converter</artifactId>
-			<version>0.9.5-SNAPSHOT</version>
+			<version>0.9.5</version>
 		</dependency>
 	</dependencies>
 </project>

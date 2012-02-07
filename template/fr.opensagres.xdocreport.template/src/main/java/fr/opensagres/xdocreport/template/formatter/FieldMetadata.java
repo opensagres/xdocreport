@@ -46,14 +46,17 @@ public class FieldMetadata
 
     private String description;
 
+    private boolean syntaxWithDirective;
+
     public FieldMetadata( FieldsMetadata fieldsMetadata, String fieldName, boolean listType, String imageName,
-                          String syntaxKind )
+                          String syntaxKind, boolean syntaxWithDirective )
     {
         this.fieldsMetadata = fieldsMetadata;
         this.fieldName = fieldName;
         setListType( listType );
         setImageName( imageName );
         this.setSyntaxKind( syntaxKind );
+        this.setSyntaxWithDirective( syntaxWithDirective );
         fieldsMetadata.fields.add( this );
     }
 
@@ -123,7 +126,7 @@ public class FieldMetadata
     public void setImageName( String imageName )
     {
         this.imageName = imageName;
-        this.imageType = StringUtils.isNotEmpty( imageName ) ;
+        this.imageType = StringUtils.isNotEmpty( imageName );
         if ( imageType )
         {
             fieldsMetadata.fieldsAsImage.put( getImageName(), this );
@@ -139,10 +142,15 @@ public class FieldMetadata
         return syntaxKind;
     }
 
+    public boolean isSyntaxWithDirective()
+    {
+        return syntaxWithDirective;
+    }
+
     public void setSyntaxKind( String syntaxKind )
     {
         this.syntaxKind = syntaxKind;
-        if ( StringUtils.isNotEmpty( syntaxKind )  )
+        if ( StringUtils.isNotEmpty( syntaxKind ) )
         {
             fieldsMetadata.fieldsAsTextStyling.put( getFieldName(), this );
         }
@@ -150,6 +158,11 @@ public class FieldMetadata
         {
             fieldsMetadata.fieldsAsTextStyling.remove( getFieldName() );
         }
+    }
+
+    public void setSyntaxWithDirective( boolean syntaxWithDirective )
+    {
+        this.syntaxWithDirective = syntaxWithDirective;
     }
 
     public void setDescription( String description )

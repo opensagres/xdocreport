@@ -40,6 +40,8 @@ public class XMLFieldsConstants
 
     public static final String TEMPLATE_ENGINE_KIND_ATTR = "templateEngineKind";
 
+    public static final String HAS_DIRECTIVE = "hasDirective";
+    
     // Elements
     public static final String FIELDS_ELT = "fields";
 
@@ -62,4 +64,5 @@ public class XMLFieldsConstants
     public static final String DESCRIPTION_START_ELT = "<" + DESCRIPTION_ELT + ">";
 
     public static final String DESCRIPTION_END_ELT = "</" + DESCRIPTION_ELT + ">";
+    
 }

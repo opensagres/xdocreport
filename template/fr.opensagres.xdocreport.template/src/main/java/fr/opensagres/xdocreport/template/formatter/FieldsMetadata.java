@@ -115,7 +115,7 @@ public class FieldsMetadata
      */
     public FieldMetadata addFieldAsImage( String imageName, String fieldName )
     {
-        return addField( fieldName, null, imageName, null );
+        return addField( fieldName, null, imageName, null, null );
     }
 
     /**
@@ -126,7 +126,18 @@ public class FieldsMetadata
      */
     public FieldMetadata addFieldAsTextStyling( String fieldName, SyntaxKind syntaxKind )
     {
-        return addFieldAsTextStyling( fieldName, syntaxKind.name() );
+        return addFieldAsTextStyling( fieldName, syntaxKind, false );
+    }
+
+    /**
+     * Add a field name which can contains text stylink (Html, Wikipedia, etc..).
+     * 
+     * @param fieldName
+     * @param syntaxKind
+     */
+    public FieldMetadata addFieldAsTextStyling( String fieldName, SyntaxKind syntaxKind, boolean syntaxWithDirective )
+    {
+        return addFieldAsTextStyling( fieldName, syntaxKind.name(), syntaxWithDirective );
     }
 
     /**
@@ -137,8 +148,19 @@ public class FieldsMetadata
      */
     public FieldMetadata addFieldAsTextStyling( String fieldName, String syntaxKind )
     {
+        return addFieldAsTextStyling( fieldName, syntaxKind, false );
+    }
+
+    /**
+     * Add a field name which can contains text stylink (Html, Wikipedia, etc..).
+     * 
+     * @param fieldName
+     * @param syntaxKind
+     */
+    public FieldMetadata addFieldAsTextStyling( String fieldName, String syntaxKind, boolean syntaxWithDirective )
+    {
         // Test if it exists fields with the given name
-        return addField( fieldName, null, null, syntaxKind );
+        return addField( fieldName, null, null, syntaxKind, syntaxWithDirective );
     }
 
     /**
@@ -148,10 +170,11 @@ public class FieldsMetadata
      */
     public FieldMetadata addFieldAsList( String fieldName )
     {
-        return addField( fieldName, true, null, null );
+        return addField( fieldName, true, null, null, null );
     }
 
-    public FieldMetadata addField( String fieldName, Boolean listType, String imageName, String syntaxKind )
+    public FieldMetadata addField( String fieldName, Boolean listType, String imageName, String syntaxKind,
+                                   Boolean syntaxWithDirective )
     {
         // Test if it exists fields with the given name
         FieldMetadata exsitingField = fieldsAsImage.get( fieldName );
@@ -167,7 +190,8 @@ public class FieldsMetadata
         if ( exsitingField == null )
         {
             FieldMetadata fieldMetadata =
-                new FieldMetadata( this, fieldName, listType == null ? false : listType, imageName, syntaxKind );
+                new FieldMetadata( this, fieldName, listType == null ? false : listType, imageName, syntaxKind,
+                                   syntaxWithDirective == null ? false : syntaxWithDirective );
             return fieldMetadata;
         }
         else
@@ -176,13 +200,17 @@ public class FieldsMetadata
             {
                 exsitingField.setListType( listType );
             }
-            if ( StringUtils.isNotEmpty( imageName ))
+            if ( StringUtils.isNotEmpty( imageName ) )
             {
                 exsitingField.setImageName( imageName );
             }
             if ( StringUtils.isNotEmpty( syntaxKind ) )
             {
                 exsitingField.setSyntaxKind( syntaxKind );
+            }
+            if ( syntaxWithDirective != null )
+            {
+                exsitingField.setSyntaxWithDirective( syntaxWithDirective );
             }
             return exsitingField;
         }

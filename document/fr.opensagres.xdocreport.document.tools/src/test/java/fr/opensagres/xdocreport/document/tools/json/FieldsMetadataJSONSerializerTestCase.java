@@ -59,7 +59,7 @@ public class FieldsMetadataJSONSerializerTestCase
         throws Exception
     {
         FieldsMetadata fieldsMetadata = new FieldsMetadata();
-        fieldsMetadata.addField( "name", false, null, null );
+        fieldsMetadata.addField( "name", false, null, null, null );
 
         StringWriter writer = new StringWriter();
         FieldsMetadataJSONSerializer.getInstance().save( fieldsMetadata, writer, false );
@@ -71,7 +71,7 @@ public class FieldsMetadataJSONSerializerTestCase
         throws Exception
     {
         FieldsMetadata fieldsMetadata = new FieldsMetadata();
-        fieldsMetadata.addField( "name", false, null, null );
+        fieldsMetadata.addField( "name", false, null, null, null );
 
         StringWriter writer = new StringWriter();
         FieldsMetadataJSONSerializer.getInstance().save( fieldsMetadata, writer, true );
@@ -83,8 +83,8 @@ public class FieldsMetadataJSONSerializerTestCase
         throws Exception
     {
         FieldsMetadata fieldsMetadata = new FieldsMetadata();
-        fieldsMetadata.addField( "name", false, null, null );
-        fieldsMetadata.addField( "name2", false, null, null );
+        fieldsMetadata.addField( "name", false, null, null, null );
+        fieldsMetadata.addField( "name2", false, null, null, null );
 
         StringWriter writer = new StringWriter();
         FieldsMetadataJSONSerializer.getInstance().save( fieldsMetadata, writer, false );
@@ -104,8 +104,8 @@ public class FieldsMetadataJSONSerializerTestCase
         throws Exception
     {
         FieldsMetadata fieldsMetadata = new FieldsMetadata();
-        fieldsMetadata.addField( "name", false, null, null );
-        fieldsMetadata.addField( "name2", false, null, null );
+        fieldsMetadata.addField( "name", false, null, null, null );
+        fieldsMetadata.addField( "name2", false, null, null, null );
 
         StringWriter writer = new StringWriter();
         FieldsMetadataJSONSerializer.getInstance().save( fieldsMetadata, writer, true );
@@ -127,7 +127,7 @@ public class FieldsMetadataJSONSerializerTestCase
         throws Exception
     {
         FieldsMetadata fieldsMetadata = new FieldsMetadata();
-        fieldsMetadata.addField( "project.name", false, null, null );
+        fieldsMetadata.addField( "project.name", false, null, null, null );
 
         StringWriter writer = new StringWriter();
         FieldsMetadataJSONSerializer.getInstance().save( fieldsMetadata, writer, false );
@@ -139,7 +139,7 @@ public class FieldsMetadataJSONSerializerTestCase
         throws Exception
     {
         FieldsMetadata fieldsMetadata = new FieldsMetadata();
-        fieldsMetadata.addField( "project.name", false, null, null );
+        fieldsMetadata.addField( "project.name", false, null, null, null );
 
         StringWriter writer = new StringWriter();
         FieldsMetadataJSONSerializer.getInstance().save( fieldsMetadata, writer, true );
@@ -151,10 +151,10 @@ public class FieldsMetadataJSONSerializerTestCase
         throws Exception
     {
         FieldsMetadata fieldsMetadata = new FieldsMetadata();
-        fieldsMetadata.addField( "project.name", false, null, null );
-        fieldsMetadata.addField( "project.url", false, null, null );
-        fieldsMetadata.addField( "developer.name", false, null, null );
-        fieldsMetadata.addField( "developer.mail", false, null, null );
+        fieldsMetadata.addField( "project.name", false, null, null, null );
+        fieldsMetadata.addField( "project.url", false, null, null, null );
+        fieldsMetadata.addField( "developer.name", false, null, null, null );
+        fieldsMetadata.addField( "developer.mail", false, null, null, null );
 
         StringWriter writer = new StringWriter();
         FieldsMetadataJSONSerializer.getInstance().save( fieldsMetadata, writer, false );
@@ -177,7 +177,7 @@ public class FieldsMetadataJSONSerializerTestCase
         throws Exception
     {
         FieldsMetadata fieldsMetadata = new FieldsMetadata();
-        fieldsMetadata.addField( "developers.name", true, null, null );
+        fieldsMetadata.addField( "developers.name", true, null, null, null );
 
         StringWriter writer = new StringWriter();
         FieldsMetadataJSONSerializer.getInstance().save( fieldsMetadata, writer, false );

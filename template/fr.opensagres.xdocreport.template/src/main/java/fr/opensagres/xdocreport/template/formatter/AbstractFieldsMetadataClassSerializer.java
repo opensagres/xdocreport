@@ -133,7 +133,7 @@ public abstract class AbstractFieldsMetadataClassSerializer
                     fieldName = getFieldName( key, desc[i].getName() );
                     if ( isClassToExclude( returnTypeClass ) )
                     {
-                        fieldsMetadata.addField( fieldName, listType, null, null );
+                        fieldsMetadata.addField( fieldName, listType, null, null, null );
                     }
                     else
                     {

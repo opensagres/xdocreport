@@ -73,7 +73,7 @@ public class FieldsMetadataXMLSerializerTestCase
         fieldsMetadata.setDescription( "A description..." );
         FieldMetadata metadata = fieldsMetadata.addFieldAsList( "developers.Name" );
         metadata.setDescription( "A field description..." );
-        metadata = fieldsMetadata.addField( "project.Name", false, null, null );
+        metadata = fieldsMetadata.addField( "project.Name", false, null, null, null );
         metadata.setDescription( "An other field description..." );
 
         StringWriter writer = new StringWriter();

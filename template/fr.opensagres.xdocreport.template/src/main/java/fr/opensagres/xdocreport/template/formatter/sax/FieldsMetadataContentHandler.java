@@ -70,7 +70,10 @@ public class FieldsMetadataContentHandler
             boolean listType = StringUtils.asBoolean( attributes.getValue( XMLFieldsConstants.LIST_ATTR ), false );
             String imageName = attributes.getValue( XMLFieldsConstants.IMAGE_NAME_ATTR );
             String syntaxKind = attributes.getValue( XMLFieldsConstants.SYNTAX_KIND_ATTR );
-            this.currentField = fieldsMetadata.addField( fieldName, listType, imageName, syntaxKind );
+            boolean syntaxKindWithDirective =
+                StringUtils.asBoolean( attributes.getValue( XMLFieldsConstants.HAS_DIRECTIVE ), false );
+            this.currentField =
+                fieldsMetadata.addField( fieldName, listType, imageName, syntaxKind, syntaxKindWithDirective );
         }
         else if ( XMLFieldsConstants.DESCRIPTION_ELT.equals( localName ) )
         {

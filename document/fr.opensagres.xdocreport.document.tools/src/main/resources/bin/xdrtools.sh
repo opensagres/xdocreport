@@ -23,6 +23,13 @@ then
    error
 fi
 
+ERR=$5
+if [ -n "$ERR" ]
+then
+   error
+fi
+
+
 cd `dirname $0`
 BASE_DIR=`pwd`
 
@@ -31,7 +38,7 @@ for i in `ls  $BASE_DIR/../lib/*.jar`
         CLASSPATH=$CLASSPATH:$i
     done
 
-java -classpath "$CLASSPATH" fr.opensagres.xdocreport.document.tools.Main -in $IN -out $OUT -dataDir $DATA_DIR -metadataFile $METADATA_FILE -autoGenData true
+java -classpath "$CLASSPATH" fr.opensagres.xdocreport.document.tools.Main -in $IN -out $OUT -dataDir $DATA_DIR -metadataFile $METADATA_FILE -err $ERR
 
 
 error()

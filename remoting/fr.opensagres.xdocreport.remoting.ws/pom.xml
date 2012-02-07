@@ -3,7 +3,7 @@
   <parent>
     <groupId>fr.opensagres.xdocreport</groupId>
     <artifactId>remoting</artifactId>
-    <version>0.9.5</version>
+    <version>0.9.6-SNAPSHOT</version>
   </parent>
   <artifactId>fr.opensagres.xdocreport.remoting.ws</artifactId>
   <dependencies>
@@ -45,7 +45,7 @@
   <dependency>
       <groupId>fr.opensagres.xdocreport</groupId>
       <artifactId>fr.opensagres.xdocreport.remoting.shared</artifactId>
-      <version>0.9.5</version>
+      <version>0.9.6-SNAPSHOT</version>
     </dependency>
     <dependency>
       <groupId>javax.xml.ws</groupId>

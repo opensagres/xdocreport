@@ -28,6 +28,7 @@ import java.io.StringReader;
 import java.io.StringWriter;
 
 import junit.framework.TestCase;
+import fr.opensagres.xdocreport.template.TemplateContextHelper;
 import fr.opensagres.xdocreport.template.formatter.FieldsMetadata;
 import fr.opensagres.xdocreport.template.formatter.IDocumentFormatter;
 import fr.opensagres.xdocreport.template.freemarker.FreemarkerDocumentFormatter;
@@ -152,7 +153,7 @@ public class DocxPreprocessorImageWithFreemarkerTestCase
                           + "</pic:nvPicPr>" + "<pic:blipFill>"
 
                           + "<a:blip r:embed=\"${"
-                          + IDocumentFormatter.IMAGE_REGISTRY_KEY
+                          + TemplateContextHelper.IMAGE_REGISTRY_KEY
                           + ".registerImage(logo)}\"/>"
 
                           + "<a:stretch>"
@@ -589,7 +590,7 @@ public class DocxPreprocessorImageWithFreemarkerTestCase
 
                           // + "<a:blip r:embed=\"rId5\"/>"
                           + "<a:blip r:embed=\"${"
-                          + IDocumentFormatter.IMAGE_REGISTRY_KEY
+                          + TemplateContextHelper.IMAGE_REGISTRY_KEY
                           + ".registerImage(item_developers.photo)}\"/>"
 
                           + "<a:stretch>"

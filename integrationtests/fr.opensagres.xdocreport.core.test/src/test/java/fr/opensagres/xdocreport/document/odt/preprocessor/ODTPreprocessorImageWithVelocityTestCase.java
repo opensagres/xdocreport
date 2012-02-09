@@ -28,6 +28,7 @@ import java.io.StringReader;
 import java.io.StringWriter;
 
 import junit.framework.TestCase;
+import fr.opensagres.xdocreport.template.TemplateContextHelper;
 import fr.opensagres.xdocreport.template.formatter.FieldsMetadata;
 import fr.opensagres.xdocreport.template.formatter.IDocumentFormatter;
 import fr.opensagres.xdocreport.template.velocity.VelocityDocumentFormatter;
@@ -108,7 +109,7 @@ public class ODTPreprocessorImageWithVelocityTestCase
                           + "svg:height=\"${imageRegistry.getHeight($logo,'22.51pt')}\" " + "draw:z-index=\"0\">"
                           + "<draw:image "
 
-                          + "xlink:href=\"${" + IDocumentFormatter.IMAGE_REGISTRY_KEY + ".registerImage($logo)}\" "
+                          + "xlink:href=\"${" + TemplateContextHelper.IMAGE_REGISTRY_KEY + ".registerImage($logo)}\" "
 
                           + "xlink:type=\"simple\" xlink:show=\"embed\" xlink:actuate=\"onLoad\"/>"
                           + "</draw:frame>Project logo :</text:p>" + "</office:document-content>", writer.toString() );
@@ -237,7 +238,7 @@ public class ODTPreprocessorImageWithVelocityTestCase
             + "svg:height=\"${imageRegistry.getHeight($item_developers.Photo,'22.51pt')}\" " + "draw:z-index=\"0\">"
             + "<draw:image "
 
-            + "xlink:href=\"${" + IDocumentFormatter.IMAGE_REGISTRY_KEY + ".registerImage($item_developers.Photo)}\" "
+            + "xlink:href=\"${" + TemplateContextHelper.IMAGE_REGISTRY_KEY + ".registerImage($item_developers.Photo)}\" "
 
             + "xlink:type=\"simple\" xlink:show=\"embed\" xlink:actuate=\"onLoad\"/>" + "</draw:frame>" + "</text:p>"
             + "</table:table-cell>" + "</table:table-row>"

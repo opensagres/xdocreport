@@ -56,7 +56,7 @@ public class PPTXSlidePreprocessorWithVelocityTestCase
         IDocumentFormatter formatter = new VelocityDocumentFormatter();
 
         StringWriter writer = new StringWriter();
-        preprocessor.preprocess( "test", reader, writer, null, metadata, null, formatter, new HashMap<String, Object>() );
+        preprocessor.preprocess( "test", reader, writer, null, metadata, formatter, new HashMap<String, Object>() );
         assertEquals( "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>"
             + "<p:sld xmlns:a=\"http://schemas.openxmlformats.org/drawingml/2006/main\""
             + " xmlns:r=\"http://schemas.openxmlformats.org/officeDocument/2006/relationships\""
@@ -107,7 +107,7 @@ public class PPTXSlidePreprocessorWithVelocityTestCase
         IDocumentFormatter formatter = new VelocityDocumentFormatter();
 
         StringWriter writer = new StringWriter();
-        preprocessor.preprocess( "test", reader, writer, null, metadata, null, formatter, new HashMap<String, Object>() );
+        preprocessor.preprocess( "test", reader, writer, null, metadata, formatter, new HashMap<String, Object>() );
         assertEquals( "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>"
             + "<p:sld xmlns:a=\"http://schemas.openxmlformats.org/drawingml/2006/main\""
             + " xmlns:r=\"http://schemas.openxmlformats.org/officeDocument/2006/relationships\""

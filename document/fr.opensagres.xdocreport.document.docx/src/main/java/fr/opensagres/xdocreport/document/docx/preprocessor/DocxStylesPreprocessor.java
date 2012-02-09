@@ -33,17 +33,13 @@ import fr.opensagres.xdocreport.template.formatter.FieldsMetadata;
 import fr.opensagres.xdocreport.template.formatter.IDocumentFormatter;
 
 /**
- * SAX Processor which parses [Content_Types].xml to add missing image format. Ex :
- * 
- * <pre>
- * <Default Extension="jpg" ContentType="image/jpeg" />
- * </pre>
+ * SAX Processor which parses word/styles.xml to add XDocReport styles (hyperlink, numbered list, etc...)
  */
-public class DocxContentTypesPreprocessor
+public class DocxStylesPreprocessor
     extends SAXXDocPreprocessor
 {
 
-    public static final IXDocPreprocessor INSTANCE = new DocxContentTypesPreprocessor();
+    public static final IXDocPreprocessor INSTANCE = new DocxStylesPreprocessor();
 
     @Override
     protected BufferedDocumentContentHandler createBufferedDocumentContentHandler( String entryName,
@@ -51,7 +47,7 @@ public class DocxContentTypesPreprocessor
                                                                                    IDocumentFormatter formater,
                                                                                    Map<String, Object> context )
     {
-        return new DocxContentTypesDocumentContentHandler();
+        return new DocxStylesDocumentContentHandler();
     }
 
 }

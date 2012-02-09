@@ -54,7 +54,7 @@ public class ODTDocumentHandler
     public ODTDocumentHandler( BufferedElement parent, IContext context, String entryName )
     {
         super( parent, context, entryName );
-        styleGen = ODTStylesGeneratorFactory.getStyleGenerator();
+        styleGen = ODTStylesGeneratorProvider.getStyleGenerator();
     }
 
     public void startDocument()

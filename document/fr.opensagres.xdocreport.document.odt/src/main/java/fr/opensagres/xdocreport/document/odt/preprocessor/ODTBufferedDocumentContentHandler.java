@@ -46,7 +46,7 @@ import org.xml.sax.helpers.AttributesImpl;
 import fr.opensagres.xdocreport.core.document.DocumentKind;
 import fr.opensagres.xdocreport.core.utils.StringUtils;
 import fr.opensagres.xdocreport.document.odt.textstyling.IODTStylesGenerator;
-import fr.opensagres.xdocreport.document.odt.textstyling.ODTStylesGeneratorFactory;
+import fr.opensagres.xdocreport.document.odt.textstyling.ODTStylesGeneratorProvider;
 import fr.opensagres.xdocreport.document.preprocessor.sax.BufferedElement;
 import fr.opensagres.xdocreport.document.preprocessor.sax.IBufferedRegion;
 import fr.opensagres.xdocreport.document.preprocessor.sax.TransformedBufferedDocumentContentHandler;
@@ -74,7 +74,7 @@ public class ODTBufferedDocumentContentHandler
                                               IDocumentFormatter formatter, Map<String, Object> sharedContext )
     {
         super( entryName, fieldsMetadata, formatter, sharedContext );
-        styleGen = ODTStylesGeneratorFactory.getStyleGenerator();
+        styleGen = ODTStylesGeneratorProvider.getStyleGenerator();
     }
 
     @Override

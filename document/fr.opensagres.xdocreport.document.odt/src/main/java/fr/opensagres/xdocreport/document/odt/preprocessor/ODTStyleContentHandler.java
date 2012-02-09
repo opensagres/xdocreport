@@ -32,7 +32,7 @@ import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
 
 import fr.opensagres.xdocreport.document.odt.textstyling.IODTStylesGenerator;
-import fr.opensagres.xdocreport.document.odt.textstyling.ODTStylesGeneratorFactory;
+import fr.opensagres.xdocreport.document.odt.textstyling.ODTStylesGeneratorProvider;
 import fr.opensagres.xdocreport.document.preprocessor.sax.IBufferedRegion;
 import fr.opensagres.xdocreport.template.formatter.FieldsMetadata;
 import fr.opensagres.xdocreport.template.formatter.IDocumentFormatter;
@@ -46,6 +46,9 @@ public class ODTStyleContentHandler
     extends ODTBufferedDocumentContentHandler
 {
 
+    private static final String STYLES_ELT = "styles";
+    private static final String STYLE_ELT = "style";
+
     protected List<Integer> existingStyles = new ArrayList<Integer>();
 
     protected final IODTStylesGenerator styleGen;
@@ -54,7 +57,7 @@ public class ODTStyleContentHandler
                                    Map<String, Object> sharedContext )
     {
         super( entryName, fieldsMetadata, formatter, sharedContext );
-        styleGen = ODTStylesGeneratorFactory.getStyleGenerator();
+        styleGen = ODTStylesGeneratorProvider.getStyleGenerator();
     }
 
     @Override
@@ -67,7 +70,7 @@ public class ODTStyleContentHandler
     public boolean doStartElement( String uri, String localName, String name, Attributes attributes )
         throws SAXException
     {
-        if ( "style".equals( localName ) )
+        if ( STYLE_ELT.equals( localName ) )
         {
             String styleName = attributes.getValue( "style:name" );
             int level = styleGen.getHeaderStyleNameLevel( styleName );
@@ -83,7 +86,7 @@ public class ODTStyleContentHandler
     public void doEndElement( String uri, String localName, String name )
         throws SAXException
     {
-        if ( "styles".equals( localName ) )
+        if ( STYLES_ELT.equals( localName ) )
         {
             for ( int i = 1; i <= styleGen.getHeaderStylesCount(); i++ )
             {

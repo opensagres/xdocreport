@@ -48,9 +48,12 @@ public class DocxDocumentHandler
 
     private HyperlinkRegistry hyperlinkRegistry;
 
+    protected final IDocxStylesGenerator styleGen;
+
     public DocxDocumentHandler( BufferedElement parent, IContext context, String entryName )
     {
         super( parent, context, entryName );
+        styleGen = DocxStylesGeneratorProvider.getStyleGenerator();
 
     }
 
@@ -231,29 +234,31 @@ public class DocxDocumentHandler
     public void handleReference( String ref, String label )
         throws IOException
     {
-        // 1) Update the hyperlink registry to modifiy the Hyperlink Relationship in the _rels/document.xml.rels
-        HyperlinkRegistry registry = getHyperlinkRegistry();
-        String rId = registry.registerHyperlink( ref );
+        if ( ref != null )
+        {
+            // 1) Update the hyperlink registry to modifiy the Hyperlink Relationship in the _rels/document.xml.rels
+            HyperlinkRegistry registry = getHyperlinkRegistry();
+            String rId = registry.registerHyperlink( ref );
 
-        // 2) Generate w:hyperlink
-        // TODO : manage style name hyperlink.
-        String hyperlinkStyleName = "Lienhypertexte";
-        super.write( "<w:hyperlink r:id=\"" );
-        super.write( rId );
-        super.write( "\" w:history=\"1\"> " );
-        super.write( "<w:proofErr w:type=\"spellStart\" />" );
-        super.write( "<w:r w:rsidRPr=\"001D30B5\">" );
-        super.write( "<w:rPr>" );
-        super.write( "<w:rStyle w:val=\"" );
-        super.write( hyperlinkStyleName );
-        super.write( "\" />" );
-        super.write( "</w:rPr>" );
-        super.write( "<w:t>" );
-        super.write( label );
-        super.write( "</w:t>" );
-        super.write( "</w:r>" );
-        super.write( "<w:proofErr w:type=\"spellEnd\" />" );
-        super.write( "</w:hyperlink>" );
+            // 2) Generate w:hyperlink
+            String hyperlinkStyleName = styleGen.getHyperLinkStyleId();
+            super.write( "<w:hyperlink r:id=\"" );
+            super.write( rId );
+            super.write( "\" w:history=\"1\"> " );
+            super.write( "<w:proofErr w:type=\"spellStart\" />" );
+            super.write( "<w:r w:rsidRPr=\"001D30B5\">" );
+            super.write( "<w:rPr>" );
+            super.write( "<w:rStyle w:val=\"" );
+            super.write( hyperlinkStyleName );
+            super.write( "\" />" );
+            super.write( "</w:rPr>" );
+            super.write( "<w:t>" );
+            super.write( label != null ? label : ref );
+            super.write( "</w:t>" );
+            super.write( "</w:r>" );
+            super.write( "<w:proofErr w:type=\"spellEnd\" />" );
+            super.write( "</w:hyperlink>" );
+        }
     }
 
     public void handleImage( String ref, String label )

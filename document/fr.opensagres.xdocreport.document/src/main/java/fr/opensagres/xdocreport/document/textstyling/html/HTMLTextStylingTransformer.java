@@ -28,7 +28,9 @@ import java.io.StringReader;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import org.xml.sax.EntityResolver;
 import org.xml.sax.InputSource;
+import org.xml.sax.SAXException;
 import org.xml.sax.XMLReader;
 import org.xml.sax.helpers.XMLReaderFactory;
 
@@ -67,7 +69,7 @@ public class HTMLTextStylingTransformer
 
         // remove special characters \n, \r
         String xml = StringUtils.replaceEach( content, searchList, replacementList );
-        // add root element if xml doesn't contaisn xml root element.
+        // add root element if xml doesn't contain xml root element.
         xml = "<root>" + xml + "</root>";
         if ( LOGGER.isLoggable( Level.FINE ) )
         {

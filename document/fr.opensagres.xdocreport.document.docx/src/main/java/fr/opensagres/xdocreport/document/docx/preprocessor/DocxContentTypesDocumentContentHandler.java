@@ -34,10 +34,20 @@ import fr.opensagres.xdocreport.core.document.ImageFormat;
 import fr.opensagres.xdocreport.document.preprocessor.sax.BufferedDocumentContentHandler;
 import fr.opensagres.xdocreport.document.preprocessor.sax.IBufferedRegion;
 
+/**
+ * Parse content of the [Content_Types].xml to add missing image format. Ex :
+ * 
+ * <pre>
+ * <Default Extension="jpg" ContentType="image/jpeg" />
+ * </pre>
+ */
 public class DocxContentTypesDocumentContentHandler
     extends BufferedDocumentContentHandler
 {
 
+    private static final String DEFAULT_ELT = "Default";
+    private static final String EXTENSION_ATTR = "Extension";
+    
     private List<ImageFormat> missingFormats = new ArrayList<ImageFormat>();
 
     @Override
@@ -58,9 +68,9 @@ public class DocxContentTypesDocumentContentHandler
     public boolean doStartElement( String uri, String localName, String name, Attributes attributes )
         throws SAXException
     {
-        if ( "Default".equals( name ) )
+        if ( DEFAULT_ELT.equals( name ) )
         {
-            ImageFormat format = ImageFormat.getFormatByExtension( attributes.getValue( "Extension" ) );
+            ImageFormat format = ImageFormat.getFormatByExtension( attributes.getValue( EXTENSION_ATTR ) );
             if ( format != null )
             {
                 missingFormats.remove( format );

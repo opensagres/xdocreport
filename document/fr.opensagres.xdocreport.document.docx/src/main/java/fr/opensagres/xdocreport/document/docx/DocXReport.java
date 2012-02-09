@@ -55,6 +55,7 @@ import fr.opensagres.xdocreport.document.docx.images.DocxImageRegistry;
 import fr.opensagres.xdocreport.document.docx.preprocessor.DocXPreprocessor;
 import fr.opensagres.xdocreport.document.docx.preprocessor.DocxContentTypesPreprocessor;
 import fr.opensagres.xdocreport.document.docx.preprocessor.DocxDocumentXMLRelsPreprocessor;
+import fr.opensagres.xdocreport.document.docx.preprocessor.DocxStylesPreprocessor;
 import fr.opensagres.xdocreport.document.docx.preprocessor.HyperlinkContentHandler;
 import fr.opensagres.xdocreport.document.docx.preprocessor.HyperlinkRegistry;
 import fr.opensagres.xdocreport.document.docx.preprocessor.HyperlinkUtils;
@@ -86,6 +87,7 @@ public class DocXReport
     @Override
     protected void registerPreprocessors()
     {
+        super.addPreprocessor( WORD_STYLES_XML_ENTRY, DocxStylesPreprocessor.INSTANCE );
         super.addPreprocessor( WORD_DOCUMENT_XML_ENTRY, DocXPreprocessor.INSTANCE );
         super.addPreprocessor( WORD_HEADER_XML_ENTRY, DocXPreprocessor.INSTANCE );
         super.addPreprocessor( WORD_FOOTER_XML_ENTRY, DocXPreprocessor.INSTANCE );

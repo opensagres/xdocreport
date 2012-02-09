@@ -26,24 +26,31 @@ package fr.opensagres.xdocreport.document.service;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
+import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
 import java.util.List;
+import java.util.logging.Logger;
 
 import fr.opensagres.xdocreport.converter.ConverterRegistry;
 import fr.opensagres.xdocreport.converter.IConverter;
 import fr.opensagres.xdocreport.converter.Options;
 import fr.opensagres.xdocreport.converter.XDocConverterException;
 import fr.opensagres.xdocreport.core.XDocReportException;
+import fr.opensagres.xdocreport.core.io.XDocArchive;
+import fr.opensagres.xdocreport.core.logging.LogUtils;
 import fr.opensagres.xdocreport.document.IXDocReport;
+import fr.opensagres.xdocreport.document.ProcessState;
 import fr.opensagres.xdocreport.document.registry.XDocReportRegistry;
 import fr.opensagres.xdocreport.template.IContext;
 import fr.opensagres.xdocreport.template.formatter.FieldsMetadata;
 
 public class XDocReportService
 {
+
+    private static final Logger LOGGER = LogUtils.getLogger( XDocReportService.class );
 
     public static final XDocReportService INSTANCE = new XDocReportService();
 
@@ -226,9 +233,38 @@ public class XDocReportService
     public byte[] download( String reportID, String processState )
         throws XDocReportException
     {
-        // TODO...
+        XDocArchive archive = null;
+        ByteArrayOutputStream out = new ByteArrayOutputStream();
 
-        return null;
+        IXDocReport report = getXDocReportRegistry().getReport( reportID );
+        if(report==null)
+              throw new XDocReportException( "report not found " +reportID);
+        if ( ProcessState.ORIGINAL.name().equalsIgnoreCase(  processState ) )
+        {
+            System.out.println(report.getOriginalDocumentArchive()+  " MMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMM");
+            archive = report.getOriginalDocumentArchive().createCopy();
+        }
+        else if ( ProcessState.PREPROCESSED.name().equalsIgnoreCase( processState ) )
+        {
+
+            archive = report.getPreprocessedDocumentArchive().createCopy();
+        }
+        else
+        {
+            throw new XDocReportException( "processState should be " + ProcessState.ORIGINAL + " or "+ ProcessState.PREPROCESSED );
+        }
+
+        try
+        {
+            XDocArchive.writeZip( archive, out );
+        }
+        catch ( IOException e )
+        {
+            LOGGER.severe( e.getMessage() );
+            throw new XDocReportException(e.getMessage());
+        }
+
+        return out.toByteArray();
     }
 
     protected XDocReportRegistry getXDocReportRegistry()

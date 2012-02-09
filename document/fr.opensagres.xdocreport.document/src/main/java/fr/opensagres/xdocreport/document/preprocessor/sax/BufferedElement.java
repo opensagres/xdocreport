@@ -41,8 +41,6 @@ public class BufferedElement
     implements IBufferedRegion
 {
 
-    public static final String KEY = "___BufferedElementMap";
-
     private final BufferedElement parent;
 
     private final String name;

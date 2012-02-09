@@ -42,10 +42,10 @@ public class ODTManifestXMLProcessor
     public static final IXDocPreprocessor INSTANCE = new ODTManifestXMLProcessor();
 
     @Override
-    protected BufferedDocumentContentHandler createBufferedDocumentContentHandler( String entryName,
-                                                                                   FieldsMetadata fieldsMetadata,
-                                                                                   IDocumentFormatter formatter,
-                                                                                   Map<String, Object> sharedContext )
+    protected BufferedDocumentContentHandler<?> createBufferedDocumentContentHandler( String entryName,
+                                                                                      FieldsMetadata fieldsMetadata,
+                                                                                      IDocumentFormatter formatter,
+                                                                                      Map<String, Object> sharedContext )
     {
         return new ODTManifestXMLDocumentContentHandler( fieldsMetadata, formatter );
     }

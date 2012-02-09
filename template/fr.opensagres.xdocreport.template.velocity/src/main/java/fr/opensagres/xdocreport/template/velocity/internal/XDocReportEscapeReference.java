@@ -29,7 +29,6 @@ import java.util.Collection;
 import org.apache.velocity.app.event.implement.EscapeXmlReference;
 import org.apache.velocity.runtime.RuntimeServices;
 
-import fr.opensagres.xdocreport.core.document.TextStylingConstants;
 import fr.opensagres.xdocreport.core.utils.StringUtils;
 import fr.opensagres.xdocreport.template.ITemplateEngine;
 import fr.opensagres.xdocreport.template.config.ReplaceText;

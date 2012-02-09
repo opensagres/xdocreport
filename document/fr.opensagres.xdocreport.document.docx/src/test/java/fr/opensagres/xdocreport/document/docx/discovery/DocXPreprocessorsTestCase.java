@@ -67,16 +67,16 @@ public class DocXPreprocessorsTestCase
                                   + "<w:p w:rsidR=\"00EB1008\" w:rsidRDefault=\"00EB1008\" w:rsidP=\"00EB1008\">"
                                   + "<w:fldSimple w:instr=\"MERGEFIELD &quot;#foreach($developer in $developers)&quot; \\* MERGEFORMAT\">"
                                   + "<w:r>" + "<w:rPr>" + "<w:noProof/>" + "</w:rPr>"
-                                  + "<w:t>�#foreach($developer in $developers)�</w:t>" + "</w:r>" + "</w:fldSimple>"
-                                  + "</w:p>"
+                                  + "<w:t>�#foreach($developer in $developers)�</w:t>" + "</w:r>"
+                                  + "</w:fldSimple>" + "</w:p>"
                                   + "<w:p w:rsidR=\"00EB1008\" w:rsidRDefault=\"00EB1008\" w:rsidP=\"00EB1008\">"
                                   + "<w:fldSimple w:instr=\"MERGEFIELD $developer.Name \\* MERGEFORMAT \">" + "<w:r>"
-                                  + "<w:rPr>" + "<w:noProof/>" + "</w:rPr>" + "<w:t>�$developer.Name�</w:t>" + "</w:r>"
-                                  + "</w:fldSimple>" + "</w:p>"
+                                  + "<w:rPr>" + "<w:noProof/>" + "</w:rPr>" + "<w:t>�$developer.Name�</w:t>"
+                                  + "</w:r>" + "</w:fldSimple>" + "</w:p>"
                                   + "<w:p w:rsidR=\"00EB1008\" w:rsidRDefault=\"00EB1008\">"
                                   + "<w:fldSimple w:instr=\"MERGEFIELD #end \\* MERGEFORMAT\">" + "<w:r>" + "<w:rPr>"
-                                  + "<w:noProof />" + "</w:rPr>" + "<w:t>�#end�</w:t>" + "</w:r>" + "</w:fldSimple>"
-                                  + "</w:p>" + "</w:document>" );
+                                  + "<w:noProof />" + "</w:rPr>" + "<w:t>�#end�</w:t>" + "</w:r>"
+                                  + "</w:fldSimple>" + "</w:p>" + "</w:document>" );
 
         StringWriter writer = new StringWriter();
         preprocessor.preprocess( "test", reader, writer, null, null, null, new HashMap<String, Object>() );

@@ -36,6 +36,7 @@ import static fr.opensagres.xdocreport.document.docx.DocXConstants.FLDSIMPLE_ELT
 import static fr.opensagres.xdocreport.document.docx.DocXConstants.HYPERLINK_ELT;
 import static fr.opensagres.xdocreport.document.docx.DocXConstants.INSTR_TEXT_ELT;
 import static fr.opensagres.xdocreport.document.docx.DocXConstants.P_ELT;
+import static fr.opensagres.xdocreport.document.docx.DocXConstants.RFONTS_ELT;
 import static fr.opensagres.xdocreport.document.docx.DocXConstants.R_ELT;
 import static fr.opensagres.xdocreport.document.docx.DocXConstants.TBL_ELT;
 import static fr.opensagres.xdocreport.document.docx.DocXConstants.TR_ELT;
@@ -228,4 +229,8 @@ public class DocxUtils
         return ( W_NS.equals( uri ) && HYPERLINK_ELT.equals( localName ) );
     }
 
+    public static boolean isRFonts( String uri, String localName, String name )
+    {
+        return W_NS.equals( uri ) && RFONTS_ELT.equals( localName );
+    }
 }

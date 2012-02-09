@@ -27,6 +27,7 @@ package fr.opensagres.xdocreport.document.pptx.preprocessor;
 import java.util.Map;
 
 import fr.opensagres.xdocreport.document.preprocessor.IXDocPreprocessor;
+import fr.opensagres.xdocreport.document.preprocessor.sax.BufferedDocumentContentHandler;
 import fr.opensagres.xdocreport.document.preprocessor.sax.SAXXDocPreprocessor;
 import fr.opensagres.xdocreport.template.formatter.FieldsMetadata;
 import fr.opensagres.xdocreport.template.formatter.IDocumentFormatter;
@@ -38,12 +39,12 @@ public class PPTXSlidePreprocessor
     public static final IXDocPreprocessor INSTANCE = new PPTXSlidePreprocessor();
 
     @Override
-    protected PPTXSlideContentHandler createBufferedDocumentContentHandler( String entryName,
-                                                                            FieldsMetadata fieldsMetadata,
-                                                                            IDocumentFormatter formater,
-                                                                            Map<String, Object> context )
+    protected BufferedDocumentContentHandler<?> createBufferedDocumentContentHandler( String entryName,
+                                                                                      FieldsMetadata fieldsMetadata,
+                                                                                      IDocumentFormatter formatter,
+                                                                                      Map<String, Object> sharedContext )
     {
-        return new PPTXSlideContentHandler( entryName, fieldsMetadata, formater, context );
+        return new PPTXSlideContentHandler( entryName, fieldsMetadata, formatter, sharedContext );
     }
 
 }

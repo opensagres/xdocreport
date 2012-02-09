@@ -42,6 +42,7 @@ import org.xml.sax.SAXException;
 import fr.opensagres.xdocreport.document.docx.images.DocxImageRegistry;
 import fr.opensagres.xdocreport.document.preprocessor.sax.BufferedDocumentContentHandler;
 import fr.opensagres.xdocreport.document.preprocessor.sax.IBufferedRegion;
+import fr.opensagres.xdocreport.template.TemplateContextHelper;
 import fr.opensagres.xdocreport.template.formatter.FieldsMetadata;
 import fr.opensagres.xdocreport.template.formatter.IDocumentFormatter;
 
@@ -170,11 +171,11 @@ public class DocxDocumentXMLRelsDocumentContentHandler
     private void generateScriptsForDynamicImages( StringBuilder script )
     {
 
-        String startIf = formatter.getStartIfDirective( IDocumentFormatter.IMAGE_REGISTRY_KEY );
+        String startIf = formatter.getStartIfDirective( TemplateContextHelper.IMAGE_REGISTRY_KEY );
         script.append( startIf );
 
         String listInfos =
-            formatter.formatAsSimpleField( false, IDocumentFormatter.IMAGE_REGISTRY_KEY, "ImageProviderInfos" );
+            formatter.formatAsSimpleField( false, TemplateContextHelper.IMAGE_REGISTRY_KEY, "ImageProviderInfos" );
         String itemListInfos = formatter.formatAsSimpleField( false, ITEM_INFO );
 
         // 1) Start loop
@@ -191,7 +192,7 @@ public class DocxDocumentXMLRelsDocumentContentHandler
         // 3) end loop
         script.append( formatter.getEndLoopDirective( itemListInfos ) );
 
-        script.append( formatter.getEndIfDirective( IDocumentFormatter.IMAGE_REGISTRY_KEY ) );
+        script.append( formatter.getEndIfDirective( TemplateContextHelper.IMAGE_REGISTRY_KEY ) );
     }
 
     private void generateScriptsForStaticHyperlinks( StringBuilder script )

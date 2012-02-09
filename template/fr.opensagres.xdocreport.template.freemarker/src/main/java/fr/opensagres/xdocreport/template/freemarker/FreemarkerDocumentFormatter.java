@@ -26,9 +26,8 @@ package fr.opensagres.xdocreport.template.freemarker;
 
 import java.util.Collection;
 
-import fr.opensagres.xdocreport.core.document.TextStylingConstants;
 import fr.opensagres.xdocreport.core.utils.StringUtils;
-import fr.opensagres.xdocreport.template.IContext;
+import fr.opensagres.xdocreport.template.TemplateContextHelper;
 import fr.opensagres.xdocreport.template.config.ITemplateEngineConfiguration;
 import fr.opensagres.xdocreport.template.config.ReplaceText;
 import fr.opensagres.xdocreport.template.formatter.AbstractDocumentFormatter;
@@ -71,15 +70,18 @@ public class FreemarkerDocumentFormatter
 
     private static final String END_IF_DIRECTIVE = "[/#if]";
 
-    private static final String START_IMAGE_DIRECTIVE = DOLLAR_TOTKEN + IMAGE_REGISTRY_KEY + ".registerImage(";
+    private static final String START_IMAGE_DIRECTIVE = DOLLAR_TOTKEN + TemplateContextHelper.IMAGE_REGISTRY_KEY
+        + ".registerImage(";
 
     private static final String END_IMAGE_DIRECTIVE = ")}";
 
-    private static final String START_IMAGE_WIDTH_DIRECTIVE = DOLLAR_TOTKEN + IMAGE_REGISTRY_KEY + ".getWidth(";
+    private static final String START_IMAGE_WIDTH_DIRECTIVE = DOLLAR_TOTKEN + TemplateContextHelper.IMAGE_REGISTRY_KEY
+        + ".getWidth(";
 
     private static final String END_IMAGE_WIDTH_DIRECTIVE = ")}";
 
-    private static final String START_IMAGE_HEIGHT_DIRECTIVE = DOLLAR_TOTKEN + IMAGE_REGISTRY_KEY + ".getHeight(";
+    private static final String START_IMAGE_HEIGHT_DIRECTIVE = DOLLAR_TOTKEN + TemplateContextHelper.IMAGE_REGISTRY_KEY
+        + ".getHeight(";
 
     private static final String END_IMAGE_HEIGHT_DIRECTIVE = ")}";
 
@@ -530,11 +532,12 @@ public class FreemarkerDocumentFormatter
         StringBuilder newContent = new StringBuilder( "[#assign " );
         newContent.append( getVariableName( variableIndex ) );
         newContent.append( "=" );
-        newContent.append( getFunctionDirective( TextStylingConstants.KEY, TextStylingConstants.TRANSFORM_METHOD,
-                                                 false, removeInterpolation( fieldName ), "\"" + syntaxKind + "\"",
+        newContent.append( getFunctionDirective( TemplateContextHelper.TEXT_STYLING_REGISTRY_KEY,
+                                                 TemplateContextHelper.TRANSFORM_METHOD, false,
+                                                 removeInterpolation( fieldName ), "\"" + syntaxKind + "\"",
                                                  syntaxWithDirective ? StringUtils.TRUE : StringUtils.FALSE, "\""
-                                                     + documentKind + "\"", "\"" + elementId + "\"", IContext.KEY, "\""
-                                                     + entryName + "\"" ) );
+                                                     + documentKind + "\"", "\"" + elementId + "\"",
+                                                 TemplateContextHelper.CONTEXT_KEY, "\"" + entryName + "\"" ) );
         newContent.append( "]" );
         return newContent.toString();
     }

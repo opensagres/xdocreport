@@ -24,9 +24,8 @@
  */
 package fr.opensagres.xdocreport.template.velocity;
 
-import fr.opensagres.xdocreport.core.document.TextStylingConstants;
 import fr.opensagres.xdocreport.core.utils.StringUtils;
-import fr.opensagres.xdocreport.template.IContext;
+import fr.opensagres.xdocreport.template.TemplateContextHelper;
 import fr.opensagres.xdocreport.template.formatter.AbstractDocumentFormatter;
 import fr.opensagres.xdocreport.template.formatter.DirectivesStack;
 import fr.opensagres.xdocreport.template.formatter.IfDirective;
@@ -61,16 +60,18 @@ public class VelocityDocumentFormatter
 
     private final static int NO_VELOCITY_FIELD = 3;
 
-    private static final String START_IMAGE_DIRECTIVE = DOLLAR_START_BRACKET + IMAGE_REGISTRY_KEY + ".registerImage(";
+    private static final String START_IMAGE_DIRECTIVE = DOLLAR_START_BRACKET + TemplateContextHelper.IMAGE_REGISTRY_KEY
+        + ".registerImage(";
 
     private static final String END_IMAGE_DIRECTIVE = ")}";
 
-    private static final String START_IMAGE_WIDTH_DIRECTIVE = DOLLAR_START_BRACKET + IMAGE_REGISTRY_KEY + ".getWidth(";
+    private static final String START_IMAGE_WIDTH_DIRECTIVE = DOLLAR_START_BRACKET
+        + TemplateContextHelper.IMAGE_REGISTRY_KEY + ".getWidth(";
 
     private static final String END_IMAGE_WIDTH_DIRECTIVE = ")}";
 
-    private static final String START_IMAGE_HEIGHT_DIRECTIVE = DOLLAR_START_BRACKET + IMAGE_REGISTRY_KEY
-        + ".getHeight(";
+    private static final String START_IMAGE_HEIGHT_DIRECTIVE = DOLLAR_START_BRACKET
+        + TemplateContextHelper.IMAGE_REGISTRY_KEY + ".getHeight(";
 
     private static final String END_IMAGE_HEIGHT_DIRECTIVE = ")}";
 
@@ -484,11 +485,12 @@ public class VelocityDocumentFormatter
         StringBuilder newContent = new StringBuilder( "#set(" );
         newContent.append( formatAsSimpleField( true, getVariableName( variableIndex ) ) );
         newContent.append( "=" );
-        newContent.append( getFunctionDirective( TextStylingConstants.KEY, TextStylingConstants.TRANSFORM_METHOD,
-                                                 fieldName, "\"" + syntaxKind + "\"",
+        newContent.append( getFunctionDirective( TemplateContextHelper.TEXT_STYLING_REGISTRY_KEY,
+                                                 TemplateContextHelper.TRANSFORM_METHOD, fieldName, "\"" + syntaxKind
+                                                     + "\"",
                                                  syntaxWithDirective ? StringUtils.TRUE : StringUtils.FALSE, "\""
-                                                     + documentKind + "\"", "\"" + elementId + "\"",
-                                                 "$" + IContext.KEY, "\"" + entryName + "\"" ) );
+                                                     + documentKind + "\"", "\"" + elementId + "\"", "$"
+                                                     + TemplateContextHelper.CONTEXT_KEY, "\"" + entryName + "\"" ) );
         newContent.append( ")" );
         return newContent.toString();
     }

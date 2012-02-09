@@ -31,6 +31,7 @@ import java.util.Map;
 import org.xml.sax.SAXException;
 
 import fr.opensagres.xdocreport.core.utils.StringUtils;
+import fr.opensagres.xdocreport.document.template.DocumentContextHelper;
 import fr.opensagres.xdocreport.template.formatter.DirectivesStack;
 import fr.opensagres.xdocreport.template.formatter.FieldMetadata;
 import fr.opensagres.xdocreport.template.formatter.FieldsMetadata;
@@ -449,7 +450,7 @@ public abstract class TransformedBufferedDocumentContentHandler<Document extends
     public String registerBufferedElement( BufferedElement element )
     {
         Map<String, BufferedElement> elements =
-            (Map<String, BufferedElement>) getSharedContext().get( BufferedElement.KEY );
+            (Map<String, BufferedElement>) getSharedContext().get( DocumentContextHelper.ELEMENTS_KEY);
         if ( element == null )
         {
             elements = new HashMap<String, BufferedElement>();

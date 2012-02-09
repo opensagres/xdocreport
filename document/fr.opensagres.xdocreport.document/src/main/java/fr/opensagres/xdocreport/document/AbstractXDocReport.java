@@ -42,7 +42,6 @@ import fr.opensagres.xdocreport.converter.IConverter;
 import fr.opensagres.xdocreport.converter.Options;
 import fr.opensagres.xdocreport.converter.XDocConverterException;
 import fr.opensagres.xdocreport.core.XDocReportException;
-import fr.opensagres.xdocreport.core.document.TextStylingConstants;
 import fr.opensagres.xdocreport.core.io.IEntryOutputStreamProvider;
 import fr.opensagres.xdocreport.core.io.IEntryReaderProvider;
 import fr.opensagres.xdocreport.core.io.IEntryWriterProvider;
@@ -54,9 +53,11 @@ import fr.opensagres.xdocreport.document.preprocessor.IXDocPreprocessor;
 import fr.opensagres.xdocreport.document.preprocessor.sax.BufferedElement;
 import fr.opensagres.xdocreport.document.registry.TextStylingRegistry;
 import fr.opensagres.xdocreport.document.registry.XDocReportRegistry;
+import fr.opensagres.xdocreport.document.template.DocumentContextHelper;
 import fr.opensagres.xdocreport.template.FieldsExtractor;
 import fr.opensagres.xdocreport.template.IContext;
 import fr.opensagres.xdocreport.template.ITemplateEngine;
+import fr.opensagres.xdocreport.template.TemplateContextHelper;
 import fr.opensagres.xdocreport.template.formatter.FieldsMetadata;
 import fr.opensagres.xdocreport.template.formatter.IDocumentFormatter;
 
@@ -76,9 +77,10 @@ public abstract class AbstractXDocReport
      */
     private Map<String, IXDocPreprocessor> preprocessors = new LinkedHashMap<String, IXDocPreprocessor>();
 
-    /**
+/**
      * id of the {@link IXDocReport}. This id is used to cache an instance of {@link IXDocReport} with
-     * {@link XDocReportRegistry#loadReport(InputStream) and get instance from cache with {
+     * {@link XDocReportRegistry#loadReport(InputStream) and get instance from cache with
+     * 
      * @link XDocReportRegistry#getReport(String)}.
      */
     private String id;
@@ -318,7 +320,7 @@ public abstract class AbstractXDocReport
         if ( fieldsMetadata != null && fieldsMetadata.getFieldsAsTextStyling().size() > 0 )
         {
             elementsCache = new HashMap<String, BufferedElement>();
-            sharedContext.put( BufferedElement.KEY, elementsCache );
+            sharedContext.put( DocumentContextHelper.ELEMENTS_KEY, elementsCache );
         }
         onBeforePreprocessing( sharedContext, preprocessedArchive );
         try
@@ -347,7 +349,8 @@ public abstract class AbstractXDocReport
                     for ( String entryNameFromWilcard : entriesNameFromWilcard )
                     {
                         preprocessor.preprocess( entryNameFromWilcard, preprocessedArchive, fieldsMetadata,
-                                                 internalGetTemplateEngine().getDocumentFormatter(), sharedContext );
+
+                        internalGetTemplateEngine().getDocumentFormatter(), sharedContext );
                     }
                 }
             }
@@ -730,32 +733,32 @@ public abstract class AbstractXDocReport
         throws XDocReportException
     {
 
-        // 1) Add text styling registry
-        context.put( TextStylingConstants.KEY, TextStylingRegistry.getRegistry() );
+        // 1) Register text styling registry
+        DocumentContextHelper.putTextStylingRegistry( context, TextStylingRegistry.getRegistry() );
 
-        // 2) Add ImageRegistry if needed
+        // 2) Register ImageRegistry if needed
         IImageRegistry imageRegistry = null;
         if ( fieldsMetadata != null && fieldsMetadata.hasFieldsAsImage() )
         {
             imageRegistry = createImageRegistry( outputArchive, outputArchive, outputArchive );
             if ( imageRegistry != null )
             {
-                context.put( IDocumentFormatter.IMAGE_REGISTRY_KEY, imageRegistry );
+                DocumentContextHelper.putImageRegistry( context, imageRegistry );
                 imageRegistry.preProcess();
             }
         }
 
-        // 3) Add context
-        context.put( IContext.KEY, context );
+        // 3) Register context
+        TemplateContextHelper.putContext( context );
 
         // 4) Add Bufferered element cache used for text styling
         if ( elementsCache != null )
         {
-            context.put( BufferedElement.KEY, elementsCache );
+            DocumentContextHelper.putElementsCache( context, elementsCache );
         }
 
-        // 5) Add template engine
-        context.put( ITemplateEngine.KEY, templateEngine );
+        // 5) Register template engine
+        TemplateContextHelper.putTemplateEngine( context, templateEngine );
     }
 
     /**
@@ -768,7 +771,7 @@ public abstract class AbstractXDocReport
     protected void onAfterProcessTemplateEngine( IContext context, XDocArchive outputArchive )
         throws XDocReportException
     {
-        IImageRegistry imageRegistry = (IImageRegistry) context.get( IDocumentFormatter.IMAGE_REGISTRY_KEY );
+        IImageRegistry imageRegistry = DocumentContextHelper.getImageRegistry( context );
         if ( imageRegistry != null )
         {
             imageRegistry.postProcess();

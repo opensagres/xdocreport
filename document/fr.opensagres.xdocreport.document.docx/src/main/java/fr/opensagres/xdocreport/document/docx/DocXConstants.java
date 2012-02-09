@@ -107,6 +107,8 @@ public class DocXConstants
 
     // hyperlink
     public static final String HYPERLINK_ELT = "hyperlink";
+    
+    public static final String RFONTS_ELT = "rFonts";    
 
     public static final String ID_ATTR = "id";
 

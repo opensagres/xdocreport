@@ -30,6 +30,7 @@ import org.xml.sax.SAXException;
 
 import fr.opensagres.xdocreport.document.preprocessor.sax.BufferedDocument;
 import fr.opensagres.xdocreport.document.preprocessor.sax.BufferedDocumentContentHandler;
+import fr.opensagres.xdocreport.template.TemplateContextHelper;
 import fr.opensagres.xdocreport.template.formatter.FieldsMetadata;
 import fr.opensagres.xdocreport.template.formatter.IDocumentFormatter;
 
@@ -54,13 +55,13 @@ public class ODTManifestXMLDocumentContentHandler
         {
             StringBuilder script = new StringBuilder();
 
-            String startIf = formatter.getStartIfDirective( IDocumentFormatter.IMAGE_REGISTRY_KEY );
+            String startIf = formatter.getStartIfDirective( TemplateContextHelper.IMAGE_REGISTRY_KEY );
             script.append( startIf );
 
             // 1) Generate script for dynamic images
             generateScriptsForDynamicImages( script );
 
-            script.append( formatter.getEndIfDirective( IDocumentFormatter.IMAGE_REGISTRY_KEY ) );
+            script.append( formatter.getEndIfDirective( TemplateContextHelper.IMAGE_REGISTRY_KEY ) );
 
             getCurrentElement().append( script.toString() );
 
@@ -72,7 +73,7 @@ public class ODTManifestXMLDocumentContentHandler
     {
 
         String listInfos =
-            formatter.formatAsSimpleField( false, IDocumentFormatter.IMAGE_REGISTRY_KEY, "ImageProviderInfos" );
+            formatter.formatAsSimpleField( false, TemplateContextHelper.IMAGE_REGISTRY_KEY, "ImageProviderInfos" );
         String itemListInfos = formatter.formatAsSimpleField( false, ITEM_INFO );
 
         String startLoop = formatter.getStartLoopDirective( itemListInfos, listInfos );

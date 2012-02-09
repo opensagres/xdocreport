@@ -27,8 +27,6 @@ package fr.opensagres.xdocreport.template.formatter;
 public interface IDocumentFormatter
 {
 
-    String IMAGE_REGISTRY_KEY = "imageRegistry";
-
     String getStartDocumentDirective();
 
     String getEndDocumentDirective();

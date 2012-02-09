@@ -96,8 +96,8 @@ public interface IXDocReport
 
     /**
      * Returns the id of the {@link IXDocReport}. This id is used to cache an instance of {@link IXDocReport} with
-     * {@link XDocReportRegistry#loadReport(InputStream) and get instance from cache with
-     * {@link XDocReportRegistry#getReport(String)}.
+     * {@link XDocReportRegistry#loadReport(InputStream) and get instance from cache with {
+     * @link XDocReportRegistry#getReport(String)}.
      * 
      * @return the id of the {@link IXDocReport}
      */
@@ -105,8 +105,8 @@ public interface IXDocReport
 
     /**
      * Set the id of the {@link IXDocReport}. This id is used to cache an instance of {@link IXDocReport} with
-     * {@link XDocReportRegistry#loadReport(InputStream) and get instance from cache with
-     * {@link XDocReportRegistry#getReport(String)}.
+     * {@link XDocReportRegistry#loadReport(InputStream) and get instance from cache with {
+     * @link XDocReportRegistry#getReport(String)}.
      * 
      * @param id of the {@link IXDocReport}
      */
@@ -313,4 +313,5 @@ public interface IXDocReport
      * @return
      */
     FieldsMetadata createFieldsMetadata();
+
 }

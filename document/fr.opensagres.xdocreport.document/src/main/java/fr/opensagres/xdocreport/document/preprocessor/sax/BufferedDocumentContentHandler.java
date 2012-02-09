@@ -105,6 +105,9 @@ public class BufferedDocumentContentHandler<Document extends BufferedDocument>
             flushCharacters( currentCharacters.toString() );
             resetCharacters();
         }
+
+        attributes = processAttributes( uri, localName, name, attributes );
+
         BufferedElement element = null;
         try
         {
@@ -118,6 +121,20 @@ public class BufferedDocumentContentHandler<Document extends BufferedDocument>
             // End of start element
             bufferedDocument.onEndStartElement( element, uri, localName, name, attributes );
         }
+    }
+
+    /**
+     * Modify attribute if needed.
+     * 
+     * @param uri
+     * @param localName
+     * @param name
+     * @param attributes
+     * @return
+     */
+    protected Attributes processAttributes( String uri, String localName, String name, Attributes attributes )
+    {
+        return attributes;
     }
 
     public BufferedElement getCurrentElement()

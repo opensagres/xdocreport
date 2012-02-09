@@ -66,8 +66,6 @@ public class ODTBufferedDocumentContentHandler
 
     private boolean textInputParsing = false;
 
-    private int variableIndex = 0;
-
     protected final IODTStylesGenerator styleGen;
 
     public ODTBufferedDocumentContentHandler( String entryName, FieldsMetadata fieldsMetadata,

@@ -60,6 +60,7 @@ import fr.opensagres.xdocreport.document.docx.preprocessor.HyperlinkContentHandl
 import fr.opensagres.xdocreport.document.docx.preprocessor.HyperlinkRegistry;
 import fr.opensagres.xdocreport.document.docx.preprocessor.HyperlinkUtils;
 import fr.opensagres.xdocreport.document.docx.preprocessor.InitialHyperlinkMap;
+import fr.opensagres.xdocreport.document.docx.template.DocxContextHelper;
 import fr.opensagres.xdocreport.document.images.IImageRegistry;
 import fr.opensagres.xdocreport.template.IContext;
 
@@ -93,6 +94,11 @@ public class DocXReport
         super.addPreprocessor( WORD_FOOTER_XML_ENTRY, DocXPreprocessor.INSTANCE );
         super.addPreprocessor( CONTENT_TYPES_XML_ENTRY, DocxContentTypesPreprocessor.INSTANCE );
         super.addPreprocessor( WORD_RELS_XMLRELS_XML_ENTRY, DocxDocumentXMLRelsPreprocessor.INSTANCE );
+        
+        // Attributes preprocessor
+//        super.addAttributePreprocessor( WORD_DOCUMENT_XML_ENTRY, FontAttributePreprocessor.INSTANCE );
+//        super.addAttributePreprocessor( WORD_HEADER_XML_ENTRY, FontAttributePreprocessor.INSTANCE );
+//        super.addAttributePreprocessor( WORD_FOOTER_XML_ENTRY, FontAttributePreprocessor.INSTANCE );
     }
 
     @Override
@@ -189,7 +195,7 @@ public class DocXReport
         {
             // docx has dynamic hyperlink, put an instance of HyperlinkRegistry
             // in the context.
-            context.put( HyperlinkUtils.getHyperlinkRegistryKey( entryName ), new HyperlinkRegistry() );
+            DocxContextHelper.putHyperlinkRegistry( context, entryName, new HyperlinkRegistry()  );
         }
     }
 

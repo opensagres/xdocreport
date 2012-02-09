@@ -32,6 +32,7 @@ import java.util.Map;
 import fr.opensagres.xdocreport.core.registry.AbstractRegistry;
 import fr.opensagres.xdocreport.document.discovery.ITextStylingDocumentHandlerFactoryDiscovery;
 import fr.opensagres.xdocreport.document.preprocessor.sax.BufferedElement;
+import fr.opensagres.xdocreport.document.template.DocumentContextHelper;
 import fr.opensagres.xdocreport.document.textstyling.BasicTransformResult;
 import fr.opensagres.xdocreport.document.textstyling.IDocumentHandler;
 import fr.opensagres.xdocreport.document.textstyling.ITextStylingTransformer;
@@ -39,6 +40,7 @@ import fr.opensagres.xdocreport.document.textstyling.ITransformResult;
 import fr.opensagres.xdocreport.document.textstyling.TextStylingTransformerRegistry;
 import fr.opensagres.xdocreport.template.IContext;
 import fr.opensagres.xdocreport.template.ITemplateEngine;
+import fr.opensagres.xdocreport.template.TemplateContextHelper;
 
 /**
  * Text styling registry to register {@link IDocumentHandler} and transform some content from syntax (HTML, MediaWiki,
@@ -102,7 +104,7 @@ public class TextStylingRegistry
                 {
                     // the content contains some directive (${name} which must be replaced)
                     // Apply template engine to this content.
-                    ITemplateEngine templateEngine = (ITemplateEngine) context.get( ITemplateEngine.KEY );
+                    ITemplateEngine templateEngine = TemplateContextHelper.getTemplateEngine( context );
                     if ( templateEngine != null )
                     {
                         StringWriter newContent = new StringWriter();
@@ -144,12 +146,7 @@ public class TextStylingRegistry
         }
 
         // Get the parent buffered element
-        BufferedElement parent = null;
-        Map<String, BufferedElement> elements = (Map<String, BufferedElement>) context.get( BufferedElement.KEY );
-        if ( elements != null )
-        {
-            parent = elements.get( elementId );
-        }
+        BufferedElement parent = DocumentContextHelper.getElementById( context, elementId );
         return factory.createDocumentHandler( parent, context, entryName );
     }
 

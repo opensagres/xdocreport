@@ -47,6 +47,7 @@ public class ODTStyleContentHandler
 {
 
     private static final String STYLES_ELT = "styles";
+
     private static final String STYLE_ELT = "style";
 
     protected List<Integer> existingStyles = new ArrayList<Integer>();

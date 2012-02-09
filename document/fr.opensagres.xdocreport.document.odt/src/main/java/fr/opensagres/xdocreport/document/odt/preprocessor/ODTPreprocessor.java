@@ -43,10 +43,10 @@ public class ODTPreprocessor
     public static final IXDocPreprocessor INSTANCE = new ODTPreprocessor();
 
     @Override
-    protected BufferedDocumentContentHandler createBufferedDocumentContentHandler( String entryName,
-                                                                                   FieldsMetadata fieldsMetadata,
-                                                                                   IDocumentFormatter formatter,
-                                                                                   Map<String, Object> sharedContext )
+    protected BufferedDocumentContentHandler<?> createBufferedDocumentContentHandler( String entryName,
+                                                                                      FieldsMetadata fieldsMetadata,
+                                                                                      IDocumentFormatter formatter,
+                                                                                      Map<String, Object> sharedContext )
     {
         return new ODTBufferedDocumentContentHandler( entryName, fieldsMetadata, formatter, sharedContext );
     }

@@ -31,6 +31,7 @@ import org.junit.Test;
 import fr.opensagres.xdocreport.document.docx.preprocessor.HyperlinkInfo;
 import fr.opensagres.xdocreport.document.docx.preprocessor.HyperlinkRegistry;
 import fr.opensagres.xdocreport.document.docx.preprocessor.HyperlinkUtils;
+import fr.opensagres.xdocreport.document.docx.template.DocxContextHelper;
 import fr.opensagres.xdocreport.document.preprocessor.sax.BufferedElement;
 import fr.opensagres.xdocreport.document.textstyling.IDocumentHandler;
 import fr.opensagres.xdocreport.document.textstyling.ITextStylingTransformer;
@@ -109,8 +110,7 @@ public class DocxDocumentHandlerTestCase
         Assert.assertEquals( "<w:hyperlink r:id=\"___rId0\" w:history=\"1\"> <w:proofErr w:type=\"spellStart\" /><w:r w:rsidRPr=\"001D30B5\"><w:rPr><w:rStyle w:val=\"XDocReport_Hyperlink\" /></w:rPr><w:t>XDocReport</w:t></w:r><w:proofErr w:type=\"spellEnd\" /></w:hyperlink>",
                              handler.getTextBody() );
 
-        String key = HyperlinkUtils.getHyperlinkRegistryKey( "word/document.xml" );
-        HyperlinkRegistry registry = (HyperlinkRegistry) context.get( key );
+        HyperlinkRegistry registry = DocxContextHelper.getHyperlinkRegistry( context, "word/document.xml" );
         Assert.assertNotNull( registry );
         Assert.assertEquals( 1, registry.getHyperlinks().size() );
 

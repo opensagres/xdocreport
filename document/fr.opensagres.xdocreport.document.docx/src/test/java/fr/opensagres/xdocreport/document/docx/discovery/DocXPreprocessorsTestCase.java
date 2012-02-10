@@ -48,7 +48,7 @@ public class DocXPreprocessorsTestCase
                 + "<w:fldSimple w:instr=\" MERGEFIELD  ${name} \">" + "<w:r w:rsidR=\"00396432\">"
                 + "<w:rPr><w:noProof/></w:rPr><w:t>�${name}�</w:t></w:r>" + "</w:fldSimple>" + "</w:document>" );
         StringWriter writer = new StringWriter();
-        preprocessor.preprocess( "test", reader, writer, null, null, null, new HashMap<String, Object>() );
+        preprocessor.preprocess( "test", reader, writer, null, null, new HashMap<String, Object>() );
         assertEquals( "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>"
                           + "<w:document xmlns:w=\"http://schemas.openxmlformats.org/wordprocessingml/2006/main\">"
                           + "<w:r w:rsidR=\"00396432\">" + "<w:rPr><w:noProof/></w:rPr><w:t>${name}</w:t></w:r>"
@@ -79,7 +79,7 @@ public class DocXPreprocessorsTestCase
                                   + "</w:fldSimple>" + "</w:p>" + "</w:document>" );
 
         StringWriter writer = new StringWriter();
-        preprocessor.preprocess( "test", reader, writer, null, null, null, new HashMap<String, Object>() );
+        preprocessor.preprocess( "test", reader, writer, null, null, new HashMap<String, Object>() );
         assertEquals( "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>"
             + "<w:document xmlns:w=\"http://schemas.openxmlformats.org/wordprocessingml/2006/main\">"
             + "<w:p w:rsidR=\"00EB1008\" w:rsidRDefault=\"00EB1008\" w:rsidP=\"00EB1008\">" + "<w:r>" + "<w:rPr>"

@@ -77,6 +77,8 @@ public class VelocityDocumentFormatter
 
     private static final String START_IF_DIRECTIVE = "#if(";
 
+    private static final String ELSE_DIRECTIVE = "#else";
+    
     private static final String END_IF_DIRECTIVE = "#end";
 
     private static final String VELOCITY_COUNT = "$velocityCount";
@@ -122,6 +124,11 @@ public class VelocityDocumentFormatter
     public String getEndLoopDirective( String itemNameList )
     {
         return END_FOREACH_DIRECTIVE;
+    }
+    
+    public String getElseDirective()
+    {
+        return ELSE_DIRECTIVE;
     }
 
     @Override

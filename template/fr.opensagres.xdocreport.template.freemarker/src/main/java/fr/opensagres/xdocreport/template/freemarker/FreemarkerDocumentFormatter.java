@@ -68,6 +68,8 @@ public class FreemarkerDocumentFormatter
 
     private static final String START_IF_DIRECTIVE = "[#if ";
 
+    private static final String ELSE_DIRECTIVE = "[#else]";
+    
     private static final String END_IF_DIRECTIVE = "[/#if]";
 
     private static final String START_IMAGE_DIRECTIVE = DOLLAR_TOTKEN + TemplateContextHelper.IMAGE_REGISTRY_KEY
@@ -126,6 +128,11 @@ public class FreemarkerDocumentFormatter
     public String getEndLoopDirective( String itemNameList )
     {
         return END_LIST_DIRECTIVE;
+    }
+    
+    public String getElseDirective()
+    {
+        return ELSE_DIRECTIVE;
     }
 
     protected boolean isModelField( String content, String fieldName )

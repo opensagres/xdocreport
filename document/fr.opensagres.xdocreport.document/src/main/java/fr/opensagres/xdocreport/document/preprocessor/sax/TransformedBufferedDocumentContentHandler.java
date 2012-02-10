@@ -28,6 +28,7 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
 
 import fr.opensagres.xdocreport.core.utils.StringUtils;
@@ -62,6 +63,8 @@ public abstract class TransformedBufferedDocumentContentHandler<Document extends
 
     private final String entryName;
 
+    private boolean hasStartDirective;
+
     protected TransformedBufferedDocumentContentHandler( String entryName, FieldsMetadata fieldsMetadata,
                                                          IDocumentFormatter formater, Map<String, Object> sharedContext )
     {
@@ -71,30 +74,33 @@ public abstract class TransformedBufferedDocumentContentHandler<Document extends
         this.directives = new DirectivesStack();
         this.variableIndex = 0;
         this.entryName = entryName;
+        this.hasStartDirective = false;
     }
 
     @Override
-    public void startDocument()
+    public boolean doStartElement( String uri, String localName, String name, Attributes attributes )
         throws SAXException
     {
-        String directive = formatter != null ? formatter.getStartDocumentDirective() : null;
-        if ( StringUtils.isNotEmpty( directive ) )
+        if ( getElementIndex() == 0 )
         {
-            this.bufferedDocument.append( directive );
+            // end directive (ex: for FM [/#escape])
+            String endDirective = formatter != null ? formatter.getEndDocumentDirective() : null;
+            if ( StringUtils.isNotEmpty( endDirective ) )
+            {
+                this.getCurrentElement().getEndTagElement().setBefore( endDirective );
+            }
         }
-        super.startDocument();
-    }
-
-    @Override
-    public void endDocument()
-        throws SAXException
-    {
-        String directive = formatter != null ? formatter.getEndDocumentDirective() : null;
-        if ( StringUtils.isNotEmpty( directive ) )
+        else if ( getElementIndex() == 1 && !hasStartDirective )
         {
-            this.bufferedDocument.append( directive );
+            hasStartDirective = true;
+            // start directive (ex:for FM [#escape any as any?xml?replace("","<text:line-break />")])
+            String startDirective = formatter != null ? formatter.getStartDocumentDirective() : null;
+            if ( StringUtils.isNotEmpty( startDirective ) )
+            {
+                this.getCurrentElement().getStartTagElement().setBefore( startDirective );
+            }
         }
-        super.endDocument();
+        return super.doStartElement( uri, localName, name, attributes );
     }
 
     @Override
@@ -412,6 +418,10 @@ public abstract class TransformedBufferedDocumentContentHandler<Document extends
     public void doEndElement( String uri, String localName, String name )
         throws SAXException
     {
+        if ( getElementIndex() == 0 )
+        {
+
+        }
         // remove list directive if needed
         if ( isTable( uri, localName, name ) )
         {
@@ -450,7 +460,7 @@ public abstract class TransformedBufferedDocumentContentHandler<Document extends
     public String registerBufferedElement( BufferedElement element )
     {
         Map<String, BufferedElement> elements =
-            (Map<String, BufferedElement>) getSharedContext().get( DocumentContextHelper.ELEMENTS_KEY);
+            (Map<String, BufferedElement>) getSharedContext().get( DocumentContextHelper.ELEMENTS_KEY );
         if ( element == null )
         {
             elements = new HashMap<String, BufferedElement>();

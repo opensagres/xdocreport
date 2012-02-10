@@ -57,7 +57,7 @@ public class DocxPreprocessorMergefieldWithConditionTestCase
                                   + "</w:fldSimple>" + "</w:document>" );
 
         StringWriter writer = new StringWriter();
-        preprocessor.preprocess( "test", reader, writer, null, null, null, null );
+        preprocessor.preprocess( "test", reader, writer, null, null, null );
 
         assertEquals( "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>" + "<w:document "
             + "xmlns:ve=\"http://schemas.openxmlformats.org/markup-compatibility/2006\" "
@@ -117,7 +117,7 @@ public class DocxPreprocessorMergefieldWithConditionTestCase
                                   + "<w:fldChar w:fldCharType=\"end\"/>" + "</w:r>" + "</w:p>" + "</w:document>" );
 
         StringWriter writer = new StringWriter();
-        preprocessor.preprocess( "test", reader, writer, null, null, null, null );
+        preprocessor.preprocess( "test", reader, writer, null, null, null );
 
         assertEquals( "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>" + "<w:document "
             + "xmlns:ve=\"http://schemas.openxmlformats.org/markup-compatibility/2006\" "
@@ -192,7 +192,7 @@ public class DocxPreprocessorMergefieldWithConditionTestCase
                                   + "<w:fldChar w:fldCharType=\"end\"/>" + "</w:r>" + "</w:p>" + "</w:document>" );
 
         StringWriter writer = new StringWriter();
-        preprocessor.preprocess( "test", reader, writer, null, null, null, null );
+        preprocessor.preprocess( "test", reader, writer, null, null, null );
 
         assertEquals( "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>" + "<w:document "
             + "xmlns:ve=\"http://schemas.openxmlformats.org/markup-compatibility/2006\" "

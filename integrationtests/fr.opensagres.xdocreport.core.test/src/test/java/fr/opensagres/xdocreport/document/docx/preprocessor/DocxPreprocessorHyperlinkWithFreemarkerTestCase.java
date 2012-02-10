@@ -79,7 +79,7 @@ public class DocxPreprocessorHyperlinkWithFreemarkerTestCase
         // metadata.addFieldAsList("developers.mail");
         IDocumentFormatter formatter = new FreemarkerDocumentFormatter();
 
-        preprocessor.preprocess( "test", reader, writer, null, metadata, formatter, new HashMap<String, Object>() );
+        preprocessor.preprocess( "test", reader, writer, metadata, formatter, new HashMap<String, Object>() );
 
         assertEquals( "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>" + "<w:document "
             + "xmlns:ve=\"http://schemas.openxmlformats.org/markup-compatibility/2006\" "
@@ -133,7 +133,7 @@ public class DocxPreprocessorHyperlinkWithFreemarkerTestCase
         hyperlinkMap.put( "rId5", new HyperlinkInfo( "rId5", "${x}", "External" ) );
         sharedContext.put( HyperlinkUtils.getHyperlinkRegistryKey( entryName ), hyperlinkMap );
 
-        preprocessor.preprocess( entryName, reader, writer, null, metadata, formatter, sharedContext );
+        preprocessor.preprocess( entryName, reader, writer, metadata, formatter, sharedContext );
 
         assertEquals( "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>"
                           + "<w:document "

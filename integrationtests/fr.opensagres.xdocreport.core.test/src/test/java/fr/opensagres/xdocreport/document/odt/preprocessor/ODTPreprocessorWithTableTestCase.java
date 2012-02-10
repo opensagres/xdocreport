@@ -56,7 +56,7 @@ public class ODTPreprocessorWithTableTestCase
         StringReader reader = new StringReader( TABLE_INSIDE_ROW );
         StringWriter writer = new StringWriter();
 
-        preprocessor.preprocess( "test", reader, writer, null, null, null, null );
+        preprocessor.preprocess( "test", reader, writer, null, null, null );
 
         assertEquals( TABLE_INSIDE_ROW, writer.toString() );
     }

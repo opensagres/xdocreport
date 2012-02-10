@@ -96,18 +96,18 @@ public interface IXDocReport
 
     /**
      * Returns the id of the {@link IXDocReport}. This id is used to cache an instance of {@link IXDocReport} with
-     * {@link XDocReportRegistry#loadReport(InputStream) and get instance from cache with {
-     * @link XDocReportRegistry#getReport(String)}.
+     * {@link XDocReportRegistry#loadReport(InputStream) and get instance from cache with
      * 
+     * @link XDocReportRegistry#getReport(String)}.
      * @return the id of the {@link IXDocReport}
      */
     String getId();
 
     /**
      * Set the id of the {@link IXDocReport}. This id is used to cache an instance of {@link IXDocReport} with
-     * {@link XDocReportRegistry#loadReport(InputStream) and get instance from cache with {
-     * @link XDocReportRegistry#getReport(String)}.
+     * {@link XDocReportRegistry#loadReport(InputStream) and get instance from cache with
      * 
+     * @link XDocReportRegistry#getReport(String)}.
      * @param id of the {@link IXDocReport}
      */
     void setId( String id );
@@ -314,4 +314,23 @@ public interface IXDocReport
      */
     FieldsMetadata createFieldsMetadata();
 
+    /**
+     * Register a processor for the entry name.
+     * 
+     * @param entryName
+     * @param preprocessor
+     */
+    void addPreprocessor( String entryName, IXDocPreprocessor preprocessor );
+
+    /**
+     * Remove processor for the entry name.
+     * 
+     * @param entryName
+     */
+    void removePreprocessor( String entryName );
+
+    /**
+     * Clear processor.
+     */
+    void removeAllPreprocessors();
 }

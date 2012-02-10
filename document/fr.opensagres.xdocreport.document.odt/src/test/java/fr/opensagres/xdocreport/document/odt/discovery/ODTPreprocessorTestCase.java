@@ -44,7 +44,7 @@ public class ODTPreprocessorTestCase
                 + " xmlns:text=\"urn:oasis:names:tc:opendocument:xmlns:text:1.0\">"
                 + "<text:text-input>$name</text:text-input>" + "</office:document-content>" );
         StringWriter writer = new StringWriter();
-        preprocessor.preprocess( "test", reader, writer, null, null, null, null );
+        preprocessor.preprocess( "test", reader, writer, null, null, null );
         assertEquals( "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>"
             + "<office:document-content xmlns:office=\"urn:oasis:names:tc:opendocument:xmlns:office:1.0\""
             + " xmlns:text=\"urn:oasis:names:tc:opendocument:xmlns:text:1.0\">" + "$name"

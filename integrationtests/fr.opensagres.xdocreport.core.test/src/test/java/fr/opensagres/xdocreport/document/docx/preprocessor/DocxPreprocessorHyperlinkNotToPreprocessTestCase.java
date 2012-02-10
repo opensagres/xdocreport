@@ -73,7 +73,7 @@ public class DocxPreprocessorHyperlinkNotToPreprocessTestCase
 
         StringWriter writer = new StringWriter();
 
-        preprocessor.preprocess( "test", reader, writer, null, null, null, null );
+        preprocessor.preprocess( "test", reader, writer, null, null, null );
 
         assertEquals( HYPERLINK_XML, writer.toString() );
     }

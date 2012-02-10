@@ -27,7 +27,6 @@ package fr.opensagres.xdocreport.document.preprocessor;
 import static fr.opensagres.xdocreport.core.utils.XMLUtils.prettyPrint;
 
 import java.io.IOException;
-import java.io.Reader;
 import java.io.StringWriter;
 import java.io.Writer;
 import java.util.Map;
@@ -46,7 +45,7 @@ import fr.opensagres.xdocreport.template.formatter.IDocumentFormatter;
 /**
  * Abstract class for {@link IXDocPreprocessor}.
  */
-public abstract class AbstractXDocPreprocessor
+public abstract class AbstractXDocPreprocessor<T>
     implements IXDocPreprocessor
 {
 
@@ -74,18 +73,18 @@ public abstract class AbstractXDocPreprocessor
         }
 
         // 2) Do preprocess
-        Reader reader = null;
+        T reader = null;
         Writer writer = null;
         boolean result = false;
         try
         {
             // Get reader + writer for the entry name.
-            reader = documentArchive.getEntryReader( entryName );
+            reader = getSource( documentArchive, entryName );
             writer = getWriter( entryName, documentArchive );
 
             // Do preprocess which use reader and store the result of preprocess
             // in the writer.
-            result = preprocess( entryName, reader, writer, null, fieldsMetadata, formater, sharedContext );
+            result = preprocess( entryName, reader, writer, fieldsMetadata, formater, sharedContext );
 
             if ( LOGGER.isLoggable( Level.FINE ) )
             {
@@ -120,10 +119,7 @@ public abstract class AbstractXDocPreprocessor
         finally
         {
             // Close reader + writer
-            if ( reader != null )
-            {
-                IOUtils.closeQuietly( reader );
-            }
+            closeSource( reader );
             if ( writer != null )
             {
                 if ( result )
@@ -140,6 +136,9 @@ public abstract class AbstractXDocPreprocessor
 
     }
 
+    protected abstract void closeSource( T reader )
+        throws XDocReportException, IOException;
+
     private Writer getWriter( String entryName, XDocArchive documentArchive )
     {
 
@@ -150,9 +149,10 @@ public abstract class AbstractXDocPreprocessor
         return documentArchive.getEntryWriter( entryName );
     }
 
-    public abstract boolean preprocess( String entryName, Reader reader, Writer writer, Writer debugWriter,
-                                        FieldsMetadata fieldsMetadata, IDocumentFormatter formater,
-                                        Map<String, Object> context )
+    public abstract boolean preprocess( String entryName, T reader, Writer writer, FieldsMetadata fieldsMetadata,
+                                        IDocumentFormatter formater, Map<String, Object> context )
         throws XDocReportException, IOException;
 
+    protected abstract T getSource( XDocArchive documentArchive, String entryName )
+        throws XDocReportException, IOException;
 }

@@ -60,7 +60,7 @@ public class ODTPreprocessorImageWithVelocityTestCase
         FieldsMetadata metadata = null;
         IDocumentFormatter formatter = new VelocityDocumentFormatter();
 
-        preprocessor.preprocess( "test", reader, writer, null, metadata, formatter, null );
+        preprocessor.preprocess( "test", reader, writer, metadata, formatter, null );
 
         assertEquals( LOGO_IMAGE_XML, writer.toString() );
     }
@@ -76,7 +76,7 @@ public class ODTPreprocessorImageWithVelocityTestCase
         metadata.addFieldAsImage( "XXX" );
         IDocumentFormatter formatter = new VelocityDocumentFormatter();
 
-        preprocessor.preprocess( "test", reader, writer, null, metadata, formatter, null );
+        preprocessor.preprocess( "test", reader, writer, metadata, formatter, null );
 
         assertEquals( LOGO_IMAGE_XML, writer.toString() );
     }
@@ -92,7 +92,7 @@ public class ODTPreprocessorImageWithVelocityTestCase
         metadata.addFieldAsImage( "logo" );
         IDocumentFormatter formatter = new VelocityDocumentFormatter();
 
-        preprocessor.preprocess( "test", reader, writer, null, metadata, formatter, null );
+        preprocessor.preprocess( "test", reader, writer, metadata, formatter, null );
 
         assertEquals( "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>"
                           + "<office:document-content xmlns:office=\"urn:oasis:names:tc:opendocument:xmlns:office:1.0\" "
@@ -176,7 +176,7 @@ public class ODTPreprocessorImageWithVelocityTestCase
         metadata.addFieldAsImage( "developers.Photo" );
         IDocumentFormatter formatter = new VelocityDocumentFormatter();
 
-        preprocessor.preprocess( "test", reader, writer, null, metadata, formatter, null );
+        preprocessor.preprocess( "test", reader, writer, metadata, formatter, null );
 
         assertEquals( "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>"
             + "<office:document-content xmlns:office=\"urn:oasis:names:tc:opendocument:xmlns:office:1.0\" "

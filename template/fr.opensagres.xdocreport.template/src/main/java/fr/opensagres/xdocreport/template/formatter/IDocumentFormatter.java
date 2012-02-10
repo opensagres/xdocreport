@@ -73,4 +73,6 @@ public interface IDocumentFormatter
                                     boolean syntaxWithDirective, String elementId, String entryName );
 
     String formatAsTextStylingField( long variableIndex, String textBeforeProperty );
+
+    String getElseDirective();
 }

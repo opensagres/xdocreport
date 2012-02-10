@@ -111,7 +111,7 @@ public class DocxPreprocessorStartStopRowTestCase
 
         StringWriter writer = new StringWriter();
 
-        preprocessor.preprocess( "test", reader, writer, null, null, null, new HashMap<String, Object>() );
+        preprocessor.preprocess( "test", reader, writer, null, null, new HashMap<String, Object>() );
 
         assertEquals( "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>" + "<w:document "
             + "xmlns:ve=\"http://schemas.openxmlformats.org/markup-compatibility/2006\" "
@@ -163,7 +163,7 @@ public class DocxPreprocessorStartStopRowTestCase
 
         StringWriter writer = new StringWriter();
 
-        preprocessor.preprocess( "test", reader, writer, null, null, null, new HashMap<String, Object>() );
+        preprocessor.preprocess( "test", reader, writer, null, null, new HashMap<String, Object>() );
 
         assertEquals( "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>" + "<w:document "
             + "xmlns:ve=\"http://schemas.openxmlformats.org/markup-compatibility/2006\" "

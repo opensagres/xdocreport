@@ -40,7 +40,7 @@ public class SAXXDocPreprocessorTestCase
         StringReader reader =
             new StringReader( "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?><p>&lt;</p>" );
         StringWriter writer = new StringWriter();
-        preprocessor.preprocess( "test", reader, writer, null, null, null, null );
+        preprocessor.preprocess( "test", reader, writer, null, null, null );
         assertEquals( "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?><p>&lt;</p>", writer.toString() );
     }
 
@@ -52,7 +52,7 @@ public class SAXXDocPreprocessorTestCase
             new StringReader(
                               "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?><p>It&apos;s a document <span>to test</span></p>" );
         StringWriter writer = new StringWriter();
-        preprocessor.preprocess( "test", reader, writer, null, null, null, null );
+        preprocessor.preprocess( "test", reader, writer, null, null, null );
         assertEquals( "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?><p>It&apos;s a document <span>to test</span></p>",
                       writer.toString() );
     }
@@ -64,7 +64,7 @@ public class SAXXDocPreprocessorTestCase
         StringReader reader =
             new StringReader( "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?><p>a&amp;b</p>" );
         StringWriter writer = new StringWriter();
-        preprocessor.preprocess( "test", reader, writer, null, null, null, null );
+        preprocessor.preprocess( "test", reader, writer, null, null, null );
         assertEquals( "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?><p>a&amp;b</p>", writer.toString() );
     }
 
@@ -75,7 +75,7 @@ public class SAXXDocPreprocessorTestCase
         StringReader reader =
             new StringReader( "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?><a>aaa</a>" );
         StringWriter writer = new StringWriter();
-        preprocessor.preprocess( "test", reader, writer, null, null, null, null );
+        preprocessor.preprocess( "test", reader, writer, null, null, null );
         assertEquals( "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?><a>aaa</a>", writer.toString() );
     }
 
@@ -85,7 +85,7 @@ public class SAXXDocPreprocessorTestCase
         MockSAXXDocPreprocessor preprocessor = new MockSAXXDocPreprocessor();
         StringReader reader = new StringReader( "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?><a/>" );
         StringWriter writer = new StringWriter();
-        preprocessor.preprocess( "test", reader, writer, null, null, null, null );
+        preprocessor.preprocess( "test", reader, writer, null, null, null );
         assertEquals( "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?><a/>", writer.toString() );
     }
 
@@ -97,7 +97,7 @@ public class SAXXDocPreprocessorTestCase
             new StringReader(
                               "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?><root><a><b/></a><c>vvvvv<d/>jjjj</c></root>" );
         StringWriter writer = new StringWriter();
-        preprocessor.preprocess( "test", reader, writer, null, null, null, null );
+        preprocessor.preprocess( "test", reader, writer, null, null, null );
         assertEquals( "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?><root><a><b/></a><c>vvvvv<d/>jjjj</c></root>",
                       writer.toString() );
     }
@@ -110,7 +110,7 @@ public class SAXXDocPreprocessorTestCase
             new StringReader(
                               "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?><root><p><span>Name</span>:<span>$d.Name</span></p></root>" );
         StringWriter writer = new StringWriter();
-        preprocessor.preprocess( "test", reader, writer, null, null, null, null );
+        preprocessor.preprocess( "test", reader, writer, null, null, null );
         assertEquals( "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?><root><p><span>Name</span>:<span>$d.Name</span></p></root>",
                       writer.toString() );
     }
@@ -122,7 +122,7 @@ public class SAXXDocPreprocessorTestCase
         StringReader reader =
             new StringReader( "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?><root attr=\"a&amp;b\"/>" );
         StringWriter writer = new StringWriter();
-        preprocessor.preprocess( "test", reader, writer, null, null, null, null );
+        preprocessor.preprocess( "test", reader, writer, null, null, null );
         assertEquals( "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?><root attr=\"a&amp;b\"/>",
                       writer.toString() );
     }

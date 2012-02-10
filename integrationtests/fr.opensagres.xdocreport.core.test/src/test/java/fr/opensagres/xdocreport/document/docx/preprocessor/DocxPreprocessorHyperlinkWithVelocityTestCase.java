@@ -79,7 +79,7 @@ public class DocxPreprocessorHyperlinkWithVelocityTestCase
         // metadata.addFieldAsList("developers.Mail");
         IDocumentFormatter formatter = new VelocityDocumentFormatter();
 
-        preprocessor.preprocess( "test", reader, writer, null, metadata, formatter, null );
+        preprocessor.preprocess( "test", reader, writer, metadata, formatter, null );
 
         assertEquals( "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>" + "<w:document "
             + "xmlns:ve=\"http://schemas.openxmlformats.org/markup-compatibility/2006\" "
@@ -133,7 +133,7 @@ public class DocxPreprocessorHyperlinkWithVelocityTestCase
         hyperlinkMap.put( "rId5", new HyperlinkInfo( "rId5", "$x", "External" ) );
         sharedContext.put( HyperlinkUtils.getHyperlinkRegistryKey( entryName ), hyperlinkMap );
 
-        preprocessor.preprocess( entryName, reader, writer, null, metadata, formatter, sharedContext );
+        preprocessor.preprocess( entryName, reader, writer, metadata, formatter, sharedContext );
 
         assertEquals( "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>"
                           + "<w:document "

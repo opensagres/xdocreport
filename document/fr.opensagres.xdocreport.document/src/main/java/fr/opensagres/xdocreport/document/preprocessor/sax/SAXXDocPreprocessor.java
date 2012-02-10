@@ -35,7 +35,7 @@ import org.xml.sax.XMLReader;
 import org.xml.sax.helpers.XMLReaderFactory;
 
 import fr.opensagres.xdocreport.core.XDocReportException;
-import fr.opensagres.xdocreport.document.preprocessor.AbstractXDocPreprocessor;
+import fr.opensagres.xdocreport.document.preprocessor.AbstractReaderXDocPreprocessor;
 import fr.opensagres.xdocreport.template.formatter.FieldsMetadata;
 import fr.opensagres.xdocreport.template.formatter.IDocumentFormatter;
 
@@ -43,13 +43,12 @@ import fr.opensagres.xdocreport.template.formatter.IDocumentFormatter;
  * SAX preprocessor to modify XML entry with SAX.
  */
 public abstract class SAXXDocPreprocessor
-    extends AbstractXDocPreprocessor
+    extends AbstractReaderXDocPreprocessor
 {
 
     @Override
-    public boolean preprocess( String entryName, Reader reader, Writer writer, Writer debugWriter,
-                               FieldsMetadata fieldsMetadata, IDocumentFormatter formater,
-                               Map<String, Object> sharedContext )
+    public boolean preprocess( String entryName, Reader reader, Writer writer, FieldsMetadata fieldsMetadata,
+                               IDocumentFormatter formater, Map<String, Object> sharedContext )
         throws XDocReportException, IOException
     {
         try
@@ -63,10 +62,6 @@ public abstract class SAXXDocPreprocessor
             if ( document != null )
             {
                 document.save( writer );
-                if ( debugWriter != null )
-                {
-                    document.save( debugWriter );
-                }
                 // StringWriter s = new StringWriter();
                 // document.save(s);
                 // System.err.println(s);

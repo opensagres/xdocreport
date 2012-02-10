@@ -86,7 +86,7 @@ public class DocxPreprocessorImageWithFreemarkerTestCase
         FieldsMetadata metadata = null;
         IDocumentFormatter formatter = new FreemarkerDocumentFormatter();
 
-        preprocessor.preprocess( "test", reader, writer, null, metadata, formatter, null );
+        preprocessor.preprocess( "test", reader, writer, metadata, formatter, null );
 
         assertEquals( LOGO_IMAGE_XML, writer.toString() );
     }
@@ -102,7 +102,7 @@ public class DocxPreprocessorImageWithFreemarkerTestCase
         metadata.addFieldAsImage( "XXX" );
         IDocumentFormatter formatter = new FreemarkerDocumentFormatter();
 
-        preprocessor.preprocess( "test", reader, writer, null, metadata, formatter, null );
+        preprocessor.preprocess( "test", reader, writer, metadata, formatter, null );
 
         assertEquals( LOGO_IMAGE_XML, writer.toString() );
     }
@@ -118,7 +118,7 @@ public class DocxPreprocessorImageWithFreemarkerTestCase
         metadata.addFieldAsImage( "logo" );
         IDocumentFormatter formatter = new FreemarkerDocumentFormatter();
 
-        preprocessor.preprocess( "test", reader, writer, null, metadata, formatter, null );
+        preprocessor.preprocess( "test", reader, writer, metadata, formatter, null );
 
         assertEquals( "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>"
                           + "<w:document "
@@ -388,7 +388,7 @@ public class DocxPreprocessorImageWithFreemarkerTestCase
         metadata.addFieldAsImage( "photo", "developers.photo" );
         IDocumentFormatter formatter = new FreemarkerDocumentFormatter();
 
-        preprocessor.preprocess( "test", reader, writer, null, metadata, formatter, null );
+        preprocessor.preprocess( "test", reader, writer, metadata, formatter, null );
 
         assertEquals( "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>"
                           + "<w:document "

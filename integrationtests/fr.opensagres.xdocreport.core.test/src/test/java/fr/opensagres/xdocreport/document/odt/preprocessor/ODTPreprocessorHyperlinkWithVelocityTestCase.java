@@ -80,7 +80,7 @@ public class ODTPreprocessorHyperlinkWithVelocityTestCase
         metadata.addFieldAsList( "developers.Mail" );
         IDocumentFormatter formatter = new VelocityDocumentFormatter();
 
-        preprocessor.preprocess( "test", reader, writer, null, metadata, formatter, null );
+        preprocessor.preprocess( "test", reader, writer, metadata, formatter, null );
 
         assertEquals( "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>"
                           + "<office:document-content xmlns:office=\"urn:oasis:names:tc:opendocument:xmlns:office:1.0\" "

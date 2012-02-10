@@ -29,6 +29,8 @@ import static fr.opensagres.xdocreport.core.utils.StringUtils.EMPTY_STRING_ARRAY
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.Map;
@@ -75,7 +77,8 @@ public abstract class AbstractXDocReport
     /**
      * Map of {@link IXDocPreprocessor} to execute for an entry of the zipped XML Document (odt, docx...).
      */
-    private Map<String, IXDocPreprocessor> preprocessors = new LinkedHashMap<String, IXDocPreprocessor>();
+    private Map<String, Collection<IXDocPreprocessor>> preprocessors =
+        new LinkedHashMap<String, Collection<IXDocPreprocessor>>();
 
 /**
      * id of the {@link IXDocReport}. This id is used to cache an instance of {@link IXDocReport} with
@@ -237,9 +240,15 @@ public abstract class AbstractXDocReport
      * @param entryName
      * @param preprocessor
      */
-    protected void addPreprocessor( String entryName, IXDocPreprocessor preprocessor )
+    public void addPreprocessor( String entryName, IXDocPreprocessor preprocessor )
     {
-        preprocessors.put( entryName, preprocessor );
+        Collection<IXDocPreprocessor> entryPreprocessors = preprocessors.get( entryName );
+        if ( entryPreprocessors == null )
+        {
+            entryPreprocessors = new ArrayList<IXDocPreprocessor>();
+            preprocessors.put( entryName, entryPreprocessors );
+        }
+        entryPreprocessors.add( preprocessor );
     }
 
     /**
@@ -247,7 +256,7 @@ public abstract class AbstractXDocReport
      * 
      * @param entryName
      */
-    protected void removePreProcessor( String entryName )
+    public void removePreprocessor( String entryName )
     {
         preprocessors.remove( entryName );
     }
@@ -255,7 +264,7 @@ public abstract class AbstractXDocReport
     /**
      * Clear processor.
      */
-    protected void removeAllPreProcessors()
+    public void removeAllPreprocessors()
     {
         preprocessors.clear();
     }
@@ -328,19 +337,21 @@ public abstract class AbstractXDocReport
 
             // Preprocessor
             String entryName = null;
-            IXDocPreprocessor preprocessor = null;
-            Set<Entry<String, IXDocPreprocessor>> preprocessorEntryNames = preprocessors.entrySet();
+            Set<Entry<String, Collection<IXDocPreprocessor>>> preprocessorEntryNames = preprocessors.entrySet();
             // Loop for each preprocessor registered
-            for ( Entry<String, IXDocPreprocessor> entry : preprocessorEntryNames )
+            for ( Entry<String, Collection<IXDocPreprocessor>> entry : preprocessorEntryNames )
             {
                 entryName = entry.getKey();
-                preprocessor = entry.getValue();
+                Collection<IXDocPreprocessor> entryPreprocessors = entry.getValue();
                 if ( preprocessedArchive.hasEntry( entryName ) )
                 {
-                    // XML Document contains a XML file which must be
-                    // preprocessed
-                    preprocessor.preprocess( entryName, preprocessedArchive, fieldsMetadata,
-                                             internalGetTemplateEngine().getDocumentFormatter(), sharedContext );
+                    for ( IXDocPreprocessor preprocessor : entryPreprocessors )
+                    {
+                        // XML Document contains a XML file which must be
+                        // preprocessed
+                        preprocessor.preprocess( entryName, preprocessedArchive, fieldsMetadata,
+                                                 internalGetTemplateEngine().getDocumentFormatter(), sharedContext );
+                    }
                 }
                 else
                 {
@@ -348,9 +359,12 @@ public abstract class AbstractXDocReport
                     Set<String> entriesNameFromWilcard = preprocessedArchive.getEntryNames( entryName );
                     for ( String entryNameFromWilcard : entriesNameFromWilcard )
                     {
-                        preprocessor.preprocess( entryNameFromWilcard, preprocessedArchive, fieldsMetadata,
+                        for ( IXDocPreprocessor preprocessor : entryPreprocessors )
+                        {
+                            preprocessor.preprocess( entryNameFromWilcard, preprocessedArchive, fieldsMetadata,
 
-                        internalGetTemplateEngine().getDocumentFormatter(), sharedContext );
+                            internalGetTemplateEngine().getDocumentFormatter(), sharedContext );
+                        }
                     }
                 }
             }

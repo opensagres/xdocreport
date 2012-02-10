@@ -60,6 +60,8 @@ public class BufferedDocumentContentHandler<Document extends BufferedDocument>
 
     private boolean startingElement = false;
 
+    private int elementIndex =0;
+    
     public BufferedDocumentContentHandler()
     {
         this.bufferedDocument = createDocument();
@@ -95,7 +97,7 @@ public class BufferedDocumentContentHandler<Document extends BufferedDocument>
     @Override
     public final void startElement( String uri, String localName, String name, Attributes attributes )
         throws SAXException
-    {
+    {        
         if ( startingElement )
         {
             getCurrentElement().append( ">" );
@@ -105,9 +107,6 @@ public class BufferedDocumentContentHandler<Document extends BufferedDocument>
             flushCharacters( currentCharacters.toString() );
             resetCharacters();
         }
-
-        attributes = processAttributes( uri, localName, name, attributes );
-
         BufferedElement element = null;
         try
         {
@@ -115,26 +114,13 @@ public class BufferedDocumentContentHandler<Document extends BufferedDocument>
             element = bufferedDocument.onStartStartElement( uri, localName, name, attributes );
             // Generate content of the start element
             startingElement = doStartElement( uri, localName, name, element.getAttributes() );
+            elementIndex++;
         }
         finally
         {
             // End of start element
             bufferedDocument.onEndStartElement( element, uri, localName, name, attributes );
         }
-    }
-
-    /**
-     * Modify attribute if needed.
-     * 
-     * @param uri
-     * @param localName
-     * @param name
-     * @param attributes
-     * @return
-     */
-    protected Attributes processAttributes( String uri, String localName, String name, Attributes attributes )
-    {
-        return attributes;
     }
 
     public BufferedElement getCurrentElement()
@@ -207,6 +193,7 @@ public class BufferedDocumentContentHandler<Document extends BufferedDocument>
     public final void endElement( String uri, String localName, String name )
         throws SAXException
     {
+        elementIndex--;
         if ( currentCharacters.length() > 0 )
         {
             // Flush caracters
@@ -382,5 +369,10 @@ public class BufferedDocumentContentHandler<Document extends BufferedDocument>
         region.append( "&#x" );
         region.append( Integer.toHexString( ch ) );
         region.append( ';' );
+    }
+    
+    public int getElementIndex()
+    {
+        return elementIndex;
     }
 }

@@ -52,7 +52,7 @@ import fr.opensagres.xdocreport.core.io.IEntryWriterProvider;
 import fr.opensagres.xdocreport.core.io.XDocArchive;
 import fr.opensagres.xdocreport.document.AbstractXDocReport;
 import fr.opensagres.xdocreport.document.docx.images.DocxImageRegistry;
-import fr.opensagres.xdocreport.document.docx.preprocessor.DocXPreprocessor;
+import fr.opensagres.xdocreport.document.docx.preprocessor.DocxPreprocessor;
 import fr.opensagres.xdocreport.document.docx.preprocessor.DocxContentTypesPreprocessor;
 import fr.opensagres.xdocreport.document.docx.preprocessor.DocxDocumentXMLRelsPreprocessor;
 import fr.opensagres.xdocreport.document.docx.preprocessor.DocxStylesPreprocessor;
@@ -68,7 +68,7 @@ import fr.opensagres.xdocreport.template.IContext;
 /**
  * MS Word DOCX report.
  */
-public class DocXReport
+public class DocxReport
     extends AbstractXDocReport
 {
 
@@ -93,9 +93,9 @@ public class DocXReport
 //        super.addPreprocessor( WORD_DOCUMENT_XML_ENTRY, DocxDocumentPreprocessor.INSTANCE );
 //        super.addPreprocessor( WORD_HEADER_XML_ENTRY, DocxDocumentPreprocessor.INSTANCE );
 //        super.addPreprocessor( WORD_FOOTER_XML_ENTRY, DocxDocumentPreprocessor.INSTANCE );
-        super.addPreprocessor( WORD_DOCUMENT_XML_ENTRY, DocXPreprocessor.INSTANCE );
-        super.addPreprocessor( WORD_HEADER_XML_ENTRY, DocXPreprocessor.INSTANCE );
-        super.addPreprocessor( WORD_FOOTER_XML_ENTRY, DocXPreprocessor.INSTANCE );
+        super.addPreprocessor( WORD_DOCUMENT_XML_ENTRY, DocxPreprocessor.INSTANCE );
+        super.addPreprocessor( WORD_HEADER_XML_ENTRY, DocxPreprocessor.INSTANCE );
+        super.addPreprocessor( WORD_FOOTER_XML_ENTRY, DocxPreprocessor.INSTANCE );
         super.addPreprocessor( CONTENT_TYPES_XML_ENTRY, DocxContentTypesPreprocessor.INSTANCE );
         super.addPreprocessor( WORD_RELS_XMLRELS_XML_ENTRY, DocxDocumentXMLRelsPreprocessor.INSTANCE );
     }

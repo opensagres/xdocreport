@@ -36,7 +36,7 @@ public class DocxPreprocessorWith2InstrText
     public void test2InstrText()
         throws Exception
     {
-        DocXPreprocessor preprocessor = new DocXPreprocessor();
+        DocxPreprocessor preprocessor = new DocxPreprocessor();
         StringReader reader =
             new StringReader( "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>" + "<w:document "
                 + "xmlns:ve=\"http://schemas.openxmlformats.org/markup-compatibility/2006\" "

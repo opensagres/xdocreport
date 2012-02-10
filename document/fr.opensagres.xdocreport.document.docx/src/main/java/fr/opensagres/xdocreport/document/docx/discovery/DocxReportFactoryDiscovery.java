@@ -29,7 +29,7 @@ import fr.opensagres.xdocreport.core.io.XDocArchive;
 import fr.opensagres.xdocreport.document.IXDocReport;
 import fr.opensagres.xdocreport.document.discovery.AbstractXDocReportFactoryDiscovery;
 import fr.opensagres.xdocreport.document.docx.DocxConstants;
-import fr.opensagres.xdocreport.document.docx.DocXReport;
+import fr.opensagres.xdocreport.document.docx.DocxReport;
 import fr.opensagres.xdocreport.document.docx.DocxUtils;
 import fr.opensagres.xdocreport.document.registry.XDocReportRegistry;
 
@@ -37,7 +37,7 @@ import fr.opensagres.xdocreport.document.registry.XDocReportRegistry;
  * MS Word DOCX discovery used by the {@link XDocReportRegistry#loadReport(java.io.InputStream)} to create an instance
  * of {@link DocxReport} if input stream to load is an ODS.
  */
-public class DocXReportFactoryDiscovery
+public class DocxReportFactoryDiscovery
     extends AbstractXDocReportFactoryDiscovery
 {
 
@@ -48,7 +48,7 @@ public class DocXReportFactoryDiscovery
 
     public IXDocReport createReport()
     {
-        return new DocXReport();
+        return new DocxReport();
     }
 
     public MimeMapping getMimeMapping()
@@ -68,7 +68,7 @@ public class DocXReportFactoryDiscovery
 
     public Class<?> getReportClass()
     {
-        return DocXReport.class;
+        return DocxReport.class;
     }
 
 }

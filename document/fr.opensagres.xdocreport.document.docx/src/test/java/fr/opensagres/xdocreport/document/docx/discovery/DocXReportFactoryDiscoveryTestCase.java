@@ -26,7 +26,7 @@ package fr.opensagres.xdocreport.document.docx.discovery;
 
 import junit.framework.TestCase;
 import fr.opensagres.xdocreport.document.IXDocReport;
-import fr.opensagres.xdocreport.document.docx.DocXReport;
+import fr.opensagres.xdocreport.document.docx.DocxReport;
 import fr.opensagres.xdocreport.document.registry.XDocReportRegistry;
 
 public class DocXReportFactoryDiscoveryTestCase
@@ -56,7 +56,7 @@ public class DocXReportFactoryDiscoveryTestCase
             assertNotNull( "Report must ne not null", report );
 
             assertTrue( "This is a docx file, DocXReport implementation should have been resolved....",
-                        report instanceof DocXReport );
+                        report instanceof DocxReport );
 
             // Report id by default is toString
             assertEquals( "Report id", report.toString(), report.getId() );
@@ -94,7 +94,7 @@ public class DocXReportFactoryDiscoveryTestCase
             assertNotNull( "Report must ne not null", report );
 
             assertTrue( "This is a docx file, DocXReport implementation should have been resolved....",
-                        report instanceof DocXReport );
+                        report instanceof DocxReport );
 
             // Report id by default is the given report id
             assertEquals( "Report id", reportId, report.getId() );

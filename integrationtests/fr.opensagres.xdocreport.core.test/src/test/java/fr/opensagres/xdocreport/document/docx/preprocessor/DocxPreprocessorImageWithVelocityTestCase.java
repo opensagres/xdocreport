@@ -79,7 +79,7 @@ public class DocxPreprocessorImageWithVelocityTestCase
     public void testImageWithNullFieldsMetadata()
         throws Exception
     {
-        DocXPreprocessor preprocessor = new DocXPreprocessor();
+        DocxPreprocessor preprocessor = new DocxPreprocessor();
         StringReader reader = new StringReader( LOGO_IMAGE_XML );
         StringWriter writer = new StringWriter();
 
@@ -94,7 +94,7 @@ public class DocxPreprocessorImageWithVelocityTestCase
     public void testImageWithBadFieldsMetadata()
         throws Exception
     {
-        DocXPreprocessor preprocessor = new DocXPreprocessor();
+        DocxPreprocessor preprocessor = new DocxPreprocessor();
         StringReader reader = new StringReader( LOGO_IMAGE_XML );
         StringWriter writer = new StringWriter();
 
@@ -110,7 +110,7 @@ public class DocxPreprocessorImageWithVelocityTestCase
     public void testImageWithSimpleField()
         throws Exception
     {
-        DocXPreprocessor preprocessor = new DocXPreprocessor();
+        DocxPreprocessor preprocessor = new DocxPreprocessor();
         StringReader reader = new StringReader( LOGO_IMAGE_XML );
         StringWriter writer = new StringWriter();
 
@@ -181,7 +181,7 @@ public class DocxPreprocessorImageWithVelocityTestCase
     public void testImageWithListFieldInTable()
         throws Exception
     {
-        DocXPreprocessor preprocessor = new DocXPreprocessor();
+        DocxPreprocessor preprocessor = new DocxPreprocessor();
         StringReader reader =
             new StringReader(
                               "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>"

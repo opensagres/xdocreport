@@ -106,7 +106,7 @@ public class DocxPreprocessorStartStopRowTestCase
     public void testFdlSimpleStartTopRow()
         throws Exception
     {
-        DocXPreprocessor preprocessor = new DocXPreprocessor();
+        DocxPreprocessor preprocessor = new DocxPreprocessor();
         StringReader reader = new StringReader( FDLSIMPLE_START_STOP_XML );
 
         StringWriter writer = new StringWriter();
@@ -158,7 +158,7 @@ public class DocxPreprocessorStartStopRowTestCase
     public void testInstrTextStartTopRow()
         throws Exception
     {
-        DocXPreprocessor preprocessor = new DocXPreprocessor();
+        DocxPreprocessor preprocessor = new DocxPreprocessor();
         StringReader reader = new StringReader( INSTRTEXT_START_STOP_XML );
 
         StringWriter writer = new StringWriter();

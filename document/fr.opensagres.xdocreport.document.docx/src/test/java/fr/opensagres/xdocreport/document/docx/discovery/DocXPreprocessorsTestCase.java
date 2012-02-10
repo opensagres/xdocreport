@@ -29,10 +29,10 @@ import java.io.StringWriter;
 import java.util.HashMap;
 
 import junit.framework.TestCase;
-import fr.opensagres.xdocreport.document.docx.preprocessor.DocXPreprocessor;
+import fr.opensagres.xdocreport.document.docx.preprocessor.DocxPreprocessor;
 
 /**
- * {@link DocXPreprocessor} JUNit tests.
+ * {@link DocxPreprocessor} JUNit tests.
  */
 public class DocXPreprocessorsTestCase
     extends TestCase
@@ -41,7 +41,7 @@ public class DocXPreprocessorsTestCase
     public void testIgnoreFldSimple()
         throws Exception
     {
-        DocXPreprocessor preprocessor = new DocXPreprocessor();
+        DocxPreprocessor preprocessor = new DocxPreprocessor();
         StringReader reader =
             new StringReader( "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>"
                 + "<w:document xmlns:w=\"http://schemas.openxmlformats.org/wordprocessingml/2006/main\" >"
@@ -59,7 +59,7 @@ public class DocXPreprocessorsTestCase
     public void testIgnoreFdlSimpleVelocityForeach()
         throws Exception
     {
-        DocXPreprocessor preprocessor = new DocXPreprocessor();
+        DocxPreprocessor preprocessor = new DocxPreprocessor();
         StringReader reader =
             new StringReader(
                               "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>"

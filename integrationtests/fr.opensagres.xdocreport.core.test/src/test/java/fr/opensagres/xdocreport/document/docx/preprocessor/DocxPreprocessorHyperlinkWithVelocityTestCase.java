@@ -70,7 +70,7 @@ public class DocxPreprocessorHyperlinkWithVelocityTestCase
     public void testImageWithListFieldInTableNoFieldsMetadata()
         throws Exception
     {
-        DocXPreprocessor preprocessor = new DocXPreprocessor();
+        DocxPreprocessor preprocessor = new DocxPreprocessor();
         StringReader reader = new StringReader( HYPERLINK_XML );
 
         StringWriter writer = new StringWriter();
@@ -117,7 +117,7 @@ public class DocxPreprocessorHyperlinkWithVelocityTestCase
     public void testImageWithListFieldInTable()
         throws Exception
     {
-        DocXPreprocessor preprocessor = new DocXPreprocessor();
+        DocxPreprocessor preprocessor = new DocxPreprocessor();
         StringReader reader = new StringReader( HYPERLINK_XML );
 
         StringWriter writer = new StringWriter();

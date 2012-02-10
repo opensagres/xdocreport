@@ -36,7 +36,7 @@ public class DocxPreprocessorMergefieldWithConditionTestCase
     public void testWithSimpleFieldAndConditionWithSimpleQuote()
         throws Exception
     {
-        DocXPreprocessor preprocessor = new DocXPreprocessor();
+        DocxPreprocessor preprocessor = new DocxPreprocessor();
         StringReader reader =
             new StringReader(
                               "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>"
@@ -82,7 +82,7 @@ public class DocxPreprocessorMergefieldWithConditionTestCase
     public void testWithFieldAndConditionWithDoubleQuote()
         throws Exception
     {
-        DocXPreprocessor preprocessor = new DocXPreprocessor();
+        DocxPreprocessor preprocessor = new DocxPreprocessor();
         StringReader reader =
             new StringReader(
                               "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>"
@@ -157,7 +157,7 @@ public class DocxPreprocessorMergefieldWithConditionTestCase
     public void testWithFieldAndConditionWithSimpleQuote()
         throws Exception
     {
-        DocXPreprocessor preprocessor = new DocXPreprocessor();
+        DocxPreprocessor preprocessor = new DocxPreprocessor();
         StringReader reader =
             new StringReader(
                               "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>"

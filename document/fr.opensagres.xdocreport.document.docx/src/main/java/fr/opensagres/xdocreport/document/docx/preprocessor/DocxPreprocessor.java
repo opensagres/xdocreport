@@ -35,11 +35,11 @@ import fr.opensagres.xdocreport.template.formatter.IDocumentFormatter;
 /**
  * DOCX preprocessor to generate lazy Freemarker/Velocity loop directive in the table row which contains a list fields.
  */
-public class DocXPreprocessor
+public class DocxPreprocessor
     extends SAXXDocPreprocessor
 {
 
-    public static final IXDocPreprocessor INSTANCE = new DocXPreprocessor();
+    public static final IXDocPreprocessor INSTANCE = new DocxPreprocessor();
 
     @Override
     protected BufferedDocumentContentHandler createBufferedDocumentContentHandler( String entryName,

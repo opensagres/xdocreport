@@ -68,7 +68,7 @@ public class DocxPreprocessorHyperlinkNotToPreprocessTestCase
     public void testHyperlinkNotToPreprocess()
         throws Exception
     {
-        DocXPreprocessor preprocessor = new DocXPreprocessor();
+        DocxPreprocessor preprocessor = new DocxPreprocessor();
         StringReader reader = new StringReader( HYPERLINK_XML );
 
         StringWriter writer = new StringWriter();

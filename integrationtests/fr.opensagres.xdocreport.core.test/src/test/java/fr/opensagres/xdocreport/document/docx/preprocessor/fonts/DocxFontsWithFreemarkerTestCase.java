@@ -201,7 +201,10 @@ public class DocxFontsWithFreemarkerTestCase
         // 2) Create context Java model
         IContext context = report.createContext();
         context.put( "name", "XXXXXXXXXXXXXXXXXXXXXXXX" );
+        
+        // Change every font name+size with Magneto + 40
         context.put( DOMFontsPreprocessor.FONT_NAME_KEY, "Magneto" );
+        context.put( DOMFontsPreprocessor.FONT_SIZE_KEY, "40" );
 
         // 3) Generate report by merging Java model with the Docx
         OutputStream out = new FileOutputStream( new File( "DocxFontsWithFreemarker_Out.docx" ) );

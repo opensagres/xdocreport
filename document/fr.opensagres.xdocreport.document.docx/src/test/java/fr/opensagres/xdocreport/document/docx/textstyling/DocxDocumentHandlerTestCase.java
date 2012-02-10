@@ -45,7 +45,7 @@ public class DocxDocumentHandlerTestCase
     public void testBoldWithB()
         throws Exception
     {
-        IContext context = null;
+        IContext context = new MockContext();
         BufferedElement parent = null;
 
         ITextStylingTransformer formatter = HTMLTextStylingTransformer.INSTANCE;
@@ -59,7 +59,7 @@ public class DocxDocumentHandlerTestCase
     public void testBoldWithStrong()
         throws Exception
     {
-        IContext context = null;
+        IContext context = new MockContext();
         BufferedElement parent = null;
 
         ITextStylingTransformer formatter = HTMLTextStylingTransformer.INSTANCE;
@@ -73,7 +73,7 @@ public class DocxDocumentHandlerTestCase
     public void testItalicWithI()
         throws Exception
     {
-        IContext context = null;
+        IContext context = new MockContext();
         BufferedElement parent = null;
 
         ITextStylingTransformer formatter = HTMLTextStylingTransformer.INSTANCE;
@@ -87,7 +87,7 @@ public class DocxDocumentHandlerTestCase
     public void testItalicWithEm()
         throws Exception
     {
-        IContext context = null;
+        IContext context = new MockContext();
         BufferedElement parent = null;
 
         ITextStylingTransformer formatter = HTMLTextStylingTransformer.INSTANCE;

@@ -13,7 +13,11 @@ public class DocxDefaultStylesGenerator
 
     public String generateHyperlinkStyle( DefaultStyle defaultStyle )
     {
-        String hyperLinkStyleId = getHyperLinkStyleId( defaultStyle );
+        if ( defaultStyle.hasHyperLinkStyleId() )
+        {
+            return "";
+        }
+        String hyperLinkStyleId = HYPERLINK_STYLE_ID;
         StringBuilder style = new StringBuilder();
         style.append( "<w:style w:type=\"character\" w:styleId=\"" );
         style.append( hyperLinkStyleId );
@@ -28,7 +32,6 @@ public class DocxDefaultStylesGenerator
         style.append( "<w:u w:val=\"single\" />" );
         style.append( "</w:rPr>" );
         style.append( "</w:style>" );
-
         return style.toString();
     }
 

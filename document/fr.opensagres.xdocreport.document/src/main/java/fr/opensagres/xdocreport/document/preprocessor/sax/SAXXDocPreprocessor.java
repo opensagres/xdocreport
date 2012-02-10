@@ -35,7 +35,9 @@ import org.xml.sax.XMLReader;
 import org.xml.sax.helpers.XMLReaderFactory;
 
 import fr.opensagres.xdocreport.core.XDocReportException;
-import fr.opensagres.xdocreport.document.preprocessor.AbstractReaderXDocPreprocessor;
+import fr.opensagres.xdocreport.core.io.IOUtils;
+import fr.opensagres.xdocreport.core.io.XDocArchive;
+import fr.opensagres.xdocreport.document.preprocessor.AbstractXDocPreprocessor;
 import fr.opensagres.xdocreport.template.formatter.FieldsMetadata;
 import fr.opensagres.xdocreport.template.formatter.IDocumentFormatter;
 
@@ -43,7 +45,7 @@ import fr.opensagres.xdocreport.template.formatter.IDocumentFormatter;
  * SAX preprocessor to modify XML entry with SAX.
  */
 public abstract class SAXXDocPreprocessor
-    extends AbstractReaderXDocPreprocessor
+    extends AbstractXDocPreprocessor<Reader>
 {
 
     @Override
@@ -74,6 +76,22 @@ public abstract class SAXXDocPreprocessor
         {
             throw new XDocReportException( e );
         }
+    }
+
+    @Override
+    protected Reader getSource( XDocArchive documentArchive, String entryName )
+    {
+        return documentArchive.getEntryReader( entryName );
+    }
+
+    @Override
+    protected void closeSource( Reader reader )
+    {
+        if ( reader != null )
+        {
+            IOUtils.closeQuietly( reader );
+        }
+
     }
 
     protected abstract BufferedDocumentContentHandler<?> createBufferedDocumentContentHandler( String entryName,

@@ -87,7 +87,7 @@ public class ODTDefaultStylesGenerator
 
     public String generateHeaderStyle( int level )
     {
-        StringBuffer style = new StringBuffer( "<style:style style:name=\"" );
+        StringBuilder style = new StringBuilder( "<style:style style:name=\"" );
         style.append( getHeaderStyleName( level ) );
         style.append( "\" style:display-name=\"" );
         style.append( "Heading " + level );
@@ -108,7 +108,7 @@ public class ODTDefaultStylesGenerator
 
     public String generateTextStyles()
     {
-        StringBuffer region = new StringBuffer();
+        StringBuilder region = new StringBuilder();
         region.append( generateStyle( BOLD_STYLE_NAME, true, false ) );
         region.append( generateStyle( ITALIC_STYLE_NAME, false, true ) );
         region.append( generateStyle( BOLD_ITALIC_STYLE_NAME, true, true ) );
@@ -117,7 +117,7 @@ public class ODTDefaultStylesGenerator
 
     private String generateStyle( String styleName, boolean bold, boolean italic )
     {
-        StringBuffer region = new StringBuffer();
+        StringBuilder region = new StringBuilder();
         region.append( "<style:style style:name=\"" );
         region.append( styleName );
         region.append( "\" style:family=\"text\">" );
@@ -136,7 +136,7 @@ public class ODTDefaultStylesGenerator
 
     public String generateListStyle()
     {
-        StringBuffer region = new StringBuffer();
+        StringBuilder region = new StringBuilder();
         region.append( generateListStyle( true ) );
         region.append( generateListStyle( false ) );
         return region.toString();
@@ -144,7 +144,7 @@ public class ODTDefaultStylesGenerator
 
     protected String generateListStyle( boolean ordered )
     {
-        StringBuffer region = new StringBuffer();
+        StringBuilder region = new StringBuilder();
 
         String styleName = UL_STYLE_NAME;
         if ( ordered )
@@ -176,7 +176,7 @@ public class ODTDefaultStylesGenerator
 
     protected String generateBulletStyle( Integer level, boolean ordered )
     {
-        StringBuffer region = new StringBuffer();
+        StringBuilder region = new StringBuilder();
 
         if ( ordered )
         {

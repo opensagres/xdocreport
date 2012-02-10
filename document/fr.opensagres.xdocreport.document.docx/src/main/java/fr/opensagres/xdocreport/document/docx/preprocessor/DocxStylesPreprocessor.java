@@ -44,10 +44,10 @@ public class DocxStylesPreprocessor
     @Override
     protected BufferedDocumentContentHandler createBufferedDocumentContentHandler( String entryName,
                                                                                    FieldsMetadata fieldsMetadata,
-                                                                                   IDocumentFormatter formater,
-                                                                                   Map<String, Object> context )
+                                                                                   IDocumentFormatter formatter,
+                                                                                   Map<String, Object> sharedContext )
     {
-        return new DocxStylesDocumentContentHandler();
+        return new DocxStylesDocumentContentHandler(formatter, sharedContext);
     }
 
 }

@@ -52,15 +52,15 @@ import fr.opensagres.xdocreport.core.io.IEntryWriterProvider;
 import fr.opensagres.xdocreport.core.io.XDocArchive;
 import fr.opensagres.xdocreport.document.AbstractXDocReport;
 import fr.opensagres.xdocreport.document.docx.images.DocxImageRegistry;
-import fr.opensagres.xdocreport.document.docx.preprocessor.DocxPreprocessor;
+import fr.opensagres.xdocreport.document.docx.preprocessor.DefaultStyle;
 import fr.opensagres.xdocreport.document.docx.preprocessor.DocxContentTypesPreprocessor;
 import fr.opensagres.xdocreport.document.docx.preprocessor.DocxDocumentXMLRelsPreprocessor;
+import fr.opensagres.xdocreport.document.docx.preprocessor.DocxPreprocessor;
 import fr.opensagres.xdocreport.document.docx.preprocessor.DocxStylesPreprocessor;
 import fr.opensagres.xdocreport.document.docx.preprocessor.HyperlinkContentHandler;
 import fr.opensagres.xdocreport.document.docx.preprocessor.HyperlinkRegistry;
 import fr.opensagres.xdocreport.document.docx.preprocessor.HyperlinkUtils;
 import fr.opensagres.xdocreport.document.docx.preprocessor.InitialHyperlinkMap;
-import fr.opensagres.xdocreport.document.docx.preprocessor.dom.DocxDocumentPreprocessor;
 import fr.opensagres.xdocreport.document.docx.template.DocxContextHelper;
 import fr.opensagres.xdocreport.document.images.IImageRegistry;
 import fr.opensagres.xdocreport.template.IContext;
@@ -81,6 +81,13 @@ public class DocxReport
 
     private Set<String> modifiedEntryNamesHyperlinks;
 
+    private DefaultStyle defaultStyle;
+
+    public DocxReport()
+    {
+        this.defaultStyle = new DefaultStyle();
+    }
+
     public String getKind()
     {
         return DocumentKind.DOCX.name();
@@ -90,9 +97,9 @@ public class DocxReport
     protected void registerPreprocessors()
     {
         super.addPreprocessor( WORD_STYLES_XML_ENTRY, DocxStylesPreprocessor.INSTANCE );
-//        super.addPreprocessor( WORD_DOCUMENT_XML_ENTRY, DocxDocumentPreprocessor.INSTANCE );
-//        super.addPreprocessor( WORD_HEADER_XML_ENTRY, DocxDocumentPreprocessor.INSTANCE );
-//        super.addPreprocessor( WORD_FOOTER_XML_ENTRY, DocxDocumentPreprocessor.INSTANCE );
+        // super.addPreprocessor( WORD_DOCUMENT_XML_ENTRY, DocxDocumentPreprocessor.INSTANCE );
+        // super.addPreprocessor( WORD_HEADER_XML_ENTRY, DocxDocumentPreprocessor.INSTANCE );
+        // super.addPreprocessor( WORD_FOOTER_XML_ENTRY, DocxDocumentPreprocessor.INSTANCE );
         super.addPreprocessor( WORD_DOCUMENT_XML_ENTRY, DocxPreprocessor.INSTANCE );
         super.addPreprocessor( WORD_HEADER_XML_ENTRY, DocxPreprocessor.INSTANCE );
         super.addPreprocessor( WORD_FOOTER_XML_ENTRY, DocxPreprocessor.INSTANCE );
@@ -162,6 +169,7 @@ public class DocxReport
                 throw new XDocReportException( e );
             }
         }
+        sharedContext.put( DocxContextHelper.DEFAULT_STYLE_KEY, defaultStyle );
     }
 
     @Override
@@ -196,6 +204,8 @@ public class DocxReport
             // in the context.
             DocxContextHelper.putHyperlinkRegistry( context, entryName, new HyperlinkRegistry() );
         }
+        // Register default style
+        DocxContextHelper.putDefaultStyle( context, defaultStyle );
     }
 
     @Override

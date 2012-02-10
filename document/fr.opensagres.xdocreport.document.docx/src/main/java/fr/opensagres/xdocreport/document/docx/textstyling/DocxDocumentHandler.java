@@ -27,8 +27,10 @@ package fr.opensagres.xdocreport.document.docx.textstyling;
 import java.io.IOException;
 import java.util.Stack;
 
+import fr.opensagres.xdocreport.document.docx.preprocessor.DefaultStyle;
 import fr.opensagres.xdocreport.document.docx.preprocessor.HyperlinkRegistry;
 import fr.opensagres.xdocreport.document.docx.preprocessor.HyperlinkUtils;
+import fr.opensagres.xdocreport.document.docx.template.DocxContextHelper;
 import fr.opensagres.xdocreport.document.preprocessor.sax.BufferedElement;
 import fr.opensagres.xdocreport.document.textstyling.AbstractDocumentHandler;
 import fr.opensagres.xdocreport.template.IContext;
@@ -50,11 +52,13 @@ public class DocxDocumentHandler
 
     protected final IDocxStylesGenerator styleGen;
 
+    private DefaultStyle defaultStyle;
+
     public DocxDocumentHandler( BufferedElement parent, IContext context, String entryName )
     {
         super( parent, context, entryName );
-        styleGen = DocxStylesGeneratorProvider.getStyleGenerator();
-
+        styleGen = DocxContextHelper.getStylesGenerator( context );
+        defaultStyle = DocxContextHelper.getDefaultStyle( context );
     }
 
     public void startDocument()
@@ -241,7 +245,7 @@ public class DocxDocumentHandler
             String rId = registry.registerHyperlink( ref );
 
             // 2) Generate w:hyperlink
-            String hyperlinkStyleName = styleGen.getHyperLinkStyleId();
+            String hyperlinkStyleName = styleGen.getHyperLinkStyleId(defaultStyle);
             super.write( "<w:hyperlink r:id=\"" );
             super.write( rId );
             super.write( "\" w:history=\"1\"> " );

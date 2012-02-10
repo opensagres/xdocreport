@@ -197,15 +197,19 @@ public class DocxReport
     protected void onBeforeProcessTemplateEngine( IContext context, XDocArchive outputArchive )
         throws XDocReportException
     {
+        // 1) Register commons Java model in the context
         super.onBeforeProcessTemplateEngine( context, outputArchive );
+        // 2) Register for each entries (word/document.xml, ... which definies hyperlink a hyperlink registry.
         for ( String entryName : modifiedEntryNamesHyperlinks )
         {
             // docx has dynamic hyperlink, put an instance of HyperlinkRegistry
             // in the context.
             DocxContextHelper.putHyperlinkRegistry( context, entryName, new HyperlinkRegistry() );
         }
-        // Register default style
+        // 3) Register default style instance
         DocxContextHelper.putDefaultStyle( context, defaultStyle );
+        // 4) Register styles generator if not exists.
+        DocxContextHelper.getStylesGenerator( context );
     }
 
     @Override

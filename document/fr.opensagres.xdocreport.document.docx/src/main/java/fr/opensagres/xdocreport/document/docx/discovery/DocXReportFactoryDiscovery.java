@@ -28,7 +28,7 @@ import fr.opensagres.xdocreport.converter.MimeMapping;
 import fr.opensagres.xdocreport.core.io.XDocArchive;
 import fr.opensagres.xdocreport.document.IXDocReport;
 import fr.opensagres.xdocreport.document.discovery.AbstractXDocReportFactoryDiscovery;
-import fr.opensagres.xdocreport.document.docx.DocXConstants;
+import fr.opensagres.xdocreport.document.docx.DocxConstants;
 import fr.opensagres.xdocreport.document.docx.DocXReport;
 import fr.opensagres.xdocreport.document.docx.DocxUtils;
 import fr.opensagres.xdocreport.document.registry.XDocReportRegistry;
@@ -53,17 +53,17 @@ public class DocXReportFactoryDiscovery
 
     public MimeMapping getMimeMapping()
     {
-        return DocXConstants.MIME_MAPPING;
+        return DocxConstants.MIME_MAPPING;
     }
 
     public String getDescription()
     {
-        return DocXConstants.DESCRIPTION_DISCOVERY;
+        return DocxConstants.DESCRIPTION_DISCOVERY;
     }
 
     public String getId()
     {
-        return DocXConstants.ID_DISCOVERY;
+        return DocxConstants.ID_DISCOVERY;
     }
 
     public Class<?> getReportClass()

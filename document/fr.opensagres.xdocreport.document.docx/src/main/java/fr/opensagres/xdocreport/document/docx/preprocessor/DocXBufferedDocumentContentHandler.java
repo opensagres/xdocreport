@@ -24,12 +24,12 @@
  */
 package fr.opensagres.xdocreport.document.docx.preprocessor;
 
-import static fr.opensagres.xdocreport.document.docx.DocXConstants.CX_ATTR;
-import static fr.opensagres.xdocreport.document.docx.DocXConstants.CY_ATTR;
-import static fr.opensagres.xdocreport.document.docx.DocXConstants.EMBED_ATTR;
-import static fr.opensagres.xdocreport.document.docx.DocXConstants.FLDCHARTYPE_ATTR;
-import static fr.opensagres.xdocreport.document.docx.DocXConstants.R_NS;
-import static fr.opensagres.xdocreport.document.docx.DocXConstants.W_NS;
+import static fr.opensagres.xdocreport.document.docx.DocxConstants.CX_ATTR;
+import static fr.opensagres.xdocreport.document.docx.DocxConstants.CY_ATTR;
+import static fr.opensagres.xdocreport.document.docx.DocxConstants.EMBED_ATTR;
+import static fr.opensagres.xdocreport.document.docx.DocxConstants.FLDCHARTYPE_ATTR;
+import static fr.opensagres.xdocreport.document.docx.DocxConstants.R_NS;
+import static fr.opensagres.xdocreport.document.docx.DocxConstants.W_NS;
 import static fr.opensagres.xdocreport.document.docx.DocxUtils.isBlip;
 import static fr.opensagres.xdocreport.document.docx.DocxUtils.isExt;
 import static fr.opensagres.xdocreport.document.docx.DocxUtils.isExtent;

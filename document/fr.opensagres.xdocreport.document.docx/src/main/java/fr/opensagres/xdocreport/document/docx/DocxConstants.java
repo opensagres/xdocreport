@@ -29,7 +29,7 @@ import fr.opensagres.xdocreport.converter.MimeMapping;
 /**
  * MS Word DOCX constants.
  */
-public class DocXConstants
+public class DocxConstants
 {
 
     public static final String WORD_REGEXP = "word*";

@@ -30,7 +30,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import junit.framework.TestCase;
-import fr.opensagres.xdocreport.document.docx.DocXConstants;
+import fr.opensagres.xdocreport.document.docx.DocxConstants;
 import fr.opensagres.xdocreport.template.formatter.FieldsMetadata;
 import fr.opensagres.xdocreport.template.formatter.IDocumentFormatter;
 import fr.opensagres.xdocreport.template.freemarker.FreemarkerDocumentFormatter;

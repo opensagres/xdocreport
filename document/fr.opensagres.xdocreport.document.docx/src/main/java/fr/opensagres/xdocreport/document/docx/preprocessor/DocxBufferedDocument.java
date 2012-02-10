@@ -24,12 +24,12 @@
  */
 package fr.opensagres.xdocreport.document.docx.preprocessor;
 
-import static fr.opensagres.xdocreport.document.docx.DocXConstants.FLDCHARTYPE_ATTR;
-import static fr.opensagres.xdocreport.document.docx.DocXConstants.ID_ATTR;
-import static fr.opensagres.xdocreport.document.docx.DocXConstants.INSTR_ATTR;
-import static fr.opensagres.xdocreport.document.docx.DocXConstants.NAME_ATTR;
-import static fr.opensagres.xdocreport.document.docx.DocXConstants.R_NS;
-import static fr.opensagres.xdocreport.document.docx.DocXConstants.W_NS;
+import static fr.opensagres.xdocreport.document.docx.DocxConstants.FLDCHARTYPE_ATTR;
+import static fr.opensagres.xdocreport.document.docx.DocxConstants.ID_ATTR;
+import static fr.opensagres.xdocreport.document.docx.DocxConstants.INSTR_ATTR;
+import static fr.opensagres.xdocreport.document.docx.DocxConstants.NAME_ATTR;
+import static fr.opensagres.xdocreport.document.docx.DocxConstants.R_NS;
+import static fr.opensagres.xdocreport.document.docx.DocxConstants.W_NS;
 import static fr.opensagres.xdocreport.document.docx.DocxUtils.isBookmarkEnd;
 import static fr.opensagres.xdocreport.document.docx.DocxUtils.isBookmarkStart;
 import static fr.opensagres.xdocreport.document.docx.DocxUtils.isFldChar;

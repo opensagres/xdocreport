@@ -24,13 +24,13 @@
  */
 package fr.opensagres.xdocreport.document.docx;
 
-import static fr.opensagres.xdocreport.document.docx.DocXConstants.CONTENT_TYPES_XML_ENTRY;
-import static fr.opensagres.xdocreport.document.docx.DocXConstants.MIME_MAPPING;
-import static fr.opensagres.xdocreport.document.docx.DocXConstants.WORD_DOCUMENT_XML_ENTRY;
-import static fr.opensagres.xdocreport.document.docx.DocXConstants.WORD_FOOTER_XML_ENTRY;
-import static fr.opensagres.xdocreport.document.docx.DocXConstants.WORD_HEADER_XML_ENTRY;
-import static fr.opensagres.xdocreport.document.docx.DocXConstants.WORD_RELS_XMLRELS_XML_ENTRY;
-import static fr.opensagres.xdocreport.document.docx.DocXConstants.WORD_STYLES_XML_ENTRY;
+import static fr.opensagres.xdocreport.document.docx.DocxConstants.CONTENT_TYPES_XML_ENTRY;
+import static fr.opensagres.xdocreport.document.docx.DocxConstants.MIME_MAPPING;
+import static fr.opensagres.xdocreport.document.docx.DocxConstants.WORD_DOCUMENT_XML_ENTRY;
+import static fr.opensagres.xdocreport.document.docx.DocxConstants.WORD_FOOTER_XML_ENTRY;
+import static fr.opensagres.xdocreport.document.docx.DocxConstants.WORD_HEADER_XML_ENTRY;
+import static fr.opensagres.xdocreport.document.docx.DocxConstants.WORD_RELS_XMLRELS_XML_ENTRY;
+import static fr.opensagres.xdocreport.document.docx.DocxConstants.WORD_STYLES_XML_ENTRY;
 
 import java.io.IOException;
 import java.io.Reader;

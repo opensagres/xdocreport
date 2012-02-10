@@ -177,7 +177,7 @@ import org.junit.Test;
 
 import fr.opensagres.xdocreport.core.XDocReportException;
 import fr.opensagres.xdocreport.document.IXDocReport;
-import fr.opensagres.xdocreport.document.docx.DocXConstants;
+import fr.opensagres.xdocreport.document.docx.DocxConstants;
 import fr.opensagres.xdocreport.document.docx.preprocessor.dom.DOMFontsPreprocessor;
 import fr.opensagres.xdocreport.document.registry.XDocReportRegistry;
 import fr.opensagres.xdocreport.template.IContext;
@@ -194,9 +194,9 @@ public class DocxFontsWithFreemarkerTestCase
         InputStream in = DocxFontsWithFreemarkerTestCase.class.getResourceAsStream( "DocxFontsWithFreemarker.docx" );
         IXDocReport report = XDocReportRegistry.getRegistry().loadReport( in, TemplateEngineKind.Freemarker );
 
-        report.addPreprocessor( DocXConstants.WORD_DOCUMENT_XML_ENTRY, DOMFontsPreprocessor.INSTANCE );
-        report.addPreprocessor( DocXConstants.WORD_HEADER_XML_ENTRY, DOMFontsPreprocessor.INSTANCE );
-        report.addPreprocessor( DocXConstants.WORD_FOOTER_XML_ENTRY, DOMFontsPreprocessor.INSTANCE );
+        report.addPreprocessor( DocxConstants.WORD_DOCUMENT_XML_ENTRY, DOMFontsPreprocessor.INSTANCE );
+        report.addPreprocessor( DocxConstants.WORD_HEADER_XML_ENTRY, DOMFontsPreprocessor.INSTANCE );
+        report.addPreprocessor( DocxConstants.WORD_FOOTER_XML_ENTRY, DOMFontsPreprocessor.INSTANCE );
 
         // 2) Create context Java model
         IContext context = report.createContext();

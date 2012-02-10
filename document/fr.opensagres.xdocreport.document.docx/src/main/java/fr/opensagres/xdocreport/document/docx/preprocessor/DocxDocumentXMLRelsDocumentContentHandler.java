@@ -24,14 +24,14 @@
  */
 package fr.opensagres.xdocreport.document.docx.preprocessor;
 
-import static fr.opensagres.xdocreport.document.docx.DocXConstants.RELATIONSHIPS_ELT;
-import static fr.opensagres.xdocreport.document.docx.DocXConstants.RELATIONSHIPS_HYPERLINK_NS;
-import static fr.opensagres.xdocreport.document.docx.DocXConstants.RELATIONSHIPS_IMAGE_NS;
-import static fr.opensagres.xdocreport.document.docx.DocXConstants.RELATIONSHIP_ELT;
-import static fr.opensagres.xdocreport.document.docx.DocXConstants.RELATIONSHIP_ID_ATTR;
-import static fr.opensagres.xdocreport.document.docx.DocXConstants.RELATIONSHIP_TARGET_ATTR;
-import static fr.opensagres.xdocreport.document.docx.DocXConstants.RELATIONSHIP_TARGET_MODE_ATTR;
-import static fr.opensagres.xdocreport.document.docx.DocXConstants.RELATIONSHIP_TYPE_ATTR;
+import static fr.opensagres.xdocreport.document.docx.DocxConstants.RELATIONSHIPS_ELT;
+import static fr.opensagres.xdocreport.document.docx.DocxConstants.RELATIONSHIPS_HYPERLINK_NS;
+import static fr.opensagres.xdocreport.document.docx.DocxConstants.RELATIONSHIPS_IMAGE_NS;
+import static fr.opensagres.xdocreport.document.docx.DocxConstants.RELATIONSHIP_ELT;
+import static fr.opensagres.xdocreport.document.docx.DocxConstants.RELATIONSHIP_ID_ATTR;
+import static fr.opensagres.xdocreport.document.docx.DocxConstants.RELATIONSHIP_TARGET_ATTR;
+import static fr.opensagres.xdocreport.document.docx.DocxConstants.RELATIONSHIP_TARGET_MODE_ATTR;
+import static fr.opensagres.xdocreport.document.docx.DocxConstants.RELATIONSHIP_TYPE_ATTR;
 
 import java.util.Collection;
 import java.util.Map;

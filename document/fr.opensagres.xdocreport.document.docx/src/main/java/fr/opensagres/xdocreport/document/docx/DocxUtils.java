@@ -24,25 +24,25 @@
  */
 package fr.opensagres.xdocreport.document.docx;
 
-import static fr.opensagres.xdocreport.document.docx.DocXConstants.A_NS;
-import static fr.opensagres.xdocreport.document.docx.DocXConstants.BLIP_ELT;
-import static fr.opensagres.xdocreport.document.docx.DocXConstants.BOOKMARK_END_ELT;
-import static fr.opensagres.xdocreport.document.docx.DocXConstants.BOOKMARK_START_ELT;
-import static fr.opensagres.xdocreport.document.docx.DocXConstants.CONTENT_TYPES_XML;
-import static fr.opensagres.xdocreport.document.docx.DocXConstants.EXTENT_ELT;
-import static fr.opensagres.xdocreport.document.docx.DocXConstants.EXT_ELT;
-import static fr.opensagres.xdocreport.document.docx.DocXConstants.FLDCHAR_ELT;
-import static fr.opensagres.xdocreport.document.docx.DocXConstants.FLDSIMPLE_ELT;
-import static fr.opensagres.xdocreport.document.docx.DocXConstants.HYPERLINK_ELT;
-import static fr.opensagres.xdocreport.document.docx.DocXConstants.INSTR_TEXT_ELT;
-import static fr.opensagres.xdocreport.document.docx.DocXConstants.P_ELT;
-import static fr.opensagres.xdocreport.document.docx.DocXConstants.RFONTS_ELT;
-import static fr.opensagres.xdocreport.document.docx.DocXConstants.R_ELT;
-import static fr.opensagres.xdocreport.document.docx.DocXConstants.TBL_ELT;
-import static fr.opensagres.xdocreport.document.docx.DocXConstants.TR_ELT;
-import static fr.opensagres.xdocreport.document.docx.DocXConstants.T_ELT;
-import static fr.opensagres.xdocreport.document.docx.DocXConstants.WP_NS;
-import static fr.opensagres.xdocreport.document.docx.DocXConstants.W_NS;
+import static fr.opensagres.xdocreport.document.docx.DocxConstants.A_NS;
+import static fr.opensagres.xdocreport.document.docx.DocxConstants.BLIP_ELT;
+import static fr.opensagres.xdocreport.document.docx.DocxConstants.BOOKMARK_END_ELT;
+import static fr.opensagres.xdocreport.document.docx.DocxConstants.BOOKMARK_START_ELT;
+import static fr.opensagres.xdocreport.document.docx.DocxConstants.CONTENT_TYPES_XML;
+import static fr.opensagres.xdocreport.document.docx.DocxConstants.EXTENT_ELT;
+import static fr.opensagres.xdocreport.document.docx.DocxConstants.EXT_ELT;
+import static fr.opensagres.xdocreport.document.docx.DocxConstants.FLDCHAR_ELT;
+import static fr.opensagres.xdocreport.document.docx.DocxConstants.FLDSIMPLE_ELT;
+import static fr.opensagres.xdocreport.document.docx.DocxConstants.HYPERLINK_ELT;
+import static fr.opensagres.xdocreport.document.docx.DocxConstants.INSTR_TEXT_ELT;
+import static fr.opensagres.xdocreport.document.docx.DocxConstants.P_ELT;
+import static fr.opensagres.xdocreport.document.docx.DocxConstants.RFONTS_ELT;
+import static fr.opensagres.xdocreport.document.docx.DocxConstants.R_ELT;
+import static fr.opensagres.xdocreport.document.docx.DocxConstants.TBL_ELT;
+import static fr.opensagres.xdocreport.document.docx.DocxConstants.TR_ELT;
+import static fr.opensagres.xdocreport.document.docx.DocxConstants.T_ELT;
+import static fr.opensagres.xdocreport.document.docx.DocxConstants.WP_NS;
+import static fr.opensagres.xdocreport.document.docx.DocxConstants.W_NS;
 import fr.opensagres.xdocreport.core.io.XDocArchive;
 
 /**
@@ -68,7 +68,7 @@ public class DocxUtils
         // <Override PartName="/word/document.xml"
         // ContentType="application/vnd.openxmlformats-officedocument.wordprocessingml.document.main+xml"
         // />
-        return documentArchive.getEntryNames( DocXConstants.WORD_REGEXP ).size() > 0;
+        return documentArchive.getEntryNames( DocxConstants.WORD_REGEXP ).size() > 0;
     }
 
     public static boolean isTable( String uri, String localName, String name )

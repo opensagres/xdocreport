@@ -38,6 +38,8 @@ public abstract class MergefieldBufferedRegion
     extends BufferedElement
 {
 
+    private static final String W_P = "w:p";
+
     private static final String MERGEFORMAT = "\\* MERGEFORMAT";
 
     private static final String MERGEFIELD_FIELD_TYPE = "MERGEFIELD";
@@ -65,7 +67,7 @@ public abstract class MergefieldBufferedRegion
     public String setInstrText( String instrText, FieldMetadata fieldAsTextStyling )
     {
         // compute field name if it's MERGEFIELD
-        this.fieldName = getFieldName( instrText, fieldAsTextStyling, handler.getFormatter(), handler );
+        this.fieldName = getFieldName( this, instrText, fieldAsTextStyling, handler.getFormatter(), handler );
         if ( fieldName == null )
         {
             // Not a MERGEFIELD, instrText must be decoded if it's an HYPERLINK
@@ -115,8 +117,9 @@ public abstract class MergefieldBufferedRegion
         return instrText;
     }
 
-    private static String getFieldName( String instrText, FieldMetadata fieldAsTextStyling,
-                                        IDocumentFormatter formatter, TransformedBufferedDocumentContentHandler handler )
+    private static String getFieldName( MergefieldBufferedRegion mergefield, String instrText,
+                                        FieldMetadata fieldAsTextStyling, IDocumentFormatter formatter,
+                                        TransformedBufferedDocumentContentHandler handler )
     {
         if ( StringUtils.isEmpty( instrText ) )
         {
@@ -159,10 +162,11 @@ public abstract class MergefieldBufferedRegion
                     if ( fieldAsTextStyling != null )
                     {
                         // register parent buffered element
-                        BufferedElement parent = handler.getCurrentElement().getParent();
-                        String elementId = handler.registerBufferedElement( parent );
-
                         long variableIndex = handler.getVariableIndex();
+                        // Find parent paragraph
+                        BufferedElement parent = mergefield.findParent( W_P );
+                        String elementId = handler.registerBufferedElement( variableIndex, parent );
+
                         // Set
                         String setVariableDirective =
                             formatter.formatAsCallTextStyling( variableIndex, fieldName, DocumentKind.DOCX.name(),

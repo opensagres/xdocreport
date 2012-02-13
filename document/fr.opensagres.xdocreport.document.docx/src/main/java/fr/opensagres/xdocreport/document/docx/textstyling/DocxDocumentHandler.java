@@ -54,11 +54,14 @@ public class DocxDocumentHandler
 
     private DefaultStyle defaultStyle;
 
+    private boolean insideHeader;
+
     public DocxDocumentHandler( BufferedElement parent, IContext context, String entryName )
     {
         super( parent, context, entryName );
         styleGen = DocxContextHelper.getStylesGenerator( context );
         defaultStyle = DocxContextHelper.getDefaultStyle( context );
+        this.insideHeader = false;
     }
 
     public void startDocument()
@@ -71,6 +74,12 @@ public class DocxDocumentHandler
     public void endDocument()
         throws IOException
     {
+        endParagraphIfNeeded();
+    }
+
+    private void endParagraphIfNeeded()
+        throws IOException
+    {
         if ( !paragraphsStack.isEmpty() )
         {
             paragraphsStack.size();
@@ -78,6 +87,7 @@ public class DocxDocumentHandler
             {
                 internalEndParagraph();
             }
+            paragraphsStack.clear();
         }
     }
 
@@ -105,25 +115,32 @@ public class DocxDocumentHandler
     public void handleString( String content )
         throws IOException
     {
-        // startParagraphIfNeeded();
-        super.write( "<w:r>" );
-        if ( bolding || italicsing )
+        if ( insideHeader )
         {
-            super.write( "<w:rPr>" );
-            if ( bolding )
-            {
-                super.write( "<w:b />" );
-            }
-            if ( italicsing )
-            {
-                super.write( "<w:i />" );
-            }
-            super.write( "</w:rPr>" );
+            super.write( content );
         }
-        super.write( "<w:t xml:space=\"preserve\" >" );
-        super.write( content );
-        super.write( "</w:t>" );
-        super.write( "</w:r>" );
+        else
+        {
+            // startParagraphIfNeeded();
+            super.write( "<w:r>" );
+            if ( bolding || italicsing )
+            {
+                super.write( "<w:rPr>" );
+                if ( bolding )
+                {
+                    super.write( "<w:b />" );
+                }
+                if ( italicsing )
+                {
+                    super.write( "<w:i />" );
+                }
+                super.write( "</w:rPr>" );
+            }
+            super.write( "<w:t xml:space=\"preserve\" >" );
+            super.write( content );
+            super.write( "</w:t>" );
+            super.write( "</w:r>" );
+        }
     }
 
     private void startParagraphIfNeeded()
@@ -188,6 +205,7 @@ public class DocxDocumentHandler
     public void startParagraph()
         throws IOException
     {
+        super.setTextLocation( TextLocation.End );
         internalStartParagraph( false );
     }
 
@@ -198,13 +216,32 @@ public class DocxDocumentHandler
     }
 
     public void startHeading( int level )
+        throws IOException
     {
+        // Close current paragraph
+        endParagraphIfNeeded();
 
+        // In docx title is a paragraph with a style.
+
+        /**
+         * <w:p w:rsidR="00F030AA"s w:rsidRDefault="00285B63" w:rsidP="00285B63"> <w:pPr> <w:pStyle w:val="Titre1" />
+         * </w:pPr> <w:r> <w:t>Titre1</w:t> </w:r> </w:p>
+         */
+        String headingStyleName = styleGen.getHeaderStyleId( level, defaultStyle );
+        super.setTextLocation( TextLocation.End );
+        super.write( "<w:p><w:pPr>" );
+        super.write( "<w:pStyle w:val=\"" );
+        super.write( headingStyleName );
+        super.write( "\" /></w:pPr><w:r><w:t>" );
+        insideHeader = true;
     }
 
     public void endHeading( int level )
+        throws IOException
     {
-
+        super.write( "</w:t></w:r></w:p>" );
+        insideHeader = false;
+        startParagraph();
     }
 
     @Override
@@ -245,7 +282,7 @@ public class DocxDocumentHandler
             String rId = registry.registerHyperlink( ref );
 
             // 2) Generate w:hyperlink
-            String hyperlinkStyleName = styleGen.getHyperLinkStyleId(defaultStyle);
+            String hyperlinkStyleName = styleGen.getHyperLinkStyleId( defaultStyle );
             super.write( "<w:hyperlink r:id=\"" );
             super.write( rId );
             super.write( "\" w:history=\"1\"> " );
@@ -294,5 +331,4 @@ public class DocxDocumentHandler
         }
         return hyperlinkRegistry;
     }
-
 }

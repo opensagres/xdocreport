@@ -94,7 +94,7 @@ public class DocxStylesDocumentContentHandler
             // Generate Hyperlink styles
             IBufferedRegion region = getCurrentElement();
             region.append( formatter.getFunctionDirective( DocxContextHelper.STYLES_GENERATOR_KEY,
-                                                           IDocxStylesGenerator.generateHyperlinkStyle,
+                                                           IDocxStylesGenerator.generateAllStyles,
                                                            DocxContextHelper.DEFAULT_STYLE_KEY ) );
         }
         super.doEndElement( uri, localName, name );

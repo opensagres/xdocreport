@@ -126,7 +126,7 @@ public class DocxDocumentHandlerTestCase
     {
         IContext context = new MockContext();
         // Add default style (in real context, this DefaultStyle is added by DocxStylesPreprocessor which search
-        // hyperlink style from the docx)
+        // hyperlink style from the word/styles.xml entry of the docx)
         DefaultStyle defaultStyle = new DefaultStyle();
         defaultStyle.setHyperLinkStyleId( "DefaultHyperlink" );
         DocxContextHelper.putDefaultStyle( context, defaultStyle );

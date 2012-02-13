@@ -62,6 +62,8 @@ import fr.opensagres.xdocreport.template.formatter.IDocumentFormatter;
 public class ODTBufferedDocumentContentHandler
     extends TransformedBufferedDocumentContentHandler<ODTBufferedDocument>
 {
+    private static final String TEXT_P = "text:p";
+
     private String dynamicImageName;
 
     private boolean textInputParsing = false;
@@ -251,17 +253,16 @@ public class ODTBufferedDocumentContentHandler
             if ( fieldAsTextStyling != null && getFormatter() != null )
             {
                 // register parent buffered element
-
-                BufferedElement textPElement = getCurrentElement().findParent( "text:p" );
+                long variableIndex = getVariableIndex();
+                BufferedElement textPElement = getCurrentElement().findParent( TEXT_P );
                 if ( textPElement == null )
                 {
                     textPElement = getCurrentElement().getParent();
                 }
-                String elementId = registerBufferedElement( textPElement );
+                String elementId = registerBufferedElement(variableIndex, textPElement );
 
                 // [#assign
-                // 1327511861250_id=___TextStylingRegistry.transform(comments_odt,"NoEscape","ODT","1327511861250_id",___context)]
-                long variableIndex = getVariableIndex();
+                // 1327511861250_id=___TextStylingRegistry.transform(comments_odt,"NoEscape","ODT","1327511861250_id",___context)]                
                 String setVariableDirective =
                     getFormatter().formatAsCallTextStyling( variableIndex, fieldName, DocumentKind.ODT.name(),
                                                             fieldAsTextStyling.getSyntaxKind(),

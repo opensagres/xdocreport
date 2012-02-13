@@ -45,6 +45,8 @@ public abstract class TransformedBufferedDocumentContentHandler<Document extends
     extends BufferedDocumentContentHandler<Document>
 {
 
+    private static final String _ELEMENT_ID = "_elementId";
+
     private static final String AFTER_TOKEN = "@/";
 
     private static final String BEFORE_TOKEN = "@";
@@ -457,7 +459,7 @@ public abstract class TransformedBufferedDocumentContentHandler<Document extends
         return null;
     }
 
-    public String registerBufferedElement( BufferedElement element )
+    public String registerBufferedElement( long variableIndex, BufferedElement element )
     {
         Map<String, BufferedElement> elements =
             (Map<String, BufferedElement>) getSharedContext().get( DocumentContextHelper.ELEMENTS_KEY );
@@ -465,9 +467,17 @@ public abstract class TransformedBufferedDocumentContentHandler<Document extends
         {
             elements = new HashMap<String, BufferedElement>();
         }
-        String id = System.currentTimeMillis() + "_id";
+        String id = generateKey( variableIndex );
         elements.put( id, element );
         return id;
+    }
+
+    public static String generateKey( long variableIndex )
+    {
+        StringBuilder key = new StringBuilder();
+        key.append( variableIndex );
+        key.append( _ELEMENT_ID );
+        return key.toString();
     }
 
     public long getVariableIndex()

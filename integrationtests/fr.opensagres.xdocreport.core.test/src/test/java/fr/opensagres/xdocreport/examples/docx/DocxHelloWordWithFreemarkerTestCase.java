@@ -66,7 +66,7 @@ public class DocxHelloWordWithFreemarkerTestCase
         // 1) Load Docx file by filling Freemarker template engine and cache it
         // to the registry
         IXDocReport report =
-            XDocReportRegistry.getRegistry().loadReport( DocxHelloWordWithFreemarkerTestCase.class.getResourceAsStream( "DocxHelloWordWithFreemarker.Docx" ),
+            XDocReportRegistry.getRegistry().loadReport( DocxHelloWordWithFreemarkerTestCase.class.getResourceAsStream( "DocxHelloWordWithFreemarker.docx" ),
                                                          TemplateEngineKind.Freemarker );
 
         Assert.assertTrue( "This is a Docx file, DocxReport implementation should have been resolved....",
@@ -79,7 +79,7 @@ public class DocxHelloWordWithFreemarkerTestCase
         // 3) Merge Java model with the Docx
         File out = new File( "target" );
         out.mkdirs();
-        File file = new File( out, "DocxHelloWordWithFreemarker.Docx" );
+        File file = new File( out, "DocxHelloWordWithFreemarker.docx" );
         report.process( context, new FileOutputStream( file ) );
 
     }
@@ -102,7 +102,7 @@ public class DocxHelloWordWithFreemarkerTestCase
     @Test
     public void loadExistingDocxReport()
     {
-        String fileName = "DocxHelloWordWithFreemarker.Docx";
+        String fileName = "DocxHelloWordWithFreemarker.docx";
         // 1) Load Docx file by filling Freemarker template engine and cache it
         // to the registry
         IXDocReport report = null;
@@ -127,7 +127,7 @@ public class DocxHelloWordWithFreemarkerTestCase
     @Test
     public void loadReportWithId()
     {
-        String fileName = "DocxHelloWordWithFreemarker.Docx";
+        String fileName = "DocxHelloWordWithFreemarker.docx";
 
         IXDocReport report = null;
         try
@@ -150,7 +150,7 @@ public class DocxHelloWordWithFreemarkerTestCase
     @Test
     public void cannotRegisterTwoTimeSameId()
     {
-        String fileName = "DocxHelloWordWithFreemarker.Docx";
+        String fileName = "DocxHelloWordWithFreemarker.docx";
 
         IXDocReport report = null;
         try
@@ -175,7 +175,7 @@ public class DocxHelloWordWithFreemarkerTestCase
     public void checkXDocArchiveContent()
         throws IOException, XDocReportException
     {
-        String fileName = "DocxHelloWordWithFreemarker.Docx";
+        String fileName = "DocxHelloWordWithFreemarker.docx";
 
         IXDocReport report = null;
 

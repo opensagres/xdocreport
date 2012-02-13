@@ -110,7 +110,7 @@ public class DocxHelloWordWithVelocityTestCase
     @Test
     public void loadExistingDocxReport()
     {
-        String fileName = "DocxHelloWordWithVelocity.Docx";
+        String fileName = "DocxHelloWordWithVelocity.docx";
         // 1) Load Docx file by filling Velocity template engine and cache it
         // to the registry
         IXDocReport report = null;
@@ -135,7 +135,7 @@ public class DocxHelloWordWithVelocityTestCase
     @Test
     public void loadReportWithId()
     {
-        String fileName = "DocxHelloWordWithVelocity.Docx";
+        String fileName = "DocxHelloWordWithVelocity.docx";
 
         IXDocReport report = null;
         try
@@ -158,7 +158,7 @@ public class DocxHelloWordWithVelocityTestCase
     @Test
     public void cannotRegisterTwoTimeSameId()
     {
-        String fileName = "DocxHelloWordWithVelocity.Docx";
+        String fileName = "DocxHelloWordWithVelocity.docx";
 
         IXDocReport report = null;
         try
@@ -183,7 +183,7 @@ public class DocxHelloWordWithVelocityTestCase
     public void checkXDocArchiveContent()
         throws IOException, XDocReportException
     {
-        String fileName = "DocxHelloWordWithVelocity.Docx";
+        String fileName = "DocxHelloWordWithVelocity.docx";
 
         IXDocReport report = null;
 

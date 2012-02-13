@@ -11,7 +11,7 @@ public class DocxContextHelper
 {
     public static final String DEFAULT_STYLE_KEY = "___DefaultStyle";
 
-    public static final String STYLES_GENERATOR_KEY = "___StylesGenerator";
+    public static final String STYLES_GENERATOR_KEY = "___NoEscapeStylesGenerator";
 
     public static void putHyperlinkRegistry( IContext context, String entryName, HyperlinkRegistry registry )
     {

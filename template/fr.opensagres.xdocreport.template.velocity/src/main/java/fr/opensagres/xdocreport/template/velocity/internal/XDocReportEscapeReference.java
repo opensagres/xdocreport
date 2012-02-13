@@ -42,6 +42,8 @@ public class XDocReportEscapeReference
 
     private static final String NO_ESCAPE = "$" + AbstractDocumentFormatter.NO_ESCAPE;
 
+    private static final String NO_ESCAPE_FCT = "${" + AbstractDocumentFormatter.NO_ESCAPE;
+
     private String[] searchList;
 
     private String[] replacementList;
@@ -80,7 +82,7 @@ public class XDocReportEscapeReference
     @Override
     public Object referenceInsert( String reference, Object value )
     {
-        if ( reference != null && reference.startsWith( NO_ESCAPE ) )
+        if ( reference != null && ( reference.startsWith( NO_ESCAPE ) || reference.startsWith( NO_ESCAPE_FCT ) ) )
         {
             // Emulate [#noescape] directive of Freemarker.
             return value;

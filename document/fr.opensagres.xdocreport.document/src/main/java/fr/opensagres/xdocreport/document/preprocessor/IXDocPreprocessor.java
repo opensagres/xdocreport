@@ -54,7 +54,7 @@ public interface IXDocPreprocessor
      * @throws IOException
      */
     void preprocess( String entryName, XDocArchive outputArchive, FieldsMetadata fieldsMetadata,
-                     IDocumentFormatter formater, Map<String, Object> sharedContext )
+                     IDocumentFormatter formatter, Map<String, Object> sharedContext )
         throws XDocReportException, IOException;
 
 }

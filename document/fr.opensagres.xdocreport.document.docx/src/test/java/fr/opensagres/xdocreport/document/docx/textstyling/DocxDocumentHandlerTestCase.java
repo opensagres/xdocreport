@@ -28,9 +28,9 @@ import junit.framework.Assert;
 
 import org.junit.Test;
 
+import fr.opensagres.xdocreport.document.docx.preprocessor.DefaultStyle;
 import fr.opensagres.xdocreport.document.docx.preprocessor.HyperlinkInfo;
 import fr.opensagres.xdocreport.document.docx.preprocessor.HyperlinkRegistry;
-import fr.opensagres.xdocreport.document.docx.preprocessor.HyperlinkUtils;
 import fr.opensagres.xdocreport.document.docx.template.DocxContextHelper;
 import fr.opensagres.xdocreport.document.preprocessor.sax.BufferedElement;
 import fr.opensagres.xdocreport.document.textstyling.IDocumentHandler;
@@ -98,7 +98,7 @@ public class DocxDocumentHandlerTestCase
     }
 
     @Test
-    public void testHyperlink()
+    public void testHyperlinkByUsingXDocReport_HyperlinkStyle()
         throws Exception
     {
         IContext context = new MockContext();
@@ -108,6 +108,35 @@ public class DocxDocumentHandlerTestCase
         IDocumentHandler handler = new DocxDocumentHandler( parent, context, "word/document.xml" );
         formatter.transform( "<a href=\"http://code.google.com/p/xdocreport/\" >XDocReport</a>", handler );
         Assert.assertEquals( "<w:hyperlink r:id=\"___rId0\" w:history=\"1\"> <w:proofErr w:type=\"spellStart\" /><w:r w:rsidRPr=\"001D30B5\"><w:rPr><w:rStyle w:val=\"XDocReport_Hyperlink\" /></w:rPr><w:t>XDocReport</w:t></w:r><w:proofErr w:type=\"spellEnd\" /></w:hyperlink>",
+                             handler.getTextBody() );
+
+        HyperlinkRegistry registry = DocxContextHelper.getHyperlinkRegistry( context, "word/document.xml" );
+        Assert.assertNotNull( registry );
+        Assert.assertEquals( 1, registry.getHyperlinks().size() );
+
+        HyperlinkInfo hyperlinkInfo = registry.getHyperlinks().get( 0 );
+        Assert.assertEquals( "___rId0", hyperlinkInfo.getId() );
+        Assert.assertEquals( "http://code.google.com/p/xdocreport/", hyperlinkInfo.getTarget() );
+        Assert.assertEquals( "External", hyperlinkInfo.getTargetMode() );
+    }
+
+    @Test
+    public void testHyperlinkByUsingDefaultHyperlinkStyle()
+        throws Exception
+    {
+        IContext context = new MockContext();
+        // Add default style (in real context, this DefaultStyle is added by DocxStylesPreprocessor which search
+        // hyperlink style from the docx)
+        DefaultStyle defaultStyle = new DefaultStyle();
+        defaultStyle.setHyperLinkStyleId( "DefaultHyperlink" );
+        DocxContextHelper.putDefaultStyle( context, defaultStyle );
+
+        BufferedElement parent = null;
+
+        ITextStylingTransformer formatter = HTMLTextStylingTransformer.INSTANCE;
+        IDocumentHandler handler = new DocxDocumentHandler( parent, context, "word/document.xml" );
+        formatter.transform( "<a href=\"http://code.google.com/p/xdocreport/\" >XDocReport</a>", handler );
+        Assert.assertEquals( "<w:hyperlink r:id=\"___rId0\" w:history=\"1\"> <w:proofErr w:type=\"spellStart\" /><w:r w:rsidRPr=\"001D30B5\"><w:rPr><w:rStyle w:val=\"DefaultHyperlink\" /></w:rPr><w:t>XDocReport</w:t></w:r><w:proofErr w:type=\"spellEnd\" /></w:hyperlink>",
                              handler.getTextBody() );
 
         HyperlinkRegistry registry = DocxContextHelper.getHyperlinkRegistry( context, "word/document.xml" );

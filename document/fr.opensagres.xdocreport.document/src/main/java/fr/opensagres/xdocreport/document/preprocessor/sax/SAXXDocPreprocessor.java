@@ -50,14 +50,14 @@ public abstract class SAXXDocPreprocessor
 
     @Override
     public boolean preprocess( String entryName, Reader reader, Writer writer, FieldsMetadata fieldsMetadata,
-                               IDocumentFormatter formater, Map<String, Object> sharedContext )
+                               IDocumentFormatter formatter, Map<String, Object> sharedContext )
         throws XDocReportException, IOException
     {
         try
         {
             XMLReader xmlReader = XMLReaderFactory.createXMLReader();
             BufferedDocumentContentHandler<?> contentHandler =
-                createBufferedDocumentContentHandler( entryName, fieldsMetadata, formater, sharedContext );
+                createBufferedDocumentContentHandler( entryName, fieldsMetadata, formatter, sharedContext );
             xmlReader.setContentHandler( contentHandler );
             xmlReader.parse( new InputSource( reader ) );
             BufferedDocument document = contentHandler.getBufferedDocument();

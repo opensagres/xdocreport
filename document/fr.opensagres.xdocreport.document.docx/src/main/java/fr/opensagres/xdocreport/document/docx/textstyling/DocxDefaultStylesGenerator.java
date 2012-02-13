@@ -19,7 +19,7 @@ public class DocxDefaultStylesGenerator
     static
     {
         DEFAULT_HEADERS_STYLE_ID = new ArrayList<String>();
-        for ( int i = 0; i < getHeaderStylesCount(); i++ )
+        for ( int i = 1; i < getHeaderStylesCount() + 1; i++ )
         {
             DEFAULT_HEADERS_STYLE_ID.add( "XDocReport_Heading_" + i );
         }
@@ -66,7 +66,7 @@ public class DocxDefaultStylesGenerator
 
     public void generateHeadersStyle( StringBuilder styles, DefaultStyle defaultStyle )
     {
-        for ( int i = 0; i < getHeaderStylesCount(); i++ )
+        for ( int i = 1; i < getHeaderStylesCount() + 1; i++ )
         {
             generateHeaderStyle( styles, defaultStyle, i );
         }
@@ -78,10 +78,10 @@ public class DocxDefaultStylesGenerator
         if ( !defaultStyle.hasHeaderStyle( level ) )
         {
             styles.append( "<w:style w:type=\"paragraph\" w:styleId=\"" );
-            styles.append( getDefaultHeaderStyleId( level + 1 ) );
+            styles.append( getDefaultHeaderStyleId( level ) );
             styles.append( "\">" );
             styles.append( "<w:name w:val=\"heading " );
-            styles.append( level + 1 );
+            styles.append( level );
             styles.append( "\" />" );
 
             styles.append( "<w:uiPriority w:val=\"9\" />" );
@@ -92,7 +92,7 @@ public class DocxDefaultStylesGenerator
             styles.append( "<w:keepLines />" );
             styles.append( "<w:spacing w:before=\"480\" w:after=\"0\" />" );
             styles.append( "<w:outlineLvl w:val=\"" );
-            styles.append( level );
+            styles.append( level - 1 );
             styles.append( "\"/>" );
             styles.append( "</w:pPr> " );
 
@@ -100,23 +100,35 @@ public class DocxDefaultStylesGenerator
             styles.append( "<w:rFonts w:asciiTheme=\"majorHAnsi\" w:eastAsiaTheme=\"majorEastAsia\"" );
             styles.append( " w:hAnsiTheme=\"majorHAnsi\" w:cstheme=\"majorBidi\" />" );
 
-            if ( level < 4 )
+            if ( level <= 4 )
             {
                 styles.append( "<w:b />" );
                 styles.append( "<w:bCs />" );
             }
 
-            styles.append( "<w:color w:val=\"365F91\" w:themeColor=\"accent1\" w:themeShade=\"BF\" />" );
+            switch ( level )
+            {
+                case 5:
+                case 6:
+                    styles.append( "<w:color w:val=\"243F60\" w:themeColor=\"accent1\" w:themeShade=\"7F\" />" );
+                    break;
+                default:
+                    styles.append( "<w:color w:val=\"365F91\" w:themeColor=\"accent1\" w:themeShade=\"BF\" />" );
+            }
 
             switch ( level )
             {
-                case 0:
+                case 1:
                     styles.append( "<w:sz w:val=\"28\" />" );
                     styles.append( "<w:szCs w:val=\"28\" />" );
                     break;
-                case 1:
+                case 2:
                     styles.append( "<w:sz w:val=\"26\" />" );
                     styles.append( "<w:szCs w:val=\"26\" />" );
+                    break;
+                case 4:
+                case 6:
+                    styles.append( "<w:iCs />" );
                     break;
             }
 

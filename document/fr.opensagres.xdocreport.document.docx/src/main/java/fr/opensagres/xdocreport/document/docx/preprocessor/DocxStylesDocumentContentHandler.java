@@ -5,6 +5,7 @@ import java.util.Map;
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
 
+import fr.opensagres.xdocreport.core.utils.StringUtils;
 import fr.opensagres.xdocreport.document.docx.template.DocxContextHelper;
 import fr.opensagres.xdocreport.document.docx.textstyling.IDocxStylesGenerator;
 import fr.opensagres.xdocreport.document.preprocessor.sax.BufferedDocumentContentHandler;
@@ -60,10 +61,23 @@ public class DocxStylesDocumentContentHandler
              * w:style w:type="character" w:styleId="Lienhypertexte"> <w:name w:val="Hyperlink" />
              */
             String val = attributes.getValue( W_VAL_ATTR );
-            if ( HYPERLINK_STYLE_NAME.equals( val ) )
+            if ( StringUtils.isNotEmpty( val ) )
             {
-                DefaultStyle defaultStyle = getDefaultStyle();
-                defaultStyle.setHyperLinkStyleId( currentStyleId );
+                if ( HYPERLINK_STYLE_NAME.equals( val ) )
+                {
+                    DefaultStyle defaultStyle = getDefaultStyle();
+                    defaultStyle.setHyperLinkStyleId( currentStyleId );
+                }
+                else if ( val.startsWith( "heading " ) )
+                {
+                    String index = val.substring( "heading ".length(), val.length() );
+                    Integer level = StringUtils.asInteger( index );
+                    if ( level != null )
+                    {
+                        DefaultStyle defaultStyle = getDefaultStyle();
+                        defaultStyle.addHeaderStyle( level, currentStyleId );
+                    }
+                }
             }
         }
         return super.doStartElement( uri, localName, name, attributes );

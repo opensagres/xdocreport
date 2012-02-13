@@ -22,7 +22,7 @@
  * OF CONTRACT, TORT OR OTHERWISE,  ARISING FROM, OUT OF OR IN CONNECTION
  * WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
-package fr.opensagres.xdocreport.examples.odt;
+package fr.opensagres.xdocreport.examples.docx;
 
 import static org.hamcrest.core.IsInstanceOf.instanceOf;
 import static org.junit.Assert.assertEquals;
@@ -38,56 +38,48 @@ import java.io.Reader;
 import java.io.StringWriter;
 
 import org.junit.Assert;
-import org.junit.Before;
 import org.junit.Test;
 
 import fr.opensagres.xdocreport.core.XDocReportException;
 import fr.opensagres.xdocreport.core.io.IOUtils;
 import fr.opensagres.xdocreport.core.io.XDocArchive;
 import fr.opensagres.xdocreport.document.IXDocReport;
-import fr.opensagres.xdocreport.document.odt.ODTConstants;
-import fr.opensagres.xdocreport.document.odt.ODTReport;
-import fr.opensagres.xdocreport.document.odt.ODTUtils;
+import fr.opensagres.xdocreport.document.docx.DocxConstants;
+import fr.opensagres.xdocreport.document.docx.DocxReport;
+import fr.opensagres.xdocreport.document.docx.DocxUtils;
 import fr.opensagres.xdocreport.document.registry.XDocReportRegistry;
 import fr.opensagres.xdocreport.template.IContext;
 import fr.opensagres.xdocreport.template.TemplateEngineKind;
 
 /**
- * Example with Open Office ODT which contains the content Hello !$name. Merge with Velocity template engine will
+ * Example with MS Word Docx which contains the content Hello ${name}!. Merge with Freemarker template engine will
  * replace this cell with Hello world!
  */
-public class ODTHelloWordWithVelocityTestCase
+public class DocxHelloWordWithFreemarkerTestCase
 {
-
-    @Before
-    public void onBefore()
-    {
-        // Clear report cached in the registry before execute a test.
-        XDocReportRegistry.getRegistry().clear();
-    }
 
     @Test
     public void testOne()
         throws IOException, XDocReportException
     {
 
-        // 1) Load ODT file by filling Velocity template engine and cache it
+        // 1) Load Docx file by filling Freemarker template engine and cache it
         // to the registry
         IXDocReport report =
-            XDocReportRegistry.getRegistry().loadReport( ODTHelloWordWithVelocityTestCase.class.getResourceAsStream( "ODTHelloWordWithVelocity.odt" ),
-                                                         TemplateEngineKind.Velocity );
+            XDocReportRegistry.getRegistry().loadReport( DocxHelloWordWithFreemarkerTestCase.class.getResourceAsStream( "DocxHelloWordWithFreemarker.Docx" ),
+                                                         TemplateEngineKind.Freemarker );
 
-        Assert.assertTrue( "This is a odt file, ODTReport implementation should have been resolved....",
-                           report instanceof ODTReport );
+        Assert.assertTrue( "This is a Docx file, DocxReport implementation should have been resolved....",
+                           report instanceof DocxReport );
 
-        // 2) Create context Java model
+        // 3) Create context Java model
         IContext context = report.createContext();
         context.put( "name", "world" );
 
-        // 3) Merge Java model with the ODT
+        // 3) Merge Java model with the Docx
         File out = new File( "target" );
         out.mkdirs();
-        File file = new File( out, "ODTHelloWordWithVelocity.odt" );
+        File file = new File( out, "DocxHelloWordWithFreemarker.Docx" );
         report.process( context, new FileOutputStream( file ) );
 
     }
@@ -98,7 +90,7 @@ public class ODTHelloWordWithVelocityTestCase
 
         try
         {
-            XDocArchive.readZip( ODTHelloWordWithVelocityTestCase.class.getResourceAsStream( "not_found" ) );
+            XDocArchive.readZip( DocxHelloWordWithFreemarkerTestCase.class.getResourceAsStream( "not_found" ) );
             fail( "'not_found' does not exists " );
         }
         catch ( IOException e )
@@ -108,18 +100,18 @@ public class ODTHelloWordWithVelocityTestCase
     }
 
     @Test
-    public void loadExistingODTReport()
+    public void loadExistingDocxReport()
     {
-        String fileName = "ODTHelloWordWithVelocity.odt";
-        // 1) Load ODT file by filling Velocity template engine and cache it
+        String fileName = "DocxHelloWordWithFreemarker.Docx";
+        // 1) Load Docx file by filling Freemarker template engine and cache it
         // to the registry
         IXDocReport report = null;
         try
         {
 
             report =
-                XDocReportRegistry.getRegistry().loadReport( ODTHelloWordWithVelocityTestCase.class.getResourceAsStream( fileName ),
-                                                             TemplateEngineKind.Velocity );
+                XDocReportRegistry.getRegistry().loadReport( DocxHelloWordWithFreemarkerTestCase.class.getResourceAsStream( fileName ),
+                                                             TemplateEngineKind.Freemarker );
 
         }
         catch ( Exception e )
@@ -127,23 +119,23 @@ public class ODTHelloWordWithVelocityTestCase
             fail( "Unable to load " + fileName + " " + e.getMessage() );
         }
 
-        assertThat( "This is a odt file, ODTReport implementation should have been resolved....", report,
-                    instanceOf( ODTReport.class ) );
+        assertThat( "This is a Docx file, DocxReport implementation should have been resolved....", report,
+                    instanceOf( DocxReport.class ) );
 
     }
 
     @Test
     public void loadReportWithId()
     {
-        String fileName = "ODTHelloWordWithVelocity.odt";
+        String fileName = "DocxHelloWordWithFreemarker.Docx";
 
         IXDocReport report = null;
         try
         {
 
             report =
-                XDocReportRegistry.getRegistry().loadReport( ODTHelloWordWithVelocityTestCase.class.getResourceAsStream( fileName ),
-                                                             fileName, TemplateEngineKind.Velocity );
+                XDocReportRegistry.getRegistry().loadReport( DocxHelloWordWithFreemarkerTestCase.class.getResourceAsStream( fileName ),
+                                                             fileName, TemplateEngineKind.Freemarker );
 
         }
         catch ( Exception e )
@@ -158,18 +150,18 @@ public class ODTHelloWordWithVelocityTestCase
     @Test
     public void cannotRegisterTwoTimeSameId()
     {
-        String fileName = "ODTHelloWordWithVelocity.odt";
+        String fileName = "DocxHelloWordWithFreemarker.Docx";
 
         IXDocReport report = null;
         try
         {
 
             report =
-                XDocReportRegistry.getRegistry().loadReport( ODTHelloWordWithVelocityTestCase.class.getResourceAsStream( fileName ),
-                                                             "id", TemplateEngineKind.Velocity );
+                XDocReportRegistry.getRegistry().loadReport( DocxHelloWordWithFreemarkerTestCase.class.getResourceAsStream( fileName ),
+                                                             "id", TemplateEngineKind.Freemarker );
 
-            XDocReportRegistry.getRegistry().loadReport( ODTHelloWordWithVelocityTestCase.class.getResourceAsStream( fileName ),
-                                                         "id", TemplateEngineKind.Velocity );
+            XDocReportRegistry.getRegistry().loadReport( DocxHelloWordWithFreemarkerTestCase.class.getResourceAsStream( fileName ),
+                                                         "id", TemplateEngineKind.Freemarker );
             fail( "cannot register 2 reports with the same id" );
         }
         catch ( Exception e )
@@ -183,26 +175,26 @@ public class ODTHelloWordWithVelocityTestCase
     public void checkXDocArchiveContent()
         throws IOException, XDocReportException
     {
-        String fileName = "ODTHelloWordWithVelocity.odt";
+        String fileName = "DocxHelloWordWithFreemarker.Docx";
 
         IXDocReport report = null;
 
         report =
-            XDocReportRegistry.getRegistry().loadReport( ODTHelloWordWithVelocityTestCase.class.getResourceAsStream( fileName ),
-                                                         TemplateEngineKind.Velocity );
+            XDocReportRegistry.getRegistry().loadReport( DocxHelloWordWithFreemarkerTestCase.class.getResourceAsStream( fileName ),
+                                                         TemplateEngineKind.Freemarker );
 
         XDocArchive archive = report.getPreprocessedDocumentArchive();
 
         assertNotNull( archive );
-        assertTrue( archive.hasEntry( ODTConstants.CONTENT_XML_ENTRY ) );
-        assertTrue( ODTUtils.isODT( archive ) );
+        assertTrue( archive.hasEntry( DocxConstants.WORD_DOCUMENT_XML_ENTRY ) );
+        assertTrue( DocxUtils.isDocx( archive ) );
 
-        Reader reader = archive.getEntryReader( ODTConstants.CONTENT_XML_ENTRY );
+        Reader reader = archive.getEntryReader( DocxConstants.WORD_DOCUMENT_XML_ENTRY );
         StringWriter writer = new StringWriter();
         IOUtils.copy( reader, writer );
 
         String contentAsString = writer.toString();
         // System.out.println(contentAsString);
-        assertTrue( contentAsString.contains( "$name" ) );
+        assertTrue( contentAsString.contains( "${name}" ) );
     }
 }

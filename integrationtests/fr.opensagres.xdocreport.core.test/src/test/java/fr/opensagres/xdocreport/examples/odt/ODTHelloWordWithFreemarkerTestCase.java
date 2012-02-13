@@ -60,36 +60,28 @@ public class ODTHelloWordWithFreemarkerTestCase
 
     @Test
     public void testOne()
+        throws IOException, XDocReportException
     {
-        try
-        {
 
-            // 1) Load ODT file by filling Freemarker template engine and cache it
-            // to the registry
-            IXDocReport report =
-                XDocReportRegistry.getRegistry().loadReport( ODTHelloWordWithFreemarkerTestCase.class.getResourceAsStream( "ODTHelloWordWithFreemarker.odt" ),
-                                                             TemplateEngineKind.Freemarker );
+        // 1) Load ODT file by filling Freemarker template engine and cache it
+        // to the registry
+        IXDocReport report =
+            XDocReportRegistry.getRegistry().loadReport( ODTHelloWordWithFreemarkerTestCase.class.getResourceAsStream( "ODTHelloWordWithFreemarker.odt" ),
+                                                         TemplateEngineKind.Freemarker );
 
-            Assert.assertTrue( "This is a odt file, ODTReport implementation should have been resolved....",
-                               report instanceof ODTReport );
+        Assert.assertTrue( "This is a odt file, ODTReport implementation should have been resolved....",
+                           report instanceof ODTReport );
 
-            // 3) Create context Java model
-            IContext context = report.createContext();
-            context.put( "name", "world" );
+        // 3) Create context Java model
+        IContext context = report.createContext();
+        context.put( "name", "world" );
 
-            // 3) Merge Java model with the ODT
-            File file = new File( "ODTHelloWordWithFreemarker.odt" );
-            report.process( context, new FileOutputStream( file ) );
+        // 3) Merge Java model with the ODT
+        File out = new File( "target" );
+        out.mkdirs();
+        File file = new File( out, "ODTHelloWordWithFreemarker.odt" );
+        report.process( context, new FileOutputStream( file ) );
 
-        }
-        catch ( IOException e )
-        {
-            e.printStackTrace();
-        }
-        catch ( XDocReportException e )
-        {
-            e.printStackTrace();
-        }
     }
 
     @Test

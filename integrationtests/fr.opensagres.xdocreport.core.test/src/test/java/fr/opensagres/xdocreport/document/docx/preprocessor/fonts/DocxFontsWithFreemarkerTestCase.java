@@ -171,7 +171,6 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.OutputStream;
 
 import org.junit.Test;
 
@@ -200,15 +199,16 @@ public class DocxFontsWithFreemarkerTestCase
 
         // 2) Create context Java model
         IContext context = report.createContext();
-        context.put( "name", "XXXXXXXXXXXXXXXXXXXXXXXX" );
-        
+        context.put( "name", "word" );
+
         // Change every font name+size with Magneto + 40
         context.put( DOMFontsPreprocessor.FONT_NAME_KEY, "Magneto" );
         context.put( DOMFontsPreprocessor.FONT_SIZE_KEY, "40" );
 
         // 3) Generate report by merging Java model with the Docx
-        OutputStream out = new FileOutputStream( new File( "DocxFontsWithFreemarker_Out.docx" ) );
-        report.process( context, out );
+        File out = new File( "target" );
+        out.mkdirs();
+        report.process( context, new FileOutputStream( new File( out, "DocxFontsWithFreemarker_Out.docx" ) ) );
 
     }
 }

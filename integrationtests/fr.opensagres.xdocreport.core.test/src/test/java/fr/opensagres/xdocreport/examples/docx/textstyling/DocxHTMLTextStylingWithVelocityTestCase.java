@@ -87,7 +87,12 @@ public class DocxHTMLTextStylingWithVelocityTestCase
 
         StringBuilder html = new StringBuilder();
         html.append( "<h1>Title 1</h1>" );
-
+        html.append( "xxx <a href=\"xxxxxxxx\" >xxx</a> and <strong>b</strong>." );
+        html.append( "<h2>Title 1.1</h2>" );
+        html.append( "aaaa<em>aaaaa</em>aaaaa <p>iiiiiiiiiiiiiii<b>hhh</b></p>" );
+        html.append( "<h3>Title 1.1.1</h3>" );
+        html.append( "<h1>Title 2</h1>" );
+        
         // 2) Create context Java model
         IContext context = report.createContext();
         context.put( "comments", html.toString() );
@@ -114,7 +119,7 @@ public class DocxHTMLTextStylingWithVelocityTestCase
             // success
         }
     }
-
+ 
     @Test
     public void loadExistingDocxReport()
     {
@@ -211,6 +216,6 @@ public class DocxHTMLTextStylingWithVelocityTestCase
 
         String contentAsString = writer.toString();
         // System.out.println(contentAsString);
-        assertTrue( contentAsString.contains( "$name" ) );
+        assertTrue( contentAsString.contains( "$comments" ) );
     }
 }

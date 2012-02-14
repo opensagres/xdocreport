@@ -51,8 +51,11 @@ public class DocxDocumentHandlerTestCase
         ITextStylingTransformer formatter = HTMLTextStylingTransformer.INSTANCE;
         IDocumentHandler handler = new DocxDocumentHandler( parent, context, "word/document.xml" );
         formatter.transform( "<b>text</b>", handler );
+
+        Assert.assertEquals( "", handler.getTextBefore() );
         Assert.assertEquals( "<w:r><w:rPr><w:b /></w:rPr><w:t xml:space=\"preserve\" >text</w:t></w:r>",
                              handler.getTextBody() );
+        Assert.assertEquals( "", handler.getTextEnd() );
     }
 
     @Test
@@ -65,8 +68,11 @@ public class DocxDocumentHandlerTestCase
         ITextStylingTransformer formatter = HTMLTextStylingTransformer.INSTANCE;
         IDocumentHandler handler = new DocxDocumentHandler( parent, context, "word/document.xml" );
         formatter.transform( "<strong>text</strong>", handler );
+
+        Assert.assertEquals( "", handler.getTextBefore() );
         Assert.assertEquals( "<w:r><w:rPr><w:b /></w:rPr><w:t xml:space=\"preserve\" >text</w:t></w:r>",
                              handler.getTextBody() );
+        Assert.assertEquals( "", handler.getTextEnd() );
     }
 
     @Test
@@ -79,8 +85,11 @@ public class DocxDocumentHandlerTestCase
         ITextStylingTransformer formatter = HTMLTextStylingTransformer.INSTANCE;
         IDocumentHandler handler = new DocxDocumentHandler( parent, context, "word/document.xml" );
         formatter.transform( "<i>text</i>", handler );
+
+        Assert.assertEquals( "", handler.getTextBefore() );
         Assert.assertEquals( "<w:r><w:rPr><w:i /></w:rPr><w:t xml:space=\"preserve\" >text</w:t></w:r>",
                              handler.getTextBody() );
+        Assert.assertEquals( "", handler.getTextEnd() );
     }
 
     @Test
@@ -93,8 +102,11 @@ public class DocxDocumentHandlerTestCase
         ITextStylingTransformer formatter = HTMLTextStylingTransformer.INSTANCE;
         IDocumentHandler handler = new DocxDocumentHandler( parent, context, "word/document.xml" );
         formatter.transform( "<em>text</em>", handler );
+
+        Assert.assertEquals( "", handler.getTextBefore() );
         Assert.assertEquals( "<w:r><w:rPr><w:i /></w:rPr><w:t xml:space=\"preserve\" >text</w:t></w:r>",
                              handler.getTextBody() );
+        Assert.assertEquals( "", handler.getTextEnd() );
     }
 
     @Test
@@ -107,8 +119,11 @@ public class DocxDocumentHandlerTestCase
         ITextStylingTransformer formatter = HTMLTextStylingTransformer.INSTANCE;
         IDocumentHandler handler = new DocxDocumentHandler( parent, context, "word/document.xml" );
         formatter.transform( "<a href=\"http://code.google.com/p/xdocreport/\" >XDocReport</a>", handler );
+
+        Assert.assertEquals( "", handler.getTextBefore() );
         Assert.assertEquals( "<w:hyperlink r:id=\"___rId0\" w:history=\"1\"> <w:proofErr w:type=\"spellStart\" /><w:r w:rsidRPr=\"001D30B5\"><w:rPr><w:rStyle w:val=\"XDocReport_Hyperlink\" /></w:rPr><w:t>XDocReport</w:t></w:r><w:proofErr w:type=\"spellEnd\" /></w:hyperlink>",
                              handler.getTextBody() );
+        Assert.assertEquals( "", handler.getTextEnd() );
 
         HyperlinkRegistry registry = DocxContextHelper.getHyperlinkRegistry( context, "word/document.xml" );
         Assert.assertNotNull( registry );
@@ -136,8 +151,11 @@ public class DocxDocumentHandlerTestCase
         ITextStylingTransformer formatter = HTMLTextStylingTransformer.INSTANCE;
         IDocumentHandler handler = new DocxDocumentHandler( parent, context, "word/document.xml" );
         formatter.transform( "<a href=\"http://code.google.com/p/xdocreport/\" >XDocReport</a>", handler );
+
+        Assert.assertEquals( "", handler.getTextBefore() );
         Assert.assertEquals( "<w:hyperlink r:id=\"___rId0\" w:history=\"1\"> <w:proofErr w:type=\"spellStart\" /><w:r w:rsidRPr=\"001D30B5\"><w:rPr><w:rStyle w:val=\"DefaultHyperlink\" /></w:rPr><w:t>XDocReport</w:t></w:r><w:proofErr w:type=\"spellEnd\" /></w:hyperlink>",
                              handler.getTextBody() );
+        Assert.assertEquals( "", handler.getTextEnd() );
 
         HyperlinkRegistry registry = DocxContextHelper.getHyperlinkRegistry( context, "word/document.xml" );
         Assert.assertNotNull( registry );
@@ -148,4 +166,76 @@ public class DocxDocumentHandlerTestCase
         Assert.assertEquals( "http://code.google.com/p/xdocreport/", hyperlinkInfo.getTarget() );
         Assert.assertEquals( "External", hyperlinkInfo.getTargetMode() );
     }
+
+    @Test
+    public void testHeaderByUsingXDocReport_HeadingStyle()
+        throws Exception
+    {
+        IContext context = new MockContext();
+        BufferedElement parent = null;
+
+        ITextStylingTransformer formatter = HTMLTextStylingTransformer.INSTANCE;
+        IDocumentHandler handler = new DocxDocumentHandler( parent, context, "word/document.xml" );
+        formatter.transform( "xxx<h1>Title1</h1><h2>Title2</h2><h3>Title3</h3><h4>Title4</h4><h5>Title5</h5><h6>Title6</h6>",
+                             handler );
+
+        Assert.assertEquals( "", handler.getTextBefore() );
+        Assert.assertEquals( "<w:r><w:t xml:space=\"preserve\" >xxx</w:t></w:r>", handler.getTextBody() );
+        Assert.assertEquals( "<w:p><w:pPr><w:pStyle w:val=\"XDocReport_Heading_1\" /></w:pPr><w:r><w:t>Title1</w:t></w:r></w:p><w:p></w:p>"
+                                 + "<w:p><w:pPr><w:pStyle w:val=\"XDocReport_Heading_2\" /></w:pPr><w:r><w:t>Title2</w:t></w:r></w:p><w:p></w:p>"
+                                 + "<w:p><w:pPr><w:pStyle w:val=\"XDocReport_Heading_3\" /></w:pPr><w:r><w:t>Title3</w:t></w:r></w:p><w:p></w:p>"
+                                 + "<w:p><w:pPr><w:pStyle w:val=\"XDocReport_Heading_4\" /></w:pPr><w:r><w:t>Title4</w:t></w:r></w:p><w:p></w:p>"
+                                 + "<w:p><w:pPr><w:pStyle w:val=\"XDocReport_Heading_5\" /></w:pPr><w:r><w:t>Title5</w:t></w:r></w:p><w:p></w:p>"
+                                 + "<w:p><w:pPr><w:pStyle w:val=\"XDocReport_Heading_6\" /></w:pPr><w:r><w:t>Title6</w:t></w:r></w:p><w:p></w:p>",
+                             handler.getTextEnd() );
+    }
+
+    @Test
+    public void testHeaderByUsingDefaultHeadingStyle()
+        throws Exception
+    {
+        IContext context = new MockContext();
+        // Add default style (in real context, this DefaultStyle is added by DocxStylesPreprocessor which search
+        // heading style from the word/styles.xml entry of the docx)
+        DefaultStyle defaultStyle = new DefaultStyle();
+        defaultStyle.addHeaderStyle( 1, "Heading1" );
+        defaultStyle.addHeaderStyle( 2, "Heading2" );
+        DocxContextHelper.putDefaultStyle( context, defaultStyle );
+
+        BufferedElement parent = null;
+
+        ITextStylingTransformer formatter = HTMLTextStylingTransformer.INSTANCE;
+        IDocumentHandler handler = new DocxDocumentHandler( parent, context, "word/document.xml" );
+        formatter.transform( "xxx<h1>Title1</h1><h2>Title2</h2><h3>Title3</h3><h4>Title4</h4><h5>Title5</h5><h6>Title6</h6>",
+                             handler );
+
+        Assert.assertEquals( "", handler.getTextBefore() );
+        Assert.assertEquals( "<w:r><w:t xml:space=\"preserve\" >xxx</w:t></w:r>", handler.getTextBody() );
+        Assert.assertEquals( "<w:p><w:pPr><w:pStyle w:val=\"Heading1\" /></w:pPr><w:r><w:t>Title1</w:t></w:r></w:p><w:p></w:p>"
+                                 + "<w:p><w:pPr><w:pStyle w:val=\"Heading2\" /></w:pPr><w:r><w:t>Title2</w:t></w:r></w:p><w:p></w:p>"
+                                 + "<w:p><w:pPr><w:pStyle w:val=\"XDocReport_Heading_3\" /></w:pPr><w:r><w:t>Title3</w:t></w:r></w:p><w:p></w:p>"
+                                 + "<w:p><w:pPr><w:pStyle w:val=\"XDocReport_Heading_4\" /></w:pPr><w:r><w:t>Title4</w:t></w:r></w:p><w:p></w:p>"
+                                 + "<w:p><w:pPr><w:pStyle w:val=\"XDocReport_Heading_5\" /></w:pPr><w:r><w:t>Title5</w:t></w:r></w:p><w:p></w:p>"
+                                 + "<w:p><w:pPr><w:pStyle w:val=\"XDocReport_Heading_6\" /></w:pPr><w:r><w:t>Title6</w:t></w:r></w:p><w:p></w:p>",
+                             handler.getTextEnd() );
+    }
+
+    @Test
+    public void testParagraph()
+        throws Exception
+    {
+        IContext context = new MockContext();
+        BufferedElement parent = null;
+
+        ITextStylingTransformer formatter = HTMLTextStylingTransformer.INSTANCE;
+        IDocumentHandler handler = new DocxDocumentHandler( parent, context, "word/document.xml" );
+        formatter.transform( "some <strong>text</strong><p>paragraph1</p><p>paragraph2</p>", handler );
+
+        Assert.assertEquals( "", handler.getTextBefore() );
+        Assert.assertEquals( "<w:r><w:t xml:space=\"preserve\" >some </w:t></w:r><w:r><w:rPr><w:b /></w:rPr><w:t xml:space=\"preserve\" >text</w:t></w:r>",
+                             handler.getTextBody() );
+        Assert.assertEquals( "<w:p><w:r><w:t xml:space=\"preserve\" >paragraph1</w:t></w:r></w:p><w:p><w:r><w:t xml:space=\"preserve\" >paragraph2</w:t></w:r></w:p>",
+                             handler.getTextEnd() );
+    }
+
 }

@@ -56,12 +56,15 @@ public class DocxDocumentHandler
 
     private boolean insideHeader;
 
+    private boolean paragraphWasInserted;
+
     public DocxDocumentHandler( BufferedElement parent, IContext context, String entryName )
     {
         super( parent, context, entryName );
         styleGen = DocxContextHelper.getStylesGenerator( context );
         defaultStyle = DocxContextHelper.getDefaultStyle( context );
         this.insideHeader = false;
+        this.paragraphWasInserted = false;
     }
 
     public void startDocument()
@@ -85,9 +88,18 @@ public class DocxDocumentHandler
             paragraphsStack.size();
             for ( int i = 0; i < paragraphsStack.size(); i++ )
             {
-                internalEndParagraph();
+                endParagraph();
             }
             paragraphsStack.clear();
+        }
+    }
+
+    private void closeCurrentParagraph()
+        throws IOException
+    {
+        if ( !paragraphsStack.isEmpty() )
+        {
+            endParagraph();
         }
     }
 
@@ -117,11 +129,12 @@ public class DocxDocumentHandler
     {
         if ( insideHeader )
         {
+            // Title of the Header.
             super.write( content );
         }
         else
         {
-            // startParagraphIfNeeded();
+            startParagraphIfNeeded();
             super.write( "<w:r>" );
             if ( bolding || italicsing )
             {
@@ -146,20 +159,32 @@ public class DocxDocumentHandler
     private void startParagraphIfNeeded()
         throws IOException
     {
-        if ( paragraphsStack.isEmpty() )
-        {
-            internalStartParagraph( false );
+
+        if ( paragraphWasInserted && paragraphsStack.isEmpty() )
+        {            
+            startParagraph(false);
         }
     }
 
-    private void internalStartParagraph( boolean containerIsList )
+    private void startParagraph( boolean realParagraph )
         throws IOException
     {
+        paragraphWasInserted = true;
+        super.setTextLocation( TextLocation.End );
         super.write( "<w:p>" );
-        paragraphsStack.push( containerIsList );
+        paragraphsStack.push( realParagraph );
     }
 
-    private void internalEndParagraph()
+    public void startParagraph()
+        throws IOException
+    {
+        //if (!paragraphsStack.isEmpty()) {
+            closeCurrentParagraph();
+        //}
+        startParagraph( true );
+    }
+
+    public void endParagraph()
         throws IOException
     {
         super.write( "</w:p>" );
@@ -170,9 +195,9 @@ public class DocxDocumentHandler
         throws IOException
     {
         // if (!paragraphsStack.isEmpty() && !paragraphsStack.peek()) {
-        // internalEndParagraph();
+        // endParagraph();
         // }
-        internalStartParagraph( true );
+        startParagraph( false );
         boolean ordered = super.getCurrentListOrder();
         super.write( "<w:pPr>" );
         super.write( "<w:pStyle w:val=\"Paragraphedeliste\" />" );
@@ -198,27 +223,15 @@ public class DocxDocumentHandler
     public void endListItem()
         throws IOException
     {
-        internalEndParagraph();
-    }
-
-    public void startParagraph()
-        throws IOException
-    {
-        super.setTextLocation( TextLocation.End );
-        internalStartParagraph( false );
-    }
-
-    public void endParagraph()
-        throws IOException
-    {
-        internalEndParagraph();
+        endParagraph();
     }
 
     public void startHeading( int level )
         throws IOException
     {
         // Close current paragraph
-        endParagraphIfNeeded();
+        closeCurrentParagraph();
+        startParagraph(false);
 
         // In docx title is a paragraph with a style.
 
@@ -227,8 +240,7 @@ public class DocxDocumentHandler
          * </w:pPr> <w:r> <w:t>Titre1</w:t> </w:r> </w:p>
          */
         String headingStyleName = styleGen.getHeaderStyleId( level, defaultStyle );
-        super.setTextLocation( TextLocation.End );
-        super.write( "<w:p><w:pPr>" );
+        super.write( "<w:pPr>" );
         super.write( "<w:pStyle w:val=\"" );
         super.write( headingStyleName );
         super.write( "\" /></w:pPr><w:r><w:t>" );
@@ -238,9 +250,9 @@ public class DocxDocumentHandler
     public void endHeading( int level )
         throws IOException
     {
-        super.write( "</w:t></w:r></w:p>" );
+        super.write( "</w:t></w:r>" );
+        endParagraph();
         insideHeader = false;
-        startParagraph();
     }
 
     @Override

@@ -187,7 +187,6 @@ public class DocxDocumentHandler
         // "<w:numId w:val="1" />"
         int numIdVal = ordered ? 2 : 1;
         super.write( "<w:numId w:val=\"" );
-        // super.write(String.valueOf(numIdVal));
         super.write( String.valueOf( numIdVal ) );
         super.write( "\" />" );
 

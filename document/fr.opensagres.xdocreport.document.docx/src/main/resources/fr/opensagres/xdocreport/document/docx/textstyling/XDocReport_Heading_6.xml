@@ -1,0 +1,23 @@
+<w:style w:type="paragraph" w:styleId="XDocReport_Heading_6">
+	<w:name w:val="heading 6" />
+	<!-- <w:basedOn w:val="Normal" />
+	<w:next w:val="Normal" />
+	<w:link w:val="Titre6Car" /> -->
+	<w:uiPriority w:val="9" />
+	<w:unhideWhenUsed />
+	<w:qFormat />
+	<w:rsid w:val="005F433E" />
+	<w:pPr>
+		<w:keepNext />
+		<w:keepLines />
+		<w:spacing w:before="200" w:after="0" />
+		<w:outlineLvl w:val="5" />
+	</w:pPr>
+	<w:rPr>
+		<w:rFonts w:asciiTheme="majorHAnsi" w:eastAsiaTheme="majorEastAsia"
+			w:hAnsiTheme="majorHAnsi" w:cstheme="majorBidi" />
+		<w:i />
+		<w:iCs />
+		<w:color w:val="243F60" w:themeColor="accent1" w:themeShade="7F" />
+	</w:rPr>
+</w:style>

@@ -5,24 +5,28 @@ import java.util.List;
 
 import fr.opensagres.xdocreport.core.utils.StringUtils;
 import fr.opensagres.xdocreport.document.docx.preprocessor.DefaultStyle;
+import fr.opensagres.xdocreport.document.textstyling.AbstractStylesGenerator;
+import fr.opensagres.xdocreport.document.textstyling.Style;
 
 public class DocxDefaultStylesGenerator
+    extends AbstractStylesGenerator<DefaultStyle>
     implements IDocxStylesGenerator
 {
 
     public static final IDocxStylesGenerator INSTANCE = new DocxDefaultStylesGenerator();
 
-    private static final String DEFAULT_HYPERLINK_STYLE_ID = "XDocReport_Hyperlink";
+    private static final Style XDocReport_Hyperlink_Style;
 
-    private static final List<String> DEFAULT_HEADERS_STYLE_ID;
+    private static final List<Style> XDocReport_Headings_Style;
 
     static
     {
-        DEFAULT_HEADERS_STYLE_ID = new ArrayList<String>();
+        XDocReport_Headings_Style = new ArrayList<Style>();
         for ( int i = 1; i < getHeaderStylesCount() + 1; i++ )
         {
-            DEFAULT_HEADERS_STYLE_ID.add( "XDocReport_Heading_" + i );
+            XDocReport_Headings_Style.add( Style.load( "XDocReport_Heading_" + i, DocxDefaultStylesGenerator.class ) );
         }
+        XDocReport_Hyperlink_Style = Style.load( "XDocReport_Hyperlink", DocxDefaultStylesGenerator.class );
     }
 
     public String generateAllStyles( DefaultStyle defaultStyle )
@@ -37,20 +41,7 @@ public class DocxDefaultStylesGenerator
     {
         if ( !defaultStyle.hasHyperLinkStyleId() )
         {
-            String hyperLinkStyleId = DEFAULT_HYPERLINK_STYLE_ID;
-            style.append( "<w:style w:type=\"character\" w:styleId=\"" );
-            style.append( hyperLinkStyleId );
-            style.append( "\">" );
-            style.append( "<w:name w:val=\"Hyperlink\" />" );
-            // style.append( "<w:basedOn w:val=\"Policepardfaut\" />" );
-            style.append( "<w:uiPriority w:val=\"99\" />" );
-            style.append( "<w:unhideWhenUsed />" );
-            style.append( "<w:rsid w:val=\"001D30B5\" />" );
-            style.append( "<w:rPr>" );
-            style.append( "<w:color w:val=\"0000FF\" w:themeColor=\"hyperlink\" />" );
-            style.append( "<w:u w:val=\"single\" />" );
-            style.append( "</w:rPr>" );
-            style.append( "</w:style>" );
+            style.append( XDocReport_Hyperlink_Style.getContent() );
         }
     }
 
@@ -58,10 +49,10 @@ public class DocxDefaultStylesGenerator
     {
         if ( defaultStyle == null )
         {
-            return DEFAULT_HYPERLINK_STYLE_ID;
+            return XDocReport_Hyperlink_Style.getId();
         }
         return StringUtils.isNotEmpty( defaultStyle.getHyperLinkStyleId() ) ? defaultStyle.getHyperLinkStyleId()
-                        : DEFAULT_HYPERLINK_STYLE_ID;
+                        : XDocReport_Hyperlink_Style.getId();
     }
 
     public void generateHeadersStyle( StringBuilder styles, DefaultStyle defaultStyle )
@@ -77,75 +68,7 @@ public class DocxDefaultStylesGenerator
     {
         if ( !defaultStyle.hasHeaderStyle( level ) )
         {
-            styles.append( "<w:style w:type=\"paragraph\" w:styleId=\"" );
-            styles.append( getDefaultHeaderStyleId( level ) );
-            styles.append( "\">" );
-            styles.append( "<w:name w:val=\"heading " );
-            styles.append( level );
-            styles.append( "\" />" );
-
-            styles.append( "<w:uiPriority w:val=\"9\" />" );
-            styles.append( "<w:unhideWhenUsed />" );
-
-            styles.append( "<w:pPr> " );
-            styles.append( "<w:keepNext />" );
-            styles.append( "<w:keepLines />" );
-            styles.append( "<w:spacing w:before=\"480\" w:after=\"0\" />" );
-            styles.append( "<w:outlineLvl w:val=\"" );
-            styles.append( level - 1 );
-            styles.append( "\"/>" );
-            styles.append( "</w:pPr> " );
-
-            styles.append( "<w:rPr>" );
-            styles.append( "<w:rFonts w:asciiTheme=\"majorHAnsi\" w:eastAsiaTheme=\"majorEastAsia\"" );
-            styles.append( " w:hAnsiTheme=\"majorHAnsi\" w:cstheme=\"majorBidi\" />" );
-
-            if ( level <= 4 )
-            {
-                styles.append( "<w:b />" );
-                styles.append( "<w:bCs />" );
-            }
-
-            switch ( level )
-            {
-                case 5:
-                case 6:
-                    styles.append( "<w:color w:val=\"243F60\" w:themeColor=\"accent1\" w:themeShade=\"7F\" />" );
-                    break;
-                default:
-                    styles.append( "<w:color w:val=\"365F91\" w:themeColor=\"accent1\" w:themeShade=\"BF\" />" );
-            }
-
-            switch ( level )
-            {
-                case 1:
-                    styles.append( "<w:sz w:val=\"28\" />" );
-                    styles.append( "<w:szCs w:val=\"28\" />" );
-                    break;
-                case 2:
-                    styles.append( "<w:sz w:val=\"26\" />" );
-                    styles.append( "<w:szCs w:val=\"26\" />" );
-                    break;
-                case 4:
-                case 6:
-                    styles.append( "<w:iCs />" );
-                    break;
-            }
-
-            styles.append( "</w:rPr>" );
-
-            styles.append( "</w:style>" );
-
-            // * <w:style w:type="paragraph" w:styleId="Titre1"> <w:name w:val="heading 1" /> <w:basedOn w:val="Normal"
-            // />
-            // * <w:next w:val="Normal" /> <w:link w:val="Titre1Car" /> <w:uiPriority w:val="9" /> <w:rsid
-            // w:val="00285B63" />
-            // * <w:pPr> <w:keepNext /> <w:keepLines /> <w:spacing w:before="480" w:after="0" /> <w:outlineLvl w:val="0"
-            // />
-            // * </w:pPr> <w:rPr> <w:rFonts w:asciiTheme="majorHAnsi" w:eastAsiaTheme="majorEastAsia"
-            // * w:hAnsiTheme="majorHAnsi" w:cstheme="majorBidi" /> <w:b /> <w:bCs /> <w:color w:val="365F91"
-            // * w:themeColor="accent1" w:themeShade="BF" /> <w:sz w:val="28" /> <w:szCs w:val="28" /> </w:rPr>
-            // </w:style>
+            styles.append( XDocReport_Headings_Style.get( level - 1 ).getContent() );
         }
     }
 
@@ -164,7 +87,7 @@ public class DocxDefaultStylesGenerator
 
     private String getDefaultHeaderStyleId( int level )
     {
-        return DEFAULT_HEADERS_STYLE_ID.get( level - 1 );
+        return XDocReport_Headings_Style.get( level - 1 ).getId();
     }
 
     public void f()

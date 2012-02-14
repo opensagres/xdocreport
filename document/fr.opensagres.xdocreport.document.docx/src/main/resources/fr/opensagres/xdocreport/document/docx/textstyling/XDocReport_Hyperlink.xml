@@ -1,0 +1,11 @@
+<w:style w:type="character" w:styleId="XDocReport_Hyperlink">
+	<w:name w:val="Hyperlink" />
+	<!-- <w:basedOn w:val="Policepardfaut" /> -->
+	<w:uiPriority w:val="99" />
+	<w:unhideWhenUsed />
+	<!-- <w:rsid w:val="00CB4FF3" /> -->
+	<w:rPr>
+		<w:color w:val="0000FF" w:themeColor="hyperlink" />
+		<w:u w:val="single" />
+	</w:rPr>
+</w:style>

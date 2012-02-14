@@ -46,9 +46,15 @@ public class DOMFontsPreprocessorWithFreemarkerTestCase
         // 1) Test Fonts preprocessing with Freemarker
         IDocumentFormatter formatter = new FreemarkerDocumentFormatter();
         StringWriter writer = new StringWriter();
-        DOMFontsPreprocessor.INSTANCE.preprocess( "word/document.xml", document, writer, null, formatter, null );        
-        Assert.assertEquals( "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"no\"?>" 
-                        + "<w:document"
+        DOMFontsPreprocessor.INSTANCE.preprocess( "word/document.xml", document, writer, null, formatter, null );     
+        
+        String s = writer.toString();
+        int index = s.indexOf( "<w:document" );
+        if ( index != -1 )
+        {
+            s = s.substring( index, s.length() );
+        }
+        Assert.assertEquals( "<w:document"
                         + " xmlns:w=\"http://schemas.openxmlformats.org/wordprocessingml/2006/main\">"
                             + " <w:body>"
                                 + "<w:p>"
@@ -69,7 +75,7 @@ public class DOMFontsPreprocessorWithFreemarkerTestCase
                                     + "</w:pPr>"
                                 + "</w:p>"
                             + " </w:body>"
-                        + " </w:document>", writer.toString() );
+                        + " </w:document>", s );
 
         // 2) Test merge template with Java model 
         ITemplateEngine templateEngine = new FreemarkerTemplateEngine();
@@ -81,12 +87,11 @@ public class DOMFontsPreprocessorWithFreemarkerTestCase
         context.put( DOMFontsPreprocessor.FONT_NAME_KEY, "Magneto" );
         context.put( DOMFontsPreprocessor.FONT_SIZE_KEY, "40" );
         
-        Reader reader=new StringReader( writer.toString() );
+        Reader reader=new StringReader( s );
         StringWriter mergedWriter = new StringWriter(); 
         templateEngine.process( "word/document.xml", context, reader, mergedWriter );
         
-        Assert.assertEquals( "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"no\"?>" 
-                        + "<w:document"
+        Assert.assertEquals( "<w:document"
                         + " xmlns:w=\"http://schemas.openxmlformats.org/wordprocessingml/2006/main\">"
                             + " <w:body>"
                                 + "<w:p>"

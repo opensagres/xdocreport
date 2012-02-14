@@ -77,7 +77,7 @@ public class VelocityDocumentFormatter
 
     private static final String START_IF_DIRECTIVE = "#if(";
 
-    private static final String ELSE_DIRECTIVE = "#else";
+    private static final String ELSE_DIRECTIVE = "#{else}";
 
     private static final String END_IF_DIRECTIVE = "#end";
 

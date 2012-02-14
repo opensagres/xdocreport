@@ -90,18 +90,6 @@ public class DocxDefaultStylesGenerator
         return XDocReport_Headings_Style.get( level - 1 ).getId();
     }
 
-    public void f()
-    {
-        /**
-         * <w:style w:type="paragraph" w:styleId="Titre1"> <w:name w:val="heading 1" /> <w:basedOn w:val="Normal" />
-         * <w:next w:val="Normal" /> <w:link w:val="Titre1Car" /> <w:uiPriority w:val="9" /> <w:rsid w:val="00285B63" />
-         * <w:pPr> <w:keepNext /> <w:keepLines /> <w:spacing w:before="480" w:after="0" /> <w:outlineLvl w:val="0" />
-         * </w:pPr> <w:rPr> <w:rFonts w:asciiTheme="majorHAnsi" w:eastAsiaTheme="majorEastAsia"
-         * w:hAnsiTheme="majorHAnsi" w:cstheme="majorBidi" /> <w:b /> <w:bCs /> <w:color w:val="365F91"
-         * w:themeColor="accent1" w:themeShade="BF" /> <w:sz w:val="28" /> <w:szCs w:val="28" /> </w:rPr> </w:style>
-         **/
-    }
-
     /**
      * @return number of available header styles
      */

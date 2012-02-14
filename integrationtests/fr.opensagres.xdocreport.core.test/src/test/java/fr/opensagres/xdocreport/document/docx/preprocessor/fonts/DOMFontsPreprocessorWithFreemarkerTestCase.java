@@ -1,0 +1,113 @@
+package fr.opensagres.xdocreport.document.docx.preprocessor.fonts;
+
+import java.io.Reader;
+import java.io.StringReader;
+import java.io.StringWriter;
+
+import org.junit.Assert;
+import org.junit.Test;
+import org.w3c.dom.Document;
+
+import fr.opensagres.xdocreport.core.utils.DOMUtils;
+import fr.opensagres.xdocreport.document.docx.preprocessor.dom.DOMFontsPreprocessor;
+import fr.opensagres.xdocreport.template.IContext;
+import fr.opensagres.xdocreport.template.ITemplateEngine;
+import fr.opensagres.xdocreport.template.formatter.IDocumentFormatter;
+import fr.opensagres.xdocreport.template.freemarker.FreemarkerDocumentFormatter;
+import fr.opensagres.xdocreport.template.freemarker.FreemarkerTemplateEngine;
+import fr.opensagres.xdocreport.template.freemarker.internal.XDocFreemarkerContext;
+
+public class DOMFontsPreprocessorWithFreemarkerTestCase
+{
+    @Test
+    public void testPreprocessFontsAndMergeTempplate()
+        throws Exception
+    {
+        String xml =    " <w:document"
+                        + " xmlns:w=\"http://schemas.openxmlformats.org/wordprocessingml/2006/main\">"
+                            + " <w:body>"
+                                + "<w:p>"
+                                    + "<w:pPr>"
+                                        + "<w:spacing w:after=\"0\" w:line=\"360\" w:lineRule=\"auto\"/>"
+                                        + "<w:jc w:val=\"both\"/>"
+                                        + "<w:rPr>"
+                                            + "<w:rFonts w:ascii=\"Arial\" w:hAnsi=\"Arial\" w:cs=\"Arial\"/>"
+                                            + "<w:sz w:val=\"24\"/>"
+                                            + "<w:szCs w:val=\"24\"/>"
+                                        + "</w:rPr>"
+                                    + "</w:pPr>"
+                                + "</w:p>"
+                            + " </w:body>"
+                        + " </w:document>";
+        
+        
+        Document document = DOMUtils.load( xml );
+        
+        // 1) Test Fonts preprocessing with Freemarker
+        IDocumentFormatter formatter = new FreemarkerDocumentFormatter();
+        StringWriter writer = new StringWriter();
+        DOMFontsPreprocessor.INSTANCE.preprocess( "word/document.xml", document, writer, null, formatter, null );        
+        Assert.assertEquals( "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"no\"?>" 
+                        + "<w:document"
+                        + " xmlns:w=\"http://schemas.openxmlformats.org/wordprocessingml/2006/main\">"
+                            + " <w:body>"
+                                + "<w:p>"
+                                    + "<w:pPr>"
+                                        + "<w:spacing w:after=\"0\" w:line=\"360\" w:lineRule=\"auto\"/>"
+                                        + "<w:jc w:val=\"both\"/>"
+                                        + "<w:rPr>"
+                                            //+ "<w:rFonts w:ascii=\"Arial\" w:hAnsi=\"Arial\" w:cs=\"Arial\"/>"
+                                            + "<w:rFonts w:ascii=\"[#if ___fontName??]${___fontName}[#else]Arial[/#if]\""                                                       
+                                                      + " w:cs=\"[#if ___fontName??]${___fontName}[#else]Arial[/#if]\"" 
+                                                      + " w:hAnsi=\"[#if ___fontName??]${___fontName}[#else]Arial[/#if]\""
+                                                      + "/>"                                                                                                
+                                            //+ "<w:sz w:val=\"24\"/>"
+                                            + "<w:sz w:val=\"[#if ___fontSize??]${___fontSize}[#else]24[/#if]\"/>"                                                      
+                                            //+ "<w:szCs w:val=\"24\"/>"
+                                            + "<w:szCs w:val=\"[#if ___fontSize??]${___fontSize}[#else]24[/#if]\"/>"
+                                        + "</w:rPr>"
+                                    + "</w:pPr>"
+                                + "</w:p>"
+                            + " </w:body>"
+                        + " </w:document>", writer.toString() );
+
+        // 2) Test merge template with Java model 
+        ITemplateEngine templateEngine = new FreemarkerTemplateEngine();
+        
+        IContext context = new XDocFreemarkerContext();
+        context.put( "name", "word" );
+
+        // Change every font name+size with Magneto + 40
+        context.put( DOMFontsPreprocessor.FONT_NAME_KEY, "Magneto" );
+        context.put( DOMFontsPreprocessor.FONT_SIZE_KEY, "40" );
+        
+        Reader reader=new StringReader( writer.toString() );
+        StringWriter mergedWriter = new StringWriter(); 
+        templateEngine.process( "word/document.xml", context, reader, mergedWriter );
+        
+        Assert.assertEquals( "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"no\"?>" 
+                        + "<w:document"
+                        + " xmlns:w=\"http://schemas.openxmlformats.org/wordprocessingml/2006/main\">"
+                            + " <w:body>"
+                                + "<w:p>"
+                                    + "<w:pPr>"
+                                        + "<w:spacing w:after=\"0\" w:line=\"360\" w:lineRule=\"auto\"/>"
+                                        + "<w:jc w:val=\"both\"/>"
+                                        + "<w:rPr>"
+                                          //+ "<w:rFonts w:ascii=\"Arial\" w:hAnsi=\"Arial\" w:cs=\"Arial\"/>"
+                                          + "<w:rFonts w:ascii=\"Magneto\""                                                       
+                                                    + " w:cs=\"Magneto\"" 
+                                                    + " w:hAnsi=\"Magneto\""
+                                                    + "/>"      
+                                            //+ "<w:sz w:val=\"24\"/>"
+                                            + "<w:sz w:val=\"40\"/>"
+                                            //+ "<w:szCs w:val=\"24\"/>"
+                                            + "<w:szCs w:val=\"40\"/>"
+                                        + "</w:rPr>"
+                                    + "</w:pPr>"
+                                + "</w:p>"
+                            + " </w:body>"
+                        + " </w:document>", mergedWriter.toString() );
+
+    }
+}

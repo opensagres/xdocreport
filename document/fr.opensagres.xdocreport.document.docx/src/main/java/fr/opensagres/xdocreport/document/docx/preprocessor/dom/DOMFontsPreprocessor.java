@@ -23,7 +23,7 @@ public class DOMFontsPreprocessor
     public static final String FONT_NAME_KEY = "___fontName";
     public static final String FONT_SIZE_KEY = "___fontSize";
 
-    public static IXDocPreprocessor INSTANCE = new DOMFontsPreprocessor();
+    public static DOMFontsPreprocessor INSTANCE = new DOMFontsPreprocessor();
 
     @Override
     protected void visit( Document document, String entryName, FieldsMetadata fieldsMetadata,

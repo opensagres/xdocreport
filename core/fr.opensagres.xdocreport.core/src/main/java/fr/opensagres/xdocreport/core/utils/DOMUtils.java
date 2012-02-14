@@ -23,6 +23,9 @@ import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 
+import fr.opensagres.xdocreport.core.EncodingConstants;
+import fr.opensagres.xdocreport.core.io.IOUtils;
+
 public class DOMUtils
 {
 
@@ -33,6 +36,15 @@ public class DOMUtils
         factory.setNamespaceAware( true );
         DocumentBuilder builder = factory.newDocumentBuilder();
         return builder.parse( stream );
+    }
+
+    public static Document load( String xml )
+        throws ParserConfigurationException, SAXException, IOException
+    {
+        DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
+        factory.setNamespaceAware( true );
+        DocumentBuilder builder = factory.newDocumentBuilder();
+        return builder.parse( IOUtils.toInputStream( xml, EncodingConstants.UTF_8.name() ) );
     }
 
     public static void save( Node node, Writer writer )
@@ -60,33 +72,35 @@ public class DOMUtils
         transformer.transform( source, result );
 
     }
-    
+
     /**
-     * Returns the first child element retrieved by tag name from the parent
-     * node and null otherwise.
+     * Returns the first child element retrieved by tag name from the parent node and null otherwise.
      * 
-     * @param parentNode
-     *            parent node.
-     * @param elementName
-     *            element name to found.
+     * @param parentNode parent node.
+     * @param elementName element name to found.
      * @return the first child element
      */
-    public static Element getFirstChildElementByTagName(Node parentNode,
-            String elementName) {
+    public static Element getFirstChildElementByTagName( Node parentNode, String elementName )
+    {
         Element result = null;
 
-        if (parentNode.getNodeType() == Node.DOCUMENT_NODE) {
-            result = ((Document) parentNode).getDocumentElement();
-            if (!result.getNodeName().equals(elementName)) {
+        if ( parentNode.getNodeType() == Node.DOCUMENT_NODE )
+        {
+            result = ( (Document) parentNode ).getDocumentElement();
+            if ( !result.getNodeName().equals( elementName ) )
+            {
                 result = null;
             }
-        } else {
+        }
+        else
+        {
             NodeList nodes = parentNode.getChildNodes();
             Node node;
-            for (int i = 0; i < nodes.getLength(); i++) {
-                node = nodes.item(i);
-                if (node.getNodeType() == Node.ELEMENT_NODE
-                        && node.getNodeName().equals(elementName)) {
+            for ( int i = 0; i < nodes.getLength(); i++ )
+            {
+                node = nodes.item( i );
+                if ( node.getNodeType() == Node.ELEMENT_NODE && node.getNodeName().equals( elementName ) )
+                {
                     result = (Element) node;
                     break;
                 }
@@ -96,41 +110,45 @@ public class DOMUtils
     }
 
     /**
-     * Returns list of the first child element retrieved by tag name from the
-     * parent node and null otherwise.
+     * Returns list of the first child element retrieved by tag name from the parent node and null otherwise.
      * 
-     * @param parentNode
-     *            parent node.
-     * @param elementName
-     *            element name to found.
+     * @param parentNode parent node.
+     * @param elementName element name to found.
      * @return list of the first child element
      */
-    public static Collection<Element> getFirstChildElementsByTagName(
-            Node contextNode, String elementName) {
+    public static Collection<Element> getFirstChildElementsByTagName( Node contextNode, String elementName )
+    {
         Collection<Element> elements = null;
         Element result = null;
 
-        if (contextNode.getNodeType() == Node.DOCUMENT_NODE) {
-            result = ((Document) contextNode).getDocumentElement();
-            if (!result.getNodeName().equals(elementName)) {
+        if ( contextNode.getNodeType() == Node.DOCUMENT_NODE )
+        {
+            result = ( (Document) contextNode ).getDocumentElement();
+            if ( !result.getNodeName().equals( elementName ) )
+            {
                 result = null;
             }
-        } else {
+        }
+        else
+        {
             NodeList nodes = contextNode.getChildNodes();
             Node node;
-            for (int i = 0; i < nodes.getLength(); i++) {
-                node = nodes.item(i);
-                if (node.getNodeType() == Node.ELEMENT_NODE
-                        && node.getNodeName().equals(elementName)) {
-                    if (elements == null) {
+            for ( int i = 0; i < nodes.getLength(); i++ )
+            {
+                node = nodes.item( i );
+                if ( node.getNodeType() == Node.ELEMENT_NODE && node.getNodeName().equals( elementName ) )
+                {
+                    if ( elements == null )
+                    {
                         elements = new ArrayList<Element>();
                     }
                     result = (Element) node;
-                    elements.add(result);
+                    elements.add( result );
                 }
             }
         }
-        if (elements == null) {
+        if ( elements == null )
+        {
             return Collections.emptyList();
         }
         return elements;

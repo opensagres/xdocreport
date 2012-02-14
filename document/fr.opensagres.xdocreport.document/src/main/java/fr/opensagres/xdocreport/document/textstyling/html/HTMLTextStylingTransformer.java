@@ -28,9 +28,7 @@ import java.io.StringReader;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import org.xml.sax.EntityResolver;
 import org.xml.sax.InputSource;
-import org.xml.sax.SAXException;
 import org.xml.sax.XMLReader;
 import org.xml.sax.helpers.XMLReaderFactory;
 
@@ -55,9 +53,9 @@ public class HTMLTextStylingTransformer
      */
     private static final Logger LOGGER = LogUtils.getLogger( HTMLTextStylingTransformer.class.getName() );
 
-    private static final String[] searchList = { "\r", "\n", "\t" };
+    private static final String[] searchList = { "\r", "\n", "\t", "&nbsp;" };
 
-    private static final String[] replacementList = { "", "", "" };
+    private static final String[] replacementList = { "", "", "", " " };
 
     @Override
     protected void doTransform( String content, IDocumentHandler documentHandler )

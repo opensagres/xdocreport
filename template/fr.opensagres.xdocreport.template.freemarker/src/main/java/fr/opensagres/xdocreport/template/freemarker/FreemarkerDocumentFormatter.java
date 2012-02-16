@@ -42,6 +42,12 @@ public class FreemarkerDocumentFormatter
     extends AbstractDocumentFormatter
 {
 
+    private static final String END_ASSIGN_DIRECTIVE = "]";
+
+    private static final String EQUALS = "=";
+
+    private static final String START_ASSIGN_DIRECTIVE = "[#assign ";
+
     private static final String START_LIST_DIRECTIVE = "[#list ";
 
     private static final String AS_DIRECTIVE = " as ";
@@ -69,7 +75,7 @@ public class FreemarkerDocumentFormatter
     private static final String START_IF_DIRECTIVE = "[#if ";
 
     private static final String ELSE_DIRECTIVE = "[#else]";
-    
+
     private static final String END_IF_DIRECTIVE = "[/#if]";
 
     private static final String START_IMAGE_DIRECTIVE = DOLLAR_TOTKEN + TemplateContextHelper.IMAGE_REGISTRY_KEY
@@ -129,7 +135,7 @@ public class FreemarkerDocumentFormatter
     {
         return END_LIST_DIRECTIVE;
     }
-    
+
     public String getElseDirective()
     {
         return ELSE_DIRECTIVE;
@@ -536,16 +542,16 @@ public class FreemarkerDocumentFormatter
                                            String syntaxKind, boolean syntaxWithDirective, String elementId,
                                            String entryName )
     {
-        StringBuilder newContent = new StringBuilder( "[#assign " );
+        StringBuilder newContent = new StringBuilder( START_ASSIGN_DIRECTIVE );
         newContent.append( getVariableName( variableIndex ) );
-        newContent.append( "=" );
+        newContent.append( EQUALS );
         newContent.append( getFunctionDirective( TemplateContextHelper.TEXT_STYLING_REGISTRY_KEY,
                                                  TemplateContextHelper.TRANSFORM_METHOD, false,
                                                  removeInterpolation( fieldName ), "\"" + syntaxKind + "\"",
                                                  syntaxWithDirective ? StringUtils.TRUE : StringUtils.FALSE, "\""
                                                      + documentKind + "\"", "\"" + elementId + "\"",
                                                  TemplateContextHelper.CONTEXT_KEY, "\"" + entryName + "\"" ) );
-        newContent.append( "]" );
+        newContent.append( END_ASSIGN_DIRECTIVE );
         return newContent.toString();
     }
 
@@ -555,5 +561,15 @@ public class FreemarkerDocumentFormatter
         result.append( formatAsSimpleField( true, getVariableName( variableIndex ), property ) );
         result.append( END_NOESCAPE );
         return result.toString();
+    }
+
+    public String getSetDirective( String name, String value )
+    {
+        StringBuilder newContent = new StringBuilder( START_ASSIGN_DIRECTIVE );
+        newContent.append( name );
+        newContent.append( EQUALS );
+        newContent.append( value );
+        newContent.append( END_ASSIGN_DIRECTIVE );
+        return newContent.toString();
     }
 }

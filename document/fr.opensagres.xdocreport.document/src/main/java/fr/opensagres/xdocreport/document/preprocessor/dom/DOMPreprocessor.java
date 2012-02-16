@@ -74,13 +74,30 @@ public abstract class DOMPreprocessor
      * @param contextKey
      * @param formatter
      */
-    protected void updateDynamicAttr( Element element, String attrName, String contextKey,
+    protected void updateDynamicAttr( Element element, String attrName, String contextKey, IDocumentFormatter formatter )
+    {
+        if ( element.hasAttribute( attrName ) )
+        {
+
+            element.setAttribute( attrName, getDynamicAttr( element, attrName, contextKey, contextKey, formatter ) );
+
+        }
+    }
+
+    /**
+     * @param element
+     * @param attrName
+     * @param contextKey
+     * @param formatter
+     */
+    protected void updateDynamicAttr( Element element, String attrName, String contextIfKey, String contextValueKey,
                                       IDocumentFormatter formatter )
     {
         if ( element.hasAttribute( attrName ) )
         {
 
-            element.setAttribute( attrName, getDynamicAttr( element, attrName, contextKey, formatter ) );
+            element.setAttribute( attrName,
+                                  getDynamicAttr( element, attrName, contextIfKey, contextValueKey, formatter ) );
 
         }
     }
@@ -93,15 +110,16 @@ public abstract class DOMPreprocessor
      * @param formatter
      * @return
      */
-    protected String getDynamicAttr( Element element, String attrName, String contextKey, IDocumentFormatter formatter )
+    protected String getDynamicAttr( Element element, String attrName, String contextIfKey, String contextValueKey,
+                                     IDocumentFormatter formatter )
     {
 
         StringBuilder value = new StringBuilder();
-        value.append( formatter.getStartIfDirective( contextKey ) );
-        value.append( formatter.formatAsSimpleField( true, contextKey ) );
+        value.append( formatter.getStartIfDirective( contextIfKey ) );       
+        value.append( formatter.formatAsSimpleField( true, contextValueKey ) );
         value.append( formatter.getElseDirective() );
         value.append( element.getAttribute( attrName ) );
-        value.append( formatter.getEndIfDirective( contextKey ) );
+        value.append( formatter.getEndIfDirective( contextIfKey ) );
         return value.toString();
     }
 }

@@ -75,4 +75,6 @@ public interface IDocumentFormatter
     String formatAsTextStylingField( long variableIndex, String textBeforeProperty );
 
     String getElseDirective();
+
+    String getSetDirective( String name, String value );
 }

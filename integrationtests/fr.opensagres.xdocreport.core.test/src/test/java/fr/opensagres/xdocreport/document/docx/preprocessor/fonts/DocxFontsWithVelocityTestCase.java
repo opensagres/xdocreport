@@ -201,9 +201,9 @@ public class DocxFontsWithVelocityTestCase
         IContext context = report.createContext();
         context.put( "name", "word" );
 
-        // Change every font name+size with Magneto + 40
+        // Change every font name+size with Magneto + 36
         context.put( DOMFontsPreprocessor.FONT_NAME_KEY, "Magneto" );
-        context.put( DOMFontsPreprocessor.FONT_SIZE_KEY, "40" );
+        context.put( DOMFontsPreprocessor.FONT_SIZE_KEY, 36 );
 
         // 3) Generate report by merging Java model with the Docx
         File out = new File( "target" );

@@ -6,12 +6,13 @@ import javax.xml.xpath.XPathExpressionException;
 
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
+import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
+import org.w3c.dom.Text;
 
 import fr.opensagres.xdocreport.core.XDocReportException;
 import fr.opensagres.xdocreport.core.utils.DOMUtils;
 import fr.opensagres.xdocreport.core.utils.XPathUtils;
-import fr.opensagres.xdocreport.document.preprocessor.IXDocPreprocessor;
 import fr.opensagres.xdocreport.document.preprocessor.dom.DOMPreprocessor;
 import fr.opensagres.xdocreport.template.formatter.FieldsMetadata;
 import fr.opensagres.xdocreport.template.formatter.IDocumentFormatter;
@@ -21,7 +22,12 @@ public class DOMFontsPreprocessor
 {
 
     public static final String FONT_NAME_KEY = "___fontName";
+
     public static final String FONT_SIZE_KEY = "___fontSize";
+
+    public static final String FONT_SIZE_TWO_KEY = "___fontSizeTwo";
+
+    public static final String FONT_SIZE_KEY_MULT_BY_2 = "___fontSize * 2";
 
     public static DOMFontsPreprocessor INSTANCE = new DOMFontsPreprocessor();
 
@@ -45,7 +51,21 @@ public class DOMFontsPreprocessor
             {
 
                 rFontsElt = (Element) rFontsNodeList.item( i );
+                if ( i == 0 )
+                {
+                    // Set variable which multiply the font size
+                    String set = formatter.getSetDirective( FONT_SIZE_TWO_KEY, FONT_SIZE_KEY_MULT_BY_2 );
 
+                    StringBuilder setWithIf = new StringBuilder();
+                    setWithIf.append( formatter.getStartIfDirective( FONT_SIZE_KEY ) );
+                    setWithIf.append( set );
+                    setWithIf.append( formatter.getEndIfDirective( FONT_SIZE_KEY ) );
+
+                    Node firstChild = rFontsElt.getOwnerDocument().getDocumentElement().getFirstChild();
+                    Text newChild = rFontsElt.getOwnerDocument().createTextNode( setWithIf.toString() );
+                    rFontsElt.getOwnerDocument().getDocumentElement().insertBefore( newChild, firstChild );
+
+                }
                 // 1) Manage fontName (w:rFonts). Modify :
 
                 /**
@@ -76,15 +96,24 @@ public class DOMFontsPreprocessor
                  * <w:sz w:val="[#if ___fontSize??]${___fontSize}[#else]24[/#if]" /> <w:szCs
                  * w:val="[#if ___fontSize??]${___fontSize}[#else]24[/#if]" />
                  */
-                Element szElt = DOMUtils.getFirstChildElementByTagName( rFontsElt.getParentNode(), "w:sz" );
-                if ( szElt != null )
-                {
-                    updateDynamicAttr( szElt, "w:val", FONT_SIZE_KEY, formatter );
-                }
                 Element szCsElt = DOMUtils.getFirstChildElementByTagName( rFontsElt.getParentNode(), "w:szCs" );
                 if ( szCsElt != null )
                 {
                     updateDynamicAttr( szCsElt, "w:val", FONT_SIZE_KEY, formatter );
+                }
+                Element szElt = DOMUtils.getFirstChildElementByTagName( rFontsElt.getParentNode(), "w:sz" );
+                if ( szElt != null )
+                {
+                    if ( szCsElt != null )
+                    {
+                        // <w:szCs is defined, multiply the value of font size with 2
+                        updateDynamicAttr( szElt, "w:val", FONT_SIZE_TWO_KEY, formatter );
+                    }
+                    else
+                    {
+                        updateDynamicAttr( szElt, "w:val", FONT_SIZE_KEY, formatter );
+                    }
+
                 }
                 // try
                 // {

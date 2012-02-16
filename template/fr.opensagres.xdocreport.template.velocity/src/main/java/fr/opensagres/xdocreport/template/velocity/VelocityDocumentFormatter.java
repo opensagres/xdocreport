@@ -38,6 +38,12 @@ public class VelocityDocumentFormatter
     extends AbstractDocumentFormatter
 {
 
+    private static final String EQUALS = "=";
+
+    private static final String END_SET_DIRECTIVE = ")";
+
+    private static final String START_SET_DIRECTIVE = "#set(";
+
     private static final String DOLLAR_START_BRACKET = "${";
 
     protected static final String ITEM_TOKEN = "$item_";
@@ -495,16 +501,16 @@ public class VelocityDocumentFormatter
                                            String syntaxKind, boolean syntaxWithDirective, String elementId,
                                            String entryName )
     {
-        StringBuilder newContent = new StringBuilder( "#set(" );
+        StringBuilder newContent = new StringBuilder( START_SET_DIRECTIVE );
         newContent.append( formatAsSimpleField( true, getVariableName( variableIndex ) ) );
-        newContent.append( "=" );
+        newContent.append( EQUALS );
         newContent.append( getFunctionDirective( TemplateContextHelper.TEXT_STYLING_REGISTRY_KEY,
                                                  TemplateContextHelper.TRANSFORM_METHOD, fieldName, "\"" + syntaxKind
                                                      + "\"",
                                                  syntaxWithDirective ? StringUtils.TRUE : StringUtils.FALSE, "\""
                                                      + documentKind + "\"", "\"" + elementId + "\"", "$"
                                                      + TemplateContextHelper.CONTEXT_KEY, "\"" + entryName + "\"" ) );
-        newContent.append( ")" );
+        newContent.append( END_SET_DIRECTIVE );
         return newContent.toString();
     }
 
@@ -516,5 +522,15 @@ public class VelocityDocumentFormatter
     public boolean hasDirective( String characters )
     {
         return characters.indexOf( "#" ) != -1;
+    }
+    
+    public String getSetDirective( String name, String value )
+    {
+        StringBuilder newContent = new StringBuilder( START_SET_DIRECTIVE );
+        newContent.append( formatAsSimpleField( true, name) );
+        newContent.append( EQUALS );
+        newContent.append( formatAsSimpleField( true, value) );
+        newContent.append( END_SET_DIRECTIVE );
+        return newContent.toString();
     }
 }

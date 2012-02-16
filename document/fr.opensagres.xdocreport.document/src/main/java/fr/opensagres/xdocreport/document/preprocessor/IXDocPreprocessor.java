@@ -42,7 +42,7 @@ public interface IXDocPreprocessor
 {
 
     /**
-     * Modify the XML file identify withe entry name from the archive.
+     * Modify the XML file identify with te entry name from the archive.
      * 
      * @param entryName Zip entry name fo the XML file to modify.
      * @param outputArchive the zip of the XML document.
@@ -55,6 +55,23 @@ public interface IXDocPreprocessor
      */
     void preprocess( String entryName, XDocArchive outputArchive, FieldsMetadata fieldsMetadata,
                      IDocumentFormatter formatter, Map<String, Object> sharedContext )
+        throws XDocReportException, IOException;
+
+    /**
+     * Create the XML file identify with te entry name from the archive.
+     * 
+     * @param entryName Zip entry name fo the XML file to modify.
+     * @param outputArchive the zip of the XML document.
+     * @param fieldsMetadata metdata fields.
+     * @param formater used to generate directive template engine
+     * @param sharedContext shared context between the whole processor to execute. This Map can be used to share
+     *            information between processors (according the order of the processor registration).
+     * @throws XDocReportException
+     * @throws IOException
+     * @return true if processing can create entry and false otherwise.
+     */
+    boolean create( String entryName, XDocArchive outputArchive, FieldsMetadata fieldsMetadata,
+                    IDocumentFormatter formatter, Map<String, Object> sharedContext )
         throws XDocReportException, IOException;
 
 }

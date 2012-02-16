@@ -29,6 +29,7 @@ import static fr.opensagres.xdocreport.document.docx.DocxConstants.MIME_MAPPING;
 import static fr.opensagres.xdocreport.document.docx.DocxConstants.WORD_DOCUMENT_XML_ENTRY;
 import static fr.opensagres.xdocreport.document.docx.DocxConstants.WORD_FOOTER_XML_ENTRY;
 import static fr.opensagres.xdocreport.document.docx.DocxConstants.WORD_HEADER_XML_ENTRY;
+import static fr.opensagres.xdocreport.document.docx.DocxConstants.WORD_NUMBERING_XML_ENTRY;
 import static fr.opensagres.xdocreport.document.docx.DocxConstants.WORD_RELS_XMLRELS_XML_ENTRY;
 import static fr.opensagres.xdocreport.document.docx.DocxConstants.WORD_STYLES_XML_ENTRY;
 
@@ -55,6 +56,7 @@ import fr.opensagres.xdocreport.document.docx.images.DocxImageRegistry;
 import fr.opensagres.xdocreport.document.docx.preprocessor.DefaultStyle;
 import fr.opensagres.xdocreport.document.docx.preprocessor.DocxContentTypesPreprocessor;
 import fr.opensagres.xdocreport.document.docx.preprocessor.DocxDocumentXMLRelsPreprocessor;
+import fr.opensagres.xdocreport.document.docx.preprocessor.DocxNumberingPreprocessor;
 import fr.opensagres.xdocreport.document.docx.preprocessor.DocxPreprocessor;
 import fr.opensagres.xdocreport.document.docx.preprocessor.DocxStylesPreprocessor;
 import fr.opensagres.xdocreport.document.docx.preprocessor.HyperlinkContentHandler;
@@ -105,6 +107,7 @@ public class DocxReport
         super.addPreprocessor( WORD_FOOTER_XML_ENTRY, DocxPreprocessor.INSTANCE );
         super.addPreprocessor( CONTENT_TYPES_XML_ENTRY, DocxContentTypesPreprocessor.INSTANCE );
         super.addPreprocessor( WORD_RELS_XMLRELS_XML_ENTRY, DocxDocumentXMLRelsPreprocessor.INSTANCE );
+        super.addPreprocessor( WORD_NUMBERING_XML_ENTRY, DocxNumberingPreprocessor.INSTANCE );
     }
 
     @Override

@@ -335,6 +335,7 @@ public abstract class AbstractXDocReport
         try
         {
 
+            IDocumentFormatter formatter = internalGetTemplateEngine().getDocumentFormatter();
             // Preprocessor
             String entryName = null;
             Set<Entry<String, Collection<IXDocPreprocessor>>> preprocessorEntryNames = preprocessors.entrySet();
@@ -349,21 +350,37 @@ public abstract class AbstractXDocReport
                     {
                         // XML Document contains a XML file which must be
                         // preprocessed
-                        preprocessor.preprocess( entryName, preprocessedArchive, fieldsMetadata,
-                                                 internalGetTemplateEngine().getDocumentFormatter(), sharedContext );
+                        preprocessor.preprocess( entryName, preprocessedArchive, fieldsMetadata, formatter,
+                                                 sharedContext );
                     }
                 }
                 else
                 {
                     // Test if it's wilcard?
                     Set<String> entriesNameFromWilcard = preprocessedArchive.getEntryNames( entryName );
-                    for ( String entryNameFromWilcard : entriesNameFromWilcard )
+                    if ( entriesNameFromWilcard.size() > 0 )
                     {
+                        for ( String entryNameFromWilcard : entriesNameFromWilcard )
+                        {
+                            for ( IXDocPreprocessor preprocessor : entryPreprocessors )
+                            {
+                                preprocessor.preprocess( entryNameFromWilcard, preprocessedArchive, fieldsMetadata,
+
+                                formatter, sharedContext );
+                            }
+                        }
+                    }
+                    else
+                    {
+                        // entry not found, create it?
+                        entryPreprocessors = entry.getValue();
                         for ( IXDocPreprocessor preprocessor : entryPreprocessors )
                         {
-                            preprocessor.preprocess( entryNameFromWilcard, preprocessedArchive, fieldsMetadata,
-
-                            internalGetTemplateEngine().getDocumentFormatter(), sharedContext );
+                            if ( preprocessor.create( entryName, preprocessedArchive, fieldsMetadata, formatter,
+                                                      sharedContext ) )
+                            {
+                                break;
+                            }
                         }
                     }
                 }

@@ -148,6 +148,13 @@ public abstract class AbstractXDocPreprocessor<T>
         }
         return documentArchive.getEntryWriter( entryName );
     }
+    
+    public boolean create( String entryName, XDocArchive outputArchive, FieldsMetadata fieldsMetadata,
+                           IDocumentFormatter formatter, Map<String, Object> sharedContext )
+        throws XDocReportException, IOException
+    {        
+        return false;
+    }
 
     public abstract boolean preprocess( String entryName, T reader, Writer writer, FieldsMetadata fieldsMetadata,
                                         IDocumentFormatter formater, Map<String, Object> context )

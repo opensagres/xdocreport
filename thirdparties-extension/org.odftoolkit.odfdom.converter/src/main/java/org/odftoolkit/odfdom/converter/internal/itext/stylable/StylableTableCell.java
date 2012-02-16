@@ -60,6 +60,8 @@ public class StylableTableCell
         this.parent = parent;
         // make iText first line alignment compatible with open office
         getColumn().setAdjustFirstLine( false );
+        // make a room for borders
+        setUseBorderPadding( true );
     }
 
     public void addElement( Element element )

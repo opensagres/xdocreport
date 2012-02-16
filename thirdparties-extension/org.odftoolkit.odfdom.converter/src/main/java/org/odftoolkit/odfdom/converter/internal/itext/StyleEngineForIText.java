@@ -264,7 +264,7 @@ public class StyleEngineForIText
         String borderLeft = ele.getFoBorderLeftAttribute();
         if ( StringUtils.isNotEmpty( borderLeft ) )
         {
-            paragraphProperties.setBorderLeft( new StyleBorder( borderBottom, BorderType.LEFT ) );
+            paragraphProperties.setBorderLeft( new StyleBorder( borderLeft, BorderType.LEFT ) );
         }
 
         // border-bottom
@@ -407,20 +407,20 @@ public class StyleEngineForIText
 
         // keep-together
         String keepTogether = ele.getFoKeepTogetherAttribute();
-        if ( FoKeepTogetherAttribute.Value.ALWAYS.name().equals( keepTogether ) )
+        if ( FoKeepTogetherAttribute.Value.ALWAYS.toString().equals( keepTogether ) )
         {
             paragraphProperties.setKeepTogether( true );
         }
 
         // fo:break-before
         String breakBefore = ele.getFoBreakBeforeAttribute();
-        if ( FoBreakBeforeAttribute.Value.PAGE.name().equals( breakBefore ) )
+        if ( FoBreakBeforeAttribute.Value.PAGE.toString().equals( breakBefore ) )
         {
             paragraphProperties.setBreakBeforePage( true );
         }
 
         String breakAfter = ele.getFoBreakAfterAttribute();
-        if ( FoBreakAfterAttribute.Value.PAGE.name().equals( breakAfter ) )
+        if ( FoBreakAfterAttribute.Value.PAGE.toString().equals( breakAfter ) )
         {
             paragraphProperties.setBreakAfterPage( true );
         }
@@ -661,7 +661,7 @@ public class StyleEngineForIText
         String borderLeft = ele.getFoBorderLeftAttribute();
         if ( StringUtils.isNotEmpty( borderLeft ) )
         {
-            tableCellProperties.setBorderLeft( new StyleBorder( borderBottom, BorderType.LEFT ) );
+            tableCellProperties.setBorderLeft( new StyleBorder( borderLeft, BorderType.LEFT ) );
         }
 
         // border-bottom

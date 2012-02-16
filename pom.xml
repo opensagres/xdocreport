@@ -291,6 +291,7 @@
 		<module>integrationtests</module>
 		<module>sandbox</module>
 		<module>remoting</module>
+		<module>tools</module>
 	</modules>
 	<dependencies>
 		<dependency>

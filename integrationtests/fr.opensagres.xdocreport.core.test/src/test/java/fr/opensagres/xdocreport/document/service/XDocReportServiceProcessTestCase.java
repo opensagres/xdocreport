@@ -36,6 +36,7 @@ import junit.framework.TestCase;
 import fr.opensagres.xdocreport.converter.Options;
 import fr.opensagres.xdocreport.core.io.IOUtils;
 import fr.opensagres.xdocreport.document.domain.DataContext;
+import fr.opensagres.xdocreport.document.internal.XDocReportServiceImpl;
 import fr.opensagres.xdocreport.template.TemplateEngineKind;
 import fr.opensagres.xdocreport.template.formatter.FieldsMetadata;
 
@@ -64,7 +65,7 @@ public class XDocReportServiceProcessTestCase
 
         // 2) Call process which returns byte array
         byte[] result =
-            XDocReportService.INSTANCE.process( document, fieldsMetadata, templateEngineId, dataContext, options );
+            XDocReportServiceImpl.INSTANCE.process( document, fieldsMetadata, templateEngineId, dataContext, options );
         assertNotNull( result );
 
         // 3) Save generated report
@@ -102,10 +103,10 @@ public class XDocReportServiceProcessTestCase
         Options options = null;
 
         // 2) Register the report
-        XDocReportService.INSTANCE.registerReport( reportId, document, fieldsMetadata, templateEngineId );
+        XDocReportServiceImpl.INSTANCE.registerReport( reportId, document, fieldsMetadata, templateEngineId );
 
         // 3) Call process which returns byte array
-        byte[] result = XDocReportService.INSTANCE.process( reportId, dataContext, options );
+        byte[] result = XDocReportServiceImpl.INSTANCE.process( reportId, dataContext, options );
         assertNotNull( result );
 
         // 3) Save generated report

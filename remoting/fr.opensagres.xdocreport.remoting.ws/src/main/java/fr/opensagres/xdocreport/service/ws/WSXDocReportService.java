@@ -26,11 +26,11 @@ package fr.opensagres.xdocreport.service.ws;
 
 import javax.jws.WebService;
 
-import fr.opensagres.xdocreport.document.service.XDocReportService;
+import fr.opensagres.xdocreport.document.internal.XDocReportServiceImpl;
 
 @WebService( serviceName = "WSXDocReportService", targetNamespace = "http://xdocreport.opensagres.fr" )
 public class WSXDocReportService
-    extends XDocReportService
+    extends XDocReportServiceImpl
 {
 
     // private XDocReportService delegate = XDocReportService.INSTANCE;

@@ -41,14 +41,14 @@ import fr.opensagres.xdocreport.document.domain.ReportAndDataRepresentation;
 import fr.opensagres.xdocreport.document.domain.ReportId;
 import fr.opensagres.xdocreport.document.domain.ReportRepresentation;
 import fr.opensagres.xdocreport.document.domain.WSOptions;
-import fr.opensagres.xdocreport.document.service.XDocReportService;
+import fr.opensagres.xdocreport.document.internal.XDocReportServiceImpl;
 import fr.opensagres.xdocreport.template.formatter.FieldsMetadata;
 
 @Path( "/" )
 public class RESTXDocReportService
 {
 
-    private XDocReportService delegate = XDocReportService.INSTANCE;
+    private XDocReportServiceImpl delegate = XDocReportServiceImpl.INSTANCE;
 
     @GET
     @Path( "/download/{reportID}/{processState}" )

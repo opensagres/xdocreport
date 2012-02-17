@@ -22,7 +22,7 @@
  * OF CONTRACT, TORT OR OTHERWISE,  ARISING FROM, OUT OF OR IN CONNECTION
  * WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
-package fr.opensagres.xdocreport.document.service;
+package fr.opensagres.xdocreport.document.internal;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
@@ -49,12 +49,12 @@ import fr.opensagres.xdocreport.document.registry.XDocReportRegistry;
 import fr.opensagres.xdocreport.template.IContext;
 import fr.opensagres.xdocreport.template.formatter.FieldsMetadata;
 
-public class XDocReportService
+public class XDocReportServiceImpl
 {
 
-    private static final Logger LOGGER = LogUtils.getLogger( XDocReportService.class );
+    private static final Logger LOGGER = LogUtils.getLogger( XDocReportServiceImpl.class );
 
-    public static final XDocReportService INSTANCE = new XDocReportService();
+    public static final XDocReportServiceImpl INSTANCE = new XDocReportServiceImpl();
 
     private boolean cacheOriginalDocument;
 

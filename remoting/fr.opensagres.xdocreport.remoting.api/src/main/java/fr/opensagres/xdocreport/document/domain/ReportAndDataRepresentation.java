@@ -1,4 +1,4 @@
-package fr.opensagres.xdocreport.document.service;
+package fr.opensagres.xdocreport.document.domain;
 
 import java.util.ArrayList;
 import java.util.List;

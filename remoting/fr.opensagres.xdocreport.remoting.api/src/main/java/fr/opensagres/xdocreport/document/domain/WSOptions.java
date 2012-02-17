@@ -22,82 +22,47 @@
  * OF CONTRACT, TORT OR OTHERWISE,  ARISING FROM, OUT OF OR IN CONNECTION
  * WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
-package fr.opensagres.xdocreport.document.service;
+package fr.opensagres.xdocreport.document.domain;
 
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-
-import javax.xml.bind.annotation.XmlMimeType;
 import javax.xml.bind.annotation.XmlRootElement;
 
 @XmlRootElement
-public class ReportRepresentation
-
+public class WSOptions
 {
 
+    private String from;
 
-    private String reportID;
+    private String to;
 
-    private String templateEngine;
+    private String via;
 
-    private Date loadedDate;
-
-
-    private byte[] document;
-
-    private List<String> fieldsMetaData = new ArrayList<String>();
-
-    @XmlMimeType( "application/octet-stream" )
-    public byte[] getDocument()
+    public String getFrom()
     {
-        return document;
+        return from;
     }
 
-    public void setDocument( byte[] document )
+    public void setFrom( String from )
     {
-        this.document = document;
+        this.from = from;
     }
 
-    public List<String> getFieldsMetaData()
+    public String getTo()
     {
-        return fieldsMetaData;
+        return to;
     }
 
-    public void setFieldsMetaData( List<String> fieldsMetaData )
+    public void setTo( String to )
     {
-        this.fieldsMetaData = fieldsMetaData;
+        this.to = to;
     }
 
-    public String getReportID()
+    public String getVia()
     {
-        return reportID;
+        return via;
     }
 
-    public void setReportID( String reportID )
+    public void setVia( String via )
     {
-        this.reportID = reportID;
+        this.via = via;
     }
-
-    public String getTemplateEngine()
-    {
-        return templateEngine;
-    }
-
-    public void setTemplateEngine( String templateEngine )
-    {
-        this.templateEngine = templateEngine;
-    }
-
-    public Date getLoadedDate()
-    {
-        return loadedDate;
-    }
-
-    public void setLoadedDate( Date loadedDate )
-    {
-        this.loadedDate = loadedDate;
-    }
-
-
 }

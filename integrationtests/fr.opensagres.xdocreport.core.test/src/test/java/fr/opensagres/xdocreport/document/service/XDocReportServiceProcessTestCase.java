@@ -35,6 +35,7 @@ import java.util.List;
 import junit.framework.TestCase;
 import fr.opensagres.xdocreport.converter.Options;
 import fr.opensagres.xdocreport.core.io.IOUtils;
+import fr.opensagres.xdocreport.document.domain.DataContext;
 import fr.opensagres.xdocreport.template.TemplateEngineKind;
 import fr.opensagres.xdocreport.template.formatter.FieldsMetadata;
 

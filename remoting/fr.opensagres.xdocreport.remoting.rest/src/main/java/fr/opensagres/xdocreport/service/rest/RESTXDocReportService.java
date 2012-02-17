@@ -36,11 +36,11 @@ import javax.ws.rs.core.MediaType;
 
 import fr.opensagres.xdocreport.converter.Options;
 import fr.opensagres.xdocreport.core.XDocReportException;
-import fr.opensagres.xdocreport.document.service.DataContext;
-import fr.opensagres.xdocreport.document.service.ReportAndDataRepresentation;
-import fr.opensagres.xdocreport.document.service.ReportId;
-import fr.opensagres.xdocreport.document.service.ReportRepresentation;
-import fr.opensagres.xdocreport.document.service.WSOptions;
+import fr.opensagres.xdocreport.document.domain.DataContext;
+import fr.opensagres.xdocreport.document.domain.ReportAndDataRepresentation;
+import fr.opensagres.xdocreport.document.domain.ReportId;
+import fr.opensagres.xdocreport.document.domain.ReportRepresentation;
+import fr.opensagres.xdocreport.document.domain.WSOptions;
 import fr.opensagres.xdocreport.document.service.XDocReportService;
 import fr.opensagres.xdocreport.template.formatter.FieldsMetadata;
 

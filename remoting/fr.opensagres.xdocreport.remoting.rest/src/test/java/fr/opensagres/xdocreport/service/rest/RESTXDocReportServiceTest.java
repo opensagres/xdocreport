@@ -53,11 +53,11 @@ import fr.opensagres.xdocreport.converter.ConverterTypeTo;
 import fr.opensagres.xdocreport.converter.ConverterTypeVia;
 import fr.opensagres.xdocreport.core.document.DocumentKind;
 import fr.opensagres.xdocreport.document.ProcessState;
-import fr.opensagres.xdocreport.document.service.DataContext;
-import fr.opensagres.xdocreport.document.service.ReportAndDataRepresentation;
-import fr.opensagres.xdocreport.document.service.ReportId;
-import fr.opensagres.xdocreport.document.service.ReportRepresentation;
-import fr.opensagres.xdocreport.document.service.WSOptions;
+import fr.opensagres.xdocreport.document.domain.DataContext;
+import fr.opensagres.xdocreport.document.domain.ReportAndDataRepresentation;
+import fr.opensagres.xdocreport.document.domain.ReportId;
+import fr.opensagres.xdocreport.document.domain.ReportRepresentation;
+import fr.opensagres.xdocreport.document.domain.WSOptions;
 
 public class RESTXDocReportServiceTest
 {

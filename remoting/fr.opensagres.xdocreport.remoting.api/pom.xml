@@ -5,18 +5,23 @@
     <groupId>fr.opensagres.xdocreport</groupId>
     <version>0.9.6-SNAPSHOT</version>
   </parent>
-  <artifactId>fr.opensagres.xdocreport.remoting.shared</artifactId>
+  <artifactId>fr.opensagres.xdocreport.remoting.api</artifactId>
   <dependencies>
-  <dependency>
-      <groupId>fr.opensagres.xdocreport</groupId>
-      <artifactId>fr.opensagres.xdocreport.document</artifactId>
-      <version>0.9.6-SNAPSHOT</version>
+
+    <!-- API (non transitive depdendencies) -->
+
+    <dependency>
+      <groupId>org.apache.geronimo.specs</groupId>
+      <artifactId>geronimo-jaxrs_1.1_spec</artifactId>
+      <version>1.0</version>
+      <scope>provided</scope>
     </dependency>
 
     <dependency>
-      <groupId>fr.opensagres.xdocreport</groupId>
-      <artifactId>fr.opensagres.xdocreport.remoting.api</artifactId>
-      <version>0.9.6-SNAPSHOT</version>
+      <groupId>org.apache.geronimo.specs</groupId>
+      <artifactId>geronimo-jaxb_2.1_spec</artifactId>
+      <version>1.0</version>
+      <scope>provided</scope>
     </dependency>
   </dependencies>
 </project>

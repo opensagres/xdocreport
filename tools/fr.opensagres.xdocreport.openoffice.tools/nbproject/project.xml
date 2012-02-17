@@ -3,7 +3,7 @@
     <type>org.netbeans.modules.java.j2seproject</type>
     <configuration>
         <data xmlns="http://www.netbeans.org/ns/j2se-project/3">
-            <name>XDocReportDesignTool</name>
+            <name>fr.opensagres.xdocreport.openoffice.tools</name>
             <minimum-ant-version>1.6.5</minimum-ant-version>
             <explicit-platform explicit-source-supported="true"/>
             <source-roots>

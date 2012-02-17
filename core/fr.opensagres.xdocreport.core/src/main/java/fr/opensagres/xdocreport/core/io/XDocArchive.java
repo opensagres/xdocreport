@@ -306,11 +306,7 @@ public class XDocArchive
                 }
                 // 4) Create empty output stream and register it with the entry
                 // name
-                OutputStream entryOutputStream = archive.getEntryOutputStream( zipEntry.getName() );
-                // 5) Copy original stream form the zip entry to the empty
-                // output stream
-                IOUtils.copy( zipInputStream, entryOutputStream );
-                entryOutputStream.close();
+                setEntry( archive, zipEntry.getName(), zipInputStream );
                 zipInputStream.closeEntry();
             }
         }
@@ -327,6 +323,24 @@ public class XDocArchive
             throw new IOException( "InputStream is not a zip." );
         }
         return archive;
+    }
+
+    /**
+     * Set the given input stream in the given entry of the document archive.
+     * 
+     * @param archive
+     * @param inputStream
+     * @throws IOException
+     */
+    public static void setEntry( XDocArchive archive, String entryName, InputStream input )
+        throws IOException
+    {
+        // 1) Create empty output stream and register it with the entry
+        // name
+        OutputStream output = archive.getEntryOutputStream( entryName );
+        // 2) Copy original stream form the input stream to the empty output stream
+        IOUtils.copy( input, output );
+        output.close();
     }
 
     /**

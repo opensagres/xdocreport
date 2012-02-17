@@ -45,9 +45,9 @@ public class DocxConstants
     public static final String CONTENT_TYPES_XML_ENTRY = "[Content_Types].xml";
 
     public static final String WORD_RELS_XMLRELS_XML_ENTRY = "word/_rels/*.xml.rels";
-    
+
     public static final String WORD_NUMBERING_XML_ENTRY = "word/numbering.xml";
-    
+
     public static final String W_NS = "http://schemas.openxmlformats.org/wordprocessingml/2006/main";
 
     public static final String WP_NS = "http://schemas.openxmlformats.org/drawingml/2006/wordprocessingDrawing";
@@ -109,8 +109,10 @@ public class DocxConstants
 
     // hyperlink
     public static final String HYPERLINK_ELT = "hyperlink";
-    
-    public static final String RFONTS_ELT = "rFonts";    
+
+    public static final String RFONTS_ELT = "rFonts";
+
+    public static final String ABSTRACT_NUM_ELT = "abstractNum";
 
     public static final String ID_ATTR = "id";
 

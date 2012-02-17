@@ -24,6 +24,7 @@
  */
 package fr.opensagres.xdocreport.document.docx;
 
+import static fr.opensagres.xdocreport.document.docx.DocxConstants.ABSTRACT_NUM_ELT;
 import static fr.opensagres.xdocreport.document.docx.DocxConstants.A_NS;
 import static fr.opensagres.xdocreport.document.docx.DocxConstants.BLIP_ELT;
 import static fr.opensagres.xdocreport.document.docx.DocxConstants.BOOKMARK_END_ELT;
@@ -232,5 +233,10 @@ public class DocxUtils
     public static boolean isRFonts( String uri, String localName, String name )
     {
         return W_NS.equals( uri ) && RFONTS_ELT.equals( localName );
+    }
+
+    public static boolean isAbstractNum( String uri, String localName, String name )
+    {
+        return W_NS.equals( uri ) && ABSTRACT_NUM_ELT.equals( localName );
     }
 }

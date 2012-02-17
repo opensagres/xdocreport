@@ -24,15 +24,13 @@
  */
 package fr.opensagres.xdocreport.document.docx.preprocessor.sax.numbering;
 
-import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.OutputStream;
 import java.util.Map;
 
 import fr.opensagres.xdocreport.core.XDocReportException;
-import fr.opensagres.xdocreport.core.io.IOUtils;
 import fr.opensagres.xdocreport.core.io.XDocArchive;
+import fr.opensagres.xdocreport.document.docx.textstyling.DocxDocumentHandler;
 import fr.opensagres.xdocreport.document.preprocessor.IXDocPreprocessor;
 import fr.opensagres.xdocreport.document.preprocessor.sax.BufferedDocumentContentHandler;
 import fr.opensagres.xdocreport.document.preprocessor.sax.SAXXDocPreprocessor;
@@ -52,9 +50,9 @@ public class DocxNumberingPreprocessor
     protected BufferedDocumentContentHandler createBufferedDocumentContentHandler( String entryName,
                                                                                    FieldsMetadata fieldsMetadata,
                                                                                    IDocumentFormatter formater,
-                                                                                   Map<String, Object> context )
+                                                                                   Map<String, Object> sharedContext )
     {
-        return new DocxNumberingDocumentContentHandler( entryName, fieldsMetadata, formater, context );
+        return new DocxNumberingDocumentContentHandler( formater, sharedContext );
     }
 
     @Override
@@ -71,16 +69,13 @@ public class DocxNumberingPreprocessor
         {
             return false;
         }
-        
-        // 1) Create word/numbering.xml entry
-        InputStream input = DocxNumberingPreprocessor.class.getResourceAsStream( "numbering.xml" );
-        OutputStream output = new ByteArrayOutputStream();
-        IOUtils.copyLarge( input, output );
-        XDocArchive.writeEntry( outputArchive, entryName, output );
-        
-        // 2) preprocess it
 
-        return super.create( entryName, outputArchive, fieldsMetadata, formatter, sharedContext );
+        // 1) Create word/numbering.xml entry
+        InputStream input = DocxDocumentHandler.class.getResourceAsStream( "numbering.xml" );
+        XDocArchive.setEntry( outputArchive, entryName, input );
+
+        // 2) preprocess it
+        return true;
     }
 
 }

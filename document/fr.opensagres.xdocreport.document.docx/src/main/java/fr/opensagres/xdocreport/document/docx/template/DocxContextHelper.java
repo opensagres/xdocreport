@@ -1,5 +1,7 @@
 package fr.opensagres.xdocreport.document.docx.template;
 
+import java.util.Map;
+
 import fr.opensagres.xdocreport.document.docx.preprocessor.DefaultStyle;
 import fr.opensagres.xdocreport.document.docx.preprocessor.HyperlinkRegistry;
 import fr.opensagres.xdocreport.document.docx.preprocessor.HyperlinkUtils;
@@ -49,6 +51,17 @@ public class DocxContextHelper
     public static DefaultStyle getDefaultStyle( IContext context )
     {
         return (DefaultStyle) context.get( DEFAULT_STYLE_KEY );
+    }
+
+    public static DefaultStyle getDefaultStyle( Map<String, Object> sharedContext )
+    {
+        DefaultStyle defaultStyle = (DefaultStyle) sharedContext.get( DocxContextHelper.DEFAULT_STYLE_KEY );
+        if ( defaultStyle == null )
+        {
+            defaultStyle = new DefaultStyle();
+            sharedContext.put( DocxContextHelper.DEFAULT_STYLE_KEY, defaultStyle );
+        }
+        return defaultStyle;
     }
 
 }

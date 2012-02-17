@@ -66,7 +66,7 @@ public class DocxStylesDocumentContentHandler
             {
                 if ( HYPERLINK_STYLE_NAME.equals( val ) )
                 {
-                    DefaultStyle defaultStyle = getDefaultStyle();
+                    DefaultStyle defaultStyle = DocxContextHelper.getDefaultStyle( sharedContext );
                     defaultStyle.setHyperLinkStyleId( currentStyleId );
                 }
                 else if ( val.startsWith( "heading " ) )
@@ -75,24 +75,13 @@ public class DocxStylesDocumentContentHandler
                     Integer level = StringUtils.asInteger( index );
                     if ( level != null )
                     {
-                        DefaultStyle defaultStyle = getDefaultStyle();
+                        DefaultStyle defaultStyle = DocxContextHelper.getDefaultStyle(sharedContext);
                         defaultStyle.addHeaderStyle( level, currentStyleId );
                     }
                 }
             }
         }
         return super.doStartElement( uri, localName, name, attributes );
-    }
-
-    private DefaultStyle getDefaultStyle()
-    {
-        DefaultStyle defaultStyle = (DefaultStyle) sharedContext.get( DocxContextHelper.DEFAULT_STYLE_KEY );
-        if ( defaultStyle == null )
-        {
-            defaultStyle = new DefaultStyle();
-            sharedContext.put( DocxContextHelper.DEFAULT_STYLE_KEY, defaultStyle );
-        }
-        return defaultStyle;
     }
 
     @Override

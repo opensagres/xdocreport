@@ -42,14 +42,18 @@ import fr.opensagres.xdocreport.document.domain.ReportId;
 import fr.opensagres.xdocreport.document.domain.ReportRepresentation;
 import fr.opensagres.xdocreport.document.domain.WSOptions;
 import fr.opensagres.xdocreport.document.internal.XDocReportServiceImpl;
+import fr.opensagres.xdocreport.document.service.XDocReportService;
 import fr.opensagres.xdocreport.template.formatter.FieldsMetadata;
 
 @Path( "/" )
-public class XDocReportServiceJaxRs
+public class XDocReportServiceJaxRs implements XDocReportService
 {
 
     private XDocReportServiceImpl delegate = XDocReportServiceImpl.INSTANCE;
 
+    /* (non-Javadoc)
+     * @see fr.opensagres.xdocreport.service.rest.XDocReportService#download(java.lang.String, java.lang.String)
+     */
     @GET
     @Path( "/download/{reportID}/{processState}" )
     @Consumes( { MediaType.APPLICATION_XML,MediaType.APPLICATION_JSON  })
@@ -63,6 +67,9 @@ public class XDocReportServiceJaxRs
     }
 
 
+    /* (non-Javadoc)
+     * @see fr.opensagres.xdocreport.service.rest.XDocReportService#listReports()
+     */
     @GET
     @Path( "/listReports" )
     @Produces( { MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML } )
@@ -72,6 +79,9 @@ public class XDocReportServiceJaxRs
     }
 
 
+    /* (non-Javadoc)
+     * @see fr.opensagres.xdocreport.service.rest.XDocReportService#upload(fr.opensagres.xdocreport.document.domain.ReportRepresentation)
+     */
     @POST
     @Path( "/upload" )
     @Consumes( { MediaType.APPLICATION_XML,MediaType.APPLICATION_JSON  })
@@ -90,6 +100,9 @@ public class XDocReportServiceJaxRs
 
     }
 
+    /* (non-Javadoc)
+     * @see fr.opensagres.xdocreport.service.rest.XDocReportService#processReport(fr.opensagres.xdocreport.document.domain.ReportAndDataRepresentation)
+     */
     @POST
     @Path( "/processReport" )
     @Consumes( { MediaType.APPLICATION_XML,MediaType.APPLICATION_JSON  })
@@ -119,12 +132,18 @@ public class XDocReportServiceJaxRs
         return result;
     }
 
+    /* (non-Javadoc)
+     * @see fr.opensagres.xdocreport.service.rest.XDocReportService#processReport(java.lang.String, java.util.List, fr.opensagres.xdocreport.converter.Options)
+     */
     public byte[] processReport( String reportId, List<DataContext> dataContext, Options options )
         throws XDocReportException
     {
         return delegate.process( reportId, dataContext, options );
     }
 
+    /* (non-Javadoc)
+     * @see fr.opensagres.xdocreport.service.rest.XDocReportService#unRegister(java.lang.String)
+     */
     public void unRegister( String reportId )
     {
         delegate.unregisterReport( reportId );

@@ -36,7 +36,7 @@ public class XDocreportApplication
 
     public XDocreportApplication()
     {
-        singletons.add( new RESTXDocReportService() );
+        singletons.add( new XDocReportServiceJaxRs() );
     }
 
 

@@ -80,7 +80,7 @@ public class RESTXDocReportServiceTest
 
         servlet.setInitParameter( Application.class.getName(),
                                   fr.opensagres.xdocreport.service.rest.XDocreportApplication.class.getName() );
-        servlet.setInitParameter( "jaxrs.serviceClasses", RESTXDocReportService.class.getName() );
+        servlet.setInitParameter( "jaxrs.serviceClasses", XDocReportServiceJaxRs.class.getName() );
 
         servlet.setInitParameter( "timeout", "60000" );
         server = new Server( PORT );

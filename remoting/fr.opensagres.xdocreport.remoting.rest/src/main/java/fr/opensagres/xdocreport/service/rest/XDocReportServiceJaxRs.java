@@ -45,7 +45,7 @@ import fr.opensagres.xdocreport.document.internal.XDocReportServiceImpl;
 import fr.opensagres.xdocreport.template.formatter.FieldsMetadata;
 
 @Path( "/" )
-public class RESTXDocReportService
+public class XDocReportServiceJaxRs
 {
 
     private XDocReportServiceImpl delegate = XDocReportServiceImpl.INSTANCE;

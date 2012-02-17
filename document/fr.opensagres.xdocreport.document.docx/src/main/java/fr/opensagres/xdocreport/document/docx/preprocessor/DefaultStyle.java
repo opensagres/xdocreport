@@ -8,9 +8,15 @@ import fr.opensagres.xdocreport.core.utils.StringUtils;
 public class DefaultStyle
 {
 
+    public static final int DEFAULT_NUMID = -1;
+
     private String hyperLinkStyleId;
 
     private Map<Integer, String> headersStyleId;
+
+    private int numIdForOrdererList = DEFAULT_NUMID;
+
+    private int numIdForUnordererList = DEFAULT_NUMID;
 
     public String getHyperLinkStyleId()
     {
@@ -44,6 +50,26 @@ public class DefaultStyle
     public String getHeaderStyle( int level )
     {
         return headersStyleId.get( level );
+    }
+
+    public int getNumIdForOrdererList()
+    {
+        return numIdForOrdererList;
+    }
+
+    public void setNumIdForOrdererList( int numIdForOrdererList )
+    {
+        this.numIdForOrdererList = numIdForOrdererList;
+    }
+
+    public int getNumIdForUnordererList()
+    {
+        return numIdForUnordererList;
+    }
+
+    public void setNumIdForUnordererList( int numIdForUnordererList )
+    {
+        this.numIdForUnordererList = numIdForUnordererList;
     }
 
 }

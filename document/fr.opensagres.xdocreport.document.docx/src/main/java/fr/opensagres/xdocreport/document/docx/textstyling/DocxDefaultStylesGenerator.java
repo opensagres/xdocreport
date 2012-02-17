@@ -19,6 +19,10 @@ public class DocxDefaultStylesGenerator
 
     private static final List<Style> XDocReport_Headings_Style;
 
+    private static final int DEFAULT_NUMID_ORDERED = 0;
+
+    private static final int DEFAULT_NUMID_UNORDERED = 1;
+
     static
     {
         XDocReport_Headings_Style = new ArrayList<Style>();
@@ -96,5 +100,24 @@ public class DocxDefaultStylesGenerator
     public static int getHeaderStylesCount()
     {
         return 6;
+    }
+
+    public int getNumIdForList( boolean ordered, DefaultStyle defaultStyle )
+    {
+        if ( ordered )
+        {
+            if ( defaultStyle == null )
+            {
+                return DEFAULT_NUMID_ORDERED;
+            }
+            return defaultStyle.getNumIdForOrdererList() != DefaultStyle.DEFAULT_NUMID ? defaultStyle.getNumIdForOrdererList()
+                            : DEFAULT_NUMID_ORDERED;
+        }
+        if ( defaultStyle == null )
+        {
+            return DEFAULT_NUMID_UNORDERED;
+        }
+        return defaultStyle.getNumIdForOrdererList() != DefaultStyle.DEFAULT_NUMID ? defaultStyle.getNumIdForUnordererList()
+                        : DEFAULT_NUMID_UNORDERED;
     }
 }

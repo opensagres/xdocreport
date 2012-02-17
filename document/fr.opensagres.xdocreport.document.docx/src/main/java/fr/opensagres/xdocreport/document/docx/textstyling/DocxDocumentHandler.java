@@ -161,8 +161,8 @@ public class DocxDocumentHandler
     {
 
         if ( paragraphWasInserted && paragraphsStack.isEmpty() )
-        {            
-            startParagraph(false);
+        {
+            startParagraph( false );
         }
     }
 
@@ -178,9 +178,9 @@ public class DocxDocumentHandler
     public void startParagraph()
         throws IOException
     {
-        //if (!paragraphsStack.isEmpty()) {
-            closeCurrentParagraph();
-        //}
+        // if (!paragraphsStack.isEmpty()) {
+        closeCurrentParagraph();
+        // }
         startParagraph( true );
     }
 
@@ -194,9 +194,6 @@ public class DocxDocumentHandler
     public void startListItem()
         throws IOException
     {
-        // if (!paragraphsStack.isEmpty() && !paragraphsStack.peek()) {
-        // endParagraph();
-        // }
         startParagraph( false );
         boolean ordered = super.getCurrentListOrder();
         super.write( "<w:pPr>" );
@@ -210,7 +207,7 @@ public class DocxDocumentHandler
         super.write( "\" />" );
 
         // "<w:numId w:val="1" />"
-        int numIdVal = ordered ? 2 : 1;
+        int numIdVal = styleGen.getNumIdForList(ordered, defaultStyle);
         super.write( "<w:numId w:val=\"" );
         super.write( String.valueOf( numIdVal ) );
         super.write( "\" />" );
@@ -231,7 +228,7 @@ public class DocxDocumentHandler
     {
         // Close current paragraph
         closeCurrentParagraph();
-        startParagraph(false);
+        startParagraph( false );
 
         // In docx title is a paragraph with a style.
 

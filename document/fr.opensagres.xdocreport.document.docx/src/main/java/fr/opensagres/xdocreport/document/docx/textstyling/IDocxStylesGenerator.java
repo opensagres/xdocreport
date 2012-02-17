@@ -13,4 +13,6 @@ public interface IDocxStylesGenerator
 
     String getHeaderStyleId( int level, DefaultStyle defaultStyle );
 
+    int getNumIdForList( boolean ordered, DefaultStyle defaultStyle );
+
 }

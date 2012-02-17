@@ -57,7 +57,7 @@ public class DocxDocumentHandlerTestCase
                              handler.getTextBody() );
         Assert.assertEquals( "", handler.getTextEnd() );
     }
-    
+
     @Test
     public void testBoldWithB()
         throws Exception
@@ -247,14 +247,13 @@ public class DocxDocumentHandlerTestCase
 
         ITextStylingTransformer formatter = HTMLTextStylingTransformer.INSTANCE;
         IDocumentHandler handler = new DocxDocumentHandler( parent, context, "word/document.xml" );
-        formatter.transform( "<h1>Title1</h1>paragraph1",
-                             handler );
+        formatter.transform( "<h1>Title1</h1>paragraph1", handler );
 
         Assert.assertEquals( "", handler.getTextBefore() );
         Assert.assertEquals( "", handler.getTextBody() );
         Assert.assertEquals( "<w:p><w:pPr><w:pStyle w:val=\"XDocReport_Heading_1\" /></w:pPr><w:r><w:t>Title1</w:t></w:r></w:p>"
                                  + "<w:p><w:r><w:t xml:space=\"preserve\" >paragraph1</w:t></w:r></w:p>",
-                                 handler.getTextEnd() );
+                             handler.getTextEnd() );
     }
 
     @Test
@@ -267,14 +266,13 @@ public class DocxDocumentHandlerTestCase
 
         ITextStylingTransformer formatter = HTMLTextStylingTransformer.INSTANCE;
         IDocumentHandler handler = new DocxDocumentHandler( parent, context, "word/document.xml" );
-        formatter.transform( "<h1>Title1</h1><p>paragraph1</p>",
-                             handler );
+        formatter.transform( "<h1>Title1</h1><p>paragraph1</p>", handler );
 
         Assert.assertEquals( "", handler.getTextBefore() );
         Assert.assertEquals( "", handler.getTextBody() );
         Assert.assertEquals( "<w:p><w:pPr><w:pStyle w:val=\"XDocReport_Heading_1\" /></w:pPr><w:r><w:t>Title1</w:t></w:r></w:p>"
                                  + "<w:p><w:r><w:t xml:space=\"preserve\" >paragraph1</w:t></w:r></w:p>",
-                                 handler.getTextEnd() );
+                             handler.getTextEnd() );
     }
 
     @Test
@@ -287,19 +285,16 @@ public class DocxDocumentHandlerTestCase
 
         ITextStylingTransformer formatter = HTMLTextStylingTransformer.INSTANCE;
         IDocumentHandler handler = new DocxDocumentHandler( parent, context, "word/document.xml" );
-        formatter.transform( "<h1>Title1</h1>" +
-        		"text" +
-        		"<p>paragraph</p>",
-                             handler );
+        formatter.transform( "<h1>Title1</h1>" + "text" + "<p>paragraph</p>", handler );
 
         Assert.assertEquals( "", handler.getTextBefore() );
         Assert.assertEquals( "", handler.getTextBody() );
         Assert.assertEquals( "<w:p><w:pPr><w:pStyle w:val=\"XDocReport_Heading_1\" /></w:pPr><w:r><w:t>Title1</w:t></w:r></w:p>"
-                                 + "<w:p><w:r><w:t xml:space=\"preserve\" >text</w:t></w:r></w:p>" 
+                                 + "<w:p><w:r><w:t xml:space=\"preserve\" >text</w:t></w:r></w:p>"
                                  + "<w:p><w:r><w:t xml:space=\"preserve\" >paragraph</w:t></w:r></w:p>",
-                                 handler.getTextEnd() );
+                             handler.getTextEnd() );
     }
-    
+
     @Test
     public void testParagraph()
         throws Exception
@@ -323,6 +318,12 @@ public class DocxDocumentHandlerTestCase
         throws Exception
     {
         IContext context = new MockContext();
+        // Add default style (in real context, this DefaultStyle is added by DocxNumberingPreprocessor which search
+        // numbering from the word/numbering.xml entry of the docx)
+        DefaultStyle defaultStyle = new DefaultStyle();
+        defaultStyle.setNumIdForOrdererList( 2 );
+        DocxContextHelper.putDefaultStyle( context, defaultStyle );
+        
         BufferedElement parent = null;
 
         ITextStylingTransformer formatter = HTMLTextStylingTransformer.INSTANCE;
@@ -333,7 +334,7 @@ public class DocxDocumentHandlerTestCase
         Assert.assertEquals( "", handler.getTextBody() );
         Assert.assertEquals( "<w:p><w:pPr><w:pStyle w:val=\"Paragraphedeliste\" /><w:numPr><w:ilvl w:val=\"0\" /><w:numId w:val=\"2\" /></w:numPr></w:pPr><w:r><w:t xml:space=\"preserve\" >item1</w:t></w:r></w:p>"
                                  + "<w:p><w:pPr><w:pStyle w:val=\"Paragraphedeliste\" /><w:numPr><w:ilvl w:val=\"0\" /><w:numId w:val=\"2\" /></w:numPr></w:pPr><w:r><w:t xml:space=\"preserve\" >item2</w:t></w:r></w:p>",
-                             handler.getTextEnd() );        
+                             handler.getTextEnd() );
     }
 
     @Test
@@ -341,6 +342,12 @@ public class DocxDocumentHandlerTestCase
         throws Exception
     {
         IContext context = new MockContext();
+        // Add default style (in real context, this DefaultStyle is added by DocxNumberingPreprocessor which search
+        // numbering from the word/numbering.xml entry of the docx)
+        DefaultStyle defaultStyle = new DefaultStyle();
+        defaultStyle.setNumIdForUnordererList( 1 );
+        DocxContextHelper.putDefaultStyle( context, defaultStyle );
+        
         BufferedElement parent = null;
 
         ITextStylingTransformer formatter = HTMLTextStylingTransformer.INSTANCE;
@@ -349,7 +356,8 @@ public class DocxDocumentHandlerTestCase
 
         Assert.assertEquals( "", handler.getTextBefore() );
         Assert.assertEquals( "", handler.getTextBody() );
-        Assert.assertEquals( "<w:p><w:pPr><w:pStyle w:val=\"Paragraphedeliste\" /><w:numPr><w:ilvl w:val=\"0\" /><w:numId w:val=\"1\" /></w:numPr></w:pPr><w:r><w:t xml:space=\"preserve\" >item1</w:t></w:r></w:p><w:p><w:pPr><w:pStyle w:val=\"Paragraphedeliste\" /><w:numPr><w:ilvl w:val=\"0\" /><w:numId w:val=\"1\" /></w:numPr></w:pPr><w:r><w:t xml:space=\"preserve\" >item2</w:t></w:r></w:p>",
+        Assert.assertEquals( "<w:p><w:pPr><w:pStyle w:val=\"Paragraphedeliste\" /><w:numPr><w:ilvl w:val=\"0\" /><w:numId w:val=\"1\" /></w:numPr></w:pPr><w:r><w:t xml:space=\"preserve\" >item1</w:t></w:r></w:p>"
+                                 + "<w:p><w:pPr><w:pStyle w:val=\"Paragraphedeliste\" /><w:numPr><w:ilvl w:val=\"0\" /><w:numId w:val=\"1\" /></w:numPr></w:pPr><w:r><w:t xml:space=\"preserve\" >item2</w:t></w:r></w:p>",
                              handler.getTextEnd() );
     }
 
@@ -364,8 +372,8 @@ public class DocxDocumentHandlerTestCase
         IDocumentHandler handler = new DocxDocumentHandler( parent, context, "word/document.xml" );
         formatter.transform( "<p>\r\n\tHere are severals styles :</p>\r\n<ul>\r\n\t<li>\r\n\t\t<strong>Bold</strong> style.</li>\r\n\t<li>\r\n\t\t<em>Italic</em> style.</li>\r\n\t<li>\r\n\t\t<strong><em>BoldAndItalic</em></strong> style.</li>\r\n</ul>\r\n<p>\r\n\tHere are 3 styles :</p>\r\n<ol>\r\n\t<li>\r\n\t\t<strong>Bold</strong> style.</li>\r\n\t<li>\r\n\t\t<em>Italic</em> style.</li>\r\n\t<li>\r\n\t\t<strong><em>BoldAndItalic</em></strong> style.</li>\r\n</ol>\r\n<p>\r\n\tXDocReport can manage thoses styles.</p>\r\n<h1>\r\n\tsqsq</h1>\r\n<p>\r\n\tzazazaa</p>\r\n ",
                              handler );
-        
-       // System.err.println(handler.getTextEnd());
+
+        // System.err.println(handler.getTextEnd());
 
     }
 }

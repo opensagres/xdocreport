@@ -72,7 +72,7 @@ public class XDocReportServiceJaxRs implements XDocReportService
      */
     @GET
     @Path( "/listReports" )
-    @Produces( { MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML } )
+    @Produces( { MediaType.APPLICATION_JSON } )
     public List<ReportId> listReports()
     {
         return delegate.listReports();

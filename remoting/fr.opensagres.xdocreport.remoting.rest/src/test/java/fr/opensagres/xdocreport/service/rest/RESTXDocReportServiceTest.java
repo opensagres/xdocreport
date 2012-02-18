@@ -149,7 +149,7 @@ System.out.println(client.getCurrentURI());
 
         WebClient client = WebClient.create( BASE_ADDRESS );
         client.path( "listReports" );
-
+        client.accept( MediaType.APPLICATION_JSON );
         @SuppressWarnings( "unchecked" )
         Collection<ReportId> reports = (Collection<ReportId>) client.getCollection( ReportId.class );
         //System.out.println( reports );

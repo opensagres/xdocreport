@@ -243,7 +243,6 @@ public class XDocReportServiceImpl
               throw new XDocReportException( "report not found " +reportID);
         if ( ProcessState.ORIGINAL.name().equalsIgnoreCase(  processState ) )
         {
-            System.out.println(report.getOriginalDocumentArchive()+  " MMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMM");
             archive = report.getOriginalDocumentArchive().createCopy();
         }
         else if ( ProcessState.PREPROCESSED.name().equalsIgnoreCase( processState ) )

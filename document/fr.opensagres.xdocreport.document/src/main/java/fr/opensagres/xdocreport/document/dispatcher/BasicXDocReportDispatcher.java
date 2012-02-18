@@ -28,6 +28,8 @@ import java.util.Collection;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
+import fr.opensagres.xdocreport.document.registry.XDocReportRegistry;
+
 public class BasicXDocReportDispatcher<T extends IXDocReportController>
     extends AbstractXDocReportDispatcher<T>
 {
@@ -46,6 +48,7 @@ public class BasicXDocReportDispatcher<T extends IXDocReportController>
 
     public void register( String reportId, T controller )
     {
+
         controllersMap.put( reportId, controller );
     }
 

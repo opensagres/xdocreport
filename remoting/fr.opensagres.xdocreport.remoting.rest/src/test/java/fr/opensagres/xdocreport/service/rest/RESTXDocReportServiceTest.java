@@ -107,6 +107,7 @@ public class RESTXDocReportServiceTest
     {
         WebClient client = WebClient.create( BASE_ADDRESS );
         client.path( "upload" );
+        client.type( MediaType.APPLICATION_JSON_TYPE );
         ReportRepresentation report = new ReportRepresentation();
 
         InputStream in = RESTXDocReportServiceTest.class.getClassLoader().getResourceAsStream( "bo.docx" );
@@ -120,7 +121,7 @@ public class RESTXDocReportServiceTest
     }
 
 
-    @Ignore
+    @Ignore("Ne peux pas fonctionner tant qu'un doc n'a pas été processé...s")
     @Test
     public void download()
         throws IOException
@@ -131,7 +132,7 @@ public class RESTXDocReportServiceTest
 
         WebClient client = WebClient.create( BASE_ADDRESS );
         client.path( "download/"+reportID+"/"+ProcessState.ORIGINAL.name() );
-        client.accept( MediaType.APPLICATION_XML );
+        client.accept( MediaType.APPLICATION_JSON );
 System.out.println(client.getCurrentURI());
       Response resp=  client.get();
       System.out.println(resp.getStatus());
@@ -168,8 +169,8 @@ System.out.println(client.getCurrentURI());
 
         WebClient client = WebClient.create( BASE_ADDRESS );
         client.path( "processReport" );
-        client.accept( MediaType.APPLICATION_XML );
-
+        client.accept( MediaType.APPLICATION_JSON );
+        client.type( MediaType.APPLICATION_JSON_TYPE );
         ReportAndDataRepresentation report = new ReportAndDataRepresentation();
 
         InputStream in = RESTXDocReportServiceTest.class.getClassLoader().getResourceAsStream( "bo.docx" );
@@ -197,8 +198,8 @@ System.out.println(client.getCurrentURI());
 
         WebClient client = WebClient.create( BASE_ADDRESS );
         client.path( "processReport" );
-        client.accept( MediaType.APPLICATION_XML );
-
+        client.accept( MediaType.APPLICATION_JSON );
+        client.type( MediaType.APPLICATION_JSON_TYPE );
         ReportAndDataRepresentation report = new ReportAndDataRepresentation();
 
         InputStream in = RESTXDocReportServiceTest.class.getClassLoader().getResourceAsStream( "bo.docx" );

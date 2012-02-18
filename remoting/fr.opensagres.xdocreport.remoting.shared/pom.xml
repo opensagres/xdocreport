@@ -8,6 +8,12 @@
   <artifactId>fr.opensagres.xdocreport.remoting.shared</artifactId>
   <dependencies>
 
+
+   <dependency>
+       <groupId>fr.opensagres.xdocreport</groupId>
+       <artifactId>fr.opensagres.xdocreport.document</artifactId>
+       <version>0.9.6-SNAPSHOT</version>
+     </dependency>
   <!-- API (non transitive depdendencies) -->
 
     <dependency>

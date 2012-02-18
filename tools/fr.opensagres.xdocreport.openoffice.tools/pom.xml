@@ -29,7 +29,6 @@
     <plugins>
       <plugin>
         <artifactId>maven-compiler-plugin</artifactId>
-        <version>2.3.2</version>
         <configuration>
           <source>1.5</source>
           <target>1.5</target>
@@ -51,11 +50,13 @@
       <groupId>org.openoffice</groupId>
       <artifactId>unoil</artifactId>
       <version>3.2.1</version>
+      <scope>provided</scope>
     </dependency>
     <dependency>
       <groupId>org.openoffice</groupId>
       <artifactId>juh</artifactId>
       <version>3.2.1</version>
+      <scope>provided</scope>
     </dependency>
     <dependency>
       <groupId>org.swinglabs</groupId>
@@ -67,6 +68,11 @@
       <artifactId>junit</artifactId>
       <version>4.5</version>
       <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>fr.opensagres.xdocreport</groupId>
+      <artifactId>fr.opensagres.xdocreport.remoting.javaclient</artifactId>
+      <version>0.9.6-SNAPSHOT</version>
     </dependency>
   </dependencies>
   <profiles>
@@ -92,6 +98,26 @@
                 <goals>
                   <goal>run</goal>
                 </goals>
+              </execution>
+            </executions>
+          </plugin>
+          <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-dependency-plugin</artifactId>
+            <version>2.4</version>
+            <executions>
+              <execution>
+                <id>copy-dependencies</id>
+                <phase>prepare-package</phase>
+                <goals>
+                  <goal>copy-dependencies</goal>
+                </goals>
+                <configuration>
+                  <excludeScope>provided</excludeScope>
+                  <includeScope>compile</includeScope>
+                  <outputDirectory>${basedir}</outputDirectory>
+                  <stripVersion>true</stripVersion>
+                </configuration>
               </execution>
             </executions>
           </plugin>

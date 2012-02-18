@@ -41,6 +41,7 @@ import fr.opensagres.xdocreport.document.domain.ReportId;
 import fr.opensagres.xdocreport.document.domain.ReportRepresentation;
 import fr.opensagres.xdocreport.document.domain.WSOptions;
 import fr.opensagres.xdocreport.document.internal.XDocReportServiceImpl;
+import fr.opensagres.xdocreport.document.service.RemoteInvocationException;
 import fr.opensagres.xdocreport.document.service.XDocReportService;
 import fr.opensagres.xdocreport.template.formatter.FieldsMetadata;
 
@@ -57,12 +58,18 @@ public class XDocReportServiceJaxRs implements XDocReportService
     @Path( "/download/{reportID}/{processState}" )
     @Consumes(  MediaType.APPLICATION_JSON  )
     @Produces(MediaType.WILDCARD)
-    public byte[] download( @PathParam("reportID") String reportID, @PathParam("processState")  String processState )
-        throws XDocReportException
+    public byte[] download( @PathParam("reportID") String reportID, @PathParam("processState")  String processState ) throws RemoteInvocationException
     {
         System.err.println("reportId "+reportID);
         System.err.println("processState "+processState);
-        return delegate.download( reportID, processState );
+        try
+        {
+            return delegate.download( reportID, processState );
+        }
+        catch ( XDocReportException e )
+        {
+         throw new RemoteInvocationException(e.getMessage(),e.getStackTrace());
+        }
     }
 
 
@@ -84,8 +91,7 @@ public class XDocReportServiceJaxRs implements XDocReportService
     @POST
     @Path( "/upload" )
     @Consumes(  MediaType.APPLICATION_JSON  )
-    public void upload( ReportRepresentation report )
-        throws XDocReportException
+    public void upload( ReportRepresentation report )throws RemoteInvocationException
     {
 
         fr.opensagres.xdocreport.template.formatter.FieldsMetadata fieldsMetadata2 =
@@ -95,7 +101,14 @@ public class XDocReportServiceJaxRs implements XDocReportService
             fieldsMetadata2.addFieldAsList( field );
         }
 
-        delegate.registerReport( report.getReportID(), report.getDocument(), fieldsMetadata2, "Velocity" );
+        try
+        {
+            delegate.registerReport( report.getReportID(), report.getDocument(), fieldsMetadata2, "Velocity" );
+        }
+        catch ( XDocReportException e )
+        {
+            throw new RemoteInvocationException(e.getMessage(),e.getStackTrace());
+        }
 
     }
 
@@ -106,8 +119,7 @@ public class XDocReportServiceJaxRs implements XDocReportService
     @Path( "/processReport" )
     @Consumes(  MediaType.APPLICATION_JSON  )
     @Produces(MediaType.WILDCARD)
-    public byte[] processReport( ReportAndDataRepresentation reportAndDataRepresentation )
-        throws XDocReportException
+    public byte[] processReport( ReportAndDataRepresentation reportAndDataRepresentation ) throws RemoteInvocationException
     {
 
         System.err.println(reportAndDataRepresentation);
@@ -126,7 +138,15 @@ public class XDocReportServiceJaxRs implements XDocReportService
         }
 
 
-        byte[] result= delegate.process( reportAndDataRepresentation.getDocument(), fieldsMetadata, reportAndDataRepresentation.getTemplateEngine(), reportAndDataRepresentation.getDataContext(), options );
+        byte[] result;
+        try
+        {
+            result = delegate.process( reportAndDataRepresentation.getDocument(), fieldsMetadata, reportAndDataRepresentation.getTemplateEngine(), reportAndDataRepresentation.getDataContext(), options );
+        }
+        catch ( XDocReportException e )
+        {
+            throw new RemoteInvocationException(e.getMessage(),e.getStackTrace());
+        }
 
         return result;
     }
@@ -135,7 +155,7 @@ public class XDocReportServiceJaxRs implements XDocReportService
     /* (non-Javadoc)
      * @see fr.opensagres.xdocreport.service.rest.XDocReportService#unRegister(java.lang.String)
      */
-    public void unRegister( String reportId )
+    public void unRegister( String reportId ) throws RemoteInvocationException
     {
         delegate.unregisterReport( reportId );
     }

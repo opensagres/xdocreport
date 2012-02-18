@@ -6,7 +6,6 @@ import javax.ws.rs.core.MediaType;
 
 import org.apache.cxf.jaxrs.client.WebClient;
 
-import fr.opensagres.xdocreport.core.XDocReportException;
 import fr.opensagres.xdocreport.document.domain.ReportAndDataRepresentation;
 import fr.opensagres.xdocreport.document.domain.ReportId;
 import fr.opensagres.xdocreport.document.domain.ReportRepresentation;
@@ -42,19 +41,17 @@ public class XDocReportServiceJaxRsClient implements XDocReportService
     }
 
     public byte[] download( String reportID, String processState )
-        throws XDocReportException
     {
         throw new UnsupportedOperationException("Not Implemented Yet");
     }
 
     public void upload( ReportRepresentation report )
-        throws XDocReportException
     {
         throw new UnsupportedOperationException("Not Implemented Yet");
     }
 
     public byte[] processReport( ReportAndDataRepresentation reportAndDataRepresentation )
-        throws XDocReportException
+
     {
         throw new UnsupportedOperationException("Not Implemented Yet");
     }

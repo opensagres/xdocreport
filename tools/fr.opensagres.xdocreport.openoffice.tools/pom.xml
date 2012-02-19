@@ -73,6 +73,7 @@
       <groupId>fr.opensagres.xdocreport</groupId>
       <artifactId>fr.opensagres.xdocreport.remoting.javaclient</artifactId>
       <version>0.9.6-SNAPSHOT</version>
+
     </dependency>
   </dependencies>
   <profiles>
@@ -113,8 +114,8 @@
                   <goal>copy-dependencies</goal>
                 </goals>
                 <configuration>
-                  <excludeScope>provided</excludeScope>
-                  <includeScope>compile</includeScope>
+                <includeScope>runtime</includeScope>
+<!--                   <excludeScope>provided-</excludeScope> -->
                   <outputDirectory>${basedir}</outputDirectory>
                   <stripVersion>true</stripVersion>
                 </configuration>

@@ -117,6 +117,10 @@
           <artifactId>jaxb-api</artifactId>
           <groupId>javax.xml.bind</groupId>
         </exclusion>
+        <exclusion>
+          <artifactId>slf4j-api</artifactId>
+          <groupId>org.slf4j</groupId>
+        </exclusion>
       </exclusions>
     </dependency>
     <dependency>
@@ -145,5 +149,16 @@
       <version>1.2</version>
       <optional>true</optional>
     </dependency>
+  <!--   <dependency>
+      <groupId>ch.qos.logback</groupId>
+      <artifactId>logback-classic</artifactId>
+      <version>0.9.29</version>
+      <exclusions>
+        <exclusion>
+          <artifactId>slf4j-api</artifactId>
+          <groupId>org.slf4j</groupId>
+        </exclusion>
+      </exclusions>
+    </dependency> -->
   </dependencies>
 </project>

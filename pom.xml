@@ -306,12 +306,6 @@
       <version>4.2.0</version>
       <scope>provided</scope>
     </dependency>
-    <!-- <dependency>
-      <groupId>ch.qos.logback</groupId>
-      <artifactId>logback-classic</artifactId>
-      <version>0.9.29</version>
-      <scope>test</scope>
-    </dependency> -->
   </dependencies>
   <issueManagement>
     <system>Google Code</system>

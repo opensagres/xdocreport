@@ -1,15 +1,24 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
-	<modelVersion>4.0.0</modelVersion>
-	<artifactId>core</artifactId>
-	<name>XDocReport Core Component</name>
-	<parent>
-		<groupId>fr.opensagres.xdocreport</groupId>
-		<artifactId>xdocreport</artifactId>
-		<version>0.9.6-SNAPSHOT</version>
-	</parent>
-	<packaging>pom</packaging>
-	<modules>
-		<module>fr.opensagres.xdocreport.core</module>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+  <artifactId>core</artifactId>
+  <name>XDocReport Core Component</name>
+  <parent>
+    <groupId>fr.opensagres.xdocreport</groupId>
+    <artifactId>xdocreport</artifactId>
+    <version>0.9.6-SNAPSHOT</version>
+  </parent>
+  <packaging>pom</packaging>
+  <modules>
+    <module>fr.opensagres.xdocreport.core</module>
 
-	</modules>
+  </modules>
+  <dependencies>
+    <dependency>
+      <groupId>ch.qos.logback</groupId>
+      <artifactId>logback-classic</artifactId>
+      <version>0.9.29</version>
+      <scope>test</scope>
+    </dependency>
+  </dependencies>
 </project>

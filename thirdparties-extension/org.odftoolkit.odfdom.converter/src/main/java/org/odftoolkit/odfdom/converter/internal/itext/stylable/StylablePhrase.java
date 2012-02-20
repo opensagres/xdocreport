@@ -64,6 +64,15 @@ public class StylablePhrase
         StyleTextProperties textProperties = style.getTextProperties();
         if ( textProperties != null )
         {
+            if ( parent != null && parent.getLastStyleApplied() != null
+                && parent.getLastStyleApplied().getTextProperties() != null )
+            {
+                // current text properties may override some text properties of parent paragraph
+                // ie. it may change font style only, but does not repeat font name
+                // merge parent container style and current style to get full information about font
+                textProperties =
+                    new StyleTextProperties( parent.getLastStyleApplied().getTextProperties(), textProperties );
+            }
             // Font
             Font font = textProperties.getFont();
             if ( font != null )

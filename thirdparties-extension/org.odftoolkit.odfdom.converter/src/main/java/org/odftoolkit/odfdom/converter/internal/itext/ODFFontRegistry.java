@@ -46,7 +46,10 @@ public class ODFFontRegistry
     @Override
     protected String resolveFamilyName( String familyName, int style )
     {
-        boolean bold = isBold( style );
+        // commented out
+        // incorrect font is retrieved for translated names - probably iText internal font instead of system font
+        //
+        /*boolean bold = isBold( style );
         boolean italic = isItalic( style );
 
         if ( COURRIER_NEW_FONT_FAMILY_NAME.equals( familyName ) )
@@ -81,7 +84,7 @@ public class ODFFontRegistry
                 return BaseFont.TIMES_ITALIC;
             }
             return BaseFont.TIMES_ROMAN;
-        }
+        }*/
 
         return familyName;
     }

@@ -24,7 +24,6 @@
  */
 package org.odftoolkit.odfdom.converter.internal.itext;
 
-import java.awt.Color;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.io.Writer;
@@ -48,7 +47,6 @@ import org.odftoolkit.odfdom.converter.internal.itext.stylable.StylableSection;
 import org.odftoolkit.odfdom.converter.internal.itext.stylable.StylableTable;
 import org.odftoolkit.odfdom.converter.internal.itext.stylable.StylableTableCell;
 import org.odftoolkit.odfdom.converter.internal.itext.styles.Style;
-import org.odftoolkit.odfdom.converter.internal.itext.styles.StyleTextProperties;
 import org.odftoolkit.odfdom.converter.internal.utils.ODFUtils;
 import org.odftoolkit.odfdom.converter.itext.PDFViaITextOptions;
 import org.odftoolkit.odfdom.doc.OdfDocument;
@@ -81,7 +79,6 @@ import com.lowagie.text.BadElementException;
 import com.lowagie.text.Chunk;
 import com.lowagie.text.DocumentException;
 import com.lowagie.text.Element;
-import com.lowagie.text.Font;
 import com.lowagie.text.Image;
 import com.lowagie.text.pdf.PdfPCell;
 
@@ -281,7 +278,7 @@ public class ElementVisitorForIText
     {
         StylableParagraph paragraph = document.createParagraph( currentContainer );
         applyStyles( ele, paragraph );
-        if ( ele.getFirstChild() == null )
+        if ( ele.getTextContent().length() == 0 )
         {
             // no content in the paragraph
             // ex : <text:p text:style-name="Standard"></text:p>
@@ -320,6 +317,8 @@ public class ElementVisitorForIText
         String reference = ele.getXlinkHrefAttribute();
         applyStyles( ele, anchor );
 
+        // set color moved to StylableAnchor
+        /*
         if ( anchor.getFont().getColor() == null )
         {
             // if no color was applied to the link
@@ -342,7 +341,7 @@ public class ElementVisitorForIText
             // Color blueColor =
             // ColorRegistryForIText.getInstance().getColor("#0000CC");
             linkFont.setColor( Color.BLUE );
-        }
+        }*/
 
         // TODO ; manage internal link
         // set the link

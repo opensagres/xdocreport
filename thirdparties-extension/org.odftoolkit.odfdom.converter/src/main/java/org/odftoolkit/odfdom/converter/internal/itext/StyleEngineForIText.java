@@ -24,7 +24,6 @@
  */
 package org.odftoolkit.odfdom.converter.internal.itext;
 
-import java.awt.Color;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -50,7 +49,11 @@ import org.odftoolkit.odfdom.converter.itext.PDFViaITextOptions;
 import org.odftoolkit.odfdom.doc.OdfDocument;
 import org.odftoolkit.odfdom.dom.attribute.fo.FoBreakAfterAttribute;
 import org.odftoolkit.odfdom.dom.attribute.fo.FoBreakBeforeAttribute;
+import org.odftoolkit.odfdom.dom.attribute.fo.FoFontStyleAttribute;
+import org.odftoolkit.odfdom.dom.attribute.fo.FoFontWeightAttribute;
 import org.odftoolkit.odfdom.dom.attribute.fo.FoKeepTogetherAttribute;
+import org.odftoolkit.odfdom.dom.attribute.style.StyleTextLineThroughStyleAttribute;
+import org.odftoolkit.odfdom.dom.attribute.style.StyleTextUnderlineStyleAttribute;
 import org.odftoolkit.odfdom.dom.element.OdfStyleBase;
 import org.odftoolkit.odfdom.dom.element.office.OfficeAutomaticStylesElement;
 import org.odftoolkit.odfdom.dom.element.office.OfficeMasterStylesElement;
@@ -73,7 +76,6 @@ import org.odftoolkit.odfdom.dom.element.text.TextListStyleElement;
 import org.w3c.dom.Node;
 
 import com.lowagie.text.Element;
-import com.lowagie.text.Font;
 
 import fr.opensagres.xdocreport.itext.extension.PageOrientation;
 import fr.opensagres.xdocreport.utils.BorderType;
@@ -97,12 +99,6 @@ public class StyleEngineForIText
     private static final String TOP = "top";
 
     private static final String BASELINE = "baseline";
-
-    private static final String NONE = "none";
-
-    private static final String BOLD = "bold";
-
-    private static final String ITALIC = "italic";
 
     private Style currentStyle = null;
 
@@ -437,6 +433,9 @@ public class StyleEngineForIText
             currentStyle.setTextProperties( textProperties );
         }
 
+        // set font encoding from options
+        textProperties.setFontEncoding( options.getFontEncoding() );
+
         // background-color
         String backgroundColor = ele.getFoBackgroundColorAttribute();
         if ( StringUtils.isNotEmpty( backgroundColor ) )
@@ -444,51 +443,46 @@ public class StyleEngineForIText
             textProperties.setBackgroundColor( ColorRegistry.getInstance().getColor( backgroundColor ) );
         }
 
-        boolean hasFontProperty = false;
         // color
-        Color fontColor = null;
         String color = ele.getFoColorAttribute();
         if ( StringUtils.isNotEmpty( color ) )
         {
-            fontColor = ColorRegistry.getInstance().getColor( color );
-            hasFontProperty = true;
+            textProperties.setFontColor( ColorRegistry.getInstance().getColor( color ) );
         }
 
         // font-family
-        String familyName = null;
         String fontFamily = ele.getFoFontFamilyAttribute();
         if ( StringUtils.isNotEmpty( fontFamily ) )
         {
-            familyName = fontFamily;
-            hasFontProperty = true;
+            textProperties.setFontName( fontFamily );
         }
 
         // font-name
         String fontName = ele.getStyleFontNameAttribute();
         if ( StringUtils.isNotEmpty( fontName ) )
         {
-            familyName = fontName;
-            hasFontProperty = true;
+            textProperties.setFontName( fontName );
         }
 
         // font-size
-        float size = Font.UNDEFINED;
         String fontSize = ele.getFoFontSizeAttribute();
         if ( StringUtils.isNotEmpty( fontSize ) )
         {
-            size = ODFUtils.getDimensionAsPoint( fontSize );
-            hasFontProperty = true;
+            textProperties.setFontSize( ODFUtils.getDimensionAsPoint( fontSize ) );
         }
 
-        int style = Font.NORMAL;
         // font-style
         String fontStyle = ele.getFoFontStyleAttribute();
         if ( StringUtils.isNotEmpty( fontStyle ) )
         {
-            if ( ITALIC.equals( fontStyle ) )
+            if ( FoFontStyleAttribute.Value.NORMAL.toString().equals( fontStyle ) )
             {
-                style |= Font.ITALIC;
-                hasFontProperty = true;
+                textProperties.setFontItalic( Boolean.FALSE );
+            }
+            else
+            {
+                // interpret other values as italic
+                textProperties.setFontItalic( Boolean.TRUE );
             }
         }
 
@@ -496,50 +490,56 @@ public class StyleEngineForIText
         String fontVariant = ele.getFoFontVariantAttribute();
         if ( StringUtils.isNotEmpty( fontVariant ) )
         {
-            // cssStyleSheet.setCSSProperty("font-variant", fontVariant);
         }
 
         // font-weight
         String fontWeight = ele.getFoFontWeightAttribute();
         if ( StringUtils.isNotEmpty( fontWeight ) )
         {
-            if ( BOLD.equals( fontWeight ) )
+            if ( FoFontWeightAttribute.Value.NORMAL.toString().equals( fontWeight ) )
             {
-                style |= Font.BOLD;
-                hasFontProperty = true;
+                textProperties.setFontBold( Boolean.FALSE );
+            }
+            else
+            {
+                // interpret other values as bold
+                textProperties.setFontBold( Boolean.TRUE );
             }
         }
 
         // text-underline-style
         String underlineStyle = ele.getStyleTextUnderlineStyleAttribute();
-        if ( StringUtils.isNotEmpty( underlineStyle ) && !underlineStyle.equals( NONE ) )
+        if ( StringUtils.isNotEmpty( underlineStyle ) )
         {
-            style |= Font.UNDERLINE;
-            hasFontProperty = true;
+            if ( StyleTextUnderlineStyleAttribute.Value.NONE.toString().equals( underlineStyle ) )
+            {
+                textProperties.setFontUnderline( Boolean.FALSE );
+            }
+            else
+            {
+                // interpret other values as underline
+                textProperties.setFontUnderline( Boolean.TRUE );
+            }
         }
 
         // text-underline-type
         String underlineType = ele.getStyleTextUnderlineTypeAttribute();
-        if ( StringUtils.isNotEmpty( underlineType ) && !underlineType.equals( NONE ) )
+        if ( StringUtils.isNotEmpty( underlineType ) )
         {
-            // cssStyleSheet.setCSSProperty("text-decoration", "underline");
         }
 
-        if ( hasFontProperty )
+        // text-line-through-style
+        String lineThroughStyle = ele.getStyleTextLineThroughStyleAttribute();
+        if ( StringUtils.isNotEmpty( lineThroughStyle ) )
         {
-            Font font =
-                ODFFontRegistry.getRegistry().getFont( familyName, options.getFontEncoding(), size, style, fontColor );
-            Font oldFont = textProperties.getFont();
-            if ( oldFont == null )
+            if ( StyleTextLineThroughStyleAttribute.Value.NONE.toString().equals( lineThroughStyle ) )
             {
-                textProperties.setFont( font );
+                textProperties.setFontStrikeThru( Boolean.FALSE );
             }
             else
             {
-                if ( oldFont.compareTo( font ) != 0 )
-                {
-                    textProperties.setFont( oldFont.difference( font ) );
-                }
+                // interpret other values as strike thru
+                textProperties.setFontStrikeThru( Boolean.TRUE );
             }
         }
 

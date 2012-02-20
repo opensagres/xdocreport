@@ -24,28 +24,133 @@
  */
 package org.odftoolkit.odfdom.converter.internal.itext.styles;
 
-import java.awt.Color;
-
 import com.lowagie.text.Font;
+import java.awt.Color;
+import org.odftoolkit.odfdom.converter.internal.itext.ODFFontRegistry;
 
 public class StyleTextProperties
 {
 
-    private Font font;
-
     private Color backgroundColor;
 
-    private Float indentation;
+    private Boolean fontBold;
+
+    private Color fontColor;
+
+    private String fontEncoding;
+
+    private Boolean fontItalic;
+
+    private String fontName;
+
+    private float fontSize = Font.UNDEFINED;
+
+    private Boolean fontStrikeThru;
+
+    private Boolean fontUnderline;
 
     public StyleTextProperties()
     {
-
     }
 
     public StyleTextProperties( StyleTextProperties textProperties )
     {
-        this.backgroundColor = textProperties.backgroundColor;
-        this.font = textProperties.font;
+        if ( textProperties != null )
+        {
+            merge( textProperties );
+        }
+    }
+
+    public StyleTextProperties( StyleTextProperties textProperties1, StyleTextProperties textProperties2 )
+    {
+        if ( textProperties1 != null )
+        {
+            merge( textProperties1 );
+        }
+        if ( textProperties2 != null )
+        {
+            merge( textProperties2 );
+        }
+    }
+
+    public void merge( StyleTextProperties textProperties )
+    {
+        if ( textProperties.getBackgroundColor() != null )
+        {
+            backgroundColor = textProperties.getBackgroundColor();
+        }
+        if ( textProperties.getFontBold() != null )
+        {
+            fontBold = textProperties.getFontBold();
+        }
+        if ( textProperties.getFontColor() != null )
+        {
+            fontColor = textProperties.getFontColor();
+        }
+        if ( textProperties.getFontEncoding() != null )
+        {
+            fontEncoding = textProperties.getFontEncoding();
+        }
+        if ( textProperties.getFontItalic() != null )
+        {
+            fontItalic = textProperties.getFontItalic();
+        }
+        if ( textProperties.getFontName() != null )
+        {
+            fontName = textProperties.getFontName();
+        }
+        if ( textProperties.getFontSize() != Font.UNDEFINED )
+        {
+            fontSize = textProperties.getFontSize();
+        }
+        if ( textProperties.getFontStrikeThru() != null )
+        {
+            fontStrikeThru = textProperties.getFontStrikeThru();
+        }
+        if ( textProperties.getFontUnderline() != null )
+        {
+            fontUnderline = textProperties.getFontUnderline();
+        }
+    }
+
+    public int getStyleFlag()
+    {
+        int style = Font.NORMAL;
+        if ( Boolean.TRUE.equals( fontItalic ) )
+        {
+            style |= Font.ITALIC;
+        }
+        if ( Boolean.TRUE.equals( fontBold ) )
+        {
+            style |= Font.BOLD;
+        }
+        if ( Boolean.TRUE.equals( fontUnderline ) )
+        {
+            style |= Font.UNDERLINE;
+        }
+        if ( Boolean.TRUE.equals( fontStrikeThru ) )
+        {
+            style |= Font.STRIKETHRU;
+        }
+        return style;
+    }
+
+    public boolean hasFontProperties()
+    {
+        return fontName != null || fontSize != Font.UNDEFINED || fontItalic != null || fontBold != null
+            || fontUnderline != null || fontStrikeThru != null || fontColor != null;
+    }
+
+    public Font getFont()
+    {
+        if ( hasFontProperties() )
+        {
+            return ODFFontRegistry.getRegistry().getFont( fontName, fontEncoding, fontSize, getStyleFlag(), fontColor );
+        }
+        else
+        {
+            return null;
+        }
     }
 
     public Color getBackgroundColor()
@@ -58,33 +163,83 @@ public class StyleTextProperties
         this.backgroundColor = backgroundColor;
     }
 
-    public Font getFont()
+    public Boolean getFontBold()
     {
-        return font;
+        return fontBold;
     }
 
-    public void setFont( Font font )
+    public void setFontBold( Boolean fontBold )
     {
-        this.font = font;
+        this.fontBold = fontBold;
     }
 
-    public void merge( StyleTextProperties textProperties )
+    public Color getFontColor()
     {
-        if ( textProperties.getBackgroundColor() != null )
-        {
-            backgroundColor = textProperties.getBackgroundColor();
-        }
-        if ( textProperties.getFont() != null )
-        {
-            if ( font == null )
-            {
-                font = textProperties.getFont();
-            }
-            else
-            {
-                font = font.difference( textProperties.getFont() );
-            }
-        }
+        return fontColor;
+    }
 
+    public void setFontColor( Color fontColor )
+    {
+        this.fontColor = fontColor;
+    }
+
+    public String getFontEncoding()
+    {
+        return fontEncoding;
+    }
+
+    public void setFontEncoding( String fontEncoding )
+    {
+        this.fontEncoding = fontEncoding;
+    }
+
+    public Boolean getFontItalic()
+    {
+        return fontItalic;
+    }
+
+    public void setFontItalic( Boolean fontItalic )
+    {
+        this.fontItalic = fontItalic;
+    }
+
+    public String getFontName()
+    {
+        return fontName;
+    }
+
+    public void setFontName( String fontName )
+    {
+        this.fontName = fontName;
+    }
+
+    public float getFontSize()
+    {
+        return fontSize;
+    }
+
+    public void setFontSize( float fontSize )
+    {
+        this.fontSize = fontSize;
+    }
+
+    public Boolean getFontStrikeThru()
+    {
+        return fontStrikeThru;
+    }
+
+    public void setFontStrikeThru( Boolean fontStrikeThru )
+    {
+        this.fontStrikeThru = fontStrikeThru;
+    }
+
+    public Boolean getFontUnderline()
+    {
+        return fontUnderline;
+    }
+
+    public void setFontUnderline( Boolean fontUnderline )
+    {
+        this.fontUnderline = fontUnderline;
     }
 }

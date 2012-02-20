@@ -24,6 +24,8 @@
  */
 package org.odftoolkit.odfdom.converter.internal.itext.stylable;
 
+import java.awt.Color;
+
 import org.odftoolkit.odfdom.converter.internal.itext.styles.Style;
 import org.odftoolkit.odfdom.converter.internal.itext.styles.StyleTextProperties;
 
@@ -62,6 +64,20 @@ public class StylableAnchor
         StyleTextProperties textProperties = style.getTextProperties();
         if ( textProperties != null )
         {
+            if ( parent != null && parent.getLastStyleApplied() != null
+                && parent.getLastStyleApplied().getTextProperties() != null )
+            {
+                // current text properties may override some text properties of parent paragraph
+                // ie. it may change font style only, but does not repeat font name
+                // merge parent container style and current style to get full information about font
+                textProperties =
+                    new StyleTextProperties( parent.getLastStyleApplied().getTextProperties(), textProperties );
+            }
+            if ( textProperties.getFontColor() == null )
+            {
+                // if no color was applied to the link set blue color
+                textProperties.setFontColor( Color.BLUE );
+            }
             // Font
             Font font = textProperties.getFont();
             if ( font != null )

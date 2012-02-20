@@ -35,8 +35,10 @@ import org.odftoolkit.odfdom.doc.OdfTextDocument;
 import fr.opensagres.xdocreport.converter.MimeMapping;
 import fr.opensagres.xdocreport.converter.MimeMappingConstants;
 import fr.opensagres.xdocreport.converter.Options;
+import fr.opensagres.xdocreport.converter.OptionsHelper;
 import fr.opensagres.xdocreport.converter.XDocConverterException;
 import fr.opensagres.xdocreport.converter.internal.AbstractConverterNoEntriesSupport;
+import fr.opensagres.xdocreport.core.utils.StringUtils;
 
 public class ODF2PDFViaITextConverter
     extends AbstractConverterNoEntriesSupport
@@ -58,7 +60,7 @@ public class ODF2PDFViaITextConverter
             OdfTextDocument odfDocument = OdfTextDocument.loadDocument( in );
             org.odftoolkit.odfdom.converter.itext.ODF2PDFViaITextConverter.getInstance().convert( odfDocument,
                                                                                                   out,
-                                                                                                  getPDFViaITextOptions( options ) );
+                                                                                                  toPDFViaITextOptions( options ) );
         }
         catch ( ODFConverterException e )
         {
@@ -74,10 +76,25 @@ public class ODF2PDFViaITextConverter
         }
     }
 
-    private PDFViaITextOptions getPDFViaITextOptions( Options options )
+    public PDFViaITextOptions toPDFViaITextOptions( Options options )
     {
+        if ( options == null )
+        {
+            return null;
+        }
         Object value = options.getSubOptions( PDFViaITextOptions.class );
-        return value instanceof PDFViaITextOptions ? (PDFViaITextOptions) value : null;
+        if ( value instanceof PDFViaITextOptions )
+        {
+            return (PDFViaITextOptions) value;
+        }
+        PDFViaITextOptions pdfOptions = PDFViaITextOptions.create();
+        // Populate font encoding
+        String fontEncoding = OptionsHelper.getFontEncoding( options );
+        if ( StringUtils.isNotEmpty( fontEncoding ) )
+        {
+            pdfOptions.fontEncoding( fontEncoding );
+        }
+        return pdfOptions;
     }
 
     public MimeMapping getMimeMapping()

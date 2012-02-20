@@ -24,6 +24,9 @@
  */
 package fr.opensagres.xdocreport.converter;
 
+/**
+ * URI resolver used to resolve path of image from an odt, docx, etc document for HTML converter.
+ */
 public interface IURIResolver
 {
 
@@ -36,6 +39,12 @@ public interface IURIResolver
         }
     };
 
+    /**
+     * Return the resolved URI.
+     * 
+     * @param uri
+     * @return
+     */
     String resolve( String uri );
 
 }

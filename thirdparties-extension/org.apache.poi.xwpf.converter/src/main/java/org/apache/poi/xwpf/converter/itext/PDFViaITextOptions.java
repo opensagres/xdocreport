@@ -25,31 +25,13 @@
 package org.apache.poi.xwpf.converter.itext;
 
 import org.apache.poi.xwpf.converter.Options;
-
-import com.lowagie.text.FontFactory;
+import org.apache.poi.xwpf.converter.internal.itext.XWPFFontRegistry;
 
 public class PDFViaITextOptions
     extends Options
 {
 
-    private String fontEncoding = determineSystemEncoding();
-
-    private String determineSystemEncoding()
-    {
-        // don't rely on file.encoding property because
-        // it may be changed if application is launched inside an ide
-        String systemEncoding = System.getProperty( "sun.jnu.encoding" );
-        if ( systemEncoding != null && systemEncoding.length() > 0 )
-        {
-            return systemEncoding;
-        }
-        systemEncoding = System.getProperty( "ibm.system.encoding" );
-        if ( systemEncoding != null && systemEncoding.length() > 0 )
-        {
-            return systemEncoding;
-        }
-        return FontFactory.defaultEncoding;
-    }
+    private String fontEncoding = XWPFFontRegistry.getRegistry().getSystemEncoding();
 
     private PDFViaITextOptions()
     {

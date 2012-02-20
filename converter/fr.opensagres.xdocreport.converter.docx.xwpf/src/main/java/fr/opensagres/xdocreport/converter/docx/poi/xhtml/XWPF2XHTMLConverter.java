@@ -31,9 +31,11 @@ import java.util.logging.Logger;
 import org.apache.poi.xwpf.converter.xhtml.XHTMLOptions;
 import org.apache.poi.xwpf.usermodel.XWPFDocument;
 
+import fr.opensagres.xdocreport.converter.IURIResolver;
 import fr.opensagres.xdocreport.converter.MimeMapping;
 import fr.opensagres.xdocreport.converter.MimeMappingConstants;
 import fr.opensagres.xdocreport.converter.Options;
+import fr.opensagres.xdocreport.converter.OptionsHelper;
 import fr.opensagres.xdocreport.converter.XDocConverterException;
 import fr.opensagres.xdocreport.converter.docx.poi.itext.XWPF2PDFViaITextConverter;
 import fr.opensagres.xdocreport.converter.internal.AbstractConverterNoEntriesSupport;
@@ -63,7 +65,7 @@ public class XWPF2XHTMLConverter
         {
             XWPFDocument document = new XWPFDocument( in );
             org.apache.poi.xwpf.converter.xhtml.XWPF2XHTMLConverter.getInstance().convert( document, out,
-                                                                                           getXHTMLOptions( options ) );
+                                                                                           toXHTMLOptions( options ) );
 
         }
         catch ( Exception e )
@@ -73,18 +75,31 @@ public class XWPF2XHTMLConverter
         }
     }
 
-    private XHTMLOptions getXHTMLOptions( Options options )
+    public XHTMLOptions toXHTMLOptions( Options options )
     {
+        if ( options == null )
+        {
+            return null;
+        }
         Object value = options.getSubOptions( XHTMLOptions.class );
-        return value instanceof XHTMLOptions ? (XHTMLOptions) value : null;
+        if ( value instanceof XHTMLOptions )
+        {
+            return (XHTMLOptions) value;
+        }
+        XHTMLOptions xhtmlOptions = XHTMLOptions.create();
+        final IURIResolver resolver = OptionsHelper.getURIResolver( options );
+        if ( resolver != null )
+        {
+            xhtmlOptions.URIResolver( new org.apache.poi.xwpf.converter.IURIResolver()
+            {
+                public String resolve( String uri )
+                {
+                    return resolver.resolve( uri );
+                }
+            } );
+        }
+        return xhtmlOptions;
     }
-
-    /*
-     * private XHTMLOptions toXWPFOptions(Options o) { XHTMLOptions options = new XHTMLOptions(); final IURIResolver
-     * resolver = (IURIResolver) o .getProperty(IURIResolver.class.getName()); if (resolver != null) {
-     * options.setURIResolver(new org.apache.poi.xwpf.converter.IURIResolver() { public String resolve(String uri) {
-     * return resolver.resolve(uri); } }); } return options; }
-     */
 
     public MimeMapping getMimeMapping()
     {

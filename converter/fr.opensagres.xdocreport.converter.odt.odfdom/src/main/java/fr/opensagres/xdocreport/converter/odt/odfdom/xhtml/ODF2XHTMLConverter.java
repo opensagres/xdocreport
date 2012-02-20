@@ -32,9 +32,11 @@ import org.odftoolkit.odfdom.converter.ODFConverterException;
 import org.odftoolkit.odfdom.converter.xhtml.XHTMLOptions;
 import org.odftoolkit.odfdom.doc.OdfTextDocument;
 
+import fr.opensagres.xdocreport.converter.IURIResolver;
 import fr.opensagres.xdocreport.converter.MimeMapping;
 import fr.opensagres.xdocreport.converter.MimeMappingConstants;
 import fr.opensagres.xdocreport.converter.Options;
+import fr.opensagres.xdocreport.converter.OptionsHelper;
 import fr.opensagres.xdocreport.converter.XDocConverterException;
 import fr.opensagres.xdocreport.converter.internal.AbstractConverterNoEntriesSupport;
 
@@ -57,7 +59,7 @@ public class ODF2XHTMLConverter
         {
             OdfTextDocument odfDocument = OdfTextDocument.loadDocument( in );
             org.odftoolkit.odfdom.converter.xhtml.ODF2XHTMLConverter.getInstance().convert( odfDocument, out,
-                                                                                            getXHTMLOptions( options ) );
+                                                                                            toXHTMLOptions( options ) );
         }
         catch ( ODFConverterException e )
         {
@@ -73,18 +75,31 @@ public class ODF2XHTMLConverter
         }
     }
 
-    private XHTMLOptions getXHTMLOptions( Options options )
+    public XHTMLOptions toXHTMLOptions( Options options )
     {
+        if ( options == null )
+        {
+            return null;
+        }
         Object value = options.getSubOptions( XHTMLOptions.class );
-        return value instanceof XHTMLOptions ? (XHTMLOptions) value : null;
+        if ( value instanceof XHTMLOptions )
+        {
+            return (XHTMLOptions) value;
+        }
+        XHTMLOptions xhtmlOptions = XHTMLOptions.create();
+        final IURIResolver resolver = OptionsHelper.getURIResolver( options );
+        if ( resolver != null )
+        {
+            xhtmlOptions.URIResolver( new org.odftoolkit.odfdom.converter.IURIResolver()
+            {
+                public String resolve( String uri )
+                {
+                    return resolver.resolve( uri );
+                }
+            } );
+        }
+        return xhtmlOptions;
     }
-
-    /*
-     * private XHTMLOptions toODFOptions(Options o) { XHTMLOptions options = XHTMLOptions.create(); final IURIResolver
-     * resolver = (IURIResolver) o .getProperty(IURIResolver.class.getName()); if (resolver != null) {
-     * options.URIResolver(new org.odftoolkit.odfdom.converter.IURIResolver() { public String resolve(String uri) {
-     * return resolver.resolve(uri); } }); } return options; }
-     */
 
     public MimeMapping getMimeMapping()
     {

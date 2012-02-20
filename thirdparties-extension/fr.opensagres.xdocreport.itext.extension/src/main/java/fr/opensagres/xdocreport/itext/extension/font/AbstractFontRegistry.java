@@ -32,6 +32,10 @@ import com.lowagie.text.FontFactory;
 public abstract class AbstractFontRegistry
 {
 
+    private boolean systemEncodingDeterminated;
+
+    private String systemEncoding;
+
     private static boolean registerFontDirectories = false;
 
     /*
@@ -116,6 +120,31 @@ public abstract class AbstractFontRegistry
             return false;
         }
         return ( style & Font.STRIKETHRU ) == Font.STRIKETHRU;
+    }
+
+    public String getSystemEncoding()
+    {
+        if ( systemEncodingDeterminated )
+        {
+            return systemEncoding;
+        }
+        // don't rely on file.encoding property because
+        // it may be changed if application is launched inside an ide
+        systemEncoding = System.getProperty( "sun.jnu.encoding" );
+        if ( systemEncoding != null && systemEncoding.length() > 0 )
+        {
+            systemEncodingDeterminated = true;
+            return systemEncoding;
+        }
+        systemEncoding = System.getProperty( "ibm.system.encoding" );
+        if ( systemEncoding != null && systemEncoding.length() > 0 )
+        {
+            systemEncodingDeterminated = true;
+            return systemEncoding;
+        }
+        systemEncoding = FontFactory.defaultEncoding;
+        systemEncodingDeterminated = true;
+        return systemEncoding;
     }
 
     protected abstract String resolveFamilyName( String familyName, int style );

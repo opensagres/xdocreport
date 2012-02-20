@@ -28,15 +28,17 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.logging.Logger;
 
+import org.apache.poi.xwpf.converter.itext.PDFViaITextOptions;
 import org.apache.poi.xwpf.usermodel.XWPFDocument;
 
-import fr.opensagres.xdocreport.converter.IConverter;
 import fr.opensagres.xdocreport.converter.MimeMapping;
 import fr.opensagres.xdocreport.converter.MimeMappingConstants;
 import fr.opensagres.xdocreport.converter.Options;
+import fr.opensagres.xdocreport.converter.OptionsHelper;
 import fr.opensagres.xdocreport.converter.XDocConverterException;
 import fr.opensagres.xdocreport.converter.internal.AbstractConverterNoEntriesSupport;
 import fr.opensagres.xdocreport.core.logging.LogUtils;
+import fr.opensagres.xdocreport.core.utils.StringUtils;
 
 public class XWPF2PDFViaITextConverter
     extends AbstractConverterNoEntriesSupport
@@ -49,7 +51,7 @@ public class XWPF2PDFViaITextConverter
      */
     private static final Logger LOGGER = LogUtils.getLogger( XWPF2PDFViaITextConverter.class.getName() );
 
-    public static IConverter getInstance()
+    public static XWPF2PDFViaITextConverter getInstance()
     {
         return INSTANCE;
     }
@@ -61,7 +63,9 @@ public class XWPF2PDFViaITextConverter
         try
         {
             XWPFDocument document = new XWPFDocument( in );
-            org.apache.poi.xwpf.converter.itext.XWPF2PDFViaITextConverter.getInstance().convert( document, out, null );
+            org.apache.poi.xwpf.converter.itext.XWPF2PDFViaITextConverter.getInstance().convert( document,
+                                                                                                 out,
+                                                                                                 toPDFViaITextOptions( options ) );
 
         }
         catch ( Exception e )
@@ -70,6 +74,27 @@ public class XWPF2PDFViaITextConverter
             LOGGER.severe( e.getMessage() );
             throw new XDocConverterException( e );
         }
+    }
+
+    public PDFViaITextOptions toPDFViaITextOptions( Options options )
+    {
+        if ( options == null )
+        {
+            return null;
+        }
+        Object value = options.getSubOptions( PDFViaITextOptions.class );
+        if ( value instanceof PDFViaITextOptions )
+        {
+            return (PDFViaITextOptions) value;
+        }
+        PDFViaITextOptions pdfOptions = PDFViaITextOptions.create();
+        // Populate font encoding
+        String fontEncoding = OptionsHelper.getFontEncoding( options );
+        if ( StringUtils.isNotEmpty( fontEncoding ) )
+        {
+            pdfOptions.fontEncoding( fontEncoding );
+        }
+        return pdfOptions;
     }
 
     public MimeMapping getMimeMapping()

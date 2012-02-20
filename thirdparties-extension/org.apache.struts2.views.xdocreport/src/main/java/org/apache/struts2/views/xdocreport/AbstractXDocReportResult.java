@@ -56,6 +56,7 @@ import fr.opensagres.xdocreport.converter.IConverter;
 import fr.opensagres.xdocreport.converter.IURIResolver;
 import fr.opensagres.xdocreport.converter.MimeMapping;
 import fr.opensagres.xdocreport.converter.Options;
+import fr.opensagres.xdocreport.converter.OptionsHelper;
 import fr.opensagres.xdocreport.converter.XDocConverterException;
 import fr.opensagres.xdocreport.core.XDocReportException;
 import fr.opensagres.xdocreport.core.logging.LogUtils;
@@ -600,8 +601,8 @@ public abstract class AbstractXDocReportResult
         if ( ConverterTypeTo.FO.name().equals( options.getTo() )
             || ConverterTypeTo.XHTML.name().equals( options.getTo() ) )
         {
-            options.setProperty( IURIResolver.class.getName(),
-                                 createWEBURIResolver( report, converterId, finalLocation, invocation ) );
+            OptionsHelper.setURIResolver( options,
+                                          createWEBURIResolver( report, converterId, finalLocation, invocation ) );
         }
     }
 

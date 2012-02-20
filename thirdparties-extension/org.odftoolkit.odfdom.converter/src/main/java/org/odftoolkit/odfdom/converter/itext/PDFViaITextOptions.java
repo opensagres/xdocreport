@@ -25,33 +25,15 @@
 package org.odftoolkit.odfdom.converter.itext;
 
 import org.odftoolkit.odfdom.converter.Options;
-
-import com.lowagie.text.FontFactory;
+import org.odftoolkit.odfdom.converter.internal.itext.ODFFontRegistry;
 
 public class PDFViaITextOptions
     extends Options
 {
 
-    private String fontEncoding = determineSystemEncoding();
+    private String fontEncoding = ODFFontRegistry.getRegistry().getSystemEncoding();
 
     private boolean preserveSoftPageBreaks = false;
-
-    private String determineSystemEncoding()
-    {
-        // don't rely on file.encoding property because
-        // it may be changed if application is launched inside an ide
-        String systemEncoding = System.getProperty( "sun.jnu.encoding" );
-        if ( systemEncoding != null && systemEncoding.length() > 0 )
-        {
-            return systemEncoding;
-        }
-        systemEncoding = System.getProperty( "ibm.system.encoding" );
-        if ( systemEncoding != null && systemEncoding.length() > 0 )
-        {
-            return systemEncoding;
-        }
-        return FontFactory.defaultEncoding;
-    }
 
     private PDFViaITextOptions()
     {

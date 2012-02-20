@@ -116,7 +116,7 @@
                 <configuration>
                 <includeScope>runtime</includeScope>
 <!--                   <excludeScope>provided-</excludeScope> -->
-                  <outputDirectory>${basedir}</outputDirectory>
+                  <outputDirectory>${basedir}/lib/cxf</outputDirectory>
                   <stripVersion>true</stripVersion>
                 </configuration>
               </execution>

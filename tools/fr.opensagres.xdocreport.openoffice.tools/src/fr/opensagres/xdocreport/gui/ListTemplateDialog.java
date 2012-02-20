@@ -12,6 +12,8 @@
 package fr.opensagres.xdocreport.gui;
 
 import fr.opensagres.xdocreport.controller.Controller;
+import fr.opensagres.xdocreport.document.domain.ReportId;
+import java.util.List;
 import javax.swing.table.AbstractTableModel;
 import javax.swing.table.TableModel;
 
@@ -29,10 +31,11 @@ public class ListTemplateDialog extends javax.swing.JDialog {
     }
 
     protected TableModel getTableModel(){
+        final List<ReportId> templates= Controller.INSTANCE.getTemplateList();
         TableModel tableModel= new AbstractTableModel() {
 
             public int getRowCount() {
-             return   Controller.INSTANCE.getTemplateList().size();
+             return   templates.size();
             }
 
             public int getColumnCount() {
@@ -40,10 +43,11 @@ public class ListTemplateDialog extends javax.swing.JDialog {
             }
 
             public Object getValueAt(int row, int col) {
+                ReportId template=templates.get(row);
                 if(col==0){
-                    return Controller.INSTANCE.getTemplateList().get(row);
+                    return template.getReportID();
                 } else if(col==1){
-                    return Controller.INSTANCE.getTemplateList().get(row);
+                    return template.getLoadedDate();
                 }
                 //default should not happen....
                 return "";

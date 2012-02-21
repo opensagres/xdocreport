@@ -88,11 +88,14 @@ public class HTMLTextStylingContentHandler
 
     private StringBuilder aContent;
 
+    private boolean ignoreCharacters;
+
     public HTMLTextStylingContentHandler( IDocumentHandler visitor )
     {
         this.documentHandler = visitor;
         this.aHref = null;
         this.aContent = new StringBuilder();
+        this.ignoreCharacters = false;
     }
 
     @Override
@@ -129,6 +132,7 @@ public class HTMLTextStylingContentHandler
     public void startElement( String uri, String localName, String name, Attributes attributes )
         throws SAXException
     {
+        ignoreCharacters = false;
         try
         {
             if ( STRONG_ELT.equals( name ) || B_ELT.equals( name ) )
@@ -214,6 +218,7 @@ public class HTMLTextStylingContentHandler
     public void endElement( String uri, String localName, String name )
         throws SAXException
     {
+        ignoreCharacters = false;
         try
         {
             if ( STRONG_ELT.equals( name ) || B_ELT.equals( name ) )
@@ -238,6 +243,7 @@ public class HTMLTextStylingContentHandler
             }
             else if ( LI_ELT.equals( name ) )
             {
+                ignoreCharacters = true;
                 // List item
                 documentHandler.endListItem();
             }
@@ -296,20 +302,23 @@ public class HTMLTextStylingContentHandler
     public void characters( char[] ch, int start, int length )
         throws SAXException
     {
-        try
+        if ( !ignoreCharacters )
         {
-            if ( aHref != null )
+            try
             {
-                aContent.append( ch, start, length );
+                if ( aHref != null )
+                {
+                    aContent.append( ch, start, length );
+                }
+                else
+                {
+                    documentHandler.handleString( String.valueOf( ch, start, length ) );
+                }
             }
-            else
+            catch ( IOException e )
             {
-                documentHandler.handleString( String.valueOf( ch, start, length ) );
+                throw new SAXException( e );
             }
-        }
-        catch ( IOException e )
-        {
-            throw new SAXException( e );
         }
         super.characters( ch, start, length );
     }
@@ -317,6 +326,7 @@ public class HTMLTextStylingContentHandler
     private void startList( boolean ordered )
         throws IOException
     {
+        ignoreCharacters = true;
         if ( ordered )
         {
             documentHandler.startOrderedList();

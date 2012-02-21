@@ -310,8 +310,9 @@ public class ODTDocumentHandler
         }
         else
         {
-            endParagraph();
+            //endParagraph();
         }
+        endParagraphIfNeeded();
         super.write( "</text:list-item>" );
     }
 

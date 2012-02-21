@@ -360,7 +360,7 @@ public class ODTDocumentHandlerTestCase
 
         Assert.assertEquals( "", handler.getTextBefore() );
         Assert.assertEquals( "", handler.getTextBody() );
-        Assert.assertEquals( "<text:list text:style-name=\"XDocReport_OL\"><text:span> </text:span>" +
+        Assert.assertEquals( "<text:list text:style-name=\"XDocReport_OL\">" +
                                 "<text:list-item text:style-name=\"XDocReport_OL\">" +
                                     "<text:p text:style-name=\"XDocReport_OL_P\">" +
                                         "<text:span>item1</text:span>" +

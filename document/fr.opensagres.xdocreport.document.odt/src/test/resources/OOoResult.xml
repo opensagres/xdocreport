@@ -5,72 +5,65 @@
   <text:h text:outline-level="2" text:style-name="Heading_20_2">title 1.1</text:h>
   <text:p/>
   <text:list text:style-name="XDocReport_UL">
-    <text:span/>
     <text:list-item text:style-name="XDocReport_UL">
       <text:p text:style-name="XDocReport_UL_P">
         <text:span>item 1</text:span>
       </text:p>
     </text:list-item>
-    <text:span/>
     <text:list-item text:style-name="XDocReport_UL">
       <text:p text:style-name="XDocReport_UL_P">
         <text:span>item 2    </text:span>
       </text:p>
       <text:list text:style-name="XDocReport_UL">
-        <text:span/>
         <text:list-item text:style-name="XDocReport_UL">
           <text:p text:style-name="XDocReport_UL_P">
             <text:span>item 2.1</text:span>
           </text:p>
         </text:list-item>
-        <text:span/>
         <text:list-item text:style-name="XDocReport_UL">
           <text:p text:style-name="XDocReport_UL_P">
             <text:span>item 2.2</text:span>
           </text:p>
         </text:list-item>
-        <text:span/>
       </text:list>
-      <text:span/>
+      <text:p>
+        <text:span>    bla bla </text:span>
+        <text:span text:style-name="XDocReport_Bold">bla</text:span>
+        <text:span/>
+      </text:p>
     </text:list-item>
-    <text:span/>
     <text:list-item text:style-name="XDocReport_UL">
       <text:p text:style-name="XDocReport_UL_P">
         <text:span>item 3</text:span>
       </text:p>
     </text:list-item>
   </text:list>
-  <text:p/>
   <text:list text:style-name="XDocReport_OL">
-    <text:span/>
     <text:list-item text:style-name="XDocReport_OL">
       <text:p text:style-name="XDocReport_OL_P">
         <text:span>Nitem 1</text:span>
       </text:p>
     </text:list-item>
-    <text:span/>
     <text:list-item text:style-name="XDocReport_OL">
       <text:p text:style-name="XDocReport_OL_P">
         <text:span>Nitem 2    </text:span>
       </text:p>
       <text:list text:style-name="XDocReport_OL">
-        <text:span/>
         <text:list-item text:style-name="XDocReport_OL">
           <text:p text:style-name="XDocReport_OL_P">
             <text:span>Nitem 2.1</text:span>
           </text:p>
         </text:list-item>
-        <text:span/>
         <text:list-item text:style-name="XDocReport_OL">
           <text:p text:style-name="XDocReport_OL_P">
             <text:span>Nitem 2.2</text:span>
           </text:p>
         </text:list-item>
-        <text:span/>
       </text:list>
-      <text:span/>
+      <text:p>
+        <text:span/>
+      </text:p>
     </text:list-item>
-    <text:span/>
     <text:list-item text:style-name="XDocReport_OL">
       <text:p text:style-name="XDocReport_OL_P">
         <text:span>Nitem 3</text:span>

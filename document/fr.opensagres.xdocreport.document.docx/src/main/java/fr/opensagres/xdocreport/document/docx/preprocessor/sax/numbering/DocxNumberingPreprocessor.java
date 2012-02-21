@@ -61,20 +61,14 @@ public class DocxNumberingPreprocessor
         throws XDocReportException, IOException
     {
         // Create word/numbering.xml, only if there is text styling.
-        if ( fieldsMetadata == null )
-        {
-            return false;
-        }
-        if ( fieldsMetadata.getFieldsAsTextStyling().size() < 1 )
+        if ( !NumberingRegistry.hasDynamicNumbering( fieldsMetadata ) )
         {
             return false;
         }
 
         // 1) Create word/numbering.xml entry
         InputStream input = DocxDocumentHandler.class.getResourceAsStream( "numbering.xml" );
-        XDocArchive.setEntry( outputArchive, entryName, input );
-
-        // 2) preprocess it
+        super.createAndProcess( entryName, outputArchive, fieldsMetadata, formatter, sharedContext, input );
         return true;
     }
 

@@ -30,6 +30,7 @@ import java.util.Stack;
 import fr.opensagres.xdocreport.document.docx.preprocessor.DefaultStyle;
 import fr.opensagres.xdocreport.document.docx.preprocessor.HyperlinkRegistry;
 import fr.opensagres.xdocreport.document.docx.preprocessor.HyperlinkUtils;
+import fr.opensagres.xdocreport.document.docx.preprocessor.sax.numbering.NumberingRegistry;
 import fr.opensagres.xdocreport.document.docx.template.DocxContextHelper;
 import fr.opensagres.xdocreport.document.preprocessor.sax.BufferedElement;
 import fr.opensagres.xdocreport.document.textstyling.AbstractDocumentHandler;
@@ -52,19 +53,25 @@ public class DocxDocumentHandler
 
     protected final IDocxStylesGenerator styleGen;
 
+    private final NumberingRegistry numberingRegistry;
+
     private DefaultStyle defaultStyle;
 
     private boolean insideHeader;
 
     private boolean paragraphWasInserted;
 
+    private Stack<Integer> numbersStack;
+
     public DocxDocumentHandler( BufferedElement parent, IContext context, String entryName )
     {
         super( parent, context, entryName );
-        styleGen = DocxContextHelper.getStylesGenerator( context );
-        defaultStyle = DocxContextHelper.getDefaultStyle( context );
+        this.styleGen = DocxContextHelper.getStylesGenerator( context );
+        this.defaultStyle = DocxContextHelper.getDefaultStyle( context );
+        this.numberingRegistry = getNumberingRegistry( context );
         this.insideHeader = false;
         this.paragraphWasInserted = false;
+        this.numbersStack = new Stack<Integer>();
     }
 
     public void startDocument()
@@ -195,9 +202,8 @@ public class DocxDocumentHandler
         throws IOException
     {
         startParagraph( false );
-        boolean ordered = super.getCurrentListOrder();
         super.write( "<w:pPr>" );
-        super.write( "<w:pStyle w:val=\"Paragraphedeliste\" />" );
+        // super.write( "<w:pStyle w:val=\"Paragraphedeliste\" />" );
         super.write( "<w:numPr>" );
 
         // <w:ilvl w:val="0" />
@@ -207,7 +213,7 @@ public class DocxDocumentHandler
         super.write( "\" />" );
 
         // "<w:numId w:val="1" />"
-        int numIdVal = styleGen.getNumIdForList(ordered, defaultStyle);
+        int numIdVal = getCurrentNumId();
         super.write( "<w:numId w:val=\"" );
         super.write( String.valueOf( numIdVal ) );
         super.write( "\" />" );
@@ -230,7 +236,7 @@ public class DocxDocumentHandler
         closeCurrentParagraph();
         startParagraph( false );
 
-        // In docx title is a paragraph with a style.
+        // In docx, title is a paragraph with a style.
 
         /**
          * <w:p w:rsidR="00F030AA"s w:rsidRDefault="00285B63" w:rsidP="00285B63"> <w:pPr> <w:pStyle w:val="Titre1" />
@@ -253,31 +259,49 @@ public class DocxDocumentHandler
     }
 
     @Override
-    protected void doEndUnorderedList()
+    protected void doStartOrderedList()
         throws IOException
     {
-
-    }
-
-    @Override
-    protected void doEndOrderedList()
-        throws IOException
-    {
-
+        int abstractNumId = styleGen.getAbstractNumIdForList( true, defaultStyle );
+        int numId = getNumberingRegistry().addNum( abstractNumId, getMaxNumId() ).getNumId();
+        numbersStack.push( numId );
     }
 
     @Override
     protected void doStartUnorderedList()
         throws IOException
     {
+        int abstractNumId = styleGen.getAbstractNumIdForList( false, defaultStyle );
+        int numId = getNumberingRegistry().addNum( abstractNumId, getMaxNumId() ).getNumId();
+        numbersStack.push( numId );
+    }
 
+    private Integer getMaxNumId()
+    {
+        if ( defaultStyle == null )
+        {
+            return null;
+        }
+        return defaultStyle.getMaxNumId();
     }
 
     @Override
-    protected void doStartOrderedList()
+    protected void doEndUnorderedList()
         throws IOException
     {
+        numbersStack.pop();
+    }
 
+    @Override
+    protected void doEndOrderedList()
+        throws IOException
+    {
+        numbersStack.pop();
+    }
+
+    private int getCurrentNumId()
+    {
+        return numbersStack.peek();
     }
 
     public void handleReference( String ref, String label )
@@ -313,6 +337,29 @@ public class DocxDocumentHandler
     public void handleImage( String ref, String label )
         throws IOException
     {
+
+    }
+
+    private NumberingRegistry getNumberingRegistry()
+    {
+        return numberingRegistry;
+    }
+
+    private NumberingRegistry getNumberingRegistry( IContext context )
+    {
+
+        if ( context == null )
+        {
+            return new NumberingRegistry();
+        }
+
+        NumberingRegistry registry = DocxContextHelper.getNumberingRegistry( context );
+        if ( registry == null )
+        {
+            registry = new NumberingRegistry();
+            DocxContextHelper.putNumberingRegistry( context, registry );
+        }
+        return registry;
 
     }
 

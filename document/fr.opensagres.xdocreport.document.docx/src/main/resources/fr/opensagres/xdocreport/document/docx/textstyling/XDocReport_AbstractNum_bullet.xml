@@ -1,0 +1,116 @@
+<w:abstractNum w:abstractNumId="51">
+	<w:nsid w:val="68EC0125" />
+	<w:multiLevelType w:val="hybridMultilevel" />
+	<w:tmpl w:val="3D16DCB8" />
+	<w:lvl w:ilvl="0" w:tplc="040C0001">
+		<w:start w:val="1" />
+		<w:numFmt w:val="bullet" />
+		<w:lvlText w:val="" />
+		<w:lvlJc w:val="left" />
+		<w:pPr>
+			<w:ind w:left="720" w:hanging="360" />
+		</w:pPr>
+		<w:rPr>
+			<w:rFonts w:ascii="Symbol" w:hAnsi="Symbol" w:hint="default" />
+		</w:rPr>
+	</w:lvl>
+	<w:lvl w:ilvl="1" w:tplc="040C0003">
+		<w:start w:val="1" />
+		<w:numFmt w:val="bullet" />
+		<w:lvlText w:val="o" />
+		<w:lvlJc w:val="left" />
+		<w:pPr>
+			<w:ind w:left="1440" w:hanging="360" />
+		</w:pPr>
+		<w:rPr>
+			<w:rFonts w:ascii="Courier New" w:hAnsi="Courier New" w:cs="Courier New"
+				w:hint="default" />
+		</w:rPr>
+	</w:lvl>
+	<w:lvl w:ilvl="2" w:tplc="040C0005" w:tentative="1">
+		<w:start w:val="1" />
+		<w:numFmt w:val="bullet" />
+		<w:lvlText w:val="" />
+		<w:lvlJc w:val="left" />
+		<w:pPr>
+			<w:ind w:left="2160" w:hanging="360" />
+		</w:pPr>
+		<w:rPr>
+			<w:rFonts w:ascii="Wingdings" w:hAnsi="Wingdings" w:hint="default" />
+		</w:rPr>
+	</w:lvl>
+	<w:lvl w:ilvl="3" w:tplc="040C0001" w:tentative="1">
+		<w:start w:val="1" />
+		<w:numFmt w:val="bullet" />
+		<w:lvlText w:val="" />
+		<w:lvlJc w:val="left" />
+		<w:pPr>
+			<w:ind w:left="2880" w:hanging="360" />
+		</w:pPr>
+		<w:rPr>
+			<w:rFonts w:ascii="Symbol" w:hAnsi="Symbol" w:hint="default" />
+		</w:rPr>
+	</w:lvl>
+	<w:lvl w:ilvl="4" w:tplc="040C0003" w:tentative="1">
+		<w:start w:val="1" />
+		<w:numFmt w:val="bullet" />
+		<w:lvlText w:val="o" />
+		<w:lvlJc w:val="left" />
+		<w:pPr>
+			<w:ind w:left="3600" w:hanging="360" />
+		</w:pPr>
+		<w:rPr>
+			<w:rFonts w:ascii="Courier New" w:hAnsi="Courier New" w:cs="Courier New"
+				w:hint="default" />
+		</w:rPr>
+	</w:lvl>
+	<w:lvl w:ilvl="5" w:tplc="040C0005" w:tentative="1">
+		<w:start w:val="1" />
+		<w:numFmt w:val="bullet" />
+		<w:lvlText w:val="" />
+		<w:lvlJc w:val="left" />
+		<w:pPr>
+			<w:ind w:left="4320" w:hanging="360" />
+		</w:pPr>
+		<w:rPr>
+			<w:rFonts w:ascii="Wingdings" w:hAnsi="Wingdings" w:hint="default" />
+		</w:rPr>
+	</w:lvl>
+	<w:lvl w:ilvl="6" w:tplc="040C0001" w:tentative="1">
+		<w:start w:val="1" />
+		<w:numFmt w:val="bullet" />
+		<w:lvlText w:val="" />
+		<w:lvlJc w:val="left" />
+		<w:pPr>
+			<w:ind w:left="5040" w:hanging="360" />
+		</w:pPr>
+		<w:rPr>
+			<w:rFonts w:ascii="Symbol" w:hAnsi="Symbol" w:hint="default" />
+		</w:rPr>
+	</w:lvl>
+	<w:lvl w:ilvl="7" w:tplc="040C0003" w:tentative="1">
+		<w:start w:val="1" />
+		<w:numFmt w:val="bullet" />
+		<w:lvlText w:val="o" />
+		<w:lvlJc w:val="left" />
+		<w:pPr>
+			<w:ind w:left="5760" w:hanging="360" />
+		</w:pPr>
+		<w:rPr>
+			<w:rFonts w:ascii="Courier New" w:hAnsi="Courier New" w:cs="Courier New"
+				w:hint="default" />
+		</w:rPr>
+	</w:lvl>
+	<w:lvl w:ilvl="8" w:tplc="040C0005" w:tentative="1">
+		<w:start w:val="1" />
+		<w:numFmt w:val="bullet" />
+		<w:lvlText w:val="" />
+		<w:lvlJc w:val="left" />
+		<w:pPr>
+			<w:ind w:left="6480" w:hanging="360" />
+		</w:pPr>
+		<w:rPr>
+			<w:rFonts w:ascii="Wingdings" w:hAnsi="Wingdings" w:hint="default" />
+		</w:rPr>
+	</w:lvl>
+</w:abstractNum>

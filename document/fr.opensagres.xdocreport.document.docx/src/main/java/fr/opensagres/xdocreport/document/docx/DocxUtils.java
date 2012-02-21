@@ -25,6 +25,7 @@
 package fr.opensagres.xdocreport.document.docx;
 
 import static fr.opensagres.xdocreport.document.docx.DocxConstants.ABSTRACT_NUM_ELT;
+import static fr.opensagres.xdocreport.document.docx.DocxConstants.ABSTRACT_NUM_ID_ELT;
 import static fr.opensagres.xdocreport.document.docx.DocxConstants.A_NS;
 import static fr.opensagres.xdocreport.document.docx.DocxConstants.BLIP_ELT;
 import static fr.opensagres.xdocreport.document.docx.DocxConstants.BOOKMARK_END_ELT;
@@ -36,6 +37,9 @@ import static fr.opensagres.xdocreport.document.docx.DocxConstants.FLDCHAR_ELT;
 import static fr.opensagres.xdocreport.document.docx.DocxConstants.FLDSIMPLE_ELT;
 import static fr.opensagres.xdocreport.document.docx.DocxConstants.HYPERLINK_ELT;
 import static fr.opensagres.xdocreport.document.docx.DocxConstants.INSTR_TEXT_ELT;
+import static fr.opensagres.xdocreport.document.docx.DocxConstants.NUMBERING_ELT;
+import static fr.opensagres.xdocreport.document.docx.DocxConstants.NUM_ELT;
+import static fr.opensagres.xdocreport.document.docx.DocxConstants.NUM_FMT_ELT;
 import static fr.opensagres.xdocreport.document.docx.DocxConstants.P_ELT;
 import static fr.opensagres.xdocreport.document.docx.DocxConstants.RFONTS_ELT;
 import static fr.opensagres.xdocreport.document.docx.DocxConstants.R_ELT;
@@ -238,5 +242,25 @@ public class DocxUtils
     public static boolean isAbstractNum( String uri, String localName, String name )
     {
         return W_NS.equals( uri ) && ABSTRACT_NUM_ELT.equals( localName );
+    }
+
+    public static boolean isNumFmt( String uri, String localName, String name )
+    {
+        return W_NS.equals( uri ) && NUM_FMT_ELT.equals( localName );
+    }
+
+    public static boolean isNum( String uri, String localName, String name )
+    {
+        return W_NS.equals( uri ) && NUM_ELT.equals( localName );
+    }
+
+    public static boolean isAbstractNumId( String uri, String localName, String name )
+    {
+        return W_NS.equals( uri ) && ABSTRACT_NUM_ID_ELT.equals( localName );
+    }
+
+    public static boolean isNumbering( String uri, String localName, String name )
+    {
+        return W_NS.equals( uri ) && NUMBERING_ELT.equals( localName );
     }
 }

@@ -8,15 +8,15 @@ import fr.opensagres.xdocreport.core.utils.StringUtils;
 public class DefaultStyle
 {
 
-    public static final int DEFAULT_NUMID = -1;
-
     private String hyperLinkStyleId;
 
     private Map<Integer, String> headersStyleId;
 
-    private int numIdForOrdererList = DEFAULT_NUMID;
+    private Integer abstractNumIdForOrdererList = null;
 
-    private int numIdForUnordererList = DEFAULT_NUMID;
+    private Integer abstractNumIdForUnordererList = null;
+
+    private Integer maxNumId = null;
 
     public String getHyperLinkStyleId()
     {
@@ -52,24 +52,34 @@ public class DefaultStyle
         return headersStyleId.get( level );
     }
 
-    public int getNumIdForOrdererList()
+    public Integer getAbstractNumIdForOrdererList()
     {
-        return numIdForOrdererList;
+        return abstractNumIdForOrdererList;
     }
 
-    public void setNumIdForOrdererList( int numIdForOrdererList )
+    public void setAbstractNumIdForOrdererList( Integer abstractNumIdForOrdererList )
     {
-        this.numIdForOrdererList = numIdForOrdererList;
+        this.abstractNumIdForOrdererList = abstractNumIdForOrdererList;
     }
 
-    public int getNumIdForUnordererList()
+    public Integer getAbstractNumIdForUnordererList()
     {
-        return numIdForUnordererList;
+        return abstractNumIdForUnordererList;
     }
 
-    public void setNumIdForUnordererList( int numIdForUnordererList )
+    public void setAbstractNumIdForUnordererList( Integer abstractNumIdForUnordererList )
     {
-        this.numIdForUnordererList = numIdForUnordererList;
+        this.abstractNumIdForUnordererList = abstractNumIdForUnordererList;
+    }
+
+    public void setMaxNumId( Integer maxNumId )
+    {
+        this.maxNumId = maxNumId;
+    }
+
+    public Integer getMaxNumId()
+    {
+        return maxNumId;
     }
 
 }

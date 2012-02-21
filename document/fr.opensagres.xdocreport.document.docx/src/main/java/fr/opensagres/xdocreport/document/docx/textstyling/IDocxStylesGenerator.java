@@ -7,12 +7,20 @@ public interface IDocxStylesGenerator
     extends IStylesGenerator<DefaultStyle>
 {
 
+    public static final String generateAbstractNumBullet = "generateAbstractNumBullet";
+    
+    public static final String generateAbstractNumDecimal = "generateAbstractNumDecimal";
+    
     String generateAllStyles( DefaultStyle defaultStyle );
 
     String getHyperLinkStyleId( DefaultStyle defaultStyle );
 
     String getHeaderStyleId( int level, DefaultStyle defaultStyle );
 
-    int getNumIdForList( boolean ordered, DefaultStyle defaultStyle );
+    Integer getAbstractNumIdForList( boolean ordered, DefaultStyle defaultStyle );
+
+    String generateAbstractNumBullet( DefaultStyle defaultStyle );
+
+    String generateAbstractNumDecimal( DefaultStyle defaultStyle );
 
 }

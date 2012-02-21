@@ -27,6 +27,7 @@ package fr.opensagres.xdocreport.document.preprocessor;
 import static fr.opensagres.xdocreport.core.utils.XMLUtils.prettyPrint;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.StringWriter;
 import java.io.Writer;
 import java.util.Map;
@@ -148,12 +149,22 @@ public abstract class AbstractXDocPreprocessor<T>
         }
         return documentArchive.getEntryWriter( entryName );
     }
-    
+
     public boolean create( String entryName, XDocArchive outputArchive, FieldsMetadata fieldsMetadata,
                            IDocumentFormatter formatter, Map<String, Object> sharedContext )
         throws XDocReportException, IOException
-    {        
+    {
         return false;
+    }
+
+    protected void createAndProcess( String entryName, XDocArchive outputArchive, FieldsMetadata fieldsMetadata,
+                                     IDocumentFormatter formatter, Map<String, Object> sharedContext, InputStream input )
+        throws IOException, XDocReportException
+    {
+        XDocArchive.setEntry( outputArchive, entryName, input );
+
+        // 2) preprocess it
+        preprocess( entryName, outputArchive, fieldsMetadata, formatter, sharedContext );
     }
 
     public abstract boolean preprocess( String entryName, T reader, Writer writer, FieldsMetadata fieldsMetadata,

@@ -19,9 +19,13 @@ public class DocxDefaultStylesGenerator
 
     private static final List<Style> XDocReport_Headings_Style;
 
-    private static final int DEFAULT_NUMID_ORDERED = 0;
+    private static final Style XDocReport_AbstractNum_decimal;
 
-    private static final int DEFAULT_NUMID_UNORDERED = 1;
+    private static final Style XDocReport_AbstractNum_bullet;
+
+    public static final int DocReport_AbstractNumId_decimal = 50;
+
+    public static final int DocReport_AbstractNumId_bullet = 51;
 
     static
     {
@@ -31,6 +35,9 @@ public class DocxDefaultStylesGenerator
             XDocReport_Headings_Style.add( Style.load( "XDocReport_Heading_" + i, DocxDefaultStylesGenerator.class ) );
         }
         XDocReport_Hyperlink_Style = Style.load( "XDocReport_Hyperlink", DocxDefaultStylesGenerator.class );
+        XDocReport_AbstractNum_decimal =
+            Style.load( "XDocReport_AbstractNum_decimal", DocxDefaultStylesGenerator.class );
+        XDocReport_AbstractNum_bullet = Style.load( "XDocReport_AbstractNum_bullet", DocxDefaultStylesGenerator.class );
     }
 
     public String generateAllStyles( DefaultStyle defaultStyle )
@@ -39,6 +46,16 @@ public class DocxDefaultStylesGenerator
         generateHyperlinkStyle( styles, defaultStyle );
         generateHeadersStyle( styles, defaultStyle );
         return styles.toString();
+    }
+
+    public String generateAbstractNumBullet( DefaultStyle defaultStyle )
+    {
+        return XDocReport_AbstractNum_bullet.getContent();
+    }
+
+    public String generateAbstractNumDecimal( DefaultStyle defaultStyle )
+    {
+        return XDocReport_AbstractNum_decimal.getContent();
     }
 
     public void generateHyperlinkStyle( StringBuilder style, DefaultStyle defaultStyle )
@@ -102,22 +119,18 @@ public class DocxDefaultStylesGenerator
         return 6;
     }
 
-    public int getNumIdForList( boolean ordered, DefaultStyle defaultStyle )
+    public Integer getAbstractNumIdForList( boolean ordered, DefaultStyle defaultStyle )
     {
-        if ( ordered )
-        {
-            if ( defaultStyle == null )
-            {
-                return DEFAULT_NUMID_ORDERED;
-            }
-            return defaultStyle.getNumIdForOrdererList() != DefaultStyle.DEFAULT_NUMID ? defaultStyle.getNumIdForOrdererList()
-                            : DEFAULT_NUMID_ORDERED;
-        }
         if ( defaultStyle == null )
         {
-            return DEFAULT_NUMID_UNORDERED;
+            return ordered ? DocReport_AbstractNumId_decimal : DocReport_AbstractNumId_bullet;
         }
-        return defaultStyle.getNumIdForOrdererList() != DefaultStyle.DEFAULT_NUMID ? defaultStyle.getNumIdForUnordererList()
-                        : DEFAULT_NUMID_UNORDERED;
+        Integer abstractNumId =
+            ordered ? defaultStyle.getAbstractNumIdForOrdererList() : defaultStyle.getAbstractNumIdForUnordererList();
+        if ( abstractNumId != null )
+        {
+            return abstractNumId;
+        }
+        return ordered ? DocReport_AbstractNumId_decimal : DocReport_AbstractNumId_bullet;
     }
 }

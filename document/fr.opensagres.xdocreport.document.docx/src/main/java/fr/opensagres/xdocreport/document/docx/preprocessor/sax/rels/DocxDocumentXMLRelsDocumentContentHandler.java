@@ -27,6 +27,7 @@ package fr.opensagres.xdocreport.document.docx.preprocessor.sax.rels;
 import static fr.opensagres.xdocreport.document.docx.DocxConstants.RELATIONSHIPS_ELT;
 import static fr.opensagres.xdocreport.document.docx.DocxConstants.RELATIONSHIPS_HYPERLINK_NS;
 import static fr.opensagres.xdocreport.document.docx.DocxConstants.RELATIONSHIPS_IMAGE_NS;
+import static fr.opensagres.xdocreport.document.docx.DocxConstants.RELATIONSHIPS_NUMBERING_NS;
 import static fr.opensagres.xdocreport.document.docx.DocxConstants.RELATIONSHIP_ELT;
 import static fr.opensagres.xdocreport.document.docx.DocxConstants.RELATIONSHIP_ID_ATTR;
 import static fr.opensagres.xdocreport.document.docx.DocxConstants.RELATIONSHIP_TARGET_ATTR;
@@ -43,6 +44,7 @@ import fr.opensagres.xdocreport.document.docx.images.DocxImageRegistry;
 import fr.opensagres.xdocreport.document.docx.preprocessor.HyperlinkInfo;
 import fr.opensagres.xdocreport.document.docx.preprocessor.HyperlinkRegistry;
 import fr.opensagres.xdocreport.document.docx.preprocessor.HyperlinkUtils;
+import fr.opensagres.xdocreport.document.docx.preprocessor.sax.numbering.NumberingRegistry;
 import fr.opensagres.xdocreport.document.preprocessor.sax.BufferedDocumentContentHandler;
 import fr.opensagres.xdocreport.document.preprocessor.sax.IBufferedRegion;
 import fr.opensagres.xdocreport.template.TemplateContextHelper;
@@ -118,6 +120,8 @@ public class DocxDocumentXMLRelsDocumentContentHandler
 
     private boolean hyperlinkParsing = false;
 
+    private boolean hasNumbering;
+
     public DocxDocumentXMLRelsDocumentContentHandler( String entryName, FieldsMetadata fieldsMetadata,
                                                       IDocumentFormatter formatter, Map<String, Object> sharedContext )
     {
@@ -125,6 +129,7 @@ public class DocxDocumentXMLRelsDocumentContentHandler
         this.formatter = formatter;
         this.fieldsMetadata = fieldsMetadata;
         this.hyperlinksMap = HyperlinkUtils.getInitialHyperlinkMap( entryName, sharedContext );
+        this.hasNumbering = false;
     }
 
     @Override
@@ -134,11 +139,24 @@ public class DocxDocumentXMLRelsDocumentContentHandler
         if ( RELATIONSHIP_ELT.equals( name ) )
         {
             String type = attributes.getValue( RELATIONSHIP_TYPE_ATTR );
-            if ( RELATIONSHIPS_HYPERLINK_NS.equals( type ) && this.hyperlinksMap != null )
+            if ( RELATIONSHIPS_HYPERLINK_NS.equals( type ) )
             {
-                // Ignore element
-                hyperlinkParsing = true;
-                return false;
+                if ( this.hyperlinksMap != null )
+                {
+                    // Ignore element
+                    hyperlinkParsing = true;
+                    return false;
+                }
+            }
+            else if ( RELATIONSHIPS_NUMBERING_NS.equals( type ) )
+            {
+                // <Relationship Id="rId2"
+                // Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/numbering"
+                // Target="numbering.xml" />
+                if ( !hasNumbering )
+                {
+                    hasNumbering = "numbering.xml".equals( attributes.getValue( RELATIONSHIP_TARGET_ATTR ) );
+                }
             }
         }
         return super.doStartElement( uri, localName, name, attributes );
@@ -164,11 +182,23 @@ public class DocxDocumentXMLRelsDocumentContentHandler
             generateScriptsForStaticHyperlinks( script );
             // 3) Generate script for dynamic hyperlinks
             generateScriptsForDynamicHyperlinks( script );
+            // 4) Generate numbering.xml if needed
+            generateNumberingRelationShip( script );
 
             IBufferedRegion currentRegion = getCurrentElement();
             currentRegion.append( script.toString() );
         }
         super.doEndElement( uri, localName, name );
+    }
+
+    private void generateNumberingRelationShip( StringBuilder script )
+    {
+        if ( !hasNumbering && NumberingRegistry.hasDynamicNumbering( fieldsMetadata ) )
+        {
+            String relationId = "xdocreportNumbering";
+            String target = "numbering.xml";
+            generateRelationship( script, relationId, RELATIONSHIPS_NUMBERING_NS, target, null );
+        }
     }
 
     private void generateScriptsForDynamicImages( StringBuilder script )

@@ -26,13 +26,17 @@ package fr.opensagres.xdocreport.document.docx.preprocessor.sax.contenttypes;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
 
 import fr.opensagres.xdocreport.core.document.ImageFormat;
+import fr.opensagres.xdocreport.document.docx.preprocessor.sax.numbering.NumberingRegistry;
 import fr.opensagres.xdocreport.document.preprocessor.sax.BufferedDocumentContentHandler;
 import fr.opensagres.xdocreport.document.preprocessor.sax.IBufferedRegion;
+import fr.opensagres.xdocreport.template.formatter.FieldsMetadata;
+import fr.opensagres.xdocreport.template.formatter.IDocumentFormatter;
 
 /**
  * Parse content of the [Content_Types].xml to add missing image format. Ex :
@@ -45,10 +49,32 @@ public class DocxContentTypesDocumentContentHandler
     extends BufferedDocumentContentHandler
 {
 
+    private static final String TYPES_ELT = "Types";
+
     private static final String DEFAULT_ELT = "Default";
+
     private static final String EXTENSION_ATTR = "Extension";
-    
+
+    private static final String OVERRIDE_ELT = "Override";
+
     private List<ImageFormat> missingFormats = new ArrayList<ImageFormat>();
+
+    protected final String entryName;
+
+    protected final IDocumentFormatter formatter;
+
+    protected final FieldsMetadata fieldsMetadata;
+
+    private boolean hasNumbering;
+
+    public DocxContentTypesDocumentContentHandler( String entryName, FieldsMetadata fieldsMetadata,
+                                                   IDocumentFormatter formatter, Map<String, Object> sharedContext )
+    {
+        this.entryName = entryName;
+        this.formatter = formatter;
+        this.fieldsMetadata = fieldsMetadata;
+        this.hasNumbering = false;
+    }
 
     @Override
     public void startDocument()
@@ -76,6 +102,13 @@ public class DocxContentTypesDocumentContentHandler
                 missingFormats.remove( format );
             }
         }
+        else if ( OVERRIDE_ELT.equals( name ) )
+        {
+            if ( !hasNumbering )
+            {
+                hasNumbering = "/word/numbering.xml".equals( attributes.getValue( "PartName" ) );
+            }
+        }
         return super.doStartElement( uri, localName, name, attributes );
     }
 
@@ -83,7 +116,7 @@ public class DocxContentTypesDocumentContentHandler
     public void doEndElement( String uri, String localName, String name )
         throws SAXException
     {
-        if ( "Types".equals( name ) )
+        if ( TYPES_ELT.equals( name ) )
         {
             for ( ImageFormat format : missingFormats )
             {
@@ -94,6 +127,14 @@ public class DocxContentTypesDocumentContentHandler
                 currentRegion.append( format.getType() );
                 currentRegion.append( "\" />" );
 
+            }
+
+            if ( !hasNumbering && NumberingRegistry.hasDynamicNumbering( fieldsMetadata ) )
+            {
+                // <Override PartName="/word/numbering.xml"
+                // ContentType="application/vnd.openxmlformats-officedocument.wordprocessingml.numbering+xml" />
+                IBufferedRegion currentRegion = getCurrentElement();
+                currentRegion.append( "<Override PartName=\"/word/numbering.xml\" ContentType=\"application/vnd.openxmlformats-officedocument.wordprocessingml.numbering+xml\" />" );
             }
         }
         super.doEndElement( uri, localName, name );

@@ -91,6 +91,9 @@ public class DocxHTMLTextStylingWithVelocityTestCase
         html.append( "<h2>Title 1.1</h2>" );
         html.append( "aaaa<em>aaaaa</em>aaaaa <p>iiiiiiiiiiiiiii<b>hhh</b></p>" );
         html.append( "<h3>Title 1.1.1</h3>" );
+        html.append( "<ul><li>aaaa</li><li>bbbb</li></ul>" );
+        html.append( "<ol><li>aaaa</li><li>bbbb</li></ol>" );
+        html.append( "<ol><li>aaaa</li><li>bbbb</li></ol>" );
         html.append( "<h1>Title 2</h1>" );
         
         // 2) Create context Java model

@@ -5,6 +5,7 @@ import java.util.Map;
 import fr.opensagres.xdocreport.document.docx.preprocessor.DefaultStyle;
 import fr.opensagres.xdocreport.document.docx.preprocessor.HyperlinkRegistry;
 import fr.opensagres.xdocreport.document.docx.preprocessor.HyperlinkUtils;
+import fr.opensagres.xdocreport.document.docx.preprocessor.sax.numbering.NumberingRegistry;
 import fr.opensagres.xdocreport.document.docx.textstyling.DocxDefaultStylesGenerator;
 import fr.opensagres.xdocreport.document.docx.textstyling.IDocxStylesGenerator;
 import fr.opensagres.xdocreport.template.IContext;
@@ -14,6 +15,8 @@ public class DocxContextHelper
     public static final String DEFAULT_STYLE_KEY = "___DefaultStyle";
 
     public static final String STYLES_GENERATOR_KEY = "___NoEscapeStylesGenerator";
+
+    public static final String NUMBERING_REGISTRY_KEY = "___NumberingRegistry";
 
     public static void putHyperlinkRegistry( IContext context, String entryName, HyperlinkRegistry registry )
     {
@@ -62,6 +65,16 @@ public class DocxContextHelper
             sharedContext.put( DocxContextHelper.DEFAULT_STYLE_KEY, defaultStyle );
         }
         return defaultStyle;
+    }
+
+    public static void putNumberingRegistry( IContext context, NumberingRegistry registry )
+    {
+        context.put( NUMBERING_REGISTRY_KEY, registry );
+    }
+
+    public static NumberingRegistry getNumberingRegistry( IContext context )
+    {
+        return (NumberingRegistry) context.get( NUMBERING_REGISTRY_KEY );
     }
 
 }

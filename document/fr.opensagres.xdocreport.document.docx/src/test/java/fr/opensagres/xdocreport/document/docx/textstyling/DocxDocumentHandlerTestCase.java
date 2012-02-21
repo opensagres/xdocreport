@@ -321,7 +321,7 @@ public class DocxDocumentHandlerTestCase
         // Add default style (in real context, this DefaultStyle is added by DocxNumberingPreprocessor which search
         // numbering from the word/numbering.xml entry of the docx)
         DefaultStyle defaultStyle = new DefaultStyle();
-        defaultStyle.setNumIdForOrdererList( 2 );
+        //defaultStyle.setNumIdForOrdererList( 2 );
         DocxContextHelper.putDefaultStyle( context, defaultStyle );
         
         BufferedElement parent = null;
@@ -332,8 +332,8 @@ public class DocxDocumentHandlerTestCase
 
         Assert.assertEquals( "", handler.getTextBefore() );
         Assert.assertEquals( "", handler.getTextBody() );
-        Assert.assertEquals( "<w:p><w:pPr><w:pStyle w:val=\"Paragraphedeliste\" /><w:numPr><w:ilvl w:val=\"0\" /><w:numId w:val=\"2\" /></w:numPr></w:pPr><w:r><w:t xml:space=\"preserve\" >item1</w:t></w:r></w:p>"
-                                 + "<w:p><w:pPr><w:pStyle w:val=\"Paragraphedeliste\" /><w:numPr><w:ilvl w:val=\"0\" /><w:numId w:val=\"2\" /></w:numPr></w:pPr><w:r><w:t xml:space=\"preserve\" >item2</w:t></w:r></w:p>",
+        Assert.assertEquals( "<w:p><w:pPr><w:numPr><w:ilvl w:val=\"0\" /><w:numId w:val=\"0\" /></w:numPr></w:pPr><w:r><w:t xml:space=\"preserve\" >item1</w:t></w:r></w:p>"
+                                 + "<w:p><w:pPr><w:numPr><w:ilvl w:val=\"0\" /><w:numId w:val=\"0\" /></w:numPr></w:pPr><w:r><w:t xml:space=\"preserve\" >item2</w:t></w:r></w:p>",
                              handler.getTextEnd() );
     }
 
@@ -345,7 +345,34 @@ public class DocxDocumentHandlerTestCase
         // Add default style (in real context, this DefaultStyle is added by DocxNumberingPreprocessor which search
         // numbering from the word/numbering.xml entry of the docx)
         DefaultStyle defaultStyle = new DefaultStyle();
-        defaultStyle.setNumIdForUnordererList( 1 );
+        //defaultStyle.setNumIdForUnordererList( 1 );
+        DocxContextHelper.putDefaultStyle( context, defaultStyle );
+        
+        BufferedElement parent = null;
+
+        ITextStylingTransformer formatter = HTMLTextStylingTransformer.INSTANCE;
+        IDocumentHandler handler = new DocxDocumentHandler( parent, context, "word/document.xml" );
+        formatter.transform( "<ol><li>item1</li><li>item2</li></ol><ul><li>item1</li><li>item2</li></ul>", handler );
+
+        Assert.assertEquals( "", handler.getTextBefore() );
+        Assert.assertEquals( "", handler.getTextBody() );
+        Assert.assertEquals( "", handler.getTextBody() );
+        Assert.assertEquals( "<w:p><w:pPr><w:numPr><w:ilvl w:val=\"0\" /><w:numId w:val=\"0\" /></w:numPr></w:pPr><w:r><w:t xml:space=\"preserve\" >item1</w:t></w:r></w:p>"
+                        + "<w:p><w:pPr><w:numPr><w:ilvl w:val=\"0\" /><w:numId w:val=\"0\" /></w:numPr></w:pPr><w:r><w:t xml:space=\"preserve\" >item2</w:t></w:r></w:p>"
+                        + "<w:p><w:pPr><w:numPr><w:ilvl w:val=\"0\" /><w:numId w:val=\"1\" /></w:numPr></w:pPr><w:r><w:t xml:space=\"preserve\" >item1</w:t></w:r></w:p>"
+                                 + "<w:p><w:pPr><w:numPr><w:ilvl w:val=\"0\" /><w:numId w:val=\"1\" /></w:numPr></w:pPr><w:r><w:t xml:space=\"preserve\" >item2</w:t></w:r></w:p>",
+                             handler.getTextEnd() );
+    }
+
+    @Test
+    public void testOrderedAndUnorderedList()
+        throws Exception
+    {
+        IContext context = new MockContext();
+        // Add default style (in real context, this DefaultStyle is added by DocxNumberingPreprocessor which search
+        // numbering from the word/numbering.xml entry of the docx)
+        DefaultStyle defaultStyle = new DefaultStyle();
+        //defaultStyle.setNumIdForUnordererList( 1 );
         DocxContextHelper.putDefaultStyle( context, defaultStyle );
         
         BufferedElement parent = null;
@@ -356,11 +383,11 @@ public class DocxDocumentHandlerTestCase
 
         Assert.assertEquals( "", handler.getTextBefore() );
         Assert.assertEquals( "", handler.getTextBody() );
-        Assert.assertEquals( "<w:p><w:pPr><w:pStyle w:val=\"Paragraphedeliste\" /><w:numPr><w:ilvl w:val=\"0\" /><w:numId w:val=\"1\" /></w:numPr></w:pPr><w:r><w:t xml:space=\"preserve\" >item1</w:t></w:r></w:p>"
-                                 + "<w:p><w:pPr><w:pStyle w:val=\"Paragraphedeliste\" /><w:numPr><w:ilvl w:val=\"0\" /><w:numId w:val=\"1\" /></w:numPr></w:pPr><w:r><w:t xml:space=\"preserve\" >item2</w:t></w:r></w:p>",
+        Assert.assertEquals( "<w:p><w:pPr><w:numPr><w:ilvl w:val=\"0\" /><w:numId w:val=\"0\" /></w:numPr></w:pPr><w:r><w:t xml:space=\"preserve\" >item1</w:t></w:r></w:p>"
+                                 + "<w:p><w:pPr><w:numPr><w:ilvl w:val=\"0\" /><w:numId w:val=\"0\" /></w:numPr></w:pPr><w:r><w:t xml:space=\"preserve\" >item2</w:t></w:r></w:p>",
                              handler.getTextEnd() );
     }
-
+    
     @Test
     public void testAll()
         throws Exception

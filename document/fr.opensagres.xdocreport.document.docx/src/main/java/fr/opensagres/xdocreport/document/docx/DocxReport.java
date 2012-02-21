@@ -77,7 +77,7 @@ public class DocxReport
     private static final long serialVersionUID = -2323716817951928168L;
 
     private static final String[] DEFAULT_XML_ENTRIES = { WORD_DOCUMENT_XML_ENTRY, WORD_STYLES_XML_ENTRY,
-        WORD_HEADER_XML_ENTRY, WORD_FOOTER_XML_ENTRY, WORD_RELS_XMLRELS_XML_ENTRY };
+        WORD_HEADER_XML_ENTRY, WORD_FOOTER_XML_ENTRY, WORD_RELS_XMLRELS_XML_ENTRY, WORD_NUMBERING_XML_ENTRY };
 
     private Set<String> allEntryNamesHyperlinks;
 

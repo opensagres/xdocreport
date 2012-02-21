@@ -471,7 +471,7 @@ public class StyleEngineForXHTML
     protected void endVisitTableCell( XWPFTableCell cell, IITextContainer tableContainer,
                                       IITextContainer tableCellContainer )
     {
-        System.out.println( cell );
+        //System.out.println( cell );
 
     }
 

@@ -83,8 +83,16 @@ public class DocxHTMLTextStylingWithFreemarkerTestCase
         html.append( "<h2>Title 1.1</h2>" );
         html.append( "aaaa<em>aaaaa</em>aaaaa <p>iiiiiiiiiiiiiii<b>hhh</b></p>" );
         html.append( "<h3>Title 1.1.1</h3>" );
+        html.append( "<ul><li>aaaa</li><li>bbbb</li>" + "<ul><li>aa</li></ul>" + "<ul><li>bb</li></ul>" + "</ul>" );
+        html.append( "<ol><li>aaaa</li><li>bbbb</li>" + "<ol><li>aa</li></ol>" + "<ol><li>bb</li></ol>" +
+
+        "</ol>" );
+        html.append( "<ol><li>aaaa</li><li>bbbb</li>" + "<ol><li>aa</li></ol>" + "<ol><li>bb</li></ol>" +
+
+        "</ol>" );
+        html.append( "<ol><li>aaaa</li><li>bbbb</li></ol>" );
         html.append( "<h1>Title 2</h1>" );
-        
+
         // 2) Create context Java model
         IContext context = report.createContext();
         context.put( "comments", html.toString() );

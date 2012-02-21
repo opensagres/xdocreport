@@ -62,6 +62,9 @@ public class DocxConstants
     public static final String RELATIONSHIPS_HYPERLINK_NS =
         "http://schemas.openxmlformats.org/officeDocument/2006/relationships/hyperlink";
 
+    public static final String RELATIONSHIPS_NUMBERING_NS =
+        "http://schemas.openxmlformats.org/officeDocument/2006/relationships/numbering";
+
     // Table element
     public static final String TBL_ELT = "tbl";
 
@@ -113,6 +116,14 @@ public class DocxConstants
     public static final String RFONTS_ELT = "rFonts";
 
     public static final String ABSTRACT_NUM_ELT = "abstractNum";
+
+    public static final String ABSTRACT_NUM_ID_ELT = "abstractNumId";
+
+    public static final String NUMBERING_ELT = "numbering";
+
+    public static final String NUM_FMT_ELT = "numFmt";
+
+    public static final String NUM_ELT = "num";
 
     public static final String ID_ATTR = "id";
 

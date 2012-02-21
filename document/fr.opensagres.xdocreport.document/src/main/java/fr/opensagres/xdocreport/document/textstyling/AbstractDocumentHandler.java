@@ -225,7 +225,7 @@ public abstract class AbstractDocumentHandler
         result.append( "\n" );
         result.append( "@textBody=" + getTextBody() );
         result.append( "\n" );
-        result.append( "@textend=" + getTextEnd() );
+        result.append( "@textEnd=" + getTextEnd() );
         return result.toString();
     }
 

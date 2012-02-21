@@ -51,10 +51,13 @@ public class ODTDocumentHandler
 
     protected final IODTStylesGenerator styleGen;
 
+    private boolean paragraphWasInserted;
+
     public ODTDocumentHandler( BufferedElement parent, IContext context, String entryName )
     {
         super( parent, context, entryName );
         styleGen = ODTStylesGeneratorProvider.getStyleGenerator();
+        this.paragraphWasInserted = false;
     }
 
     public void startDocument()
@@ -114,6 +117,7 @@ public class ODTDocumentHandler
         }
         else
         {
+            startParagraphIfNeeded();
             super.write( "<text:span" );
             if ( bolding || italicsing )
             {
@@ -138,6 +142,16 @@ public class ODTDocumentHandler
         }
     }
 
+    private void startParagraphIfNeeded()
+        throws IOException
+    {
+
+        if ( paragraphWasInserted && paragraphsStack.isEmpty() )
+        {
+            internalStartParagraph( false );
+        }
+    }
+
     public void startParagraph()
         throws IOException
     {
@@ -154,7 +168,24 @@ public class ODTDocumentHandler
     private void internalStartParagraph( boolean containerIsList )
         throws IOException
     {
-        super.write( "<text:p>" );
+        internalStartParagraph( containerIsList, null );
+    }
+
+    private void internalStartParagraph( boolean containerIsList, String styleName )
+        throws IOException
+    {
+        if ( styleName == null )
+        {
+            super.write( "<text:p>" );
+        }
+        else
+        {
+            super.write( "<text:p text:style-name=\"" );
+            super.write( styleName );
+            super.write( "\">" );
+
+        }
+        paragraphWasInserted = true;
         paragraphsStack.push( containerIsList );
     }
 
@@ -219,6 +250,7 @@ public class ODTDocumentHandler
     protected void internalStartList( String style )
         throws IOException
     {
+        super.setTextLocation( TextLocation.End );
         if ( listDepth == 0 )
         {
             endParagraphIfNeeded();
@@ -227,7 +259,8 @@ public class ODTDocumentHandler
         else
         {
             // close item for nested lists
-            super.write( "</text:p>" );
+            //super.write( "</text:p>" );
+            endParagraph();
             lastItemAlreadyClosed.add( listDepth, true );
         }
         if ( style != null )
@@ -249,7 +282,7 @@ public class ODTDocumentHandler
         listDepth--;
         if ( listDepth == 0 )
         {
-            startParagraph();
+            //startParagraph();
         }
     }
 
@@ -259,13 +292,12 @@ public class ODTDocumentHandler
         if ( itemStyle != null )
         {
             super.write( "<text:list-item text:style-name=\"" + itemStyle + "\">" );
-            super.write( "<text:p text:style-name=\"" + itemStyle + styleGen.getListItemParagraphStyleNameSuffix()
-                + "\">" );
+            internalStartParagraph( true, itemStyle + styleGen.getListItemParagraphStyleNameSuffix() );
         }
         else
         {
             super.write( "<text:list-item>" );
-            super.write( "<text:p>" );
+            internalStartParagraph( true );
         }
     }
 
@@ -278,7 +310,7 @@ public class ODTDocumentHandler
         }
         else
         {
-            super.write( "</text:p>" );
+            endParagraph();
         }
         super.write( "</text:list-item>" );
     }

@@ -1,174 +1,30 @@
-<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<office:document-content
-	xmlns:office="urn:oasis:names:tc:opendocument:xmlns:office:1.0"
-	xmlns:style="urn:oasis:names:tc:opendocument:xmlns:style:1.0"
-	xmlns:text="urn:oasis:names:tc:opendocument:xmlns:text:1.0"
-	xmlns:table="urn:oasis:names:tc:opendocument:xmlns:table:1.0"
-	xmlns:draw="urn:oasis:names:tc:opendocument:xmlns:drawing:1.0"
-	xmlns:fo="urn:oasis:names:tc:opendocument:xmlns:xsl-fo-compatible:1.0"
-	xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:dc="http://purl.org/dc/elements/1.1/"
-	xmlns:meta="urn:oasis:names:tc:opendocument:xmlns:meta:1.0"
-	xmlns:number="urn:oasis:names:tc:opendocument:xmlns:datastyle:1.0"
-	xmlns:svg="urn:oasis:names:tc:opendocument:xmlns:svg-compatible:1.0"
-	xmlns:chart="urn:oasis:names:tc:opendocument:xmlns:chart:1.0"
-	xmlns:dr3d="urn:oasis:names:tc:opendocument:xmlns:dr3d:1.0" xmlns:math="http://www.w3.org/1998/Math/MathML"
-	xmlns:form="urn:oasis:names:tc:opendocument:xmlns:form:1.0"
-	xmlns:script="urn:oasis:names:tc:opendocument:xmlns:script:1.0"
-	xmlns:ooo="http://openoffice.org/2004/office" xmlns:ooow="http://openoffice.org/2004/writer"
-	xmlns:oooc="http://openoffice.org/2004/calc" xmlns:dom="http://www.w3.org/2001/xml-events"
-	xmlns:xforms="http://www.w3.org/2002/xforms" xmlns:xsd="http://www.w3.org/2001/XMLSchema"
-	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:rpt="http://openoffice.org/2005/report"
-	xmlns:of="urn:oasis:names:tc:opendocument:xmlns:of:1.2" xmlns:xhtml="http://www.w3.org/1999/xhtml"
-	xmlns:grddl="http://www.w3.org/2003/g/data-view#" xmlns:tableooo="http://openoffice.org/2009/table"
-	xmlns:field="urn:openoffice:names:experimental:ooo-ms-interop:xmlns:field:1.0"
-	xmlns:formx="urn:openoffice:names:experimental:ooxml-odf-interop:xmlns:form:1.0"
-	xmlns:css3t="http://www.w3.org/TR/css3-text/" office:version="1.2"
-	grddl:transformation="http://docs.oasis-open.org/office/1.2/xslt/odf2rdf.xsl">
-	<office:scripts />
-	<office:font-face-decls>
-		<style:font-face style:name="Mangal1" svg:font-family="Mangal" />
-		<style:font-face style:name="Times New Roman"
-			svg:font-family="'Times New Roman'" style:font-family-generic="roman"
-			style:font-pitch="variable" />
-		<style:font-face style:name="Arial" svg:font-family="Arial"
-			style:font-family-generic="swiss" style:font-pitch="variable" />
-		<style:font-face style:name="Arial Unicode MS"
-			svg:font-family="'Arial Unicode MS'" style:font-family-generic="system"
-			style:font-pitch="variable" />
-		<style:font-face style:name="Mangal" svg:font-family="Mangal"
-			style:font-family-generic="system" style:font-pitch="variable" />
-	</office:font-face-decls>
-	<office:automatic-styles>
-		<style:style style:name="Tableau1" style:family="table">
-			<style:table-properties style:width="17cm"
-				table:align="margins" />
-		</style:style>
-		<style:style style:name="Tableau1.A" style:family="table-column">
-			<style:table-column-properties
-				style:column-width="17cm" style:rel-column-width="65535*" />
-		</style:style>
-		<style:style style:name="Tableau1.A1" style:family="table-cell">
-			<style:table-cell-properties fo:padding="0.097cm"
-				fo:border="0.002cm solid #000000" />
-		</style:style>
-		<style:style style:name="Tableau2" style:family="table">
-			<style:table-properties style:width="17cm"
-				table:align="margins" />
-		</style:style>
-		<style:style style:name="Tableau2.A" style:family="table-column">
-			<style:table-column-properties
-				style:column-width="17cm" style:rel-column-width="65535*" />
-		</style:style>
-		<style:style style:name="Tableau2.A1" style:family="table-cell">
-			<style:table-cell-properties fo:padding="0.097cm"
-				fo:border="0.002cm solid #000000" />
-		</style:style>
-		<style:style style:name="P1" style:family="paragraph"
-			style:parent-style-name="Standard">
-			<style:text-properties fo:color="#000000"
-				fo:font-weight="normal" style:font-weight-asian="normal"
-				style:font-weight-complex="normal" />
-		</style:style>
-		<style:style style:name="P2" style:family="paragraph"
-			style:parent-style-name="Standard">
-			<style:text-properties fo:color="#000000"
-				fo:font-weight="bold" style:font-weight-asian="bold"
-				style:font-weight-complex="bold" />
-		</style:style>
-		<style:style style:name="P3" style:family="paragraph"
-			style:parent-style-name="Standard">
-			<style:text-properties fo:color="#ff0000"
-				fo:font-weight="bold" style:font-weight-asian="bold"
-				style:font-weight-complex="bold" />
-		</style:style>
-		<style:style style:name="P4" style:family="paragraph"
-			style:parent-style-name="Standard">
-			<style:text-properties fo:color="#000000"
-				fo:font-weight="normal" style:font-weight-asian="normal"
-				style:font-weight-complex="normal" />
-		</style:style>
-		<style:style style:name="P5" style:family="paragraph"
-			style:parent-style-name="Standard">
-			<style:text-properties fo:color="#000000"
-				fo:font-weight="bold" style:font-weight-asian="bold"
-				style:font-weight-complex="bold" />
-		</style:style>
-		<style:style style:name="T1" style:family="text">
-			<style:text-properties fo:color="#ff0000"
-				fo:font-weight="bold" style:font-weight-asian="bold"
-				style:font-weight-complex="bold" />
-		</style:style>
-		<style:style style:name="T2" style:family="text">
-			<style:text-properties fo:font-weight="bold"
-				style:font-weight-asian="bold" style:font-weight-complex="bold" />
-		</style:style>
-		<style:style style:name="XDocReport_Bold" style:family="text">
-			<style:text-properties fo:font-weight="bold" />
-		</style:style>
-		<style:style style:name="XDocReport_Italic" style:family="text">
-			<style:text-properties fo:font-style="italic" />
-		</style:style>
-		<style:style style:name="XDocReport_BoldItalic"
-			style:family="text">
-			<style:text-properties fo:font-weight="bold"
-				fo:font-style="italic" />
-		</style:style>
-	</office:automatic-styles>
-	<office:body>
-		<office:text>
-			<text:sequence-decls>
-				<text:sequence-decl text:display-outline-level="0"
-					text:name="Illustration" />
-				<text:sequence-decl text:display-outline-level="0"
-					text:name="Table" />
-				<text:sequence-decl text:display-outline-level="0"
-					text:name="Text" />
-				<text:sequence-decl text:display-outline-level="0"
-					text:name="Drawing" />
-			</text:sequence-decls>
-			<text:p text:style-name="Standard">
-				Project:
-				<text:span text:style-name="T1">${project.name}</text:span>
-				<text:span text:style-name="T1"></text:span>
-			</text:p>
-			<text:p text:style-name="P3" />
-			<text:p text:style-name="P1">
-				<text:span text:style-name="T2">ODT Comments </text:span>
-				:
-			</text:p>
-			<text:p text:style-name="P2" />
-			<table:table table:name="Tableau1" table:style-name="Tableau1">
-				<table:table-column table:style-name="Tableau1.A" />
-				<table:table-row>
-					<table:table-cell table:style-name="Tableau1.A1"
-						office:value-type="string">
-						#set($___NoEscape1327538327703=${___TextStylingRegistry.transform($comments_odt,"NoEscape","ODT","1327538327703_id",$___context)})
-						$___NoEscape1327538327703.TextBefore
-						<text:p text:style-name="Table_20_Contents">$___NoEscape1327538327703.TextBody</text:p>
-						$___NoEscape1327538327703.TextEnd
-					</table:table-cell>
-				</table:table-row>
-			</table:table>
-			<text:p text:style-name="P1" />
-			<text:p text:style-name="P1">
-				<text:span text:style-name="T2">HTML Comments </text:span>
-				:
-			</text:p>
-			<text:p text:style-name="P2" />
-			<table:table table:name="Tableau2" table:style-name="Tableau2">
-				<table:table-column table:style-name="Tableau2.A" />
-				<table:table-row>
-					<table:table-cell table:style-name="Tableau2.A1"
-						office:value-type="string">
-						#set($___NoEscape1327538327703=${___TextStylingRegistry.transform($comments_html,"Html","ODT","1327538327703_id",$___context)})
-						$___NoEscape1327538327703.TextBefore
-						<text:p text:style-name="Table_20_Contents">$___NoEscape1327538327703.TextBody</text:p>
-						$___NoEscape1327538327703.TextEnd
-					</table:table-cell>
-				</table:table-row>
-			</table:table>
-			<text:p text:style-name="P1" />
-			<text:p text:style-name="P1" />
-		</office:text>
-	</office:body>
-</office:document-content>
+<ul>
+	<li>
+		<strong>Bold</strong>
+		style.
+		<ul>
+			<li>zaza</li>
+			<li>zaza</li>
+			<li>zaza</li>
+		</ul>
+	</li>
+	<li>
+		<em>Italic</em>
+		style.
+		<ul>
+			<li>zazaaa</li>
+			<li>
+				zzzzzzzzzzzz
+				<ul>
+					<li>ddddddddddddddddddd</li>
+				</ul>
+			</li>
+		</ul>
+	</li>
+	<li>
+		<strong>
+			<em>BoldAndItalic</em>
+		</strong>
+		style.
+	</li>
+</ul>

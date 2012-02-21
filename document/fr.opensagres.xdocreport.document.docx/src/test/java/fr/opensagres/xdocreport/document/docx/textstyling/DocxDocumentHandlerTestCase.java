@@ -442,6 +442,7 @@ public class DocxDocumentHandlerTestCase
         IContext context = new MockContext();
         BufferedElement parent = null;
 
+        context.put( "comments_html", "<b>Bold</b> text" );
         ITextStylingTransformer formatter = HTMLTextStylingTransformer.INSTANCE;
         IDocumentHandler handler = new DocxDocumentHandler( parent, context, "word/document.xml" );
         formatter.transform( "<p>\r\n\tHere are severals styles :</p>\r\n<ul>\r\n\t<li>\r\n\t\t<strong>Bold</strong> style.</li>\r\n\t<li>\r\n\t\t<em>Italic</em> style.</li>\r\n\t<li>\r\n\t\t<strong><em>BoldAndItalic</em></strong> style.</li>\r\n</ul>\r\n<p>\r\n\tHere are 3 styles :</p>\r\n<ol>\r\n\t<li>\r\n\t\t<strong>Bold</strong> style.</li>\r\n\t<li>\r\n\t\t<em>Italic</em> style.</li>\r\n\t<li>\r\n\t\t<strong><em>BoldAndItalic</em></strong> style.</li>\r\n</ol>\r\n<p>\r\n\tXDocReport can manage thoses styles.</p>\r\n<h1>\r\n\tsqsq</h1>\r\n<p>\r\n\tzazazaa</p>\r\n ",

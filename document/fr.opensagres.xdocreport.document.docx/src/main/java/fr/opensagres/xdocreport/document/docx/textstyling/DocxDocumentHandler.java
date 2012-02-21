@@ -63,6 +63,8 @@ public class DocxDocumentHandler
 
     private Stack<Integer> numbersStack;
 
+    private int currentNumId;
+
     public DocxDocumentHandler( BufferedElement parent, IContext context, String entryName )
     {
         super( parent, context, entryName );
@@ -185,9 +187,7 @@ public class DocxDocumentHandler
     public void startParagraph()
         throws IOException
     {
-        // if (!paragraphsStack.isEmpty()) {
         closeCurrentParagraph();
-        // }
         startParagraph( true );
     }
 
@@ -201,7 +201,10 @@ public class DocxDocumentHandler
     public void startListItem()
         throws IOException
     {
+        // Close current paragraph
+        closeCurrentParagraph();
         startParagraph( false );
+
         super.write( "<w:pPr>" );
         // super.write( "<w:pStyle w:val=\"Paragraphedeliste\" />" );
         super.write( "<w:numPr>" );
@@ -226,7 +229,7 @@ public class DocxDocumentHandler
     public void endListItem()
         throws IOException
     {
-        endParagraph();
+        //endParagraph();
     }
 
     public void startHeading( int level )
@@ -262,18 +265,32 @@ public class DocxDocumentHandler
     protected void doStartOrderedList()
         throws IOException
     {
-        int abstractNumId = styleGen.getAbstractNumIdForList( true, defaultStyle );
-        int numId = getNumberingRegistry().addNum( abstractNumId, getMaxNumId() ).getNumId();
-        numbersStack.push( numId );
+        // if ( numbersStack.isEmpty() )
+        // {
+        if ( getCurrentListIndex() < 1 )
+        {
+            int abstractNumId = styleGen.getAbstractNumIdForList( true, defaultStyle );
+            int numId = getNumberingRegistry().addNum( abstractNumId, getMaxNumId() ).getNumId();
+            // numbersStack.push( numId );
+            currentNumId = numId;
+        }
+        // }
     }
 
     @Override
     protected void doStartUnorderedList()
         throws IOException
     {
-        int abstractNumId = styleGen.getAbstractNumIdForList( false, defaultStyle );
-        int numId = getNumberingRegistry().addNum( abstractNumId, getMaxNumId() ).getNumId();
-        numbersStack.push( numId );
+        // if ( numbersStack.isEmpty() )
+        // {
+        if ( getCurrentListIndex() < 1 )
+        {
+            int abstractNumId = styleGen.getAbstractNumIdForList( false, defaultStyle );
+            int numId = getNumberingRegistry().addNum( abstractNumId, getMaxNumId() ).getNumId();
+            // numbersStack.push( numId );
+            currentNumId = numId;
+        }
+        // }
     }
 
     private Integer getMaxNumId()
@@ -289,19 +306,25 @@ public class DocxDocumentHandler
     protected void doEndUnorderedList()
         throws IOException
     {
-        numbersStack.pop();
+        // if ( !numbersStack.isEmpty() )
+        // {
+        // numbersStack.pop();
+        // }
     }
 
     @Override
     protected void doEndOrderedList()
         throws IOException
     {
-        numbersStack.pop();
+        // if ( !numbersStack.isEmpty() )
+        // {
+        // numbersStack.pop();
+        // }
     }
 
     private int getCurrentNumId()
     {
-        return numbersStack.peek();
+        return currentNumId;// numbersStack.peek();
     }
 
     public void handleReference( String ref, String label )

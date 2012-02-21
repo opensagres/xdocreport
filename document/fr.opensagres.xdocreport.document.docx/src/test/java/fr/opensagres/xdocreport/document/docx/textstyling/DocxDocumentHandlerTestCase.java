@@ -387,6 +387,53 @@ public class DocxDocumentHandlerTestCase
                                  + "<w:p><w:pPr><w:numPr><w:ilvl w:val=\"0\" /><w:numId w:val=\"0\" /></w:numPr></w:pPr><w:r><w:t xml:space=\"preserve\" >item2</w:t></w:r></w:p>",
                              handler.getTextEnd() );
     }
+
+
+    @Test
+    public void testComplexList()
+        throws Exception
+    {
+        IContext context = new MockContext();
+        // Add default style (in real context, this DefaultStyle is added by DocxNumberingPreprocessor which search
+        // numbering from the word/numbering.xml entry of the docx)
+        DefaultStyle defaultStyle = new DefaultStyle();
+        //defaultStyle.setNumIdForUnordererList( 1 );
+        DocxContextHelper.putDefaultStyle( context, defaultStyle );
+        
+        BufferedElement parent = null;
+
+        ITextStylingTransformer formatter = HTMLTextStylingTransformer.INSTANCE;
+        IDocumentHandler handler = new DocxDocumentHandler( parent, context, "word/document.xml" );
+        formatter.transform( "<ul>" +
+                                "<li>" +
+                                    "<strong>Bold</strong> style." +
+                                    "<ul>" +
+                                        "<li>zaza</li>" +
+                                        "<li>zaza</li>" +
+                                        "<li>zaza</li>" +
+                                     "</ul>" +
+                                "</li>" +
+                                "<li><em>Italic</em> style." +
+                                    "<ul>" +
+                                        "<li>zazaaa</li>" +
+                                        "<li>zzzzzzzzzzzz" +
+                                            "<ul>" +
+                                                "<li>ddddddddddddddddddd</li>" +
+                                            "</ul>" +
+                                        "</li>" +
+                                    "</ul>" +
+                                "</li>" +
+                                "<li><strong><em>BoldAndItalic</em></strong> style." +
+                                "</li>" +
+                             "</ul>", handler );
+
+        Assert.assertEquals( "", handler.getTextBefore() );
+        Assert.assertEquals( "", handler.getTextBody() );
+        Assert.assertEquals( "<w:p><w:pPr><w:numPr><w:ilvl w:val=\"0\" /><w:numId w:val=\"0\" /></w:numPr></w:pPr><w:r><w:rPr><w:b /></w:rPr><w:t xml:space=\"preserve\" >Bold</w:t></w:r><w:r><w:t xml:space=\"preserve\" > style.</w:t></w:r></w:p><w:p><w:pPr><w:numPr><w:ilvl w:val=\"1\" /><w:numId w:val=\"0\" /></w:numPr></w:pPr><w:r><w:t xml:space=\"preserve\" >zaza</w:t></w:r></w:p><w:p><w:pPr><w:numPr><w:ilvl w:val=\"1\" /><w:numId w:val=\"0\" /></w:numPr></w:pPr><w:r><w:t xml:space=\"preserve\" >zaza</w:t></w:r></w:p><w:p><w:pPr><w:numPr><w:ilvl w:val=\"1\" /><w:numId w:val=\"0\" /></w:numPr></w:pPr><w:r><w:t xml:space=\"preserve\" >zaza</w:t></w:r></w:p><w:p><w:pPr><w:numPr><w:ilvl w:val=\"0\" /><w:numId w:val=\"0\" /></w:numPr></w:pPr><w:r><w:rPr><w:i /></w:rPr><w:t xml:space=\"preserve\" >Italic</w:t></w:r><w:r><w:t xml:space=\"preserve\" > style.</w:t></w:r></w:p><w:p><w:pPr><w:numPr><w:ilvl w:val=\"1\" /><w:numId w:val=\"0\" /></w:numPr></w:pPr><w:r><w:t xml:space=\"preserve\" >zazaaa</w:t></w:r></w:p><w:p><w:pPr><w:numPr><w:ilvl w:val=\"1\" /><w:numId w:val=\"0\" /></w:numPr></w:pPr><w:r><w:t xml:space=\"preserve\" >zzzzzzzzzzzz</w:t></w:r></w:p><w:p><w:pPr><w:numPr><w:ilvl w:val=\"2\" /><w:numId w:val=\"0\" /></w:numPr></w:pPr><w:r><w:t xml:space=\"preserve\" >ddddddddddddddddddd</w:t></w:r></w:p><w:p><w:pPr><w:numPr><w:ilvl w:val=\"0\" /><w:numId w:val=\"0\" /></w:numPr></w:pPr><w:r><w:rPr><w:b /><w:i /></w:rPr><w:t xml:space=\"preserve\" >BoldAndItalic</w:t></w:r><w:r><w:t xml:space=\"preserve\" > style.</w:t></w:r></w:p>",
+                             handler.getTextEnd() );
+    }
+
+    
     
     @Test
     public void testAll()

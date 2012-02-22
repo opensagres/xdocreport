@@ -1,10 +1,9 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
   <modelVersion>4.0.0</modelVersion>
   <parent>
     <artifactId>tools</artifactId>
     <groupId>fr.opensagres.xdocreport</groupId>
-    <version>0.9.6-SNAPSHOT</version>
+    <version>0.9.6</version>
   </parent>
   <artifactId>fr.opensagres.xdocreport.openoffice.tools</artifactId>
   <build>
@@ -72,7 +71,7 @@
     <dependency>
       <groupId>fr.opensagres.xdocreport</groupId>
       <artifactId>fr.opensagres.xdocreport.remoting.javaclient</artifactId>
-      <version>0.9.6-SNAPSHOT</version>
+      <version>0.9.6</version>
 
     </dependency>
   </dependencies>
@@ -90,7 +89,7 @@
                 <configuration>
                   <target>
                     <!-- TODO : Customize the path where LibreOffice/OpenOffice -->
-                    <property name="office.program.dir" value='/Applications' />
+                    <property name="office.program.dir" value="/Applications" />
                     <ant antfile="${basedir}/build.xml">
                       <target name="uno-package" />
                     </ant>

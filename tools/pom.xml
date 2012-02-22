@@ -3,7 +3,7 @@
   <parent>
     <artifactId>xdocreport</artifactId>
     <groupId>fr.opensagres.xdocreport</groupId>
-    <version>0.9.6</version>
+    <version>0.9.7-SNAPSHOT</version>
   </parent>
   <artifactId>tools</artifactId>
   <packaging>pom</packaging>

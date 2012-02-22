@@ -3,7 +3,7 @@
 	<parent>
 		<artifactId>thirdparties-extension</artifactId>
 		<groupId>fr.opensagres.xdocreport</groupId>
-		<version>0.9.6</version>
+		<version>0.9.7-SNAPSHOT</version>
 	</parent>
 	<artifactId>org.apache.poi.xwpf.converter</artifactId>
 	<dependencies>
@@ -27,7 +27,7 @@
 		<dependency>
 			<groupId>fr.opensagres.xdocreport</groupId>
 			<artifactId>fr.opensagres.xdocreport.itext.extension</artifactId>
-			<version>0.9.6</version>
+			<version>0.9.7-SNAPSHOT</version>
 		</dependency>
 	</dependencies>
 </project>

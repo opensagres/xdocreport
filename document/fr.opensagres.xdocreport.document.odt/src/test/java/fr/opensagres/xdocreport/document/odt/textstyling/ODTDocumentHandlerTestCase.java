@@ -194,12 +194,12 @@ public class ODTDocumentHandlerTestCase
 
         Assert.assertEquals( "", handler.getTextBefore() );
         Assert.assertEquals( "<text:span>xxx</text:span>", handler.getTextBody() );
-        Assert.assertEquals( "<text:h text:style-name=\"Heading_20_1\" text:outline-level=\"1\">Title1</text:h><text:p></text:p>" +
-        		"<text:h text:style-name=\"Heading_20_2\" text:outline-level=\"2\">Title2</text:h><text:p></text:p>" +
-        		"<text:h text:style-name=\"Heading_20_3\" text:outline-level=\"3\">Title3</text:h><text:p></text:p>" +
-        		"<text:h text:style-name=\"Heading_20_4\" text:outline-level=\"4\">Title4</text:h><text:p></text:p>" +
-        		"<text:h text:style-name=\"Heading_20_5\" text:outline-level=\"5\">Title5</text:h><text:p></text:p>" +
-        		"<text:h text:style-name=\"Heading_20_6\" text:outline-level=\"6\">Title6</text:h><text:p></text:p>",
+        Assert.assertEquals( "<text:h text:style-name=\"Heading_20_1\" text:outline-level=\"1\">Title1</text:h>" +
+        		"<text:h text:style-name=\"Heading_20_2\" text:outline-level=\"2\">Title2</text:h>" +
+        		"<text:h text:style-name=\"Heading_20_3\" text:outline-level=\"3\">Title3</text:h>" +
+        		"<text:h text:style-name=\"Heading_20_4\" text:outline-level=\"4\">Title4</text:h>" +
+        		"<text:h text:style-name=\"Heading_20_5\" text:outline-level=\"5\">Title5</text:h>" +
+        		"<text:h text:style-name=\"Heading_20_6\" text:outline-level=\"6\">Title6</text:h>",
                              handler.getTextEnd() );
     }
 
@@ -267,7 +267,7 @@ public class ODTDocumentHandlerTestCase
         Assert.assertEquals( "", handler.getTextBefore() );
         Assert.assertEquals( "", handler.getTextBody() );
         Assert.assertEquals( "<text:h text:style-name=\"Heading_20_1\" text:outline-level=\"1\">Title1</text:h>" +
-        		"<text:p><text:p><text:span>paragraph1</text:span></text:p></text:p>",
+        		"<text:p><text:span>paragraph1</text:span></text:p>",
                              handler.getTextEnd() );
     }
 

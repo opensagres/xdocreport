@@ -1,9 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <root>
   <text:h text:outline-level="1" text:style-name="Heading_20_1">title 1</text:h>
-  <text:p/>
   <text:h text:outline-level="2" text:style-name="Heading_20_2">title 1.1</text:h>
-  <text:p/>
   <text:list text:style-name="XDocReport_UL">
     <text:list-item text:style-name="XDocReport_UL">
       <text:p text:style-name="XDocReport_UL_P">

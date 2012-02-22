@@ -53,11 +53,14 @@ public class ODTDocumentHandler
 
     private boolean paragraphWasInserted;
 
+    private boolean closeHeader;
+
     public ODTDocumentHandler( BufferedElement parent, IContext context, String entryName )
     {
         super( parent, context, entryName );
         styleGen = ODTStylesGeneratorProvider.getStyleGenerator();
         this.paragraphWasInserted = false;
+        this.closeHeader = false;
     }
 
     public void startDocument()
@@ -146,7 +149,7 @@ public class ODTDocumentHandler
         throws IOException
     {
 
-        if ( paragraphWasInserted && paragraphsStack.isEmpty() )
+        if ( ( paragraphWasInserted && paragraphsStack.isEmpty() ) || closeHeader )
         {
             internalStartParagraph( false );
         }
@@ -174,6 +177,7 @@ public class ODTDocumentHandler
     private void internalStartParagraph( boolean containerIsList, String styleName )
         throws IOException
     {
+        closeHeader = false;
         if ( styleName == null )
         {
             super.write( "<text:p>" );
@@ -207,6 +211,7 @@ public class ODTDocumentHandler
         super.write( "<text:h text:style-name=\"" + styleGen.getHeaderStyleName( level ) + "\" text:outline-level=\""
             + level + "\">" );
         insideHeader = true;
+        closeHeader = false;
     }
 
     public void endHeading( int level )
@@ -214,7 +219,8 @@ public class ODTDocumentHandler
     {
         super.write( "</text:h>" );
         insideHeader = false;
-        startParagraph();
+        closeHeader = true;
+        // startParagraph();
     }
 
     @Override
@@ -250,6 +256,7 @@ public class ODTDocumentHandler
     protected void internalStartList( String style )
         throws IOException
     {
+        closeHeader = false;
         super.setTextLocation( TextLocation.End );
         if ( listDepth == 0 )
         {
@@ -259,7 +266,7 @@ public class ODTDocumentHandler
         else
         {
             // close item for nested lists
-            //super.write( "</text:p>" );
+            // super.write( "</text:p>" );
             endParagraph();
             lastItemAlreadyClosed.add( listDepth, true );
         }
@@ -282,7 +289,7 @@ public class ODTDocumentHandler
         listDepth--;
         if ( listDepth == 0 )
         {
-            //startParagraph();
+            // startParagraph();
         }
     }
 
@@ -310,7 +317,7 @@ public class ODTDocumentHandler
         }
         else
         {
-            //endParagraph();
+            // endParagraph();
         }
         endParagraphIfNeeded();
         super.write( "</text:list-item>" );

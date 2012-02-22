@@ -91,7 +91,7 @@
       <plugin>
         <artifactId>maven-release-plugin</artifactId>
         <configuration>
-          <preparationGoals>clean install</preparationGoals>
+          <preparationGoals>clean install -DskipTests</preparationGoals>
           <autoVersionSubmodules>true</autoVersionSubmodules>
           <checkModificationExcludes>
             <checkModificationExclude>META-INF/MANIFEST.MF</checkModificationExclude>

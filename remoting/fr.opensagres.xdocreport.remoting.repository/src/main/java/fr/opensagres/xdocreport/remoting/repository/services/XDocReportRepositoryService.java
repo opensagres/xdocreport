@@ -1,0 +1,135 @@
+package fr.opensagres.xdocreport.remoting.repository.services;
+
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
+
+import fr.opensagres.xdocreport.core.io.XDocArchive;
+import fr.opensagres.xdocreport.document.IXDocReport;
+import fr.opensagres.xdocreport.document.registry.XDocReportRegistry;
+import fr.opensagres.xdocreport.remoting.repository.domain.Filter;
+import fr.opensagres.xdocreport.remoting.repository.domain.ResourceContent;
+import fr.opensagres.xdocreport.remoting.repository.domain.ResourceMetadata;
+
+public class XDocReportRepositoryService
+    extends AbstractRepositoryService
+{
+
+    private final String METADATA_KEY = XDocReportRepositoryService.class.getName();
+
+    private static final IRepositoryService INSTANCE = new XDocReportRepositoryService();
+
+    private final XDocReportRegistry registry;
+
+    public static IRepositoryService getDefault()
+    {
+        return INSTANCE;
+    }
+
+    public XDocReportRepositoryService( XDocReportRegistry registry )
+    {
+        this.registry = registry;
+    }
+
+    public XDocReportRepositoryService()
+    {
+        this( XDocReportRegistry.getRegistry() );
+    }
+
+    private ResourceMetadata getMetadata( IXDocReport report )
+    {
+        if ( report == null )
+        {
+            // TODO throw exception
+            return null;
+        }
+        ResourceMetadata metadata = report.getData( METADATA_KEY );
+        if ( metadata == null )
+        {
+            metadata = new ResourceMetadata();
+            metadata.setId( report.getId() );
+            report.setData( METADATA_KEY, metadata );
+        }
+        return metadata;
+    }
+
+    private IXDocReport getReport( String resourceId )
+    {
+        return registry.getReport( resourceId );
+    }
+
+    public ResourceContent download( String resourceId, Filter filter )
+    {
+        // TODO manage filter
+        ResourceContent content = null;
+        IXDocReport report = getReport( resourceId );
+        if ( report != null )
+        {
+            content = new ResourceContent();
+            content.setId( report.getId() );
+
+            XDocArchive archive = null;
+            ByteArrayOutputStream out = new ByteArrayOutputStream();
+
+            archive = report.getOriginalDocumentArchive();
+
+            try
+            {
+                XDocArchive.writeZip( archive, out );
+            }
+            catch ( IOException e )
+            {
+                e.printStackTrace();
+            }
+
+            content.setContent( out.toByteArray() );
+        }
+        return content;
+    }
+
+    public List<ResourceMetadata> getMetadatas( Filter filter )
+    {
+        ResourceMetadata metadata = null;
+        List<ResourceMetadata> metadatas = new ArrayList<ResourceMetadata>();
+        Collection<IXDocReport> reports = registry.getCachedReports();
+        for ( IXDocReport report : reports )
+        {
+            metadata = getMetadata( report.getId(), filter );
+            if ( metadata != null )
+            {
+                metadatas.add( metadata );
+            }
+        }
+        return metadatas;
+    }
+
+    public ResourceMetadata getMetadata( String resourceId, Filter filter )
+    {
+        // TODO: manage filter
+        IXDocReport report = getReport( resourceId );
+        return getMetadata( report );
+    }
+
+    public void upload( ResourceContent content )
+    {
+        String templateEngineKind = "Velocity";
+        String reportId = content.getId();
+        InputStream sourceStream;
+        try
+        {
+            sourceStream = getInputStream( content.getContent() );
+
+            registry.loadReport( sourceStream, reportId, templateEngineKind );
+        }
+        catch ( Exception e )
+        {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+
+    }
+
+}

@@ -495,21 +495,6 @@ public class XDocReportRegistry
         return reportFactoryDiscoveries;
     }
 
-    // /**
-    // * Returns true if template engine is default and false otherwise.
-    // *
-    // * @param templateEngine
-    // * @return
-    // */
-    // public boolean isDefault(ITemplateEngine templateEngine) {
-    // ITemplateEngine defaultTemplateEngine = reportLoader
-    // .getDefaultTemplateEngine();
-    // if (defaultTemplateEngine == null) {
-    // return false;
-    // }
-    // return defaultTemplateEngine.equals(templateEngine);
-    // }
-
     /**
      * Returns cached report {@link IXDocReport};
      * 

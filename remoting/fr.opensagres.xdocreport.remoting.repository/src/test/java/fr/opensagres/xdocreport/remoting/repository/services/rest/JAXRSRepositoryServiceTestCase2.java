@@ -14,8 +14,8 @@ import org.apache.cxf.jaxrs.servlet.CXFNonSpringJaxrsServlet;
 import org.eclipse.jetty.server.Server;
 import org.eclipse.jetty.servlet.ServletContextHandler;
 import org.eclipse.jetty.servlet.ServletHolder;
+import org.junit.AfterClass;
 import org.junit.BeforeClass;
-import org.junit.Ignore;
 import org.junit.Test;
 
 import fr.opensagres.xdocreport.remoting.repository.Data;
@@ -106,7 +106,7 @@ public class JAXRSRepositoryServiceTestCase2
         IRepositoryService client = JAXRSClientFactory.create( BASE_ADDRESS, IJAXRSRepositoryService.class );
         ResourceContent resourceContent = client.download( "DOWNLOAD" );
 
-       // createFile( resourceContent.getContent(), "download.docx" );
+       createFile( resourceContent.getContent(), "download.docx" );
     }
 
     private void createFile( byte[] flux, String filename )
@@ -118,4 +118,10 @@ public class JAXRSRepositoryServiceTestCase2
         fos.close();
     }
 
+    @AfterClass
+    public static void stopServer()
+        throws Exception
+    {
+        server.stop();
+    }
 }

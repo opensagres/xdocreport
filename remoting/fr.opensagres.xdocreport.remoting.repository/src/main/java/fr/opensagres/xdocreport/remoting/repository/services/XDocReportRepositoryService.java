@@ -122,7 +122,8 @@ public class XDocReportRepositoryService
         {
             sourceStream = getInputStream( content.getContent() );
 
-            registry.loadReport( sourceStream, reportId, templateEngineKind );
+            IXDocReport report = registry.loadReport( sourceStream, reportId, templateEngineKind );
+            report.setCacheOriginalDocument( true );
         }
         catch ( Exception e )
         {

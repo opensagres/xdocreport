@@ -6,15 +6,18 @@ import java.io.InputStream;
 
 import javax.ws.rs.core.Application;
 import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
 
 import org.apache.cxf.jaxrs.client.WebClient;
 import org.apache.cxf.jaxrs.servlet.CXFNonSpringJaxrsServlet;
 import org.eclipse.jetty.server.Server;
 import org.eclipse.jetty.servlet.ServletContextHandler;
 import org.eclipse.jetty.servlet.ServletHolder;
+import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
+import fr.opensagres.xdocreport.document.ProcessState;
 import fr.opensagres.xdocreport.remoting.repository.Data;
 import fr.opensagres.xdocreport.remoting.repository.domain.ResourceContent;
 
@@ -76,4 +79,34 @@ public class JAXRSRepositoryServiceTestCase
         client.post( content );
     }
 
+    @Test
+    public void download()
+        throws IOException
+    {
+        // first upload a file...
+        String reportID = "id";
+        uploadAFile( reportID );
+
+        WebClient client = WebClient.create( BASE_ADDRESS );
+        client.path( "download/" + reportID );
+       // client.accept( MediaType.APPLICATION_JSON );
+        System.out.println( client.getCurrentURI() );
+        
+        ResourceContent r = client.get(ResourceContent.class);
+        System.err.println(r);
+        
+        //Response resp = client.get();
+        //System.out.println( resp.getStatus() );
+        // byte[] flux= client.get( byte[].class );
+        // assertNotNull(flux);
+        // createFile( flux,"result.docx" );
+
+    }
+
+    @AfterClass
+    public static void stopServer()
+        throws Exception
+    {
+        server.stop();
+    }
 }

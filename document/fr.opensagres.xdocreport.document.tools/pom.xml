@@ -55,6 +55,35 @@
 			<groupId>fr.opensagres.xdocreport</groupId>
 			<artifactId>fr.opensagres.xdocreport.template.velocity</artifactId>
 			<version>0.9.7-SNAPSHOT</version>
-		</dependency>				
+		</dependency>
+		
+		<dependency>
+			<groupId>fr.opensagres.xdocreport</groupId>
+			<artifactId>fr.opensagres.xdocreport.remoting.repository</artifactId>
+			<version>0.9.7-SNAPSHOT</version>
+		</dependency>
+							
+	 <!-- Jetty is extremely convenient for testing REST and WS -->
+	    <dependency>
+	      <groupId>org.eclipse.jetty</groupId>
+	      <artifactId>jetty-server</artifactId>
+	      <version>7.4.2.v20110526</version>
+	      <scope>test</scope>
+	    </dependency>
+	
+	    <dependency>
+	      <groupId>org.eclipse.jetty</groupId>
+	      <artifactId>jetty-servlet</artifactId>
+	      <version>7.4.2.v20110526</version>
+	      <scope>test</scope>
+	    </dependency>
+	
+	    <dependency>
+	      <groupId>org.eclipse.jetty</groupId>
+	      <artifactId>jetty-webapp</artifactId>
+	      <version>7.4.2.v20110526</version>
+	      <scope>test</scope>
+	    </dependency>
+	    								
 	</dependencies>
 </project>

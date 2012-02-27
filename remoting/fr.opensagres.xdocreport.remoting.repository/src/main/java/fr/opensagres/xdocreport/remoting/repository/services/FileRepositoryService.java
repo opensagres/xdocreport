@@ -7,7 +7,7 @@ import fr.opensagres.xdocreport.remoting.repository.domain.Filter;
 import fr.opensagres.xdocreport.remoting.repository.domain.ResourceContent;
 import fr.opensagres.xdocreport.remoting.repository.domain.ResourceMetadata;
 
-public class FileRepositoryService
+public abstract class FileRepositoryService
     extends AbstractRepositoryService
 {
 

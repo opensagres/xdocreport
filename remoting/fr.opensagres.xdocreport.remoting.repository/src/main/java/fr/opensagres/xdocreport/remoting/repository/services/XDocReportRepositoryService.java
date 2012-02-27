@@ -39,6 +39,11 @@ public class XDocReportRepositoryService
         this( XDocReportRegistry.getRegistry() );
     }
 
+    public String getName()
+    {
+        return "XDocReport";
+    }
+    
     private ResourceMetadata getMetadata( IXDocReport report )
     {
         if ( report == null )

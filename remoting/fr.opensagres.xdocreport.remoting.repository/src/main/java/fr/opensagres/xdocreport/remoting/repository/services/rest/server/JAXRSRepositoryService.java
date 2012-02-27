@@ -1,18 +1,34 @@
-package fr.opensagres.xdocreport.remoting.repository.services.ws;
+package fr.opensagres.xdocreport.remoting.repository.services.rest.server;
 
 import java.util.List;
+
+import javax.ws.rs.Consumes;
+import javax.ws.rs.GET;
+import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
+import javax.ws.rs.Produces;
+import javax.ws.rs.core.MediaType;
 
 import fr.opensagres.xdocreport.remoting.repository.domain.Filter;
 import fr.opensagres.xdocreport.remoting.repository.domain.ResourceContent;
 import fr.opensagres.xdocreport.remoting.repository.domain.ResourceMetadata;
 import fr.opensagres.xdocreport.remoting.repository.services.DelegateRepositoryService;
+import fr.opensagres.xdocreport.remoting.repository.services.rest.IJAXRSRepositoryService;
 
-public class JAXWSRepositoryService
+public class JAXRSRepositoryService
     extends DelegateRepositoryService
+    implements IJAXRSRepositoryService
 {
 
     @Override
-    public ResourceContent download( String resourceId )
+    public String getName()
+    {    
+        return super.getName();
+    }
+    
+    @Override
+    public ResourceContent download( 
+    String resourceId )
     {
         return super.download( resourceId );
     }
@@ -47,6 +63,7 @@ public class JAXWSRepositoryService
         return super.getMetadatas( filter );
     }
 
+    // Override must be done to use JAX-RS annotations from IJAXRSRepositoryService
     @Override
     public void upload( ResourceContent content )
     {

@@ -20,6 +20,12 @@ public interface IJAXRSRepositoryService
 {
 
     @GET
+    @Path( "/name" )
+    @Consumes( MediaType.APPLICATION_JSON )
+    @Produces( MediaType.APPLICATION_JSON )
+    String getName();
+
+    @GET
     @Path( "/download/{resourceId}" )
     @Consumes( MediaType.APPLICATION_JSON )
     @Produces( MediaType.WILDCARD )

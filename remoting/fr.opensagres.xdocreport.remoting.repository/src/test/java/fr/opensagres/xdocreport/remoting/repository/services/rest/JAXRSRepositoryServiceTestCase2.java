@@ -22,6 +22,8 @@ import fr.opensagres.xdocreport.remoting.repository.Data;
 import fr.opensagres.xdocreport.remoting.repository.domain.ResourceContent;
 import fr.opensagres.xdocreport.remoting.repository.domain.ResourceMetadata;
 import fr.opensagres.xdocreport.remoting.repository.services.IRepositoryService;
+import fr.opensagres.xdocreport.remoting.repository.services.rest.server.JAXRSRepositoryApplication;
+import fr.opensagres.xdocreport.remoting.repository.services.rest.server.JAXRSRepositoryService;
 
 public class JAXRSRepositoryServiceTestCase2
 {

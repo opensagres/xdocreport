@@ -24,6 +24,8 @@
  */
 package fr.opensagres.xdocreport.document.tools;
 
+import static fr.opensagres.xdocreport.document.tools.internal.MainHelper.getValue;
+
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -35,6 +37,7 @@ import java.util.List;
 
 import org.xml.sax.SAXException;
 
+import fr.opensagres.xdocreport.document.tools.internal.BadArgException;
 import fr.opensagres.xdocreport.template.formatter.FieldsMetadata;
 import fr.opensagres.xdocreport.template.formatter.FieldsMetadataXMLSerializer;
 
@@ -55,47 +58,55 @@ public class Main
 
         List<IDataProvider> dataProviders = new ArrayList<IDataProvider>();
         String arg = null;
-        for ( int i = 0; i < args.length; i++ )
+        try
         {
-            arg = args[i];
-            if ( "-in".equals( arg ) )
+            for ( int i = 0; i < args.length; i++ )
             {
-                in = getValue( args, i );
-                if ( in != null )
-                    i++;
+                arg = args[i];
+                if ( "-in".equals( arg ) )
+                {
+                    in = getValue( args, i );
+                    if ( in != null )
+                        i++;
+                }
+                else if ( "-out".equals( arg ) )
+                {
+                    out = getValue( args, i );
+                    if ( out != null )
+                        i++;
+                }
+                else if ( "-err".equals( arg ) )
+                {
+                    err = getValue( args, i );
+                    if ( err != null )
+                        i++;
+                }
+                else if ( "-engine".equals( arg ) )
+                {
+                    templateEngineKind = getValue( args, i );
+                    if ( templateEngineKind != null )
+                        i++;
+                }
+                else if ( "-jsonFile".equals( arg ) )
+                {
+                    jsonFile = getValue( args, i );
+                    if ( jsonFile != null )
+                        i++;
+                }
+                else if ( "-metadataFile".equals( arg ) )
+                {
+                    metadataFile = getValue( args, i );
+                }
+                else if ( "-dataDir".equals( arg ) )
+                {
+                    dataDir = getValue( args, i );
+                }
             }
-            else if ( "-out".equals( arg ) )
-            {
-                out = getValue( args, i );
-                if ( out != null )
-                    i++;
-            }
-            else if ( "-err".equals( arg ) )
-            {
-                err = getValue( args, i );
-                if ( err != null )
-                    i++;
-            }
-            else if ( "-engine".equals( arg ) )
-            {
-                templateEngineKind = getValue( args, i );
-                if ( templateEngineKind != null )
-                    i++;
-            }
-            else if ( "-jsonFile".equals( arg ) )
-            {
-                jsonFile = getValue( args, i );
-                if ( jsonFile != null )
-                    i++;
-            }
-            else if ( "-metadataFile".equals( arg ) )
-            {
-                metadataFile = getValue( args, i );
-            }
-            else if ( "-dataDir".equals( arg ) )
-            {
-                dataDir = getValue( args, i );
-            }
+        }
+        catch ( BadArgException e )
+        {
+            printUsage();
+            return;
         }
 
         // Err
@@ -204,19 +215,6 @@ public class Main
 
         Tools tools = Tools.getInstance();
         tools.process( new File( in ), fileOut, templateEngineKind, fieldsMetadata, dataProviders );
-    }
-
-    private static String getValue( String[] args, int i )
-    {
-        if ( i == ( args.length - 1 ) )
-        {
-            printUsage();
-            return null;
-        }
-        else
-        {
-            return args[i + 1];
-        }
     }
 
     private static void printUsage()

@@ -20,6 +20,8 @@ import org.junit.Test;
 import fr.opensagres.xdocreport.document.ProcessState;
 import fr.opensagres.xdocreport.remoting.repository.Data;
 import fr.opensagres.xdocreport.remoting.repository.domain.ResourceContent;
+import fr.opensagres.xdocreport.remoting.repository.services.rest.server.JAXRSRepositoryApplication;
+import fr.opensagres.xdocreport.remoting.repository.services.rest.server.JAXRSRepositoryService;
 
 public class JAXRSRepositoryServiceTestCase
 {

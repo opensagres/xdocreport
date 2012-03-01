@@ -27,21 +27,21 @@ package fr.opensagres.xdocreport.remoting.resources.services;
 /**
  * Enum with service name of the {@link ResourcesService}.
  */
-public enum ServiceName
+public enum ResourcesServiceName
 {
 
     name, root, download, upload;
 
     /**
-     * Returns the enum {@link ServiceName} from the given String value and null if not found.
+     * Returns the enum {@link ResourcesServiceName} from the given String value and null if not found.
      * 
      * @param value
      * @return
      */
-    public static ServiceName getServiceName( String value )
+    public static ResourcesServiceName getServiceName( String value )
     {
-        ServiceName[] names = ServiceName.values();
-        ServiceName currentName = null;
+        ResourcesServiceName[] names = ResourcesServiceName.values();
+        ResourcesServiceName currentName = null;
         for ( int i = 0; i < names.length; i++ )
         {
             currentName = names[i];

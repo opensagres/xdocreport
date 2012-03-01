@@ -37,7 +37,7 @@ import fr.opensagres.xdocreport.document.tools.internal.ArgContext;
 import fr.opensagres.xdocreport.remoting.resources.domain.Resource;
 import fr.opensagres.xdocreport.remoting.resources.services.ResourcesService;
 import fr.opensagres.xdocreport.remoting.resources.services.ResourcesServiceClientFactory;
-import fr.opensagres.xdocreport.remoting.resources.services.ServiceName;
+import fr.opensagres.xdocreport.remoting.resources.services.ResourcesServiceName;
 import fr.opensagres.xdocreport.remoting.resources.services.ServiceType;
 
 public class Main
@@ -57,7 +57,7 @@ public class Main
         String password = context.get( "-password" );
 
         ServiceType serviceType = ServiceType.REST;
-        ServiceName serviceName = getServiceName( context.get( "-serviceName" ) );
+        ResourcesServiceName serviceName = getServiceName( context.get( "-serviceName" ) );
 
         String out = context.get( "-out" );
         String err = context.get( "-err" );
@@ -94,13 +94,13 @@ public class Main
         }
     }
 
-    private static ServiceName getServiceName( String value )
+    private static ResourcesServiceName getServiceName( String value )
     {
-        return ServiceName.getServiceName( value );
+        return ResourcesServiceName.getServiceName( value );
     }
 
     private static void process( String baseAddress, String user, String password, ServiceType serviceType,
-                                 ServiceName serviceName, String out, ArgContext context )
+                                 ResourcesServiceName serviceName, String out, ArgContext context )
         throws IOException
     {
         ResourcesService client = ResourcesServiceClientFactory.create( baseAddress, serviceType, user, password );
@@ -179,16 +179,19 @@ public class Main
         writer.write( " type=\"" );
         writer.write( String.valueOf( root.getType() ) );
         writer.write( "\"" );
-        writer.write( ">" );
-        if ( root.getChildren() != null )
+        boolean hasChildren = root.getChildren() != null && root.getChildren().size() > 0;
+        if ( hasChildren )
         {
+            writer.write( ">" );
             for ( Resource child : root.getChildren() )
             {
                 toXML( child, writer );
             }
+            writer.write( "</resource>" );
         }
-        writer.write( "</resource>" );
-
+        else {
+            writer.write( "/>" );    
+        }
     }
 
     private static void processName( String repositoryName, File file )

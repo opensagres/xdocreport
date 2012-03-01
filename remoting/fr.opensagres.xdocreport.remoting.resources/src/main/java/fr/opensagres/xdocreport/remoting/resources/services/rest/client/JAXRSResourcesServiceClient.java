@@ -9,7 +9,7 @@ import org.apache.cxf.jaxrs.client.WebClient;
 import fr.opensagres.xdocreport.remoting.resources.domain.Filter;
 import fr.opensagres.xdocreport.remoting.resources.domain.Resource;
 import fr.opensagres.xdocreport.remoting.resources.services.ResourcesService;
-import fr.opensagres.xdocreport.remoting.resources.services.ServiceName;
+import fr.opensagres.xdocreport.remoting.resources.services.ResourcesServiceName;
 
 public class JAXRSResourcesServiceClient
     implements ResourcesService
@@ -24,12 +24,12 @@ public class JAXRSResourcesServiceClient
 
     public String getName()
     {
-        return client.path( ServiceName.name ).accept( MediaType.TEXT_PLAIN ).get( String.class );
+        return client.path( ResourcesServiceName.name ).accept( MediaType.TEXT_PLAIN ).get( String.class );
     }
 
     public Resource getRoot()
     {
-        return client.path( ServiceName.root ).accept( MediaType.APPLICATION_JSON ).get( Resource.class );
+        return client.path( ResourcesServiceName.root ).accept( MediaType.APPLICATION_JSON ).get( Resource.class );
     }
 
     public Resource getRoot( Filter filter )
@@ -46,7 +46,7 @@ public class JAXRSResourcesServiceClient
 
     public byte[] download( String resourcePath )
     {
-        StringBuilder path = new StringBuilder( ServiceName.download.name() );
+        StringBuilder path = new StringBuilder( ResourcesServiceName.download.name() );
         path.append( "/" );
         path.append( resourcePath );
         return client.path( path.toString() ).accept( MediaType.APPLICATION_JSON_TYPE ).get( byte[].class );

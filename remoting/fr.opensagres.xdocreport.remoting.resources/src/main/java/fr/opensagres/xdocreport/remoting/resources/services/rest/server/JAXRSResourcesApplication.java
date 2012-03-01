@@ -25,31 +25,66 @@
 package fr.opensagres.xdocreport.remoting.resources.services.rest.server;
 
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 import javax.ws.rs.core.Application;
 
+import fr.opensagres.xdocreport.remoting.resources.services.ResourcesService;
+import fr.opensagres.xdocreport.remoting.resources.services.ResourcesServicesRegistry;
+
 public class JAXRSResourcesApplication
     extends Application
 {
-    HashSet<Object> singletons = new HashSet<Object>();
+    private HashSet<Object> singletons;
 
     public JAXRSResourcesApplication()
     {
-        singletons.add( new JAXRSResourcesServiceImpl() );
+        this.singletons = null;
     }
-
 
     public Set<Class<?>> getClasses()
     {
+
         HashSet<Class<?>> set = new HashSet<Class<?>>();
         return set;
     }
 
-
     public Set<Object> getSingletons()
     {
+        loadIfNeed();
         return singletons;
     }
 
+    private void loadIfNeed()
+    {
+        if ( singletons != null )
+        {
+            return;
+        }
+        load();
+    }
+
+    private synchronized void load()
+    {
+        if ( singletons != null )
+        {
+            return;
+        }
+
+        HashSet<Object> singletons = new HashSet<Object>();
+        List<ResourcesService> services = ResourcesServicesRegistry.getRegistry().getServices();
+        for ( final ResourcesService service : services )
+        {
+            singletons.add( new JAXRSResourcesServiceImpl()
+            {
+                @Override
+                protected ResourcesService getDelegate()
+                {
+                    return service;
+                }
+            } );
+        }
+        this.singletons = singletons;
+    }
 }

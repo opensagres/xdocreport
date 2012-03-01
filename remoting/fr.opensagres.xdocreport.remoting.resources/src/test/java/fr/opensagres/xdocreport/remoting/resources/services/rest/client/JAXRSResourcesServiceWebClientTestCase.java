@@ -20,7 +20,7 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 
 import fr.opensagres.xdocreport.remoting.resources.domain.Resource;
-import fr.opensagres.xdocreport.remoting.resources.services.ServiceName;
+import fr.opensagres.xdocreport.remoting.resources.services.ResourcesServiceName;
 import fr.opensagres.xdocreport.remoting.resources.services.rest.MockJAXRSResourcesApplication;
 import fr.opensagres.xdocreport.remoting.resources.services.rest.MockJAXRSResourcesService;
 
@@ -59,7 +59,7 @@ public class JAXRSResourcesServiceWebClientTestCase
     public void name()
     {
         WebClient client = WebClient.create( BASE_ADDRESS );
-        String name = client.path( ServiceName.name ).accept( MediaType.TEXT_PLAIN ).get( String.class );
+        String name = client.path( ResourcesServiceName.name ).accept( MediaType.TEXT_PLAIN ).get( String.class );
         Assert.assertEquals( "Test-RepositoryService", name );
     }
 
@@ -67,7 +67,7 @@ public class JAXRSResourcesServiceWebClientTestCase
     public void root()
     {
         WebClient client = WebClient.create( BASE_ADDRESS );
-        Resource root = client.path( ServiceName.root ).accept( MediaType.APPLICATION_JSON ).get( Resource.class );
+        Resource root = client.path( ResourcesServiceName.root ).accept( MediaType.APPLICATION_JSON ).get( Resource.class );
 
         // Document coming from the folder src/test/resources/fr/opensagres/xdocreport/resources/repository
         // See class MockRepositoryService
@@ -94,7 +94,7 @@ public class JAXRSResourcesServiceWebClientTestCase
         String resourcePath = "Simple.docx";
         WebClient client = WebClient.create( BASE_ADDRESS );
         
-        StringBuilder path= new StringBuilder(ServiceName.download.name());
+        StringBuilder path= new StringBuilder(ResourcesServiceName.download.name());
         path.append( "/" );
         path.append( resourcePath );
         

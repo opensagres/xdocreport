@@ -15,10 +15,9 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 
 import fr.opensagres.xdocreport.core.io.IOUtils;
-import fr.opensagres.xdocreport.document.tools.remoting.resources.Main;
 import fr.opensagres.xdocreport.document.tools.remoting.resources.rest.MockJAXRSRepositoryApplication;
 import fr.opensagres.xdocreport.document.tools.remoting.resources.rest.MockJAXRSRepositoryService;
-import fr.opensagres.xdocreport.remoting.resources.services.ServiceName;
+import fr.opensagres.xdocreport.remoting.resources.services.ResourcesServiceName;
 
 public class MainTest
 {
@@ -75,7 +74,7 @@ public class MainTest
     {
         File nameFile = new File( tempFolder, "name.txt" );
         String[] args =
-            { "-baseAddress", BASE_ADDRESS, "-serviceName", ServiceName.name.name(), "-out", nameFile.getPath() };
+            { "-baseAddress", BASE_ADDRESS, "-serviceName", ResourcesServiceName.name.name(), "-out", nameFile.getPath() };
         Main.main( args );
 
         Assert.assertTrue( nameFile.exists() );
@@ -89,13 +88,22 @@ public class MainTest
     {
         File rootFile = new File( tempFolder, "root.xml" );
         String[] args =
-            { "-baseAddress", BASE_ADDRESS, "-serviceName", ServiceName.root.name(), "-out", rootFile.getPath() };
+            { "-baseAddress", BASE_ADDRESS, "-serviceName", ResourcesServiceName.root.name(), "-out", rootFile.getPath() };
         Main.main( args );
 
         Assert.assertTrue( rootFile.exists() );
         String s = IOUtils.toString( new FileReader( rootFile ) );
-        Assert.assertEquals( "<resource name=\"resources\" type=\"0\"><resource name=\"Custom\" type=\"0\"><resource name=\"CustomSimple.docx\" type=\"1\"></resource><resource name=\"CustomSimple.odt\" type=\"1\"></resource></resource><resource name=\"Opensagres\" type=\"0\"><resource name=\"OpensagresSimple.docx\" type=\"1\"></resource><resource name=\"OpensagresSimple.odt\" type=\"1\"></resource></resource><resource name=\"Simple.docx\" type=\"1\"></resource><resource name=\"Simple.odt\" type=\"1\"></resource></resource>",
-                             s );
+
+        // According OS, File#listFiles() are not the same order.
+        if ( "<resource name=\"resources\" type=\"0\"><resource name=\"Custom\" type=\"0\"><resource name=\"CustomSimple.docx\" type=\"1\"/><resource name=\"CustomSimple.odt\" type=\"1\"/></resource><resource name=\"Opensagres\" type=\"0\"><resource name=\"OpensagresSimple.docx\" type=\"1\"/><resource name=\"OpensagresSimple.odt\" type=\"1\"/></resource><resource name=\"Simple.docx\" type=\"1\"/><resource name=\"Simple.odt\" type=\"1\"/></resource>".equals( s ) )
+        {
+            // test is OK
+        }
+        else
+        {
+            Assert.assertEquals( "<resource name=\"resources\" type=\"0\"><resource name=\"Opensagres\" type=\"0\"><resource name=\"OpensagresSimple.docx\" type=\"1\"/><resource name=\"OpensagresSimple.odt\" type=\"1\"/></resource><resource name=\"Simple.odt\" type=\"1\"/><resource name=\"Custom\" type=\"0\"><resource name=\"CustomSimple.odt\" type=\"1\"/><resource name=\"CustomSimple.docx\" type=\"1\"/></resource><resource name=\"Simple.docx\" type=\"1\"/>",
+                                 s );
+        }
     }
 
     @Test
@@ -105,7 +113,7 @@ public class MainTest
         String fileToDownload = "Simple.docx";
         File downlodedFile = new File( tempFolder, "DownlodedSimple.docx" );
         String[] args =
-            { "-baseAddress", BASE_ADDRESS, "-serviceName", ServiceName.download.name(), "-resources", fileToDownload,
+            { "-baseAddress", BASE_ADDRESS, "-serviceName", ResourcesServiceName.download.name(), "-resources", fileToDownload,
                 "-out", downlodedFile.getPath() };
         Main.main( args );
         Assert.assertTrue( downlodedFile.exists() );

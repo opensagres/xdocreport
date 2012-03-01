@@ -11,6 +11,7 @@ import fr.opensagres.xdocreport.core.io.XDocArchive;
 import fr.opensagres.xdocreport.document.IXDocReport;
 import fr.opensagres.xdocreport.document.registry.XDocReportRegistry;
 import fr.opensagres.xdocreport.remoting.repository.domain.Filter;
+import fr.opensagres.xdocreport.remoting.repository.domain.Resource;
 import fr.opensagres.xdocreport.remoting.repository.domain.ResourceContent;
 import fr.opensagres.xdocreport.remoting.repository.domain.ResourceMetadata;
 
@@ -136,6 +137,30 @@ public class XDocReportRepositoryService
             e.printStackTrace();
         }
 
+    }
+
+    public Resource getRoot( Filter filter )
+    {
+        // TODO Auto-generated method stub
+        return null;
+    }
+
+    public List<byte[]> download( List<String> resourcePaths )
+    {
+        // TODO Auto-generated method stub
+        return null;
+    }
+
+    public byte[] download( String resourcePath )
+    {
+        // TODO Auto-generated method stub
+        return null;
+    }
+
+    public void upload( String resourcePath, byte[] content )
+    {
+        // TODO Auto-generated method stub
+        
     }
 
 }

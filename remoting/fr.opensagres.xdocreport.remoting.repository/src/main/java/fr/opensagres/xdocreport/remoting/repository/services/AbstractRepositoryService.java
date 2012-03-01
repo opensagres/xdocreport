@@ -1,31 +1,19 @@
 package fr.opensagres.xdocreport.remoting.repository.services;
 
 import java.io.ByteArrayInputStream;
-import java.util.List;
 
 import fr.opensagres.xdocreport.core.XDocReportException;
-import fr.opensagres.xdocreport.remoting.repository.domain.ResourceContent;
-import fr.opensagres.xdocreport.remoting.repository.domain.ResourceMetadata;
+import fr.opensagres.xdocreport.remoting.repository.domain.Resource;
 
 public abstract class AbstractRepositoryService
     implements IRepositoryService
 {
 
-    public List<ResourceMetadata> getMetadatas()
+    public Resource getRoot()
     {
-        return getMetadatas( null );
+        return getRoot( null );
     }
-
-    public ResourceMetadata getMetadata( String resourceId )
-    {
-        return getMetadata( resourceId, null );
-    }
-
-    public ResourceContent download( String resourceId )
-    {
-        return download( resourceId, null );
-    }
-
+    
     protected ByteArrayInputStream getInputStream( byte[] content )
         throws XDocReportException
     {

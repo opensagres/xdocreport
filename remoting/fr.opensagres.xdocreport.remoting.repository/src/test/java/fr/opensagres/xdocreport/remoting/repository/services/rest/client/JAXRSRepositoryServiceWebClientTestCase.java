@@ -1,4 +1,4 @@
-package fr.opensagres.xdocreport.remoting.repository.services.rest;
+package fr.opensagres.xdocreport.remoting.repository.services.rest.client;
 
 import java.io.File;
 import java.io.IOException;
@@ -6,7 +6,6 @@ import java.io.InputStream;
 
 import javax.ws.rs.core.Application;
 import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.Response;
 
 import org.apache.cxf.jaxrs.client.WebClient;
 import org.apache.cxf.jaxrs.servlet.CXFNonSpringJaxrsServlet;
@@ -14,16 +13,18 @@ import org.eclipse.jetty.server.Server;
 import org.eclipse.jetty.servlet.ServletContextHandler;
 import org.eclipse.jetty.servlet.ServletHolder;
 import org.junit.AfterClass;
+import org.junit.Assert;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
-import fr.opensagres.xdocreport.document.ProcessState;
 import fr.opensagres.xdocreport.remoting.repository.Data;
+import fr.opensagres.xdocreport.remoting.repository.domain.Resource;
 import fr.opensagres.xdocreport.remoting.repository.domain.ResourceContent;
-import fr.opensagres.xdocreport.remoting.repository.services.rest.server.JAXRSRepositoryApplication;
-import fr.opensagres.xdocreport.remoting.repository.services.rest.server.JAXRSRepositoryService;
+import fr.opensagres.xdocreport.remoting.repository.services.ServiceName;
+import fr.opensagres.xdocreport.remoting.repository.services.rest.MockJAXRSRepositoryApplication;
+import fr.opensagres.xdocreport.remoting.repository.services.rest.MockJAXRSRepositoryService;
 
-public class JAXRSRepositoryServiceTestCase
+public class JAXRSRepositoryServiceWebClientTestCase
 {
 
     private static final int PORT = 9999;
@@ -41,8 +42,8 @@ public class JAXRSRepositoryServiceTestCase
 
         ServletHolder servlet = new ServletHolder( CXFNonSpringJaxrsServlet.class );
 
-        servlet.setInitParameter( Application.class.getName(), JAXRSRepositoryApplication.class.getName() );
-        servlet.setInitParameter( "jaxrs.serviceClasses", JAXRSRepositoryService.class.getName() );
+        servlet.setInitParameter( Application.class.getName(), MockJAXRSRepositoryApplication.class.getName() );
+        servlet.setInitParameter( "jaxrs.serviceClasses", MockJAXRSRepositoryService.class.getName() );
 
         servlet.setInitParameter( "timeout", "60000" );
         server = new Server( PORT );
@@ -55,6 +56,33 @@ public class JAXRSRepositoryServiceTestCase
     }
 
     @Test
+    public void name()
+    {
+        WebClient client = WebClient.create( BASE_ADDRESS );
+        String name = client.path( ServiceName.name ).accept( MediaType.TEXT_PLAIN ).get( String.class );
+        Assert.assertEquals( "Test-RepositoryService", name );
+    }
+
+    @Test
+    public void root()
+    {
+        WebClient client = WebClient.create( BASE_ADDRESS );
+        Resource root = client.path( ServiceName.root ).accept( MediaType.APPLICATION_JSON ).get( Resource.class );
+
+        
+        // Document coming from the folder src/test/resources/fr/opensagres/xdocreport/remoting/repository
+        // See class MockRepositoryService
+        Assert.assertNotNull( root );
+        Assert.assertEquals( "repository", root.getName() );
+        Assert.assertEquals( 4, root.getChildren().size() );
+        Assert.assertEquals( "Custom", root.getChildren().get( 0 ).getName() );
+        Assert.assertEquals( Resource.FOLDER_TYPE, root.getChildren().get( 0 ).getType() );
+        Assert.assertEquals( "Opensagres", root.getChildren().get( 1 ).getName() );
+        Assert.assertEquals( Resource.FOLDER_TYPE, root.getChildren().get( 1 ).getType() );        
+        Assert.assertEquals( "Simple.docx", root.getChildren().get( 2 ).getName() );
+        Assert.assertEquals( "Simple.odt", root.getChildren().get( 3 ).getName() );    }
+
+    //@Test
     public void upload()
         throws IOException
     {
@@ -81,7 +109,7 @@ public class JAXRSRepositoryServiceTestCase
         client.post( content );
     }
 
-    @Test
+    //@Test
     public void download()
         throws IOException
     {
@@ -91,14 +119,14 @@ public class JAXRSRepositoryServiceTestCase
 
         WebClient client = WebClient.create( BASE_ADDRESS );
         client.path( "download/" + reportID );
-       // client.accept( MediaType.APPLICATION_JSON );
+        // client.accept( MediaType.APPLICATION_JSON );
         System.out.println( client.getCurrentURI() );
-        
-        ResourceContent r = client.get(ResourceContent.class);
-        System.err.println(r);
-        
-        //Response resp = client.get();
-        //System.out.println( resp.getStatus() );
+
+        ResourceContent r = client.get( ResourceContent.class );
+        System.err.println( r );
+
+        // Response resp = client.get();
+        // System.out.println( resp.getStatus() );
         // byte[] flux= client.get( byte[].class );
         // assertNotNull(flux);
         // createFile( flux,"result.docx" );

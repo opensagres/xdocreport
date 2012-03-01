@@ -32,6 +32,7 @@ import java.io.Writer;
 
 import fr.opensagres.xdocreport.core.io.IOUtils;
 import fr.opensagres.xdocreport.document.tools.internal.ArgContext;
+import fr.opensagres.xdocreport.remoting.repository.domain.Resource;
 import fr.opensagres.xdocreport.remoting.repository.services.IRepositoryService;
 import fr.opensagres.xdocreport.remoting.repository.services.RepositoryServiceClientFactory;
 import fr.opensagres.xdocreport.remoting.repository.services.ServiceName;
@@ -54,7 +55,7 @@ public class Main
         String password = context.get( "-password" );
 
         ServiceType serviceType = ServiceType.REST;
-        ServiceName serviceName = ServiceName.name;
+        ServiceName serviceName = getServiceName( context.get( "-serviceName" ) );
 
         String out = context.get( "-out" );
         String err = context.get( "-err" );
@@ -91,6 +92,11 @@ public class Main
         }
     }
 
+    private static ServiceName getServiceName( String value )
+    {
+        return ServiceName.getServiceName( value );
+    }
+
     private static void process( String baseAddress, String user, String password, ServiceType serviceType,
                                  ServiceName serviceName, String out )
         throws IOException
@@ -101,7 +107,46 @@ public class Main
             case name:
                 generateRepositoryNameFile( client.getName(), new File( out ) );
                 break;
+            case root:
+                generateRepositoryRootFile( client.getRoot(), new File( out ) );
+                break;
         }
+    }
+
+    private static void generateRepositoryRootFile( Resource root, File file )
+        throws IOException
+    {
+        Writer writer = new FileWriter( file );
+        try
+        {
+            toXML( root, writer );
+        }
+        finally
+        {
+            IOUtils.closeQuietly( writer );
+        }
+    }
+
+    private static void toXML( Resource root, Writer writer )
+        throws IOException
+    {
+        writer.write( "<resource" );
+        writer.write( " name=\"" );
+        writer.write( root.getName() );
+        writer.write( "\"" );
+        writer.write( " type=\"" );
+        writer.write( String.valueOf( root.getType() ) );
+        writer.write( "\"" );
+        writer.write( ">" );
+        if ( root.getChildren() != null )
+        {
+            for ( Resource child : root.getChildren() )
+            {
+                toXML( child, writer );
+            }
+        }
+        writer.write( "</resource>" );
+
     }
 
     private static void generateRepositoryNameFile( String repositoryName, File file )

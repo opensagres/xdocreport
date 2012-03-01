@@ -3,8 +3,7 @@ package fr.opensagres.xdocreport.remoting.repository.services;
 import java.util.List;
 
 import fr.opensagres.xdocreport.remoting.repository.domain.Filter;
-import fr.opensagres.xdocreport.remoting.repository.domain.ResourceContent;
-import fr.opensagres.xdocreport.remoting.repository.domain.ResourceMetadata;
+import fr.opensagres.xdocreport.remoting.repository.domain.Resource;
 
 public class DelegateRepositoryService
     implements IRepositoryService
@@ -15,46 +14,35 @@ public class DelegateRepositoryService
         return getDelegate().getName();
     }
 
-    public List<ResourceMetadata> getMetadatas()
+    public Resource getRoot()
     {
-        return getDelegate().getMetadatas();
+        return getDelegate().getRoot();
     }
 
-    public List<ResourceMetadata> getMetadatas( Filter filter )
+    public Resource getRoot( Filter filter )
     {
-        return getDelegate().getMetadatas( filter );
+        return getDelegate().getRoot( filter );
     }
 
-    public ResourceMetadata getMetadata( String resourceId )
+    public List<byte[]> download( List<String> resourcePaths )
     {
-        return getDelegate().getMetadata( resourceId );
+        return getDelegate().download( resourcePaths );
     }
 
-    public ResourceMetadata getMetadata( String resourceId, Filter filter )
+    public byte[] download( String resourcePath )
     {
-        return getDelegate().getMetadata( resourceId, filter );
+        return getDelegate().download( resourcePath );
     }
 
-    public ResourceContent download( String resourceId )
+    public void upload( String resourcePath, byte[] content )
     {
-        return getDelegate().download( resourceId );
+        getDelegate().upload( resourcePath, content );
     }
 
-    public ResourceContent download( String resourceId, Filter filter )
-    {
-        return getDelegate().download( resourceId, filter );
-    }
-
-    public void upload( ResourceContent content )
-    {
-        getDelegate().upload( content );
-    }
-
-    private IRepositoryService getDelegate()
+    protected IRepositoryService getDelegate()
     {
         // TODO : manage implementation with SPI
         // By default it's XDocReportRepositoryService.
         return XDocReportRepositoryService.getDefault();
     }
-
 }

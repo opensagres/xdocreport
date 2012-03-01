@@ -7,8 +7,7 @@ import javax.ws.rs.core.MediaType;
 import org.apache.cxf.jaxrs.client.WebClient;
 
 import fr.opensagres.xdocreport.remoting.repository.domain.Filter;
-import fr.opensagres.xdocreport.remoting.repository.domain.ResourceContent;
-import fr.opensagres.xdocreport.remoting.repository.domain.ResourceMetadata;
+import fr.opensagres.xdocreport.remoting.repository.domain.Resource;
 import fr.opensagres.xdocreport.remoting.repository.services.IRepositoryService;
 import fr.opensagres.xdocreport.remoting.repository.services.ServiceName;
 
@@ -25,46 +24,33 @@ public class JAXRSRepositoryServiceClient
 
     public String getName()
     {
-        return client.path( ServiceName.name ).accept( MediaType.APPLICATION_JSON ).get( String.class );
+        return client.path( ServiceName.name ).accept( MediaType.TEXT_PLAIN ).get( String.class );
     }
 
-    public List<ResourceMetadata> getMetadatas()
+    public Resource getRoot()
+    {
+        return client.path( ServiceName.root ).accept( MediaType.APPLICATION_JSON ).get( Resource.class );
+    }
+
+    public Resource getRoot( Filter filter )
     {
         // TODO Auto-generated method stub
         return null;
     }
 
-    public List<ResourceMetadata> getMetadatas( Filter filter )
+    public List<byte[]> download( List<String> resourcePaths )
     {
         // TODO Auto-generated method stub
         return null;
     }
 
-    public ResourceMetadata getMetadata( String resourceId )
+    public byte[] download( String resourcePath )
     {
         // TODO Auto-generated method stub
         return null;
     }
 
-    public ResourceMetadata getMetadata( String resourceId, Filter filter )
-    {
-        // TODO Auto-generated method stub
-        return null;
-    }
-
-    public ResourceContent download( String resourceId )
-    {
-        // TODO Auto-generated method stub
-        return null;
-    }
-
-    public ResourceContent download( String resourceId, Filter filter )
-    {
-        // TODO Auto-generated method stub
-        return null;
-    }
-
-    public void upload( ResourceContent content )
+    public void upload( String resourcePath, byte[] content )
     {
         // TODO Auto-generated method stub
 

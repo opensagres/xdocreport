@@ -3,8 +3,7 @@ package fr.opensagres.xdocreport.remoting.repository.services.ws.server;
 import java.util.List;
 
 import fr.opensagres.xdocreport.remoting.repository.domain.Filter;
-import fr.opensagres.xdocreport.remoting.repository.domain.ResourceContent;
-import fr.opensagres.xdocreport.remoting.repository.domain.ResourceMetadata;
+import fr.opensagres.xdocreport.remoting.repository.domain.Resource;
 import fr.opensagres.xdocreport.remoting.repository.services.DelegateRepositoryService;
 
 public class JAXWSRepositoryService
@@ -12,44 +11,38 @@ public class JAXWSRepositoryService
 {
 
     @Override
-    public ResourceContent download( String resourceId )
+    public String getName()
     {
-        return super.download( resourceId );
+        return super.getName();
     }
 
     @Override
-    public ResourceContent download( String resourceId, Filter filter )
+    public Resource getRoot()
     {
-        return super.download( resourceId, filter );
+        return super.getRoot();
     }
 
     @Override
-    public ResourceMetadata getMetadata( String resourceId )
+    public Resource getRoot( Filter filter )
     {
-        return super.getMetadata( resourceId );
+        return super.getRoot( filter );
     }
 
     @Override
-    public ResourceMetadata getMetadata( String resourceId, Filter filter )
+    public byte[] download( String resourcePath )
     {
-        return super.getMetadata( resourceId, filter );
+        return super.download( resourcePath );
     }
 
     @Override
-    public List<ResourceMetadata> getMetadatas()
+    public List<byte[]> download( List<String> resourcePaths )
     {
-        return super.getMetadatas();
+        return super.download( resourcePaths );
     }
 
     @Override
-    public List<ResourceMetadata> getMetadatas( Filter filter )
+    public void upload( String resourcePath, byte[] content )
     {
-        return super.getMetadatas( filter );
-    }
-
-    @Override
-    public void upload( ResourceContent content )
-    {
-        super.upload( content );
+        super.upload( resourcePath, content );
     }
 }

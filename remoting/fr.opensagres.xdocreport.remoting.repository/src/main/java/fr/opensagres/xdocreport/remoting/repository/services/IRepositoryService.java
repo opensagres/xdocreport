@@ -3,8 +3,7 @@ package fr.opensagres.xdocreport.remoting.repository.services;
 import java.util.List;
 
 import fr.opensagres.xdocreport.remoting.repository.domain.Filter;
-import fr.opensagres.xdocreport.remoting.repository.domain.ResourceContent;
-import fr.opensagres.xdocreport.remoting.repository.domain.ResourceMetadata;
+import fr.opensagres.xdocreport.remoting.repository.domain.Resource;
 
 public interface IRepositoryService
 {
@@ -16,18 +15,19 @@ public interface IRepositoryService
      */
     String getName();
 
-    List<ResourceMetadata> getMetadatas();
+    /**
+     * Returns the root resource.
+     * 
+     * @return
+     */
+    Resource getRoot();
 
-    List<ResourceMetadata> getMetadatas( Filter filter );
+    Resource getRoot( Filter filter );
 
-    ResourceMetadata getMetadata( String resourceId );
+    List<byte[]> download( List<String> resourcePaths );
 
-    ResourceMetadata getMetadata( String resourceId, Filter filter );
+    byte[] download( String resourcePath );
 
-    ResourceContent download( String resourceId );
-
-    ResourceContent download( String resourceId, Filter filter );
-
-    void upload( ResourceContent content );
+    void upload( String resourcePath, byte[] content );
 
 }

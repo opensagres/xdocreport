@@ -15,8 +15,9 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 
 import fr.opensagres.xdocreport.core.io.IOUtils;
-import fr.opensagres.xdocreport.remoting.repository.services.rest.server.JAXRSRepositoryApplication;
-import fr.opensagres.xdocreport.remoting.repository.services.rest.server.JAXRSRepositoryService;
+import fr.opensagres.xdocreport.document.tools.repository.rest.MockJAXRSRepositoryApplication;
+import fr.opensagres.xdocreport.document.tools.repository.rest.MockJAXRSRepositoryService;
+import fr.opensagres.xdocreport.remoting.repository.services.ServiceName;
 
 public class MainTest
 {
@@ -36,8 +37,8 @@ public class MainTest
 
         ServletHolder servlet = new ServletHolder( CXFNonSpringJaxrsServlet.class );
 
-        servlet.setInitParameter( Application.class.getName(), JAXRSRepositoryApplication.class.getName() );
-        servlet.setInitParameter( "jaxrs.serviceClasses", JAXRSRepositoryService.class.getName() );
+        servlet.setInitParameter( Application.class.getName(), MockJAXRSRepositoryApplication.class.getName() );
+        servlet.setInitParameter( "jaxrs.serviceClasses", MockJAXRSRepositoryService.class.getName() );
 
         servlet.setInitParameter( "timeout", "60000" );
         server = new Server( PORT );
@@ -50,16 +51,50 @@ public class MainTest
     }
 
     @Test
-    public void testRepositoryName()
+    public void testBadBaseAddress()
         throws Exception
     {
         File nameFile = new File( tempFolder, "name.txt" );
-        String[] args = { "-baseAddress", BASE_ADDRESS, "-out", nameFile.getPath() };
+        File errFile = new File( tempFolder, "name.err.txt" );
+        String[] args =
+            { "-baseAddress", "http://localhost:99/remaaaaa=aaaa", "-out", nameFile.getPath(), "-err",
+                errFile.getPath() };
+        Main.main( args );
+
+        Assert.assertTrue( errFile.exists() );
+        String s = IOUtils.toString( new FileReader( errFile ) );
+        Assert.assertNotNull( s );
+        // System.err.println( s );
+        // Assert.assertEquals( "XDocReport", s );
+    }
+
+    @Test
+    public void name()
+        throws Exception
+    {
+        File nameFile = new File( tempFolder, "name.txt" );
+        String[] args =
+            { "-baseAddress", BASE_ADDRESS, "-serviceName", ServiceName.name.name(), "-out", nameFile.getPath() };
         Main.main( args );
 
         Assert.assertTrue( nameFile.exists() );
         String s = IOUtils.toString( new FileReader( nameFile ) );
-        Assert.assertEquals( "XDocReport", s );
+        Assert.assertEquals( "Test-Tools-RepositoryService", s );
+    }
+
+    @Test
+    public void root()
+        throws Exception
+    {
+        File rootFile = new File( tempFolder, "root.xml" );
+        String[] args =
+            { "-baseAddress", BASE_ADDRESS, "-serviceName", ServiceName.root.name(), "-out", rootFile.getPath() };
+        Main.main( args );
+
+        Assert.assertTrue( rootFile.exists() );
+        String s = IOUtils.toString( new FileReader( rootFile ) );
+        Assert.assertEquals( "<resource name=\"repository\" type=\"0\"><resource name=\"Simple.docx\" type=\"1\"></resource><resource name=\"Simple.odt\" type=\"1\"></resource></resource>",
+                             s );
     }
 
     @AfterClass

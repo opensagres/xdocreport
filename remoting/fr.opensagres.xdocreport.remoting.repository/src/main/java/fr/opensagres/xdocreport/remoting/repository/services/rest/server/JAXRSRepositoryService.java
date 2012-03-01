@@ -2,16 +2,8 @@ package fr.opensagres.xdocreport.remoting.repository.services.rest.server;
 
 import java.util.List;
 
-import javax.ws.rs.Consumes;
-import javax.ws.rs.GET;
-import javax.ws.rs.Path;
-import javax.ws.rs.PathParam;
-import javax.ws.rs.Produces;
-import javax.ws.rs.core.MediaType;
-
 import fr.opensagres.xdocreport.remoting.repository.domain.Filter;
-import fr.opensagres.xdocreport.remoting.repository.domain.ResourceContent;
-import fr.opensagres.xdocreport.remoting.repository.domain.ResourceMetadata;
+import fr.opensagres.xdocreport.remoting.repository.domain.Resource;
 import fr.opensagres.xdocreport.remoting.repository.services.DelegateRepositoryService;
 import fr.opensagres.xdocreport.remoting.repository.services.rest.IJAXRSRepositoryService;
 
@@ -22,51 +14,38 @@ public class JAXRSRepositoryService
 
     @Override
     public String getName()
-    {    
+    {
         return super.getName();
     }
-    
+
     @Override
-    public ResourceContent download( 
-    String resourceId )
+    public Resource getRoot()
     {
-        return super.download( resourceId );
+        return super.getRoot();
     }
 
     @Override
-    public ResourceContent download( String resourceId, Filter filter )
+    public Resource getRoot( Filter filter )
     {
-        return super.download( resourceId, filter );
+        return super.getRoot( filter );
     }
 
     @Override
-    public ResourceMetadata getMetadata( String resourceId )
+    public byte[] download( String resourcePath )
     {
-        return super.getMetadata( resourceId );
+        return super.download( resourcePath );
     }
 
     @Override
-    public ResourceMetadata getMetadata( String resourceId, Filter filter )
+    public List<byte[]> download( List<String> resourcePaths )
     {
-        return super.getMetadata( resourceId, filter );
+        return super.download( resourcePaths );
     }
 
     @Override
-    public List<ResourceMetadata> getMetadatas()
+    public void upload( String resourcePath, byte[] content )
     {
-        return super.getMetadatas();
+        super.upload( resourcePath, content );
     }
 
-    @Override
-    public List<ResourceMetadata> getMetadatas( Filter filter )
-    {
-        return super.getMetadatas( filter );
-    }
-
-    // Override must be done to use JAX-RS annotations from IJAXRSRepositoryService
-    @Override
-    public void upload( ResourceContent content )
-    {
-        super.upload( content );
-    }
 }

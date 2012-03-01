@@ -59,7 +59,7 @@
 		
 		<dependency>
 			<groupId>fr.opensagres.xdocreport</groupId>
-			<artifactId>fr.opensagres.xdocreport.remoting.repository</artifactId>
+			<artifactId>fr.opensagres.xdocreport.remoting.resources</artifactId>
 			<version>0.9.7-SNAPSHOT</version>
 		</dependency>
 							

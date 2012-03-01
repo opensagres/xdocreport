@@ -32,6 +32,7 @@ set SERVICE_TYPE=%4
 set SERVICE_NAME=%5
 set OUT=%6
 set ERR=%7
+set RESOURCES=%8
 
 setlocal EnableDelayedExpansion
 set CLASSPATH="
@@ -40,7 +41,7 @@ for /R %~dp0/../lib %%a in (*.jar) do (
 )
 set CLASSPATH=!CLASSPATH!"
 
-java -classpath "%CLASSPATH%" fr.opensagres.xdocreport.document.tools.repository.Main -baseAddress %BASE_ADDRESS% -user %USER% -password %PASSWORD% -serviceType %SERVICE_TYPE% -serviceName %SERVICE_NAME% -out %OUT% -err %ERR%
+java -classpath "%CLASSPATH%" fr.opensagres.xdocreport.document.tools.remoting.resources.Main -baseAddress %BASE_ADDRESS% -user %USER% -password %PASSWORD% -serviceType %SERVICE_TYPE% -serviceName %SERVICE_NAME% -out %OUT% -err %ERR% -resources %RESOURCES%
 
 goto end
 

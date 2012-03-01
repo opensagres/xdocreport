@@ -15,6 +15,6 @@
     <module>fr.opensagres.xdocreport.remoting.api</module>
     <module>fr.opensagres.xdocreport.remoting.javaclient</module>
 
-    <module>fr.opensagres.xdocreport.remoting.repository</module>
+    <module>fr.opensagres.xdocreport.remoting.resources</module>
   </modules>
 </project>

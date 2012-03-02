@@ -24,8 +24,11 @@
  */
 package fr.opensagres.xdocreport.document.docx.preprocessor;
 
+import java.io.InputStream;
 import java.io.StringReader;
 import java.io.StringWriter;
+
+import fr.opensagres.xdocreport.core.io.IOUtils;
 
 import junit.framework.TestCase;
 
@@ -37,27 +40,26 @@ public class DocxPreprocessorMergefieldWithConditionTestCase
         throws Exception
     {
         DocxPreprocessor preprocessor = new DocxPreprocessor();
-        StringReader reader =
-            new StringReader(
-                              "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>"
-                                  + "<w:document "
-                                  + "xmlns:ve=\"http://schemas.openxmlformats.org/markup-compatibility/2006\" "
-                                  + "xmlns:o=\"urn:schemas-microsoft-com:office:office\" "
-                                  + "xmlns:r=\"http://schemas.openxmlformats.org/officeDocument/2006/relationships\" "
-                                  + "xmlns:m=\"http://schemas.openxmlformats.org/officeDocument/2006/math\" "
-                                  + "xmlns:v=\"urn:schemas-microsoft-com:vml\" "
-                                  + "xmlns:wp=\"http://schemas.openxmlformats.org/drawingml/2006/wordprocessingDrawing\" "
-                                  + "xmlns:w10=\"urn:schemas-microsoft-com:office:word\" "
-                                  + "xmlns:w=\"http://schemas.openxmlformats.org/wordprocessingml/2006/main\" "
-                                  + "xmlns:wne=\"http://schemas.microsoft.com/office/word/2006/wordml\">"
-                                  + "<w:fldSimple	w:instr=\" MERGEFIELD  &quot;[#if name = 'world']world[#else]not world[/#if]&quot;  \\* MERGEFORMAT \">"
-                                  + "<w:r w:rsidRPr=\"009C7F29\">" + "<w:rPr>" + "<w:noProof/>"
-                                  + "<w:lang w:val=\"en-US\"/>" + "</w:rPr>"
-                                  + "<w:t>«[#if name = 'world']world[#else]not worl»+ </w:t>" + "</w:r>"
-                                  + "</w:fldSimple>" + "</w:document>" );
+        InputStream stream =
+                        IOUtils.toInputStream( "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>"
+                                        + "<w:document "
+                                        + "xmlns:ve=\"http://schemas.openxmlformats.org/markup-compatibility/2006\" "
+                                        + "xmlns:o=\"urn:schemas-microsoft-com:office:office\" "
+                                        + "xmlns:r=\"http://schemas.openxmlformats.org/officeDocument/2006/relationships\" "
+                                        + "xmlns:m=\"http://schemas.openxmlformats.org/officeDocument/2006/math\" "
+                                        + "xmlns:v=\"urn:schemas-microsoft-com:vml\" "
+                                        + "xmlns:wp=\"http://schemas.openxmlformats.org/drawingml/2006/wordprocessingDrawing\" "
+                                        + "xmlns:w10=\"urn:schemas-microsoft-com:office:word\" "
+                                        + "xmlns:w=\"http://schemas.openxmlformats.org/wordprocessingml/2006/main\" "
+                                        + "xmlns:wne=\"http://schemas.microsoft.com/office/word/2006/wordml\">"
+                                        + "<w:fldSimple   w:instr=\" MERGEFIELD  &quot;[#if name = 'world']world[#else]not world[/#if]&quot;  \\* MERGEFORMAT \">"
+                                        + "<w:r w:rsidRPr=\"009C7F29\">" + "<w:rPr>" + "<w:noProof/>"
+                                        + "<w:lang w:val=\"en-US\"/>" + "</w:rPr>"
+                                        + "<w:t>«[#if name = 'world']world[#else]not worl»+ </w:t>" + "</w:r>"
+                                        + "</w:fldSimple>" + "</w:document>"  );
 
         StringWriter writer = new StringWriter();
-        preprocessor.preprocess( "test", reader, writer, null, null, null );
+        preprocessor.preprocess( "test", stream, writer, null, null, null );
 
         assertEquals( "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>" + "<w:document "
             + "xmlns:ve=\"http://schemas.openxmlformats.org/markup-compatibility/2006\" "
@@ -83,41 +85,40 @@ public class DocxPreprocessorMergefieldWithConditionTestCase
         throws Exception
     {
         DocxPreprocessor preprocessor = new DocxPreprocessor();
-        StringReader reader =
-            new StringReader(
-                              "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>"
-                                  + "<w:document "
-                                  + "xmlns:ve=\"http://schemas.openxmlformats.org/markup-compatibility/2006\" "
-                                  + "xmlns:o=\"urn:schemas-microsoft-com:office:office\" "
-                                  + "xmlns:r=\"http://schemas.openxmlformats.org/officeDocument/2006/relationships\" "
-                                  + "xmlns:m=\"http://schemas.openxmlformats.org/officeDocument/2006/math\" "
-                                  + "xmlns:v=\"urn:schemas-microsoft-com:vml\" "
-                                  + "xmlns:wp=\"http://schemas.openxmlformats.org/drawingml/2006/wordprocessingDrawing\" "
-                                  + "xmlns:w10=\"urn:schemas-microsoft-com:office:word\" "
-                                  + "xmlns:w=\"http://schemas.openxmlformats.org/wordprocessingml/2006/main\" "
-                                  + "xmlns:wne=\"http://schemas.microsoft.com/office/word/2006/wordml\">"
-                                  + "<w:p w:rsidR=\"009C44CF\" w:rsidRPr=\"00EF7951\" w:rsidRDefault=\"009C7F29\">"
-                                  + "<w:pPr>"
-                                  + "<w:rPr>"
-                                  + "<w:lang w:val=\"en-US\"/>"
-                                  + "</w:rPr>"
-                                  + "</w:pPr>"
-                                  + "<w:r>"
-                                  + "<w:fldChar w:fldCharType=\"begin\"/>"
-                                  + "</w:r>"
-                                  + "<w:r w:rsidRPr=\"009C7F29\">"
-                                  + "<w:rPr>"
-                                  + "<w:lang w:val=\"en-US\"/>"
-                                  + "</w:rPr>"
-                                  + "<w:instrText xml:space=\"preserve\"> MERGEFIELD  \"[#if name != \\\"world\\\"]world[#else]not world[/#if]\"  \\* MERGEFORMAT </w:instrText>"
-                                  + "</w:r>" + "<w:r>" + "<w:fldChar w:fldCharType=\"separate\"/>" + "</w:r>"
-                                  + "<w:r w:rsidRPr=\"009C7F29\">" + "<w:rPr>" + "<w:noProof/>"
-                                  + "<w:lang w:val=\"en-US\"/>" + "</w:rPr>"
-                                  + "<w:t>[#if name != \"world\"]world[#else]not wor»</w:t>" + "</w:r>" + "<w:r>"
-                                  + "<w:fldChar w:fldCharType=\"end\"/>" + "</w:r>" + "</w:p>" + "</w:document>" );
+        InputStream stream =
+                        IOUtils.toInputStream( "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>"
+                                        + "<w:document "
+                                        + "xmlns:ve=\"http://schemas.openxmlformats.org/markup-compatibility/2006\" "
+                                        + "xmlns:o=\"urn:schemas-microsoft-com:office:office\" "
+                                        + "xmlns:r=\"http://schemas.openxmlformats.org/officeDocument/2006/relationships\" "
+                                        + "xmlns:m=\"http://schemas.openxmlformats.org/officeDocument/2006/math\" "
+                                        + "xmlns:v=\"urn:schemas-microsoft-com:vml\" "
+                                        + "xmlns:wp=\"http://schemas.openxmlformats.org/drawingml/2006/wordprocessingDrawing\" "
+                                        + "xmlns:w10=\"urn:schemas-microsoft-com:office:word\" "
+                                        + "xmlns:w=\"http://schemas.openxmlformats.org/wordprocessingml/2006/main\" "
+                                        + "xmlns:wne=\"http://schemas.microsoft.com/office/word/2006/wordml\">"
+                                        + "<w:p w:rsidR=\"009C44CF\" w:rsidRPr=\"00EF7951\" w:rsidRDefault=\"009C7F29\">"
+                                        + "<w:pPr>"
+                                        + "<w:rPr>"
+                                        + "<w:lang w:val=\"en-US\"/>"
+                                        + "</w:rPr>"
+                                        + "</w:pPr>"
+                                        + "<w:r>"
+                                        + "<w:fldChar w:fldCharType=\"begin\"/>"
+                                        + "</w:r>"
+                                        + "<w:r w:rsidRPr=\"009C7F29\">"
+                                        + "<w:rPr>"
+                                        + "<w:lang w:val=\"en-US\"/>"
+                                        + "</w:rPr>"
+                                        + "<w:instrText xml:space=\"preserve\"> MERGEFIELD  \"[#if name != \\\"world\\\"]world[#else]not world[/#if]\"  \\* MERGEFORMAT </w:instrText>"
+                                        + "</w:r>" + "<w:r>" + "<w:fldChar w:fldCharType=\"separate\"/>" + "</w:r>"
+                                        + "<w:r w:rsidRPr=\"009C7F29\">" + "<w:rPr>" + "<w:noProof/>"
+                                        + "<w:lang w:val=\"en-US\"/>" + "</w:rPr>"
+                                        + "<w:t>[#if name != \"world\"]world[#else]not wor»</w:t>" + "</w:r>" + "<w:r>"
+                                        + "<w:fldChar w:fldCharType=\"end\"/>" + "</w:r>" + "</w:p>" + "</w:document>");
 
         StringWriter writer = new StringWriter();
-        preprocessor.preprocess( "test", reader, writer, null, null, null );
+        preprocessor.preprocess( "test", stream, writer, null, null, null );
 
         assertEquals( "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>" + "<w:document "
             + "xmlns:ve=\"http://schemas.openxmlformats.org/markup-compatibility/2006\" "
@@ -158,8 +159,9 @@ public class DocxPreprocessorMergefieldWithConditionTestCase
         throws Exception
     {
         DocxPreprocessor preprocessor = new DocxPreprocessor();
-        StringReader reader =
-            new StringReader(
+
+        InputStream stream =
+                        IOUtils.toInputStream((
                               "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>"
                                   + "<w:document "
                                   + "xmlns:ve=\"http://schemas.openxmlformats.org/markup-compatibility/2006\" "
@@ -189,10 +191,10 @@ public class DocxPreprocessorMergefieldWithConditionTestCase
                                   + "<w:r w:rsidRPr=\"009C7F29\">" + "<w:rPr>" + "<w:noProof/>"
                                   + "<w:lang w:val=\"en-US\"/>" + "</w:rPr>"
                                   + "<w:t>[#if name != 'world']world[#else]not wor»</w:t>" + "</w:r>" + "<w:r>"
-                                  + "<w:fldChar w:fldCharType=\"end\"/>" + "</w:r>" + "</w:p>" + "</w:document>" );
+                                  + "<w:fldChar w:fldCharType=\"end\"/>" + "</w:r>" + "</w:p>" + "</w:document>" ));
 
         StringWriter writer = new StringWriter();
-        preprocessor.preprocess( "test", reader, writer, null, null, null );
+        preprocessor.preprocess( "test", stream, writer, null, null, null );
 
         assertEquals( "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>" + "<w:document "
             + "xmlns:ve=\"http://schemas.openxmlformats.org/markup-compatibility/2006\" "

@@ -24,10 +24,11 @@
  */
 package fr.opensagres.xdocreport.document.odt.discovery;
 
-import java.io.StringReader;
+import java.io.InputStream;
 import java.io.StringWriter;
 
 import junit.framework.TestCase;
+import fr.opensagres.xdocreport.core.io.IOUtils;
 import fr.opensagres.xdocreport.document.odt.preprocessor.ODTPreprocessor;
 
 public class ODTPreprocessorTestCase
@@ -38,13 +39,13 @@ public class ODTPreprocessorTestCase
         throws Exception
     {
         ODTPreprocessor preprocessor = new ODTPreprocessor();
-        StringReader reader =
-            new StringReader( "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>"
-                + "<office:document-content xmlns:office=\"urn:oasis:names:tc:opendocument:xmlns:office:1.0\""
-                + " xmlns:text=\"urn:oasis:names:tc:opendocument:xmlns:text:1.0\">"
-                + "<text:text-input>$name</text:text-input>" + "</office:document-content>" );
+        InputStream stream =
+                        IOUtils.toInputStream( "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>"
+                                        + "<office:document-content xmlns:office=\"urn:oasis:names:tc:opendocument:xmlns:office:1.0\""
+                                        + " xmlns:text=\"urn:oasis:names:tc:opendocument:xmlns:text:1.0\">"
+                                        + "<text:text-input>$name</text:text-input>" + "</office:document-content>" );        
         StringWriter writer = new StringWriter();
-        preprocessor.preprocess( "test", reader, writer, null, null, null );
+        preprocessor.preprocess( "test", stream, writer, null, null, null );
         assertEquals( "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>"
             + "<office:document-content xmlns:office=\"urn:oasis:names:tc:opendocument:xmlns:office:1.0\""
             + " xmlns:text=\"urn:oasis:names:tc:opendocument:xmlns:text:1.0\">" + "$name"

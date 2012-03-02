@@ -24,9 +24,12 @@
  */
 package fr.opensagres.xdocreport.document.docx.preprocessor;
 
+import java.io.InputStream;
 import java.io.StringReader;
 import java.io.StringWriter;
 import java.util.HashMap;
+
+import fr.opensagres.xdocreport.core.io.IOUtils;
 
 import junit.framework.TestCase;
 
@@ -107,11 +110,12 @@ public class DocxPreprocessorStartStopRowTestCase
         throws Exception
     {
         DocxPreprocessor preprocessor = new DocxPreprocessor();
-        StringReader reader = new StringReader( FDLSIMPLE_START_STOP_XML );
+        InputStream stream =
+                        IOUtils.toInputStream( FDLSIMPLE_START_STOP_XML );
 
         StringWriter writer = new StringWriter();
 
-        preprocessor.preprocess( "test", reader, writer, null, null, new HashMap<String, Object>() );
+        preprocessor.preprocess( "test", stream, writer, null, null, new HashMap<String, Object>() );
 
         assertEquals( "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>" + "<w:document "
             + "xmlns:ve=\"http://schemas.openxmlformats.org/markup-compatibility/2006\" "
@@ -159,11 +163,12 @@ public class DocxPreprocessorStartStopRowTestCase
         throws Exception
     {
         DocxPreprocessor preprocessor = new DocxPreprocessor();
-        StringReader reader = new StringReader( INSTRTEXT_START_STOP_XML );
+        InputStream stream =
+                        IOUtils.toInputStream( INSTRTEXT_START_STOP_XML );
 
         StringWriter writer = new StringWriter();
 
-        preprocessor.preprocess( "test", reader, writer, null, null, new HashMap<String, Object>() );
+        preprocessor.preprocess( "test", stream, writer, null, null, new HashMap<String, Object>() );
 
         assertEquals( "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>" + "<w:document "
             + "xmlns:ve=\"http://schemas.openxmlformats.org/markup-compatibility/2006\" "

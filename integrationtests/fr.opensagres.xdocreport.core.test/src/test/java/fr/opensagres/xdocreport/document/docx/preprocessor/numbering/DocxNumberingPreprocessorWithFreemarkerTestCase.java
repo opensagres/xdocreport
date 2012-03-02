@@ -1,5 +1,6 @@
 package fr.opensagres.xdocreport.document.docx.preprocessor.numbering;
 
+import java.io.InputStream;
 import java.io.StringReader;
 import java.io.StringWriter;
 import java.util.HashMap;
@@ -8,6 +9,7 @@ import java.util.Map;
 import org.junit.Assert;
 import org.junit.Test;
 
+import fr.opensagres.xdocreport.core.io.IOUtils;
 import fr.opensagres.xdocreport.document.docx.preprocessor.DefaultStyle;
 import fr.opensagres.xdocreport.document.docx.preprocessor.sax.numbering.DocxNumberingPreprocessor;
 import fr.opensagres.xdocreport.document.docx.template.DocxContextHelper;
@@ -23,8 +25,8 @@ public class DocxNumberingPreprocessorWithFreemarkerTestCase
         throws Exception
     {
         DocxNumberingPreprocessor preprocessor = new DocxNumberingPreprocessor();
-        StringReader reader =
-            new StringReader( "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>" + "<w:numbering"
+        InputStream stream =
+                        IOUtils.toInputStream( "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>" + "<w:numbering"
                 + " xmlns:ve=\"http://schemas.openxmlformats.org/markup-compatibility/2006\""
                 + " xmlns:o=\"urn:schemas-microsoft-com:office:office\""
                 + " xmlns:r=\"http://schemas.openxmlformats.org/officeDocument/2006/relationships\""
@@ -39,7 +41,7 @@ public class DocxNumberingPreprocessorWithFreemarkerTestCase
         StringWriter writer = new StringWriter();
         IDocumentFormatter formatter = new FreemarkerDocumentFormatter();
         Map<String, Object> sharedContext = new HashMap<String, Object>();
-        preprocessor.preprocess( "word/numbering.xml", reader, writer, null, formatter, sharedContext );
+        preprocessor.preprocess( "word/numbering.xml", stream, writer, null, formatter, sharedContext );
 
         Assert.assertEquals( "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>" + "<w:numbering"
                 + " xmlns:ve=\"http://schemas.openxmlformats.org/markup-compatibility/2006\""
@@ -75,8 +77,8 @@ public class DocxNumberingPreprocessorWithFreemarkerTestCase
         throws Exception
     {
         DocxNumberingPreprocessor preprocessor = new DocxNumberingPreprocessor();
-        StringReader reader =
-            new StringReader( "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>" + "<w:numbering"
+        InputStream stream =
+                        IOUtils.toInputStream("<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>" + "<w:numbering"
                 + " xmlns:ve=\"http://schemas.openxmlformats.org/markup-compatibility/2006\""
                 + " xmlns:o=\"urn:schemas-microsoft-com:office:office\""
                 + " xmlns:r=\"http://schemas.openxmlformats.org/officeDocument/2006/relationships\""
@@ -96,7 +98,7 @@ public class DocxNumberingPreprocessorWithFreemarkerTestCase
         StringWriter writer = new StringWriter();
         IDocumentFormatter formatter = new FreemarkerDocumentFormatter();
         Map<String, Object> sharedContext = new HashMap<String, Object>();
-        preprocessor.preprocess( "word/numbering.xml", reader, writer, null, formatter, sharedContext );
+        preprocessor.preprocess( "word/numbering.xml", stream, writer, null, formatter, sharedContext );
 
         Assert.assertEquals( "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>" + "<w:numbering"
                 + " xmlns:ve=\"http://schemas.openxmlformats.org/markup-compatibility/2006\""
@@ -138,8 +140,8 @@ public class DocxNumberingPreprocessorWithFreemarkerTestCase
         throws Exception
     {
         DocxNumberingPreprocessor preprocessor = new DocxNumberingPreprocessor();
-        StringReader reader =
-            new StringReader( "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>" + "<w:numbering"
+        InputStream stream =
+                        IOUtils.toInputStream("<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>" + "<w:numbering"
                 + " xmlns:ve=\"http://schemas.openxmlformats.org/markup-compatibility/2006\""
                 + " xmlns:o=\"urn:schemas-microsoft-com:office:office\""
                 + " xmlns:r=\"http://schemas.openxmlformats.org/officeDocument/2006/relationships\""
@@ -159,7 +161,7 @@ public class DocxNumberingPreprocessorWithFreemarkerTestCase
         StringWriter writer = new StringWriter();
         IDocumentFormatter formatter = new FreemarkerDocumentFormatter();
         Map<String, Object> sharedContext = new HashMap<String, Object>();
-        preprocessor.preprocess( "word/numbering.xml", reader, writer, null, formatter, sharedContext );
+        preprocessor.preprocess( "word/numbering.xml", stream, writer, null, formatter, sharedContext );
 
         Assert.assertEquals( "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>" + "<w:numbering"
                 + " xmlns:ve=\"http://schemas.openxmlformats.org/markup-compatibility/2006\""

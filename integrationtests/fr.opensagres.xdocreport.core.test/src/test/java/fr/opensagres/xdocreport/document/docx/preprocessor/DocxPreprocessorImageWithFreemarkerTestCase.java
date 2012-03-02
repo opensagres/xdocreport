@@ -24,10 +24,12 @@
  */
 package fr.opensagres.xdocreport.document.docx.preprocessor;
 
+import java.io.InputStream;
 import java.io.StringReader;
 import java.io.StringWriter;
 
 import junit.framework.TestCase;
+import fr.opensagres.xdocreport.core.io.IOUtils;
 import fr.opensagres.xdocreport.template.TemplateContextHelper;
 import fr.opensagres.xdocreport.template.formatter.FieldsMetadata;
 import fr.opensagres.xdocreport.template.formatter.IDocumentFormatter;
@@ -80,13 +82,14 @@ public class DocxPreprocessorImageWithFreemarkerTestCase
         throws Exception
     {
         DocxPreprocessor preprocessor = new DocxPreprocessor();
-        StringReader reader = new StringReader( LOGO_IMAGE_XML );
+        InputStream stream =
+                        IOUtils.toInputStream(LOGO_IMAGE_XML );
         StringWriter writer = new StringWriter();
 
         FieldsMetadata metadata = null;
         IDocumentFormatter formatter = new FreemarkerDocumentFormatter();
 
-        preprocessor.preprocess( "test", reader, writer, metadata, formatter, null );
+        preprocessor.preprocess( "test", stream, writer, metadata, formatter, null );
 
         assertEquals( LOGO_IMAGE_XML, writer.toString() );
     }
@@ -95,14 +98,15 @@ public class DocxPreprocessorImageWithFreemarkerTestCase
         throws Exception
     {
         DocxPreprocessor preprocessor = new DocxPreprocessor();
-        StringReader reader = new StringReader( LOGO_IMAGE_XML );
+        InputStream stream =
+                        IOUtils.toInputStream(LOGO_IMAGE_XML );
         StringWriter writer = new StringWriter();
 
         FieldsMetadata metadata = new FieldsMetadata();
         metadata.addFieldAsImage( "XXX" );
         IDocumentFormatter formatter = new FreemarkerDocumentFormatter();
 
-        preprocessor.preprocess( "test", reader, writer, metadata, formatter, null );
+        preprocessor.preprocess( "test", stream, writer, metadata, formatter, null );
 
         assertEquals( LOGO_IMAGE_XML, writer.toString() );
     }
@@ -111,14 +115,15 @@ public class DocxPreprocessorImageWithFreemarkerTestCase
         throws Exception
     {
         DocxPreprocessor preprocessor = new DocxPreprocessor();
-        StringReader reader = new StringReader( LOGO_IMAGE_XML );
+        InputStream stream =
+                        IOUtils.toInputStream( LOGO_IMAGE_XML );
         StringWriter writer = new StringWriter();
 
         FieldsMetadata metadata = new FieldsMetadata();
         metadata.addFieldAsImage( "logo" );
         IDocumentFormatter formatter = new FreemarkerDocumentFormatter();
 
-        preprocessor.preprocess( "test", reader, writer, metadata, formatter, null );
+        preprocessor.preprocess( "test", stream, writer, metadata, formatter, null );
 
         assertEquals( "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>"
                           + "<w:document "
@@ -182,8 +187,8 @@ public class DocxPreprocessorImageWithFreemarkerTestCase
         throws Exception
     {
         DocxPreprocessor preprocessor = new DocxPreprocessor();
-        StringReader reader =
-            new StringReader(
+        InputStream stream =
+                        IOUtils.toInputStream(
                               "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>"
                                   + "<w:document "
                                   + "xmlns:ve=\"http://schemas.openxmlformats.org/markup-compatibility/2006\" "
@@ -388,7 +393,7 @@ public class DocxPreprocessorImageWithFreemarkerTestCase
         metadata.addFieldAsImage( "photo", "developers.photo" );
         IDocumentFormatter formatter = new FreemarkerDocumentFormatter();
 
-        preprocessor.preprocess( "test", reader, writer, metadata, formatter, null );
+        preprocessor.preprocess( "test", stream, writer, metadata, formatter, null );
 
         assertEquals( "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>"
                           + "<w:document "

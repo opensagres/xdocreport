@@ -24,10 +24,12 @@
  */
 package fr.opensagres.xdocreport.document.odt.preprocessor;
 
+import java.io.InputStream;
 import java.io.StringReader;
 import java.io.StringWriter;
 
 import junit.framework.TestCase;
+import fr.opensagres.xdocreport.core.io.IOUtils;
 import fr.opensagres.xdocreport.template.formatter.FieldsMetadata;
 import fr.opensagres.xdocreport.template.formatter.IDocumentFormatter;
 import fr.opensagres.xdocreport.template.velocity.VelocityDocumentFormatter;
@@ -40,8 +42,8 @@ public class ODTPreprocessorHyperlinkWithVelocityTestCase
         throws Exception
     {
         ODTPreprocessor preprocessor = new ODTPreprocessor();
-        StringReader reader =
-            new StringReader( "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>"
+        InputStream stream =
+                        IOUtils.toInputStream( "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>"
                 + "<office:document-content xmlns:office=\"urn:oasis:names:tc:opendocument:xmlns:office:1.0\" "
                 + "xmlns:text=\"urn:oasis:names:tc:opendocument:xmlns:text:1.0\" "
                 + "xmlns:table=\"urn:oasis:names:tc:opendocument:xmlns:table:1.0\" "
@@ -80,7 +82,7 @@ public class ODTPreprocessorHyperlinkWithVelocityTestCase
         metadata.addFieldAsList( "developers.Mail" );
         IDocumentFormatter formatter = new VelocityDocumentFormatter();
 
-        preprocessor.preprocess( "test", reader, writer, metadata, formatter, null );
+        preprocessor.preprocess( "test", stream, writer, metadata, formatter, null );
 
         assertEquals( "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>"
                           + "<office:document-content xmlns:office=\"urn:oasis:names:tc:opendocument:xmlns:office:1.0\" "

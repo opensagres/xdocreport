@@ -24,8 +24,11 @@
  */
 package fr.opensagres.xdocreport.document.odt.preprocessor;
 
+import java.io.InputStream;
 import java.io.StringReader;
 import java.io.StringWriter;
+
+import fr.opensagres.xdocreport.core.io.IOUtils;
 
 import junit.framework.TestCase;
 
@@ -53,10 +56,12 @@ public class ODTPreprocessorWithTableTestCase
         throws Exception
     {
         ODTPreprocessor preprocessor = new ODTPreprocessor();
-        StringReader reader = new StringReader( TABLE_INSIDE_ROW );
+        InputStream stream =
+                        IOUtils.toInputStream( TABLE_INSIDE_ROW );
+
         StringWriter writer = new StringWriter();
 
-        preprocessor.preprocess( "test", reader, writer, null, null, null );
+        preprocessor.preprocess( "test", stream, writer, null, null, null );
 
         assertEquals( TABLE_INSIDE_ROW, writer.toString() );
     }

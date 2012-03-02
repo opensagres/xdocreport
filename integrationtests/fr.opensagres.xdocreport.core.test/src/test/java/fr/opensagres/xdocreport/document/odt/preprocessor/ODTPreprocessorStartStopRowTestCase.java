@@ -24,8 +24,11 @@
  */
 package fr.opensagres.xdocreport.document.odt.preprocessor;
 
+import java.io.InputStream;
 import java.io.StringReader;
 import java.io.StringWriter;
+
+import fr.opensagres.xdocreport.core.io.IOUtils;
 
 import junit.framework.TestCase;
 
@@ -49,10 +52,11 @@ public class ODTPreprocessorStartStopRowTestCase
         throws Exception
     {
         ODTPreprocessor preprocessor = new ODTPreprocessor();
-        StringReader reader = new StringReader( START_STOP_XML );
+        InputStream stream =
+                        IOUtils.toInputStream( START_STOP_XML );
         StringWriter writer = new StringWriter();
 
-        preprocessor.preprocess( "test", reader, writer, null, null, null );
+        preprocessor.preprocess( "test", stream, writer, null, null, null );
 
         assertEquals( "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>"
             + "<office:document-content xmlns:office=\"urn:oasis:names:tc:opendocument:xmlns:office:1.0\" "

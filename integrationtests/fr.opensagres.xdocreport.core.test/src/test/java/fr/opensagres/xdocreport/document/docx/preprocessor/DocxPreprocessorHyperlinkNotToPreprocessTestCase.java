@@ -24,10 +24,11 @@
  */
 package fr.opensagres.xdocreport.document.docx.preprocessor;
 
-import java.io.StringReader;
+import java.io.InputStream;
 import java.io.StringWriter;
 
 import junit.framework.TestCase;
+import fr.opensagres.xdocreport.core.io.IOUtils;
 
 public class DocxPreprocessorHyperlinkNotToPreprocessTestCase
     extends TestCase
@@ -69,11 +70,10 @@ public class DocxPreprocessorHyperlinkNotToPreprocessTestCase
         throws Exception
     {
         DocxPreprocessor preprocessor = new DocxPreprocessor();
-        StringReader reader = new StringReader( HYPERLINK_XML );
-
+        InputStream stream = IOUtils.toInputStream( HYPERLINK_XML );
         StringWriter writer = new StringWriter();
 
-        preprocessor.preprocess( "test", reader, writer, null, null, null );
+        preprocessor.preprocess( "test", stream, writer, null, null, null );
 
         assertEquals( HYPERLINK_XML, writer.toString() );
     }

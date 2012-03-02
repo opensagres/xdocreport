@@ -25,6 +25,7 @@
 package fr.opensagres.xdocreport.document.preprocessor.sax;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.Reader;
 import java.io.Writer;
 import java.util.Map;
@@ -45,11 +46,11 @@ import fr.opensagres.xdocreport.template.formatter.IDocumentFormatter;
  * SAX preprocessor to modify XML entry with SAX.
  */
 public abstract class SAXXDocPreprocessor
-    extends AbstractXDocPreprocessor<Reader>
+    extends AbstractXDocPreprocessor<InputStream>
 {
 
     @Override
-    public boolean preprocess( String entryName, Reader reader, Writer writer, FieldsMetadata fieldsMetadata,
+    public boolean preprocess( String entryName, InputStream reader, Writer writer, FieldsMetadata fieldsMetadata,
                                IDocumentFormatter formatter, Map<String, Object> sharedContext )
         throws XDocReportException, IOException
     {
@@ -79,13 +80,13 @@ public abstract class SAXXDocPreprocessor
     }
 
     @Override
-    protected Reader getSource( XDocArchive documentArchive, String entryName )
+    protected InputStream getSource( XDocArchive documentArchive, String entryName )
     {
-        return documentArchive.getEntryReader( entryName );
+        return documentArchive.getEntryInputStream( entryName );
     }
 
     @Override
-    protected void closeSource( Reader reader )
+    protected void closeSource( InputStream reader )
     {
         if ( reader != null )
         {

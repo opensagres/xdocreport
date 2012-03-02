@@ -24,12 +24,14 @@
  */
 package fr.opensagres.xdocreport.document.docx.preprocessor;
 
+import java.io.InputStream;
 import java.io.StringReader;
 import java.io.StringWriter;
 import java.util.HashMap;
 import java.util.Map;
 
 import junit.framework.TestCase;
+import fr.opensagres.xdocreport.core.io.IOUtils;
 import fr.opensagres.xdocreport.document.docx.DocxConstants;
 import fr.opensagres.xdocreport.template.formatter.FieldsMetadata;
 import fr.opensagres.xdocreport.template.formatter.IDocumentFormatter;
@@ -71,7 +73,8 @@ public class DocxPreprocessorHyperlinkWithFreemarkerTestCase
         throws Exception
     {
         DocxPreprocessor preprocessor = new DocxPreprocessor();
-        StringReader reader = new StringReader( HYPERLINK_XML );
+        InputStream stream =
+                        IOUtils.toInputStream( HYPERLINK_XML );
 
         StringWriter writer = new StringWriter();
 
@@ -79,7 +82,7 @@ public class DocxPreprocessorHyperlinkWithFreemarkerTestCase
         // metadata.addFieldAsList("developers.mail");
         IDocumentFormatter formatter = new FreemarkerDocumentFormatter();
 
-        preprocessor.preprocess( "test", reader, writer, metadata, formatter, new HashMap<String, Object>() );
+        preprocessor.preprocess( "test", stream, writer, metadata, formatter, new HashMap<String, Object>() );
 
         assertEquals( "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>" + "<w:document "
             + "xmlns:ve=\"http://schemas.openxmlformats.org/markup-compatibility/2006\" "
@@ -118,7 +121,8 @@ public class DocxPreprocessorHyperlinkWithFreemarkerTestCase
         throws Exception
     {
         DocxPreprocessor preprocessor = new DocxPreprocessor();
-        StringReader reader = new StringReader( HYPERLINK_XML );
+        InputStream stream =
+                        IOUtils.toInputStream(HYPERLINK_XML );
 
         StringWriter writer = new StringWriter();
 
@@ -133,7 +137,7 @@ public class DocxPreprocessorHyperlinkWithFreemarkerTestCase
         hyperlinkMap.put( "rId5", new HyperlinkInfo( "rId5", "${x}", "External" ) );
         sharedContext.put( HyperlinkUtils.getHyperlinkRegistryKey( entryName ), hyperlinkMap );
 
-        preprocessor.preprocess( entryName, reader, writer, metadata, formatter, sharedContext );
+        preprocessor.preprocess( entryName, stream, writer, metadata, formatter, sharedContext );
 
         assertEquals( "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>"
                           + "<w:document "

@@ -24,9 +24,11 @@
  */
 package fr.opensagres.xdocreport.document.odt.preprocessor;
 
+import java.io.InputStream;
 import java.io.StringReader;
 import java.io.StringWriter;
 
+import fr.opensagres.xdocreport.core.io.IOUtils;
 import fr.opensagres.xdocreport.template.formatter.IDocumentFormatter;
 import fr.opensagres.xdocreport.template.freemarker.FreemarkerDocumentFormatter;
 
@@ -40,8 +42,8 @@ public class ODTPreprocessorTextInputWithFreemarkerTestCase
         throws Exception
     {
         ODTPreprocessor preprocessor = new ODTPreprocessor();
-        StringReader reader =
-            new StringReader( "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>"
+        InputStream stream =
+                        IOUtils.toInputStream( "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>"
                 + "<office:document-content xmlns:office=\"urn:oasis:names:tc:opendocument:xmlns:office:1.0\" "
                 + "xmlns:text=\"urn:oasis:names:tc:opendocument:xmlns:text:1.0\" "
                 + "xmlns:table=\"urn:oasis:names:tc:opendocument:xmlns:table:1.0\">"
@@ -51,7 +53,7 @@ public class ODTPreprocessorTextInputWithFreemarkerTestCase
         StringWriter writer = new StringWriter();
 
         IDocumentFormatter formatter = new FreemarkerDocumentFormatter();
-        preprocessor.preprocess( "test", reader, writer, null, formatter, null );
+        preprocessor.preprocess( "test", stream, writer, null, formatter, null );
 
         assertEquals( "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>"
             + "<office:document-content xmlns:office=\"urn:oasis:names:tc:opendocument:xmlns:office:1.0\" "
@@ -66,8 +68,8 @@ public class ODTPreprocessorTextInputWithFreemarkerTestCase
         throws Exception
     {
         ODTPreprocessor preprocessor = new ODTPreprocessor();
-        StringReader reader =
-            new StringReader( "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>"
+        InputStream stream =
+                        IOUtils.toInputStream( "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>"
                 + "<office:document-content xmlns:office=\"urn:oasis:names:tc:opendocument:xmlns:office:1.0\" "
                 + "xmlns:text=\"urn:oasis:names:tc:opendocument:xmlns:text:1.0\" "
                 + "xmlns:table=\"urn:oasis:names:tc:opendocument:xmlns:table:1.0\">"
@@ -77,7 +79,7 @@ public class ODTPreprocessorTextInputWithFreemarkerTestCase
         StringWriter writer = new StringWriter();
 
         IDocumentFormatter formatter = new FreemarkerDocumentFormatter();
-        preprocessor.preprocess( "test", reader, writer, null, formatter, null );
+        preprocessor.preprocess( "test", stream, writer, null, formatter, null );
 
         assertEquals( "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>"
             + "<office:document-content xmlns:office=\"urn:oasis:names:tc:opendocument:xmlns:office:1.0\" "
@@ -92,8 +94,8 @@ public class ODTPreprocessorTextInputWithFreemarkerTestCase
         throws Exception
     {
         ODTPreprocessor preprocessor = new ODTPreprocessor();
-        StringReader reader =
-            new StringReader(
+        InputStream stream =
+                        IOUtils.toInputStream(
                               "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>"
                                   + "<office:document-content xmlns:office=\"urn:oasis:names:tc:opendocument:xmlns:office:1.0\" "
                                   + "xmlns:text=\"urn:oasis:names:tc:opendocument:xmlns:text:1.0\" "
@@ -104,7 +106,7 @@ public class ODTPreprocessorTextInputWithFreemarkerTestCase
         StringWriter writer = new StringWriter();
 
         IDocumentFormatter formatter = new FreemarkerDocumentFormatter();
-        preprocessor.preprocess( "test", reader, writer, null, formatter, null );
+        preprocessor.preprocess( "test", stream, writer, null, formatter, null );
 
         assertEquals( "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>"
             + "<office:document-content xmlns:office=\"urn:oasis:names:tc:opendocument:xmlns:office:1.0\" "
@@ -120,8 +122,8 @@ public class ODTPreprocessorTextInputWithFreemarkerTestCase
         throws Exception
     {
         ODTPreprocessor preprocessor = new ODTPreprocessor();
-        StringReader reader =
-            new StringReader(
+        InputStream stream =
+                        IOUtils.toInputStream(
                               "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>"
                                   + "<office:document-content xmlns:office=\"urn:oasis:names:tc:opendocument:xmlns:office:1.0\" "
                                   + "xmlns:text=\"urn:oasis:names:tc:opendocument:xmlns:text:1.0\" "
@@ -132,7 +134,7 @@ public class ODTPreprocessorTextInputWithFreemarkerTestCase
         StringWriter writer = new StringWriter();
 
         IDocumentFormatter formatter = new FreemarkerDocumentFormatter();
-        preprocessor.preprocess( "test", reader, writer, null, formatter, null );
+        preprocessor.preprocess( "test", stream, writer, null, formatter, null );
 
         assertEquals( "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>"
             + "<office:document-content xmlns:office=\"urn:oasis:names:tc:opendocument:xmlns:office:1.0\" "

@@ -24,10 +24,12 @@
  */
 package fr.opensagres.xdocreport.document.odt.preprocessor;
 
+import java.io.InputStream;
 import java.io.StringReader;
 import java.io.StringWriter;
 
 import junit.framework.TestCase;
+import fr.opensagres.xdocreport.core.io.IOUtils;
 import fr.opensagres.xdocreport.template.TemplateContextHelper;
 import fr.opensagres.xdocreport.template.formatter.FieldsMetadata;
 import fr.opensagres.xdocreport.template.formatter.IDocumentFormatter;
@@ -54,13 +56,14 @@ public class ODTPreprocessorImageWithVelocityTestCase
         throws Exception
     {
         ODTPreprocessor preprocessor = new ODTPreprocessor();
-        StringReader reader = new StringReader( LOGO_IMAGE_XML );
+        InputStream stream =
+                        IOUtils.toInputStream(LOGO_IMAGE_XML );
         StringWriter writer = new StringWriter();
 
         FieldsMetadata metadata = null;
         IDocumentFormatter formatter = new VelocityDocumentFormatter();
 
-        preprocessor.preprocess( "test", reader, writer, metadata, formatter, null );
+        preprocessor.preprocess( "test", stream, writer, metadata, formatter, null );
 
         assertEquals( LOGO_IMAGE_XML, writer.toString() );
     }
@@ -69,14 +72,15 @@ public class ODTPreprocessorImageWithVelocityTestCase
         throws Exception
     {
         ODTPreprocessor preprocessor = new ODTPreprocessor();
-        StringReader reader = new StringReader( LOGO_IMAGE_XML );
+        InputStream stream =
+                        IOUtils.toInputStream( LOGO_IMAGE_XML );
         StringWriter writer = new StringWriter();
 
         FieldsMetadata metadata = new FieldsMetadata();
         metadata.addFieldAsImage( "XXX" );
         IDocumentFormatter formatter = new VelocityDocumentFormatter();
 
-        preprocessor.preprocess( "test", reader, writer, metadata, formatter, null );
+        preprocessor.preprocess( "test", stream, writer, metadata, formatter, null );
 
         assertEquals( LOGO_IMAGE_XML, writer.toString() );
     }
@@ -85,14 +89,15 @@ public class ODTPreprocessorImageWithVelocityTestCase
         throws Exception
     {
         ODTPreprocessor preprocessor = new ODTPreprocessor();
-        StringReader reader = new StringReader( LOGO_IMAGE_XML );
+        InputStream stream =
+                        IOUtils.toInputStream( LOGO_IMAGE_XML );
         StringWriter writer = new StringWriter();
 
         FieldsMetadata metadata = new FieldsMetadata();
         metadata.addFieldAsImage( "logo" );
         IDocumentFormatter formatter = new VelocityDocumentFormatter();
 
-        preprocessor.preprocess( "test", reader, writer, metadata, formatter, null );
+        preprocessor.preprocess( "test", stream, writer, metadata, formatter, null );
 
         assertEquals( "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>"
                           + "<office:document-content xmlns:office=\"urn:oasis:names:tc:opendocument:xmlns:office:1.0\" "
@@ -119,8 +124,8 @@ public class ODTPreprocessorImageWithVelocityTestCase
         throws Exception
     {
         ODTPreprocessor preprocessor = new ODTPreprocessor();
-        StringReader reader =
-            new StringReader(
+        InputStream stream =
+                        IOUtils.toInputStream(
                               "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>"
                                   + "<office:document-content xmlns:office=\"urn:oasis:names:tc:opendocument:xmlns:office:1.0\" "
                                   + "xmlns:text=\"urn:oasis:names:tc:opendocument:xmlns:text:1.0\" "
@@ -176,7 +181,7 @@ public class ODTPreprocessorImageWithVelocityTestCase
         metadata.addFieldAsImage( "developers.Photo" );
         IDocumentFormatter formatter = new VelocityDocumentFormatter();
 
-        preprocessor.preprocess( "test", reader, writer, metadata, formatter, null );
+        preprocessor.preprocess( "test", stream, writer, metadata, formatter, null );
 
         assertEquals( "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>"
             + "<office:document-content xmlns:office=\"urn:oasis:names:tc:opendocument:xmlns:office:1.0\" "

@@ -25,12 +25,10 @@
 package fr.opensagres.xdocreport.document.odt.preprocessor;
 
 import java.io.InputStream;
-import java.io.StringReader;
 import java.io.StringWriter;
 
-import fr.opensagres.xdocreport.core.io.IOUtils;
-
 import junit.framework.TestCase;
+import fr.opensagres.xdocreport.core.io.IOUtils;
 
 public class ODTPreprocessorStartStopRowTestCase
     extends TestCase
@@ -53,7 +51,7 @@ public class ODTPreprocessorStartStopRowTestCase
     {
         ODTPreprocessor preprocessor = new ODTPreprocessor();
         InputStream stream =
-                        IOUtils.toInputStream( START_STOP_XML );
+                        IOUtils.toInputStream( START_STOP_XML, "UTF-8" );
         StringWriter writer = new StringWriter();
 
         preprocessor.preprocess( "test", stream, writer, null, null, null );

@@ -70,7 +70,7 @@ public class DocxPreprocessorHyperlinkNotToPreprocessTestCase
         throws Exception
     {
         DocxPreprocessor preprocessor = new DocxPreprocessor();
-        InputStream stream = IOUtils.toInputStream( HYPERLINK_XML );
+        InputStream stream = IOUtils.toInputStream( HYPERLINK_XML, "UTF-8" );
         StringWriter writer = new StringWriter();
 
         preprocessor.preprocess( "test", stream, writer, null, null, null );

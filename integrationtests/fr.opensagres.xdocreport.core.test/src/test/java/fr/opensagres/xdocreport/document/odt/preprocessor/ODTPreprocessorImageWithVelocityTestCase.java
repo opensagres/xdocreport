@@ -25,7 +25,6 @@
 package fr.opensagres.xdocreport.document.odt.preprocessor;
 
 import java.io.InputStream;
-import java.io.StringReader;
 import java.io.StringWriter;
 
 import junit.framework.TestCase;
@@ -57,7 +56,7 @@ public class ODTPreprocessorImageWithVelocityTestCase
     {
         ODTPreprocessor preprocessor = new ODTPreprocessor();
         InputStream stream =
-                        IOUtils.toInputStream(LOGO_IMAGE_XML );
+                        IOUtils.toInputStream(LOGO_IMAGE_XML, "UTF-8" );
         StringWriter writer = new StringWriter();
 
         FieldsMetadata metadata = null;
@@ -73,7 +72,7 @@ public class ODTPreprocessorImageWithVelocityTestCase
     {
         ODTPreprocessor preprocessor = new ODTPreprocessor();
         InputStream stream =
-                        IOUtils.toInputStream( LOGO_IMAGE_XML );
+                        IOUtils.toInputStream( LOGO_IMAGE_XML, "UTF-8" );
         StringWriter writer = new StringWriter();
 
         FieldsMetadata metadata = new FieldsMetadata();
@@ -90,7 +89,7 @@ public class ODTPreprocessorImageWithVelocityTestCase
     {
         ODTPreprocessor preprocessor = new ODTPreprocessor();
         InputStream stream =
-                        IOUtils.toInputStream( LOGO_IMAGE_XML );
+                        IOUtils.toInputStream( LOGO_IMAGE_XML, "UTF-8" );
         StringWriter writer = new StringWriter();
 
         FieldsMetadata metadata = new FieldsMetadata();
@@ -173,7 +172,7 @@ public class ODTPreprocessorImageWithVelocityTestCase
                                   + "<draw:frame draw:style-name=\"fr1\" draw:name=\"developers.Photo\" text:anchor-type=\"paragraph\" svg:width=\"21pt\" svg:height=\"22.51pt\" draw:z-index=\"0\">"
                                   + "<draw:image xlink:href=\"Pictures/100000000000001C0000001EE8812A78.png\" xlink:type=\"simple\" xlink:show=\"embed\" xlink:actuate=\"onLoad\"/>"
                                   + "</draw:frame>" + "</text:p>" + "</table:table-cell>" + "</table:table-row>"
-                                  + "</table:table>" + "</office:document-content>" );
+                                  + "</table:table>" + "</office:document-content>", "UTF-8" );
         StringWriter writer = new StringWriter();
 
         FieldsMetadata metadata = new FieldsMetadata();

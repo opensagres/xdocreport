@@ -1,7 +1,6 @@
 package fr.opensagres.xdocreport.document.docx.preprocessor.numbering;
 
 import java.io.InputStream;
-import java.io.StringReader;
 import java.io.StringWriter;
 import java.util.HashMap;
 import java.util.Map;

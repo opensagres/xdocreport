@@ -24,7 +24,6 @@
  */
 package fr.opensagres.xdocreport.document.tools;
 
-import org.junit.Test;
 
 public class MainVithFreemarkerTestCase
 {

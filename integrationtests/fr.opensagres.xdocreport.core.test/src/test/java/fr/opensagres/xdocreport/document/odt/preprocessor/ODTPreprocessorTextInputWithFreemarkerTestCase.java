@@ -25,14 +25,12 @@
 package fr.opensagres.xdocreport.document.odt.preprocessor;
 
 import java.io.InputStream;
-import java.io.StringReader;
 import java.io.StringWriter;
 
+import junit.framework.TestCase;
 import fr.opensagres.xdocreport.core.io.IOUtils;
 import fr.opensagres.xdocreport.template.formatter.IDocumentFormatter;
 import fr.opensagres.xdocreport.template.freemarker.FreemarkerDocumentFormatter;
-
-import junit.framework.TestCase;
 
 public class ODTPreprocessorTextInputWithFreemarkerTestCase
     extends TestCase
@@ -49,7 +47,7 @@ public class ODTPreprocessorTextInputWithFreemarkerTestCase
                 + "xmlns:table=\"urn:oasis:names:tc:opendocument:xmlns:table:1.0\">"
                 + "<text:p text:style-name=\"Table_20_Contents\">"
                 + "<text:text-input text:description=\"\">${doc[&apos;dc:title&apos;]}</text:text-input>" + "</text:p>"
-                + "</office:document-content>" );
+                + "</office:document-content>", "UTF-8" );
         StringWriter writer = new StringWriter();
 
         IDocumentFormatter formatter = new FreemarkerDocumentFormatter();
@@ -75,7 +73,7 @@ public class ODTPreprocessorTextInputWithFreemarkerTestCase
                 + "xmlns:table=\"urn:oasis:names:tc:opendocument:xmlns:table:1.0\">"
                 + "<text:p text:style-name=\"Table_20_Contents\">"
                 + "<text:text-input text:description=\"\">${doc[&quot;dc:title&quot;]}</text:text-input>" + "</text:p>"
-                + "</office:document-content>" );
+                + "</office:document-content>", "UTF-8" );
         StringWriter writer = new StringWriter();
 
         IDocumentFormatter formatter = new FreemarkerDocumentFormatter();
@@ -102,7 +100,7 @@ public class ODTPreprocessorTextInputWithFreemarkerTestCase
                                   + "xmlns:table=\"urn:oasis:names:tc:opendocument:xmlns:table:1.0\">"
                                   + "<text:p text:style-name=\"Table_20_Contents\">"
                                   + "<text:text-input text:description=\"\">[#list doc[&apos;dc:subjects&apos;] as subject]</text:text-input>"
-                                  + "</text:p>" + "</office:document-content>" );
+                                  + "</text:p>" + "</office:document-content>", "UTF-8" );
         StringWriter writer = new StringWriter();
 
         IDocumentFormatter formatter = new FreemarkerDocumentFormatter();
@@ -130,7 +128,7 @@ public class ODTPreprocessorTextInputWithFreemarkerTestCase
                                   + "xmlns:table=\"urn:oasis:names:tc:opendocument:xmlns:table:1.0\">"
                                   + "<text:p text:style-name=\"Table_20_Contents\">"
                                   + "<text:text-input text:description=\"\">[#list doc[&quot;dc:subjects&quot;] as subject]</text:text-input>"
-                                  + "</text:p>" + "</office:document-content>" );
+                                  + "</text:p>" + "</office:document-content>", "UTF-8" );
         StringWriter writer = new StringWriter();
 
         IDocumentFormatter formatter = new FreemarkerDocumentFormatter();

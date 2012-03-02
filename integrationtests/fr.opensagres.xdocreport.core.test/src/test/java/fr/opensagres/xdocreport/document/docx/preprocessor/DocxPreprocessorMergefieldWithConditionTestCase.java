@@ -25,12 +25,10 @@
 package fr.opensagres.xdocreport.document.docx.preprocessor;
 
 import java.io.InputStream;
-import java.io.StringReader;
 import java.io.StringWriter;
 
-import fr.opensagres.xdocreport.core.io.IOUtils;
-
 import junit.framework.TestCase;
+import fr.opensagres.xdocreport.core.io.IOUtils;
 
 public class DocxPreprocessorMergefieldWithConditionTestCase
     extends TestCase
@@ -56,7 +54,7 @@ public class DocxPreprocessorMergefieldWithConditionTestCase
                                         + "<w:r w:rsidRPr=\"009C7F29\">" + "<w:rPr>" + "<w:noProof/>"
                                         + "<w:lang w:val=\"en-US\"/>" + "</w:rPr>"
                                         + "<w:t>«[#if name = 'world']world[#else]not worl»+ </w:t>" + "</w:r>"
-                                        + "</w:fldSimple>" + "</w:document>"  );
+                                        + "</w:fldSimple>" + "</w:document>", "UTF-8"  );
 
         StringWriter writer = new StringWriter();
         preprocessor.preprocess( "test", stream, writer, null, null, null );
@@ -115,7 +113,7 @@ public class DocxPreprocessorMergefieldWithConditionTestCase
                                         + "<w:r w:rsidRPr=\"009C7F29\">" + "<w:rPr>" + "<w:noProof/>"
                                         + "<w:lang w:val=\"en-US\"/>" + "</w:rPr>"
                                         + "<w:t>[#if name != \"world\"]world[#else]not wor»</w:t>" + "</w:r>" + "<w:r>"
-                                        + "<w:fldChar w:fldCharType=\"end\"/>" + "</w:r>" + "</w:p>" + "</w:document>");
+                                        + "<w:fldChar w:fldCharType=\"end\"/>" + "</w:r>" + "</w:p>" + "</w:document>", "UTF-8");
 
         StringWriter writer = new StringWriter();
         preprocessor.preprocess( "test", stream, writer, null, null, null );
@@ -191,7 +189,7 @@ public class DocxPreprocessorMergefieldWithConditionTestCase
                                   + "<w:r w:rsidRPr=\"009C7F29\">" + "<w:rPr>" + "<w:noProof/>"
                                   + "<w:lang w:val=\"en-US\"/>" + "</w:rPr>"
                                   + "<w:t>[#if name != 'world']world[#else]not wor»</w:t>" + "</w:r>" + "<w:r>"
-                                  + "<w:fldChar w:fldCharType=\"end\"/>" + "</w:r>" + "</w:p>" + "</w:document>" ));
+                                  + "<w:fldChar w:fldCharType=\"end\"/>" + "</w:r>" + "</w:p>" + "</w:document>" ), "UTF-8");
 
         StringWriter writer = new StringWriter();
         preprocessor.preprocess( "test", stream, writer, null, null, null );

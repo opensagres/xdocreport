@@ -42,7 +42,6 @@ import org.junit.Test;
 import fr.opensagres.xdocreport.core.io.IOUtils;
 import fr.opensagres.xdocreport.core.io.XDocArchive;
 import fr.opensagres.xdocreport.core.logging.LogUtils;
-import fr.opensagres.xdocreport.core.logging.Slf4jLogger;
 
 /**
  * Test case for {@link XDocArchive}.

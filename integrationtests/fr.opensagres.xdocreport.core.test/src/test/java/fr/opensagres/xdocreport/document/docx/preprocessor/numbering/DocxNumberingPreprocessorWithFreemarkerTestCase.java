@@ -1,7 +1,6 @@
 package fr.opensagres.xdocreport.document.docx.preprocessor.numbering;
 
 import java.io.InputStream;
-import java.io.StringReader;
 import java.io.StringWriter;
 import java.util.HashMap;
 import java.util.Map;
@@ -13,7 +12,6 @@ import fr.opensagres.xdocreport.core.io.IOUtils;
 import fr.opensagres.xdocreport.document.docx.preprocessor.DefaultStyle;
 import fr.opensagres.xdocreport.document.docx.preprocessor.sax.numbering.DocxNumberingPreprocessor;
 import fr.opensagres.xdocreport.document.docx.template.DocxContextHelper;
-import fr.opensagres.xdocreport.document.docx.textstyling.DocxDefaultStylesGenerator;
 import fr.opensagres.xdocreport.template.formatter.IDocumentFormatter;
 import fr.opensagres.xdocreport.template.freemarker.FreemarkerDocumentFormatter;
 

@@ -24,8 +24,6 @@
  */
 package fr.opensagres.xdocreport.document.docx.textstyling;
 
-import junit.framework.Assert;
-
 import org.junit.Test;
 
 import fr.opensagres.xdocreport.document.textstyling.IDocumentHandler;

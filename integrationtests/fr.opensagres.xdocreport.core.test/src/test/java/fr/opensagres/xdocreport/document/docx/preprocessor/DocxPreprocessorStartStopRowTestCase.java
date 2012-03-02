@@ -25,13 +25,11 @@
 package fr.opensagres.xdocreport.document.docx.preprocessor;
 
 import java.io.InputStream;
-import java.io.StringReader;
 import java.io.StringWriter;
 import java.util.HashMap;
 
-import fr.opensagres.xdocreport.core.io.IOUtils;
-
 import junit.framework.TestCase;
+import fr.opensagres.xdocreport.core.io.IOUtils;
 
 public class DocxPreprocessorStartStopRowTestCase
     extends TestCase
@@ -111,7 +109,7 @@ public class DocxPreprocessorStartStopRowTestCase
     {
         DocxPreprocessor preprocessor = new DocxPreprocessor();
         InputStream stream =
-                        IOUtils.toInputStream( FDLSIMPLE_START_STOP_XML );
+                        IOUtils.toInputStream( FDLSIMPLE_START_STOP_XML, "UTF-8" );
 
         StringWriter writer = new StringWriter();
 
@@ -164,7 +162,7 @@ public class DocxPreprocessorStartStopRowTestCase
     {
         DocxPreprocessor preprocessor = new DocxPreprocessor();
         InputStream stream =
-                        IOUtils.toInputStream( INSTRTEXT_START_STOP_XML );
+                        IOUtils.toInputStream( INSTRTEXT_START_STOP_XML, "UTF-8" );
 
         StringWriter writer = new StringWriter();
 

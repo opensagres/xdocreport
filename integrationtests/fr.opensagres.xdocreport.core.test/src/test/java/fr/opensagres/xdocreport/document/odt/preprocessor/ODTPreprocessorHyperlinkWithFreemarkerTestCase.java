@@ -25,7 +25,6 @@
 package fr.opensagres.xdocreport.document.odt.preprocessor;
 
 import java.io.InputStream;
-import java.io.StringReader;
 import java.io.StringWriter;
 
 import junit.framework.TestCase;
@@ -75,7 +74,7 @@ public class ODTPreprocessorHyperlinkWithFreemarkerTestCase
                 + "<text:p text:style-name=\"Standard\">"
                 + "<text:a xlink:type=\"simple\" xlink:href=\"mailto:${developers.mail}\">${developers.mail}</text:a>"
                 + "</text:p>" + "</table:table-cell>" + "</table:table-row>" + "</table:table>"
-                + "</office:document-content>" );
+                + "</office:document-content>", "UTF-8" );
         StringWriter writer = new StringWriter();
 
         FieldsMetadata metadata = new FieldsMetadata();

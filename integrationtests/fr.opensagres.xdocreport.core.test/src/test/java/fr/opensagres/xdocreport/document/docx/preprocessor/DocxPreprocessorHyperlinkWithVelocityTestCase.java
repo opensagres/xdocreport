@@ -25,14 +25,12 @@
 package fr.opensagres.xdocreport.document.docx.preprocessor;
 
 import java.io.InputStream;
-import java.io.StringReader;
 import java.io.StringWriter;
 import java.util.HashMap;
 import java.util.Map;
 
 import junit.framework.TestCase;
 import fr.opensagres.xdocreport.core.io.IOUtils;
-import fr.opensagres.xdocreport.document.docx.DocxConstants;
 import fr.opensagres.xdocreport.template.formatter.FieldsMetadata;
 import fr.opensagres.xdocreport.template.formatter.IDocumentFormatter;
 import fr.opensagres.xdocreport.template.velocity.VelocityDocumentFormatter;
@@ -74,7 +72,7 @@ public class DocxPreprocessorHyperlinkWithVelocityTestCase
     {
         DocxPreprocessor preprocessor = new DocxPreprocessor();
         InputStream stream =
-                        IOUtils.toInputStream( HYPERLINK_XML );
+                        IOUtils.toInputStream( HYPERLINK_XML, "UTF-8" );
 
         StringWriter writer = new StringWriter();
 
@@ -122,7 +120,7 @@ public class DocxPreprocessorHyperlinkWithVelocityTestCase
     {
         DocxPreprocessor preprocessor = new DocxPreprocessor();
         InputStream stream =
-                        IOUtils.toInputStream( HYPERLINK_XML );
+                        IOUtils.toInputStream( HYPERLINK_XML, "UTF-8" );
 
         StringWriter writer = new StringWriter();
 

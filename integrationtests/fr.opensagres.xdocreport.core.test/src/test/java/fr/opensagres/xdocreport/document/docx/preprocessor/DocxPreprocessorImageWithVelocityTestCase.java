@@ -25,7 +25,6 @@
 package fr.opensagres.xdocreport.document.docx.preprocessor;
 
 import java.io.InputStream;
-import java.io.StringReader;
 import java.io.StringWriter;
 
 import junit.framework.TestCase;
@@ -83,7 +82,7 @@ public class DocxPreprocessorImageWithVelocityTestCase
     {
         DocxPreprocessor preprocessor = new DocxPreprocessor();
         InputStream stream =
-                        IOUtils.toInputStream(LOGO_IMAGE_XML );
+                        IOUtils.toInputStream(LOGO_IMAGE_XML, "UTF-8" );
         StringWriter writer = new StringWriter();
 
         FieldsMetadata metadata = null;
@@ -99,7 +98,7 @@ public class DocxPreprocessorImageWithVelocityTestCase
     {
         DocxPreprocessor preprocessor = new DocxPreprocessor();
         InputStream stream =
-                        IOUtils.toInputStream( LOGO_IMAGE_XML );
+                        IOUtils.toInputStream( LOGO_IMAGE_XML, "UTF-8" );
         StringWriter writer = new StringWriter();
 
         FieldsMetadata metadata = new FieldsMetadata();
@@ -116,7 +115,7 @@ public class DocxPreprocessorImageWithVelocityTestCase
     {
         DocxPreprocessor preprocessor = new DocxPreprocessor();
         InputStream stream =
-                        IOUtils.toInputStream( LOGO_IMAGE_XML );
+                        IOUtils.toInputStream( LOGO_IMAGE_XML, "UTF-8" );
         StringWriter writer = new StringWriter();
 
         FieldsMetadata metadata = new FieldsMetadata();
@@ -384,7 +383,7 @@ public class DocxPreprocessorImageWithVelocityTestCase
                                   + "<a:prstGeom prst=\"rect\">" + "<a:avLst/>" + "</a:prstGeom>" + "</pic:spPr>"
                                   + "</pic:pic>" + "</a:graphicData>" + "</a:graphic>" + "</wp:inline>"
                                   + "</w:drawing>" + "</w:r>" + "<w:bookmarkEnd w:id=\"0\"/>" + "</w:p>" + "</w:tc>"
-                                  + "</w:tr>" + "</w:tbl>" + "</w:document>" );
+                                  + "</w:tr>" + "</w:tbl>" + "</w:document>", "UTF-8" );
 
         StringWriter writer = new StringWriter();
 

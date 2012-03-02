@@ -25,12 +25,10 @@
 package fr.opensagres.xdocreport.document.odt.preprocessor;
 
 import java.io.InputStream;
-import java.io.StringReader;
 import java.io.StringWriter;
 
-import fr.opensagres.xdocreport.core.io.IOUtils;
-
 import junit.framework.TestCase;
+import fr.opensagres.xdocreport.core.io.IOUtils;
 
 public class ODTPreprocessorWithTableTestCase
     extends TestCase
@@ -57,7 +55,7 @@ public class ODTPreprocessorWithTableTestCase
     {
         ODTPreprocessor preprocessor = new ODTPreprocessor();
         InputStream stream =
-                        IOUtils.toInputStream( TABLE_INSIDE_ROW );
+                        IOUtils.toInputStream( TABLE_INSIDE_ROW, "UTF-8" );
 
         StringWriter writer = new StringWriter();
 

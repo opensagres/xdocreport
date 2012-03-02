@@ -25,7 +25,6 @@
 package fr.opensagres.xdocreport.document.pptx.preprocessor;
 
 import java.io.InputStream;
-import java.io.StringReader;
 import java.io.StringWriter;
 import java.util.HashMap;
 
@@ -51,7 +50,7 @@ public class PPTXSlidePreprocessorWithVelocityTestCase
                                         + "<a:bodyPr>" + "<a:spAutoFit/>" + "</a:bodyPr>" + "<a:lstStyle/>" + "<a:p>" + "<a:r>"
                                         + "<a:rPr lang=\"fr-FR\" dirty=\"0\" smtClean=\"0\"/>" + "<a:t>$</a:t>" + "</a:r>" + "<a:r>"
                                         + "<a:rPr lang=\"fr-FR\" dirty=\"0\" err=\"1\" smtClean=\"0\"/>" + "<a:t>developers.Name</a:t>"
-                                        + "</a:r>" + "<a:endParaRPr lang=\"fr-FR\" dirty=\"0\"/>" + "</a:p>" + "</p:txBody>" + "</p:sld>" );
+                                        + "</a:r>" + "<a:endParaRPr lang=\"fr-FR\" dirty=\"0\"/>" + "</a:p>" + "</p:txBody>" + "</p:sld>", "UTF-8" );
         FieldsMetadata metadata = new FieldsMetadata();
         metadata.addFieldAsList( "developers.Name" );
         IDocumentFormatter formatter = new VelocityDocumentFormatter();
@@ -99,7 +98,7 @@ public class PPTXSlidePreprocessorWithVelocityTestCase
                                         + "<a:pPr lvl=\"1\"/>" + "<a:r>" + "<a:rPr lang=\"fr-FR\" dirty=\"0\" smtClean=\"0\"/>"
                                         + "<a:t>Mail: </a:t>" + "</a:r>" + "<a:r>" + "<a:rPr lang=\"fr-FR\" smtClean=\"0\"/>" + "<a:t>$</a:t>"
                                         + "</a:r>" + "<a:r>" + "<a:rPr lang=\"fr-FR\" smtClean=\"0\"/>" + "<a:t>developers.Mail</a:t>"
-                                        + "</a:r>" + "<a:endParaRPr lang=\"fr-FR\" dirty=\"0\"/>" + "</a:p>" + "</p:txBody>" + "</p:sld>" );
+                                        + "</a:r>" + "<a:endParaRPr lang=\"fr-FR\" dirty=\"0\"/>" + "</a:p>" + "</p:txBody>" + "</p:sld>", "UTF-8" );
         FieldsMetadata metadata = new FieldsMetadata();
         metadata.addFieldAsList( "developers.Name" );
         metadata.addFieldAsList( "developers.LastName" );

@@ -25,12 +25,10 @@
 package fr.opensagres.xdocreport.document.docx.preprocessor;
 
 import java.io.InputStream;
-import java.io.StringReader;
 import java.io.StringWriter;
 
-import fr.opensagres.xdocreport.core.io.IOUtils;
-
 import junit.framework.TestCase;
+import fr.opensagres.xdocreport.core.io.IOUtils;
 
 public class DocxPreprocessorWith2InstrText
     extends TestCase
@@ -58,7 +56,7 @@ public class DocxPreprocessorWith2InstrText
                                         + "<w:r>" + "<w:fldChar w:fldCharType=\"separate\" />" + "</w:r>" + "<w:r w:rsidR=\"002407B7\">"
                                         + "<w:rPr>" + "<w:noProof/>" + "</w:rPr>" + "<w:t>«${ctx.serviceclientdeparture}»</w:t>" + "</w:r>"
                                         + "<w:r>" + "<w:rPr>" + "<w:noProof/>" + "</w:rPr>" + "<w:fldChar w:fldCharType=\"end\" />" + "</w:r>"
-                                        + "</w:p>" + "</w:document>"  );
+                                        + "</w:p>" + "</w:document>", "UTF-8"  );
 
         StringWriter writer = new StringWriter();
         preprocessor.preprocess( "test", stream, writer, null, null, null );

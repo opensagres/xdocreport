@@ -7,7 +7,7 @@ import fr.opensagres.xdocreport.remoting.resources.domain.Resource;
 import fr.opensagres.xdocreport.remoting.resources.services.DelegateResourcesService;
 import fr.opensagres.xdocreport.remoting.resources.services.ws.JAXWSResourcesService;
 
-public class JAXWSResourcesServiceImpl
+public abstract class JAXWSResourcesServiceImpl
     extends DelegateResourcesService
     implements JAXWSResourcesService
 {

@@ -2,12 +2,10 @@ package fr.opensagres.xdocreport.remoting.resources.services;
 
 import java.util.List;
 
-import old.XDocReportRepositoryService;
-
 import fr.opensagres.xdocreport.remoting.resources.domain.Filter;
 import fr.opensagres.xdocreport.remoting.resources.domain.Resource;
 
-public class DelegateResourcesService
+public abstract class DelegateResourcesService
     implements ResourcesService
 {
 
@@ -41,10 +39,10 @@ public class DelegateResourcesService
         getDelegate().upload( resourcePath, content );
     }
 
-    protected ResourcesService getDelegate()
-    {
-        // TODO : manage implementation with SPI
-        // By default it's XDocReportRepositoryService.
-        return XDocReportRepositoryService.getDefault();
-    }
+    protected abstract ResourcesService getDelegate();
+    // {
+    // // TODO : manage implementation with SPI
+    // // By default it's XDocReportRepositoryService.
+    // return XDocReportRepositoryService.getDefault();
+    // }
 }

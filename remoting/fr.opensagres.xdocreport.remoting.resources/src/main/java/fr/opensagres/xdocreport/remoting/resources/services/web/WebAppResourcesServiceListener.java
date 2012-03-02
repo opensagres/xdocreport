@@ -61,7 +61,7 @@ public abstract class WebAppResourcesServiceListener
         {
             return webAppFolder;
         }
-        webAppFolder = new File( servletContext.getRealPath( "" ) );
+        webAppFolder = new File( servletContext.getRealPath( "/" ) );
         return webAppFolder;
     }
 

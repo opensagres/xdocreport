@@ -1,4 +1,4 @@
-package fr.opensagres.xdocreport.remoting.resources.services.rest.client;
+package fr.opensagres.xdocreport.remoting.resources.services;
 
 import java.util.Comparator;
 

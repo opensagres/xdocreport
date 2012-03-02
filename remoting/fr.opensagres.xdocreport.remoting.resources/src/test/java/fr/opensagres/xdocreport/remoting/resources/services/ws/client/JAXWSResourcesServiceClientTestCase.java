@@ -1,4 +1,4 @@
-package fr.opensagres.xdocreport.remoting.resources.services.rest.client;
+package fr.opensagres.xdocreport.remoting.resources.services.ws.client;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -6,10 +6,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.Collections;
 
-import javax.ws.rs.core.Application;
-
-import org.apache.cxf.jaxrs.client.JAXRSClientFactory;
-import org.apache.cxf.jaxrs.servlet.CXFNonSpringJaxrsServlet;
+import org.apache.cxf.transport.servlet.CXFNonSpringServlet;
 import org.eclipse.jetty.server.Server;
 import org.eclipse.jetty.servlet.ServletContextHandler;
 import org.eclipse.jetty.servlet.ServletHolder;
@@ -21,11 +18,9 @@ import org.junit.Test;
 import fr.opensagres.xdocreport.remoting.resources.domain.Resource;
 import fr.opensagres.xdocreport.remoting.resources.services.ResourceComparator;
 import fr.opensagres.xdocreport.remoting.resources.services.ResourcesService;
-import fr.opensagres.xdocreport.remoting.resources.services.rest.JAXRSResourcesService;
-import fr.opensagres.xdocreport.remoting.resources.services.rest.MockJAXRSResourcesApplication;
-import fr.opensagres.xdocreport.remoting.resources.services.rest.MockJAXRSResourcesService;
+import fr.opensagres.xdocreport.remoting.resources.services.ws.MockJAXWSResourcesService;
 
-public class JAXRSResourcesServiceCGLibClientTestCase
+public class JAXWSResourcesServiceClientTestCase
 {
 
     private static final int PORT = 9999;
@@ -41,11 +36,7 @@ public class JAXRSResourcesServiceCGLibClientTestCase
         throws Exception
     {
 
-        ServletHolder servlet = new ServletHolder( CXFNonSpringJaxrsServlet.class );
-
-        servlet.setInitParameter( Application.class.getName(), MockJAXRSResourcesApplication.class.getName() );
-        servlet.setInitParameter( "jaxrs.serviceClasses", MockJAXRSResourcesService.class.getName() );
-
+        ServletHolder servlet = new ServletHolder( CXFNonSpringServlet.class );
         servlet.setInitParameter( "timeout", "60000" );
         server = new Server( PORT );
 
@@ -54,22 +45,23 @@ public class JAXRSResourcesServiceCGLibClientTestCase
         context.addServlet( servlet, "/*" );
         server.start();
 
+        //String address = BASE_ADDRESS + "/ResourcesServiceImplPort";
+        //javax.xml.ws.Endpoint.publish( address, new MockJAXWSResourcesService() );
+
     }
 
-    @Test
+    //@Test
     public void name()
     {
-        ResourcesService client = JAXRSClientFactory.create( BASE_ADDRESS, JAXRSResourcesService.class );
+        ResourcesService client = JAXWSResourcesServiceClientFactory.create( BASE_ADDRESS );
         String name = client.getName();
         Assert.assertEquals( "Test-RepositoryService", name );
     }
 
-    @Test
+    //@Test
     public void root()
-        throws IOException
     {
-
-        ResourcesService client = JAXRSClientFactory.create( BASE_ADDRESS, JAXRSResourcesService.class );
+        ResourcesService client = JAXWSResourcesServiceClientFactory.create( BASE_ADDRESS );
         Resource root = client.getRoot();
 
         // Document coming from the folder src/test/resources/fr/opensagres/xdocreport/resources/repository
@@ -88,31 +80,30 @@ public class JAXRSResourcesServiceCGLibClientTestCase
         Assert.assertEquals( Resource.FOLDER_TYPE, root.getChildren().get( 1 ).getType() );
         Assert.assertEquals( "Simple.docx", root.getChildren().get( 2 ).getName() );
         Assert.assertEquals( "Simple.odt", root.getChildren().get( 3 ).getName() );
-
     }
 
-    @Test
+    //@Test
     public void downloadARootFile()
         throws FileNotFoundException, IOException
     {
         String resourcePath = "Simple.docx";
-        ResourcesService client = JAXRSClientFactory.create( BASE_ADDRESS, JAXRSResourcesService.class );
+        ResourcesService client = JAXWSResourcesServiceClientFactory.create( BASE_ADDRESS );
         byte[] document = client.download( resourcePath );
         Assert.assertNotNull( document );
         createFile( document, resourcePath );
     }
 
-    @Test
+    //@Test
     public void downloadAFileInFolder()
         throws FileNotFoundException, IOException
     {
-        String resourcePath = "Custom%2FCustomSimple.docx";
-        ResourcesService client = JAXRSClientFactory.create( BASE_ADDRESS, JAXRSResourcesService.class );
+        String resourcePath = "Custom/CustomSimple.docx";
+        ResourcesService client = JAXWSResourcesServiceClientFactory.create( BASE_ADDRESS );
         byte[] document = client.download( resourcePath );
         Assert.assertNotNull( document );
         createFile( document, resourcePath );
     }
-    
+
     private void createFile( byte[] flux, String filename )
         throws FileNotFoundException, IOException
     {

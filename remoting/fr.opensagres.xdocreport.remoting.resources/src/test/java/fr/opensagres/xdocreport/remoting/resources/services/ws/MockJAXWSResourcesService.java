@@ -1,4 +1,4 @@
-package fr.opensagres.xdocreport.remoting.resources.services.ws.server;
+package fr.opensagres.xdocreport.remoting.resources.services.ws;
 
 import java.util.List;
 
@@ -6,12 +6,12 @@ import javax.jws.WebService;
 
 import fr.opensagres.xdocreport.remoting.resources.domain.Filter;
 import fr.opensagres.xdocreport.remoting.resources.domain.Resource;
-import fr.opensagres.xdocreport.remoting.resources.services.DelegateResourcesService;
-import fr.opensagres.xdocreport.remoting.resources.services.ws.JAXWSResourcesService;
+import fr.opensagres.xdocreport.remoting.resources.services.MockResourcesService;
+import fr.opensagres.xdocreport.remoting.resources.services.ResourcesService;
+import fr.opensagres.xdocreport.remoting.resources.services.ws.server.JAXWSResourcesServiceImpl;
 
-public abstract class JAXWSResourcesServiceImpl
-    extends DelegateResourcesService
-    implements JAXWSResourcesService
+@WebService( name = "ResourcesService" )
+public class MockJAXWSResourcesService extends JAXWSResourcesServiceImpl implements JAXWSResourcesService
 {
 
     @Override
@@ -48,5 +48,11 @@ public abstract class JAXWSResourcesServiceImpl
     public void upload( String resourcePath, byte[] content )
     {
         super.upload( resourcePath, content );
+    }
+    
+    @Override
+    protected ResourcesService getDelegate()
+    {        
+        return MockResourcesService.INSTANCE;
     }
 }

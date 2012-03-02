@@ -20,6 +20,7 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 
 import fr.opensagres.xdocreport.remoting.resources.domain.Resource;
+import fr.opensagres.xdocreport.remoting.resources.services.ResourceComparator;
 import fr.opensagres.xdocreport.remoting.resources.services.ResourcesServiceName;
 import fr.opensagres.xdocreport.remoting.resources.services.rest.MockJAXRSResourcesApplication;
 import fr.opensagres.xdocreport.remoting.resources.services.rest.MockJAXRSResourcesService;

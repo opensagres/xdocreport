@@ -98,12 +98,13 @@ public class MainTest
 
         // According OS, File#listFiles() are not the same order.
         // Test cannot be done -(
-        //Assert.assertEquals( "<resource name=\"resources\" type=\"0\"><resource name=\"Custom\" type=\"0\"><resource name=\"CustomSimple.docx\" type=\"1\"/><resource name=\"CustomSimple.odt\" type=\"1\"/></resource><resource name=\"Opensagres\" type=\"0\"><resource name=\"OpensagresSimple.docx\" type=\"1\"/><resource name=\"OpensagresSimple.odt\" type=\"1\"/></resource><resource name=\"Simple.docx\" type=\"1\"/><resource name=\"Simple.odt\" type=\"1\"/></resource>",
-        //                    s );
+        // Assert.assertEquals(
+        // "<resource name=\"resources\" type=\"0\"><resource name=\"Custom\" type=\"0\"><resource name=\"CustomSimple.docx\" type=\"1\"/><resource name=\"CustomSimple.odt\" type=\"1\"/></resource><resource name=\"Opensagres\" type=\"0\"><resource name=\"OpensagresSimple.docx\" type=\"1\"/><resource name=\"OpensagresSimple.odt\" type=\"1\"/></resource><resource name=\"Simple.docx\" type=\"1\"/><resource name=\"Simple.odt\" type=\"1\"/></resource>",
+        // s );
     }
 
     @Test
-    public void download()
+    public void downloadARootFile()
         throws Exception
     {
         String fileToDownload = "Simple.docx";
@@ -113,7 +114,19 @@ public class MainTest
                 fileToDownload, "-out", downlodedFile.getPath() };
         Main.main( args );
         Assert.assertTrue( downlodedFile.exists() );
+    }
 
+    @Test
+    public void downloadAFileInFolder()
+        throws Exception
+    {
+        String fileToDownload = "Custom/CustomSimple.docx";
+        File downlodedFile = new File( tempFolder, "DownlodedCustomSimple.docx" );
+        String[] args =
+            { "-baseAddress", BASE_ADDRESS, "-serviceName", ResourcesServiceName.download.name(), "-resources",
+                fileToDownload, "-out", downlodedFile.getPath() };
+        Main.main( args );
+        Assert.assertTrue( downlodedFile.exists() );
     }
 
     @AfterClass

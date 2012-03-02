@@ -18,6 +18,7 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 
 import fr.opensagres.xdocreport.remoting.resources.domain.Resource;
+import fr.opensagres.xdocreport.remoting.resources.services.ResourceComparator;
 import fr.opensagres.xdocreport.remoting.resources.services.ResourcesService;
 import fr.opensagres.xdocreport.remoting.resources.services.rest.MockJAXRSResourcesApplication;
 import fr.opensagres.xdocreport.remoting.resources.services.rest.MockJAXRSResourcesService;
@@ -87,7 +88,7 @@ public class JAXRSResourcesServiceStaticClientTestCase
     }
 
     @Test
-    public void download()
+    public void downloadARootFile()
         throws FileNotFoundException, IOException
     {
         String resourcePath = "Simple.docx";
@@ -97,6 +98,17 @@ public class JAXRSResourcesServiceStaticClientTestCase
         createFile( document, resourcePath );
     }
 
+    @Test
+    public void downloadAFileInFolder()
+        throws FileNotFoundException, IOException
+    {
+        String resourcePath = "Custom%2FCustomSimple.docx";
+        ResourcesService client = JAXRSResourcesServiceClientFactory.create( BASE_ADDRESS );
+        byte[] document = client.download( resourcePath );
+        Assert.assertNotNull( document );
+        createFile( document, resourcePath );
+    }
+    
     private void createFile( byte[] flux, String filename )
         throws FileNotFoundException, IOException
     {

@@ -19,7 +19,7 @@ public class JAXRSResourcesServiceClient
 
     public JAXRSResourcesServiceClient( String baseAddress, String username, String password )
     {
-        if (username!=null && !username.isEmpty()) {
+        if (username!=null && !"".equals(username)) {
             this.client = WebClient.create( baseAddress , username, password, null);
         } else {
             this.client = WebClient.create( baseAddress );    

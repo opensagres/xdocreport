@@ -17,9 +17,14 @@ public class JAXRSResourcesServiceClient
 
     private final WebClient client;
 
-    public JAXRSResourcesServiceClient( String baseAddress )
+    public JAXRSResourcesServiceClient( String baseAddress, String username, String password )
     {
-        this.client = WebClient.create( baseAddress );
+        if (username!=null && !username.isEmpty()) {
+            this.client = WebClient.create( baseAddress , username, password, null);
+        } else {
+            this.client = WebClient.create( baseAddress );    
+        }
+        
     }
 
     public String getName()

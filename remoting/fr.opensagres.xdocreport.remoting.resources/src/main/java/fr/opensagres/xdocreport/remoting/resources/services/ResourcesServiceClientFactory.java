@@ -46,7 +46,7 @@ public class ResourcesServiceClientFactory
     {
         if ( serviceType == ServiceType.REST )
         {
-            return JAXRSResourcesServiceClientFactory.create( baseAddress );
+            return JAXRSResourcesServiceClientFactory.create( baseAddress, user, password );
         }
         return JAXWSResourcesServiceClientFactory.create( baseAddress );
     }

@@ -6,6 +6,7 @@ import javax.ws.rs.core.MediaType;
 
 import org.apache.cxf.jaxrs.client.WebClient;
 
+import fr.opensagres.xdocreport.core.utils.StringUtils;
 import fr.opensagres.xdocreport.remoting.resources.domain.Filter;
 import fr.opensagres.xdocreport.remoting.resources.domain.Resource;
 import fr.opensagres.xdocreport.remoting.resources.services.ResourcesService;
@@ -19,12 +20,15 @@ public class JAXRSResourcesServiceClient
 
     public JAXRSResourcesServiceClient( String baseAddress, String username, String password )
     {
-        if (username!=null && !"".equals(username)) {
-            this.client = WebClient.create( baseAddress , username, password, null);
-        } else {
-            this.client = WebClient.create( baseAddress );    
+        if ( StringUtils.isNotEmpty( username ) )
+        {
+            this.client = WebClient.create( baseAddress, username, password, null );
         }
-        
+        else
+        {
+            this.client = WebClient.create( baseAddress );
+        }
+
     }
 
     public String getName()

@@ -45,8 +45,8 @@
     <!-- add jaxws api -->        
     <dependency>
       <groupId>javax.jws</groupId>
-      <artifactId>jsr181</artifactId>
-      <version>1.0</version>
+      <artifactId>jsr181-api</artifactId>
+      <version>1.0-MR1</version>
       <scope>provided</scope>
     </dependency>
 

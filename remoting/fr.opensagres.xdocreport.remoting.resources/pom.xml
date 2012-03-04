@@ -41,7 +41,15 @@
       <version>2.0</version>
       <scope>provided</scope>
     </dependency>
-        
+
+    <!-- add jaxws api -->        
+    <dependency>
+      <groupId>javax.jws</groupId>
+      <artifactId>jsr181</artifactId>
+      <version>1.0</version>
+      <scope>provided</scope>
+    </dependency>
+
  	<!-- We need some impl in order to have smtg to test on... -->
     <dependency>
       <groupId>fr.opensagres.xdocreport</groupId>

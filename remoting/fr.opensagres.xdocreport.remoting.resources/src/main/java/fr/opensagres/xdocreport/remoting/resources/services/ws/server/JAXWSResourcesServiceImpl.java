@@ -2,8 +2,6 @@ package fr.opensagres.xdocreport.remoting.resources.services.ws.server;
 
 import java.util.List;
 
-import javax.jws.WebService;
-
 import fr.opensagres.xdocreport.remoting.resources.domain.Filter;
 import fr.opensagres.xdocreport.remoting.resources.domain.Resource;
 import fr.opensagres.xdocreport.remoting.resources.services.DelegateResourcesService;

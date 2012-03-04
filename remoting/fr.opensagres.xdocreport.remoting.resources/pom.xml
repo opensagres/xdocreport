@@ -33,8 +33,8 @@
       <artifactId>geronimo-jaxb_2.1_spec</artifactId>
       <version>1.0</version>
       <scope>provided</scope>
-    </dependency>
-            
+    </dependency>            
+                
     <dependency>
       <groupId>org.apache.geronimo.specs</groupId>
       <artifactId>geronimo-jaxws_2.2_spec</artifactId>
@@ -42,6 +42,13 @@
       <scope>provided</scope>
     </dependency>
 
+    <dependency>
+      <groupId>org.apache.geronimo.specs</groupId>
+      <artifactId>geronimo-ws-metadata_2.0_spec</artifactId>
+      <version>1.1.3</version>
+      <scope>provided</scope>
+    </dependency>
+    
  	<!-- We need some impl in order to have smtg to test on... -->
     <dependency>
       <groupId>fr.opensagres.xdocreport</groupId>

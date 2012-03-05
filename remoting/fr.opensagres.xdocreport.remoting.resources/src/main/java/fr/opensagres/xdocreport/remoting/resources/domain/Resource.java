@@ -42,11 +42,33 @@ public class Resource
 
     public static int FILE_TYPE = 1;
 
+    private String id;
+
     private String name;
 
     private List<Resource> children;
 
     private int type;
+
+    /**
+     * Returns the unique resource id.
+     * 
+     * @return the unique resource id.
+     */
+    public String getId()
+    {
+        return id;
+    }
+
+    /**
+     * Set the unique resource id
+     * 
+     * @param id the unique resource id
+     */
+    public void setId( String id )
+    {
+        this.id = id;
+    }
 
     /**
      * Returns the resource name.

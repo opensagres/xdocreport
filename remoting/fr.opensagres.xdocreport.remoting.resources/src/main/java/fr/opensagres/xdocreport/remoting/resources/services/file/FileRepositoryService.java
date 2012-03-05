@@ -6,9 +6,9 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.List;
 
 import fr.opensagres.xdocreport.core.io.IOUtils;
+import fr.opensagres.xdocreport.core.utils.StringUtils;
 import fr.opensagres.xdocreport.remoting.resources.domain.Filter;
 import fr.opensagres.xdocreport.remoting.resources.domain.Resource;
 import fr.opensagres.xdocreport.remoting.resources.services.AbstractResourcesService;
@@ -29,9 +29,10 @@ public abstract class FileRepositoryService
         return toResource( getRootFolder(), null );
     }
 
-    public byte[] download( String resourcePath )
+    public byte[] download( String resourceId )
     {
-        File file = new File(getRootFolder(), resourcePath);
+        String resourcePath = getPath( resourceId );
+        File file = new File( getRootFolder(), resourcePath );
         try
         {
             return IOUtils.toByteArray( new FileInputStream( file ) );
@@ -49,6 +50,12 @@ public abstract class FileRepositoryService
         return null;
     }
 
+    private String getPath( String resourceId )
+    {
+        // TODO Auto-generated method stub
+        return StringUtils.replaceAll( resourceId, "____", "/" );
+    }
+
     public void upload( String resourcePath, byte[] content )
     {
         // TODO Auto-generated method stub
@@ -63,7 +70,8 @@ public abstract class FileRepositoryService
     public static Resource toResource( File file, Resource linkedResource )
     {
         Resource resource = new Resource();
-        //resource.setParent( linkedResource );
+        // resource.setId( getId(file, linkedResource) );
+        // resource.setParent( linkedResource );
         resource.setName( file.getName() );
         resource.setChildren( Collections.EMPTY_LIST );
         if ( linkedResource != null )

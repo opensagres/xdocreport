@@ -24,19 +24,19 @@ public abstract class DelegateResourcesService
         return getDelegate().getRoot( filter );
     }
 
-    public List<byte[]> download( List<String> resourcePaths )
+    public List<byte[]> download( List<String> resourceIds )
     {
-        return getDelegate().download( resourcePaths );
+        return getDelegate().download( resourceIds );
     }
 
-    public byte[] download( String resourcePath )
+    public byte[] download( String resourceId )
     {
-        return getDelegate().download( resourcePath );
+        return getDelegate().download( resourceId );
     }
 
-    public void upload( String resourcePath, byte[] content )
+    public void upload( String resourceId, byte[] content )
     {
-        getDelegate().upload( resourcePath, content );
+        getDelegate().upload( resourceId, content );
     }
 
     protected abstract ResourcesService getDelegate();

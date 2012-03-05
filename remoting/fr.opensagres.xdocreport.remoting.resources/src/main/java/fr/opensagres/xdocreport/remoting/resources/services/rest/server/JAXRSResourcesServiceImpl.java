@@ -31,21 +31,21 @@ public abstract class JAXRSResourcesServiceImpl
     }
 
     @Override
-    public byte[] download( String resourcePath )
+    public byte[] download( String resourceId )
     {
-        return super.download( resourcePath );
+        return super.download( resourceId );
     }
 
     @Override
-    public List<byte[]> download( List<String> resourcePaths )
+    public List<byte[]> download( List<String> resourceIds )
     {
-        return super.download( resourcePaths );
+        return super.download( resourceIds );
     }
 
     @Override
-    public void upload( String resourcePath, byte[] content )
+    public void upload( String resourceId, byte[] content )
     {
-        super.upload( resourcePath, content );
+        super.upload( resourceId, content );
     }
 
 }

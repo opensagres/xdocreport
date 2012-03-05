@@ -52,16 +52,16 @@ public interface ResourcesService
 
     Resource getRoot( Filter filter );
 
-    List<byte[]> download( List<String> resourcePaths );
+    List<byte[]> download( List<String> resourceIds );
 
     /**
-     * Download the content of the given resourcePath.
+     * Download the content of the given unique resource id.
      * 
-     * @param resourcePath the resource path.
+     * @param resourcePath the unique resource id.
      * @return the byte array of the content of the given resourcePath.
      */
-    byte[] download( String resourcePath );
+    byte[] download( String resourceId );
 
-    void upload( String resourcePath, byte[] content );
+    void upload( String resourceId, byte[] content );
 
 }

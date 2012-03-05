@@ -28,11 +28,11 @@ public interface JAXRSResourcesService
     Resource getRoot();
 
     @GET
-    @Path( "/download/{resourcePath}" )
+    @Path( "/download/{resourceId}" )
     @Consumes( MediaType.APPLICATION_JSON )
     @Produces( MediaType.WILDCARD )
-    byte[] download( @PathParam( "resourcePath" )
-    String resourcePath );
+    byte[] download( @PathParam( "resourceId" )
+    String resourceId );
 
     // @GET
     // @Path( "/download/{resourceId}" )

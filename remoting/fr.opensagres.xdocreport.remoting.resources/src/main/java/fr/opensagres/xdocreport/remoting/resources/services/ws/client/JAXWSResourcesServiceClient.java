@@ -45,19 +45,19 @@ public class JAXWSResourcesServiceClient
         return client.getRoot( filter );
     }
 
-    public List<byte[]> download( List<String> resourcePaths )
+    public List<byte[]> download( List<String> resourceIds )
     {
-        return client.download( resourcePaths );
+        return client.download( resourceIds );
     }
 
-    public byte[] download( String resourcePath )
+    public byte[] download( String resourceId )
     {
-        return client.download( resourcePath );
+        return client.download( resourceId );
     }
 
-    public void upload( String resourcePath, byte[] content )
+    public void upload( String resourceId, byte[] content )
     {
-        client.upload( resourcePath, content );
+        client.upload( resourceId, content );
     }
 
 }

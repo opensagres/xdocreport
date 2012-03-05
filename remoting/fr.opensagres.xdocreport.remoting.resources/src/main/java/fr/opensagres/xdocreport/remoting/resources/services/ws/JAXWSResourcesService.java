@@ -23,6 +23,6 @@ public interface JAXWSResourcesService
     @WebMethod( operationName = "download", action = "urn:Download1" )
     @RequestWrapper( className = "fr.opensagres.xdocreport.remoting.resources.services.jaxws.Download1", localName = "download1", targetNamespace = "http://services.resources.remoting.xdocreport.opensagres.fr/" )
     @ResponseWrapper( className = "fr.opensagres.xdocreport.remoting.resources.services.jaxws.DownloadResponse1", localName = "download1Response", targetNamespace = "http://services.resources.remoting.xdocreport.opensagres.fr/" )
-    public byte[] download( @WebParam( name = "download" )
-    String resourcePath );
+    public byte[] download( @WebParam( name = "resourceId" )
+    String resourceId );
 }

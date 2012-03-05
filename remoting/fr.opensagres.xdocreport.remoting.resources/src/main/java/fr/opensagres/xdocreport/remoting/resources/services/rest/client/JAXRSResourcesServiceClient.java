@@ -47,21 +47,21 @@ public class JAXRSResourcesServiceClient
         return null;
     }
 
-    public List<byte[]> download( List<String> resourcePaths )
+    public List<byte[]> download( List<String> resourceIds )
     {
         // TODO Auto-generated method stub
         return null;
     }
 
-    public byte[] download( String resourcePath )
+    public byte[] download( String resourceId )
     {
         StringBuilder path = new StringBuilder( ResourcesServiceName.download.name() );
         path.append( "/" );
-        path.append( resourcePath );
+        path.append( resourceId );
         return client.path( path.toString() ).accept( MediaType.APPLICATION_JSON_TYPE ).get( byte[].class );
     }
 
-    public void upload( String resourcePath, byte[] content )
+    public void upload( String resourceId, byte[] content )
     {
         // TODO Auto-generated method stub
 

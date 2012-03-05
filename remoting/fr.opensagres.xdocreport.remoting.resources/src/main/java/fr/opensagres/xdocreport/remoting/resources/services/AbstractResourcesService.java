@@ -16,12 +16,12 @@ public abstract class AbstractResourcesService
         return getRoot( null );
     }
 
-    public List<byte[]> download( List<String> resourcePaths )
+    public List<byte[]> download( List<String> resourceIds )
     {
-        List<byte[]> contents = new ArrayList<byte[]>( resourcePaths.size() );
-        for ( String resourcePath : resourcePaths )
+        List<byte[]> contents = new ArrayList<byte[]>( resourceIds.size() );
+        for ( String id : resourceIds )
         {
-            contents.add( download( resourcePath ) );
+            contents.add( download( id ) );
         }
         return contents;
     }

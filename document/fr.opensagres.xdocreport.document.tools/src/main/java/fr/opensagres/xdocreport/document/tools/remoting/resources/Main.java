@@ -150,6 +150,7 @@ public class Main
     private static void createFile( byte[] flux, File outFile )
         throws IOException
     {
+        outFile.getParentFile().mkdirs();
         FileOutputStream fos = new FileOutputStream( outFile );
         fos.write( flux );
         fos.close();
@@ -173,6 +174,12 @@ public class Main
         throws IOException
     {
         writer.write( "<resource" );
+        if ( StringUtils.isNotEmpty( root.getId() ) )
+        {
+            writer.write( " id=\"" );
+            writer.write( root.getId() );
+            writer.write( "\"" );
+        }
         writer.write( " name=\"" );
         writer.write( root.getName() );
         writer.write( "\"" );
@@ -189,8 +196,9 @@ public class Main
             }
             writer.write( "</resource>" );
         }
-        else {
-            writer.write( "/>" );    
+        else
+        {
+            writer.write( "/>" );
         }
     }
 

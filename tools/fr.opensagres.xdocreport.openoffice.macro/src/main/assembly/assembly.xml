@@ -1,0 +1,56 @@
+<project name="nuxeo-liveedit-openoffice-distribution-assembly" default="build"
+  xmlns:nx="urn:nuxeo-build" xmlns:artifact="urn:nuxeo-artifact">
+  <taskdef resource="org/nuxeo/build/antlib.xml" uri="urn:nuxeo-build" />
+  <taskdef resource="org/nuxeo/build/artifact/antlib.xml" uri="urn:nuxeo-artifact" />
+
+  <artifact:expand depth="1" />
+
+  <property name="outdir" value="${maven.project.build.directory}" />
+  <property name="stagedir.oxt" value="${outdir}/oxt.stagedir" />
+  <property name="resources.oxt" value="src/main/resources.oxt" />
+
+  <target name="build">
+    <antcall target="oxt" />
+  </target>
+  
+  
+  
+  <target name="oxt" depends="clean" description="oxt packaging">
+  
+    <echo>nuxeo-liveedit oxt build ...</echo>
+
+    <mkdir dir="${stagedir.oxt}" />
+
+    <!-- Copy all NxLiveOoo  -->
+    <copy todir="${stagedir.oxt}" overwrite="true">
+      <fileset dir="${resources.oxt}/NxLEOOo" />
+    </copy>
+            
+    <!-- generate and add the right version in description.xml and update.xml using .ftl files -->
+    <property name="liveedit.version" value="${maven.project.version}" />
+    <nx:templates baseDir="${resources.oxt}/ftls" toDir="${stagedir.oxt}" />
+    
+    <!-- zip everything in an oxt file -->
+    <zip
+      destfile="${outdir}/${maven.project.artifactId}-${maven.project.version}.oxt"
+      basedir="${stagedir.oxt}" />
+      
+    <copy file="${outdir}/${maven.project.artifactId}-${maven.project.version}.oxt"
+      tofile="${outdir}/${maven.project.artifactId}-${maven.project.version}-oxt.zip"/>
+
+    <artifact:attach file="${outdir}/${maven.project.artifactId}-${maven.project.version}-oxt.zip"
+      target="${maven.project.groupId}:${maven.project.artifactId}" type="zip" classifier="oxt" />
+
+    <echo>Distribution built:
+      ${outdir}/${maven.project.artifactId}-${maven.project.version}.oxt</echo>
+  </target>
+  
+  <target name="clean">
+    <delete dir="${stagedir.oxt}" />
+  </target>
+
+  <target name="cleanall">
+    <delete dir="${outdir}" />
+  </target>
+
+</project>

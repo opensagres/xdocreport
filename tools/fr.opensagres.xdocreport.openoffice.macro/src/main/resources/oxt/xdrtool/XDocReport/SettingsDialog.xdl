@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE dlg:window PUBLIC "-//OpenOffice.org//DTD OfficeDocument 1.0//EN" "dialog.dtd">
+<dlg:window xmlns:dlg="http://openoffice.org/2000/dialog" xmlns:script="http://openoffice.org/2000/script" dlg:id="SettingsDialog" dlg:left="407" dlg:top="218" dlg:width="341" dlg:height="126" dlg:closeable="true" dlg:moveable="true" dlg:title="XDocReport - Settings">
+ <dlg:styles>
+  <dlg:style dlg:style-id="0" dlg:font-weight="150"/>
+ </dlg:styles>
+ <dlg:bulletinboard>
+  <dlg:text dlg:id="fieldsDirectoryLbl" dlg:tab-index="2" dlg:left="6" dlg:top="25" dlg:width="60" dlg:height="9" dlg:value="Directory (*.fields.xml):"/>
+  <dlg:titledbox dlg:id="FieldsFrameControl" dlg:tab-index="0" dlg:left="0" dlg:top="1" dlg:width="339" dlg:height="35">
+   <dlg:title dlg:value="Fields Settings"/>
+  </dlg:titledbox>
+  <dlg:filecontrol dlg:id="xdrToolsBatFileControl" dlg:tab-index="5" dlg:left="70" dlg:top="55" dlg:width="265" dlg:height="14" dlg:help-text="Please select directory which contains the xdrtools.bat/xdrtools.sh to use Preview feature.">
+   <script:event script:event-name="on-textchange" script:macro-name="vnd.sun.star.script:XDocReport.Settings.UpdatePreviewStatus?language=Basic&amp;location=application" script:language="Script"/>
+  </dlg:filecontrol>
+  <dlg:titledbox dlg:id="PreviewFrameControl" dlg:tab-index="1" dlg:left="0" dlg:top="36" dlg:width="339" dlg:height="35">
+   <dlg:title dlg:value="Preview Settings"/>
+  </dlg:titledbox>
+  <dlg:button dlg:id="SelectFolderCommandButton" dlg:tab-index="4" dlg:left="301" dlg:top="22" dlg:width="35" dlg:height="14" dlg:value="Browse...">
+   <script:event script:event-name="on-performaction" script:macro-name="vnd.sun.star.script:XDocReport.Settings.SelectFolder?language=Basic&amp;location=application" script:language="Script"/>
+  </dlg:button>
+  <dlg:textfield dlg:id="fieldsDirectoryTextField" dlg:tab-index="3" dlg:left="68" dlg:top="22" dlg:width="233" dlg:height="12">
+   <script:event script:event-name="on-textchange" script:macro-name="vnd.sun.star.script:XDocReport.Settings.updateFieldsStatus?language=Basic&amp;location=application" script:language="Script"/>
+  </dlg:textfield>
+  <dlg:button dlg:id="cancelCommandButton" dlg:tab-index="7" dlg:left="301" dlg:top="111" dlg:width="39" dlg:height="12" dlg:value="Cancel">
+   <script:event script:event-name="on-performaction" script:macro-name="vnd.sun.star.script:XDocReport.Settings.CloseSettingsDialog?language=Basic&amp;location=application" script:language="Script"/>
+  </dlg:button>
+  <dlg:button dlg:id="OKCommandButton" dlg:tab-index="6" dlg:left="258" dlg:top="111" dlg:width="39" dlg:height="12" dlg:value="OK">
+   <script:event script:event-name="on-performaction" script:macro-name="vnd.sun.star.script:XDocReport.Settings.SaveUISettings?language=Basic&amp;location=application" script:language="Script"/>
+  </dlg:button>
+  <dlg:text dlg:id="xdrToolsBatFileLbl" dlg:tab-index="8" dlg:left="6" dlg:top="59" dlg:width="70" dlg:height="9" dlg:value="File (xdrtools.bat/.sh):"/>
+  <dlg:text dlg:style-id="0" dlg:id="statusFieldsLabel" dlg:tab-index="9" dlg:left="6" dlg:top="10" dlg:width="328" dlg:height="16"/>
+  <dlg:text dlg:style-id="0" dlg:id="statusPreviewLabel" dlg:tab-index="10" dlg:left="6" dlg:top="46" dlg:width="328" dlg:height="17"/>
+  <dlg:text dlg:id="xdrToolsRepositoriesBatFileLbl" dlg:tab-index="13" dlg:left="6" dlg:top="94" dlg:width="70" dlg:height="9" dlg:value="File (xdrtools-rep.bat/.sh):"/>
+  <dlg:titledbox dlg:id="RepositoriesFrameControl" dlg:tab-index="11" dlg:left="0" dlg:top="71" dlg:width="339" dlg:height="35">
+   <dlg:title dlg:value="Repositories Settings"/>
+  </dlg:titledbox>
+  <dlg:filecontrol dlg:id="xdrToolsRepBatFileControl" dlg:tab-index="12" dlg:left="70" dlg:top="90" dlg:width="264" dlg:height="14" dlg:help-text="Please select directory which contains the xdrtools.bat/xdrtools.sh to use Preview feature.">
+   <script:event script:event-name="on-textchange" script:macro-name="vnd.sun.star.script:XDocReport.Settings.UpdateRepositoriesStatus?language=Basic&amp;location=application" script:language="Script"/>
+  </dlg:filecontrol>
+  <dlg:text dlg:style-id="0" dlg:id="statusRepLabel" dlg:tab-index="14" dlg:left="6" dlg:top="81" dlg:width="328" dlg:height="17"/>
+ </dlg:bulletinboard>
+</dlg:window>

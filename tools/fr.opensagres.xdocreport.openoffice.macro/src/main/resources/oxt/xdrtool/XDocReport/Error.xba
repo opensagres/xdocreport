@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE script:module PUBLIC "-//OpenOffice.org//DTD OfficeDocument 1.0//EN" "module.dtd">
+<script:module xmlns:script="http://openoffice.org/2000/script" script:name="Error" script:language="StarBasic">REM  *****  BASIC  *****
+
+Public gPreviewErrDialog as Object
+
+Public Sub OpenErrorDialog(ByVal errFilePath as String)
+
+	DialogLibraries.LoadLibrary( &quot;XDocReport&quot; )
+	gPreviewErrDialog = CreateUnoDialog( DialogLibraries.XDocReport.ErrorDialog )	
+	gPreviewErrDialog.getControl(&quot;stackTraceTextField&quot;).Text = GetTextFileContent(errFilePath)
+	gPreviewErrDialog.Execute ()
+	CloseErrorDialog()
+	
+End Sub
+
+Private Sub CloseErrorDialog
+	gPreviewErrDialog.endExecute()
+End Sub
+
+Public Function GetTextFileContent(ByVal fileName as String) as String
+	Dim myTextFile As Object, sf As Object, fileStream As Object
+	Dim textContent As String, myFilePath As String
+	textContent = &quot;&quot;
+	GetTextFileContent = textContent
+	myFilePath = ConvertToURL(fileName)
+	sf = createUnoService(&quot;com.sun.star.ucb.SimpleFileAccess&quot;)
+	
+	On Error Goto fichierKO
+		fileStream = sf.openFileRead(myFilePath)
+		myTextFile = createUnoService(&quot;com.sun.star.io.TextInputStream&quot;)
+		myTextFile.InputStream = fileStream
+		&apos;myTextFile.Encoding = &quot;ISO-8859-15&quot;
+
+		Do while not myTextFile.IsEOF
+		  textContent = textContent + myTextFile.readLine + Chr(10)
+		Loop
+		GetTextFileContent = textContent
+
+		fileStream.closeInput
+		myTextFile.closeInput
+		
+		On Error Goto 0
+			Exit Function
+
+		FichierKO:
+			Resume FichierKO2
+		FichierKO2:
+			On Error Resume Next
+			MsgBox(&quot;File read error !&quot;, 16)
+		fileStream.closeInput
+		myTextFile.closeInput
+		
+	On Error Goto 0	
+End Function
+</script:module>

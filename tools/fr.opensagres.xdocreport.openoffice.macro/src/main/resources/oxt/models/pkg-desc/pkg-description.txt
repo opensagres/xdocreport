@@ -1,0 +1,4 @@
+XDocReport-@oxtversion@.oxt
+Copyright (c) 2012  
+
+OOo extension which helps to design ODT reporting to use it with XDocReport.

@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE dlg:window PUBLIC "-//OpenOffice.org//DTD OfficeDocument 1.0//EN" "dialog.dtd">
+<dlg:window xmlns:dlg="http://openoffice.org/2000/dialog" xmlns:script="http://openoffice.org/2000/script" dlg:id="CreateFieldsListDialog" dlg:left="388" dlg:top="218" dlg:width="195" dlg:height="127" dlg:closeable="true" dlg:moveable="true" dlg:title="Fields List">
+ <dlg:bulletinboard>
+  <dlg:text dlg:id="StaticSequenceLabel" dlg:tab-index="0" dlg:left="4" dlg:top="3" dlg:width="27" dlg:height="9" dlg:value="Sequence:"/>
+  <dlg:text dlg:id="StaticItemLabel" dlg:tab-index="1" dlg:left="4" dlg:top="15" dlg:width="23" dlg:height="9" dlg:value="Item:"/>
+  <dlg:titledbox dlg:id="PreviewFrameControl" dlg:tab-index="2" dlg:left="2" dlg:top="26" dlg:width="192" dlg:height="79">
+   <dlg:title dlg:value="Preview"/>
+  </dlg:titledbox>
+  <dlg:text dlg:id="PreviewLabel" dlg:tab-index="3" dlg:left="6" dlg:top="38" dlg:width="184" dlg:height="63"/>
+  <dlg:button dlg:id="OKCommandButton" dlg:tab-index="4" dlg:left="115" dlg:top="110" dlg:width="37" dlg:height="14" dlg:value="OK">
+   <script:event script:event-name="on-performaction" script:macro-name="vnd.sun.star.script:XDocReport.CreateFieldsList.GenerateFields?language=Basic&amp;location=application" script:language="Script"/>
+  </dlg:button>
+  <dlg:button dlg:id="CancelCommandButton" dlg:tab-index="5" dlg:left="155" dlg:top="110" dlg:width="37" dlg:height="14" dlg:value="Cancel">
+   <script:event script:event-name="on-performaction" script:macro-name="vnd.sun.star.script:XDocReport.CreateFieldsList.CloseCreateFieldsList?language=Basic&amp;location=application" script:language="Script"/>
+  </dlg:button>
+  <dlg:text dlg:id="SequenceLabel" dlg:tab-index="6" dlg:left="31" dlg:top="3" dlg:width="161" dlg:height="9"/>
+  <dlg:textfield dlg:id="ItemTextField" dlg:tab-index="7" dlg:left="28" dlg:top="15" dlg:width="165" dlg:height="12">
+   <script:event script:event-name="on-textchange" script:macro-name="vnd.sun.star.script:XDocReport.CreateFieldsList.displayPreview?language=Basic&amp;location=application" script:language="Script"/>
+  </dlg:textfield>
+ </dlg:bulletinboard>
+</dlg:window>

@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="XDocReportDesignTool" default="oxt-package" basedir=".">
+
+<target name="oxt-package" >
+    <property name="outdir" value="${project.build.directory}" />
+    <property name="stagedir.oxt" value="${outdir}/oxt.stagedir" />
+    <property name="resources.oxt" value="src/main/resources/oxt" />
+    <property name="oxt.version" value="${project.version}" />
+
+    <echo> running oxt buid on version ${oxt.version} </echo>
+    <echo> oudir = ${outdir} </echo>
+
+    <!-- copy static resources -->
+    <copy todir="${stagedir.oxt}" overwrite="true">
+      <fileset dir="${resources.oxt}/xdrtool" />
+    </copy>
+
+    <!-- copy with replacement -->
+    <copy todir="${stagedir.oxt}" overwrite="true">
+      <fileset dir="${resources.oxt}/models" />
+      <filterset>
+        <filter token="oxtversion" value="${oxt.version}"/>
+      </filterset>
+    </copy>
+
+    <zip
+      destfile="${outdir}/XDocReportDesignTool-${oxt.version}.oxt"
+      basedir="${stagedir.oxt}" />
+
+    <delete dir="${stagedir.oxt}"/>
+
+</target>
+
+</project>

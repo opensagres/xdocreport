@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE dlg:window PUBLIC "-//OpenOffice.org//DTD OfficeDocument 1.0//EN" "dialog.dtd">
+<dlg:window xmlns:dlg="http://openoffice.org/2000/dialog" xmlns:script="http://openoffice.org/2000/script" dlg:id="CreateRepositoryDialog" dlg:left="382" dlg:top="202" dlg:width="201" dlg:height="169" dlg:closeable="true" dlg:moveable="true" dlg:title="Repository">
+ <dlg:bulletinboard>
+  <dlg:radiogroup>
+   <dlg:radio dlg:id="WebServiceOptionButton" dlg:tab-index="0" dlg:left="27" dlg:top="26" dlg:width="49" dlg:height="9" dlg:value="Web Service?"/>
+   <dlg:radio dlg:id="RESTOptionButton" dlg:tab-index="1" dlg:left="79" dlg:top="26" dlg:width="49" dlg:height="9" dlg:value="REST Service?"/>
+  </dlg:radiogroup>
+  <dlg:text dlg:id="URLLabel" dlg:tab-index="2" dlg:left="6" dlg:top="7" dlg:width="15" dlg:height="12" dlg:value="URL:"/>
+  <dlg:text dlg:id="TypeLabel" dlg:tab-index="4" dlg:left="6" dlg:top="23" dlg:width="15" dlg:height="12" dlg:value="Type:"/>
+  <dlg:titledbox dlg:id="AuthentificationFrameControl" dlg:tab-index="5" dlg:left="8" dlg:top="44" dlg:width="161" dlg:height="49">
+   <dlg:title dlg:value="Authentification"/>
+  </dlg:titledbox>
+  <dlg:text dlg:id="UserLabel" dlg:tab-index="6" dlg:left="12" dlg:top="56" dlg:width="13" dlg:height="14" dlg:value="User:"/>
+  <dlg:textfield dlg:id="UserTextField" dlg:tab-index="7" dlg:left="27" dlg:top="56" dlg:width="114" dlg:height="14"/>
+  <dlg:text dlg:id="PasswordLabel" dlg:tab-index="8" dlg:left="12" dlg:top="74" dlg:width="31" dlg:height="12" dlg:value="Password:"/>
+  <dlg:textfield dlg:id="PasswordTextField" dlg:tab-index="9" dlg:left="47" dlg:top="74" dlg:width="87" dlg:height="12"/>
+  <dlg:button dlg:id="OKCommandButton" dlg:tab-index="10" dlg:left="99" dlg:top="135" dlg:width="39" dlg:height="16" dlg:value="OK">
+   <script:event script:event-name="on-performaction" script:macro-name="vnd.sun.star.script:XDocReport.CreateRepository.SaveRepository?language=Basic&amp;location=application" script:language="Script"/>
+  </dlg:button>
+  <dlg:button dlg:id="CancelCommandButton" dlg:tab-index="11" dlg:left="148" dlg:top="135" dlg:width="35" dlg:height="16" dlg:value="Cancel">
+   <script:event script:event-name="on-performaction" script:macro-name="vnd.sun.star.script:XDocReport.CreateRepository.CloseCreateRepositoryDialog?language=Basic&amp;location=application" script:language="Script"/>
+  </dlg:button>
+  <dlg:textfield dlg:id="BaseAddressTextField" dlg:tab-index="3" dlg:left="25" dlg:top="7" dlg:width="172" dlg:height="12"/>
+ </dlg:bulletinboard>
+</dlg:window>

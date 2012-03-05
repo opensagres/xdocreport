@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE script:module PUBLIC "-//OpenOffice.org//DTD OfficeDocument 1.0//EN" "module.dtd">
+<script:module xmlns:script="http://openoffice.org/2000/script" script:name="About" script:language="StarBasic">Option Explicit
+
+Public gAboutDialog as Object
+
+Sub OpenAboutDialog
+
+	DialogLibraries.LoadLibrary( &quot;XDocReport&quot; )
+	gAboutDialog = CreateUnoDialog( DialogLibraries.XDocReport.AboutDialog )	
+	gAboutDialog.execute ()
+
+End Sub
+</script:module>

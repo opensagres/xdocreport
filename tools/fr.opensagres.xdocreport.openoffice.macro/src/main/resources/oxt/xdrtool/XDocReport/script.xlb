@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE library:library PUBLIC "-//OpenOffice.org//DTD OfficeDocument 1.0//EN" "library.dtd">
+<library:library xmlns:library="http://openoffice.org/2000/library" library:name="XDocReport" library:readonly="false" library:passwordprotected="false">
+ <library:element library:name="About"/>
+ <library:element library:name="Fields"/>
+ <library:element library:name="Preview"/>
+ <library:element library:name="Settings"/>
+ <library:element library:name="CreateFieldsList"/>
+ <library:element library:name="Repositories"/>
+ <library:element library:name="CreateRepository"/>
+ <library:element library:name="Error"/>
+ <library:element library:name="WorkInProcess"/>
+</library:library>

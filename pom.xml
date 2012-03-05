@@ -285,13 +285,13 @@
   <modules>
     <module>thirdparties-extension</module>
     <module>core</module>
+    <module>tools</module>
     <module>document</module>
     <module>template</module>
     <module>converter</module>
     <module>integrationtests</module>
     <module>sandbox</module>
     <module>remoting</module>
-    <module>tools</module>
   </modules>
   <dependencies>
     <dependency>

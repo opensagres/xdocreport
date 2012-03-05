@@ -30,7 +30,7 @@
 		<fileSet>
 			<directory>src/main/resources</directory>
 			<includes>
-				<include>macro/*</include>
+				<include>macro/*.dotm</include>
 			</includes>
 			<filtered>false</filtered>
 			<outputDirectory>/</outputDirectory>
@@ -40,7 +40,17 @@
 	</fileSets>
 	<dependencySets>
 		<dependencySet>
+                        <excludes>
+                         <exclude>fr.opensagres.xdocreport:fr.opensagres.xdocreport.openoffice.macro</exclude>
+                        </excludes>
 			<outputDirectory>lib</outputDirectory>
 		</dependencySet>
+		<dependencySet>
+                        <includes>
+                          <include>fr.opensagres.xdocreport:fr.opensagres.xdocreport.openoffice.macro</include>
+                        </includes>
+			<outputDirectory>macro</outputDirectory>
+		</dependencySet>
 	</dependencySets>
+
 </assembly>

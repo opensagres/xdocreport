@@ -1,0 +1,479 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE script:module PUBLIC "-//OpenOffice.org//DTD OfficeDocument 1.0//EN" "module.dtd">
+<script:module xmlns:script="http://openoffice.org/2000/script" script:name="Fields" script:language="StarBasic">REM  *****  BASIC  *****
+
+Option Explicit
+
+&apos; Constants for field type structure
+Public Const NAME_FIELD_INDEX as Integer = 0
+Public Const LIST_FIELD_INDEX as Integer = 1
+Private gTemplateEngineKind as String
+
+&apos; FieldsDialog 
+Private gFieldsDialog as Object
+
+&apos; Tree   
+Private gTreeMouseListener as Object
+Private gSelectedField as Object
+
+&apos;==================================================
+&apos;   Fields Dialog.
+&apos;==================================================
+
+&apos; boolean used to manage modeless window (window is opened while &quot;Closeé button was not clicked)
+Dim bClose as Boolean
+
+&apos; Open Fields Dialog as modeless
+Public Sub OpenFieldsDialog
+	
+	gSelectedField = Nothing
+	&apos; Check if Settings is well configurated
+	Dim directory as String
+	directory = Settings.GetXMLFieldsDirectorySetting()
+	If (directory = &quot;&quot;) Then 
+		MsgBox &quot;Please fill the *.fields.xml directory in the XDocReport-Settings.&quot;
+		Settings.OpenSettingsDialog()
+	Else
+		&apos; Check if directory exists
+		If Not FileExists(directory) Then 
+			MsgBox &quot;The configured directory &lt;&quot; + directory + &quot;&gt; which contains *.fields.xml files doesn&apos;t exists. Please configure it in the XDocReport-Settings.&quot;
+			Settings.OpenSettingsDialog()		
+		Else
+			&apos; Check if the directory contains *.fields.xml files
+			Dim nbFiles as Long
+			nbFiles =  Settings.GetNbXMLFieldsFiles(directory) 
+			If (nbFiles = 0) Then 
+				MsgBox &quot;The configured directory &lt;&quot; + directory + &quot;&gt; which contains *.fields.xml files doesn&apos;t contain *.fields.xml files. Please configure it in the XDocReport-Settings.&quot;
+				Settings.OpenSettingsDialog()		
+			Else
+				&apos; Get FieldsDialog instance
+				DialogLibraries.LoadLibrary( &quot;XDocReport&quot; )
+				gFieldsDialog = CreateUnoDialog( DialogLibraries.XDocReport.FieldsDialog )
+				
+				&apos; Load model list bow with list of *.fields.xml files
+				LoadModelListBox()   
+				&apos; Load fields tree with the selected *.fields.xml
+				InitializeFieldsTree()
+				LoadFieldsTree()
+				
+				&apos; Open FieldsDialog as modeless window
+				gFieldsDialog.setVisible( True )
+			
+				&apos; Manage modeles window while &quot;Close&quot; button was not clicked	
+				Do
+					wait 1000
+				Loop until bClose
+			
+				DisposeFieldsTree()   
+			   
+			   &apos; Close FieldsDialog
+			   	gFieldsDialog.setVisible( False )
+			   	gFieldsDialog.endExecute()
+			   	gFieldsDialog.dispose()	
+			End If			   	
+		End If
+	End if
+
+End Sub
+
+&apos; Close Fields Dialog
+Sub CloseFieldsDialog( oEv )
+	bClose = True
+End Sub 
+
+&apos;==================================================
+&apos;   Model ListBox (list of *.fields.xml files).
+&apos;==================================================
+
+&apos; Populate Model ListBox with files *.fields.xml
+Private Sub LoadModelListBox()
+	
+	Dim modelListBox as Object, selectedFileName as String 
+	modelListBox = gFieldsDialog.getControl(&quot;ModelListBox&quot;)
+	selectedFileName = Settings.GetXMLFieldFileNameSetting()
+	Dim baseDir as String, fileName as String	
+	baseDir =	Settings.GetXMLFieldsDirectorySetting()
+	If (baseDir &lt;&gt; &quot;&quot;) Then 
+		Dim i As Long
+		Dim selectedIndex as Long
+		i= 0
+		selectedIndex =-1
+		baseDir = ConvertFromUrl(baseDir) 
+		&apos;Loop for *.fields.xml files
+		fileName=Dir(baseDir &amp; &quot;/*.fields.xml&quot;,0) 		
+		Do While Len(fileName) &gt;0 
+			modelListBox.AddItem fileName, i
+			If(fileName= selectedFileName) Then 
+				selectedIndex=i
+			End If
+			fileName=Dir() 
+			i= i + 1
+		Loop 
+		if (selectedIndex = -1 and i &gt; 0) Then
+			selectedIndex = 0
+		End If
+		If (selectedIndex &lt;&gt; -1) Then
+			modelListBox.selectItemPos( selectedIndex, True )
+		End If
+	End If
+End Sub
+
+&apos;==================================================
+&apos;   Fields Tree (list of fields coming from the selected *.fields.xml file of Model ListBox ).
+&apos;==================================================
+
+Private Sub InitializeFieldsTree()
+	Dim oFieldsTreeControl as Object
+	oFieldsTreeControl = gFieldsDialog.getControl(&quot;FieldsTreeControl&quot;)
+	
+	gTreeMouseListener = createUnoListener(&quot;TreeMouseListener_&quot;, &quot;com.sun.star.awt.XMouseListener&quot;)
+	oFieldsTreeControl.addMouselistener(gTreeMouseListener)   
+End Sub
+
+rem~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+sub TreeMouseListener_mousePressed(ByVal oEvt as Object)
+rem~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+	Dim selectedValue 
+	selectedValue = oEvt.Source.Selection.DataValue
+	
+	Dim fieldType as Boolean
+	fieldType =  (Not (selectedValue Is Nothing) and IsArray(selectedValue)) 
+	Dim fieldAsList as Boolean
+	fieldAsList = False
+	
+	gSelectedField = Nothing
+	If (fieldType) Then
+		gSelectedField = selectedValue
+		fieldAsList = selectedValue(LIST_FIELD_INDEX)
+	End If
+	
+	&apos; Manage Enable/Disable Insert buttons
+	gFieldsDialog.getControl(&quot;InsertFieldCommandButton&quot;).Model.Enabled=fieldType	
+	gFieldsDialog.getControl(&quot;InsertLIstFieldCommandButton&quot;).Model.Enabled=fieldAsList
+		
+	&apos; Manage double click to on tree node to insert fields in the document	
+	if (fieldType and  oEvt.clickCount = 2) then		
+		InsertInputFieldFromFieldType selectedValue
+	End If
+end sub
+
+Private Sub InsertInputFieldFromFieldType (ByVal selectedValue)
+	Dim field as String 
+	field = selectedValue(NAME_FIELD_INDEX)
+	If (gTemplateEngineKind = &quot;Freemarker&quot;) Then 
+		field = &quot;${&quot; + field + &quot;}&quot;
+	Else
+		field = &quot;$&quot; + field
+	End If
+	InsertInputField field	
+End Sub
+
+Private Sub InsertInputFieldFromSelectedTreeNode
+	Dim selectedValue
+	selectedValue = gFieldsDialog.getControl(&quot;FieldsTreeControl&quot;).Selection.DataValue
+	
+	InsertInputFieldFromFieldType selectedValue
+	
+End Sub
+
+sub TreeMouseListener_mouseReleased(oEvt)
+end sub
+sub TreeMouseListener_mouseEntered(oEvt)
+end sub
+sub TreeMouseListener_mouseExited(oEvt)
+end sub
+sub TreeMouseListener_disposing(oEvt)
+end sub
+
+Private Sub DisposeFieldsTree()
+	Dim oFieldsTreeControl as Object
+	oFieldsTreeControl = gFieldsDialog.getControl(&quot;FieldsTreeControl&quot;)
+	
+	oFieldsTreeControl.removeMouselistener(gTreeMouseListener)
+End Sub
+
+&apos; When *fields.xml is selected in the Model ListBox, Treeview must be refreshed with fields coming from the *.fields.xml
+Private Sub LoadFieldsTree()
+
+	Dim modelListBox as Object 
+	modelListBox = gFieldsDialog.getControl(&quot;ModelListBox&quot;)
+	If (modelListBox.SelectedItemPos() &lt;&gt; -1) Then
+		Settings.SetXMLFieldFileNameSetting(modelListBox.SelectedItem)
+		Settings.SaveSettings()
+		LoadFieldsTreeFromFile modelListBox.SelectedItem
+	End If	
+	
+End Sub
+
+Private Sub LoadFieldsTreeFromFile(ByVal fileName as String)
+	&apos; Compute URL of the XML *.fields.xml file to load
+	Dim xmlFile as String
+	xmlFile = Settings.GetXMLFieldsDirectorySetting() + &quot;/&quot; + fileName
+
+	&apos; Initialize the gTreeDataModel MutableTreeDataModel
+	Dim oFieldsTreeControl as Object, oElement as Object
+    oFieldsTreeControl = gFieldsDialog.getControl(&quot;FieldsTreeControl&quot;)
+	gTreeDataModel = createUnoService(&quot;com.sun.star.awt.tree.MutableTreeDataModel&quot;)
+	oElement = gTreeDataModel.createNode( &quot;Root&quot;, true )	
+	gTreeDataModel.setRoot(oElement) 	
+
+	ReadXmlFromUrl(xmlFile)
+	
+	oFieldsTreeControl.Model.DataModel = gTreeDataModel
+	gFieldsDialog.getControl(&quot;TemplateEngineLabel&quot;).Text = gTemplateEngineKind
+End Sub
+
+rem~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+&apos;treeAddChildElement : Add a child element to a tree item
+rem~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+Function treeAddChildElement (oTreeDataModel as Object, oParent As Object, sChild As String, bIsNotLeaf As Boolean) As Object
+   Dim oElement   As Object
+   
+   oElement = oTreeDataModel.createNode( sChild, bIsNotLeaf )
+   oParent.appendChild(oElement)
+   
+   treeAddChildElement = oElement
+End Function
+
+Public Sub InsertInputField(ByVal fieldName as String) 
+	Dim oDoc as Object
+	Dim oText as Object
+	Dim oViewCursor as Object
+	Dim oField as Object
+	Dim oCursor as Object
+	
+	oDoc = ThisComponent
+	oText = oDoc.getText()
+	oViewCursor = oDoc.getCurrentController().getViewCursor()
+  
+	oField = oDoc.createInstance(&quot;com.sun.star.text.textfield.Input&quot;)
+	With oField
+	  .Content = fieldName 
+	End With
+
+
+	&apos;Check if Cursor is in a table
+   	If IsEmpty(oViewCursor.TextTable) Then   	
+      	&apos; The cursor is NOT in a table&quot;      	
+      	oCursor = oText.createTextCursorByRange(oViewCursor.getStart())
+		&apos; insert the field at the cursor position   
+      	oText.insertTextContent(oCursor.getStart(), oField, False)   
+      Else
+      
+      	&apos; FIXME: when field is inserted in a table cell, field is inserted at begin of the cell even if there is already some text content.
+      	&apos; Improve that to insert field after the text content of the cell
+      
+      	&apos; Cursor is in a table
+   		Dim oTable as Object
+   		Dim oCurCell as Object        
+   		Dim oCell as Object        
+   		
+		oTable = oViewCursor.TextTable    &apos;take cursor in table
+        oCurCell = oViewCursor.Cell      &apos;take cursor in current cell
+         
+		oCell = oTable.getCellByName(oCurCell.CellName)      &apos;check where cursor is at
+		oText = oCell.getText() &apos;get text from cell
+		&apos; After this line, you can do many things with oText,
+		&apos; just as if it were the text of the main document.
+		oCursor = oText.createTextCursor()             &apos;get cursor from text
+		oText.insertTextContent( oCursor, oField, False )    &apos;insert field at cursor 		
+		
+   End If 
+
+end Sub
+
+&apos; This routine demonstrates how to use the Universal Content Broker&apos;s
+&apos;  SimpleFileAccess to read from a local file.
+Sub ReadXmlFromUrl( cUrl )
+   &apos; The SimpleFileAccess service provides mechanisms to open, read, write files,
+   &apos;  as well as scan the directories of folders to see what they contain.
+   &apos; The advantage of this over Basic&apos;s ugly file manipulation is that this
+   &apos;  technique works the same way in any programming language.
+   &apos;  Furthermore, the program could be running on one machine, while the SimpleFileAccess
+   &apos;  accesses files from the point of view of the machine running OOo, not the machine
+   &apos;  where, say a remote Java or Python program is running.
+   Dim oSimpleFileAccess as Object, oInputStream as Object
+   oSimpleFileAccess = createUnoService( &quot;com.sun.star.ucb.SimpleFileAccess&quot; )
+   
+   &apos; Open input file.
+   oInputStream = oSimpleFileAccess.openFileRead( cUrl )
+
+   ReadXmlFromInputStream( oInputStream )
+
+   oInputStream.closeInput()
+End Sub
+
+Sub ReadXmlFromInputStream( oInputStream )
+   &apos; Create a Sax Xml parser.
+   Dim oSaxParser as Object, oDocEventsHandler as Object, oInputSource as Object
+   oSaxParser = createUnoService( &quot;com.sun.star.xml.sax.Parser&quot; )
+
+   &apos; Create a document event handler object.
+   &apos; As methods of this object are called, Basic arranges
+   &apos;  for global routines (see below) to be called.   
+   oDocEventsHandler = CreateDocumentHandler()
+   
+   &apos; Plug our event handler into the parser.
+   &apos; As the parser reads an Xml document, it calls methods
+   &apos;  of the object, and hence global subroutines below
+   &apos;  to notify them of what it is seeing within the Xml document.
+   oSaxParser.setDocumentHandler( oDocEventsHandler )
+   
+   &apos; Create an InputSource structure.
+   oInputSource = createUnoStruct( &quot;com.sun.star.xml.sax.InputSource&quot; )
+   With oInputSource
+      .aInputStream = oInputStream   &apos; plug in the input stream
+   End With
+   
+   &apos; Now parse the document.
+   &apos; This reads in the entire document.
+   &apos; Methods of the oDocEventsHandler object are called as
+   &apos;  the document is scanned.
+   oSaxParser.parseStream( oInputSource )
+End Sub
+
+
+&apos;==================================================
+&apos;   Xml Sax document handler.
+&apos;==================================================
+
+
+&apos; Global variables used by our document handler.
+&apos;
+&apos; Once the Sax parser has given us a document locator,
+&apos;  the glLocatorSet variable is set to True,
+&apos;  and the goLocator contains the locator object.
+&apos;
+&apos; The methods of the locator object has cool methods
+&apos;  which can tell you where within the current Xml document
+&apos;  being parsed that the current Sax event occured.
+&apos; The locator object implements com.sun.star.xml.sax.XLocator.
+&apos;
+Private goLocator As Object
+Private glLocatorSet As Boolean
+Private gTreeDataModel as Object
+Private gParent as Object
+
+&apos; This creates an object which implements the interface
+&apos;  com.sun.star.xml.sax.XDocumentHandler.
+&apos; The doucment handler is returned as the function result.
+Function CreateDocumentHandler()
+   &apos; Use the CreateUnoListener function of Basic.
+   &apos; Basic creates and returns an object that implements a particular interface.
+   &apos; When methods of that object are called,
+   &apos;  Basic will call global Basic functions whose names are the same
+   &apos;  as the methods, but prefixed with a certian prefix.
+   Dim oDocHandler as Object
+   oDocHandler = CreateUnoListener( &quot;DocHandler_&quot;, &quot;com.sun.star.xml.sax.XDocumentHandler&quot; )
+   
+   glLocatorSet = False
+   
+   CreateDocumentHandler() = oDocHandler
+End Function
+
+
+
+&apos;==================================================
+&apos;   Methods of our document handler call these
+&apos;    global functions.
+&apos;   These methods look strangely similar to
+&apos;    a SAX event handler.  ;-)
+&apos;   These global routines are called by the Sax parser
+&apos;    as it reads in an XML document.
+&apos;   These subroutines must be named with a prefix that is
+&apos;    followed by the event name of the com.sun.star.xml.sax.XDocumentHandler interface.
+&apos;==================================================
+
+Sub DocHandler_startDocument()
+   &apos;Print &quot;Start document&quot;
+End Sub
+
+
+Sub DocHandler_endDocument()
+&apos;   Print &quot;End document&quot;
+End Sub
+
+
+Sub DocHandler_startElement( cName As String, oAttributes As com.sun.star.xml.sax.XAttributeList )
+	If (cName = &quot;fields&quot; ) Then
+		gTemplateEngineKind = oAttributes.getValueByName(&quot;templateEngineKind&quot;)
+	Else	
+		If (cName = &quot;field&quot; ) Then
+			Dim fieldName as String
+		   	fieldName = oAttributes.getValueByName(&quot;name&quot;)
+		   	If (fieldName &lt;&gt; &quot;&quot;) Then
+		   
+		   		Dim parentNode as Object, treeNode as Object
+		   		parentNode = gTreeDataModel.Root &apos;.DisplayValue
+		   		
+		   		Dim fields() As String
+	  			Dim i As Integer
+		   		fields = Split(fieldName, &quot;.&quot;)
+	&apos;	   		 treeAddChildElement(FieldsTreeControl.Model.DataModel, parentNode,  fieldName, false)
+		   		For i = LBound(fields) To UBound(fields)	   		
+					treeNode = FindTreeNodeByName(fields(i), parentNode)
+		   			If (treeNode Is Nothing) Then 
+		   				parentNode = treeAddChildElement(gTreeDataModel, parentNode,  fields(i), false)
+		   			Else
+		   				parentNode = treeNode
+		   			End If
+		   			If (i = UBound(fields)) Then
+		   				Dim fieldType(2)
+						fieldType(NAME_FIELD_INDEX) = fieldName
+						fieldType(LIST_FIELD_INDEX) = ( oAttributes.getValueByName(&quot;list&quot;) = &quot;true&quot;)						
+						parentNode.DataValue = fieldType	
+		   			End if
+				  Next i
+			End If
+		End If
+	End If
+End Sub
+
+Private Function FindTreeNodeByName(ByVal name as String, ByVal rootNode as Object)
+	findTreeNodeByName = Nothing
+	Dim currentNode as Object, i as Integer
+	For i = 0 To rootNode.getChildCount() - 1
+	    currentNode = rootNode.getChildAt(i)
+	    If (currentNode.DisplayValue = name) Then 
+	    	findTreeNodeByName = currentNode
+	    	Exit For
+	    End If
+	Next i	
+End Function
+
+
+Sub DocHandler_endElement( cName As String )
+&apos;   Print &quot;End element&quot;, cName
+End Sub
+
+
+Sub DocHandler_characters( cChars As String )
+End Sub
+
+
+Sub DocHandler_ignorableWhitespace( cWhitespace As String )
+End Sub
+
+
+Sub DocHandler_processingInstruction( cTarget As String, cData As String )
+End Sub
+
+
+Sub DocHandler_setDocumentLocator( oLocator As com.sun.star.xml.sax.XLocator )
+   &apos; Save the locator object in a global variable.
+   &apos; The locator object has valuable methods that we can
+   &apos;  call to determine
+   goLocator = oLocator
+   
+   glLocatorSet = True
+End Sub
+
+
+Public Function GetTemplateEngineKind() as String
+	GetTemplateEngineKind = gTemplateEngineKind
+End Function
+
+Public Function SelectedField as Object
+	SelectedField = gSelectedField
+End Function
+</script:module>

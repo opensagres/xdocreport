@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE script:module PUBLIC "-//OpenOffice.org//DTD OfficeDocument 1.0//EN" "module.dtd">
+<script:module xmlns:script="http://openoffice.org/2000/script" script:name="CreateFieldsList" script:language="StarBasic">REM  *****  BASIC  *****
+
+Option Explicit
+
+Public Const NAME_FIELD_INDEX as Integer = 0
+Public Const LIST_FIELD_INDEX as Integer = 1
+
+Public gCreateFieldsListDialog as Object
+
+Private sequence As String
+Private itemFieldName As String
+Private templateEngineKind As String
+
+Private startListDirective As String
+Private bodyListDirective As String
+Private endListDirective As String
+
+Sub OpenCreateFieldsList
+
+	DialogLibraries.LoadLibrary( &quot;XDocReport&quot; )
+	gCreateFieldsListDialog = CreateUnoDialog( DialogLibraries.XDocReport.CreateFieldsListDialog )
+	DisplayPreview()
+	
+	templateEngineKind = Fields.GetTemplateEngineKind()
+	Dim selectedField as Object
+	selectedField = Fields.SelectedField()
+	
+	If Not (selectedField Is Nothing) Then
+        Dim index
+        sequence = selectedField(NAME_FIELD_INDEX)
+        index = InStr(1, sequence, &quot;.&quot;)
+        If (index &gt; 0) Then
+            itemFieldName = Mid(sequence, index + 1, Len(sequence))
+            sequence = Mid(sequence, 1, index - 1)
+        End If
+        gCreateFieldsListDialog.getControl(&quot;ItemTextField&quot;).Text = Mid(sequence, 1, 1)
+        gCreateFieldsListDialog.getControl(&quot;SequenceLabel&quot;).Text = sequence
+    End If
+	
+	gCreateFieldsListDialog.Execute()				
+	CloseCreateFieldsList()
+
+End Sub
+
+Public Sub CloseCreateFieldsList
+	gCreateFieldsListDialog.endExecute()
+End Sub
+
+Private Sub DisplayPreview()
+	Dim item as String
+	item = gCreateFieldsListDialog.getControl(&quot;ItemTextField&quot;).Text
+
+    &apos; [#list or #foreach
+    If (templateEngineKind = &quot;Freemarker&quot;) Then
+        startListDirective = &quot;[#list &quot; &amp; sequence &amp; &quot; as &quot; &amp; item &amp; &quot;]&quot;
+    Else
+        startListDirective = &quot;#foreach($&quot; &amp; item &amp; &quot; in $&quot; &amp; sequence &amp; &quot;)&quot;
+    End If
+    
+    &apos; item
+    bodyListDirective = item
+    If itemFieldName &lt;&gt; &quot;&quot; Then
+        bodyListDirective = bodyListDirective + &quot;.&quot; + itemFieldName
+    End If
+    If (templateEngineKind = &quot;Freemarker&quot;) Then
+        bodyListDirective = &quot;${&quot; + bodyListDirective + &quot;}&quot;
+    Else
+        bodyListDirective = &quot;$&quot; + bodyListDirective
+    End If
+    
+    &apos; [/#list] or #end
+    If (templateEngineKind = &quot;Freemarker&quot;) Then
+        endListDirective = &quot;[/#list]&quot;
+    Else
+        endListDirective = &quot;#end&quot;
+    End If
+
+	gCreateFieldsListDialog.getControl(&quot;PreviewLabel&quot;).Text = startListDirective &amp; Chr(10) &amp; &quot;    &quot; &amp; bodyListDirective &amp; Chr(10) &amp; endListDirective
+    
+End Sub
+
+Private Sub GenerateFields()
+	Fields.InsertInputField startListDirective
+	Fields.InsertInputField bodyListDirective
+	Fields.InsertInputField endListDirective
+	CloseCreateFieldsList()
+End Sub 
+
+</script:module>

@@ -1,0 +1,16 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<description
+ xmlns="http://openoffice.org/extensions/description/2006"
+ xmlns:dep="http://openoffice.org/extensions/description/2006"
+ xmlns:xlink="http://www.w3.org/1999/xlink">
+	<identifier value="vnd.basicaddonbuilder.xdocreport"/>
+	<version value="@oxtversion@"/>
+	<!-- <dependencies>
+		<OpenOffice.org-minimal-version value="2.1" dep:name="OpenOffice.org 2.1"/>
+	</dependencies> -->
+	<registration>
+		<simple-license  accept-by="admin" default-license-id="ID0" suppress-on-update="true" >
+			<license-text xlink:href="registration/license.txt" lang="en" license-id="ID0" />
+		</simple-license>
+	</registration>
+</description>

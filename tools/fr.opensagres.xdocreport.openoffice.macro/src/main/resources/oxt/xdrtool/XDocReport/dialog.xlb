@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE library:library PUBLIC "-//OpenOffice.org//DTD OfficeDocument 1.0//EN" "library.dtd">
+<library:library xmlns:library="http://openoffice.org/2000/library" library:name="XDocReport" library:readonly="false" library:passwordprotected="false">
+ <library:element library:name="AboutDialog"/>
+ <library:element library:name="SettingsDialog"/>
+ <library:element library:name="FieldsDialog"/>
+ <library:element library:name="CreateRepositoryDialog"/>
+ <library:element library:name="CreateFieldsListDialog"/>
+ <library:element library:name="RepositoriesDialog"/>
+ <library:element library:name="ErrorDialog"/>
+ <library:element library:name="WorkInProcessDialog"/>
+</library:library>

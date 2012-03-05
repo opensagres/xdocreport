@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE dlg:window PUBLIC "-//OpenOffice.org//DTD OfficeDocument 1.0//EN" "dialog.dtd">
+<dlg:window xmlns:dlg="http://openoffice.org/2000/dialog" xmlns:script="http://openoffice.org/2000/script" dlg:id="FieldsDialog" dlg:left="250" dlg:top="128" dlg:width="201" dlg:height="287" dlg:closeable="true" dlg:moveable="true" dlg:title="XDocReport - Fields">
+ <dlg:bulletinboard>
+  <dlg:button dlg:id="CloseCommandButton" dlg:tab-index="1" dlg:left="151" dlg:top="270" dlg:width="39" dlg:height="14" dlg:value="Close">
+   <script:event script:event-name="on-performaction" script:macro-name="vnd.sun.star.script:XDocReport.Fields.CloseFieldsDialog?language=Basic&amp;location=application" script:language="Script"/>
+  </dlg:button>
+  <dlg:treecontrol dlg:id="FieldsTreeControl" dlg:tab-index="0" dlg:left="2" dlg:top="23" dlg:width="105" dlg:height="247" dlg:selectiontype="single" dlg:rootdisplayed="false"/>
+  <dlg:text dlg:id="ModelLabel" dlg:tab-index="2" dlg:left="2" dlg:top="7" dlg:width="19" dlg:height="12" dlg:value="Model:"/>
+  <dlg:menulist dlg:id="ModelListBox" dlg:tab-index="3" dlg:left="21" dlg:top="7" dlg:width="177" dlg:height="12" dlg:page="1" dlg:spin="true">
+   <script:event script:event-name="on-itemstatechange" script:macro-name="vnd.sun.star.script:XDocReport.Fields.LoadFieldsTree?language=Basic&amp;location=application" script:language="Script"/>
+  </dlg:menulist>
+  <dlg:titledbox dlg:id="DescriptionFrameControl" dlg:tab-index="4" dlg:left="107" dlg:top="23" dlg:width="91" dlg:height="242">
+   <dlg:title dlg:value="Model Description"/>
+  </dlg:titledbox>
+  <dlg:text dlg:id="StaticTemplateEngineLabel" dlg:tab-index="5" dlg:left="111" dlg:top="35" dlg:width="45" dlg:height="12" dlg:value="Template engine:"/>
+  <dlg:text dlg:id="TemplateEngineLabel" dlg:tab-index="6" dlg:left="154" dlg:top="35" dlg:width="45" dlg:height="12"/>
+  <dlg:text dlg:id="FieldsDescriptionLabel" dlg:tab-index="7" dlg:left="111" dlg:top="52" dlg:width="85" dlg:height="107"/>
+  <dlg:text dlg:id="FieldDescriptionLabel" dlg:tab-index="8" dlg:left="111" dlg:top="161" dlg:width="85" dlg:height="100"/>
+  <dlg:button dlg:id="InsertFieldCommandButton" dlg:tab-index="9" dlg:disabled="true" dlg:left="2" dlg:top="270" dlg:width="39" dlg:height="14" dlg:value="Insert Field">
+   <script:event script:event-name="on-performaction" script:macro-name="vnd.sun.star.script:XDocReport.Fields.InsertInputFieldFromSelectedTreeNode?language=Basic&amp;location=application" script:language="Script"/>
+  </dlg:button>
+  <dlg:button dlg:id="InsertLIstFieldCommandButton" dlg:tab-index="10" dlg:disabled="true" dlg:left="43" dlg:top="270" dlg:width="39" dlg:height="14" dlg:value="Insert List">
+   <script:event script:event-name="on-performaction" script:macro-name="vnd.sun.star.script:XDocReport.CreateFieldsList.OpenCreateFieldsList?language=Basic&amp;location=application" script:language="Script"/>
+  </dlg:button>
+  <dlg:checkbox dlg:id="HyperlinkCheckBox" dlg:tab-index="11" dlg:left="84" dlg:top="273" dlg:width="22" dlg:height="9" dlg:value="Link?" dlg:checked="false"/>
+  <dlg:button dlg:id="PreviewCommandButton" dlg:tab-index="12" dlg:left="109" dlg:top="270" dlg:width="39" dlg:height="14" dlg:value="Preview">
+   <script:event script:event-name="on-performaction" script:macro-name="vnd.sun.star.script:XDocReport.Preview.Main?language=Basic&amp;location=application" script:language="Script"/>
+  </dlg:button>
+ </dlg:bulletinboard>
+</dlg:window>

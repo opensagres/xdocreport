@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE script:module PUBLIC "-//OpenOffice.org//DTD OfficeDocument 1.0//EN" "module.dtd">
+<script:module xmlns:script="http://openoffice.org/2000/script" script:name="Preview" script:language="StarBasic">REM  *****  BASIC  *****
+
+Sub Main
+
+	&apos;1) Check if Preview is available
+	If Not (IsPreviewAvailable()) Then
+		MsgBox &quot;Preview is not available. Please fix settings of XDocReport-Settings.&quot;
+		Exit Sub
+	End If	
+
+	&apos; 2) Save the ODT document.
+	If (ThisComponent.HasLocation) Then 
+		&apos; ODT exists, store it.
+		ThisComponent.Store
+	Else
+		&apos; ODT doesn&apos;t exist, open save as dialog
+		Dim oFrame As Object ,oDisp As Object
+		Dim Array()
+
+		oFrame = ThisComponent.CurrentController.getFrame()
+		oDisp = createUnoService(&quot;com.sun.star.frame.DispatchHelper&quot;)
+		oDisp.executeDispatch(oFrame , &quot;.uno:SaveAs&quot;, &quot;&quot;, 0 , Array())
+		
+	End If
+
+	&apos; 3) Get parameters of xdrtools.bat/xdrtools.sh
+	inFilePath= ConvertFromURL( ThisComponent.getURL() ) 
+	outFilePath= inFilePath  &amp; &quot;.generated.odt&quot;
+	errFilePath= inFilePath  &amp; &quot;.err.txt&quot;
+	
+	metadataFile = ConvertFromURL(Settings.GetXMLFieldsDirectorySetting() + &quot;/&quot; + Settings.GetXMLFieldFileNameSetting())
+	dataDir = metadataFile + &quot;-data&quot;
+	
+	&apos; 4) Compute command parameters
+	cmd = GenerateCommand(inFilePath, outFilePath, metadataFile, dataDir, errFilePath)
+	batOrShFile = Settings.GetXDRToolsBatFileSetting()
+
+	&apos; 5) Execute command with xdrtools.bat/xdrtools.sh
+&apos;	Shell(ConvertToURL(&quot;C:\XDocReport\bin/xdrtools.bat&quot;), 4,cmd &amp;&quot; &gt;C:/log.text&quot;, True) 
+	Shell(ConvertToURL(batOrShFile), 2 , cmd , True) 
+
+	If (FileExists(errFilePath)) Then 
+		&apos; 6.1) an error file was generated in a file -err.txt, display the content of this file in the textbox of the Dialog PreviewErrDialog.
+		OpenErrorDialog(errFilePath)
+	Else
+		&apos; 6.2) Open the generated ODT
+		If (FileExists(outFilePath)) Then 
+			Dim Doc
+			Doc = starDeskTop.loadComponentFromUrl (ConvertToUrl(outFilePath), &quot;_blank&quot;, 0, Array())
+		Else
+			MsgBox &quot;Impossible to open the file &quot; + outFilePath
+		End If
+	End If
+	
+
+End Sub
+
+Private Function GenerateCommand(ByVal inFilePath As String, ByVal outFilePath As String, ByVal metadataFile As String, ByVal dataDir As String, ByVal errFilePath As String) As String
+    &apos; 1) -in
+    GenerateCommand = GenerateCommand + &quot; &quot;&quot;&quot; + inFilePath + &quot;&quot;&quot; &quot;
+    &apos; 2) -out
+    GenerateCommand = GenerateCommand + &quot; &quot;&quot;&quot; + outFilePath + &quot;&quot;&quot; &quot;
+    &apos; 3) -metadataFile
+    GenerateCommand = GenerateCommand + &quot; &quot;&quot;&quot; + metadataFile + &quot;&quot;&quot; &quot;
+    &apos; 4) -dataDir
+    GenerateCommand = GenerateCommand + &quot; &quot;&quot;&quot; + dataDir + &quot;&quot;&quot; &quot;
+    &apos; 5) -err
+    GenerateCommand = GenerateCommand + &quot; &quot;&quot;&quot; + errFilePath + &quot;&quot;&quot;&quot;    
+End Function
+
+Private Function IsPreviewAvailable() as Boolean
+	&apos; 1) Check if bat/sh is available
+	Dim batOrShFile as String
+	batOrShFile = Settings.GetXDRToolsBatFileSetting()
+	If Not (FileExists(batOrShFile)) Then 
+		Settings.OpenSettingsDialog()
+	End If
+	batOrShFile = Settings.GetXDRToolsBatFileSetting()
+	IsPreviewAvailable= FileExists(batOrShFile)
+End Function
+</script:module>

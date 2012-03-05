@@ -9,5 +9,6 @@
   <packaging>pom</packaging>
   <modules>
   	<module>fr.opensagres.xdocreport.openoffice.tools</module>
+  	<module>fr.opensagres.xdocreport.openoffice.macro</module>
   </modules>
 </project>

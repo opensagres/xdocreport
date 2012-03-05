@@ -272,6 +272,34 @@ Function XDocReport_LastIndexOf ( cText as String, cMatch as String) As Integer
   XDocReport_LastIndexOf()=lastIndex
 End Function
 
+Function XDocReport_Replace(ByVal chaine As String, src As String, dest As String, casse As Boolean)        
+	Dim lsrc As Integer, i As Integer, kas As Integer
+	dim limite as string
+
+	limite=&quot;&quot;
+	kas = iif(casse, 0, 1)
+	lsrc = len(src)
+	i = instr(1, chaine, src, kas)
+	while i&lt;&gt;0
+	  while i&lt;0
+	    limite=limite+left(chaine,32000)
+	    chaine=mid(chaine,32001)
+	    i=instr(1, chaine, src, kas)
+	  wend
+	  &apos; ici i est toujours positif non nul
+	  if i&gt;1 then
+	     limite = limite + Left(chaine, i-1) +dest
+	  else &apos; ici i vaut toujours 1
+	     limite = limite +dest
+	  endif   
+	  &apos; raccourcir en deux temps car risque : i+src &gt; 32767
+	  chaine = Mid(chaine, i)   
+	  chaine = Mid(chaine, 1+lsrc)
+	  i = instr(1, chaine, src, kas)
+	wend
+	XDocReport_Replace = limite + chaine
+End Function
+
 Public Sub AddRepository(ByVal baseAddress as String,ByVal user as String,ByVal password as String,ByVal serviceType as String,ByVal repositoryName as String) 
 	Dim value as String
 	value = ReadParameter(REPOSITORIES_PARAM)	

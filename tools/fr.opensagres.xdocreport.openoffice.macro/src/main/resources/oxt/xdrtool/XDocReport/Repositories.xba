@@ -9,7 +9,7 @@ Private EMPTY_PARAM_VALUE
 Public Const EMPTY_PARAM_VALUE =  &quot;___empty&quot;
 
 &apos; Tree   
-Private gTreeMouseListener as Object
+Private gResourcesTreeMouseListener as Object
 Private gSelectedField as Object
 
 &apos; Open Repositories Dialog
@@ -21,6 +21,7 @@ Public Sub OpenRepositoriesDialog
 	&apos; Load repository list bow with list repository
 	LoadRepositoryListBox()   
 
+	InitializeResourcesTree()
 	gRepositoriesDialog.Execute ()
 		
 End Sub
@@ -66,6 +67,8 @@ Public Sub SelectRepository
 	Dim repositoryListBox as Object
 		
 	gRepositoriesDialog.getControl(&quot;RefreshCommandButton&quot;).Model.Enabled = True
+	gRepositoriesDialog.getControl(&quot;DownloadCommandButton&quot;).Model.Enabled = False
+	gRepositoriesDialog.getControl(&quot;OpenLocalCommandButton&quot;).Model.Enabled = False
 				
 	repositoryListBox = gRepositoriesDialog.getControl(&quot;RepositoryListBox&quot;)
 	selectedIndex = repositoryListBox.getSelectedItemPos()
@@ -88,16 +91,15 @@ Public Sub SelectRepository
 	End If
 End Sub
                                  
-Public Function ExecuteRepositoryServiceClient (ByVal baseAddress as String, ByVal user as String, ByVal password as String, ByVal serviceType as String, ByVal serviceName as String, ByVal resourcePath as String) as String
+Public Function ExecuteRepositoryServiceClient (ByVal baseAddress as String, ByVal user as String, ByVal password as String, ByVal serviceType as String, ByVal serviceName as String, ByVal resourcePath as String, ByVal outFilePath As String) as String
 
-	ExecuteRepositoryServiceClient = &quot;&quot;
+	ExecuteRepositoryServiceClient() = &quot;&quot;
 	&apos;1) Check if Preview is available
 	If Not (IsRepositoryAvailable()) Then
 		MsgBox &quot;REST/SOAP Repository is not available. Please fix settings of XDocReport-Settings.&quot;
 		Exit Function
 	End If	
 	
-	Dim outFilePath As String 
 	Dim errFilePath as String
 	Dim batOrShFile as String
 	batOrShFile = Settings.GetXDRToolsRepBatFileSetting()
@@ -105,7 +107,11 @@ Public Function ExecuteRepositoryServiceClient (ByVal baseAddress as String, ByV
 	Dim repositoryFolder as String		
 	repositoryFolder = Settings.GetRepositoryFolderSetting()
 
-	outFilePath = ConvertFromURL(repositoryFolder + &quot;/&quot; + serviceName+ &quot;.txt&quot;)
+	If (outFilePath = &quot;&quot;) Then 
+		outFilePath = ConvertFromURL(repositoryFolder + &quot;/&quot; + serviceName+ &quot;.txt&quot;)
+	Else 
+		outFilePath = ConvertFromURL(outFilePath)
+	End If
 	errFilePath = ConvertFromURL(repositoryFolder + &quot;/&quot; + serviceName+ &quot;.err.txt&quot;)
 		
 	Dim cmd as String	 
@@ -125,7 +131,7 @@ Public Function ExecuteRepositoryServiceClient (ByVal baseAddress as String, ByV
 	message= message + serviceName    
 	
 	&apos; Open Popup Work In Process
-	WorkInProcess.OpenWorkInProcess(message)	
+	WorkInProcess.OpenWorkInProcess(message, 20)	
 	
 	&apos; 5) Execute command with xdrtools-rep.bat/xdrtools-rep.sh
 	&apos; Shell(ConvertToURL(batOrShFile), 4,cmd &amp;&quot; &gt;C:/log.text&quot;, True) 
@@ -149,7 +155,7 @@ End Function
 Public Function ExecuteRepositoryServiceClient_Name(ByVal baseAddress as String, ByVal user as String, ByVal password as String, ByVal serviceType as String) as String
 	ExecuteRepositoryServiceClient_Name = &quot;&quot;
 	Dim outFilePath as String
-	outFilePath = ExecuteRepositoryServiceClient(baseAddress, user, password, serviceType, &quot;name&quot;, &quot;&quot;)
+	outFilePath = ExecuteRepositoryServiceClient(baseAddress, user, password, serviceType, &quot;name&quot;, &quot;&quot;, &quot;&quot;)
 	If (outFilePath &lt;&gt; &quot;&quot;) Then 
 		ExecuteRepositoryServiceClient_Name = GetTextFileContent(outFilePath)
 	End If
@@ -158,10 +164,10 @@ End Function
 Public Function ExecuteRepositoryServiceClient_Root(ByVal baseAddress as String, ByVal user as String, ByVal password as String, ByVal serviceType as String) as String
 	ExecuteRepositoryServiceClient_Root = &quot;&quot;
 	Dim outFilePath as String
-	outFilePath = ExecuteRepositoryServiceClient(baseAddress, user, password, serviceType, &quot;root&quot;, &quot;&quot;)
+	outFilePath = ExecuteRepositoryServiceClient(baseAddress, user, password, serviceType, &quot;root&quot;, &quot;&quot;, &quot;&quot;)
 	If (outFilePath &lt;&gt; &quot;&quot;) Then 
 		&apos; Open Popup Work In Process
-		WorkInProcess.OpenWorkInProcess(&quot;Populating resources tree...&quot;)
+		WorkInProcess.OpenWorkInProcess(&quot;Populating resources tree...&quot;, 0)
 		&apos; Populate Tree
 		LoadResourcesTree(outFilePath)
 		WorkInProcess.CloseWorkInProcess()
@@ -169,6 +175,15 @@ Public Function ExecuteRepositoryServiceClient_Root(ByVal baseAddress as String,
 	Else 
 		CleanResourcesTree()
 		ExecuteRepositoryServiceClient_Root = False
+	End If
+End Function
+
+Public Function ExecuteRepositoryServiceClient_Download(ByVal baseAddress as String, ByVal user as String, ByVal password as String, ByVal serviceType as String,  ByVal resourceId as String, ByVal downloadedFilePath as String) as String
+	ExecuteRepositoryServiceClient_Download = &quot;&quot;
+	Dim outFilePath as String
+	outFilePath = ExecuteRepositoryServiceClient(baseAddress, user, password, serviceType, &quot;download&quot;, resourceId, downloadedFilePath)
+	If (outFilePath &lt;&gt; &quot;&quot;) Then 
+		ExecuteRepositoryServiceClient_Download = outFilePath
 	End If
 End Function
 
@@ -226,6 +241,56 @@ Private Function IsRepositoryAvailable() as Boolean
 	IsRepositoryAvailable= FileExists(batOrShFile)
 End Function
 
+&apos;==================================================
+&apos;   Repositories Tree (list of repositories coming from the selected *.repositories.xml file of Model ListBox ).
+&apos;==================================================
+
+Private Sub InitializeResourcesTree()
+	Dim oResourcesTreeControl as Object
+	oResourcesTreeControl = gRepositoriesDialog.getControl(&quot;ResourcesTreeControl&quot;)
+	
+	gResourcesTreeMouseListener = createUnoListener(&quot;ResourcesTreeMouseListener_&quot;, &quot;com.sun.star.awt.XMouseListener&quot;)
+	oResourcesTreeControl.addMouselistener(gResourcesTreeMouseListener)   
+End Sub
+
+rem~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+sub ResourcesTreeMouseListener_mousePressed(ByVal oEvt as Object)
+rem~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+	Dim selectedValue 	
+	If Not (oEvt is Nothing) And Not (oEvt.Source is Nothing) And Not (oEvt.Source.Selection is Nothing) Then 
+		selectedValue = oEvt.Source.Selection.DataValue
+		gRepositoriesDialog.getControl(&quot;DownloadCommandButton&quot;).Model.Enabled=False	
+		
+		If IsArray(selectedValue) Then 
+			&apos; resource is selected, &quot;Download&quot; button is enabled.
+			gRepositoriesDialog.getControl(&quot;DownloadCommandButton&quot;).Model.Enabled=True
+			
+			&apos; try if resource was already downloaded?
+			Dim resourcePath as String			
+			resourcePath = selectedvalue(0)	
+			
+			Dim localFilePath as String
+			localFilePath = GetCurrentResourcesFolder() + &quot;/&quot; + resourcePath
+			gRepositoriesDialog.getControl(&quot;OpenLocalCommandButton&quot;).Model.Enabled= FileExists(localFilePath) 
+		End If		
+	End If		
+end sub
+
+sub ResourcesTreeMouseListener_mouseReleased(oEvt)
+end sub
+sub ResourcesTreeMouseListener_mouseEntered(oEvt)
+end sub
+sub ResourcesTreeMouseListener_mouseExited(oEvt)
+end sub
+sub ResourcesTreeMouseListener_disposing(oEvt)
+end sub
+
+Private Sub DisposeResourcesTree()
+	Dim oResourcesTreeControl as Object
+	oResourcesTreeControl = gRepositoriesDialog.getControl(&quot;ResourcesTreeControl&quot;)
+	
+	oResourcesTreeControl.removeMouselistener(gResourcesTreeMouseListener)
+End Sub
 
 &apos; When *fields.xml is selected in the Model ListBox, Treeview must be refreshed with fields coming from the *.fields.xml
 Private Sub LoadResourcesTree(ByVal xmlFile as String)
@@ -384,6 +449,30 @@ Sub RepositoryDocHandler_startElement( cName As String, oAttributes As com.sun.s
 		If (isFolder) Then 
 			treeNode.DataValue = True
 			gParentNode = treeNode
+		Else
+			&apos; File type, set the resource id
+			Dim resourceId as String
+			resourceId = oAttributes.getValueByName(&quot;id&quot;)
+				
+			Dim resourcePath as String			
+			Dim tempTreeNode as Object
+			tempTreeNode = treeNode
+			
+			While Not (tempTreeNode.GetParent() Is Nothing)
+				If (resourcePath = &quot;&quot;) Then 
+					resourcePath = tempTreeNode.GetDisplayValue()
+				Else
+					resourcePath = tempTreeNode.GetDisplayValue() + &quot;/&quot; + resourcePath
+				End If
+				tempTreeNode = 	tempTreeNode.GetParent()
+			Wend				
+			
+			Dim values(2) as String
+			&apos; Resource path (for local)
+			values(0) = resourcePath
+			values(1) = resourceId
+			treeNode.DataValue = values				
+			
 		End If
 	End If
 End Sub
@@ -396,7 +485,7 @@ Sub RepositoryDocHandler_endElement( cName As String )
 			&apos; =&gt; Get parent tree node
 			gParentNode = gParentNode.getParent()
 		Else
-			If (treeNode.DataValue = True) Then 
+			If Not IsArray(treeNode.DataValue) Then 
 				&apos; TreeNode folder is closed, get parent tree node
 				gParentNode = treeNode.getParent()
 			End If
@@ -425,4 +514,106 @@ Sub RepositoryDocHandler_setDocumentLocator( oLocator As com.sun.star.xml.sax.XL
    
    glLocatorSet = True
 End Sub
+
+Public Sub DownloadResource
+	Dim oResourcesTreeControl as Object
+	oResourcesTreeControl = gRepositoriesDialog.getControl(&quot;ResourcesTreeControl&quot;)
+
+	Dim selectedValue 
+	selectedValue = oResourcesTreeControl.Selection.DataValue
+	
+	If IsArray(selectedValue) Then 
+		Dim resourcePath as String
+		Dim resourceId as String
+			
+		resourcePath = selectedvalue(0)	
+		resourceId = selectedvalue(1)
+		If (resourceId = &quot;&quot; ) Then 
+			resourceId = XDocReport_Replace (resourcePath, &quot;/&quot;, &quot;____&quot;, True)		
+		End If				
+		
+		Dim fileToDownloadPath as String
+		fileToDownloadPath = GetCurrentResourcesFolder() + &quot;/&quot; + resourcePath
+
+		Dim repositoryListBox as Object 
+		Dim selectedIndex as Integer
+		repositoryListBox = gRepositoriesDialog.getControl(&quot;RepositoryListBox&quot;)
+		selectedIndex = repositoryListBox.getSelectedItemPos()
+		Dim repositories() as String
+		Dim baseAddress as String
+		Dim user as String
+		Dim password as String
+		Dim serviceType as String
+		
+			Settings.LoadSettingsIfNeeded()
+		repositories = Settings.repositories	
+		baseAddress= repositories(selectedIndex*4+0)
+		
+		user= repositories(selectedIndex*4+1)
+		password= repositories(selectedIndex*4+2)
+		serviceType= repositories(selectedIndex*4+3)			
+	
+		fileToDownloadPath = ExecuteRepositoryServiceClient_Download(baseAddress, user, password, serviceType, resourceId, fileToDownloadPath)
+		If (fileToDownloadPath &lt;&gt; &quot;&quot;) Then 		
+			If (OpenLocalResource(fileToDownloadPath)) Then 
+				gRepositoriesDialog.getControl(&quot;OpenLocalCommandButton&quot;).Model.Enabled = True
+			End If
+		End If
+	End If
+End Sub
+
+
+Private Function OpenLocalResource(ByVal outFilePath as String) as Boolean
+	OpenLocalResource = False
+	If (FileExists(outFilePath)) Then 
+		Dim Doc
+		Doc = starDeskTop.loadComponentFromUrl (ConvertToUrl(outFilePath), &quot;_blank&quot;, 0, Array())
+		OpenLocalResource = True
+	Else
+		MsgBox &quot;Impossible to open the file &quot; + outFilePath
+	End If
+End Function
+
+Public Sub OpenSelectedLocalResource
+	Dim oResourcesTreeControl as Object
+	oResourcesTreeControl = gRepositoriesDialog.getControl(&quot;ResourcesTreeControl&quot;)
+
+	Dim selectedValue 
+	selectedValue = oResourcesTreeControl.Selection.DataValue
+	
+	If IsArray(selectedValue) Then 
+		Dim resourcePath as String			
+		resourcePath = selectedvalue(0)	
+		
+		Dim localFilePath as String
+		localFilePath = GetCurrentResourcesFolder() + &quot;/&quot; + resourcePath
+		
+		If (OpenLocalResource(localFilePath)) Then 
+			gRepositoriesDialog.getControl(&quot;OpenLocalCommandButton&quot;).Model.Enabled = False
+		End If 
+	End If
+End Sub
+
+Private Function GetCurrentResourcesFolder()
+	Dim baseFolder as String
+	Dim repositoryListBox as Object				
+	repositoryListBox = gRepositoriesDialog.getControl(&quot;RepositoryListBox&quot;)
+	
+	Dim selectedIndex as Integer
+	selectedIndex = repositoryListBox.getSelectedItemPos()
+	If (selectedIndex &lt;&gt; -1) Then		
+ 		Settings.LoadSettingsIfNeeded()
+		repositories = Settings.repositories	
+		baseFolder= repositories(selectedIndex*4+0)
+		baseFolder = XDocReport_Replace (baseFolder, &quot;/&quot;, &quot;_&quot;, True)
+		baseFolder = XDocReport_Replace (baseFolder, &quot;:&quot;, &quot;_&quot;, True)
+		baseFolder = XDocReport_Replace (baseFolder, &quot;.&quot;, &quot;_&quot;, True)		
+		baseFolder = XDocReport_Replace (baseFolder, &quot;?&quot;, &quot;_&quot;, True)		
+		baseFolder = XDocReport_Replace (baseFolder, &quot;&amp;&quot;, &quot;_&quot;, True)				
+		GetCurrentResourcesFolder() = Settings.GetRepositoryFolderSetting() + &quot;/&quot; + baseFolder
+	Else
+		GetCurrentResourcesFolder() = &quot;&quot;			
+	End If
+	
+End Function 
 </script:module>

@@ -4,14 +4,16 @@
 
 Dim workInProcessDialog as Object
 
-Sub OpenWorkInProcess(ByVal message as String)
+Sub OpenWorkInProcess(ByVal message as String, ByVal time as Integer)
 
 	DialogLibraries.LoadLibrary( &quot;XDocReport&quot; )
 	workInProcessDialog = CreateUnoDialog( DialogLibraries.XDocReport.WorkInProcessDialog )			
 	workInProcessDialog.GetControl(&quot;WorkInProcessLabel&quot;).Text= message
 	workInProcessDialog.setVisible( True )
 	
-	Wait 1
+	If (time &gt; 0 ) Then 
+		Wait time
+	End If
 	
 End Sub
 

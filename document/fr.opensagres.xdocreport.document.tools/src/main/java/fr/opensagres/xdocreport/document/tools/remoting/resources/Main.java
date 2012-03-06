@@ -157,10 +157,13 @@ public class Main
     private static void createFile( byte[] flux, File outFile )
         throws IOException
     {
-        outFile.getParentFile().mkdirs();
+        if ( outFile.getParentFile() != null )
+        {
+            outFile.getParentFile().mkdirs();
+        }
         FileOutputStream fos = new FileOutputStream( outFile );
         fos.write( flux );
-        fos.close();
+        fos.close();        
     }
 
     private static void processUpload( ResourcesService client, String resources, String out )

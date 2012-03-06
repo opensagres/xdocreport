@@ -2,7 +2,6 @@ package fr.opensagres.xdocreport.remoting.resources.services.file;
 
 import java.io.ByteArrayInputStream;
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -16,6 +15,7 @@ import fr.opensagres.xdocreport.remoting.resources.domain.BinaryData;
 import fr.opensagres.xdocreport.remoting.resources.domain.Filter;
 import fr.opensagres.xdocreport.remoting.resources.domain.Resource;
 import fr.opensagres.xdocreport.remoting.resources.services.AbstractResourcesService;
+import fr.opensagres.xdocreport.remoting.resources.services.ResourcesException;
 
 public abstract class FileResourcesService
     extends AbstractResourcesService
@@ -34,6 +34,7 @@ public abstract class FileResourcesService
     }
 
     public BinaryData download( String resourceId )
+        throws ResourcesException
     {
         String resourcePath = getResourcePath( resourceId );
         File file = new File( getRootFolder(), resourcePath );
@@ -43,17 +44,10 @@ public abstract class FileResourcesService
             data.setResourceId( resourceId );
             return data;
         }
-        catch ( FileNotFoundException e )
+        catch ( Exception e )
         {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
+            throw new ResourcesException( e );
         }
-        catch ( IOException e )
-        {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        }
-        return null;
     }
 
     protected String getResourcePath( String resourceId )
@@ -61,7 +55,7 @@ public abstract class FileResourcesService
         return StringUtils.replaceAll( resourceId, "____", "/" );
     }
 
-    public void upload( BinaryData data )
+    public void upload( BinaryData data ) throws ResourcesException
     {
         String resourceId = data.getResourceId();
         byte[] content = data.getContent();
@@ -81,8 +75,7 @@ public abstract class FileResourcesService
         }
         catch ( IOException e )
         {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
+            throw new ResourcesException( e );
         }
         finally
         {

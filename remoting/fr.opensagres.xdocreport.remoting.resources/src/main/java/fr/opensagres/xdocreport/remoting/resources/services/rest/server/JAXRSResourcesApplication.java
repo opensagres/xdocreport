@@ -74,7 +74,7 @@ public class JAXRSResourcesApplication
         }
 
         HashSet<Object> singletons = new HashSet<Object>();
-        List<ResourcesService> services = ResourcesServicesRegistry.getRegistry().getServices();
+        List<ResourcesService> services = getRegistry().getServices();
         for ( final ResourcesService service : services )
         {
             singletons.add( new JAXRSResourcesServiceImpl( service ) );
@@ -82,5 +82,10 @@ public class JAXRSResourcesApplication
         // register here Providers
         singletons.addAll( Providers.get() );
         this.singletons = singletons;
+    }
+
+    protected ResourcesServicesRegistry getRegistry()
+    {
+        return ResourcesServicesRegistry.getRegistry();
     }
 }

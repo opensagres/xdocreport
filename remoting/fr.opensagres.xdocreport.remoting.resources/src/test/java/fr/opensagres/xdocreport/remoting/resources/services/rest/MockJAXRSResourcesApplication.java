@@ -24,30 +24,16 @@
  */
 package fr.opensagres.xdocreport.remoting.resources.services.rest;
 
-import java.util.HashSet;
-import java.util.Set;
-
-import javax.ws.rs.core.Application;
-
 import fr.opensagres.xdocreport.remoting.resources.services.MockResourcesService;
-import fr.opensagres.xdocreport.remoting.resources.services.rest.server.JAXRSResourcesServiceImpl;
+import fr.opensagres.xdocreport.remoting.resources.services.rest.server.JAXRSResourcesApplication;
 
-public class MockJAXRSResourcesApplication extends Application {
-    HashSet<Object> singletons = new HashSet<Object>();
+public class MockJAXRSResourcesApplication
+    extends JAXRSResourcesApplication
+{
 
-    public MockJAXRSResourcesApplication() {
-        singletons.add(new JAXRSResourcesServiceImpl(new MockResourcesService()));
-        singletons.add(new BinaryDataMessageBodyWriter());
-        singletons.add(new BinaryDataMessageBodyReader());
+    public MockJAXRSResourcesApplication()
+    {
+        super.getRegistry().clear();
+        super.getRegistry().addService( new MockResourcesService() );
     }
-
-    public Set<Class<?>> getClasses() {
-        HashSet<Class<?>> set = new HashSet<Class<?>>();
-        return set;
-    }
-
-    public Set<Object> getSingletons() {
-        return singletons;
-    }
-
 }

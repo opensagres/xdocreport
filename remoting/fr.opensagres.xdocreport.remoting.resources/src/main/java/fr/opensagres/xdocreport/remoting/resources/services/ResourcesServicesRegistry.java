@@ -28,4 +28,10 @@ public class ResourcesServicesRegistry
     {
         return services;
     }
+
+    public void clear()
+    {
+        this.services.clear();
+        
+    }
 }

@@ -24,7 +24,9 @@
   <dlg:button dlg:id="DownloadCommandButton" dlg:tab-index="8" dlg:disabled="true" dlg:left="6" dlg:top="229" dlg:width="33" dlg:height="12" dlg:value="Download">
    <script:event script:event-name="on-performaction" script:macro-name="vnd.sun.star.script:XDocReport.Repositories.DownloadResource?language=Basic&amp;location=application" script:language="Script"/>
   </dlg:button>
-  <dlg:button dlg:id="UploadCommandButton" dlg:tab-index="9" dlg:disabled="true" dlg:left="89" dlg:top="229" dlg:width="33" dlg:height="12" dlg:value="Upload"/>
+  <dlg:button dlg:id="UploadCommandButton" dlg:tab-index="9" dlg:disabled="true" dlg:left="89" dlg:top="229" dlg:width="33" dlg:height="12" dlg:value="Upload">
+   <script:event script:event-name="on-performaction" script:macro-name="vnd.sun.star.script:XDocReport.Repositories.UploadResource?language=Basic&amp;location=application" script:language="Script"/>
+  </dlg:button>
   <dlg:button dlg:id="OpenLocalCommandButton" dlg:tab-index="11" dlg:disabled="true" dlg:left="43" dlg:top="229" dlg:width="33" dlg:height="12" dlg:value="Open Local">
    <script:event script:event-name="on-performaction" script:macro-name="vnd.sun.star.script:XDocReport.Repositories.OpenSelectedLocalResource?language=Basic&amp;location=application" script:language="Script"/>
   </dlg:button>

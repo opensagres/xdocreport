@@ -69,6 +69,7 @@ Public Sub SelectRepository
 	gRepositoriesDialog.getControl(&quot;RefreshCommandButton&quot;).Model.Enabled = True
 	gRepositoriesDialog.getControl(&quot;DownloadCommandButton&quot;).Model.Enabled = False
 	gRepositoriesDialog.getControl(&quot;OpenLocalCommandButton&quot;).Model.Enabled = False
+	gRepositoriesDialog.getControl(&quot;UploadCommandButton&quot;).Model.Enabled = False
 				
 	repositoryListBox = gRepositoriesDialog.getControl(&quot;RepositoryListBox&quot;)
 	selectedIndex = repositoryListBox.getSelectedItemPos()
@@ -187,6 +188,15 @@ Public Function ExecuteRepositoryServiceClient_Download(ByVal baseAddress as Str
 	End If
 End Function
 
+Public Function ExecuteRepositoryServiceClient_Upload(ByVal baseAddress as String, ByVal user as String, ByVal password as String, ByVal serviceType as String,  ByVal resourceId as String, ByVal fileToUploadFilePath as String) as Boolean
+	ExecuteRepositoryServiceClient_Upload = False
+	Dim outFilePath as String
+	outFilePath = ExecuteRepositoryServiceClient(baseAddress, user, password, serviceType, &quot;upload&quot;, resourceId, fileToUploadFilePath)
+	If (outFilePath &lt;&gt; &quot;&quot;) Then 
+		ExecuteRepositoryServiceClient_Upload = True
+	End If
+End Function
+
 Public Function GenerateRepositoryCommand(ByVal baseAddress as String, ByVal user as String, ByVal password as String, ByVal serviceType as String, ByVal serviceName as String, ByVal outFilePath as String, ByVal errFilePath as String, ByVal resources as String) As String
     &apos; 1) -baseAddress
     If (baseAddress = &quot;&quot;) Then 
@@ -271,7 +281,11 @@ rem~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 			
 			Dim localFilePath as String
 			localFilePath = GetCurrentResourcesFolder() + &quot;/&quot; + resourcePath
-			gRepositoriesDialog.getControl(&quot;OpenLocalCommandButton&quot;).Model.Enabled= FileExists(localFilePath) 
+			
+			Dim isFileExists as Boolean
+			isFileExists = FileExists(ConvertFromURL(localFilePath))
+			gRepositoriesDialog.getControl(&quot;OpenLocalCommandButton&quot;).Model.Enabled= isFileExists
+			gRepositoriesDialog.getControl(&quot;UploadCommandButton&quot;).Model.Enabled= isFileExists
 		End If		
 	End If		
 end sub
@@ -557,6 +571,7 @@ Public Sub DownloadResource
 		If (fileToDownloadPath &lt;&gt; &quot;&quot;) Then 		
 			If (OpenLocalResource(fileToDownloadPath)) Then 
 				gRepositoriesDialog.getControl(&quot;OpenLocalCommandButton&quot;).Model.Enabled = True
+				gRepositoriesDialog.getControl(&quot;UploadCommandButton&quot;).Model.Enabled = True				
 			End If
 		End If
 	End If
@@ -590,6 +605,7 @@ Public Sub OpenSelectedLocalResource
 		
 		If (OpenLocalResource(localFilePath)) Then 
 			gRepositoriesDialog.getControl(&quot;OpenLocalCommandButton&quot;).Model.Enabled = False
+			gRepositoriesDialog.getControl(&quot;UploadCommandButton&quot;).Model.Enabled = False			
 		End If 
 	End If
 End Sub
@@ -616,4 +632,60 @@ Private Function GetCurrentResourcesFolder()
 	End If
 	
 End Function 
+
+Public Sub UploadResource
+
+	Dim selectedResource
+	selectedResource = GetSelectedResource()
+	
+	If Not (selectedResource is Nothing) Then 
+		Dim resourcePath as String
+		Dim resourceId as String
+			
+		resourcePath = selectedResource(0)	
+		resourceId = selectedResource(1)
+		If (resourceId = &quot;&quot; ) Then 
+			resourceId = XDocReport_Replace (resourcePath, &quot;/&quot;, &quot;____&quot;, True)		
+		End If				
+		
+		Dim fileToUploadPath as String
+		fileToUploadPath = GetCurrentResourcesFolder() + &quot;/&quot; + resourcePath
+
+		Dim repositoryListBox as Object 
+		Dim selectedIndex as Integer
+		repositoryListBox = gRepositoriesDialog.getControl(&quot;RepositoryListBox&quot;)
+		selectedIndex = repositoryListBox.getSelectedItemPos()
+		Dim repositories() as String
+		Dim baseAddress as String
+		Dim user as String
+		Dim password as String
+		Dim serviceType as String
+		
+		Settings.LoadSettingsIfNeeded()
+		repositories = Settings.repositories	
+		baseAddress= repositories(selectedIndex*4+0)
+		
+		user= repositories(selectedIndex*4+1)
+		password= repositories(selectedIndex*4+2)
+		serviceType= repositories(selectedIndex*4+3)			
+	
+		ExecuteRepositoryServiceClient_Upload(baseAddress, user, password, serviceType, resourceId, fileToUploadPath)
+				
+	End If
+End Sub
+
+
+Private Function GetSelectedResource() as Object
+	GetSelectedResource()= Nothing
+	Dim oResourcesTreeControl as Object
+	oResourcesTreeControl = gRepositoriesDialog.getControl(&quot;ResourcesTreeControl&quot;)
+
+	Dim selectedValue 
+	selectedValue = oResourcesTreeControl.Selection.DataValue
+	
+	If IsArray(selectedValue) Then 
+		GetSelectedResource() = selectedValue
+	End If
+End Function
+
 </script:module>

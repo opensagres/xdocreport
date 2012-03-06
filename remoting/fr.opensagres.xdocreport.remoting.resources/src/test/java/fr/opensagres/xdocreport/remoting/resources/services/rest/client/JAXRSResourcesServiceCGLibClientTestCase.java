@@ -20,14 +20,13 @@ import org.junit.Test;
 
 import fr.opensagres.xdocreport.core.io.IOUtils;
 import fr.opensagres.xdocreport.remoting.resources.Data;
-import fr.opensagres.xdocreport.remoting.resources.domain.BinaryDataIn;
+import fr.opensagres.xdocreport.remoting.resources.domain.BinaryData;
 import fr.opensagres.xdocreport.remoting.resources.domain.Resource;
 import fr.opensagres.xdocreport.remoting.resources.services.FileUtils;
 import fr.opensagres.xdocreport.remoting.resources.services.ResourceComparator;
 import fr.opensagres.xdocreport.remoting.resources.services.ResourcesService;
 import fr.opensagres.xdocreport.remoting.resources.services.rest.JAXRSResourcesService;
 import fr.opensagres.xdocreport.remoting.resources.services.rest.MockJAXRSResourcesApplication;
-import fr.opensagres.xdocreport.remoting.resources.services.rest.MockJAXRSResourcesService;
 
 public class JAXRSResourcesServiceCGLibClientTestCase
 {
@@ -59,9 +58,7 @@ public class JAXRSResourcesServiceCGLibClientTestCase
         // 2) Start Jetty Server
 
         ServletHolder servlet = new ServletHolder( CXFNonSpringJaxrsServlet.class );
-
-        servlet.setInitParameter( Application.class.getName(), MockJAXRSResourcesApplication.class.getName() );
-        servlet.setInitParameter( "jaxrs.serviceClasses", MockJAXRSResourcesService.class.getName() );
+        servlet.setInitParameter( "javax.ws.rs.Application", MockJAXRSResourcesApplication.class.getName() );
 
         servlet.setInitParameter( "timeout", "60000" );
         server = new Server( PORT );
@@ -114,9 +111,10 @@ public class JAXRSResourcesServiceCGLibClientTestCase
     {
         String resourceId = "Simple.docx";
         ResourcesService client = JAXRSClientFactory.create( BASE_ADDRESS, JAXRSResourcesService.class );
-        byte[] document = client.download( resourceId );
+        BinaryData document = client.download( resourceId );
         Assert.assertNotNull( document );
-        createFile( document, resourceId );
+        Assert.assertNotNull( document.getContent() );
+        createFile( document.getContent(), resourceId );
     }
 
     @Test
@@ -125,9 +123,10 @@ public class JAXRSResourcesServiceCGLibClientTestCase
     {
         String resourceId = "Custom%2FCustomSimple.docx";
         ResourcesService client = JAXRSClientFactory.create( BASE_ADDRESS, JAXRSResourcesService.class );
-        byte[] document = client.download( resourceId );
+        BinaryData document = client.download( resourceId );
         Assert.assertNotNull( document );
-        createFile( document, resourceId );
+        Assert.assertNotNull( document.getContent() );
+        createFile( document.getContent(), resourceId );
     }
 
     private void createFile( byte[] flux, String filename )
@@ -147,7 +146,7 @@ public class JAXRSResourcesServiceCGLibClientTestCase
         ResourcesService client = JAXRSClientFactory.create( BASE_ADDRESS, JAXRSResourcesService.class );
         byte[] document = IOUtils.toByteArray( Data.class.getResourceAsStream( "Simple.docx" ) );
 
-        BinaryDataIn dataIn = new BinaryDataIn();
+        BinaryData dataIn = new BinaryData();
         dataIn.setResourceId( resourceId );
         dataIn.setContent( document );
 
@@ -157,8 +156,9 @@ public class JAXRSResourcesServiceCGLibClientTestCase
         Assert.assertTrue( new File( resourcesFolder, resourceId ).exists() );
 
         // Test if download with the resourceId returns a non null binary data.
-        byte[] downloadedDocument = client.download( resourceId );
+        BinaryData downloadedDocument = client.download( resourceId );
         Assert.assertNotNull( downloadedDocument );
+        Assert.assertNotNull( downloadedDocument.getContent() );
     }
 
     @Test
@@ -169,7 +169,7 @@ public class JAXRSResourcesServiceCGLibClientTestCase
         ResourcesService client = JAXRSClientFactory.create( BASE_ADDRESS, JAXRSResourcesService.class );
         byte[] document = IOUtils.toByteArray( Data.class.getResourceAsStream( "Simple.docx" ) );
 
-        BinaryDataIn dataIn = new BinaryDataIn();
+        BinaryData dataIn = new BinaryData();
         dataIn.setResourceId( resourceId );
         dataIn.setContent( document );
 
@@ -180,8 +180,9 @@ public class JAXRSResourcesServiceCGLibClientTestCase
             + ".docx" ).exists() );
 
         // Test if download with the resourceId returns a non null binary data.
-        byte[] downloadedDocument = client.download( resourceId );
+        BinaryData downloadedDocument = client.download( resourceId );
         Assert.assertNotNull( downloadedDocument );
+        Assert.assertNotNull( downloadedDocument.getContent() );
     }
 
     @AfterClass

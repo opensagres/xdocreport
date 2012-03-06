@@ -8,7 +8,7 @@ import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 
-import fr.opensagres.xdocreport.remoting.resources.domain.BinaryDataIn;
+import fr.opensagres.xdocreport.remoting.resources.domain.BinaryData;
 import fr.opensagres.xdocreport.remoting.resources.domain.Resource;
 import fr.opensagres.xdocreport.remoting.resources.services.ResourcesService;
 
@@ -33,32 +33,12 @@ public interface JAXRSResourcesService
     @Path( "/download/{resourceId}" )
     @Consumes( MediaType.APPLICATION_JSON )
     @Produces( MediaType.WILDCARD )
-    byte[] download( @PathParam( "resourceId" )
+    BinaryData download( @PathParam( "resourceId" )
     String resourceId );
 
-    // @GET
-    // @Path( "/download/{resourceId}" )
-    // @Consumes( MediaType.APPLICATION_JSON )
-    // @Produces( MediaType.WILDCARD )
-    // ResourceContent download( @PathParam( "resourceId" )
-    // String resourceId );
-    //
-    // @GET
-    // @Path( "/metadata/{resourceId}" )
-    // @Consumes( MediaType.APPLICATION_JSON )
-    // @Produces( MediaType.APPLICATION_JSON )
-    // ResourceMetadata getMetadata( @PathParam( "resourceId" )
-    // String resourceId );
-    //
-    // @GET
-    // @Path( "/metadatas" )
-    // @Consumes( MediaType.APPLICATION_JSON )
-    // @Produces( MediaType.APPLICATION_XML )
-    // List<ResourceMetadata> getMetadatas();
-    //
     @POST
     @Path( "/upload" )
     @Consumes( MediaType.APPLICATION_JSON )
-    void upload( BinaryDataIn dataIn );
+    void upload( BinaryData data );
 
 }

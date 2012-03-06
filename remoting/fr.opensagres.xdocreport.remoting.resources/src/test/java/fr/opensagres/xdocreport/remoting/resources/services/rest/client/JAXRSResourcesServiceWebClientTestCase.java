@@ -6,7 +6,6 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.Collections;
 
-import javax.ws.rs.core.Application;
 import javax.ws.rs.core.MediaType;
 
 import org.apache.cxf.jaxrs.client.WebClient;
@@ -21,13 +20,12 @@ import org.junit.Test;
 
 import fr.opensagres.xdocreport.core.io.IOUtils;
 import fr.opensagres.xdocreport.remoting.resources.Data;
-import fr.opensagres.xdocreport.remoting.resources.domain.BinaryDataIn;
+import fr.opensagres.xdocreport.remoting.resources.domain.BinaryData;
 import fr.opensagres.xdocreport.remoting.resources.domain.Resource;
 import fr.opensagres.xdocreport.remoting.resources.services.FileUtils;
 import fr.opensagres.xdocreport.remoting.resources.services.ResourceComparator;
 import fr.opensagres.xdocreport.remoting.resources.services.ResourcesServiceName;
 import fr.opensagres.xdocreport.remoting.resources.services.rest.MockJAXRSResourcesApplication;
-import fr.opensagres.xdocreport.remoting.resources.services.rest.MockJAXRSResourcesService;
 
 public class JAXRSResourcesServiceWebClientTestCase
 {
@@ -53,9 +51,7 @@ public class JAXRSResourcesServiceWebClientTestCase
 
         // 2) Start Jetty Server
         ServletHolder servlet = new ServletHolder( CXFNonSpringJaxrsServlet.class );
-
-        servlet.setInitParameter( Application.class.getName(), MockJAXRSResourcesApplication.class.getName() );
-        servlet.setInitParameter( "jaxrs.serviceClasses", MockJAXRSResourcesService.class.getName() );
+        servlet.setInitParameter( "javax.ws.rs.Application", MockJAXRSResourcesApplication.class.getName() );
 
         servlet.setInitParameter( "timeout", "60000" );
         server = new Server( PORT );
@@ -127,7 +123,7 @@ public class JAXRSResourcesServiceWebClientTestCase
         fos.close();
     }
 
-    //@Test
+    // @Test
     public void uploadARootFile()
         throws FileNotFoundException, IOException
     {
@@ -135,7 +131,7 @@ public class JAXRSResourcesServiceWebClientTestCase
         String resourceId = "ZzzNewSimple_" + this.getClass().getSimpleName() + ".docx";
         byte[] document = IOUtils.toByteArray( Data.class.getResourceAsStream( "Simple.docx" ) );
 
-        BinaryDataIn dataIn = new BinaryDataIn();
+        BinaryData dataIn = new BinaryData();
         dataIn.setResourceId( resourceId );
         dataIn.setContent( document );
 
@@ -163,7 +159,7 @@ public class JAXRSResourcesServiceWebClientTestCase
         String resourceId = "ZzzCustom____NewCustomSimple_" + this.getClass().getSimpleName() + ".docx";
         byte[] document = IOUtils.toByteArray( Data.class.getResourceAsStream( "Simple.docx" ) );
 
-        BinaryDataIn dataIn = new BinaryDataIn();
+        BinaryData dataIn = new BinaryData();
         dataIn.setResourceId( resourceId );
         dataIn.setContent( document );
 

@@ -13,7 +13,7 @@ import java.util.Collections;
 
 import fr.opensagres.xdocreport.core.io.IOUtils;
 import fr.opensagres.xdocreport.core.utils.StringUtils;
-import fr.opensagres.xdocreport.remoting.resources.domain.BinaryDataIn;
+import fr.opensagres.xdocreport.remoting.resources.domain.BinaryData;
 import fr.opensagres.xdocreport.remoting.resources.domain.Filter;
 import fr.opensagres.xdocreport.remoting.resources.domain.Resource;
 import fr.opensagres.xdocreport.remoting.resources.services.AbstractResourcesService;
@@ -34,13 +34,16 @@ public abstract class FileResourcesService
         return toResource( getRootFolder(), null );
     }
 
-    public byte[] download( String resourceId )
+    public BinaryData download( String resourceId )
     {
-        String resourcePath = getPath( resourceId );
+        String resourcePath = getResourcePath( resourceId );
         File file = new File( getRootFolder(), resourcePath );
         try
         {
-            return IOUtils.toByteArray( new FileInputStream( file ) );
+            BinaryData data = new BinaryData();
+            data.setResourceId( resourceId );
+            data.setContent( IOUtils.toByteArray( new FileInputStream( file ) ) );
+            return data;
         }
         catch ( FileNotFoundException e )
         {
@@ -55,16 +58,16 @@ public abstract class FileResourcesService
         return null;
     }
 
-    private String getPath( String resourceId )
+    protected String getResourcePath( String resourceId )
     {
         return StringUtils.replaceAll( resourceId, "____", "/" );
     }
 
-    public void upload( BinaryDataIn data )
+    public void upload( BinaryData data )
     {
         String resourceId = data.getResourceId();
         byte[] content = data.getContent();
-        String resourcePath = getPath( resourceId );
+        String resourcePath = getResourcePath( resourceId );
         File file = new File( getRootFolder(), resourcePath );
         if ( !file.getParentFile().exists() )
         {

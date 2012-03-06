@@ -4,8 +4,6 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
 
-import javax.ws.rs.core.Application;
-
 import org.apache.cxf.jaxrs.servlet.CXFNonSpringJaxrsServlet;
 import org.eclipse.jetty.server.Server;
 import org.eclipse.jetty.servlet.ServletContextHandler;
@@ -16,9 +14,9 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 
 import fr.opensagres.xdocreport.core.io.IOUtils;
-import fr.opensagres.xdocreport.document.tools.remoting.resources.rest.MockJAXRSRepositoryApplication;
-import fr.opensagres.xdocreport.document.tools.remoting.resources.rest.MockJAXRSRepositoryService;
+import fr.opensagres.xdocreport.document.tools.remoting.resources.rest.MockJAXRSResourcesApplication;
 import fr.opensagres.xdocreport.remoting.resources.services.ResourcesServiceName;
+
 
 public class MainTest
 {
@@ -45,9 +43,7 @@ public class MainTest
         initResources();
 
         ServletHolder servlet = new ServletHolder( CXFNonSpringJaxrsServlet.class );
-
-        servlet.setInitParameter( Application.class.getName(), MockJAXRSRepositoryApplication.class.getName() );
-        servlet.setInitParameter( "jaxrs.serviceClasses", MockJAXRSRepositoryService.class.getName() );
+        servlet.setInitParameter( "javax.ws.rs.Application", MockJAXRSResourcesApplication.class.getName() );
 
         servlet.setInitParameter( "timeout", "60000" );
         server = new Server( PORT );

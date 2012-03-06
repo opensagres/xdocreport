@@ -168,6 +168,9 @@ public abstract class AbstractXDocReport
     public void load( InputStream sourceStream )
         throws IOException, XDocReportException
     {
+        if (preprocessed) {
+            preprocessed = false;
+        }
         // Load zipped XML Document (odt, docx...)
         setDocumentArchive( XDocArchive.readZip( sourceStream ) );
     }

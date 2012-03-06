@@ -22,39 +22,35 @@
  * OF CONTRACT, TORT OR OTHERWISE,  ARISING FROM, OUT OF OR IN CONNECTION
  * WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
-package fr.opensagres.xdocreport.remoting.resources.domain;
+package fr.opensagres.xdocreport.document.tools.remoting.resources.rest;
 
-import javax.xml.bind.annotation.XmlMimeType;
-import javax.xml.bind.annotation.XmlRootElement;
+import java.util.HashSet;
+import java.util.Set;
 
-@XmlRootElement
-public class BinaryDataIn
+import javax.ws.rs.core.Application;
 
+import fr.opensagres.xdocreport.document.tools.remoting.resources.MockResourcesService;
+import fr.opensagres.xdocreport.remoting.resources.services.rest.server.JAXRSResourcesServiceImpl;
+
+public class MockJAXRSResourcesApplication
+    extends Application
 {
+    HashSet<Object> singletons = new HashSet<Object>();
 
-    private String resourceId;
-
-    private byte[] content;
-
-    public String getResourceId()
+    public MockJAXRSResourcesApplication()
     {
-        return resourceId;
+        singletons.add( new JAXRSResourcesServiceImpl( new MockResourcesService() ) );
     }
 
-    public void setResourceId( String resourceId )
+    public Set<Class<?>> getClasses()
     {
-        this.resourceId = resourceId;
+        HashSet<Class<?>> set = new HashSet<Class<?>>();
+        return set;
     }
 
-    @XmlMimeType( "application/octet-stream" )
-    public byte[] getContent()
+    public Set<Object> getSingletons()
     {
-        return content;
-    }
-
-    public void setContent( byte[] content )
-    {
-        this.content = content;
+        return singletons;
     }
 
 }

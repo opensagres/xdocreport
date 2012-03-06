@@ -7,7 +7,7 @@ import javax.ws.rs.core.MediaType;
 import org.apache.cxf.jaxrs.client.WebClient;
 
 import fr.opensagres.xdocreport.core.utils.StringUtils;
-import fr.opensagres.xdocreport.remoting.resources.domain.BinaryDataIn;
+import fr.opensagres.xdocreport.remoting.resources.domain.BinaryData;
 import fr.opensagres.xdocreport.remoting.resources.domain.Filter;
 import fr.opensagres.xdocreport.remoting.resources.domain.Resource;
 import fr.opensagres.xdocreport.remoting.resources.services.ResourcesService;
@@ -50,22 +50,22 @@ public class JAXRSResourcesServiceClient
         return null;
     }
 
-    public List<byte[]> download( List<String> resourceIds )
+    public List<BinaryData> download( List<String> resourceIds )
     {
         reset();
         return null;
     }
 
-    public byte[] download( String resourceId )
+    public BinaryData download( String resourceId )
     {
         reset();
         StringBuilder path = new StringBuilder( ResourcesServiceName.download.name() );
         path.append( "/" );
         path.append( resourceId );
-        return client.path( path.toString() ).accept( MediaType.APPLICATION_JSON_TYPE ).get( byte[].class );
+        return client.path( path.toString() ).accept( MediaType.APPLICATION_JSON_TYPE ).get( BinaryData.class );
     }
 
-    public void upload( BinaryDataIn data )
+    public void upload( BinaryData data )
     {
         reset();
         client.path( ResourcesServiceName.upload ).type( MediaType.APPLICATION_JSON ).post( data );

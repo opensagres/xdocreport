@@ -57,12 +57,7 @@ public abstract class WebAppResourcesServiceListener
 
     protected File getWebAppFolder( ServletContext servletContext )
     {
-        if ( webAppFolder != null )
-        {
-            return webAppFolder;
-        }
-        webAppFolder = new File( servletContext.getRealPath( "/" ) );
-        return webAppFolder;
+        return WebAppHelper.getWebAppFolder( servletContext );
     }
 
     protected abstract File getRootFolder( File webAppFolder );

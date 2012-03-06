@@ -2,13 +2,20 @@ package fr.opensagres.xdocreport.remoting.resources.services;
 
 import java.util.List;
 
-import fr.opensagres.xdocreport.remoting.resources.domain.BinaryDataIn;
+import fr.opensagres.xdocreport.remoting.resources.domain.BinaryData;
 import fr.opensagres.xdocreport.remoting.resources.domain.Filter;
 import fr.opensagres.xdocreport.remoting.resources.domain.Resource;
 
-public abstract class DelegateResourcesService
+public class DelegateResourcesService
     implements ResourcesService
 {
+
+    private final ResourcesService delegate;
+
+    public DelegateResourcesService( ResourcesService delegate )
+    {
+        this.delegate = delegate;
+    }
 
     public String getName()
     {
@@ -25,25 +32,24 @@ public abstract class DelegateResourcesService
         return getDelegate().getRoot( filter );
     }
 
-    public List<byte[]> download( List<String> resourceIds )
+    public List<BinaryData> download( List<String> resourceIds )
     {
         return getDelegate().download( resourceIds );
     }
 
-    public byte[] download( String resourceId )
+    public BinaryData download( String resourceId )
     {
         return getDelegate().download( resourceId );
     }
 
-    public void upload( BinaryDataIn dataIn )
+    public void upload( BinaryData dataIn )
     {
         getDelegate().upload( dataIn );
     }
 
-    protected abstract ResourcesService getDelegate();
-    // {
-    // // TODO : manage implementation with SPI
-    // // By default it's XDocReportRepositoryService.
-    // return XDocReportRepositoryService.getDefault();
-    // }
+    protected ResourcesService getDelegate()
+    {
+        return delegate;
+    }
+
 }

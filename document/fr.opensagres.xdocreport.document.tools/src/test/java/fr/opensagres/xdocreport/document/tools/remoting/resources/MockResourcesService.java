@@ -5,13 +5,11 @@ import java.io.File;
 import fr.opensagres.xdocreport.remoting.resources.services.ResourcesService;
 import fr.opensagres.xdocreport.remoting.resources.services.file.FileResourcesService;
 
-public class MockRepositoryService
+public class MockResourcesService
     extends FileResourcesService
 {
 
-    public static final ResourcesService INSTANCE = new MockRepositoryService();
-
-    public MockRepositoryService()
+    public MockResourcesService()
     {
         super( new File( "target/resources" ) );
     }

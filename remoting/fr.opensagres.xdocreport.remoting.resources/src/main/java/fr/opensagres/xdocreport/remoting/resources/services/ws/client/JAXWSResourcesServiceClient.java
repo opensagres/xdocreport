@@ -6,7 +6,7 @@ import javax.xml.namespace.QName;
 import javax.xml.ws.Service;
 import javax.xml.ws.soap.SOAPBinding;
 
-import fr.opensagres.xdocreport.remoting.resources.domain.BinaryDataIn;
+import fr.opensagres.xdocreport.remoting.resources.domain.BinaryData;
 import fr.opensagres.xdocreport.remoting.resources.domain.Filter;
 import fr.opensagres.xdocreport.remoting.resources.domain.Resource;
 import fr.opensagres.xdocreport.remoting.resources.services.ResourcesService;
@@ -46,17 +46,17 @@ public class JAXWSResourcesServiceClient
         return client.getRoot( filter );
     }
 
-    public List<byte[]> download( List<String> resourceIds )
+    public List<BinaryData> download( List<String> resourceIds )
     {
         return client.download( resourceIds );
     }
 
-    public byte[] download( String resourceId )
+    public BinaryData download( String resourceId )
     {
         return client.download( resourceId );
     }
 
-    public void upload( BinaryDataIn data )
+    public void upload( BinaryData data )
     {
         client.upload( data );
 

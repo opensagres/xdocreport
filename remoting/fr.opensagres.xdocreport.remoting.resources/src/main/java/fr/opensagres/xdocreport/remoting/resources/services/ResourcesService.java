@@ -26,7 +26,7 @@ package fr.opensagres.xdocreport.remoting.resources.services;
 
 import java.util.List;
 
-import fr.opensagres.xdocreport.remoting.resources.domain.BinaryDataIn;
+import fr.opensagres.xdocreport.remoting.resources.domain.BinaryData;
 import fr.opensagres.xdocreport.remoting.resources.domain.Filter;
 import fr.opensagres.xdocreport.remoting.resources.domain.Resource;
 
@@ -53,7 +53,7 @@ public interface ResourcesService
 
     Resource getRoot( Filter filter );
 
-    List<byte[]> download( List<String> resourceIds );
+    List<BinaryData> download( List<String> resourceIds );
 
     /**
      * Download the content of the given unique resource id.
@@ -61,8 +61,8 @@ public interface ResourcesService
      * @param resourcePath the unique resource id.
      * @return the byte array of the content of the given resourcePath.
      */
-    byte[] download( String resourceId );
+    BinaryData download( String resourceId );
 
-    void upload( BinaryDataIn data );
+    void upload( BinaryData data );
 
 }

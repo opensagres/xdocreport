@@ -35,7 +35,7 @@ import java.io.Writer;
 import fr.opensagres.xdocreport.core.io.IOUtils;
 import fr.opensagres.xdocreport.core.utils.StringUtils;
 import fr.opensagres.xdocreport.document.tools.internal.ArgContext;
-import fr.opensagres.xdocreport.remoting.resources.domain.BinaryDataIn;
+import fr.opensagres.xdocreport.remoting.resources.domain.BinaryData;
 import fr.opensagres.xdocreport.remoting.resources.domain.Resource;
 import fr.opensagres.xdocreport.remoting.resources.services.ResourcesService;
 import fr.opensagres.xdocreport.remoting.resources.services.ResourcesServiceClientFactory;
@@ -150,8 +150,8 @@ public class Main
     private static void processDownload( ResourcesService client, String resourcePath, File outFile )
         throws IOException
     {
-        byte[] document = client.download( resourcePath );
-        createFile( document, outFile );
+        BinaryData data = client.download( resourcePath );
+        createFile( data.getContent(), outFile );
     }
 
     private static void createFile( byte[] flux, File outFile )
@@ -186,7 +186,7 @@ public class Main
 
     private static void processUpload( ResourcesService client, String resourceId, byte[] content )
     {
-        BinaryDataIn data = new BinaryDataIn();
+        BinaryData data = new BinaryData();
         data.setResourceId( resourceId );
         data.setContent( content );
         client.upload( data );

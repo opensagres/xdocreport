@@ -76,14 +76,7 @@ public class JAXRSResourcesApplication
         List<ResourcesService> services = ResourcesServicesRegistry.getRegistry().getServices();
         for ( final ResourcesService service : services )
         {
-            singletons.add( new JAXRSResourcesServiceImpl()
-            {
-                @Override
-                protected ResourcesService getDelegate()
-                {
-                    return service;
-                }
-            } );
+            singletons.add( new JAXRSResourcesServiceImpl( service ) );
         }
         this.singletons = singletons;
     }

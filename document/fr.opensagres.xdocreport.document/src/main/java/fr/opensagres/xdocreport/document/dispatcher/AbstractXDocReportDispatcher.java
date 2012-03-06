@@ -24,6 +24,7 @@
  */
 package fr.opensagres.xdocreport.document.dispatcher;
 
+import java.io.IOException;
 import java.io.InputStream;
 
 import fr.opensagres.xdocreport.template.formatter.FieldsMetadata;
@@ -32,7 +33,7 @@ public abstract class AbstractXDocReportDispatcher<T extends IXDocReportControll
     implements IXDocReportDispatcher<T>
 {
 
-    public InputStream getSourceStream( String reportId )
+    public InputStream getSourceStream( String reportId ) throws IOException
     {
         T controller = getReportController( reportId );
         if ( controller != null )

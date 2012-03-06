@@ -29,6 +29,9 @@ import java.util.Set;
 
 import javax.ws.rs.core.Application;
 
+import fr.opensagres.xdocreport.remoting.resources.services.MockResourcesService;
+import fr.opensagres.xdocreport.remoting.resources.services.rest.server.JAXRSResourcesServiceImpl;
+
 public class MockJAXRSResourcesApplication
     extends Application
 {
@@ -36,7 +39,7 @@ public class MockJAXRSResourcesApplication
 
     public MockJAXRSResourcesApplication()
     {
-        singletons.add( new MockJAXRSResourcesService() );
+        singletons.add( new JAXRSResourcesServiceImpl(new MockResourcesService()) );
     }
 
     public Set<Class<?>> getClasses()

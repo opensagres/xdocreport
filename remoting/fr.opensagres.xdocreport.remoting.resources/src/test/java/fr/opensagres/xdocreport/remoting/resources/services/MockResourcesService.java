@@ -2,7 +2,6 @@ package fr.opensagres.xdocreport.remoting.resources.services;
 
 import java.io.File;
 
-import fr.opensagres.xdocreport.remoting.resources.services.ResourcesService;
 import fr.opensagres.xdocreport.remoting.resources.services.file.FileResourcesService;
 
 public class MockResourcesService

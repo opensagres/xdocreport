@@ -10,7 +10,7 @@
 
     <dependency>
       <groupId>fr.opensagres.xdocreport</groupId>
-      <artifactId>fr.opensagres.xdocreport.document</artifactId>
+      <artifactId>fr.opensagres.xdocreport.core</artifactId>
       <version>0.9.7-SNAPSHOT</version>      
     </dependency>
     
@@ -47,21 +47,6 @@
       <artifactId>geronimo-ws-metadata_2.0_spec</artifactId>
       <version>1.1.3</version>
       <scope>provided</scope>
-    </dependency>
-    
- 	<!-- We need some impl in order to have smtg to test on... -->
-    <dependency>
-      <groupId>fr.opensagres.xdocreport</groupId>
-      <artifactId>fr.opensagres.xdocreport.document.docx</artifactId>
-      <version>0.9.7-SNAPSHOT</version>
-      <scope>test</scope>
-    </dependency>
-
-    <dependency>
-      <groupId>fr.opensagres.xdocreport</groupId>
-      <artifactId>fr.opensagres.xdocreport.template.velocity</artifactId>
-      <version>0.9.7-SNAPSHOT</version>
-      <scope>test</scope>
     </dependency>
 
     <dependency>

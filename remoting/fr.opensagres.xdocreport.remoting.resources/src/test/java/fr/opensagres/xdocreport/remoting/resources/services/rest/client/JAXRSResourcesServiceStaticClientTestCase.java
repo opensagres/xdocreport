@@ -6,8 +6,6 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.Collections;
 
-import javax.ws.rs.core.Application;
-
 import org.apache.cxf.jaxrs.servlet.CXFNonSpringJaxrsServlet;
 import org.eclipse.jetty.server.Server;
 import org.eclipse.jetty.servlet.ServletContextHandler;
@@ -19,13 +17,12 @@ import org.junit.Test;
 
 import fr.opensagres.xdocreport.core.io.IOUtils;
 import fr.opensagres.xdocreport.remoting.resources.Data;
-import fr.opensagres.xdocreport.remoting.resources.domain.BinaryDataIn;
+import fr.opensagres.xdocreport.remoting.resources.domain.BinaryData;
 import fr.opensagres.xdocreport.remoting.resources.domain.Resource;
 import fr.opensagres.xdocreport.remoting.resources.services.FileUtils;
 import fr.opensagres.xdocreport.remoting.resources.services.ResourceComparator;
 import fr.opensagres.xdocreport.remoting.resources.services.ResourcesService;
 import fr.opensagres.xdocreport.remoting.resources.services.rest.MockJAXRSResourcesApplication;
-import fr.opensagres.xdocreport.remoting.resources.services.rest.MockJAXRSResourcesService;
 
 public class JAXRSResourcesServiceStaticClientTestCase
 {
@@ -52,9 +49,7 @@ public class JAXRSResourcesServiceStaticClientTestCase
 
         // 2) Start Jetty Server
         ServletHolder servlet = new ServletHolder( CXFNonSpringJaxrsServlet.class );
-
-        servlet.setInitParameter( Application.class.getName(), MockJAXRSResourcesApplication.class.getName() );
-        servlet.setInitParameter( "jaxrs.serviceClasses", MockJAXRSResourcesService.class.getName() );
+        servlet.setInitParameter( "javax.ws.rs.Application", MockJAXRSResourcesApplication.class.getName() );
 
         servlet.setInitParameter( "timeout", "60000" );
         server = new Server( PORT );
@@ -116,9 +111,10 @@ public class JAXRSResourcesServiceStaticClientTestCase
     {
         String resourceId = "Simple.docx";
         ResourcesService client = JAXRSResourcesServiceClientFactory.create( BASE_ADDRESS );
-        byte[] document = client.download( resourceId );
+        BinaryData document = client.download( resourceId );
         Assert.assertNotNull( document );
-        createFile( document, resourceId );
+        Assert.assertNotNull( document.getContent() );
+        createFile( document.getContent(), resourceId );
     }
 
     @Test
@@ -127,9 +123,10 @@ public class JAXRSResourcesServiceStaticClientTestCase
     {
         String resourceId = "Custom____CustomSimple.docx";
         ResourcesService client = JAXRSResourcesServiceClientFactory.create( BASE_ADDRESS );
-        byte[] document = client.download( resourceId );
+        BinaryData document = client.download( resourceId );
         Assert.assertNotNull( document );
-        createFile( document, resourceId );
+        Assert.assertNotNull( document.getContent() );
+        createFile( document.getContent(), resourceId );
     }
 
     private void createFile( byte[] flux, String filename )
@@ -149,7 +146,7 @@ public class JAXRSResourcesServiceStaticClientTestCase
         ResourcesService client = JAXRSResourcesServiceClientFactory.create( BASE_ADDRESS );
         byte[] document = IOUtils.toByteArray( Data.class.getResourceAsStream( "Simple.docx" ) );
 
-        BinaryDataIn dataIn = new BinaryDataIn();
+        BinaryData dataIn = new BinaryData();
         dataIn.setResourceId( resourceId );
         dataIn.setContent( document );
         client.upload( dataIn );
@@ -158,8 +155,9 @@ public class JAXRSResourcesServiceStaticClientTestCase
         Assert.assertTrue( new File( resourcesFolder, resourceId ).exists() );
 
         // Test if download with the resourceId returns a non null binary data.
-        byte[] downloadedDocument = client.download( resourceId );
+        BinaryData downloadedDocument = client.download( resourceId );
         Assert.assertNotNull( downloadedDocument );
+        Assert.assertNotNull( downloadedDocument.getContent() );
     }
 
     @Test
@@ -170,7 +168,7 @@ public class JAXRSResourcesServiceStaticClientTestCase
         ResourcesService client = JAXRSResourcesServiceClientFactory.create( BASE_ADDRESS );
         byte[] document = IOUtils.toByteArray( Data.class.getResourceAsStream( "Simple.docx" ) );
 
-        BinaryDataIn dataIn = new BinaryDataIn();
+        BinaryData dataIn = new BinaryData();
         dataIn.setResourceId( resourceId );
         dataIn.setContent( document );
         client.upload( dataIn );
@@ -180,8 +178,9 @@ public class JAXRSResourcesServiceStaticClientTestCase
             + ".docx" ).exists() );
 
         // Test if download with the resourceId returns a non null binary data.
-        byte[] downloadedDocument = client.download( resourceId );
+        BinaryData downloadedDocument = client.download( resourceId );
         Assert.assertNotNull( downloadedDocument );
+        Assert.assertNotNull( downloadedDocument.getContent() );
     }
 
     @AfterClass

@@ -14,6 +14,7 @@ import org.junit.AfterClass;
 import org.junit.Assert;
 import org.junit.BeforeClass;
 
+import fr.opensagres.xdocreport.remoting.resources.domain.BinaryData;
 import fr.opensagres.xdocreport.remoting.resources.domain.Resource;
 import fr.opensagres.xdocreport.remoting.resources.services.FileUtils;
 import fr.opensagres.xdocreport.remoting.resources.services.ResourceComparator;
@@ -99,9 +100,10 @@ public class JAXWSResourcesServiceClientTestCase
     {
         String resourcePath = "Simple.docx";
         ResourcesService client = JAXWSResourcesServiceClientFactory.create( BASE_ADDRESS );
-        byte[] document = client.download( resourcePath );
+        BinaryData document = client.download( resourcePath );
         Assert.assertNotNull( document );
-        createFile( document, resourcePath );
+        Assert.assertNotNull( document.getContent() );
+        createFile( document.getContent(), resourcePath );
     }
 
     // @Test
@@ -110,9 +112,10 @@ public class JAXWSResourcesServiceClientTestCase
     {
         String resourcePath = "Custom/CustomSimple.docx";
         ResourcesService client = JAXWSResourcesServiceClientFactory.create( BASE_ADDRESS );
-        byte[] document = client.download( resourcePath );
+        BinaryData document = client.download( resourcePath );
         Assert.assertNotNull( document );
-        createFile( document, resourcePath );
+        Assert.assertNotNull( document.getContent() );
+        createFile( document.getContent(), resourcePath );
     }
 
     private void createFile( byte[] flux, String filename )

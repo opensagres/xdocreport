@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import fr.opensagres.xdocreport.core.XDocReportException;
+import fr.opensagres.xdocreport.remoting.resources.domain.BinaryData;
 import fr.opensagres.xdocreport.remoting.resources.domain.Resource;
 
 public abstract class AbstractResourcesService
@@ -16,9 +17,9 @@ public abstract class AbstractResourcesService
         return getRoot( null );
     }
 
-    public List<byte[]> download( List<String> resourceIds )
+    public List<BinaryData> download( List<String> resourceIds )
     {
-        List<byte[]> contents = new ArrayList<byte[]>( resourceIds.size() );
+        List<BinaryData> contents = new ArrayList<BinaryData>( resourceIds.size() );
         for ( String id : resourceIds )
         {
             contents.add( download( id ) );

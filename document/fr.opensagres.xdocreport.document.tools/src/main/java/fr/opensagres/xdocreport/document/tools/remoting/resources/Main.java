@@ -37,6 +37,7 @@ import fr.opensagres.xdocreport.core.utils.StringUtils;
 import fr.opensagres.xdocreport.document.tools.internal.ArgContext;
 import fr.opensagres.xdocreport.remoting.resources.domain.BinaryData;
 import fr.opensagres.xdocreport.remoting.resources.domain.Resource;
+import fr.opensagres.xdocreport.remoting.resources.services.ResourcesException;
 import fr.opensagres.xdocreport.remoting.resources.services.ResourcesService;
 import fr.opensagres.xdocreport.remoting.resources.services.ResourcesServiceClientFactory;
 import fr.opensagres.xdocreport.remoting.resources.services.ResourcesServiceName;
@@ -103,7 +104,7 @@ public class Main
 
     private static void process( String baseAddress, String user, String password, ServiceType serviceType,
                                  ResourcesServiceName serviceName, String out, ArgContext context )
-        throws IOException
+        throws IOException, ResourcesException
     {
         String resources = null;
         ResourcesService client = ResourcesServiceClientFactory.create( baseAddress, serviceType, user, password );
@@ -127,7 +128,7 @@ public class Main
     }
 
     private static void processDownload( ResourcesService client, String resources, String out )
-        throws IOException
+        throws IOException, ResourcesException
     {
         if ( StringUtils.isEmpty( resources ) )
         {
@@ -148,7 +149,7 @@ public class Main
     }
 
     private static void processDownload( ResourcesService client, String resourcePath, File outFile )
-        throws IOException
+        throws IOException, ResourcesException
     {
         BinaryData data = client.download( resourcePath );
         createFile( data.getContent(), outFile );
@@ -163,11 +164,11 @@ public class Main
         }
         FileOutputStream fos = new FileOutputStream( outFile );
         fos.write( flux );
-        fos.close();        
+        fos.close();
     }
 
     private static void processUpload( ResourcesService client, String resources, String out )
-        throws IOException
+        throws IOException, ResourcesException
     {
         if ( StringUtils.isEmpty( resources ) )
         {
@@ -188,6 +189,7 @@ public class Main
     }
 
     private static void processUpload( ResourcesService client, String resourceId, byte[] content )
+        throws ResourcesException
     {
         BinaryData data = new BinaryData();
         data.setResourceId( resourceId );

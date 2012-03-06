@@ -23,26 +23,31 @@ public class DelegateResourcesService
     }
 
     public Resource getRoot()
+        throws ResourcesException
     {
         return getDelegate().getRoot();
     }
 
     public Resource getRoot( Filter filter )
+        throws ResourcesException
     {
         return getDelegate().getRoot( filter );
     }
 
     public List<BinaryData> download( List<String> resourceIds )
+        throws ResourcesException
     {
         return getDelegate().download( resourceIds );
     }
 
     public BinaryData download( String resourceId )
+        throws ResourcesException
     {
         return getDelegate().download( resourceId );
     }
 
     public void upload( BinaryData dataIn )
+        throws ResourcesException
     {
         getDelegate().upload( dataIn );
     }

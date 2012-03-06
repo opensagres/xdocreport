@@ -9,6 +9,7 @@ import javax.xml.ws.soap.SOAPBinding;
 import fr.opensagres.xdocreport.remoting.resources.domain.BinaryData;
 import fr.opensagres.xdocreport.remoting.resources.domain.Filter;
 import fr.opensagres.xdocreport.remoting.resources.domain.Resource;
+import fr.opensagres.xdocreport.remoting.resources.services.ResourcesException;
 import fr.opensagres.xdocreport.remoting.resources.services.ResourcesService;
 
 public class JAXWSResourcesServiceClient
@@ -37,26 +38,31 @@ public class JAXWSResourcesServiceClient
     }
 
     public Resource getRoot()
+        throws ResourcesException
     {
         return client.getRoot();
     }
 
     public Resource getRoot( Filter filter )
+        throws ResourcesException
     {
         return client.getRoot( filter );
     }
 
     public List<BinaryData> download( List<String> resourceIds )
+        throws ResourcesException
     {
         return client.download( resourceIds );
     }
 
     public BinaryData download( String resourceId )
+        throws ResourcesException
     {
         return client.download( resourceId );
     }
 
     public void upload( BinaryData data )
+        throws ResourcesException
     {
         client.upload( data );
 

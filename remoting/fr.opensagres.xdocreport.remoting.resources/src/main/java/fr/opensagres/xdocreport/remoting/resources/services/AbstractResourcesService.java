@@ -13,11 +13,13 @@ public abstract class AbstractResourcesService
 {
 
     public Resource getRoot()
+        throws ResourcesException
     {
         return getRoot( null );
     }
 
     public List<BinaryData> download( List<String> resourceIds )
+        throws ResourcesException
     {
         List<BinaryData> contents = new ArrayList<BinaryData>( resourceIds.size() );
         for ( String id : resourceIds )

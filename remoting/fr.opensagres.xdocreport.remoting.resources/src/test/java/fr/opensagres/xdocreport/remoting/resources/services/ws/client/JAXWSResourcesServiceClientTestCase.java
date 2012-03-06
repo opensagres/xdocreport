@@ -18,6 +18,7 @@ import fr.opensagres.xdocreport.remoting.resources.domain.BinaryData;
 import fr.opensagres.xdocreport.remoting.resources.domain.Resource;
 import fr.opensagres.xdocreport.remoting.resources.services.FileUtils;
 import fr.opensagres.xdocreport.remoting.resources.services.ResourceComparator;
+import fr.opensagres.xdocreport.remoting.resources.services.ResourcesException;
 import fr.opensagres.xdocreport.remoting.resources.services.ResourcesService;
 
 public class JAXWSResourcesServiceClientTestCase
@@ -72,6 +73,7 @@ public class JAXWSResourcesServiceClientTestCase
 
     // @Test
     public void root()
+        throws ResourcesException
     {
         ResourcesService client = JAXWSResourcesServiceClientFactory.create( BASE_ADDRESS );
         Resource root = client.getRoot();
@@ -96,7 +98,7 @@ public class JAXWSResourcesServiceClientTestCase
 
     // @Test
     public void downloadARootFile()
-        throws FileNotFoundException, IOException
+        throws FileNotFoundException, IOException, ResourcesException
     {
         String resourcePath = "Simple.docx";
         ResourcesService client = JAXWSResourcesServiceClientFactory.create( BASE_ADDRESS );
@@ -108,7 +110,7 @@ public class JAXWSResourcesServiceClientTestCase
 
     // @Test
     public void downloadAFileInFolder()
-        throws FileNotFoundException, IOException
+        throws FileNotFoundException, IOException, ResourcesException
     {
         String resourcePath = "Custom/CustomSimple.docx";
         ResourcesService client = JAXWSResourcesServiceClientFactory.create( BASE_ADDRESS );

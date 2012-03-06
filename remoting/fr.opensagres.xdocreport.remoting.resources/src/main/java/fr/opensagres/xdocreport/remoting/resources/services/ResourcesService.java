@@ -49,11 +49,14 @@ public interface ResourcesService
      * 
      * @return
      */
-    Resource getRoot();
+    Resource getRoot()
+        throws ResourcesException;
 
-    Resource getRoot( Filter filter );
+    Resource getRoot( Filter filter )
+        throws ResourcesException;
 
-    List<BinaryData> download( List<String> resourceIds );
+    List<BinaryData> download( List<String> resourceIds )
+        throws ResourcesException;
 
     /**
      * Download the content of the given unique resource id.
@@ -61,8 +64,10 @@ public interface ResourcesService
      * @param resourcePath the unique resource id.
      * @return the byte array of the content of the given resourcePath.
      */
-    BinaryData download( String resourceId );
+    BinaryData download( String resourceId )
+        throws ResourcesException;
 
-    void upload( BinaryData data );
+    void upload( BinaryData data )
+        throws ResourcesException;
 
 }

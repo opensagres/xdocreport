@@ -2,7 +2,6 @@ package fr.opensagres.xdocreport.remoting.resources.services.file;
 
 import java.io.ByteArrayInputStream;
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -40,9 +39,8 @@ public abstract class FileResourcesService
         File file = new File( getRootFolder(), resourcePath );
         try
         {
-            BinaryData data = new BinaryData();
+            BinaryData data = new BinaryData( file );
             data.setResourceId( resourceId );
-            data.setContent( IOUtils.toByteArray( new FileInputStream( file ) ) );
             return data;
         }
         catch ( FileNotFoundException e )

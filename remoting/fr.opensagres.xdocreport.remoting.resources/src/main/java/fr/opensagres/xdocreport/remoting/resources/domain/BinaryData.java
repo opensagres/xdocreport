@@ -24,16 +24,64 @@
  */
 package fr.opensagres.xdocreport.remoting.resources.domain;
 
+import java.io.ByteArrayInputStream;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.InputStream;
+
 import javax.xml.bind.annotation.XmlMimeType;
 import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.bind.annotation.XmlTransient;
 
+import org.apache.cxf.helpers.IOUtils;
+
+/**
+ * Represention of a Binary Stream.
+ * <p>
+ * This class tries to avoid as much as possible to avoid loading the binary data in the JVM Memory.
+ * 
+ * @author <a href="mailto:tdelprat@nuxeo.com">Tiry</a>
+ */
 @XmlRootElement
 public class BinaryData
 {
 
     private String resourceId;
 
-    private byte[] content;
+    private InputStream in;
+
+    private String fileName;
+
+    private String mimeType;
+
+    private long length;
+
+    public BinaryData()
+    {
+    }
+
+    public BinaryData( File file )
+        throws FileNotFoundException
+    {
+        this( file, "application/octet-stream" );
+    }
+
+    public BinaryData( File file, String mimetype )
+        throws FileNotFoundException
+    {
+        this( new FileInputStream( file ), file.getName(), mimetype );
+        this.length = file.length();
+    }
+
+    public BinaryData( InputStream in, String filename, String mimetype )
+    {
+        this.in = in;
+        this.fileName = filename;
+        this.mimeType = mimetype;
+        this.length = -1;
+    }
 
     public String getResourceId()
     {
@@ -45,15 +93,62 @@ public class BinaryData
         this.resourceId = resourceId;
     }
 
+    /*
+     * This method is only here for JAXB and compatibility
+     */
     @XmlMimeType( "application/octet-stream" )
     public byte[] getContent()
     {
-        return content;
+        try
+        {
+            return IOUtils.readBytesFromStream( in );
+        }
+        catch ( IOException e )
+        {
+            e.printStackTrace(); // XXX boo
+            return null;
+        }
     }
 
     public void setContent( byte[] content )
     {
-        this.content = content;
+        in = new ByteArrayInputStream( content );
+    }
+
+    public String getFileName()
+    {
+        return fileName;
+    }
+
+    public void setFileName( String fileName )
+    {
+        this.fileName = fileName;
+    }
+
+    public String getMimeType()
+    {
+        return mimeType;
+    }
+
+    public void setMimeType( String mimeType )
+    {
+        this.mimeType = mimeType;
+    }
+
+    public long getLength()
+    {
+        return length;
+    }
+
+    public void setLength( long length )
+    {
+        this.length = length;
+    }
+
+    @XmlTransient
+    public InputStream getStream()
+    {
+        return in;
     }
 
 }

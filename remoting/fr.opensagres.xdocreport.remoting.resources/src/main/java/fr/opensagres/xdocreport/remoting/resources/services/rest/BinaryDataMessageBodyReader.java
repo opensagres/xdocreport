@@ -27,60 +27,52 @@ package fr.opensagres.xdocreport.remoting.resources.services.rest;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.OutputStream;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Type;
 
 import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.MultivaluedMap;
-import javax.ws.rs.ext.MessageBodyWriter;
+import javax.ws.rs.ext.MessageBodyReader;
 import javax.ws.rs.ext.Provider;
 
 import fr.opensagres.xdocreport.remoting.resources.domain.BinaryData;
 
 /**
- * {@link MessageBodyWriter} that streams an {@link BinaryData} object in an Http response.
- * <p>
- * To allow streaming the binday data is directly sent inside the Http body and the other attributes are passed as http
- * header (it avoids to use MultiPart encoding)
+ * {@link MessageBodyReader} used by JAXRS to read the {@link BinaryData} from an Http request
  * 
  * @author <a href="mailto:tdelprat@nuxeo.com">Tiry</a>
  */
 @Provider
-public class BinaryDataMessageBodyWriter
-    implements MessageBodyWriter<BinaryData>
+public class BinaryDataMessageBodyReader
+    implements MessageBodyReader<BinaryData>
 {
 
-    public boolean isWriteable( Class<?> type, Type genericType, Annotation[] annotations, MediaType mediaType )
+    public boolean isReadable( Class<?> type, Type genericType, Annotation[] annotations, MediaType mediaType )
     {
         return BinaryData.class.isAssignableFrom( type );
     }
 
-    public long getSize( BinaryData t, Class<?> type, Type genericType, Annotation[] annotations, MediaType mediaType )
-    {
-        return t.getLength();
-    }
-
-    public void writeTo( BinaryData t, Class<?> type, Type genericType, Annotation[] annotations, MediaType mediaType,
-                         MultivaluedMap<String, Object> httpHeaders, OutputStream entityStream )
+    public BinaryData readFrom( Class<BinaryData> type, Type genericType, Annotation[] annotations,
+                                MediaType mediaType, MultivaluedMap<String, String> httpHeaders,
+                                InputStream entityStream )
         throws IOException, WebApplicationException
     {
 
-        InputStream in = t.getStream();
-
-        httpHeaders.add( "Content-Disposition", "attachement;filename=" + t.getFileName() );
-        httpHeaders.add( "Content-Type", t.getMimeType() );
-        httpHeaders.add( "X-resourceId", t.getResourceId() );
-
-        // manual copy
-        byte[] buffer = new byte[65536];
-        int read;
-        while ( ( read = in.read( buffer ) ) != -1 )
+        String filename = "";
+        String cd = httpHeaders.getFirst( "Content-Disposition" );
+        if ( cd != null )
         {
-            entityStream.write( buffer, 0, read );
+            filename = cd.replace( "attachement;filename=", "" );
         }
-        in.close();
-    }
 
+        String mimetype = httpHeaders.getFirst( "Content-Type" );
+
+        String resourceId = httpHeaders.getFirst( "X-resourceId" );
+
+        BinaryData data = new BinaryData( entityStream, filename, mimetype );
+        data.setResourceId( resourceId );
+
+        return data;
+    }
 }

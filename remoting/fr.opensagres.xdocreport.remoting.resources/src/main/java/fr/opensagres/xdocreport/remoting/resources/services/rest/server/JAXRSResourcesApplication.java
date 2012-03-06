@@ -32,44 +32,55 @@ import javax.ws.rs.core.Application;
 
 import fr.opensagres.xdocreport.remoting.resources.services.ResourcesService;
 import fr.opensagres.xdocreport.remoting.resources.services.ResourcesServicesRegistry;
-import fr.opensagres.xdocreport.remoting.resources.services.rest.BinaryDataMessageBodyWriter;
+import fr.opensagres.xdocreport.remoting.resources.services.rest.Providers;
 
-public class JAXRSResourcesApplication extends Application {
+public class JAXRSResourcesApplication
+    extends Application
+{
     private HashSet<Object> singletons;
 
-    public JAXRSResourcesApplication() {
+    public JAXRSResourcesApplication()
+    {
         this.singletons = null;
     }
 
-    public Set<Class<?>> getClasses() {
+    public Set<Class<?>> getClasses()
+    {
 
         HashSet<Class<?>> set = new HashSet<Class<?>>();
         return set;
     }
 
-    public Set<Object> getSingletons() {
+    public Set<Object> getSingletons()
+    {
         loadIfNeed();
         return singletons;
     }
 
-    private void loadIfNeed() {
-        if (singletons != null) {
+    private void loadIfNeed()
+    {
+        if ( singletons != null )
+        {
             return;
         }
         load();
     }
 
-    private synchronized void load() {
-        if (singletons != null) {
+    private synchronized void load()
+    {
+        if ( singletons != null )
+        {
             return;
         }
 
         HashSet<Object> singletons = new HashSet<Object>();
         List<ResourcesService> services = ResourcesServicesRegistry.getRegistry().getServices();
-        for (final ResourcesService service : services) {
-            singletons.add(new JAXRSResourcesServiceImpl(service));
+        for ( final ResourcesService service : services )
+        {
+            singletons.add( new JAXRSResourcesServiceImpl( service ) );
         }
-        singletons.add(new BinaryDataMessageBodyWriter());
+        // register here Providers
+        singletons.addAll( Providers.get() );
         this.singletons = singletons;
     }
 }

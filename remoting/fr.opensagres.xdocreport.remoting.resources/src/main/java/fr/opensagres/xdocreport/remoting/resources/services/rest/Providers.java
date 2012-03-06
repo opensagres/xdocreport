@@ -22,32 +22,30 @@
  * OF CONTRACT, TORT OR OTHERWISE,  ARISING FROM, OUT OF OR IN CONNECTION
  * WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
+
 package fr.opensagres.xdocreport.remoting.resources.services.rest;
 
-import java.util.HashSet;
-import java.util.Set;
+import java.util.ArrayList;
+import java.util.List;
 
-import javax.ws.rs.core.Application;
+/**
+ * Helper class to hold JAXRS Providers config
+ * 
+ * @author <a href="mailto:tdelprat@nuxeo.com">Tiry</a>
+ */
+public class Providers
+{
 
-import fr.opensagres.xdocreport.remoting.resources.services.MockResourcesService;
-import fr.opensagres.xdocreport.remoting.resources.services.rest.server.JAXRSResourcesServiceImpl;
+    protected static List<Object> providers = null;
 
-public class MockJAXRSResourcesApplication extends Application {
-    HashSet<Object> singletons = new HashSet<Object>();
-
-    public MockJAXRSResourcesApplication() {
-        singletons.add(new JAXRSResourcesServiceImpl(new MockResourcesService()));
-        singletons.add(new BinaryDataMessageBodyWriter());
-        singletons.add(new BinaryDataMessageBodyReader());
+    public static synchronized List<Object> get()
+    {
+        if ( providers == null )
+        {
+            providers = new ArrayList<Object>();
+            providers.add( new BinaryDataMessageBodyReader() );
+            providers.add( new BinaryDataMessageBodyWriter() );
+        }
+        return providers;
     }
-
-    public Set<Class<?>> getClasses() {
-        HashSet<Class<?>> set = new HashSet<Class<?>>();
-        return set;
-    }
-
-    public Set<Object> getSingletons() {
-        return singletons;
-    }
-
 }

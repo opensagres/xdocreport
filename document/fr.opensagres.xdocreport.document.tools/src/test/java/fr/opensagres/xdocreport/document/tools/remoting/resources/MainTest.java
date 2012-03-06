@@ -2,6 +2,7 @@ package fr.opensagres.xdocreport.document.tools.remoting.resources;
 
 import java.io.File;
 import java.io.FileReader;
+import java.io.IOException;
 
 import javax.ws.rs.core.Application;
 
@@ -22,18 +23,26 @@ import fr.opensagres.xdocreport.remoting.resources.services.ResourcesServiceName
 public class MainTest
 {
 
-    private static final int PORT = 9999;
+    private static final int PORT = 9991;
 
     private static Server server;
 
     private static final String BASE_ADDRESS = "http://localhost:" + PORT;
 
-    public File tempFolder = new File( "target" );
+    public static File tempFolder = new File( "target" );
+
+    public static File resourcesFolder = new File( tempFolder, "resources" );
+
+    public static File srcFolder =
+        new File( "src/test/resources/fr/opensagres/xdocreport/document/tools/remoting/resources" );
 
     @BeforeClass
     public static void startServer()
         throws Exception
     {
+
+        // 1) Copy resources in the target folder.
+        initResources();
 
         ServletHolder servlet = new ServletHolder( CXFNonSpringJaxrsServlet.class );
 
@@ -116,12 +125,11 @@ public class MainTest
         Assert.assertTrue( downlodedFile.exists() );
     }
 
-    // desactivated for now since Download is not implemented
-    //@Test 
+    @Test
     public void downloadAFileInFolder()
         throws Exception
     {
-        String fileToDownload = "Custom/CustomSimple.docx";
+        String fileToDownload = "Custom____CustomSimple.docx";
         File downlodedFile = new File( tempFolder, "DownlodedCustomSimple.docx" );
         String[] args =
             { "-baseAddress", BASE_ADDRESS, "-serviceName", ResourcesServiceName.download.name(), "-resources",
@@ -130,10 +138,49 @@ public class MainTest
         Assert.assertTrue( downlodedFile.exists() );
     }
 
+    @Test
+    public void uploadARootFile()
+        throws Exception
+    {
+        File fileToUploadFile = new File( srcFolder, "Simple.docx" );
+        String resourceId = "NewSimple.docx";
+        String[] args =
+            { "-baseAddress", BASE_ADDRESS, "-serviceName", ResourcesServiceName.upload.name(), "-resources",
+                resourceId, "-out", fileToUploadFile.getPath() };
+        Main.main( args );
+        File uploadedFile = new File( resourcesFolder, "NewSimple.docx" );
+        Assert.assertTrue( uploadedFile.exists() );
+    }
+
+    @Test
+    public void uploadAFileInFolder()
+        throws Exception
+    {
+        File fileToUploadFile = new File( srcFolder, "Simple.docx" );
+        String resourceId = "XXX____NewSimple.docx";
+        String[] args =
+            { "-baseAddress", BASE_ADDRESS, "-serviceName", ResourcesServiceName.upload.name(), "-resources",
+                resourceId, "-out", fileToUploadFile.getPath() };
+        Main.main( args );
+        File uploadedFile = new File( resourcesFolder, "XXX/NewSimple.docx" );
+        Assert.assertTrue( uploadedFile.exists() );
+    }
+    
     @AfterClass
     public static void stopServer()
         throws Exception
     {
         server.stop();
     }
+
+    private static void initResources()
+        throws IOException
+    {
+        if ( resourcesFolder.exists() )
+        {
+            resourcesFolder.delete();
+        }
+        FileUtils.copyDirectory( srcFolder, resourcesFolder );
+    }
+
 }

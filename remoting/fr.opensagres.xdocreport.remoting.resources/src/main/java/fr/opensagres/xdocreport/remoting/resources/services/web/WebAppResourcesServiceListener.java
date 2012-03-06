@@ -7,10 +7,10 @@ import javax.servlet.ServletContextEvent;
 import javax.servlet.ServletContextListener;
 
 import fr.opensagres.xdocreport.remoting.resources.services.ResourcesServicesRegistry;
-import fr.opensagres.xdocreport.remoting.resources.services.file.FileRepositoryService;
+import fr.opensagres.xdocreport.remoting.resources.services.file.FileResourcesService;
 
 public abstract class WebAppResourcesServiceListener
-    extends FileRepositoryService
+    extends FileResourcesService
     implements ServletContextListener
 {
 

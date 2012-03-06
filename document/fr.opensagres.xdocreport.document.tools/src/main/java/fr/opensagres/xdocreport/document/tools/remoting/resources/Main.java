@@ -25,6 +25,7 @@
 package fr.opensagres.xdocreport.document.tools.remoting.resources;
 
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -34,6 +35,7 @@ import java.io.Writer;
 import fr.opensagres.xdocreport.core.io.IOUtils;
 import fr.opensagres.xdocreport.core.utils.StringUtils;
 import fr.opensagres.xdocreport.document.tools.internal.ArgContext;
+import fr.opensagres.xdocreport.remoting.resources.domain.BinaryDataIn;
 import fr.opensagres.xdocreport.remoting.resources.domain.Resource;
 import fr.opensagres.xdocreport.remoting.resources.services.ResourcesService;
 import fr.opensagres.xdocreport.remoting.resources.services.ResourcesServiceClientFactory;
@@ -103,6 +105,7 @@ public class Main
                                  ResourcesServiceName serviceName, String out, ArgContext context )
         throws IOException
     {
+        String resources = null;
         ResourcesService client = ResourcesServiceClientFactory.create( baseAddress, serviceType, user, password );
         switch ( serviceName )
         {
@@ -113,8 +116,12 @@ public class Main
                 processRoot( client.getRoot(), new File( out ) );
                 break;
             case download:
-                String resources = context.get( "-resources" );
+                resources = context.get( "-resources" );
                 processDownload( client, resources, out );
+                break;
+            case upload:
+                resources = context.get( "-resources" );
+                processUpload( client, resources, out );
                 break;
         }
     }
@@ -124,7 +131,7 @@ public class Main
     {
         if ( StringUtils.isEmpty( resources ) )
         {
-            throw new IOException( "rsources must be not empty" );
+            throw new IOException( "resources must be not empty" );
         }
         if ( resources.indexOf( ";" ) == -1 )
         {
@@ -154,6 +161,36 @@ public class Main
         FileOutputStream fos = new FileOutputStream( outFile );
         fos.write( flux );
         fos.close();
+    }
+
+    private static void processUpload( ResourcesService client, String resources, String out )
+        throws IOException
+    {
+        if ( StringUtils.isEmpty( resources ) )
+        {
+            throw new IOException( "resources must be not empty" );
+        }
+        if ( resources.indexOf( ";" ) == -1 )
+        {
+            processUpload( client, resources, IOUtils.toByteArray( new FileInputStream( new File( out ) ) ) );
+        }
+        else
+        {
+            // TODO : manage list of uppload
+        }
+
+        // String[] resources= s.split( ";" );
+        // String[] outs= out.split( ";" );
+
+    }
+
+    private static void processUpload( ResourcesService client, String resourceId, byte[] content )
+    {
+        BinaryDataIn data = new BinaryDataIn();
+        data.setResourceId( resourceId );
+        data.setContent( content );
+        client.upload( data );
+
     }
 
     private static void processRoot( Resource root, File file )

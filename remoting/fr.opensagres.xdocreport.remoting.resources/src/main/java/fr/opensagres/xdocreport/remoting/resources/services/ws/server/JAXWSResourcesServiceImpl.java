@@ -2,6 +2,7 @@ package fr.opensagres.xdocreport.remoting.resources.services.ws.server;
 
 import java.util.List;
 
+import fr.opensagres.xdocreport.remoting.resources.domain.BinaryDataIn;
 import fr.opensagres.xdocreport.remoting.resources.domain.Filter;
 import fr.opensagres.xdocreport.remoting.resources.domain.Resource;
 import fr.opensagres.xdocreport.remoting.resources.services.DelegateResourcesService;
@@ -43,8 +44,8 @@ public abstract class JAXWSResourcesServiceImpl
     }
 
     @Override
-    public void upload( String resourceId, byte[] content )
+    public void upload( BinaryDataIn dataIn )
     {
-        super.upload( resourceId, content );
+        super.upload( dataIn );
     }
 }

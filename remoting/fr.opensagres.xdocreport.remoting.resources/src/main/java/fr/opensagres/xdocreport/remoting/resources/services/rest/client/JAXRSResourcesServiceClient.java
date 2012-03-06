@@ -7,6 +7,7 @@ import javax.ws.rs.core.MediaType;
 import org.apache.cxf.jaxrs.client.WebClient;
 
 import fr.opensagres.xdocreport.core.utils.StringUtils;
+import fr.opensagres.xdocreport.remoting.resources.domain.BinaryDataIn;
 import fr.opensagres.xdocreport.remoting.resources.domain.Filter;
 import fr.opensagres.xdocreport.remoting.resources.domain.Resource;
 import fr.opensagres.xdocreport.remoting.resources.services.ResourcesService;
@@ -33,38 +34,46 @@ public class JAXRSResourcesServiceClient
 
     public String getName()
     {
+        reset();
         return client.path( ResourcesServiceName.name ).accept( MediaType.TEXT_PLAIN ).get( String.class );
     }
 
     public Resource getRoot()
     {
+        reset();
         return client.path( ResourcesServiceName.root ).accept( MediaType.APPLICATION_JSON ).get( Resource.class );
     }
 
     public Resource getRoot( Filter filter )
     {
-        // TODO Auto-generated method stub
+        reset();
         return null;
     }
 
     public List<byte[]> download( List<String> resourceIds )
     {
-        // TODO Auto-generated method stub
+        reset();
         return null;
     }
 
     public byte[] download( String resourceId )
     {
+        reset();
         StringBuilder path = new StringBuilder( ResourcesServiceName.download.name() );
         path.append( "/" );
         path.append( resourceId );
         return client.path( path.toString() ).accept( MediaType.APPLICATION_JSON_TYPE ).get( byte[].class );
     }
 
-    public void upload( String resourceId, byte[] content )
+    public void upload( BinaryDataIn data )
     {
-        // TODO Auto-generated method stub
-
+        reset();
+        client.path( ResourcesServiceName.upload ).type( MediaType.APPLICATION_JSON ).post( data );
     }
 
+    protected void reset()
+    {
+        client.reset();
+
+    }
 }

@@ -19,7 +19,11 @@ import org.junit.Assert;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
+import fr.opensagres.xdocreport.core.io.IOUtils;
+import fr.opensagres.xdocreport.remoting.resources.Data;
+import fr.opensagres.xdocreport.remoting.resources.domain.BinaryDataIn;
 import fr.opensagres.xdocreport.remoting.resources.domain.Resource;
+import fr.opensagres.xdocreport.remoting.resources.services.FileUtils;
 import fr.opensagres.xdocreport.remoting.resources.services.ResourceComparator;
 import fr.opensagres.xdocreport.remoting.resources.services.ResourcesServiceName;
 import fr.opensagres.xdocreport.remoting.resources.services.rest.MockJAXRSResourcesApplication;
@@ -34,13 +38,20 @@ public class JAXRSResourcesServiceWebClientTestCase
 
     private static final String BASE_ADDRESS = "http://localhost:" + PORT;
 
-    public File tempFolder = new File( "target" );
+    public static File srcFolder = new File( "src/test/resources/fr/opensagres/xdocreport/remoting/resources" );
+
+    public static File tempFolder = new File( "target" );
+
+    public static File resourcesFolder = new File( tempFolder, "resources" );
 
     @BeforeClass
     public static void startServer()
         throws Exception
     {
+        // 1) Copy resources in the target folder.
+        initResources();
 
+        // 2) Start Jetty Server
         ServletHolder servlet = new ServletHolder( CXFNonSpringJaxrsServlet.class );
 
         servlet.setInitParameter( Application.class.getName(), MockJAXRSResourcesApplication.class.getName() );
@@ -66,20 +77,23 @@ public class JAXRSResourcesServiceWebClientTestCase
 
     @Test
     public void root()
+        throws IOException
     {
+
         WebClient client = WebClient.create( BASE_ADDRESS );
-        Resource root = client.path( ResourcesServiceName.root ).accept( MediaType.APPLICATION_JSON ).get( Resource.class );
+        Resource root =
+            client.path( ResourcesServiceName.root ).accept( MediaType.APPLICATION_JSON ).get( Resource.class );
 
         // Document coming from the folder src/test/resources/fr/opensagres/xdocreport/resources/repository
         // See class MockRepositoryService
         Assert.assertNotNull( root );
         Assert.assertEquals( "resources", root.getName() );
-        Assert.assertEquals( 4, root.getChildren().size() );
-        
+        Assert.assertTrue( root.getChildren().size() >= 4 );
+
         // Sort the list of Resource because File.listFiles() doeesn' given the same order
         // between different OS.
         Collections.sort( root.getChildren(), ResourceComparator.INSTANCE );
-        
+
         Assert.assertEquals( "Custom", root.getChildren().get( 0 ).getName() );
         Assert.assertEquals( Resource.FOLDER_TYPE, root.getChildren().get( 0 ).getType() );
         Assert.assertEquals( "Opensagres", root.getChildren().get( 1 ).getName() );
@@ -94,13 +108,12 @@ public class JAXRSResourcesServiceWebClientTestCase
     {
         String resourcePath = "Simple.docx";
         WebClient client = WebClient.create( BASE_ADDRESS );
-        
-        StringBuilder path= new StringBuilder(ResourcesServiceName.download.name());
+
+        StringBuilder path = new StringBuilder( ResourcesServiceName.download.name() );
         path.append( "/" );
         path.append( resourcePath );
-        
-        byte[] document =
-            client.path( path.toString()).accept( MediaType.APPLICATION_JSON_TYPE ).get( byte[].class );
+
+        byte[] document = client.path( path.toString() ).accept( MediaType.APPLICATION_JSON_TYPE ).get( byte[].class );
         Assert.assertNotNull( document );
         createFile( document, resourcePath );
     }
@@ -112,6 +125,66 @@ public class JAXRSResourcesServiceWebClientTestCase
         FileOutputStream fos = new FileOutputStream( aFile );
         fos.write( flux );
         fos.close();
+    }
+
+    //@Test
+    public void uploadARootFile()
+        throws FileNotFoundException, IOException
+    {
+
+        String resourceId = "ZzzNewSimple_" + this.getClass().getSimpleName() + ".docx";
+        byte[] document = IOUtils.toByteArray( Data.class.getResourceAsStream( "Simple.docx" ) );
+
+        BinaryDataIn dataIn = new BinaryDataIn();
+        dataIn.setResourceId( resourceId );
+        dataIn.setContent( document );
+
+        WebClient client = WebClient.create( BASE_ADDRESS );
+        client.path( ResourcesServiceName.upload );
+        client.type( MediaType.APPLICATION_JSON_TYPE );
+        client.post( dataIn );
+
+        client.reset();
+
+        StringBuilder path = new StringBuilder( ResourcesServiceName.download.name() );
+        path.append( "/" );
+        path.append( resourceId );
+        byte[] downloadedDocument =
+            client.path( path.toString() ).accept( MediaType.APPLICATION_JSON_TYPE ).get( byte[].class );
+        Assert.assertNotNull( document );
+
+        Assert.assertNotNull( downloadedDocument );
+    }
+
+    @Test
+    public void uploadAFileInFolder()
+        throws FileNotFoundException, IOException
+    {
+        String resourceId = "ZzzCustom____NewCustomSimple_" + this.getClass().getSimpleName() + ".docx";
+        byte[] document = IOUtils.toByteArray( Data.class.getResourceAsStream( "Simple.docx" ) );
+
+        BinaryDataIn dataIn = new BinaryDataIn();
+        dataIn.setResourceId( resourceId );
+        dataIn.setContent( document );
+
+        WebClient client = WebClient.create( BASE_ADDRESS );
+        client.path( ResourcesServiceName.upload );
+        client.type( MediaType.APPLICATION_JSON_TYPE );
+        client.post( dataIn );
+
+        // Test if file was uploaded in the target/resources folder
+        Assert.assertTrue( new File( resourcesFolder, "ZzzCustom/NewCustomSimple_" + this.getClass().getSimpleName()
+            + ".docx" ).exists() );
+
+        client.reset();
+
+        // Test if download with the resourceId returns a non null binary data.
+        StringBuilder path = new StringBuilder( ResourcesServiceName.download.name() );
+        path.append( "/" );
+        path.append( resourceId );
+        byte[] downloadedDocument =
+            client.path( path.toString() ).accept( MediaType.APPLICATION_JSON_TYPE ).get( byte[].class );
+        Assert.assertNotNull( downloadedDocument );
     }
 
     // @Test
@@ -170,5 +243,15 @@ public class JAXRSResourcesServiceWebClientTestCase
         throws Exception
     {
         server.stop();
+    }
+
+    private static void initResources()
+        throws IOException
+    {
+        if ( resourcesFolder.exists() )
+        {
+            resourcesFolder.delete();
+        }
+        FileUtils.copyDirectory( srcFolder, resourcesFolder );
     }
 }

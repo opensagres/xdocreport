@@ -18,7 +18,11 @@ import org.junit.Assert;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
+import fr.opensagres.xdocreport.core.io.IOUtils;
+import fr.opensagres.xdocreport.remoting.resources.Data;
+import fr.opensagres.xdocreport.remoting.resources.domain.BinaryDataIn;
 import fr.opensagres.xdocreport.remoting.resources.domain.Resource;
+import fr.opensagres.xdocreport.remoting.resources.services.FileUtils;
 import fr.opensagres.xdocreport.remoting.resources.services.ResourceComparator;
 import fr.opensagres.xdocreport.remoting.resources.services.ResourcesService;
 import fr.opensagres.xdocreport.remoting.resources.services.rest.JAXRSResourcesService;
@@ -28,18 +32,31 @@ import fr.opensagres.xdocreport.remoting.resources.services.rest.MockJAXRSResour
 public class JAXRSResourcesServiceCGLibClientTestCase
 {
 
-    private static final int PORT = 9999;
+    private static final int PORT = 9997;
 
     private static Server server;
 
     private static final String BASE_ADDRESS = "http://localhost:" + PORT;
 
-    public File tempFolder = new File( "target" );
+    public static File srcFolder = new File( "src/test/resources/fr/opensagres/xdocreport/remoting/resources" );
+
+    public static File tempFolder = new File( "target" );
+
+    public static File resourcesFolder = new File( tempFolder, "resources" );
 
     @BeforeClass
     public static void startServer()
         throws Exception
     {
+
+        // 1) Copy resources in the target folder.
+        if ( resourcesFolder.exists() )
+        {
+            resourcesFolder.delete();
+        }
+        FileUtils.copyDirectory( srcFolder, resourcesFolder );
+
+        // 2) Start Jetty Server
 
         ServletHolder servlet = new ServletHolder( CXFNonSpringJaxrsServlet.class );
 
@@ -76,7 +93,7 @@ public class JAXRSResourcesServiceCGLibClientTestCase
         // See class MockRepositoryService
         Assert.assertNotNull( root );
         Assert.assertEquals( "resources", root.getName() );
-        Assert.assertEquals( 4, root.getChildren().size() );
+        Assert.assertTrue( root.getChildren().size() >= 4 );
 
         // Sort the list of Resource because File.listFiles() doeesn' given the same order
         // between different OS.
@@ -95,24 +112,24 @@ public class JAXRSResourcesServiceCGLibClientTestCase
     public void downloadARootFile()
         throws FileNotFoundException, IOException
     {
-        String resourcePath = "Simple.docx";
+        String resourceId = "Simple.docx";
         ResourcesService client = JAXRSClientFactory.create( BASE_ADDRESS, JAXRSResourcesService.class );
-        byte[] document = client.download( resourcePath );
+        byte[] document = client.download( resourceId );
         Assert.assertNotNull( document );
-        createFile( document, resourcePath );
+        createFile( document, resourceId );
     }
 
     @Test
     public void downloadAFileInFolder()
         throws FileNotFoundException, IOException
     {
-        String resourcePath = "Custom%2FCustomSimple.docx";
+        String resourceId = "Custom%2FCustomSimple.docx";
         ResourcesService client = JAXRSClientFactory.create( BASE_ADDRESS, JAXRSResourcesService.class );
-        byte[] document = client.download( resourcePath );
+        byte[] document = client.download( resourceId );
         Assert.assertNotNull( document );
-        createFile( document, resourcePath );
+        createFile( document, resourceId );
     }
-    
+
     private void createFile( byte[] flux, String filename )
         throws FileNotFoundException, IOException
     {
@@ -120,6 +137,51 @@ public class JAXRSResourcesServiceCGLibClientTestCase
         FileOutputStream fos = new FileOutputStream( aFile );
         fos.write( flux );
         fos.close();
+    }
+
+    @Test
+    public void uploadARootFile()
+        throws FileNotFoundException, IOException
+    {
+        String resourceId = "ZzzNewSimple_" + this.getClass().getSimpleName() + ".docx";
+        ResourcesService client = JAXRSClientFactory.create( BASE_ADDRESS, JAXRSResourcesService.class );
+        byte[] document = IOUtils.toByteArray( Data.class.getResourceAsStream( "Simple.docx" ) );
+
+        BinaryDataIn dataIn = new BinaryDataIn();
+        dataIn.setResourceId( resourceId );
+        dataIn.setContent( document );
+
+        client.upload( dataIn );
+
+        // Test if file was uploaded in the target/resources folder
+        Assert.assertTrue( new File( resourcesFolder, resourceId ).exists() );
+
+        // Test if download with the resourceId returns a non null binary data.
+        byte[] downloadedDocument = client.download( resourceId );
+        Assert.assertNotNull( downloadedDocument );
+    }
+
+    @Test
+    public void uploadAFileInFolder()
+        throws FileNotFoundException, IOException
+    {
+        String resourceId = "ZzzCustom____NewCustomSimple_" + this.getClass().getSimpleName() + ".docx";
+        ResourcesService client = JAXRSClientFactory.create( BASE_ADDRESS, JAXRSResourcesService.class );
+        byte[] document = IOUtils.toByteArray( Data.class.getResourceAsStream( "Simple.docx" ) );
+
+        BinaryDataIn dataIn = new BinaryDataIn();
+        dataIn.setResourceId( resourceId );
+        dataIn.setContent( document );
+
+        client.upload( dataIn );
+
+        // Test if file was uploaded in the target/resources folder
+        Assert.assertTrue( new File( resourcesFolder, "ZzzCustom/NewCustomSimple_" + this.getClass().getSimpleName()
+            + ".docx" ).exists() );
+
+        // Test if download with the resourceId returns a non null binary data.
+        byte[] downloadedDocument = client.download( resourceId );
+        Assert.assertNotNull( downloadedDocument );
     }
 
     @AfterClass

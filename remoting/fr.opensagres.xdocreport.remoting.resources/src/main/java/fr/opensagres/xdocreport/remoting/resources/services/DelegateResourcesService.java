@@ -2,6 +2,7 @@ package fr.opensagres.xdocreport.remoting.resources.services;
 
 import java.util.List;
 
+import fr.opensagres.xdocreport.remoting.resources.domain.BinaryDataIn;
 import fr.opensagres.xdocreport.remoting.resources.domain.Filter;
 import fr.opensagres.xdocreport.remoting.resources.domain.Resource;
 
@@ -34,9 +35,9 @@ public abstract class DelegateResourcesService
         return getDelegate().download( resourceId );
     }
 
-    public void upload( String resourceId, byte[] content )
+    public void upload( BinaryDataIn dataIn )
     {
-        getDelegate().upload( resourceId, content );
+        getDelegate().upload( dataIn );
     }
 
     protected abstract ResourcesService getDelegate();

@@ -13,12 +13,11 @@ import org.eclipse.jetty.servlet.ServletHolder;
 import org.junit.AfterClass;
 import org.junit.Assert;
 import org.junit.BeforeClass;
-import org.junit.Test;
 
 import fr.opensagres.xdocreport.remoting.resources.domain.Resource;
+import fr.opensagres.xdocreport.remoting.resources.services.FileUtils;
 import fr.opensagres.xdocreport.remoting.resources.services.ResourceComparator;
 import fr.opensagres.xdocreport.remoting.resources.services.ResourcesService;
-import fr.opensagres.xdocreport.remoting.resources.services.ws.MockJAXWSResourcesService;
 
 public class JAXWSResourcesServiceClientTestCase
 {
@@ -29,12 +28,24 @@ public class JAXWSResourcesServiceClientTestCase
 
     private static final String BASE_ADDRESS = "http://localhost:" + PORT;
 
-    public File tempFolder = new File( "target" );
+    public static File srcFolder = new File( "src/test/resources/fr/opensagres/xdocreport/remoting/resources" );
+
+    public static File tempFolder = new File( "target" );
 
     @BeforeClass
     public static void startServer()
         throws Exception
     {
+
+        // 1) Copy resources in the target folder.
+        File resourcesFolder = new File( tempFolder, "resources" );
+        if ( resourcesFolder.exists() )
+        {
+            resourcesFolder.delete();
+        }
+        FileUtils.copyDirectory( srcFolder, resourcesFolder );
+
+        // 2) Start Jetty Server
 
         ServletHolder servlet = new ServletHolder( CXFNonSpringServlet.class );
         servlet.setInitParameter( "timeout", "60000" );
@@ -45,12 +56,12 @@ public class JAXWSResourcesServiceClientTestCase
         context.addServlet( servlet, "/*" );
         server.start();
 
-        //String address = BASE_ADDRESS + "/ResourcesServiceImplPort";
-        //javax.xml.ws.Endpoint.publish( address, new MockJAXWSResourcesService() );
+        // String address = BASE_ADDRESS + "/ResourcesServiceImplPort";
+        // javax.xml.ws.Endpoint.publish( address, new MockJAXWSResourcesService() );
 
     }
 
-    //@Test
+    // @Test
     public void name()
     {
         ResourcesService client = JAXWSResourcesServiceClientFactory.create( BASE_ADDRESS );
@@ -58,7 +69,7 @@ public class JAXWSResourcesServiceClientTestCase
         Assert.assertEquals( "Test-RepositoryService", name );
     }
 
-    //@Test
+    // @Test
     public void root()
     {
         ResourcesService client = JAXWSResourcesServiceClientFactory.create( BASE_ADDRESS );
@@ -82,7 +93,7 @@ public class JAXWSResourcesServiceClientTestCase
         Assert.assertEquals( "Simple.odt", root.getChildren().get( 3 ).getName() );
     }
 
-    //@Test
+    // @Test
     public void downloadARootFile()
         throws FileNotFoundException, IOException
     {
@@ -93,7 +104,7 @@ public class JAXWSResourcesServiceClientTestCase
         createFile( document, resourcePath );
     }
 
-    //@Test
+    // @Test
     public void downloadAFileInFolder()
         throws FileNotFoundException, IOException
     {

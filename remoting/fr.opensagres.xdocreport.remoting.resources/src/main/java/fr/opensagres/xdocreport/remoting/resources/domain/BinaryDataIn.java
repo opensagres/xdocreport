@@ -22,47 +22,39 @@
  * OF CONTRACT, TORT OR OTHERWISE,  ARISING FROM, OUT OF OR IN CONNECTION
  * WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
-package fr.opensagres.xdocreport.remoting.resources.services;
+package fr.opensagres.xdocreport.remoting.resources.domain;
 
-import java.util.List;
+import javax.xml.bind.annotation.XmlMimeType;
+import javax.xml.bind.annotation.XmlRootElement;
 
-import fr.opensagres.xdocreport.remoting.resources.domain.BinaryDataIn;
-import fr.opensagres.xdocreport.remoting.resources.domain.Filter;
-import fr.opensagres.xdocreport.remoting.resources.domain.Resource;
+@XmlRootElement
+public class BinaryDataIn
 
-/**
- * Interface to define resources services to retrieves from a repository list of resources (folder/files), and
- * upload/download some resources.
- */
-public interface ResourcesService
 {
 
-    /**
-     * Returns the repository name.
-     * 
-     * @return
-     */
-    String getName();
+    private String resourceId;
 
-    /**
-     * Returns the root resource.
-     * 
-     * @return
-     */
-    Resource getRoot();
+    private byte[] content;
 
-    Resource getRoot( Filter filter );
+    public String getResourceId()
+    {
+        return resourceId;
+    }
 
-    List<byte[]> download( List<String> resourceIds );
+    public void setResourceId( String resourceId )
+    {
+        this.resourceId = resourceId;
+    }
 
-    /**
-     * Download the content of the given unique resource id.
-     * 
-     * @param resourcePath the unique resource id.
-     * @return the byte array of the content of the given resourcePath.
-     */
-    byte[] download( String resourceId );
+    @XmlMimeType( "application/octet-stream" )
+    public byte[] getContent()
+    {
+        return content;
+    }
 
-    void upload( BinaryDataIn data );
+    public void setContent( byte[] content )
+    {
+        this.content = content;
+    }
 
 }

@@ -24,8 +24,6 @@
  */
 package fr.opensagres.xdocreport.itext.extension;
 
-import java.util.LinkedList;
-
 import com.lowagie.text.Document;
 import com.lowagie.text.pdf.PdfPageEventHelper;
 import com.lowagie.text.pdf.PdfWriter;
@@ -36,10 +34,9 @@ import com.lowagie.text.pdf.PdfWriter;
 public class ExtendedHeaderFooter
     extends PdfPageEventHelper
 {
-
-    private final LinkedList<MasterPage> masterPagesStack = new LinkedList<MasterPage>();
-
     private final ExtendedDocument document;
+
+    private MasterPage masterPage;
 
     public ExtendedHeaderFooter( ExtendedDocument document )
     {
@@ -54,12 +51,6 @@ public class ExtendedHeaderFooter
      */
     public void onStartPage( PdfWriter writer, Document doc )
     {
-        MasterPage masterPage = null;
-        if ( !masterPagesStack.isEmpty() )
-        {
-            masterPage = masterPagesStack.removeLast();
-        }
-
         if ( masterPage == null )
         {
             masterPage = document.getDefaultMasterPage();
@@ -113,6 +104,6 @@ public class ExtendedHeaderFooter
         }
         document.setMargins( marginLeft, marginRight, marginTop, marginBottom );
 
-        this.masterPagesStack.addFirst( masterPage );
+        this.masterPage = masterPage;
     }
 }

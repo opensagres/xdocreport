@@ -42,6 +42,9 @@ import fr.opensagres.xdocreport.itext.extension.IParagraphFactory;
 import fr.opensagres.xdocreport.itext.extension.MasterPage;
 import fr.opensagres.xdocreport.itext.extension.PageOrientation;
 
+/**
+ * fixes for pdf conversion by Leszek Piotrowicz <leszekp@safe-mail.net>
+ */
 public class StylableDocument
     extends ExtendedDocument
     implements IStylableContainer, IStylableFactory, IParagraphFactory
@@ -55,6 +58,10 @@ public class StylableDocument
 
     private StylableChapter currentChapter;
 
+    private boolean masterPageActivated;
+
+    private boolean implicitPageBreakAfterMasterPageChange;
+
     public StylableDocument( OutputStream out, StyleEngineForIText styleEngine )
         throws DocumentException
     {
@@ -62,21 +69,9 @@ public class StylableDocument
         this.styleEngine = styleEngine;
     }
 
-    public void addElement( Element element )
-    {
-        try
-        {
-            if ( !super.isOpen() )
-            {
-                super.open();
-            }
-            super.add( element );
-        }
-        catch ( DocumentException e )
-        {
-            e.printStackTrace();
-        }
-    }
+    //
+    // IStylableFactory, IParagraphFactory implementation
+    //
 
     public StylableParagraph createParagraph( IStylableContainer parent )
     {
@@ -144,29 +139,9 @@ public class StylableDocument
         return currentChapter;
     }
 
-    public StyleEngineForIText getStyleEngine()
-    {
-        return styleEngine;
-    }
-
-    public Style getLastStyleApplied()
-    {
-        return lastStyleApplied;
-    }
-
-    public IStylableContainer getParent()
-    {
-        return null;
-    }
-
-    public void addMasterPage( StylableMasterPage currentMasterPage )
-    {
-        super.addMasterPage( currentMasterPage );
-        if ( getDefaultMasterPage() != null )
-        {
-            this.applyStyles();
-        }
-    }
+    //
+    // master page handling
+    //
 
     @Override
     public void setActiveMasterPage( MasterPage masterPage )
@@ -177,6 +152,11 @@ public class StylableDocument
             this.applyStyles( style );
         }
         super.setActiveMasterPage( masterPage );
+        if ( masterPageActivated )
+        {
+            implicitPageBreakAfterMasterPageChange = true;
+        }
+        masterPageActivated = true;
     }
 
     public Style getStyleMasterPage( StylableMasterPage masterPage )
@@ -185,15 +165,40 @@ public class StylableDocument
         return style;
     }
 
-    public void applyStyles()
+    @Override
+    public StylableMasterPage getMasterPage( String masterPageName )
     {
-        if ( getDefaultMasterPage() != null )
+        return (StylableMasterPage) super.getMasterPage( masterPageName );
+    }
+
+    @Override
+    public StylableMasterPage getDefaultMasterPage()
+    {
+        return (StylableMasterPage) super.getDefaultMasterPage();
+    }
+
+    //
+    // IStylableContainer implementation
+    //
+
+    public void addElement( Element element )
+    {
+        try
         {
-            Style style = getStyleMasterPage( (StylableMasterPage) getDefaultMasterPage() );
-            if ( style != null )
+            if ( !super.isOpen() )
             {
-                this.applyStyles( style );
+                super.open();
             }
+            if ( implicitPageBreakAfterMasterPageChange )
+            {
+                // master page was changed but there was no explicit page break
+                newPage();
+            }
+            super.add( element );
+        }
+        catch ( DocumentException e )
+        {
+            e.printStackTrace();
         }
     }
 
@@ -235,18 +240,6 @@ public class StylableDocument
                 {
                     originMarginLeft = margin.getMarginLeft();
                 }
-                // if (defaultMasterPage != null) {
-                // StylableHeaderFooter header = defaultMasterPage
-                // .getHeader();
-                // if (header != null) {
-                // marginTop += header.getTotalHeight();
-                // }
-                // StylableHeaderFooter footer = defaultMasterPage
-                // .getHeader();
-                // if (footer != null) {
-                // marginBottom += footer.getTotalHeight();
-                // }
-                // }
 
                 super.setMargins( originMarginLeft, originMarginRight, originMarginTop, originMarginBottom );
             }
@@ -261,14 +254,26 @@ public class StylableDocument
 
     }
 
+    public Style getLastStyleApplied()
+    {
+        return lastStyleApplied;
+    }
+
+    public IStylableContainer getParent()
+    {
+        return null;
+    }
+
     public Element getElement()
     {
         return null;
     }
 
     @Override
-    public StylableMasterPage getMasterPage( String masterPageName )
+    public boolean newPage()
     {
-        return (StylableMasterPage) super.getMasterPage( masterPageName );
+        implicitPageBreakAfterMasterPageChange = false;
+        return super.newPage();
     }
+
 }

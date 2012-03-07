@@ -27,7 +27,8 @@ package org.odftoolkit.odfdom.converter.internal.itext.stylable;
 import org.odftoolkit.odfdom.converter.internal.itext.styles.Style;
 import org.odftoolkit.odfdom.converter.internal.itext.styles.StyleHeaderFooterProperties;
 
-import com.lowagie.text.Rectangle;
+import com.lowagie.text.Table;
+import com.lowagie.text.pdf.PdfContentByte;
 
 import fr.opensagres.xdocreport.itext.extension.IMasterPageHeaderFooter;
 
@@ -39,6 +40,8 @@ public class StylableHeaderFooter
     implements IMasterPageHeaderFooter
 {
 
+    private final StylableDocument ownerDocument;
+
     private final boolean header;
 
     private final StylableTableCell tableCell;
@@ -46,19 +49,24 @@ public class StylableHeaderFooter
     public StylableHeaderFooter( StylableDocument ownerDocument, boolean header )
     {
         super( ownerDocument, null, 1 );
+        this.ownerDocument = ownerDocument;
         this.header = header;
         tableCell = ownerDocument.createTableCell( this );
-        tableCell.disableBorderSide( Rectangle.TOP | Rectangle.BOTTOM | Rectangle.LEFT | Rectangle.RIGHT );
+        tableCell.setBorder( Table.NO_BORDER );
         // set padding to zero for proper alignment
-        tableCell.setPaddingLeft( 0.0f );
-        tableCell.setPaddingRight( 0.0f );
-        tableCell.setPaddingTop( 0.0f );
-        tableCell.setPaddingBottom( 0.0f );
+        tableCell.setPadding( 0.0f );
+    }
+
+    private void computeWidth()
+    {
         // compute width as page width - margins
         float headerFooterWidth =
             ownerDocument.getPageSize().getWidth() - ownerDocument.getOriginMarginLeft()
                 - ownerDocument.getOriginMarginRight();
-        setTotalWidth( headerFooterWidth );
+        if ( getTotalWidth() != headerFooterWidth )
+        {
+            setTotalWidth( headerFooterWidth );
+        }
     }
 
     public StylableTableCell getTableCell()
@@ -69,16 +77,6 @@ public class StylableHeaderFooter
     @Override
     public void applyStyles( Style style )
     {
-        super.applyStyles( style );
-
-        /*
-         * unecessary as width computed in costructor StylePageLayoutProperties pageLayoutProperties =
-         * style.getPageLayoutProperties(); if (pageLayoutProperties != null) { // width/height Float width =
-         * pageLayoutProperties.getWidth(); if (width != null) { super.setTotalWidth(width); } // Float height =
-         * pageLayoutProperties.getHeight(); // if (width != null && height != null) { // super.setPageSize(new
-         * Rectangle(width, height)); // } }
-         */
-
         StyleHeaderFooterProperties headerFooterProperties =
             header ? style.getHeaderProperties() : style.getFooterProperties();
         if ( headerFooterProperties != null )
@@ -94,11 +92,19 @@ public class StylableHeaderFooter
 
     public float getTotalHeight()
     {
+        computeWidth();
         return super.getRowHeight( 0 );
     }
 
     public void flush()
     {
         super.addCell( tableCell );
+    }
+
+    @Override
+    public float writeSelectedRows( int rowStart, int rowEnd, float xPos, float yPos, PdfContentByte canvas )
+    {
+        computeWidth();
+        return super.writeSelectedRows( rowStart, rowEnd, xPos, yPos, canvas );
     }
 }

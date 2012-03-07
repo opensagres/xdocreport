@@ -101,8 +101,6 @@ public class ElementVisitorForIText
 
     private StylableDocument document;
 
-    private StylableMasterPage defaultMasterPage;
-
     private boolean parseOfficeTextElement = false;
 
     private Style currentRowStyle;
@@ -136,10 +134,6 @@ public class ElementVisitorForIText
         String name = ele.getStyleNameAttribute();
         String pageLayoutName = ele.getStylePageLayoutNameAttribute();
         currentMasterPage = new StylableMasterPage( name, pageLayoutName );
-        if ( defaultMasterPage == null )
-        {
-            defaultMasterPage = currentMasterPage;
-        }
         document.addMasterPage( currentMasterPage );
         super.visit( ele );
         currentMasterPage = null;
@@ -319,29 +313,13 @@ public class ElementVisitorForIText
 
         // set color moved to StylableAnchor
         /*
-        if ( anchor.getFont().getColor() == null )
-        {
-            // if no color was applied to the link
-            // get the font of the paragraph and set blue color.
-            Font linkFont = anchor.getFont();
-            Style style = currentContainer.getLastStyleApplied();
-            if ( style != null )
-            {
-                StyleTextProperties textProperties = style.getTextProperties();
-                if ( textProperties != null )
-                {
-                    Font font = textProperties.getFont();
-                    if ( font != null )
-                    {
-                        linkFont = new Font( font );
-                        anchor.setFont( linkFont );
-                    }
-                }
-            }
-            // Color blueColor =
-            // ColorRegistryForIText.getInstance().getColor("#0000CC");
-            linkFont.setColor( Color.BLUE );
-        }*/
+         * if ( anchor.getFont().getColor() == null ) { // if no color was applied to the link // get the font of the
+         * paragraph and set blue color. Font linkFont = anchor.getFont(); Style style =
+         * currentContainer.getLastStyleApplied(); if ( style != null ) { StyleTextProperties textProperties =
+         * style.getTextProperties(); if ( textProperties != null ) { Font font = textProperties.getFont(); if ( font !=
+         * null ) { linkFont = new Font( font ); anchor.setFont( linkFont ); } } } // Color blueColor = //
+         * ColorRegistryForIText.getInstance().getColor("#0000CC"); linkFont.setColor( Color.BLUE ); }
+         */
 
         // TODO ; manage internal link
         // set the link
@@ -592,21 +570,20 @@ public class ElementVisitorForIText
             if ( parseOfficeTextElement )
             {
                 String masterPageName = style.getMasterPageName();
-                if ( StringUtils.isEmpty( masterPageName ) )
+                if ( StringUtils.isNotEmpty( masterPageName ) )
                 {
-                    if ( !defaultMasterPage.equals( currentMasterPage ) )
-                    {
-                        // Add page
-                        newMasterPage = defaultMasterPage;
-                    }
-                }
-                else
-                {
+                    // explicit master page activation
                     StylableMasterPage masterPage = document.getMasterPage( masterPageName );
                     if ( masterPage != null && !masterPage.equals( currentMasterPage ) )
                     {
                         newMasterPage = masterPage;
                     }
+                }
+                else if ( currentMasterPage == null )
+                {
+                    // no master page was activated yet
+                    // activate default
+                    newMasterPage = document.getDefaultMasterPage();
                 }
             }
             if ( newMasterPage != null )

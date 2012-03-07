@@ -50,7 +50,7 @@ public class StyleParagraphProperties
 
     private StyleBorder borderTop;
 
-    private boolean breakAfterPage = false;
+    private boolean breakBeforeColumn = false;
 
     private boolean breakBeforePage = false;
 
@@ -78,11 +78,10 @@ public class StyleParagraphProperties
 
     public StyleParagraphProperties( StyleParagraphProperties paragraphProperties )
     {
-        if ( paragraphProperties == null )
+        if ( paragraphProperties != null )
         {
-            return;
+            merge( paragraphProperties );
         }
-        merge( paragraphProperties );
     }
 
     public void merge( StyleParagraphProperties paragraphProperties )
@@ -118,6 +117,14 @@ public class StyleParagraphProperties
         if ( paragraphProperties.getBorderTop() != null )
         {
             borderTop = paragraphProperties.getBorderTop();
+        }
+        if ( paragraphProperties.isBreakBeforeColumn() != breakBeforeColumn )
+        {
+            breakBeforeColumn = paragraphProperties.isBreakBeforeColumn();
+        }
+        if ( paragraphProperties.isBreakBeforePage() != breakBeforePage )
+        {
+            breakBeforePage = paragraphProperties.isBreakBeforePage();
         }
         if ( paragraphProperties.isKeepTogether() != keepTogether )
         {
@@ -237,14 +244,14 @@ public class StyleParagraphProperties
         this.borderTop = borderTop;
     }
 
-    public boolean isBreakAfterPage()
+    public boolean isBreakBeforeColumn()
     {
-        return breakAfterPage;
+        return breakBeforeColumn;
     }
 
-    public void setBreakAfterPage( boolean breakAfterPage )
+    public void setBreakBeforeColumn( boolean breakBeforeColumn )
     {
-        this.breakAfterPage = breakAfterPage;
+        this.breakBeforeColumn = breakBeforeColumn;
     }
 
     public boolean isBreakBeforePage()

@@ -47,7 +47,6 @@ import org.odftoolkit.odfdom.converter.internal.itext.styles.StyleTextProperties
 import org.odftoolkit.odfdom.converter.internal.utils.ODFUtils;
 import org.odftoolkit.odfdom.converter.itext.PDFViaITextOptions;
 import org.odftoolkit.odfdom.doc.OdfDocument;
-import org.odftoolkit.odfdom.dom.attribute.fo.FoBreakAfterAttribute;
 import org.odftoolkit.odfdom.dom.attribute.fo.FoBreakBeforeAttribute;
 import org.odftoolkit.odfdom.dom.attribute.fo.FoFontStyleAttribute;
 import org.odftoolkit.odfdom.dom.attribute.fo.FoFontWeightAttribute;
@@ -412,13 +411,13 @@ public class StyleEngineForIText
         String breakBefore = ele.getFoBreakBeforeAttribute();
         if ( FoBreakBeforeAttribute.Value.PAGE.toString().equals( breakBefore ) )
         {
+            paragraphProperties.setBreakBeforeColumn( false );
             paragraphProperties.setBreakBeforePage( true );
         }
-
-        String breakAfter = ele.getFoBreakAfterAttribute();
-        if ( FoBreakAfterAttribute.Value.PAGE.toString().equals( breakAfter ) )
+        else if ( FoBreakBeforeAttribute.Value.COLUMN.toString().equals( breakBefore ) )
         {
-            paragraphProperties.setBreakAfterPage( true );
+            paragraphProperties.setBreakBeforeColumn( true );
+            paragraphProperties.setBreakBeforePage( false );
         }
 
         super.visit( ele );
@@ -1005,18 +1004,11 @@ public class StyleEngineForIText
     @Override
     public void visit( StyleColumnsElement ele )
     {
-        StyleSectionProperties sectionProperties = currentStyle.getSectionProperties();
-        if ( sectionProperties == null )
-        {
-            // style:columns outside style:section-properties, ignore it
-            return;
-        }
-
-        StyleColumnsProperties columnsProperties = sectionProperties.getColumnsProperties();
+        StyleColumnsProperties columnsProperties = currentStyle.getColumnsProperties();
         if ( columnsProperties == null )
         {
             columnsProperties = new StyleColumnsProperties();
-            sectionProperties.setColumnsProperties( columnsProperties );
+            currentStyle.setColumnsProperties( columnsProperties );
         }
 
         // column-count
@@ -1033,19 +1025,12 @@ public class StyleEngineForIText
     @Override
     public void visit( StyleColumnElement ele )
     {
-        StyleSectionProperties sectionProperties = currentStyle.getSectionProperties();
-        if ( sectionProperties == null )
+        List<StyleColumnProperties> styleColumnPropertiesList = currentStyle.getColumnPropertiesList();
+        if ( styleColumnPropertiesList == null )
         {
-            // style:column outside style:section-properties, ignore it
-            return;
+            styleColumnPropertiesList = new ArrayList<StyleColumnProperties>();
+            currentStyle.setColumnPropertiesList( styleColumnPropertiesList );
         }
-
-        StyleColumnsProperties columnsProperties = sectionProperties.getColumnsProperties();
-        if ( columnsProperties == null )
-        {
-            // style:column outside style:columns, ignore it
-        }
-
         StyleColumnProperties columnProperties = new StyleColumnProperties();
 
         // rel-width
@@ -1055,7 +1040,7 @@ public class StyleEngineForIText
             columnProperties.setRelWidth( ODFUtils.getRelativeSize( relWidth ) );
         }
 
-        columnsProperties.getColumnProperties().add( columnProperties );
+        styleColumnPropertiesList.add( columnProperties );
 
         super.visit( ele );
     }

@@ -24,20 +24,12 @@
  */
 package org.odftoolkit.odfdom.converter.internal.itext.styles;
 
-import java.util.ArrayList;
-import java.util.List;
-
 /**
  * fixes for pdf conversion by Leszek Piotrowicz <leszekp@safe-mail.net>
  */
 public class StyleColumnsProperties
 {
-
-    // attributes
     private Integer columnCount;
-
-    // child nodes
-    private List<StyleColumnProperties> columnProperties = new ArrayList<StyleColumnProperties>();
 
     public StyleColumnsProperties()
     {
@@ -51,10 +43,5 @@ public class StyleColumnsProperties
     public void setColumnCount( Integer columnCount )
     {
         this.columnCount = columnCount;
-    }
-
-    public List<StyleColumnProperties> getColumnProperties()
-    {
-        return columnProperties;
     }
 }

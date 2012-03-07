@@ -31,8 +31,6 @@ import java.awt.Color;
  */
 public class StyleSectionProperties
 {
-
-    // attributes
     private Color backgroundColor;
 
     private Boolean dontBalanceTextColumns;
@@ -40,9 +38,6 @@ public class StyleSectionProperties
     private Float marginLeft;
 
     private Float marginRight;
-
-    // child nodes
-    private StyleColumnsProperties columnsProperties;
 
     public StyleSectionProperties()
     {
@@ -86,15 +81,5 @@ public class StyleSectionProperties
     public void setMarginRight( Float marginRight )
     {
         this.marginRight = marginRight;
-    }
-
-    public StyleColumnsProperties getColumnsProperties()
-    {
-        return columnsProperties;
-    }
-
-    public void setColumnsProperties( StyleColumnsProperties columnsProperties )
-    {
-        this.columnsProperties = columnsProperties;
     }
 }

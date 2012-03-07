@@ -24,6 +24,8 @@
  */
 package org.odftoolkit.odfdom.converter.internal.itext.styles;
 
+import java.util.List;
+
 public class Style
 {
 
@@ -50,6 +52,10 @@ public class Style
     private StyleTableCellProperties tableCellProperties;
 
     private StyleSectionProperties sectionProperties;
+
+    private StyleColumnsProperties columnsProperties;
+
+    private List<StyleColumnProperties> columnPropertiesList;
 
     public Style( String styleName, String familyName, String masterPageName )
     {
@@ -183,6 +189,26 @@ public class Style
     public void setSectionProperties( StyleSectionProperties sectionProperties )
     {
         this.sectionProperties = sectionProperties;
+    }
+
+    public StyleColumnsProperties getColumnsProperties()
+    {
+        return columnsProperties;
+    }
+
+    public void setColumnsProperties( StyleColumnsProperties columnsProperties )
+    {
+        this.columnsProperties = columnsProperties;
+    }
+
+    public List<StyleColumnProperties> getColumnPropertiesList()
+    {
+        return columnPropertiesList;
+    }
+
+    public void setColumnPropertiesList( List<StyleColumnProperties> columnPropertiesList )
+    {
+        this.columnPropertiesList = columnPropertiesList;
     }
 
     public StylePageLayoutProperties getPageLayoutProperties()

@@ -37,6 +37,7 @@ import javax.ws.rs.core.MultivaluedMap;
 import javax.ws.rs.ext.MessageBodyWriter;
 import javax.ws.rs.ext.Provider;
 
+import fr.opensagres.xdocreport.core.io.IOUtils;
 import fr.opensagres.xdocreport.remoting.resources.domain.BinaryData;
 
 /**
@@ -73,14 +74,7 @@ public class BinaryDataMessageBodyWriter
         httpHeaders.add( "Content-Type", t.getMimeType() );
         httpHeaders.add( "X-resourceId", t.getResourceId() );
 
-        // manual copy
-        byte[] buffer = new byte[65536];
-        int read;
-        while ( ( read = in.read( buffer ) ) != -1 )
-        {
-            entityStream.write( buffer, 0, read );
-        }
-        in.close();
+        IOUtils.copy( in, entityStream);
     }
 
 }

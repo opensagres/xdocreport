@@ -29,6 +29,7 @@ import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.PrintStream;
 import java.io.Writer;
 
@@ -59,7 +60,7 @@ public class Main
         String user = context.get( "-password" );
         String password = context.get( "-password" );
 
-        ServiceType serviceType = ServiceType.REST;
+        ServiceType serviceType = getServiceType( context.get( "-serviceType" ) );
         ResourcesServiceName serviceName = getServiceName( context.get( "-serviceName" ) );
 
         String out = context.get( "-out" );
@@ -95,6 +96,15 @@ public class Main
                 e.printStackTrace( new PrintStream( fileErr ) );
             }
         }
+    }
+
+    private static ServiceType getServiceType( String serviceType )
+    {
+        if ( ServiceType.SOAP.name().equalsIgnoreCase( serviceType ) )
+        {
+            return ServiceType.SOAP;
+        }
+        return ServiceType.REST;
     }
 
     private static ResourcesServiceName getServiceName( String value )
@@ -152,7 +162,14 @@ public class Main
         throws IOException, ResourcesException
     {
         BinaryData data = client.download( resourcePath );
-        createFile( data.getContent(), outFile );
+        if ( data.getStream() != null )
+        {
+            createFile( data.getStream(), outFile );
+        }
+        else
+        {
+            createFile( data.getContent(), outFile );
+        }
     }
 
     private static void createFile( byte[] flux, File outFile )
@@ -165,6 +182,17 @@ public class Main
         FileOutputStream fos = new FileOutputStream( outFile );
         fos.write( flux );
         fos.close();
+    }
+
+    private static void createFile( InputStream input, File outFile )
+        throws IOException
+    {
+        if ( outFile.getParentFile() != null )
+        {
+            outFile.getParentFile().mkdirs();
+        }
+        FileOutputStream out = new FileOutputStream( outFile );
+        IOUtils.copy( input, out );
     }
 
     private static void processUpload( ResourcesService client, String resources, String out )

@@ -43,6 +43,7 @@ import java.util.zip.ZipInputStream;
 import java.util.zip.ZipOutputStream;
 
 import fr.opensagres.xdocreport.core.EncodingConstants;
+import fr.opensagres.xdocreport.core.io.internal.OutputStream2InputStream;
 import fr.opensagres.xdocreport.core.io.internal.OutputStreamWriterCancelable;
 
 /**
@@ -425,6 +426,21 @@ public class XDocArchive
         }
         IOUtils.closeQuietly( entryInputStream );
         zipOutputStream.closeEntry();
+    }
+
+    /**
+     * Returns the input stream of the given {@link XDocArchive}.
+     * 
+     * @param archive
+     * @return the input stream of the given {@link XDocArchive}.
+     * @throws IOException
+     */
+    public static InputStream getInputStream( XDocArchive archive )
+        throws IOException
+    {
+        OutputStream2InputStream outputArchiveZipped = new OutputStream2InputStream();
+        XDocArchive.writeZip( archive, outputArchiveZipped );
+        return outputArchiveZipped.getInputStream();
     }
 
     /**

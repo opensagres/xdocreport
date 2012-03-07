@@ -11,9 +11,10 @@ import fr.opensagres.xdocreport.remoting.resources.domain.Filter;
 import fr.opensagres.xdocreport.remoting.resources.domain.Resource;
 import fr.opensagres.xdocreport.remoting.resources.services.ResourcesException;
 import fr.opensagres.xdocreport.remoting.resources.services.ResourcesService;
+import fr.opensagres.xdocreport.remoting.resources.services.ws.JAXWSResourcesService;
 
 public class JAXWSResourcesServiceClient
-    implements ResourcesService
+    implements JAXWSResourcesService
 {
 
     private final ResourcesService client;
@@ -21,14 +22,13 @@ public class JAXWSResourcesServiceClient
     public JAXWSResourcesServiceClient( String baseAddress )
     {
         QName serviceName =
-            new QName( "http://services.resources.remoting.xdocreport.opensagres.fr/", "ResourcesServiceImplService" );
+            new QName( "http://services.resources.remoting.xdocreport.opensagres.fr/", "ResourcesServiceService" );
         QName portName =
-            new QName( "http://services.resources.remoting.xdocreport.opensagres.fr/", "ResourcesServiceImplPort" );
+            new QName( "http://services.resources.remoting.xdocreport.opensagres.fr/", "ResourcesServicePort" );
 
         Service service = Service.create( serviceName );
-        service.addPort( portName, SOAPBinding.SOAP11HTTP_BINDING, baseAddress + "/ResourcesServiceImplPort" );
-        this.client =
-            service.getPort( portName, fr.opensagres.xdocreport.remoting.resources.services.ResourcesService.class );
+        service.addPort( portName, SOAPBinding.SOAP11HTTP_BINDING, baseAddress );
+        this.client = service.getPort( portName, JAXWSResourcesService.class );
 
     }
 

@@ -35,7 +35,7 @@ import javax.xml.bind.annotation.XmlMimeType;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient;
 
-import org.apache.cxf.helpers.IOUtils;
+import fr.opensagres.xdocreport.core.io.IOUtils;
 
 /**
  * Represention of a Binary Stream.
@@ -48,13 +48,15 @@ import org.apache.cxf.helpers.IOUtils;
 public class BinaryData
 {
 
+    private static final String DEFAULT_MIMETYPE = "application/octet-stream";
+
     private String resourceId;
 
     private InputStream in;
 
     private String fileName;
 
-    private String mimeType;
+    private String mimeType = DEFAULT_MIMETYPE;
 
     private long length;
 
@@ -65,22 +67,31 @@ public class BinaryData
     public BinaryData( File file )
         throws FileNotFoundException
     {
-        this( file, "application/octet-stream" );
+        this( file, DEFAULT_MIMETYPE );
     }
 
     public BinaryData( File file, String mimetype )
         throws FileNotFoundException
     {
-        this( new FileInputStream( file ), file.getName(), mimetype );
-        this.length = file.length();
+        this( new FileInputStream( file ), file.getName(), mimetype, file.length() );
+    }
+
+    public BinaryData( InputStream in, String filename )
+    {
+        this( in, filename, DEFAULT_MIMETYPE, -1 );
     }
 
     public BinaryData( InputStream in, String filename, String mimetype )
     {
+        this( in, filename, mimetype, -1 );
+    }
+
+    public BinaryData( InputStream in, String filename, String mimetype, long length )
+    {
         this.in = in;
         this.fileName = filename;
         this.mimeType = mimetype;
-        this.length = -1;
+        this.length = length;
     }
 
     public String getResourceId()
@@ -96,12 +107,12 @@ public class BinaryData
     /*
      * This method is only here for JAXB and compatibility
      */
-    @XmlMimeType( "application/octet-stream" )
+    @XmlMimeType( DEFAULT_MIMETYPE )
     public byte[] getContent()
     {
         try
         {
-            return IOUtils.readBytesFromStream( in );
+            return IOUtils.toByteArray( in );
         }
         catch ( IOException e )
         {

@@ -22,18 +22,28 @@
  * OF CONTRACT, TORT OR OTHERWISE,  ARISING FROM, OUT OF OR IN CONNECTION
  * WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
-package fr.opensagres.xdocreport.remoting.resources.services.rest;
+package fr.opensagres.xdocreport.core.io.internal;
 
-import fr.opensagres.xdocreport.remoting.resources.services.MockResourcesService;
-import fr.opensagres.xdocreport.remoting.resources.services.rest.server.JAXRSResourcesApplication;
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
 
-public class MockJAXRSResourcesApplication
-    extends JAXRSResourcesApplication
+import fr.opensagres.xdocreport.core.io.IOUtils;
+
+public class OutputStream2InputStream
+    extends ByteArrayOutputStream
 {
 
-    public MockJAXRSResourcesApplication()
+    public OutputStream2InputStream()
     {
-        super.getRegistry().clear();
-        super.getRegistry().addService( new MockResourcesService("resources") );
+    }
+
+    public InputStream getInputStream()
+        throws IOException
+    {
+        ByteArrayOutputStream o = new ByteArrayOutputStream();
+        IOUtils.write( super.toByteArray(), o );
+        return new ByteArrayInputStream( o.toByteArray() );
     }
 }

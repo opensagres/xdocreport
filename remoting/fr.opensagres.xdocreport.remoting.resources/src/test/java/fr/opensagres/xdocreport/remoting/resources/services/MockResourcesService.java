@@ -8,12 +8,12 @@ public class MockResourcesService
     extends FileResourcesService
 {
 
-    public static final ResourcesService INSTANCE = new MockResourcesService();
+    //public static final ResourcesService INSTANCE = new MockResourcesService();
 
-    public MockResourcesService()
+    public MockResourcesService(String resourcesDir)
     {
         //super(new File("../../"));
-        super( new File( "target/resources" ) );
+        super( new File( "target/" + resourcesDir ) );
     }
 
     public String getName()

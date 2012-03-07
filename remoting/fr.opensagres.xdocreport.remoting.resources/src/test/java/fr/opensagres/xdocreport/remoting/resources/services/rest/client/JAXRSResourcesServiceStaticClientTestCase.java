@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.Collections;
 
 import org.apache.cxf.jaxrs.servlet.CXFNonSpringJaxrsServlet;
@@ -117,8 +118,8 @@ public class JAXRSResourcesServiceStaticClientTestCase
 
         BinaryData document = client.download( resourceId );
         Assert.assertNotNull( document );
-        Assert.assertNotNull( document.getContent() );
-        createFile( document.getContent(), resourceId );
+        Assert.assertNotNull( document.getStream() );
+        createFile( document.getStream(), resourceId );
     }
 
     @Test
@@ -129,17 +130,33 @@ public class JAXRSResourcesServiceStaticClientTestCase
         ResourcesService client = JAXRSResourcesServiceClientFactory.create( BASE_ADDRESS );
         BinaryData document = client.download( resourceId );
         Assert.assertNotNull( document );
-        Assert.assertNotNull( document.getContent() );
-        createFile( document.getContent(), resourceId );
+        Assert.assertNotNull( document.getStream() );
+        createFile( document.getStream(), resourceId );
     }
 
-    private void createFile( byte[] flux, String filename )
+    @Test
+    public void downloadNotExistsFile()
+        throws FileNotFoundException, IOException, ResourcesException
+    {
+        String resourceId = "XXXXX.docx";
+        ResourcesService client = JAXRSResourcesServiceClientFactory.create( BASE_ADDRESS );
+
+        // try
+        // {
+        // BinaryData document = client.download( resourceId );
+        // }
+        // catch ( ResourcesException e )
+        // {
+        // e.printStackTrace();
+        // }
+    }
+
+    private void createFile( InputStream stream, String filename )
         throws FileNotFoundException, IOException
     {
         File aFile = new File( tempFolder, this.getClass().getSimpleName() + "_" + filename );
         FileOutputStream fos = new FileOutputStream( aFile );
-        fos.write( flux );
-        fos.close();
+        IOUtils.copy( stream, fos );
     }
 
     @Test

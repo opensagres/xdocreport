@@ -168,7 +168,8 @@ public abstract class AbstractXDocReport
     public void load( InputStream sourceStream )
         throws IOException, XDocReportException
     {
-        if (preprocessed) {
+        if ( preprocessed )
+        {
             preprocessed = false;
         }
         // Load zipped XML Document (odt, docx...)
@@ -675,9 +676,7 @@ public abstract class AbstractXDocReport
             {
                 // Converter cannot supper input entries provider,
                 // rebuild a zip and set it as input stream.
-                OutputStream2InputStream outputArchiveZipped = new OutputStream2InputStream();
-                XDocArchive.writeZip( outputArchive, outputArchiveZipped );
-                converter.convert( outputArchiveZipped.getInputStream(), out, options );
+                converter.convert( XDocArchive.getInputStream( outputArchive ), out, options );
             }
 
             // 7) End process report generation

@@ -2,6 +2,8 @@ package fr.opensagres.xdocreport.remoting.resources.services.ws.server;
 
 import java.util.List;
 
+import javax.jws.WebService;
+
 import fr.opensagres.xdocreport.remoting.resources.domain.BinaryData;
 import fr.opensagres.xdocreport.remoting.resources.domain.Filter;
 import fr.opensagres.xdocreport.remoting.resources.domain.Resource;
@@ -10,6 +12,7 @@ import fr.opensagres.xdocreport.remoting.resources.services.ResourcesException;
 import fr.opensagres.xdocreport.remoting.resources.services.ResourcesService;
 import fr.opensagres.xdocreport.remoting.resources.services.ws.JAXWSResourcesService;
 
+@WebService( endpointInterface = "fr.opensagres.xdocreport.remoting.resources.services.ws.JAXWSResourcesService", serviceName = "ResourcesServiceService" )
 public class JAXWSResourcesServiceImpl
     extends DelegateResourcesService
     implements JAXWSResourcesService
@@ -48,13 +51,15 @@ public class JAXWSResourcesServiceImpl
     }
 
     @Override
-    public List<BinaryData> download( List<String> resourceIds ) throws ResourcesException
+    public List<BinaryData> download( List<String> resourceIds )
+        throws ResourcesException
     {
         return super.download( resourceIds );
     }
 
     @Override
-    public void upload( BinaryData dataIn ) throws ResourcesException
+    public void upload( BinaryData dataIn )
+        throws ResourcesException
     {
         super.upload( dataIn );
     }

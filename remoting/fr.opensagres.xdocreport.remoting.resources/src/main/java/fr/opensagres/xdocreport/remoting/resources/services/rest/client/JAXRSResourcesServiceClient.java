@@ -26,15 +26,21 @@
 package fr.opensagres.xdocreport.remoting.resources.services.rest.client;
 
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
 
+import org.apache.cxf.interceptor.LoggingInInterceptor;
+import org.apache.cxf.interceptor.LoggingOutInterceptor;
 import org.apache.cxf.jaxrs.client.ClientConfiguration;
 import org.apache.cxf.jaxrs.client.JAXRSClientFactoryBean;
 import org.apache.cxf.jaxrs.client.WebClient;
 import org.apache.cxf.transport.http.HTTPConduit;
 import org.apache.cxf.transports.http.configuration.HTTPClientPolicy;
 
+import fr.opensagres.xdocreport.core.logging.LogUtils;
 import fr.opensagres.xdocreport.core.utils.StringUtils;
 import fr.opensagres.xdocreport.remoting.resources.domain.BinaryData;
 import fr.opensagres.xdocreport.remoting.resources.domain.Filter;
@@ -46,6 +52,11 @@ import fr.opensagres.xdocreport.remoting.resources.services.rest.Providers;
 public class JAXRSResourcesServiceClient
     implements ResourcesService
 {
+
+    /**
+     * Logger for this class
+     */
+    private static final Logger LOGGER = LogUtils.getLogger( JAXRSResourcesServiceClient.class.getName() );
 
     private final WebClient client;
 
@@ -66,18 +77,24 @@ public class JAXRSResourcesServiceClient
         bean.setProviders( Providers.get() );
 
         this.client = bean.createWebClient();
-        
+
         // I don't know why, but httpClientPolicy.setAllowChunking(false);
         // must be done to manage /upload with the WebApp demo
-        // at http://xdocreport.opensagres.cloudbees.net/cxf otherwise we have every time 
-        // an HHTP error 411 
-        ClientConfiguration config = WebClient.getConfig(client);
-        HTTPConduit http = (HTTPConduit)config.getConduit();
-        //Turn off chunking so that NTLM can occur
+        // at http://xdocreport.opensagres.cloudbees.net/cxf otherwise we have every time
+        // an HHTP error 411
+        ClientConfiguration config = WebClient.getConfig( client );
+        HTTPConduit http = (HTTPConduit) config.getConduit();
+        // Turn off chunking so that NTLM can occur
         HTTPClientPolicy httpClientPolicy = new HTTPClientPolicy();
-        //httpClientPolicy.setConnectionTimeout(36000);
-        httpClientPolicy.setAllowChunking(false);
-        http.setClient(httpClientPolicy);
+        // httpClientPolicy.setConnectionTimeout(36000);
+        httpClientPolicy.setAllowChunking( false );
+        http.setClient( httpClientPolicy );
+
+        if ( LOGGER.isLoggable( Level.FINE ) )
+        {
+            config.getInInterceptors().add( new LoggingInInterceptor() );
+            config.getOutInterceptors().add( new LoggingOutInterceptor() );
+        }
     }
 
     public String getName()
@@ -116,7 +133,9 @@ public class JAXRSResourcesServiceClient
     public void upload( BinaryData data )
     {
         reset();
-        client.path( ResourcesServiceName.upload ).type( MediaType.APPLICATION_JSON ).post( data );
+        Response response =
+            client.path( ResourcesServiceName.upload.name() ).accept( MediaType.TEXT_PLAIN ).type( MediaType.APPLICATION_JSON ).post( data );
+        // TODO : display status of the response.
     }
 
     protected void reset()

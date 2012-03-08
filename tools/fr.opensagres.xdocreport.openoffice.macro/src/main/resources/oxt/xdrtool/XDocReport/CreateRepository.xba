@@ -27,6 +27,9 @@ Public Sub SaveRepository
 	user = gCreateRepositoryDialog.getControl(&quot;UserTextField&quot;).Text
 	password = gCreateRepositoryDialog.getControl(&quot;PasswordTextField&quot;).Text
 	serviceType = &quot;REST&quot;
+	If (gCreateRepositoryDialog.getControl(&quot;SOAPOptionButton&quot;).State = True) Then 
+		serviceType = &quot;SOAP&quot;
+	End If
 	
 	Dim save as Boolean
 	save = False
@@ -38,7 +41,7 @@ Public Sub SaveRepository
 		save = True
 	End If
 	
-	If (save) Then 
+	If (save) Then
 		Settings.AddRepository(baseAddress, user, password, serviceType, repositoryName)
 		Repositories.LoadRepositoryListBox()
 		gCreateRepositoryDialog.EndExecute()

@@ -199,45 +199,37 @@ End Function
 
 Public Function GenerateRepositoryCommand(ByVal baseAddress as String, ByVal user as String, ByVal password as String, ByVal serviceType as String, ByVal serviceName as String, ByVal outFilePath as String, ByVal errFilePath as String, ByVal resources as String) As String
     &apos; 1) -baseAddress
-    If (baseAddress = &quot;&quot;) Then 
-    	baseAddress = EMPTY_PARAM_VALUE
-    End If
-    GenerateRepositoryCommand = GenerateRepositoryCommand + &quot; &quot;&quot;&quot; + baseAddress + &quot;&quot;&quot; &quot;
+    If (baseAddress &lt;&gt; &quot;&quot;) Then     
+		GenerateRepositoryCommand = GenerateRepositoryCommand + &quot; -baseAddress &quot;&quot;&quot; + baseAddress + &quot;&quot;&quot;&quot;        
+	End If	
     &apos; 2) -user
-    If (user = &quot;&quot;) Then 
-	    user = EMPTY_PARAM_VALUE
+    If (user &lt;&gt; &quot;&quot;) Then 
+		GenerateRepositoryCommand = GenerateRepositoryCommand + &quot; -user &quot;&quot;&quot; + user + &quot;&quot;&quot;&quot;        
     End If
-	GenerateRepositoryCommand = GenerateRepositoryCommand + &quot; &quot;&quot;&quot; + user + &quot;&quot;&quot; &quot;    	
     &apos; 3) -password
-    If (password = &quot;&quot;) Then     
-	    password = EMPTY_PARAM_VALUE    
+    If (password &lt;&gt; &quot;&quot;) Then     
+		GenerateRepositoryCommand = GenerateRepositoryCommand + &quot; -password &quot;&quot;&quot; + password + &quot;&quot;&quot; &quot;        
 	End If    
-	GenerateRepositoryCommand = GenerateRepositoryCommand + &quot; &quot;&quot;&quot; + password + &quot;&quot;&quot; &quot;        
     &apos; 4) -serviceType
-    If (serviceType = &quot;&quot;) Then     
-	    serviceType = EMPTY_PARAM_VALUE        
+    If (serviceType &lt;&gt; &quot;&quot;) Then     
+		GenerateRepositoryCommand = GenerateRepositoryCommand + &quot; -serviceType &quot;&quot;&quot; + serviceType + &quot;&quot;&quot; &quot;        
 	End If        
-   	GenerateRepositoryCommand = GenerateRepositoryCommand + &quot; &quot;&quot;&quot; + serviceType + &quot;&quot;&quot; &quot;            
     &apos; 5) -serviceName
-    If (serviceName = &quot;&quot;) Then     
-	    serviceName = EMPTY_PARAM_VALUE            
-	End If        
-    GenerateRepositoryCommand = GenerateRepositoryCommand + &quot; &quot;&quot;&quot; + serviceName + &quot;&quot;&quot; &quot;                
+    If (serviceName &lt;&gt; &quot;&quot;) Then     
+		GenerateRepositoryCommand = GenerateRepositoryCommand + &quot; -serviceName &quot;&quot;&quot; + serviceName + &quot;&quot;&quot;&quot;        
+	End If           
     &apos; 6) -out
-    If (outFilePath = &quot;&quot;) Then     
-   	    outFilePath = EMPTY_PARAM_VALUE            
+    If (outFilePath &lt;&gt; &quot;&quot;) Then     
+	   	GenerateRepositoryCommand = GenerateRepositoryCommand + &quot; -out &quot;&quot;&quot; + outFilePath + &quot;&quot;&quot;&quot;            
 	End If        
-    GenerateRepositoryCommand = GenerateRepositoryCommand + &quot; &quot;&quot;&quot; + outFilePath + &quot;&quot;&quot; &quot;
     &apos; 5) -err
-    If (errFilePath = &quot;&quot;) Then     
-   	    errFilePath = EMPTY_PARAM_VALUE                
-	End If   	    
-	GenerateRepositoryCommand = GenerateRepositoryCommand + &quot; &quot;&quot;&quot; + errFilePath + &quot;&quot;&quot; &quot;    
+    If (errFilePath &lt;&gt; &quot;&quot;) Then     
+	   	GenerateRepositoryCommand = GenerateRepositoryCommand + &quot; -err &quot;&quot;&quot; + errFilePath + &quot;&quot;&quot;&quot;            
+	End If    
     &apos; 5) -resources
-    If (resources = &quot;&quot;) Then     
-   	    resources = EMPTY_PARAM_VALUE                
-	End If   	    
-	GenerateRepositoryCommand = GenerateRepositoryCommand + &quot; &quot;&quot;&quot; + resources + &quot;&quot;&quot;&quot;    	
+    If (resources &lt;&gt; &quot;&quot;) Then     
+	   	GenerateRepositoryCommand = GenerateRepositoryCommand + &quot; -resources &quot;&quot;&quot; + resources + &quot;&quot;&quot;&quot;            
+	End If        
 End Function
 
 Private Function IsRepositoryAvailable() as Boolean
@@ -266,28 +258,34 @@ End Sub
 rem~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 sub ResourcesTreeMouseListener_mousePressed(ByVal oEvt as Object)
 rem~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-	Dim selectedValue 	
-	If Not (oEvt is Nothing) And Not (oEvt.Source is Nothing) And Not (oEvt.Source.Selection is Nothing) Then 
-		selectedValue = oEvt.Source.Selection.DataValue
-		gRepositoriesDialog.getControl(&quot;DownloadCommandButton&quot;).Model.Enabled=False	
-		
-		If IsArray(selectedValue) Then 
-			&apos; resource is selected, &quot;Download&quot; button is enabled.
-			gRepositoriesDialog.getControl(&quot;DownloadCommandButton&quot;).Model.Enabled=True
+
+	Dim oResourcesTreeControl as Object
+    oResourcesTreeControl = gRepositoriesDialog.getControl(&quot;ResourcesTreeControl&quot;)
+    If Not (oResourcesTreeControl.Model.DataModel is Nothing)  Then 
+    
+		Dim selectedValue 	
+		If Not (oEvt is Nothing) And Not (oEvt.Source is Nothing) And Not (oEvt.Source.Selection is Nothing) Then 
+			selectedValue = oEvt.Source.Selection.DataValue
+			gRepositoriesDialog.getControl(&quot;DownloadCommandButton&quot;).Model.Enabled=False	
 			
-			&apos; try if resource was already downloaded?
-			Dim resourcePath as String			
-			resourcePath = selectedvalue(0)	
-			
-			Dim localFilePath as String
-			localFilePath = GetCurrentResourcesFolder() + &quot;/&quot; + resourcePath
-			
-			Dim isFileExists as Boolean
-			isFileExists = FileExists(ConvertFromURL(localFilePath))
-			gRepositoriesDialog.getControl(&quot;OpenLocalCommandButton&quot;).Model.Enabled= isFileExists
-			gRepositoriesDialog.getControl(&quot;UploadCommandButton&quot;).Model.Enabled= isFileExists
+			If IsArray(selectedValue) Then 
+				&apos; resource is selected, &quot;Download&quot; button is enabled.
+				gRepositoriesDialog.getControl(&quot;DownloadCommandButton&quot;).Model.Enabled=True
+				
+				&apos; try if resource was already downloaded?
+				Dim resourcePath as String			
+				resourcePath = selectedvalue(0)	
+				
+				Dim localFilePath as String
+				localFilePath = GetCurrentResourcesFolder() + &quot;/&quot; + resourcePath
+				
+				Dim isFileExists as Boolean
+				isFileExists = FileExists(ConvertFromURL(localFilePath))
+				gRepositoriesDialog.getControl(&quot;OpenLocalCommandButton&quot;).Model.Enabled= isFileExists
+				gRepositoriesDialog.getControl(&quot;UploadCommandButton&quot;).Model.Enabled= isFileExists
+			End If		
 		End If		
-	End If		
+	End If				
 end sub
 
 sub ResourcesTreeMouseListener_mouseReleased(oEvt)

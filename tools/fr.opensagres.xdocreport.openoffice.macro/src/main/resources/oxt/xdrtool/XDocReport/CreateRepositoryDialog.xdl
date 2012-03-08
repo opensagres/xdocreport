@@ -3,7 +3,6 @@
 <dlg:window xmlns:dlg="http://openoffice.org/2000/dialog" xmlns:script="http://openoffice.org/2000/script" dlg:id="CreateRepositoryDialog" dlg:left="382" dlg:top="202" dlg:width="201" dlg:height="169" dlg:closeable="true" dlg:moveable="true" dlg:title="Repository">
  <dlg:bulletinboard>
   <dlg:radiogroup>
-   <dlg:radio dlg:id="WebServiceOptionButton" dlg:tab-index="0" dlg:left="27" dlg:top="26" dlg:width="49" dlg:height="9" dlg:value="Web Service?"/>
    <dlg:radio dlg:id="RESTOptionButton" dlg:tab-index="1" dlg:left="79" dlg:top="26" dlg:width="49" dlg:height="9" dlg:value="REST Service?"/>
   </dlg:radiogroup>
   <dlg:text dlg:id="URLLabel" dlg:tab-index="2" dlg:left="6" dlg:top="7" dlg:width="15" dlg:height="12" dlg:value="URL:"/>
@@ -22,5 +21,8 @@
    <script:event script:event-name="on-performaction" script:macro-name="vnd.sun.star.script:XDocReport.CreateRepository.CloseCreateRepositoryDialog?language=Basic&amp;location=application" script:language="Script"/>
   </dlg:button>
   <dlg:textfield dlg:id="BaseAddressTextField" dlg:tab-index="3" dlg:left="25" dlg:top="7" dlg:width="172" dlg:height="12"/>
+  <dlg:radiogroup>
+   <dlg:radio dlg:id="SOAPOptionButton" dlg:tab-index="0" dlg:left="27" dlg:top="26" dlg:width="49" dlg:height="9" dlg:value="Web Service?"/>
+  </dlg:radiogroup>
  </dlg:bulletinboard>
 </dlg:window>

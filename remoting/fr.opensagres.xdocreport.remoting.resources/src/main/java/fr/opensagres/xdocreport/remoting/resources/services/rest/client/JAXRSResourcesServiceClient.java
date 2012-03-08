@@ -29,8 +29,11 @@ import java.util.List;
 
 import javax.ws.rs.core.MediaType;
 
+import org.apache.cxf.jaxrs.client.ClientConfiguration;
 import org.apache.cxf.jaxrs.client.JAXRSClientFactoryBean;
 import org.apache.cxf.jaxrs.client.WebClient;
+import org.apache.cxf.transport.http.HTTPConduit;
+import org.apache.cxf.transports.http.configuration.HTTPClientPolicy;
 
 import fr.opensagres.xdocreport.core.utils.StringUtils;
 import fr.opensagres.xdocreport.remoting.resources.domain.BinaryData;
@@ -63,6 +66,18 @@ public class JAXRSResourcesServiceClient
         bean.setProviders( Providers.get() );
 
         this.client = bean.createWebClient();
+        
+        // I don't know why, but httpClientPolicy.setAllowChunking(false);
+        // must be done to manage /upload with the WebApp demo
+        // at http://xdocreport.opensagres.cloudbees.net/cxf otherwise we have every time 
+        // an HHTP error 411 
+        ClientConfiguration config = WebClient.getConfig(client);
+        HTTPConduit http = (HTTPConduit)config.getConduit();
+        //Turn off chunking so that NTLM can occur
+        HTTPClientPolicy httpClientPolicy = new HTTPClientPolicy();
+        //httpClientPolicy.setConnectionTimeout(36000);
+        httpClientPolicy.setAllowChunking(false);
+        http.setClient(httpClientPolicy);
     }
 
     public String getName()

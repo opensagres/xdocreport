@@ -7,8 +7,14 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.Collections;
 
+import org.apache.cxf.interceptor.LoggingInInterceptor;
+import org.apache.cxf.interceptor.LoggingOutInterceptor;
+import org.apache.cxf.jaxrs.client.ClientConfiguration;
 import org.apache.cxf.jaxrs.client.JAXRSClientFactory;
+import org.apache.cxf.jaxrs.client.WebClient;
 import org.apache.cxf.jaxrs.servlet.CXFNonSpringJaxrsServlet;
+import org.apache.cxf.transport.http.HTTPConduit;
+import org.apache.cxf.transports.http.configuration.HTTPClientPolicy;
 import org.eclipse.jetty.server.Server;
 import org.eclipse.jetty.servlet.ServletContextHandler;
 import org.eclipse.jetty.servlet.ServletHolder;
@@ -142,6 +148,32 @@ public class JAXRSResourcesServiceCGLibClientTestCase
         File aFile = new File( tempFolder, this.getClass().getSimpleName() + "_" + filename );
         FileOutputStream fos = new FileOutputStream( aFile );
         IOUtils.copy( stream, fos );
+    }
+    
+    public static void main( String[] args ) throws IOException
+    {
+        String resourceId = "Opensagres____ODTCV.odt";
+        ResourcesService client =
+            JAXRSClientFactory.create( "http://xdocreport.opensagres.cloudbees.net/cxf", JAXRSResourcesService.class, Providers.get() );
+        byte[] document = IOUtils.toByteArray( Data.class.getResourceAsStream( "Simple.docx" ) );
+
+        ClientConfiguration config = WebClient.getConfig(client);
+        HTTPConduit http = (HTTPConduit)config.getConduit();
+        //Turn off chunking so that NTLM can occur
+        HTTPClientPolicy httpClientPolicy = new HTTPClientPolicy();
+        //httpClientPolicy.setConnectionTimeout(36000);
+        //httpClientPolicy.setAllowChunking(false);
+        http.setClient(httpClientPolicy);
+        
+        config.getInInterceptors().add(new LoggingInInterceptor());
+        config.getOutInterceptors().add(new LoggingOutInterceptor());
+        
+        BinaryData dataIn = new BinaryData();
+        dataIn.setResourceId( resourceId );
+        dataIn.setContent( document );
+
+        client.upload( dataIn );
+        
     }
 
     @Test

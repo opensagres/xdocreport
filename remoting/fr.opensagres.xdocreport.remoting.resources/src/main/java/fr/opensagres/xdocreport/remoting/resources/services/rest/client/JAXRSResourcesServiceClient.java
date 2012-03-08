@@ -30,7 +30,6 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.Response;
 
 import org.apache.cxf.interceptor.LoggingInInterceptor;
 import org.apache.cxf.interceptor.LoggingOutInterceptor;
@@ -60,7 +59,8 @@ public class JAXRSResourcesServiceClient
 
     private final WebClient client;
 
-    public JAXRSResourcesServiceClient( String baseAddress, String username, String password )
+    public JAXRSResourcesServiceClient( String baseAddress, String username, String password, Long connectionTimeout,
+                                        Boolean allowChunking )
     {
 
         JAXRSClientFactoryBean bean = new JAXRSClientFactoryBean();
@@ -78,20 +78,26 @@ public class JAXRSResourcesServiceClient
 
         this.client = bean.createWebClient();
 
-        // I don't know why, but httpClientPolicy.setAllowChunking(false);
-        // must be done to manage /upload with the WebApp demo
-        // at http://xdocreport.opensagres.cloudbees.net/cxf otherwise we have every time
-        // an HHTP error 411
-        ClientConfiguration config = WebClient.getConfig( client );
-        HTTPConduit http = (HTTPConduit) config.getConduit();
-        // Turn off chunking so that NTLM can occur
-        HTTPClientPolicy httpClientPolicy = new HTTPClientPolicy();
-        // httpClientPolicy.setConnectionTimeout(36000);
-        httpClientPolicy.setAllowChunking( false );
-        http.setClient( httpClientPolicy );
+        if ( connectionTimeout != null || allowChunking != null )
+        {
+            ClientConfiguration config = WebClient.getConfig( client );
+            HTTPConduit http = (HTTPConduit) config.getConduit();
+            HTTPClientPolicy httpClientPolicy = new HTTPClientPolicy();
+            if ( connectionTimeout != null )
+            {
+                httpClientPolicy.setConnectionTimeout( connectionTimeout );
+            }
+            if ( allowChunking != null )
+            {
+                httpClientPolicy.setAllowChunking( allowChunking );
+            }
+            http.setClient( httpClientPolicy );
+
+        }
 
         if ( LOGGER.isLoggable( Level.FINE ) )
         {
+            ClientConfiguration config = WebClient.getConfig( client );
             config.getInInterceptors().add( new LoggingInInterceptor() );
             config.getOutInterceptors().add( new LoggingOutInterceptor() );
         }
@@ -133,9 +139,9 @@ public class JAXRSResourcesServiceClient
     public void upload( BinaryData data )
     {
         reset();
-        Response response =
-            client.path( ResourcesServiceName.upload.name() ).accept( MediaType.TEXT_PLAIN ).type( MediaType.APPLICATION_JSON ).post( data );
-        // TODO : display status of the response.
+        // Use Void.class to throw an exception of there is HTTP error.s
+        client.path( ResourcesServiceName.upload.name() ).accept( MediaType.TEXT_PLAIN ).type( MediaType.APPLICATION_JSON ).post( data,
+                                                                                                                                  Void.class );
     }
 
     protected void reset()

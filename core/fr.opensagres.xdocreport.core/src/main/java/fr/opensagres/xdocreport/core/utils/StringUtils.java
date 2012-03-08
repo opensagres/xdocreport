@@ -137,6 +137,21 @@ public class StringUtils
         return TRUE.equals( value.toLowerCase() );
     }
 
+    public static Boolean asBooleanObject( String value )
+    {
+        return asBooleanObject( value, null );
+    }
+
+    public static Boolean asBooleanObject( String value, Boolean defaultValue )
+    {
+        if ( value == null )
+            return defaultValue;
+        value = value.trim();
+        if ( defaultValue )
+            return !( FALSE.equals( value.toLowerCase() ) );
+        return TRUE.equals( value.toLowerCase() );
+    }
+
     /**
      * Returns the given value String as Integer.
      * 
@@ -160,6 +175,36 @@ public class StringUtils
         try
         {
             return Integer.parseInt( value );
+        }
+        catch ( Throwable e )
+        {
+            return defaultValue;
+        }
+    }
+
+    /**
+     * Returns the given value String as Long.
+     * 
+     * @param value
+     * @return
+     */
+    public static Long asLong( String value )
+    {
+        return asLong( value, null );
+    }
+
+    /**
+     * Returns the given value String as Long.
+     * 
+     * @param value
+     * @param defaultValue
+     * @return
+     */
+    public static Long asLong( String value, Long defaultValue )
+    {
+        try
+        {
+            return Long.parseLong( value );
         }
         catch ( Throwable e )
         {

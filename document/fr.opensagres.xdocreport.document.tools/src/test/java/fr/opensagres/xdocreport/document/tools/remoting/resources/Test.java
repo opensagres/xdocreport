@@ -14,6 +14,8 @@ public class Test
     private static final String url2 = "http://localhost:9999/jaxrs";
     
     private static final String url3 = "http://localhost:8080/xdocreport-webapp/cxf/resources";
+    
+    private static final String url4 = "http://xdocreport.opensagres.cloudbees.net/cxf";
 
     public static void main1( String[] s ) throws Exception
     {
@@ -27,7 +29,7 @@ public class Test
         Assert.assertTrue( downlodedFile.exists() );
     }
     
-    public static void main( String[] s ) throws Exception
+    public static void main2( String[] s ) throws Exception
     {
 
         File downlodedFile = new File( "name.txt" );
@@ -36,5 +38,16 @@ public class Test
                  "-out", downlodedFile.getPath(), "-serviceType", "SOAP" };
         Main.main( args );
         Assert.assertTrue( downlodedFile.exists() );
+    }
+    
+    public static void main( String[] s ) throws Exception
+    {
+
+        String fileToDownload = "Opensagres____ODTCV.odt";
+        File downlodedFile = new File( "ODTCV.odt" );
+        String[] args =
+            { "-baseAddress", url4, "-serviceName", ResourcesServiceName.upload.name(), "-resources",
+                fileToDownload, "-out", downlodedFile.getPath() };
+        Main.main( args );
     }
 }

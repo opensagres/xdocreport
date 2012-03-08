@@ -25,7 +25,6 @@
 package fr.opensagres.xdocreport.document.tools.remoting.resources;
 
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.FileWriter;
@@ -50,8 +49,6 @@ public class Main
 
     public static final String BASE_ADDRESS_ARG = "-baseAddress";
 
-    // -baseAddress %BASE_ADDRESS% -user %USER% -password %PASSWORD% -serviceType %SERVICE_TYPE% -serviceName
-    // %SERVICE_NAME% -out %OUT% -err %ERR%
     public static void main( String[] args )
         throws Exception
     {
@@ -60,6 +57,8 @@ public class Main
         String baseAddress = context.get( BASE_ADDRESS_ARG );
         String user = context.get( "-password" );
         String password = context.get( "-password" );
+        Long connectionTimeout = StringUtils.asLong( context.get( "-timeout" ) );
+        Boolean allowChunking = StringUtils.asBoolean( context.get( "-chunk" ) );
 
         ServiceType serviceType = getServiceType( context.get( "-serviceType" ) );
         ResourcesServiceName serviceName = getServiceName( context.get( "-serviceName" ) );
@@ -84,13 +83,15 @@ public class Main
 
         if ( fileErr == null )
         {
-            process( baseAddress, user, password, serviceType, serviceName, out, context );
+            process( baseAddress, user, password, connectionTimeout, allowChunking, serviceType, serviceName, out,
+                     context );
         }
         else
         {
             try
             {
-                process( baseAddress, user, password, serviceType, serviceName, out, context );
+                process( baseAddress, user, password, connectionTimeout, allowChunking, serviceType, serviceName, out,
+                         context );
             }
             catch ( Throwable e )
             {
@@ -113,12 +114,15 @@ public class Main
         return ResourcesServiceName.getServiceName( value );
     }
 
-    private static void process( String baseAddress, String user, String password, ServiceType serviceType,
-                                 ResourcesServiceName serviceName, String out, ArgContext context )
+    private static void process( String baseAddress, String user, String password, Long connectionTimeout,
+                                 Boolean allowChunking, ServiceType serviceType, ResourcesServiceName serviceName,
+                                 String out, ArgContext context )
         throws IOException, ResourcesException
     {
         String resources = null;
-        ResourcesService client = ResourcesServiceClientFactory.create( baseAddress, serviceType, user, password );
+        ResourcesService client =
+            ResourcesServiceClientFactory.create( baseAddress, serviceType, user, password, connectionTimeout,
+                                                  allowChunking );
         switch ( serviceName )
         {
             case name:
@@ -205,7 +209,7 @@ public class Main
         }
         if ( resources.indexOf( ";" ) == -1 )
         {
-            processUpload( client, resources,  new File( out )  );
+            processUpload( client, resources, new File( out ) );
         }
         else
         {
@@ -220,7 +224,7 @@ public class Main
     private static void processUpload( ResourcesService client, String resourceId, File out )
         throws ResourcesException, FileNotFoundException
     {
-        BinaryData data = new BinaryData(out);
+        BinaryData data = new BinaryData( out );
         data.setResourceId( resourceId );
         client.upload( data );
 

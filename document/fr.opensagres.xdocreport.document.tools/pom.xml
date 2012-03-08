@@ -65,10 +65,17 @@
 		<dependency>
 			<groupId>fr.opensagres.xdocreport</groupId>
 			<artifactId>fr.opensagres.xdocreport.openoffice.macro</artifactId>
-                        <type>oxt</type>
+            <type>oxt</type>
 			<version>1.0.2</version>
 		</dependency>
-							
+		
+		<!-- Use JAX-WS CXF implementation  -->	
+		<dependency>
+	      <groupId>org.apache.cxf</groupId>
+	      <artifactId>cxf-rt-frontend-jaxws</artifactId>
+	      <version>2.4.0</version>
+	    </dependency>
+	    							
 	 <!-- Jetty is extremely convenient for testing REST and WS -->
 	    <dependency>
 	      <groupId>org.eclipse.jetty</groupId>

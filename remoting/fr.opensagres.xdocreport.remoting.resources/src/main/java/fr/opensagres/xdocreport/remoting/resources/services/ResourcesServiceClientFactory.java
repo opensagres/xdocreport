@@ -42,12 +42,14 @@ public class ResourcesServiceClientFactory
      * @param password user for authentication
      * @return an instance of the (REST or SOAP) client {@link ResourcesService}.
      */
-    public static ResourcesService create( String baseAddress, ServiceType serviceType, String user, String password )
+    public static ResourcesService create( String baseAddress, ServiceType serviceType, String user, String password,
+                                           Long connectionTimeout, Boolean allowChunking )
     {
         if ( serviceType == ServiceType.REST )
         {
-            return JAXRSResourcesServiceClientFactory.create( baseAddress, user, password );
+            return JAXRSResourcesServiceClientFactory.create( baseAddress, user, password, connectionTimeout,
+                                                              allowChunking );
         }
-        return JAXWSResourcesServiceClientFactory.create( baseAddress );
+        return JAXWSResourcesServiceClientFactory.create( baseAddress, user, password, connectionTimeout, allowChunking );
     }
 }

@@ -41,7 +41,7 @@ public interface JAXRSResourcesService
 
     @POST
     @Path( "/upload" )
-    @Consumes( MediaType.APPLICATION_JSON )
+    //@Consumes( MediaType.APPLICATION_JSON )
     void upload( BinaryData data )
         throws ResourcesException;
 

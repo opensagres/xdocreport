@@ -103,6 +103,9 @@ Public Sub SaveRepository
 		checkConnection = gBaseAddress &lt;&gt; baseAddress
 	End If
 	
+	&apos; Disable the test of the connection
+	checkConnection = False
+	
 	Dim repositoryName as String	
 	If (checkConnection) Then 
 		repositoryName = ExecuteRepositoryServiceClient_Name(baseAddress, user, password, serviceType, chunk, timeout)

@@ -355,8 +355,12 @@ End Sub
 Public Sub RemoveRepository(ByVal selectedIndex as Integer, ByVal baseAddress as String,ByVal user as String,ByVal password as String,ByVal serviceType as String, ByVal chunk as String, ByVal timeout as String, ByVal repositoryName as String) 
 	Dim value as String
 	Dim i as Integer
+	Dim startIndex as Integer
+	Dim endIndex as Integer	
+	startIndex = selectedIndex * 6
+	endIndex = startIndex + 5
 	For i = 0 To UBound(repositories)
-		If Not (i&gt;=selectedIndex and i&lt;=selectedIndex+5) Then 
+		If Not (i&gt;=startIndex and i&lt;=endIndex) Then 
 			If (value &lt;&gt; &quot;&quot;) Then 
 				value = value + &quot;____&quot; 
 			End If

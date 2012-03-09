@@ -62,6 +62,7 @@ Public Sub SelectLastRepository()
 	Dim repositoryListBox as Object
 	repositoryListBox = gResourcesDialog.getControl(&quot;RepositoryListBox&quot;)
 	repositoryListBox.SelectItemPos( repositoryListBox.GetItemCount()-1, True )
+	SelectRepository()
 End Sub
 
 Public Sub SelectRepository

@@ -4,10 +4,9 @@
  <library:element library:name="AboutDialog"/>
  <library:element library:name="SettingsDialog"/>
  <library:element library:name="FieldsDialog"/>
- <library:element library:name="CreateRepositoryDialog"/>
+ <library:element library:name="ResourcesDialog"/>
  <library:element library:name="CreateFieldsListDialog"/>
  <library:element library:name="WorkInProcessDialog"/>
  <library:element library:name="ErrorDialog"/>
- <library:element library:name="ResourcesDialog"/>
- <library:element library:name="ManageRepositoriesDialog"/>
+ <library:element library:name="RepositoryDialog"/>
 </library:library>

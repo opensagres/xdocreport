@@ -44,16 +44,18 @@ Public Sub LoadRepositoryListBox()
  	Settings.LoadSettingsIfNeeded()
 	repositories = Settings.repositories	
 	
-	Dim size as Long
-	Dim i as Integer
-	size = UBound(repositories)
-	If (size &gt; 0) Then 		
-		For i = 0 To size Step 6
-			baseAddress = repositories(i)	
-			repositoryListBox.AddItem baseAddress, i
-		Next
+	If (IsArray(repositories)) Then 
+		Dim size as Long
+		Dim i as Integer
+		size = UBound(repositories)
+		If (size &gt; 0) Then 		
+			For i = 0 To size Step 6
+				baseAddress = repositories(i)	
+				repositoryListBox.AddItem baseAddress, i
+			Next
+		End If
 	End If
-	
+		
 End Sub
 
 Public Sub SelectLastRepository()
@@ -64,15 +66,18 @@ End Sub
 
 Public Sub SelectRepository
 	Dim selectedIndex as Integer
-	Dim repositoryListBox as Object
 		
 	gResourcesDialog.getControl(&quot;RefreshCommandButton&quot;).Model.Enabled = True
 	gResourcesDialog.getControl(&quot;DownloadCommandButton&quot;).Model.Enabled = False
 	gResourcesDialog.getControl(&quot;OpenLocalCommandButton&quot;).Model.Enabled = False
 	gResourcesDialog.getControl(&quot;UploadCommandButton&quot;).Model.Enabled = False
-				
-	repositoryListBox = gResourcesDialog.getControl(&quot;RepositoryListBox&quot;)
-	selectedIndex = repositoryListBox.getSelectedItemPos()
+	gResourcesDialog.getControl(&quot;ServiceTypeLabel&quot;).Text=&quot;&quot;	
+	gResourcesDialog.getControl(&quot;AllwowedChunkingCheckBox&quot;).State= 0
+	gResourcesDialog.getControl(&quot;TimeoutLabel&quot;).Text=&quot;&quot;
+	gResourcesDialog.getControl(&quot;EditRepositoryCommandButton&quot;).Model.Enabled = False
+	gResourcesDialog.getControl(&quot;RemoveRepositoryCommandButton&quot;).Model.Enabled = False
+								
+	selectedIndex = GetSelectedRepositoryIndex()
 	If (selectedIndex &lt;&gt; -1) Then
 		Dim repositories() as String
 		Dim baseAddress as String
@@ -84,16 +89,30 @@ Public Sub SelectRepository
 				
  		Settings.LoadSettingsIfNeeded()
 		repositories = Settings.repositories	
-		baseAddress= repositories(selectedIndex*4+0)
-		user= repositories(selectedIndex*4+1)
-		password= repositories(selectedIndex*4+2)
-		serviceType= repositories(selectedIndex*4+3)						
-		chunk = repositories(selectedIndex*4+4)
-		timeout = repositories(selectedIndex*4+5)
-						
+		baseAddress= repositories(selectedIndex*6+0)
+		user= repositories(selectedIndex*6+1)
+		password= repositories(selectedIndex*6+2)
+		chunk = repositories(selectedIndex*6+3)
+		timeout = repositories(selectedIndex*6+4)
+		serviceType= repositories(selectedIndex*6+5)						
+		
+		gResourcesDialog.getControl(&quot;ServiceTypeLabel&quot;).Text= serviceType
+		If (chunk = &quot;true&quot;) Then 
+			gResourcesDialog.getControl(&quot;AllwowedChunkingCheckBox&quot;).State= 1
+		End If
+		gResourcesDialog.getControl(&quot;TimeoutLabel&quot;).Text= timeout
+		gResourcesDialog.getControl(&quot;EditRepositoryCommandButton&quot;).Model.Enabled = True
+		gResourcesDialog.getControl(&quot;RemoveRepositoryCommandButton&quot;).Model.Enabled = True		
+				
 		ExecuteRepositoryServiceClient_Root(baseAddress, user, password, serviceType, chunk, timeout)
 	End If
 End Sub
+
+Public Function GetSelectedRepositoryIndex() as Integer
+	Dim repositoryListBox as Object
+	repositoryListBox = gResourcesDialog.getControl(&quot;RepositoryListBox&quot;)
+	GetSelectedRepositoryIndex = repositoryListBox.getSelectedItemPos()
+End Function
                                  
 Public Function ExecuteRepositoryServiceClient (ByVal baseAddress as String, ByVal user as String, ByVal password as String, ByVal serviceType as String, ByVal serviceName as String, ByVal resourcePath as String, ByVal outFilePath As String, ByVal chunk As String, ByVal timeout As String) as String
 
@@ -582,14 +601,13 @@ Public Sub DownloadResource
 				
 		Settings.LoadSettingsIfNeeded()
 		repositories = Settings.repositories	
-		baseAddress= repositories(selectedIndex*4+0)
-		
-		user= repositories(selectedIndex*4+1)
-		password= repositories(selectedIndex*4+2)
-		serviceType= repositories(selectedIndex*4+3)			
-		chunk= repositories(selectedIndex*4+4)			
-		timeout= repositories(selectedIndex*4+5)			
-	
+		baseAddress= repositories(selectedIndex*6+0)		
+		user= repositories(selectedIndex*6+1)
+		password= repositories(selectedIndex*6+2)
+		chunk= repositories(selectedIndex*6+3)			
+		timeout= repositories(selectedIndex*6+4)			
+		serviceType= repositories(selectedIndex*6+5)			
+			
 		fileToDownloadPath = ExecuteRepositoryServiceClient_Download(baseAddress, user, password, serviceType, resourceId, fileToDownloadPath, chunk, timeout)
 		If (fileToDownloadPath &lt;&gt; &quot;&quot;) Then 		
 			If (OpenLocalResource(fileToDownloadPath)) Then 
@@ -643,7 +661,7 @@ Private Function GetCurrentResourcesFolder()
 	If (selectedIndex &lt;&gt; -1) Then		
  		Settings.LoadSettingsIfNeeded()
 		repositories = Settings.repositories	
-		baseFolder= repositories(selectedIndex*4+0)
+		baseFolder= repositories(selectedIndex*6+0)
 		baseFolder = XDocReport_Replace (baseFolder, &quot;/&quot;, &quot;_&quot;, True)
 		baseFolder = XDocReport_Replace (baseFolder, &quot;:&quot;, &quot;_&quot;, True)
 		baseFolder = XDocReport_Replace (baseFolder, &quot;.&quot;, &quot;_&quot;, True)		
@@ -688,13 +706,12 @@ Public Sub UploadResource
 		
 		Settings.LoadSettingsIfNeeded()
 		repositories = Settings.repositories	
-		baseAddress= repositories(selectedIndex*4+0)
-		
-		user= repositories(selectedIndex*4+1)
-		password= repositories(selectedIndex*4+2)
-		serviceType= repositories(selectedIndex*4+3)			
-		chunk= repositories(selectedIndex*4+4)			
-		timeout= repositories(selectedIndex*4+5)
+		baseAddress= repositories(selectedIndex*6+0)		
+		user= repositories(selectedIndex*6+1)
+		password= repositories(selectedIndex*6+2)
+		chunk= repositories(selectedIndex*6+3)			
+		timeout= repositories(selectedIndex*6+4)
+		serviceType= repositories(selectedIndex*6+5)					
 								
 		ExecuteRepositoryServiceClient_Upload(baseAddress, user, password, serviceType, resourceId, fileToUploadPath, chunk, timeout)
 				

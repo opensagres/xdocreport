@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE dlg:window PUBLIC "-//OpenOffice.org//DTD OfficeDocument 1.0//EN" "dialog.dtd">
+<dlg:window xmlns:dlg="http://openoffice.org/2000/dialog" xmlns:script="http://openoffice.org/2000/script" dlg:id="RepositoryDialog" dlg:left="382" dlg:top="202" dlg:width="203" dlg:height="133" dlg:closeable="true" dlg:moveable="true" dlg:title="Repository">
+ <dlg:bulletinboard>
+  <dlg:radiogroup>
+   <dlg:radio dlg:id="RESTOptionButton" dlg:tab-index="1" dlg:left="72" dlg:top="25" dlg:width="49" dlg:height="9" dlg:value="REST Service?"/>
+  </dlg:radiogroup>
+  <dlg:text dlg:id="URLLabel" dlg:tab-index="3" dlg:left="4" dlg:top="8" dlg:width="15" dlg:height="12" dlg:value="URL:"/>
+  <dlg:text dlg:id="TypeLabel" dlg:tab-index="4" dlg:left="4" dlg:top="24" dlg:width="15" dlg:height="12" dlg:value="Type:"/>
+  <dlg:titledbox dlg:id="AuthentificationFrameControl" dlg:tab-index="5" dlg:left="4" dlg:top="38" dlg:width="196" dlg:height="42">
+   <dlg:title dlg:value="Authentification"/>
+  </dlg:titledbox>
+  <dlg:text dlg:id="UserLabel" dlg:tab-index="6" dlg:left="8" dlg:top="47" dlg:width="15" dlg:height="14" dlg:value="User:"/>
+  <dlg:textfield dlg:id="UserTextField" dlg:tab-index="7" dlg:left="35" dlg:top="47" dlg:width="163" dlg:height="12"/>
+  <dlg:text dlg:id="PasswordLabel" dlg:tab-index="8" dlg:left="8" dlg:top="62" dlg:width="25" dlg:height="12" dlg:value="Password:"/>
+  <dlg:textfield dlg:id="PasswordTextField" dlg:tab-index="9" dlg:left="35" dlg:top="62" dlg:width="161" dlg:height="12"/>
+  <dlg:button dlg:id="OKCommandButton" dlg:tab-index="10" dlg:left="122" dlg:top="117" dlg:width="39" dlg:height="13" dlg:value="OK">
+   <script:event script:event-name="on-performaction" script:macro-name="vnd.sun.star.script:XDocReport.Repository.SaveRepository?language=Basic&amp;location=application" script:language="Script"/>
+  </dlg:button>
+  <dlg:button dlg:id="CancelCommandButton" dlg:tab-index="11" dlg:left="166" dlg:top="117" dlg:width="35" dlg:height="13" dlg:value="Cancel">
+   <script:event script:event-name="on-performaction" script:macro-name="vnd.sun.star.script:XDocReport.Repository.CloseRepositoryDialog?language=Basic&amp;location=application" script:language="Script"/>
+  </dlg:button>
+  <dlg:textfield dlg:id="BaseAddressTextField" dlg:tab-index="0" dlg:left="19" dlg:top="8" dlg:width="181" dlg:height="12"/>
+  <dlg:radiogroup>
+   <dlg:radio dlg:id="SOAPOptionButton" dlg:tab-index="2" dlg:left="23" dlg:top="25" dlg:width="49" dlg:height="9" dlg:value="Web Service?"/>
+  </dlg:radiogroup>
+  <dlg:checkbox dlg:id="AllowedChunkingCheckBox" dlg:tab-index="12" dlg:left="37" dlg:top="85" dlg:width="43" dlg:height="12" dlg:value="Allowed?" dlg:checked="false"/>
+  <dlg:text dlg:id="ChunkingLabel" dlg:tab-index="13" dlg:left="4" dlg:top="85" dlg:width="31" dlg:height="12" dlg:value="Chunking : "/>
+  <dlg:text dlg:id="TimeoutLabel" dlg:tab-index="14" dlg:left="4" dlg:top="98" dlg:width="29" dlg:height="14" dlg:value="Timeout:"/>
+  <dlg:text dlg:id="MSLabel" dlg:tab-index="16" dlg:left="178" dlg:top="98" dlg:width="22" dlg:height="14" dlg:value="(ms)"/>
+  <dlg:textfield dlg:id="TimeoutTextField" dlg:tab-index="15" dlg:left="35" dlg:top="98" dlg:width="142" dlg:height="12"/>
+ </dlg:bulletinboard>
+</dlg:window>

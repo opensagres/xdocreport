@@ -77,22 +77,8 @@
 					<prop oor:name="Target" oor:type="xs:string">
 						<value>_self</value>
 					</prop>
-				</node>
+				</node>							
 				<node oor:name="m6" oor:op="replace">
-					<prop oor:name="Context" oor:type="xs:string">
-						<value>com.sun.star.text.TextDocument</value>
-					</prop>
-					<prop oor:name="URL" oor:type="xs:string">
-						<value>vnd.sun.star.script:XDocReport.Repositories.OpenRepositoriesDialog?language=Basic&amp;location=application</value>
-					</prop>
-					<prop oor:name="Title" oor:type="xs:string">
-						<value>REST/SOAP Repositories</value>
-					</prop>
-					<prop oor:name="Target" oor:type="xs:string">
-						<value>_self</value>
-					</prop>
-				</node>									
-				<node oor:name="m7" oor:op="replace">
 					<prop oor:name="Context" oor:type="xs:string">
 						<value>com.sun.star.text.TextDocument</value>
 					</prop>
@@ -100,7 +86,7 @@
 						<value>private:separator</value>
 					</prop>
 				</node>								
-				<node oor:name="m8" oor:op="replace">
+				<node oor:name="m7" oor:op="replace">
 					<prop oor:name="Context" oor:type="xs:string">
 						<value>com.sun.star.text.TextDocument</value>
 					</prop>

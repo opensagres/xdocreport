@@ -6,8 +6,9 @@
  <library:element library:name="Preview"/>
  <library:element library:name="Settings"/>
  <library:element library:name="CreateFieldsList"/>
- <library:element library:name="Repositories"/>
+ <library:element library:name="WorkInProcess"/>
  <library:element library:name="CreateRepository"/>
  <library:element library:name="Error"/>
- <library:element library:name="WorkInProcess"/>
+ <library:element library:name="Resources"/>
+ <library:element library:name="ManageRepositories"/>
 </library:library>

@@ -300,7 +300,7 @@ Function XDocReport_Replace(ByVal chaine As String, src As String, dest As Strin
 	XDocReport_Replace = limite + chaine
 End Function
 
-Public Sub AddRepository(ByVal baseAddress as String,ByVal user as String,ByVal password as String,ByVal serviceType as String,ByVal repositoryName as String) 
+Public Sub AddRepository(ByVal baseAddress as String,ByVal user as String,ByVal password as String,ByVal serviceType as String, ByVal chunk as String, ByVal timeout as String, ByVal repositoryName as String) 
 	Dim value as String
 	value = ReadParameter(REPOSITORIES_PARAM)	
 	If (value &lt;&gt; &quot;&quot;) Then 
@@ -309,7 +309,9 @@ Public Sub AddRepository(ByVal baseAddress as String,ByVal user as String,ByVal 
 	value = value + baseAddress  +  &quot;____&quot; 
 	value = value + user  +  &quot;____&quot; 
 	value = value + password  +  &quot;____&quot; 
-	value = value + serviceType
+	value = value + serviceType  +  &quot;____&quot;
+	value = value + chunk  +  &quot;____&quot;		
+	value = value + timeout
 	InsertParameter(REPOSITORIES_PARAM, value)	
 	
 	LoadRepositories(value)					

@@ -22,6 +22,8 @@ Public Sub SaveRepository
 	Dim user as String
 	Dim password as String
 	Dim serviceType as String
+	Dim chunk as String
+	Dim timeout as String	
 	
 	baseAddress = gCreateRepositoryDialog.getControl(&quot;BaseAddressTextField&quot;).Text
 	user = gCreateRepositoryDialog.getControl(&quot;UserTextField&quot;).Text
@@ -30,11 +32,13 @@ Public Sub SaveRepository
 	If (gCreateRepositoryDialog.getControl(&quot;SOAPOptionButton&quot;).State = True) Then 
 		serviceType = &quot;SOAP&quot;
 	End If
-	
+	chunk = &quot;true&quot;
+	timeout = &quot;&quot;
+			
 	Dim save as Boolean
 	save = False
 	Dim repositoryName as String
-	repositoryName = ExecuteRepositoryServiceClient_Name(baseAddress, user, password, serviceType)
+	repositoryName = ExecuteRepositoryServiceClient_Name(baseAddress, user, password, serviceType, chunk, timeout)
 	If (repositoryName = &quot;&quot;) Then 
 		save = MsgBox(&quot;This repository seems not be a well XDocReport Repository. Do you wish save it yet?&quot;, 4, &quot;Save Repository?&quot;) = 6
 	Else
@@ -42,10 +46,10 @@ Public Sub SaveRepository
 	End If
 	
 	If (save) Then
-		Settings.AddRepository(baseAddress, user, password, serviceType, repositoryName)
-		Repositories.LoadRepositoryListBox()
+		Settings.AddRepository(baseAddress, user, password, serviceType, chunk, timeout, repositoryName)
+		Resources.LoadRepositoryListBox()
 		gCreateRepositoryDialog.EndExecute()
-		Repositories.SelectLastRepository()
+		Resources.SelectLastRepository()
 	End If
 End Sub
 </script:module>

@@ -561,9 +561,8 @@ public class ElementVisitorForIText
         currentContainer.addElement( element );
     }
 
-    private StylableMasterPage applyStyles( OdfStylableElement ele, IStylableElement element )
+    private void applyStyles( OdfStylableElement ele, IStylableElement element )
     {
-        StylableMasterPage newMasterPage = null;
         Style style = getStyle( ele );
         if ( style != null )
         {
@@ -574,26 +573,20 @@ public class ElementVisitorForIText
                 {
                     // explicit master page activation
                     StylableMasterPage masterPage = document.getMasterPage( masterPageName );
-                    if ( masterPage != null && !masterPage.equals( currentMasterPage ) )
+                    if ( masterPage != null && masterPage != document.getActiveMasterPage() )
                     {
-                        newMasterPage = masterPage;
+                        document.setActiveMasterPage( masterPage );
                     }
                 }
-                else if ( currentMasterPage == null )
+                else if ( document.getActiveMasterPage() == null )
                 {
                     // no master page was activated yet
                     // activate default
-                    newMasterPage = document.getDefaultMasterPage();
+                    document.setActiveMasterPage( document.getDefaultMasterPage() );
                 }
-            }
-            if ( newMasterPage != null )
-            {
-                currentMasterPage = newMasterPage;
-                document.setActiveMasterPage( newMasterPage );
             }
             element.applyStyles( style );
         }
-        return newMasterPage;
     }
 
     private Style getStyle( OdfStylableElement ele )

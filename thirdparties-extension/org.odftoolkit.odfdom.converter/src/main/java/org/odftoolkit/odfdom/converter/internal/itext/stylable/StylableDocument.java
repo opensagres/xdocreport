@@ -58,7 +58,7 @@ public class StylableDocument
 
     private StylableChapter currentChapter;
 
-    private boolean masterPageActivated;
+    private StylableMasterPage activeMasterPage;
 
     private boolean implicitPageBreakAfterMasterPageChange;
 
@@ -152,11 +152,16 @@ public class StylableDocument
             this.applyStyles( style );
         }
         super.setActiveMasterPage( masterPage );
-        if ( masterPageActivated )
+        if ( activeMasterPage != null )
         {
             implicitPageBreakAfterMasterPageChange = true;
         }
-        masterPageActivated = true;
+        activeMasterPage = (StylableMasterPage) masterPage;
+    }
+
+    public StylableMasterPage getActiveMasterPage()
+    {
+        return activeMasterPage;
     }
 
     public Style getStyleMasterPage( StylableMasterPage masterPage )

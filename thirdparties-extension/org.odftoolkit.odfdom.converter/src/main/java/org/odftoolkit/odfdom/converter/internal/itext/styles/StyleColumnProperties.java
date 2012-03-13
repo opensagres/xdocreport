@@ -29,8 +29,11 @@ package org.odftoolkit.odfdom.converter.internal.itext.styles;
  */
 public class StyleColumnProperties
 {
-
     private Integer relWidth;
+
+    private Float startIndent;
+
+    private Float endIndent;
 
     public StyleColumnProperties()
     {
@@ -44,5 +47,25 @@ public class StyleColumnProperties
     public void setRelWidth( Integer relWidth )
     {
         this.relWidth = relWidth;
+    }
+
+    public Float getStartIndent()
+    {
+        return startIndent;
+    }
+
+    public void setStartIndent( Float startIndent )
+    {
+        this.startIndent = startIndent;
+    }
+
+    public Float getEndIndent()
+    {
+        return endIndent;
+    }
+
+    public void setEndIndent( Float endIndent )
+    {
+        this.endIndent = endIndent;
     }
 }

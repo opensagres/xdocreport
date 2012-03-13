@@ -31,6 +31,8 @@ public class StyleColumnsProperties
 {
     private Integer columnCount;
 
+    private Float columnGap;
+
     public StyleColumnsProperties()
     {
     }
@@ -43,5 +45,15 @@ public class StyleColumnsProperties
     public void setColumnCount( Integer columnCount )
     {
         this.columnCount = columnCount;
+    }
+
+    public Float getColumnGap()
+    {
+        return columnGap;
+    }
+
+    public void setColumnGap( Float columnGap )
+    {
+        this.columnGap = columnGap;
     }
 }

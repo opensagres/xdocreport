@@ -1018,6 +1018,13 @@ public class StyleEngineForIText
             columnsProperties.setColumnCount( columnCount );
         }
 
+        // column-gap
+        String columnGap = ele.getFoColumnGapAttribute();
+        if ( StringUtils.isNotEmpty( columnGap ) )
+        {
+            columnsProperties.setColumnGap( ODFUtils.getDimensionAsPoint( columnGap ) );
+        }
+
         super.visit( ele );
     }
 
@@ -1038,6 +1045,20 @@ public class StyleEngineForIText
         if ( StringUtils.isNotEmpty( relWidth ) )
         {
             columnProperties.setRelWidth( ODFUtils.getRelativeSize( relWidth ) );
+        }
+
+        // start-indent
+        String startIndent = ele.getFoStartIndentAttribute();
+        if ( StringUtils.isNotEmpty( startIndent ) )
+        {
+            columnProperties.setStartIndent( ODFUtils.getDimensionAsPoint( startIndent ) );
+        }
+
+        // end-indent
+        String endIndent = ele.getFoEndIndentAttribute();
+        if ( StringUtils.isNotEmpty( endIndent ) )
+        {
+            columnProperties.setEndIndent( ODFUtils.getDimensionAsPoint( endIndent ) );
         }
 
         styleColumnPropertiesList.add( columnProperties );

@@ -289,16 +289,24 @@ public class DocxBufferedDocument
         }
         else
         {
-            // ex: ]]#@before-row#foreach($d in $developers)#[[
-            if ( fieldName.startsWith( handler.getEndNoParse() ) )
+            String endNoParse = handler.getEndNoParse();
+            if ( endNoParse != null )
             {
-                // ex: @before-row#foreach($d in $developers)#[[
-                fieldName = fieldName.substring( handler.getEndNoParse().length(), fieldName.length() );
+                // ex: ]]#@before-row#foreach($d in $developers)#[[
+                if ( fieldName.startsWith( endNoParse ) )
+                {
+                    // ex: @before-row#foreach($d in $developers)#[[
+                    fieldName = fieldName.substring( endNoParse.length(), fieldName.length() );
+                }
             }
-            if ( fieldName.endsWith( handler.getStartNoParse() ) )
+            String startNoParse = handler.getStartNoParse();
+            if ( startNoParse != null )
             {
-                // ex: @before-row#foreach($d in $developers)
-                fieldName = fieldName.substring( 0, fieldName.length() - handler.getStartNoParse().length() );
+                if ( fieldName.endsWith( startNoParse ) )
+                {
+                    // ex: @before-row#foreach($d in $developers)
+                    fieldName = fieldName.substring( 0, fieldName.length() - startNoParse.length() );
+                }
             }
 
             boolean hasScript = handler.processScriptBefore( fieldName );

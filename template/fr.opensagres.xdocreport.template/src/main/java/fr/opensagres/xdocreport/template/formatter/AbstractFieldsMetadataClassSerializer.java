@@ -137,7 +137,7 @@ public abstract class AbstractFieldsMetadataClassSerializer
                     }
                     else
                     {
-                        process( fieldsMetadata, fieldName, clazz, listType );
+                        process( fieldsMetadata, fieldName, returnTypeClass, listType );
                     }
                 }
             }
@@ -146,7 +146,7 @@ public abstract class AbstractFieldsMetadataClassSerializer
 
     /**
      * Return true if package of the given class start with list of package to exclude and false otherwise.
-     * 
+     *
      * @param clazz
      * @return
      */

@@ -165,6 +165,12 @@ public class HyperlinkBufferedRegion
                                                                     + target + "\"", "\"" + targetMode + "\"" );
                             idAttribute.setValue( id );
                             hyperlinksMap.remove( hyperlink.getId() );
+                            
+                            if ( StringUtils.isNotEmpty( handler.getStartNoParse() ) )
+                            {
+                                this.setContentBeforeStartTagElement( handler.getEndNoParse() );
+                                this.setContentAfterEndTagElement( handler.getStartNoParse() );
+                            }
                         }
                     }
                 }

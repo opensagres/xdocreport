@@ -61,8 +61,6 @@ public class DocxDocumentHandler
 
     private boolean paragraphWasInserted;
 
-    private Stack<Integer> numbersStack;
-
     private int currentNumId;
 
     public DocxDocumentHandler( BufferedElement parent, IContext context, String entryName )
@@ -73,7 +71,6 @@ public class DocxDocumentHandler
         this.numberingRegistry = getNumberingRegistry( context );
         this.insideHeader = false;
         this.paragraphWasInserted = false;
-        this.numbersStack = new Stack<Integer>();
     }
 
     public void startDocument()

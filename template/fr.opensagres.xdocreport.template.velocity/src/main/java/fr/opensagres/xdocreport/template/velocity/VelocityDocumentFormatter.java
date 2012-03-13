@@ -89,6 +89,10 @@ public class VelocityDocumentFormatter
 
     private static final String VELOCITY_COUNT = "$velocityCount";
 
+    private static final String START_NOPARSE = "#[[";
+
+    private static final String END_NOPARSE = "]]#";
+
     public String formatAsFieldItemList( String content, String fieldName, boolean forceAsField )
     {
         int type = getModelFieldType( content, fieldName );
@@ -532,5 +536,15 @@ public class VelocityDocumentFormatter
         newContent.append( formatAsSimpleField( true, value) );
         newContent.append( END_SET_DIRECTIVE );
         return newContent.toString();
+    }
+    
+    public String getStartNoParse()
+    {
+        return START_NOPARSE;
+    }
+
+    public String getEndNoParse()
+    {
+        return END_NOPARSE;
     }
 }

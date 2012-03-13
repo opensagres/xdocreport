@@ -31,6 +31,7 @@ import fr.opensagres.xdocreport.core.utils.StringUtils;
 import fr.opensagres.xdocreport.document.preprocessor.sax.BufferedElement;
 import fr.opensagres.xdocreport.document.preprocessor.sax.TransformedBufferedDocumentContentHandler;
 import fr.opensagres.xdocreport.document.textstyling.ITransformResult;
+import fr.opensagres.xdocreport.template.formatter.Directive;
 import fr.opensagres.xdocreport.template.formatter.FieldMetadata;
 import fr.opensagres.xdocreport.template.formatter.IDocumentFormatter;
 
@@ -181,12 +182,15 @@ public abstract class MergefieldBufferedRegion
                         String textEnd =
                             formatter.formatAsTextStylingField( variableIndex, ITransformResult.TEXT_END_PROPERTY );
 
-                        parent.setContentBeforeStartTagElement( setVariableDirective + " " + textBefore );
-                        parent.setContentAfterEndTagElement( textEnd );
-                        return textBody;
+                        parent.setContentBeforeStartTagElement( Directive.formatDirective( setVariableDirective + " "
+                            + textBefore, handler.getStartNoParse(), handler.getEndNoParse() ) );
+                        parent.setContentAfterEndTagElement( Directive.formatDirective( textEnd,
+                                                                                        handler.getStartNoParse(),
+                                                                                        handler.getEndNoParse() ) );
+                        return Directive.formatDirective( textBody, handler.getStartNoParse(), handler.getEndNoParse() );
 
                     }
-                    return fieldName;
+                    return Directive.formatDirective( fieldName, handler.getStartNoParse(), handler.getEndNoParse() );
                 }
             }
         }

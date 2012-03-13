@@ -140,7 +140,7 @@ public class DocXBufferedDocumentContentHandler
             BookmarkBufferedRegion currentBookmark = bufferedDocument.getCurrentBookmark();
             // <a:blip r:embed="rId5" />
             if ( currentBookmark != null && formatter != null )
-            {
+            {                
                 // modify "embed" attribute with image script (Velocity,
                 // Freemarker)
                 // <a:blip

@@ -76,4 +76,46 @@ public abstract class Directive
         s.append( endDirective );
         return s.toString();
     }
+
+    public static String formatDirective( String directive, String startNoParse, String endNoParse )
+    {
+        if ( startNoParse != null )
+        {
+            return endNoParse + directive + startNoParse;
+        }
+        return directive;
+    }
+
+    public static String getStartNoParse( IDocumentFormatter formatter, FieldsMetadata fieldsMetadata )
+    {
+        if ( isEvaluateEngineOnlyForFields( formatter, fieldsMetadata ) )
+        {
+            return formatter.getStartNoParse();
+        }
+        return null;
+
+    }
+
+    public static String getEndNoParse( IDocumentFormatter formatter, FieldsMetadata fieldsMetadata )
+    {
+        if ( isEvaluateEngineOnlyForFields( formatter, fieldsMetadata ) )
+        {
+            return formatter.getEndNoParse();
+        }
+        return null;
+    }
+
+    public static boolean isEvaluateEngineOnlyForFields( IDocumentFormatter formatter, FieldsMetadata fieldsMetadata )
+    {
+        if ( formatter == null )
+        {
+            return false;
+        }
+        if ( fieldsMetadata == null || !fieldsMetadata.isEvaluateEngineOnlyForFields() )
+        {
+            return false;
+        }
+        return true;
+    }
+
 }

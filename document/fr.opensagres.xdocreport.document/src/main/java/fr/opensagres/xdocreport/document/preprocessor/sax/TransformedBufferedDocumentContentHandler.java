@@ -33,6 +33,7 @@ import org.xml.sax.SAXException;
 
 import fr.opensagres.xdocreport.core.utils.StringUtils;
 import fr.opensagres.xdocreport.document.template.DocumentContextHelper;
+import fr.opensagres.xdocreport.template.formatter.Directive;
 import fr.opensagres.xdocreport.template.formatter.DirectivesStack;
 import fr.opensagres.xdocreport.template.formatter.FieldMetadata;
 import fr.opensagres.xdocreport.template.formatter.FieldsMetadata;
@@ -67,6 +68,10 @@ public abstract class TransformedBufferedDocumentContentHandler<Document extends
 
     private boolean hasStartDirective;
 
+    private String startNoParse;
+
+    private String endNoParse;
+
     protected TransformedBufferedDocumentContentHandler( String entryName, FieldsMetadata fieldsMetadata,
                                                          IDocumentFormatter formater, Map<String, Object> sharedContext )
     {
@@ -77,6 +82,8 @@ public abstract class TransformedBufferedDocumentContentHandler<Document extends
         this.variableIndex = 0;
         this.entryName = entryName;
         this.hasStartDirective = false;
+        this.startNoParse = Directive.getStartNoParse( formater, fieldsMetadata );
+        this.endNoParse = Directive.getEndNoParse( formater, fieldsMetadata );
     }
 
     @Override
@@ -85,21 +92,45 @@ public abstract class TransformedBufferedDocumentContentHandler<Document extends
     {
         if ( getElementIndex() == 0 )
         {
+            String endNoParse = getEndNoParse();
             // end directive (ex: for FM [/#escape])
             String endDirective = formatter != null ? formatter.getEndDocumentDirective() : null;
+
+            StringBuilder directive = new StringBuilder();
+            if ( endNoParse != null )
+            {
+                directive.append( endNoParse );
+            }
             if ( StringUtils.isNotEmpty( endDirective ) )
             {
-                this.getCurrentElement().getEndTagElement().setBefore( endDirective );
+                directive.append( endDirective );
+            }
+            if ( StringUtils.isNotEmpty( directive.toString() ) )
+            {
+                this.getCurrentElement().getEndTagElement().setBefore( directive.toString() );
             }
         }
         else if ( getElementIndex() == 1 && !hasStartDirective )
         {
             hasStartDirective = true;
+
             // start directive (ex:for FM [#escape any as any?xml?replace("","<text:line-break />")])
             String startDirective = formatter != null ? formatter.getStartDocumentDirective() : null;
+            String startNoParse = getStartNoParse();
+
+            StringBuilder directive = new StringBuilder();
             if ( StringUtils.isNotEmpty( startDirective ) )
             {
-                this.getCurrentElement().getStartTagElement().setBefore( startDirective );
+                directive.append( startDirective );
+            }
+            if ( startNoParse != null )
+            {
+                directive.append( startNoParse );
+            }
+
+            if ( StringUtils.isNotEmpty( directive.toString() ) )
+            {
+                this.getCurrentElement().getStartTagElement().setBefore( directive.toString() );
             }
         }
         return super.doStartElement( uri, localName, name, attributes );
@@ -151,7 +182,8 @@ public abstract class TransformedBufferedDocumentContentHandler<Document extends
                         String itemNameList = formatter.extractItemNameList( content, fieldName, forceAsField );
                         if ( StringUtils.isNotEmpty( itemNameList ) )
                         {
-                            currentRow.initializeLoopTemplateDirective( itemNameList, formatter );
+                            currentRow.initializeLoopTemplateDirective( itemNameList, formatter, getStartNoParse(),
+                                                                        getEndNoParse() );
                             break;
                         }
                     }
@@ -332,6 +364,7 @@ public abstract class TransformedBufferedDocumentContentHandler<Document extends
                 return false;
             }
             String before = fieldName.substring( index, fieldName.length() );
+            before = formatDirective( before );
             elementInfo.setContentBeforeStartTagElement( before );
             return true;
         }
@@ -410,6 +443,7 @@ public abstract class TransformedBufferedDocumentContentHandler<Document extends
                 return false;
             }
             String after = fieldName.substring( index, fieldName.length() );
+            after = formatDirective( after );
             elementInfo.setContentAfterEndTagElement( after );
             return true;
         }
@@ -488,6 +522,21 @@ public abstract class TransformedBufferedDocumentContentHandler<Document extends
     public String getEntryName()
     {
         return entryName;
+    }
+
+    public String formatDirective( String directive )
+    {
+        return Directive.formatDirective( directive, getStartNoParse(), getEndNoParse() );
+    }
+
+    public String getStartNoParse()
+    {
+        return startNoParse;
+    }
+
+    public String getEndNoParse()
+    {
+        return endNoParse;
     }
 
     protected abstract Document createDocument();

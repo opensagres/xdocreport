@@ -31,6 +31,7 @@ import static fr.opensagres.xdocreport.document.docx.DocxConstants.BLIP_ELT;
 import static fr.opensagres.xdocreport.document.docx.DocxConstants.BOOKMARK_END_ELT;
 import static fr.opensagres.xdocreport.document.docx.DocxConstants.BOOKMARK_START_ELT;
 import static fr.opensagres.xdocreport.document.docx.DocxConstants.CONTENT_TYPES_XML;
+import static fr.opensagres.xdocreport.document.docx.DocxConstants.DRAWING_ELT;
 import static fr.opensagres.xdocreport.document.docx.DocxConstants.EXTENT_ELT;
 import static fr.opensagres.xdocreport.document.docx.DocxConstants.EXT_ELT;
 import static fr.opensagres.xdocreport.document.docx.DocxConstants.FLDCHAR_ELT;
@@ -262,5 +263,10 @@ public class DocxUtils
     public static boolean isNumbering( String uri, String localName, String name )
     {
         return W_NS.equals( uri ) && NUMBERING_ELT.equals( localName );
+    }
+
+    public static boolean isDrawing( String uri, String localName, String name )
+    {
+        return W_NS.equals( uri ) && DRAWING_ELT.equals( localName );
     }
 }

@@ -97,6 +97,10 @@ public class FreemarkerDocumentFormatter
 
     private static final String END_NOESCAPE = "[/#noescape]";
 
+    private static final String START_NOPARSE = "[#noparse]";
+
+    private static final String END_NOPARSE = "[/#noparse]";
+
     public String formatAsFieldItemList( String content, String fieldName, boolean forceAsField )
     {
         if ( forceAsField )
@@ -571,5 +575,15 @@ public class FreemarkerDocumentFormatter
         newContent.append( value );
         newContent.append( END_ASSIGN_DIRECTIVE );
         return newContent.toString();
+    }
+
+    public String getStartNoParse()
+    {
+        return START_NOPARSE;
+    }
+
+    public String getEndNoParse()
+    {
+        return END_NOPARSE;
     }
 }

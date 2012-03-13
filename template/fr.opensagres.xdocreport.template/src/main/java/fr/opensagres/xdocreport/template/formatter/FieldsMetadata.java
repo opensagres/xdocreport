@@ -79,6 +79,8 @@ public class FieldsMetadata
 
     private String templateEngineKind;
 
+    private boolean evaluateEngineOnlyForFields;
+
     public FieldsMetadata()
     {
         this( null );
@@ -95,6 +97,7 @@ public class FieldsMetadata
         this.beforeTableCellToken = DEFAULT_BEFORE_TABLE_CELL_TOKEN;
         this.afterTableCellToken = DEFAULT_AFTER_TABLE_CELL_TOKEN;
         setTemplateEngineKind( templateEngineKind );
+        this.evaluateEngineOnlyForFields = false;
     }
 
     /**
@@ -334,8 +337,8 @@ public class FieldsMetadata
      * 
      * <pre>
      * <fields>
-     * 	<field name="project.Name" imageName="" list="false" />
-     * 	<field name="developers.Name" imageName="" list="true" />
+     *  <field name="project.Name" imageName="" list="false" />
+     *  <field name="developers.Name" imageName="" list="true" />
      * <field name="project.Logo" imageName="Logo" list="false" />
      * </fields>
      * </pre>
@@ -354,8 +357,8 @@ public class FieldsMetadata
      * 
      * <pre>
      * <fields>
-     * 	<field name="project.Name" imageName="" list="false" />
-     * 	<field name="developers.Name" imageName="" list="true" />
+     *  <field name="project.Name" imageName="" list="false" />
+     *  <field name="developers.Name" imageName="" list="true" />
      * <field name="project.Logo" imageName="Logo" list="false" />
      * </fields>
      * </pre>
@@ -376,8 +379,8 @@ public class FieldsMetadata
      * 
      * <pre>
      * <fields>
-     * 	<field name="project.Name" imageName="" list="false" />
-     * 	<field name="developers.Name" imageName="" list="true" />
+     *  <field name="project.Name" imageName="" list="false" />
+     *  <field name="developers.Name" imageName="" list="true" />
      * <field name="project.Logo" imageName="Logo" list="false" />
      * </fields>
      * </pre>
@@ -396,8 +399,8 @@ public class FieldsMetadata
      * 
      * <pre>
      * <fields>
-     * 	<field name="project.Name" imageName="" list="false" />
-     * 	<field name="developers.Name" imageName="" list="true" />
+     *  <field name="project.Name" imageName="" list="false" />
+     *  <field name="developers.Name" imageName="" list="true" />
      * <field name="project.Logo" imageName="Logo" list="false" />
      * </fields>
      * </pre>
@@ -505,6 +508,28 @@ public class FieldsMetadata
         {
             serializer = FieldsMetadataClassSerializerRegistry.getRegistry().getSerializer( templateEngineKind );
         }
+    }
+
+    /**
+     * Returns true if evaluation of the template engine should be done only for directive inserted in a field
+     * (MergeField for MS Word, Text-Inpout for ODT, etc) and false otherwise.
+     * 
+     * @return
+     */
+    public boolean isEvaluateEngineOnlyForFields()
+    {
+        return evaluateEngineOnlyForFields;
+    }
+
+    /**
+     * Set true if evaluation of the template engine should be done only for directive inserted in a field (MergeField
+     * for MS Word, Text-Inpout for ODT, etc) and false otherwises.
+     * 
+     * @param evaluateEngineOnlyForFields
+     */
+    public void setEvaluateEngineOnlyForFields( boolean evaluateEngineOnlyForFields )
+    {
+        this.evaluateEngineOnlyForFields = evaluateEngineOnlyForFields;
     }
 
 }

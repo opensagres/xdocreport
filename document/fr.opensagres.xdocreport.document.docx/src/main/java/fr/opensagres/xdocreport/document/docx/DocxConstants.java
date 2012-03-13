@@ -110,6 +110,8 @@ public class DocxConstants
 
     public static final String CY_ATTR = "cy";
 
+    public static final String DRAWING_ELT = "drawing";
+    
     // hyperlink
     public static final String HYPERLINK_ELT = "hyperlink";
 

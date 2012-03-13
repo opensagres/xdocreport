@@ -77,4 +77,8 @@ public interface IDocumentFormatter
     String getElseDirective();
 
     String getSetDirective( String name, String value );
+    
+    String getStartNoParse();
+    
+    String getEndNoParse();
 }

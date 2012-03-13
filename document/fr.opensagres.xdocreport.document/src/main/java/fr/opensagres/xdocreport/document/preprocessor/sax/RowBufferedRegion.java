@@ -27,6 +27,7 @@ package fr.opensagres.xdocreport.document.preprocessor.sax;
 import org.xml.sax.Attributes;
 
 import fr.opensagres.xdocreport.core.utils.StringUtils;
+import fr.opensagres.xdocreport.template.formatter.Directive;
 import fr.opensagres.xdocreport.template.formatter.IDocumentFormatter;
 
 /**
@@ -64,11 +65,14 @@ public class RowBufferedRegion
         return StringUtils.isNotEmpty( getStartLoopDirective() ) && StringUtils.isNotEmpty( getEndLoopDirective() );
     }
 
-    public void initializeLoopTemplateDirective( String itemNameList, IDocumentFormatter formatter )
+    public void initializeLoopTemplateDirective( String itemNameList, IDocumentFormatter formatter,
+                                                 String startNoParse, String endNoParse )
     {
         this.itemNameList = itemNameList;
-        setStartLoopDirective( formatter.getStartLoopDirective( itemNameList ) );
-        setEndLoopDirective( formatter.getEndLoopDirective( itemNameList ) );
+        setStartLoopDirective( Directive.formatDirective( formatter.getStartLoopDirective( itemNameList ),
+                                                          startNoParse, endNoParse ) );
+        setEndLoopDirective( Directive.formatDirective( formatter.getEndLoopDirective( itemNameList ), startNoParse,
+                                                        endNoParse ) );
     }
 
     public String getItemNameList()

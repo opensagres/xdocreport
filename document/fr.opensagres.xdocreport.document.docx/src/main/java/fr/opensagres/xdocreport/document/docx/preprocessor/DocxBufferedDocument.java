@@ -32,6 +32,7 @@ import static fr.opensagres.xdocreport.document.docx.DocxConstants.R_NS;
 import static fr.opensagres.xdocreport.document.docx.DocxConstants.W_NS;
 import static fr.opensagres.xdocreport.document.docx.DocxUtils.isBookmarkEnd;
 import static fr.opensagres.xdocreport.document.docx.DocxUtils.isBookmarkStart;
+import static fr.opensagres.xdocreport.document.docx.DocxUtils.isDrawing;
 import static fr.opensagres.xdocreport.document.docx.DocxUtils.isFldChar;
 import static fr.opensagres.xdocreport.document.docx.DocxUtils.isFldSimple;
 import static fr.opensagres.xdocreport.document.docx.DocxUtils.isHyperlink;
@@ -42,6 +43,7 @@ import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
 import org.xml.sax.helpers.AttributesImpl;
 
+import fr.opensagres.xdocreport.core.utils.StringUtils;
 import fr.opensagres.xdocreport.core.utils.XMLUtils;
 import fr.opensagres.xdocreport.document.docx.DocxUtils;
 import fr.opensagres.xdocreport.document.preprocessor.sax.BufferedElement;
@@ -163,6 +165,21 @@ public class DocxBufferedDocument
             // return result;
         }
 
+        if ( isDrawing( uri, localName, name ) )
+        {
+            if ( currentBookmark != null )
+            {
+
+            }
+            BufferedElement element = super.createElement( parent, uri, localName, name, attributes );
+            if ( StringUtils.isNotEmpty( handler.getStartNoParse() ) )
+            {
+                element.setContentBeforeStartTagElement( handler.getEndNoParse() );
+                element.setContentAfterEndTagElement( handler.getStartNoParse() );
+            }
+            return element;
+        }
+
         if ( isHyperlink( uri, localName, name ) )
         {
             // <w:hyperlink r:id="rId5" w:history="1">
@@ -272,6 +289,18 @@ public class DocxBufferedDocument
         }
         else
         {
+            // ex: ]]#@before-row#foreach($d in $developers)#[[
+            if ( fieldName.startsWith( handler.getEndNoParse() ) )
+            {
+                // ex: @before-row#foreach($d in $developers)#[[
+                fieldName = fieldName.substring( handler.getEndNoParse().length(), fieldName.length() );
+            }
+            if ( fieldName.endsWith( handler.getStartNoParse() ) )
+            {
+                // ex: @before-row#foreach($d in $developers)
+                fieldName = fieldName.substring( 0, fieldName.length() - handler.getStartNoParse().length() );
+            }
+
             boolean hasScript = handler.processScriptBefore( fieldName );
             if ( hasScript )
             {

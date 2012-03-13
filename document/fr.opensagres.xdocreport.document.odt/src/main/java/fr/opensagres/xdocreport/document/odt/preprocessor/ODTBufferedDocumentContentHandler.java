@@ -95,7 +95,7 @@ public class ODTBufferedDocumentContentHandler
             this.textInputParsing = true;
             return false;
         }
-        if ( isTextA( uri, localName, name ) )
+        else if ( isTextA( uri, localName, name ) )
         {
             // <text:a xlink:type="simple"
             // xlink:href="mailto:$developers.Mail">$developers.Mail</text:a>
@@ -107,6 +107,12 @@ public class ODTBufferedDocumentContentHandler
                     String newHref = processRowIfNeeded( StringUtils.decode( href ) );
                     if ( newHref != null )
                     {
+
+                        if ( StringUtils.isNotEmpty( getStartNoParse() ) )
+                        {
+                            getCurrentElement().setContentBeforeStartTagElement( getEndNoParse() );
+                            getCurrentElement().setContentAfterEndTagElement( getStartNoParse() );
+                        }
                         AttributesImpl attributesImpl = toAttributesImpl( attributes );
                         int index = attributesImpl.getIndex( XLINK_NS, HREF_ATTR );
                         attributesImpl.setValue( index, newHref );
@@ -132,6 +138,13 @@ public class ODTBufferedDocumentContentHandler
                     dynamicImageName = processRowIfNeeded( imageFieldName, true );
                     if ( dynamicImageName != null && formatter != null )
                     {
+
+                        if ( StringUtils.isNotEmpty( getStartNoParse() ) )
+                        {
+                            getCurrentElement().setContentBeforeStartTagElement( getEndNoParse() );
+                            getCurrentElement().setContentAfterEndTagElement( getStartNoParse() );
+                        }
+
                         // Modify svg:width="21pt" svg:height="22.51pt" with
                         // Freemarker/Velocity directive
                         //
@@ -249,37 +262,46 @@ public class ODTBufferedDocumentContentHandler
             {
                 return;
             }
-            FieldMetadata fieldAsTextStyling = getFieldAsTextStyling( fieldName );
-            if ( fieldAsTextStyling != null && getFormatter() != null )
+            if ( getFormatter() != null )
             {
-                // register parent buffered element
-                long variableIndex = getVariableIndex();
-                BufferedElement textPElement = getCurrentElement().findParent( TEXT_P );
-                if ( textPElement == null )
+                FieldMetadata fieldAsTextStyling = getFieldAsTextStyling( fieldName );
+                if ( fieldAsTextStyling != null )
                 {
-                    textPElement = getCurrentElement().getParent();
+                    // register parent buffered element
+                    long variableIndex = getVariableIndex();
+                    BufferedElement textPElement = getCurrentElement().findParent( TEXT_P );
+                    if ( textPElement == null )
+                    {
+                        textPElement = getCurrentElement().getParent();
+                    }
+                    String elementId = registerBufferedElement( variableIndex, textPElement );
+
+                    // [#assign
+                    // 1327511861250_id=___TextStylingRegistry.transform(comments_odt,"NoEscape","ODT","1327511861250_id",___context)]
+                    String setVariableDirective =
+                        getFormatter().formatAsCallTextStyling( variableIndex, fieldName, DocumentKind.ODT.name(),
+                                                                fieldAsTextStyling.getSyntaxKind(),
+                                                                fieldAsTextStyling.isSyntaxWithDirective(), elementId,
+                                                                super.getEntryName() );
+
+                    String textBefore =
+                        getFormatter().formatAsTextStylingField( variableIndex, ITransformResult.TEXT_BEFORE_PROPERTY );
+                    String textBody =
+                        getFormatter().formatAsTextStylingField( variableIndex, ITransformResult.TEXT_BODY_PROPERTY );
+                    String textEnd =
+                        getFormatter().formatAsTextStylingField( variableIndex, ITransformResult.TEXT_END_PROPERTY );
+
+                    textPElement.setContentBeforeStartTagElement( formatDirective( setVariableDirective + " "
+                        + textBefore ) );
+                    textPElement.setContentAfterEndTagElement( formatDirective( textEnd ) );
+                    super.flushCharacters( formatDirective( textBody ) );
+                    return;
                 }
-                String elementId = registerBufferedElement(variableIndex, textPElement );
-
-                // [#assign
-                // 1327511861250_id=___TextStylingRegistry.transform(comments_odt,"NoEscape","ODT","1327511861250_id",___context)]                
-                String setVariableDirective =
-                    getFormatter().formatAsCallTextStyling( variableIndex, fieldName, DocumentKind.ODT.name(),
-                                                            fieldAsTextStyling.getSyntaxKind(),
-                                                            fieldAsTextStyling.isSyntaxWithDirective(), elementId,
-                                                            super.getEntryName() );
-
-                String textBefore =
-                    getFormatter().formatAsTextStylingField( variableIndex, ITransformResult.TEXT_BEFORE_PROPERTY );
-                String textBody =
-                    getFormatter().formatAsTextStylingField( variableIndex, ITransformResult.TEXT_BODY_PROPERTY );
-                String textEnd =
-                    getFormatter().formatAsTextStylingField( variableIndex, ITransformResult.TEXT_END_PROPERTY );
-
-                textPElement.setContentBeforeStartTagElement( setVariableDirective + " " + textBefore );
-                textPElement.setContentAfterEndTagElement( textEnd );
-                super.flushCharacters( textBody );
-                return;
+                else
+                {
+                    // Simple field.
+                    characters = formatDirective( characters );
+                }
             }
         }
         super.flushCharacters( characters );

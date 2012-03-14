@@ -144,6 +144,12 @@ public class VelocityTemplateEngine
             return velocityEngineProperties;
         }
         velocityEngineProperties = new Properties();
+	
+	//Copy default velocity.properties
+	Properties velocityDefaultProperties = getVelocityDefaultProperties();
+	if(velocityDefaultProperties != null){
+		velocityEngineProperties.putAll(velocityDefaultProperties);
+	}
 
         // Initialize properties to use XDocReportEntryResourceLoader to
         // load template from entry name of XDocArchive.
@@ -169,6 +175,27 @@ public class VelocityTemplateEngine
             // Do nothing
         }
         return velocityEngineProperties;
+    }
+
+    /**
+     * Reads 'velocity.properties' from classpath 
+     * 
+     * @return <code>Properties</code> loaded or <code>null</code> if is not found 
+     * 
+     * @throws XDocReportException if IOException is catched reading 'velocity.properties'
+     */
+    public synchronized Properties getVelocityDefaultProperties() throws XDocReportException {
+	InputStream is =  this.getClass().getClassLoader().getResourceAsStream("velocity.properties");
+	if(is != null){
+		try {
+			Properties p = new Properties();
+			p.load(is);
+			return p;
+		} catch (IOException e) {
+			throw new XDocReportException(e);
+		}
+	}
+	return null;
     }
 
     public IDocumentFormatter getDocumentFormatter()

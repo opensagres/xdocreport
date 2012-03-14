@@ -24,7 +24,11 @@
  */
 package fr.opensagres.xdocreport.template.velocity.internal;
 
+import java.util.Stack;
+
+import org.apache.velocity.runtime.parser.node.ASTDirective;
 import org.apache.velocity.runtime.parser.node.ASTReference;
+import org.apache.velocity.runtime.parser.node.ASTprocess;
 import org.apache.velocity.runtime.visitor.BaseVisitor;
 
 import fr.opensagres.xdocreport.template.FieldsExtractor;
@@ -40,6 +44,31 @@ public class ExtractVariablesVelocityVisitor
         this.extractor = extractor;
     }
 
+    private Stack<Foreach> foreachStack = new Stack<Foreach>();
+
+    @Override
+    public Object visit( ASTprocess node, Object data )
+    {
+        // TODO Auto-generated method stub
+        return super.visit( node, data );
+    }
+
+    @Override
+    public Object visit( ASTDirective node, Object data )
+    {
+        boolean isForeach = "foreach".equals( node.getDirectiveName() );
+        if ( isForeach )
+        {
+            foreachStack.push( new Foreach() );
+        }
+        Object o = super.visit( node, data );
+        if ( isForeach )
+        {
+            foreachStack.pop();
+        }
+        return o;
+    }
+
     @Override
     public Object visit( ASTReference node, Object data )
     {
@@ -48,7 +77,43 @@ public class ExtractVariablesVelocityVisitor
         {
             variableName = variableName.substring( 1, variableName.length() );
         }
-        extractor.addFieldName( variableName );
+        if ( !foreachStack.isEmpty() )
+        {
+            Foreach currentForeach = foreachStack.peek();
+            if ( currentForeach.getItem() == null )
+            {
+                currentForeach.setItem( variableName );
+            }
+            else if ( currentForeach.getSequence() == null )
+            {
+                currentForeach.setSequence( variableName );
+            }
+            else
+            {
+                String firstToken = variableName;
+                int index = firstToken.indexOf( '.' );
+                if ( index != -1 )
+                {
+                    firstToken = firstToken.substring( 0, index );
+                }
+                if ( firstToken.equals( currentForeach.getItem() ) )
+                {
+                    String field = "";
+                    if ( index != -1 )
+                    {
+                        field = variableName.substring( index, variableName.length() );
+                    }
+                    extractor.addFieldName( currentForeach.getSequence() + field, true );
+                }
+                else {
+                    extractor.addFieldName( variableName, false );
+                }
+            }
+        }
+        else
+        {
+            extractor.addFieldName( variableName, false );
+        }
         return super.visit( node, data );
     }
 }

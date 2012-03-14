@@ -94,7 +94,7 @@ public interface IXDocReport
      */
     String getKind();
 
-    /**
+/**
      * Returns the id of the {@link IXDocReport}. This id is used to cache an instance of {@link IXDocReport} with
      * {@link XDocReportRegistry#loadReport(InputStream) and get instance from cache with
      * 
@@ -103,7 +103,7 @@ public interface IXDocReport
      */
     String getId();
 
-    /**
+/**
      * Set the id of the {@link IXDocReport}. This id is used to cache an instance of {@link IXDocReport} with
      * {@link XDocReportRegistry#loadReport(InputStream) and get instance from cache with
      * 
@@ -333,4 +333,13 @@ public interface IXDocReport
      * Clear processor.
      */
     void removeAllPreprocessors();
+
+    /**
+     * Force the preprocessing step.
+     * 
+     * @throws XDocReportException
+     * @throws IOException
+     */
+    void preprocess()
+        throws XDocReportException, IOException;
 }

@@ -205,7 +205,7 @@ public class FreemarkerTemplateEngine
         {
             String fieldName = templateElement.getCanonicalForm();
             fieldName = fieldName.substring( 2, fieldName.length() - 1 );
-            extractor.addFieldName( fieldName );
+            extractor.addFieldName( fieldName, false );
         }
         Enumeration<TemplateElement> enums = templateElement.children();
         while ( enums.hasMoreElements() )

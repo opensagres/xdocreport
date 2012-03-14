@@ -308,6 +308,12 @@ public abstract class AbstractXDocReport
         return fieldsMetadata;
     }
 
+    public void preprocess()
+        throws XDocReportException, IOException
+    {
+        setDocumentArchive( getOriginalDocumentArchive() );
+    }
+
     /**
      * Execute processors registered to modify entry names of the original document archive. Processors use
      * {@link FieldsMetadata} and {@link IDocumentFormatter} (coming from {@link ITemplateEngine#getDocumentFormatter()}

@@ -33,9 +33,6 @@ import org.apache.velocity.Template;
 import org.apache.velocity.VelocityContext;
 import org.apache.velocity.app.VelocityEngine;
 import org.apache.velocity.runtime.RuntimeConstants;
-import org.apache.velocity.runtime.RuntimeSingleton;
-import org.apache.velocity.runtime.parser.ParseException;
-import org.apache.velocity.runtime.parser.node.SimpleNode;
 
 import fr.opensagres.xdocreport.core.EncodingConstants;
 import fr.opensagres.xdocreport.core.XDocReportException;
@@ -46,7 +43,6 @@ import fr.opensagres.xdocreport.template.TemplateEngineKind;
 import fr.opensagres.xdocreport.template.config.ITemplateEngineConfiguration;
 import fr.opensagres.xdocreport.template.formatter.IDocumentFormatter;
 import fr.opensagres.xdocreport.template.velocity.cache.XDocReportEntryResourceLoader;
-import fr.opensagres.xdocreport.template.velocity.internal.ExtractVariablesVelocityVisitor;
 import fr.opensagres.xdocreport.template.velocity.internal.XDocReportEscapeReference;
 import fr.opensagres.xdocreport.template.velocity.internal.XDocVelocityContext;
 
@@ -179,18 +175,6 @@ public class VelocityTemplateEngine
     public void extractFields( Reader reader, String entryName, FieldsExtractor extractor )
         throws XDocReportException
     {
-        try
-        {
-            SimpleNode document = RuntimeSingleton.parse( reader, entryName );
-            ExtractVariablesVelocityVisitor visitor = new ExtractVariablesVelocityVisitor( extractor );
-            visitor.setContext( null );
-            // visitor.setWriter(new PrintWriter(System.out));
-            document.jjtAccept( visitor, null );
-
-        }
-        catch ( ParseException e )
-        {
-            throw new XDocReportException( e );
-        }
+        VelocityFieldsExtractor.getInstance().extractFields( reader, entryName, extractor );
     }
 }

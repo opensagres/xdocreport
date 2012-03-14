@@ -956,6 +956,39 @@ public class StyleEngineForIText
             headerFooterProperties.setMinHeight( ODFUtils.getDimensionAsPoint( minHeight ) );
         }
 
+        // margin
+        String margin = ele.getFoMarginAttribute();
+        if ( StringUtils.isNotEmpty( margin ) )
+        {
+            headerFooterProperties.setMargin( ODFUtils.getDimensionAsPoint( margin ) );
+        }
+
+        // margin-bottom
+        String marginBottom = ele.getFoMarginBottomAttribute();
+        if ( StringUtils.isNotEmpty( marginBottom ) )
+        {
+            headerFooterProperties.setMarginBottom( ODFUtils.getDimensionAsPoint( marginBottom ) );
+        }
+
+        // margin-left
+        String marginLeft = ele.getFoMarginLeftAttribute();
+        if ( StringUtils.isNotEmpty( marginLeft ) )
+        {
+            headerFooterProperties.setMarginLeft( ODFUtils.getDimensionAsPoint( marginLeft ) );
+        }
+
+        // margin-right
+        String marginRight = ele.getFoMarginRightAttribute();
+        if ( StringUtils.isNotEmpty( marginRight ) )
+        {
+            headerFooterProperties.setMarginRight( ODFUtils.getDimensionAsPoint( marginRight ) );
+        }
+        // margin-top
+        String marginTop = ele.getFoMarginTopAttribute();
+        if ( StringUtils.isNotEmpty( marginTop ) )
+        {
+            headerFooterProperties.setMarginTop( ODFUtils.getDimensionAsPoint( marginTop ) );
+        }
     }
 
     // visit //style:section-properties

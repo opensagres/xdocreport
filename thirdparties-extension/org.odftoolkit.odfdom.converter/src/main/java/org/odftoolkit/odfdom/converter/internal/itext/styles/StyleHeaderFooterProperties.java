@@ -26,8 +26,67 @@ package org.odftoolkit.odfdom.converter.internal.itext.styles;
 
 public class StyleHeaderFooterProperties
 {
+    private Float margin;
+
+    private Float marginBottom;
+
+    private Float marginLeft;
+
+    private Float marginRight;
+
+    private Float marginTop;
 
     private Float minHeight;
+
+    public Float getMargin()
+    {
+        return margin;
+    }
+
+    public void setMargin( Float margin )
+    {
+        this.margin = margin;
+    }
+
+    public Float getMarginBottom()
+    {
+        return marginBottom;
+    }
+
+    public void setMarginBottom( Float marginBottom )
+    {
+        this.marginBottom = marginBottom;
+    }
+
+    public Float getMarginLeft()
+    {
+        return marginLeft;
+    }
+
+    public void setMarginLeft( Float marginLeft )
+    {
+        this.marginLeft = marginLeft;
+    }
+
+    public Float getMarginRight()
+    {
+        return marginRight;
+    }
+
+    public void setMarginRight( Float marginRight )
+    {
+        this.marginRight = marginRight;
+    }
+
+    public Float getMarginTop()
+    {
+        return marginTop;
+    }
+
+    public void setMarginTop( Float marginTop )
+    {
+        this.marginTop = marginTop;
+    }
 
     public Float getMinHeight()
     {
@@ -38,5 +97,4 @@ public class StyleHeaderFooterProperties
     {
         this.minHeight = minHeight;
     }
-
 }

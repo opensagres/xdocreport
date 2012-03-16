@@ -24,29 +24,33 @@
  */
 package org.odftoolkit.odfdom.converter.internal.itext;
 
+import java.awt.Color;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.io.Writer;
 import java.net.MalformedURLException;
+import java.util.ArrayList;
+import java.util.List;
 
 import org.odftoolkit.odfdom.converter.ODFConverterException;
 import org.odftoolkit.odfdom.converter.internal.ElementVisitorConverter;
 import org.odftoolkit.odfdom.converter.internal.itext.stylable.IStylableContainer;
 import org.odftoolkit.odfdom.converter.internal.itext.stylable.IStylableElement;
 import org.odftoolkit.odfdom.converter.internal.itext.stylable.StylableAnchor;
-import org.odftoolkit.odfdom.converter.internal.itext.stylable.StylableChapter;
 import org.odftoolkit.odfdom.converter.internal.itext.stylable.StylableChunk;
 import org.odftoolkit.odfdom.converter.internal.itext.stylable.StylableDocument;
+import org.odftoolkit.odfdom.converter.internal.itext.stylable.StylableDocumentSection;
 import org.odftoolkit.odfdom.converter.internal.itext.stylable.StylableHeaderFooter;
+import org.odftoolkit.odfdom.converter.internal.itext.stylable.StylableHeading;
 import org.odftoolkit.odfdom.converter.internal.itext.stylable.StylableList;
 import org.odftoolkit.odfdom.converter.internal.itext.stylable.StylableListItem;
 import org.odftoolkit.odfdom.converter.internal.itext.stylable.StylableMasterPage;
 import org.odftoolkit.odfdom.converter.internal.itext.stylable.StylableParagraph;
 import org.odftoolkit.odfdom.converter.internal.itext.stylable.StylablePhrase;
-import org.odftoolkit.odfdom.converter.internal.itext.stylable.StylableSection;
 import org.odftoolkit.odfdom.converter.internal.itext.stylable.StylableTable;
 import org.odftoolkit.odfdom.converter.internal.itext.stylable.StylableTableCell;
 import org.odftoolkit.odfdom.converter.internal.itext.styles.Style;
+import org.odftoolkit.odfdom.converter.internal.itext.styles.StyleTextProperties;
 import org.odftoolkit.odfdom.converter.internal.utils.ODFUtils;
 import org.odftoolkit.odfdom.converter.itext.PDFViaITextOptions;
 import org.odftoolkit.odfdom.doc.OdfDocument;
@@ -68,6 +72,7 @@ import org.odftoolkit.odfdom.dom.element.text.TextLineBreakElement;
 import org.odftoolkit.odfdom.dom.element.text.TextListElement;
 import org.odftoolkit.odfdom.dom.element.text.TextListItemElement;
 import org.odftoolkit.odfdom.dom.element.text.TextPElement;
+import org.odftoolkit.odfdom.dom.element.text.TextSectionElement;
 import org.odftoolkit.odfdom.dom.element.text.TextSoftPageBreakElement;
 import org.odftoolkit.odfdom.dom.element.text.TextSpanElement;
 import org.odftoolkit.odfdom.dom.element.text.TextTabElement;
@@ -79,6 +84,7 @@ import com.lowagie.text.BadElementException;
 import com.lowagie.text.Chunk;
 import com.lowagie.text.DocumentException;
 import com.lowagie.text.Element;
+import com.lowagie.text.Font;
 import com.lowagie.text.Image;
 import com.lowagie.text.pdf.PdfPCell;
 
@@ -94,6 +100,8 @@ public class ElementVisitorForIText
     private final StyleEngineForIText styleEngine;
 
     private final PDFViaITextOptions options;
+
+    private List<Integer> currentHeadingNumbering;
 
     private IStylableContainer currentContainer;
 
@@ -149,6 +157,7 @@ public class ElementVisitorForIText
         Style style = document.getStyleMasterPage( currentMasterPage );
         if ( style != null )
         {
+            document.applyStyles( style );
             header.applyStyles( style );
         }
         currentMasterPage.setHeader( header );
@@ -175,6 +184,7 @@ public class ElementVisitorForIText
         Style style = document.getStyleMasterPage( currentMasterPage );
         if ( style != null )
         {
+            document.applyStyles( style );
             footer.applyStyles( style );
         }
         currentMasterPage.setFooter( footer );
@@ -200,8 +210,16 @@ public class ElementVisitorForIText
         this.parseOfficeTextElement = true;
         currentContainer = document;
         super.visit( ele );
-        addCurrentChapterIfNeeded();
         this.parseOfficeTextElement = false;
+    }
+
+    @Override
+    public void visit( TextSectionElement ele )
+    {
+        StylableDocumentSection documentSection =
+            document.createDocumentSection( currentContainer, !parseOfficeTextElement );
+        applyStyles( ele, documentSection );
+        addITextContainer( ele, documentSection );
     }
 
     // ---------------------- visit //text:h
@@ -209,60 +227,29 @@ public class ElementVisitorForIText
     @Override
     public void visit( TextHElement ele )
     {
-        int level = ele.getTextOutlineLevelAttribute() != null ? ele.getTextOutlineLevelAttribute() : 1;
-
-        // 1) Create title of the chapter
-        StylableParagraph title = document.createParagraph( (IStylableContainer) null );
-        // apply style for the title font, color, bold style...
-        applyStyles( ele, title );
-        // loop for Text node to add text in the title without add the paragraph
-        // to the current container.
-        addITextContainer( ele, title, false );
-
-        // 2) Create a chapter or section according level title
-        if ( level == 1 )
+        // compute heading numbering (ie 1.3.1)
+        int outlineLevel = ele.getTextOutlineLevelAttribute() != null ? ele.getTextOutlineLevelAttribute() : 1;
+        if ( currentHeadingNumbering == null )
         {
-            // It's text:h with level one, create a chapter
-
-            // Create chapter without adding it to the current container.
-            // Chapter must be added to the container AFTER it is filled.
-            currentContainer = addCurrentChapterIfNeeded();
-            StylableChapter chapter = document.createChapter( currentContainer, title );
-            // apply style for the chapter title border, background color...
-            applyStyles( ele, chapter );
-            // Current container is chapter
-            currentContainer = chapter;
+            currentHeadingNumbering = new ArrayList<Integer>();
         }
-        else
+        while ( currentHeadingNumbering.size() > outlineLevel )
         {
-            // It's text:h with another level, create a section and add it to
-            // the current chapter
-            StylableChapter currentChapter = document.getCurrentChapter();
-
-            // Current container is section
-            StylableSection section = (StylableSection) currentChapter.addSection( title );
-            // apply style for the section title border, background color...
-            applyStyles( ele, section );
-            currentContainer = section;
-
+            currentHeadingNumbering.remove( currentHeadingNumbering.size() - 1 );
         }
-    }
-
-    /**
-     * This method add the current chapter to the parent container of teh chapter if current container is chapter.
-     * 
-     * @return parent container of the current chapter otherwise returns current container.
-     */
-    private IStylableContainer addCurrentChapterIfNeeded()
-    {
-        StylableChapter currentChapter = document.getCurrentChapter();
-        if ( currentChapter != null )
+        if ( currentHeadingNumbering.size() == outlineLevel )
         {
-            IStylableContainer parentContainer = currentChapter.getParent();
-            parentContainer.addElement( currentChapter );
-            return parentContainer;
+            currentHeadingNumbering.set( outlineLevel - 1, currentHeadingNumbering.get( outlineLevel - 1 ) + 1 );
         }
-        return currentContainer;
+        while ( currentHeadingNumbering.size() < outlineLevel )
+        {
+            currentHeadingNumbering.add( 1 );
+        }
+
+        StylableHeading heading =
+            document.createHeading( currentContainer, new ArrayList<Integer>( currentHeadingNumbering ) );
+        applyStyles( ele, heading );
+        addITextContainer( ele, heading );
     }
 
     // ---------------------- visit //text:p
@@ -277,7 +264,7 @@ public class ElementVisitorForIText
             // no content in the paragraph
             // ex : <text:p text:style-name="Standard"></text:p>
             // add blank Chunk
-            paragraph.add( Chunk.NEWLINE );
+            paragraph.add( new Chunk( " " ) );
         }
         addITextContainer( ele, paragraph );
 
@@ -311,15 +298,26 @@ public class ElementVisitorForIText
         String reference = ele.getXlinkHrefAttribute();
         applyStyles( ele, anchor );
 
-        // set color moved to StylableAnchor
-        /*
-         * if ( anchor.getFont().getColor() == null ) { // if no color was applied to the link // get the font of the
-         * paragraph and set blue color. Font linkFont = anchor.getFont(); Style style =
-         * currentContainer.getLastStyleApplied(); if ( style != null ) { StyleTextProperties textProperties =
-         * style.getTextProperties(); if ( textProperties != null ) { Font font = textProperties.getFont(); if ( font !=
-         * null ) { linkFont = new Font( font ); anchor.setFont( linkFont ); } } } // Color blueColor = //
-         * ColorRegistryForIText.getInstance().getColor("#0000CC"); linkFont.setColor( Color.BLUE ); }
-         */
+        if ( anchor.getFont().getColor() == null )
+        {
+            // if no color was applied to the link get the font of the paragraph and set blue color.
+            Font linkFont = anchor.getFont();
+            Style style = currentContainer.getLastStyleApplied();
+            if ( style != null )
+            {
+                StyleTextProperties textProperties = style.getTextProperties();
+                if ( textProperties != null )
+                {
+                    Font font = textProperties.getFont();
+                    if ( font != null )
+                    {
+                        linkFont = new Font( font );
+                        anchor.setFont( linkFont );
+                    }
+                }
+            }
+            linkFont.setColor( Color.BLUE );
+        }
 
         // TODO ; manage internal link
         // set the link
@@ -491,7 +489,7 @@ public class ElementVisitorForIText
     {
         if ( options.isPreserveSoftPageBreaks() )
         {
-            document.newPage();
+            // switched off after section implementation
         }
     }
 

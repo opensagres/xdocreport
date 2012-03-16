@@ -119,6 +119,13 @@ public abstract class AbstractODFDOMConverterTest
     {
         doGenerate( "TestTable.odt" );
     }
+    
+    @Test
+    public void testTextSectionsAndBreaks()
+        throws Exception
+    {
+        doGenerate( "TestTextSectionsAndBreaks.odt" );
+    }
 
     @Test
     public void testTextSectionsAndTabulators()

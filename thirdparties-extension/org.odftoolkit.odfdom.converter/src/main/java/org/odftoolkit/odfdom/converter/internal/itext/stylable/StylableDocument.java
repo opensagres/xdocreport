@@ -25,7 +25,9 @@
 package org.odftoolkit.odfdom.converter.internal.itext.stylable;
 
 import java.io.OutputStream;
+import java.util.List;
 
+import org.odftoolkit.odfdom.converter.ODFConverterException;
 import org.odftoolkit.odfdom.converter.internal.itext.StyleEngineForIText;
 import org.odftoolkit.odfdom.converter.internal.itext.styles.Style;
 import org.odftoolkit.odfdom.converter.internal.itext.styles.StyleMargin;
@@ -36,6 +38,9 @@ import com.lowagie.text.DocumentException;
 import com.lowagie.text.Element;
 import com.lowagie.text.Paragraph;
 import com.lowagie.text.Rectangle;
+import com.lowagie.text.pdf.ColumnText;
+import com.lowagie.text.pdf.PdfPCell;
+import com.lowagie.text.pdf.PdfPTable;
 
 import fr.opensagres.xdocreport.itext.extension.ExtendedDocument;
 import fr.opensagres.xdocreport.itext.extension.IParagraphFactory;
@@ -60,7 +65,13 @@ public class StylableDocument
 
     private StylableMasterPage activeMasterPage;
 
-    private boolean implicitPageBreakAfterMasterPageChange;
+    private boolean masterPageJustChanged;
+
+    private PdfPTable layoutTable;
+
+    private ColumnText text;
+
+    private int colIdx;
 
     public StylableDocument( OutputStream out, StyleEngineForIText styleEngine )
         throws DocumentException
@@ -88,6 +99,11 @@ public class StylableDocument
         return new StylableParagraph( this, title, null );
     }
 
+    public StylableHeading createHeading( IStylableContainer parent, List<Integer> headingNumbering )
+    {
+        return new StylableHeading( this, parent, headingNumbering );
+    }
+
     public StylablePhrase createPhrase( IStylableContainer parent )
     {
         return new StylablePhrase( this, parent );
@@ -106,6 +122,11 @@ public class StylableDocument
     public StylableListItem createListItem( IStylableContainer parent )
     {
         return new StylableListItem( this, parent );
+    }
+
+    public StylableDocumentSection createDocumentSection( IStylableContainer parent, boolean inHeaderFooter )
+    {
+        return new StylableDocumentSection( this, parent, inHeaderFooter );
     }
 
     public StylableTable createTable( IStylableContainer parent, int numColumns )
@@ -146,17 +167,27 @@ public class StylableDocument
     @Override
     public void setActiveMasterPage( MasterPage masterPage )
     {
+        // flush pending content
+        flushTable();
+        // activate master page in three steps
         Style style = getStyleMasterPage( (StylableMasterPage) masterPage );
         if ( style != null )
         {
+            // step 1 - apply styles like page dimensions and orientation
             this.applyStyles( style );
         }
+        // step 2 - set header/footer if any, it needs page dimensions from step 1
         super.setActiveMasterPage( masterPage );
         if ( activeMasterPage != null )
         {
-            implicitPageBreakAfterMasterPageChange = true;
+            // set a flag used by addElement/newPage
+            masterPageJustChanged = true;
         }
         activeMasterPage = (StylableMasterPage) masterPage;
+        // step 3 - initialize column layout, it needs page dimensions which may be lowered by header/footer in step 2
+        layoutTable = StylableDocumentSection.createLayoutTable( getPageWidth(), getAdjustedPageHeight(), style );
+        text = StylableDocumentSection.createColumnText();
+        setColIdx( 0 );
     }
 
     public StylableMasterPage getActiveMasterPage()
@@ -185,27 +216,6 @@ public class StylableDocument
     //
     // IStylableContainer implementation
     //
-
-    public void addElement( Element element )
-    {
-        try
-        {
-            if ( !super.isOpen() )
-            {
-                super.open();
-            }
-            if ( implicitPageBreakAfterMasterPageChange )
-            {
-                // master page was changed but there was no explicit page break
-                newPage();
-            }
-            super.add( element );
-        }
-        catch ( DocumentException e )
-        {
-            e.printStackTrace();
-        }
-    }
 
     public void applyStyles( Style style )
     {
@@ -274,11 +284,139 @@ public class StylableDocument
         return null;
     }
 
+    //
+    // this amazing and awesome algorithm
+    // which lay out content in columns on page
+    // was written by Leszek Piotrowicz <leszekp@safe-mail.net>
+    //
+
+    public void addElement( Element element )
+    {
+        if ( !super.isOpen() )
+        {
+            super.open();
+        }
+        if ( masterPageJustChanged )
+        {
+            // master page was changed but there was no explicit page break
+            newPage();
+        }
+        text.addElement( element );
+        StylableDocumentSection.getCell( layoutTable, colIdx ).getColumn().addElement( element );
+        simulateText();
+    }
+
+    public void newColumn()
+    {
+        if ( colIdx + 1 < layoutTable.getNumberOfColumns() )
+        {
+            setColIdx( colIdx + 1 );
+            simulateText();
+        }
+        else
+        {
+            newPage();
+        }
+    }
+
     @Override
     public boolean newPage()
     {
-        implicitPageBreakAfterMasterPageChange = false;
-        return super.newPage();
+        if ( masterPageJustChanged )
+        {
+            // we are just after master page change
+            // move to a new page but do not initialize column layout
+            // because it is already done
+            masterPageJustChanged = false;
+            super.newPage();
+        }
+        else
+        {
+            // flush pending content
+            flushTable();
+            // document new page
+            super.newPage();
+            // initialize column layout for new page
+            layoutTable = StylableDocumentSection.cloneAndClearTable( layoutTable );
+            setColIdx( 0 );
+            simulateText();
+        }
+        return true;
     }
 
+    @Override
+    public void close()
+    {
+        flushTable();
+        super.close();
+    }
+
+    public float getCurrentColumnWidth()
+    {
+        PdfPCell cell = StylableDocumentSection.getCell( layoutTable, colIdx );
+        return cell.getRight() - cell.getPaddingRight() - cell.getLeft() - cell.getPaddingLeft();
+    }
+
+    public float getCurrentColumnAvailableHeight()
+    {
+        // yLine is negative
+        return StylableDocumentSection.getCell( layoutTable, colIdx ).getFixedHeight() + text.getYLine();
+    }
+
+    public float getPageWidth()
+    {
+        return right() - left();
+    }
+
+    public float getAdjustedPageHeight()
+    {
+        // subtract small value from height, otherwise table breaks to new page
+        return top() - bottom() - 0.001f;
+    }
+
+    private void setColIdx( int idx )
+    {
+        colIdx = idx;
+        PdfPCell cell = StylableDocumentSection.getCell( layoutTable, colIdx );
+        text.setSimpleColumn( cell.getLeft() + cell.getPaddingLeft(), -getAdjustedPageHeight(),
+                              cell.getRight() - cell.getPaddingRight(), 0.0f );
+        cell.setColumn( ColumnText.duplicate( text ) );
+    }
+
+    private void simulateText()
+    {
+        int res = 0;
+        try
+        {
+            res = text.go( true );
+        }
+        catch ( DocumentException e )
+        {
+            throw new ODFConverterException( e );
+        }
+        if ( ColumnText.hasMoreText( res ) )
+        {
+            // text does not fit into current column
+            // split it to a new column
+            newColumn();
+        }
+    }
+
+    private void flushTable()
+    {
+        if ( layoutTable != null )
+        {
+            // force calculate height because it may be zero
+            // and nothing will be flushed
+            layoutTable.calculateHeights( true );
+            try
+            {
+                super.add( layoutTable );
+            }
+            catch ( DocumentException e )
+            {
+                throw new ODFConverterException( e );
+            }
+        }
+    }
 }

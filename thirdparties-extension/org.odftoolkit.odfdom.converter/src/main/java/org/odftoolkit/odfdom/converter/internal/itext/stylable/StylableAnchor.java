@@ -24,8 +24,6 @@
  */
 package org.odftoolkit.odfdom.converter.internal.itext.stylable;
 
-import java.awt.Color;
-
 import org.odftoolkit.odfdom.converter.internal.itext.styles.Style;
 import org.odftoolkit.odfdom.converter.internal.itext.styles.StyleTextProperties;
 
@@ -39,8 +37,7 @@ public class StylableAnchor
     extends Anchor
     implements IStylableContainer
 {
-
-    private final IStylableFactory ownerDocument;
+    private static final long serialVersionUID = 664309269352903329L;
 
     private final IStylableContainer parent;
 
@@ -48,7 +45,6 @@ public class StylableAnchor
 
     public StylableAnchor( IStylableFactory ownerDocument, IStylableContainer parent )
     {
-        this.ownerDocument = ownerDocument;
         this.parent = parent;
     }
 
@@ -73,18 +69,12 @@ public class StylableAnchor
                 textProperties =
                     new StyleTextProperties( parent.getLastStyleApplied().getTextProperties(), textProperties );
             }
-            if ( textProperties.getFontColor() == null )
-            {
-                // if no color was applied to the link set blue color
-                textProperties.setFontColor( Color.BLUE );
-            }
             // Font
             Font font = textProperties.getFont();
             if ( font != null )
             {
                 super.setFont( font );
             }
-
         }
     }
 
@@ -110,7 +100,5 @@ public class StylableAnchor
 
     public void setITextContainer( IITextContainer container )
     {
-
     }
-
 }

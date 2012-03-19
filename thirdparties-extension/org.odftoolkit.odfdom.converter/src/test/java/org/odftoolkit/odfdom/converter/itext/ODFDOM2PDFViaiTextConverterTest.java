@@ -44,14 +44,15 @@ public class ODFDOM2PDFViaiTextConverterTest
         String fileOutName = root + "/" + fileInName + ".pdf";
 
         long startTime = System.currentTimeMillis();
+        System.out.println( "Starting generation " + fileOutName);
 
         OdfTextDocument document = OdfTextDocument.loadDocument( Data.class.getResourceAsStream( fileInName ) );
 
         OutputStream out = new FileOutputStream( new File( fileOutName ) );
         PDFViaITextOptions options =
-            PDFViaITextOptions.create().fontEncoding( "windows-1250" ).preserveSoftPageBreaks( true );
+            PDFViaITextOptions.create().fontEncoding( "windows-1250" );
         ODF2PDFViaITextConverter.getInstance().convert( document, out, options );
 
-        System.out.println( "Generate " + fileOutName + " with " + ( System.currentTimeMillis() - startTime ) + " ms." );
+        System.out.println( "Generated " + fileOutName + " with " + ( System.currentTimeMillis() - startTime ) + " ms." );
     }
 }

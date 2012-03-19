@@ -35,9 +35,6 @@ public class StylableTable
     extends ExtendedPdfPTable
     implements IStylableContainer
 {
-
-    private static final long serialVersionUID = 664309269352903329L;
-
     private final StylableDocument ownerDocument;
 
     private IStylableContainer parent;
@@ -87,5 +84,10 @@ public class StylableTable
     public Element getElement()
     {
         return this;
+    }
+
+    public int getColIdx()
+    {
+        return currentRowIdx;
     }
 }

@@ -52,9 +52,8 @@ import fr.opensagres.xdocreport.itext.extension.PageOrientation;
  */
 public class StylableDocument
     extends ExtendedDocument
-    implements IStylableContainer, IStylableFactory, IParagraphFactory
+    implements IStylableContainer, IBoundsLimitContainer, IBreakHandlingContainer, IStylableFactory, IParagraphFactory
 {
-
     private final StyleEngineForIText styleEngine;
 
     private Style lastStyleApplied = null;
@@ -180,7 +179,7 @@ public class StylableDocument
         super.setActiveMasterPage( masterPage );
         if ( activeMasterPage != null )
         {
-            // set a flag used by addElement/newPage
+            // set a flag used by addElement/pageBreak
             masterPageJustChanged = true;
         }
         activeMasterPage = (StylableMasterPage) masterPage;
@@ -299,14 +298,14 @@ public class StylableDocument
         if ( masterPageJustChanged )
         {
             // master page was changed but there was no explicit page break
-            newPage();
+            pageBreak();
         }
         text.addElement( element );
         StylableDocumentSection.getCell( layoutTable, colIdx ).getColumn().addElement( element );
         simulateText();
     }
 
-    public void newColumn()
+    public void columnBreak()
     {
         if ( colIdx + 1 < layoutTable.getNumberOfColumns() )
         {
@@ -315,12 +314,11 @@ public class StylableDocument
         }
         else
         {
-            newPage();
+            pageBreak();
         }
     }
 
-    @Override
-    public boolean newPage()
+    public void pageBreak()
     {
         if ( masterPageJustChanged )
         {
@@ -337,11 +335,16 @@ public class StylableDocument
             // document new page
             super.newPage();
             // initialize column layout for new page
-            layoutTable = StylableDocumentSection.cloneAndClearTable( layoutTable );
+            layoutTable = StylableDocumentSection.cloneAndClearTable( layoutTable, false );
             setColIdx( 0 );
             simulateText();
         }
-        return true;
+    }
+
+    @Override
+    public boolean newPage()
+    {
+        throw new ODFConverterException( "internal error - do not call newPage directly" );
     }
 
     @Override
@@ -351,13 +354,13 @@ public class StylableDocument
         super.close();
     }
 
-    public float getCurrentColumnWidth()
+    public float getWidthLimit()
     {
         PdfPCell cell = StylableDocumentSection.getCell( layoutTable, colIdx );
         return cell.getRight() - cell.getPaddingRight() - cell.getLeft() - cell.getPaddingLeft();
     }
 
-    public float getCurrentColumnAvailableHeight()
+    public float getHeightLimit()
     {
         // yLine is negative
         return StylableDocumentSection.getCell( layoutTable, colIdx ).getFixedHeight() + text.getYLine();
@@ -368,7 +371,7 @@ public class StylableDocument
         return right() - left();
     }
 
-    public float getAdjustedPageHeight()
+    private float getAdjustedPageHeight()
     {
         // subtract small value from height, otherwise table breaks to new page
         return top() - bottom() - 0.001f;
@@ -398,7 +401,7 @@ public class StylableDocument
         {
             // text does not fit into current column
             // split it to a new column
-            newColumn();
+            columnBreak();
         }
     }
 

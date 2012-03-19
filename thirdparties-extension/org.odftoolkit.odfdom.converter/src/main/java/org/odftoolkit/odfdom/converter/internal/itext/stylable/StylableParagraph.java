@@ -232,28 +232,16 @@ public class StylableParagraph
 
     private void handleBreak( boolean columnBreak, boolean pageBreak )
     {
-        // find nearest parent container which can handle breaks
-        StylableDocumentSection ds = StylableDocumentSection.getStylableDocumentSection( parent );
-        if ( ds != null )
+        IBreakHandlingContainer b = StylableDocumentSection.getIBreakHandlingContainer( parent );
+        if ( b != null )
         {
             if ( columnBreak )
             {
-                ds.newColumn();
+                b.columnBreak();
             }
             else if ( pageBreak )
             {
-                ds.newPage();
-            }
-        }
-        else
-        {
-            if ( columnBreak )
-            {
-                ownerDocument.newColumn();
-            }
-            else if ( pageBreak )
-            {
-                ownerDocument.newPage();
+                b.pageBreak();
             }
         }
     }

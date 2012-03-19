@@ -38,6 +38,7 @@ import com.lowagie.text.Element;
 import com.lowagie.text.Table;
 import com.lowagie.text.pdf.ColumnText;
 import com.lowagie.text.pdf.PdfPCell;
+import com.lowagie.text.pdf.PdfPRow;
 import com.lowagie.text.pdf.PdfPTable;
 
 import fr.opensagres.xdocreport.itext.extension.IITextContainer;
@@ -48,15 +49,13 @@ import fr.opensagres.xdocreport.itext.extension.IITextContainer;
 // was written by Leszek Piotrowicz <leszekp@safe-mail.net>
 //
 public class StylableDocumentSection
-    implements IStylableContainer
+    implements IStylableContainer, IBreakHandlingContainer
 {
-    private final StylableDocument ownerDocument;
-
     private IStylableContainer parent;
 
-    private IStylableContainer ultimateParent;
+    private IBoundsLimitContainer sectionParent;
 
-    private boolean inHeaderFooter;
+    private IBreakHandlingContainer breakHandlingParent;
 
     private Style lastStyleApplied = null;
 
@@ -71,38 +70,31 @@ public class StylableDocumentSection
     public StylableDocumentSection( StylableDocument ownerDocument, IStylableContainer parent, boolean inHeaderFooter )
     {
         super();
-        this.ownerDocument = ownerDocument;
         this.parent = parent;
-        this.inHeaderFooter = inHeaderFooter;
-        // find ultimate parent which may be
-        // StylableDocument or StylableHeaderFooter table cell
-        if ( inHeaderFooter )
+
+        // find "real" parent which is first non section element in parent hierarchy
+        // this section will be added to that parent, not to direct parent
+        if ( parent instanceof StylableDocumentSection )
         {
-            this.ultimateParent = parent;
-            while ( this.ultimateParent != null )
-            {
-                this.ultimateParent = this.ultimateParent.getParent();
-            }
+            // special case - directly nested section
+            StylableDocumentSection dc = (StylableDocumentSection) parent;
+            // flush parent section to update vertical position on page
+            dc.flushTable();
+            this.sectionParent = dc.sectionParent;
         }
         else
         {
-            this.ultimateParent = ownerDocument;
+            this.sectionParent = (IBoundsLimitContainer) parent;
         }
+
+        // find parent container which can handle breaks
+        // if null, it means that page breaks are forbidden (ie in header/footer)
+        this.breakHandlingParent = getIBreakHandlingContainer( parent );
     }
 
     public void applyStyles( Style style )
     {
         this.lastStyleApplied = style;
-
-        if ( !inHeaderFooter )
-        {
-            // flush parent section to update vertical position on page
-            StylableDocumentSection parentSection = getStylableDocumentSection( parent );
-            if ( parentSection != null )
-            {
-                parentSection.flushTable();
-            }
-        }
 
         StyleSectionProperties sectionProperties = style.getSectionProperties();
         if ( sectionProperties != null )
@@ -115,8 +107,8 @@ public class StylableDocumentSection
         }
 
         // initialize layout table
-        float width = getUltimateParentAvailableWidth();
-        float height = getUltimateParentParentAvailableHeight();
+        float width = sectionParent.getWidthLimit();
+        float height = sectionParent.getHeightLimit();
         layoutTable = createLayoutTable( width, height, style );
 
         // initialize simulated text
@@ -142,104 +134,90 @@ public class StylableDocumentSection
         return layoutTable;
     }
 
-    public IITextContainer getITextContainer()
-    {
-        return null;
-    }
-
-    public void setITextContainer( IITextContainer container )
-    {
-    }
-
     public void addElement( Element element )
     {
         if ( element instanceof SectionPdfPTable )
         {
             // section is a specific container
             // it is not added to direct parent container
-            // but to ultimate parent container which may be
-            // StylableDocument or StylableHeaderFooter table cell
-            ultimateParent.addElement( element );
+            // but to section parent container which may be
+            // StylableDocument or StylableTableCell or StylableHeaderFooter table cell
+            sectionParent.addElement( element );
         }
         else
         {
             // ordinary element
             texts.get( colIdx ).addElement( element );
-            balanceText();
+            simulateText();
         }
     }
 
-    public void newColumn()
+    public void columnBreak()
     {
-        if ( inHeaderFooter )
+        if ( colIdx + 1 < layoutTable.getNumberOfColumns() )
         {
-            // may result in more column breaks than available columns
-            // but we cannot break to a new page in header/footer
-            // don't know what to do in such situation
-            // anyway it is logical error made by document creator
             setColIdx( colIdx + 1 );
         }
         else
         {
-            if ( colIdx + 1 < layoutTable.getNumberOfColumns() )
-            {
-                setColIdx( colIdx + 1 );
-            }
-            else
-            {
-                newPage();
-            }
+            pageBreak();
         }
     }
 
-    public void newPage()
+    public void pageBreak()
     {
-        if ( inHeaderFooter )
+        if ( breakHandlingParent != null )
         {
-            // should not happen because
-            // page break is forbidden in header/footer
+            if ( sectionParent.getHeightLimit() >= 0.0f )
+            {
+                // fill remaining space on page break
+                fillTable( sectionParent.getHeightLimit() );
+            }
+            // flush
+            flushTable();
+            breakHandlingParent.columnBreak();
         }
         else
         {
-            // cancel balancing if page break
-            fitsHeight( getUltimateParentParentAvailableHeight() );
-            // flush
-            flushTable();
-            ownerDocument.newColumn();
+            // more column breaks than available columns
+            // but we cannot break to a new page
+            // don't really know what to do in such situation
+            // anyway it is logical error made by document creator
+            setColIdx( colIdx + 1 );
         }
     }
 
-    public void flushTable()
+    private void flushTable()
     {
-        // force calculate height because it may be zero
-        // and nothing will be flushed
-        layoutTable.calculateHeights( true );
-        ultimateParent.addElement( layoutTable );
+        sectionParent.addElement( getElement() );
 
         // initialize layout table
-        layoutTable = cloneAndClearTable( layoutTable );
+        layoutTable = cloneAndClearTable( layoutTable, true );
 
         // initialize simulated text
         texts = new ArrayList<ColumnText>();
         setColIdx( 0 );
     }
 
-    private void balanceText()
+    private void simulateText()
     {
-        float minHeight = 0f;
-        float maxHeight = getUltimateParentParentAvailableHeight();
-        //
-        List<ColumnText> splittedTexts = fitsHeight( maxHeight );
+        float maxHeight = sectionParent.getHeightLimit();
+        List<ColumnText> splittedTexts = fillTable( maxHeight );
         if ( splittedTexts == null )
         {
             // fits in current column on page
             if ( balanceText )
             {
-                float currHeight = 0f;
+                float minHeight = 0f;
+                if ( maxHeight < 0.0f )
+                {
+                    maxHeight = layoutTable.calculateHeights( true );
+                }
+                float currHeight = 0.0f;
                 while ( Math.abs( maxHeight - minHeight ) > 0.1f )
                 {
                     currHeight = ( minHeight + maxHeight ) / 2;
-                    if ( fitsHeight( currHeight ) == null )
+                    if ( fillTable( currHeight ) == null )
                     {
                         // try to lower height
                         maxHeight = currHeight;
@@ -253,30 +231,38 @@ public class StylableDocumentSection
                 // populate table with last height
                 if ( currHeight != maxHeight )
                 {
-                    fitsHeight( maxHeight );
+                    fillTable( maxHeight );
+                }
+            }
+            else
+            {
+                if ( maxHeight >= 0.0f )
+                {
+                    // fill minimum space only
+                    fillTable( -1.0f );
                 }
             }
         }
         else
         {
             // overflow
-            if ( !inHeaderFooter )
+            if ( breakHandlingParent != null )
             {
                 flushTable();
-                ownerDocument.newColumn();
+                breakHandlingParent.columnBreak();
                 //
                 texts = splittedTexts;
                 colIdx = texts.size() - 1;
-                balanceText();
+                simulateText();
             }
         }
     }
 
-    private List<ColumnText> fitsHeight( float height )
+    private List<ColumnText> fillTable( float height )
     {
         // copy text for simulation
         List<ColumnText> tt = null;
-        if ( inHeaderFooter && colIdx >= layoutTable.getNumberOfColumns() )
+        if ( breakHandlingParent == null && colIdx >= layoutTable.getNumberOfColumns() )
         {
             // more column breaks than available column
             // we try not to lose content
@@ -306,17 +292,17 @@ public class StylableDocumentSection
             }
         }
         // clear layout table
-        clearTable( layoutTable );
+        clearTable( layoutTable, true );
         setWidthIfNecessary();
 
         // try to fill cells with text
         ColumnText t = tt.get( 0 );
         for ( PdfPCell cell : layoutTable.getRow( 0 ).getCells() )
         {
-            cell.setFixedHeight( height );
+            cell.setFixedHeight( height >= 0.0f ? height : -1.0f );
             cell.setColumn( ColumnText.duplicate( t ) );
             //
-            t.setSimpleColumn( cell.getLeft() + cell.getPaddingLeft(), -height,
+            t.setSimpleColumn( cell.getLeft() + cell.getPaddingLeft(), height >= 0.0f ? -height : PdfPRow.BOTTOM_LIMIT,
                                cell.getRight() - cell.getPaddingRight(), 0 );
             int res = 0;
             try
@@ -358,33 +344,23 @@ public class StylableDocumentSection
 
     private void setWidthIfNecessary()
     {
-        if ( layoutTable.getTotalWidth() != getUltimateParentAvailableWidth() )
+        if ( layoutTable.getTotalWidth() != sectionParent.getWidthLimit() )
         {
-            layoutTable.setTotalWidth( getUltimateParentAvailableWidth() );
+            layoutTable.setTotalWidth( sectionParent.getWidthLimit() );
         }
-    }
-
-    private float getUltimateParentAvailableWidth()
-    {
-        return inHeaderFooter ? ownerDocument.getPageWidth() : ownerDocument.getCurrentColumnWidth();
-    }
-
-    private float getUltimateParentParentAvailableHeight()
-    {
-        return inHeaderFooter ? ownerDocument.getAdjustedPageHeight() : ownerDocument.getCurrentColumnAvailableHeight();
     }
 
     //
     // static helper functions
     //
 
-    public static StylableDocumentSection getStylableDocumentSection( IStylableContainer c )
+    public static IBreakHandlingContainer getIBreakHandlingContainer( IStylableContainer c )
     {
         while ( c != null )
         {
-            if ( c instanceof StylableDocumentSection )
+            if ( c instanceof IBreakHandlingContainer )
             {
-                return (StylableDocumentSection) c;
+                return (IBreakHandlingContainer) c;
             }
             c = c.getParent();
         }
@@ -451,7 +427,7 @@ public class StylableDocumentSection
             cell.setBorder( Table.NO_BORDER );
             cell.setPadding( 0.0f );
             cell.setColumn( createColumnText() );
-            cell.setFixedHeight( height );
+            cell.setFixedHeight( height >= 0.0f ? height : -1.0f );
             // apply styles to cell
             StyleColumnProperties columnProperties = columnPropertiesList.get( i );
             relativeWidths[i] = columnProperties.getRelWidth();
@@ -498,19 +474,23 @@ public class StylableDocumentSection
         return table.getRow( 0 ).getCells()[idx];
     }
 
-    public static SectionPdfPTable cloneAndClearTable( PdfPTable table )
+    public static SectionPdfPTable cloneAndClearTable( PdfPTable table, boolean resetFixedHeight )
     {
         SectionPdfPTable clonedTable = new SectionPdfPTable( table );
-        clearTable( clonedTable );
+        clearTable( clonedTable, resetFixedHeight );
         replaceTableCells( clonedTable );
         return clonedTable;
     }
 
-    public static void clearTable( PdfPTable table )
+    public static void clearTable( PdfPTable table, boolean resetFixedHeight )
     {
         for ( PdfPCell cell : table.getRow( 0 ).getCells() )
         {
             cell.setColumn( createColumnText() );
+            if ( resetFixedHeight )
+            {
+                cell.setFixedHeight( -1.0f );
+            }
         }
     }
 
@@ -544,7 +524,20 @@ public class StylableDocumentSection
             // such a situation occurs if paragraphs have space before or after
             // it is hard to say if it is a bug or a feature in iText
             // we want fixed height to avoid breaking table to a new page
-            return getFixedHeight() != 0.0f ? getFixedHeight() : super.getMaxHeight();
+            return getFixedHeight() >= 0.0f ? getFixedHeight() : super.getMaxHeight();
         }
+    }
+
+    //
+    // probably not used
+    //
+
+    public IITextContainer getITextContainer()
+    {
+        return null;
+    }
+
+    public void setITextContainer( IITextContainer container )
+    {
     }
 }

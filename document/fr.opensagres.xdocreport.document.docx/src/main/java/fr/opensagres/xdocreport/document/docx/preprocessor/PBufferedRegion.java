@@ -88,10 +88,13 @@ public class PBufferedRegion
 
     private List<RBufferedRegion> rBufferedRegions = new ArrayList<RBufferedRegion>();
 
-    public PBufferedRegion( BufferedElement parent, String uri, String localName, String name, Attributes attributes )
+    private final DocxBufferedDocument document;
+
+    public PBufferedRegion( DocxBufferedDocument document, BufferedElement parent, String uri, String localName,
+                            String name, Attributes attributes )
     {
         super( parent, uri, localName, name, attributes );
-        // this
+        this.document = document;
     }
 
     @Override
@@ -169,6 +172,11 @@ public class PBufferedRegion
                         fieldName = firstR.getFieldName();
                         if ( fieldName != null )
                         {
+                            
+                            if (document.processScriptBeforeAfter( firstR )) {
+                                rReseted = true;
+                            }
+                            
                             for ( RBufferedRegion r : rMerged )
                             {
                                 toRemove.add( r );
@@ -192,6 +200,7 @@ public class PBufferedRegion
                 remove = false;
                 fieldName = null;
                 fieldNameSetted = false;
+                rReseted = false;
             }
             else if ( fieldName != null || rReseted )
             {

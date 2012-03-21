@@ -88,7 +88,7 @@ public class DocxBufferedDocument
         if ( isP( uri, localName, name ) )
         {
             // w:p element
-            currentPRegion = new PBufferedRegion( getCurrentElement(), uri, localName, name, attributes );
+            currentPRegion = new PBufferedRegion(this, getCurrentElement(), uri, localName, name, attributes );
             return currentPRegion;
         }
 
@@ -242,11 +242,11 @@ public class DocxBufferedDocument
         if ( isR( uri, localName, name ) && currentRRegion != null && currentFldSimpleRegion == null )
         {
             super.onEndEndElement( uri, localName, name );
-            boolean hasScript = processScriptBeforeAfter( currentRRegion );
-            if ( hasScript )
-            {
-                currentRRegion.reset();
-            }
+//            boolean hasScript = processScriptBeforeAfter( currentRRegion );
+//            if ( hasScript )
+//            {
+//                currentRRegion.reset();
+//            }
             currentRRegion = null;
             return;
         }
@@ -280,7 +280,7 @@ public class DocxBufferedDocument
         super.onEndEndElement( uri, localName, name );
     }
 
-    private boolean processScriptBeforeAfter( MergefieldBufferedRegion mergefield )
+    public boolean processScriptBeforeAfter( MergefieldBufferedRegion mergefield )
     {
         String fieldName = mergefield.getFieldName();
         if ( fieldName == null )

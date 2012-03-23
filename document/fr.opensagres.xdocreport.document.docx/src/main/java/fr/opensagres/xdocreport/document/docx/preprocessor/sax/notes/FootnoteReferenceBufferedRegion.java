@@ -5,6 +5,7 @@ import org.xml.sax.Attributes;
 import fr.opensagres.xdocreport.document.docx.preprocessor.DocXBufferedDocumentContentHandler;
 import fr.opensagres.xdocreport.document.preprocessor.sax.BufferedAttribute;
 import fr.opensagres.xdocreport.document.preprocessor.sax.BufferedElement;
+import fr.opensagres.xdocreport.template.TemplateContextHelper;
 
 public class FootnoteReferenceBufferedRegion
     extends BufferedElement
@@ -34,9 +35,9 @@ public class FootnoteReferenceBufferedRegion
 
     private void process()
     {
-        if ( handler.hasSharedContext() && handler.getFormatter() != null)
+        if ( handler.hasSharedContext() && handler.getFormatter() != null )
         {
-            
+
             InitialFootNoteInfoMap infos = FootnoteUtils.getInitialFootNoteInfoMap( handler.getSharedContext() );
             if ( infos != null )
             {
@@ -44,7 +45,9 @@ public class FootnoteReferenceBufferedRegion
                 FootnoteInfo info = infos.get( id );
                 if ( info != null )
                 {
-                    String newId = handler.getFormatter().getFunctionDirective( FootnoteRegistry.KEY, "registerFootnote", "'" + id+ "'", "'" + info.getContent() + "'"); 
+                    String newId =
+                        handler.getFormatter().getFunctionDirective( FootnoteRegistry.KEY, "registerFootnote",
+                                                                     "\"" + id + "\"", TemplateContextHelper.CONTEXT_KEY );
                     idAttribute.setValue( newId );
                 }
             }

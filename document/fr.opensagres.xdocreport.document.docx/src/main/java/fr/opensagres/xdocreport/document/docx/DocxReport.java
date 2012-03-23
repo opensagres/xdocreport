@@ -64,6 +64,7 @@ import fr.opensagres.xdocreport.document.docx.preprocessor.sax.contenttypes.Docx
 import fr.opensagres.xdocreport.document.docx.preprocessor.sax.notes.DocxFootnotesPreprocessor;
 import fr.opensagres.xdocreport.document.docx.preprocessor.sax.notes.FootnoteRegistry;
 import fr.opensagres.xdocreport.document.docx.preprocessor.sax.notes.FootnoteUtils;
+import fr.opensagres.xdocreport.document.docx.preprocessor.sax.notes.InitialFootNoteInfoMap;
 import fr.opensagres.xdocreport.document.docx.preprocessor.sax.numbering.DocxNumberingPreprocessor;
 import fr.opensagres.xdocreport.document.docx.preprocessor.sax.rels.DocxDocumentXMLRelsPreprocessor;
 import fr.opensagres.xdocreport.document.docx.preprocessor.sax.styles.DocxStylesPreprocessor;
@@ -90,7 +91,7 @@ public class DocxReport
 
     private DefaultStyle defaultStyle;
 
-    private boolean hasFootnotes;
+    private InitialFootNoteInfoMap initialFootNoteInfoMap;
 
     public DocxReport()
     {
@@ -204,7 +205,7 @@ public class DocxReport
                 }
             }
             // 2) Footnotes
-            hasFootnotes = FootnoteUtils.getInitialFootNoteInfoMap( sharedContext ) != null;
+            initialFootNoteInfoMap = FootnoteUtils.getInitialFootNoteInfoMap( sharedContext );
         }
     }
 
@@ -226,9 +227,9 @@ public class DocxReport
         // 4) Register styles generator if not exists.
         DocxContextHelper.getStylesGenerator( context );
         // 5) Footnotes registry if need
-        if ( hasFootnotes )
+        if ( initialFootNoteInfoMap != null )
         {
-            DocxContextHelper.putFootnoteRegistry( context, new FootnoteRegistry() );
+            DocxContextHelper.putFootnoteRegistry( context, new FootnoteRegistry(initialFootNoteInfoMap) );
         }
     }
 

@@ -1,18 +1,34 @@
 package fr.opensagres.xdocreport.document.docx.preprocessor.sax.notes;
 
+import java.io.IOException;
+import java.io.StringReader;
+import java.io.StringWriter;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import fr.opensagres.xdocreport.core.XDocReportException;
+import fr.opensagres.xdocreport.template.IContext;
+import fr.opensagres.xdocreport.template.ITemplateEngine;
+import fr.opensagres.xdocreport.template.TemplateContextHelper;
+
 public class FootnoteRegistry
 {
     public static final String KEY = "___FootnoteRegistry";
 
+    private InitialFootNoteInfoMap initialFootNoteInfoMap;
+    
     private Map<String, List<FootnoteInfo>> footnotesMap;
 
-    public String registerFootnote( String id, String content )
+    public FootnoteRegistry( InitialFootNoteInfoMap initialFootNoteInfoMap )
+    {
+        this.initialFootNoteInfoMap=initialFootNoteInfoMap;
+    }
+
+    public String registerFootnote( String id, IContext context )
+        throws XDocReportException, IOException
     {
         if ( footnotesMap == null )
         {
@@ -25,7 +41,14 @@ public class FootnoteRegistry
             footnotesMap.put( id, footnotes );
         }
         String newId = "" + ( footnotes.size() + 1 );
-        footnotes.add( new FootnoteInfo( newId, content ) );
+    
+        ITemplateEngine templateEngine = TemplateContextHelper.getTemplateEngine( context );
+        FootnoteInfo info = initialFootNoteInfoMap.get( id );
+
+        StringWriter content = new StringWriter();
+        templateEngine.process( "", context, new StringReader( info.getContent() ), content );
+
+        footnotes.add( new FootnoteInfo( newId, content.toString() ) );
         return newId;
     }
 
@@ -42,4 +65,5 @@ public class FootnoteRegistry
         }
         return footnotes;
     }
+
 }

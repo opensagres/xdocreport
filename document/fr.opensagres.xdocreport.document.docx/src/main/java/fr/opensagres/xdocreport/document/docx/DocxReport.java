@@ -28,6 +28,7 @@ import static fr.opensagres.xdocreport.document.docx.DocxConstants.CONTENT_TYPES
 import static fr.opensagres.xdocreport.document.docx.DocxConstants.MIME_MAPPING;
 import static fr.opensagres.xdocreport.document.docx.DocxConstants.WORD_DOCUMENT_XML_ENTRY;
 import static fr.opensagres.xdocreport.document.docx.DocxConstants.WORD_FOOTER_XML_ENTRY;
+import static fr.opensagres.xdocreport.document.docx.DocxConstants.WORD_FOOTNOTES_XML_ENTRY;
 import static fr.opensagres.xdocreport.document.docx.DocxConstants.WORD_HEADER_XML_ENTRY;
 import static fr.opensagres.xdocreport.document.docx.DocxConstants.WORD_NUMBERING_XML_ENTRY;
 import static fr.opensagres.xdocreport.document.docx.DocxConstants.WORD_RELS_XMLRELS_XML_ENTRY;
@@ -60,6 +61,9 @@ import fr.opensagres.xdocreport.document.docx.preprocessor.HyperlinkRegistry;
 import fr.opensagres.xdocreport.document.docx.preprocessor.HyperlinkUtils;
 import fr.opensagres.xdocreport.document.docx.preprocessor.InitialHyperlinkMap;
 import fr.opensagres.xdocreport.document.docx.preprocessor.sax.contenttypes.DocxContentTypesPreprocessor;
+import fr.opensagres.xdocreport.document.docx.preprocessor.sax.notes.DocxFootnotesPreprocessor;
+import fr.opensagres.xdocreport.document.docx.preprocessor.sax.notes.FootnoteRegistry;
+import fr.opensagres.xdocreport.document.docx.preprocessor.sax.notes.FootnoteUtils;
 import fr.opensagres.xdocreport.document.docx.preprocessor.sax.numbering.DocxNumberingPreprocessor;
 import fr.opensagres.xdocreport.document.docx.preprocessor.sax.rels.DocxDocumentXMLRelsPreprocessor;
 import fr.opensagres.xdocreport.document.docx.preprocessor.sax.styles.DocxStylesPreprocessor;
@@ -77,13 +81,16 @@ public class DocxReport
     private static final long serialVersionUID = -2323716817951928168L;
 
     private static final String[] DEFAULT_XML_ENTRIES = { WORD_DOCUMENT_XML_ENTRY, WORD_STYLES_XML_ENTRY,
-        WORD_HEADER_XML_ENTRY, WORD_FOOTER_XML_ENTRY, WORD_RELS_XMLRELS_XML_ENTRY, WORD_NUMBERING_XML_ENTRY };
+        WORD_HEADER_XML_ENTRY, WORD_FOOTER_XML_ENTRY, WORD_RELS_XMLRELS_XML_ENTRY, WORD_FOOTNOTES_XML_ENTRY,
+        WORD_NUMBERING_XML_ENTRY };
 
     private Set<String> allEntryNamesHyperlinks;
 
     private Set<String> modifiedEntryNamesHyperlinks;
 
     private DefaultStyle defaultStyle;
+
+    private boolean hasFootnotes;
 
     public DocxReport()
     {
@@ -99,6 +106,7 @@ public class DocxReport
     protected void registerPreprocessors()
     {
         super.addPreprocessor( WORD_STYLES_XML_ENTRY, DocxStylesPreprocessor.INSTANCE );
+        super.addPreprocessor( WORD_FOOTNOTES_XML_ENTRY, DocxFootnotesPreprocessor.INSTANCE );
         // super.addPreprocessor( WORD_DOCUMENT_XML_ENTRY, DocxDocumentPreprocessor.INSTANCE );
         // super.addPreprocessor( WORD_HEADER_XML_ENTRY, DocxDocumentPreprocessor.INSTANCE );
         // super.addPreprocessor( WORD_FOOTER_XML_ENTRY, DocxDocumentPreprocessor.INSTANCE );
@@ -172,6 +180,7 @@ public class DocxReport
                 throw new XDocReportException( e );
             }
         }
+        // Default style
         sharedContext.put( DocxContextHelper.DEFAULT_STYLE_KEY, defaultStyle );
     }
 
@@ -183,6 +192,7 @@ public class DocxReport
         // Compute if the docx has dynamic hyperlink
         if ( sharedContext != null )
         {
+            // 1) Hyperlink
             InitialHyperlinkMap hyperlinkMap = null;
             modifiedEntryNamesHyperlinks = new HashSet<String>();
             for ( String entryName : allEntryNamesHyperlinks )
@@ -193,6 +203,8 @@ public class DocxReport
                     modifiedEntryNamesHyperlinks.add( entryName );
                 }
             }
+            // 2) Footnotes
+            hasFootnotes = FootnoteUtils.getInitialFootNoteInfoMap( sharedContext ) != null;
         }
     }
 
@@ -213,6 +225,11 @@ public class DocxReport
         DocxContextHelper.putDefaultStyle( context, defaultStyle );
         // 4) Register styles generator if not exists.
         DocxContextHelper.getStylesGenerator( context );
+        // 5) Footnotes registry if need
+        if ( hasFootnotes )
+        {
+            DocxContextHelper.putFootnoteRegistry( context, new FootnoteRegistry() );
+        }
     }
 
     @Override
@@ -221,4 +238,5 @@ public class DocxReport
     {
         super.onAfterProcessTemplateEngine( context, outputArchive );
     }
+
 }

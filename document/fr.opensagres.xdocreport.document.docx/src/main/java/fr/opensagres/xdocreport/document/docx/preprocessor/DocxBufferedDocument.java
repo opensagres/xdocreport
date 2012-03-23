@@ -35,6 +35,7 @@ import static fr.opensagres.xdocreport.document.docx.DocxUtils.isBookmarkStart;
 import static fr.opensagres.xdocreport.document.docx.DocxUtils.isDrawing;
 import static fr.opensagres.xdocreport.document.docx.DocxUtils.isFldChar;
 import static fr.opensagres.xdocreport.document.docx.DocxUtils.isFldSimple;
+import static fr.opensagres.xdocreport.document.docx.DocxUtils.isFootnoteReference;
 import static fr.opensagres.xdocreport.document.docx.DocxUtils.isHyperlink;
 import static fr.opensagres.xdocreport.document.docx.DocxUtils.isP;
 import static fr.opensagres.xdocreport.document.docx.DocxUtils.isR;
@@ -46,6 +47,7 @@ import org.xml.sax.helpers.AttributesImpl;
 import fr.opensagres.xdocreport.core.utils.StringUtils;
 import fr.opensagres.xdocreport.core.utils.XMLUtils;
 import fr.opensagres.xdocreport.document.docx.DocxUtils;
+import fr.opensagres.xdocreport.document.docx.preprocessor.sax.notes.FootnoteReferenceBufferedRegion;
 import fr.opensagres.xdocreport.document.preprocessor.sax.BufferedElement;
 import fr.opensagres.xdocreport.document.preprocessor.sax.TransformedBufferedDocument;
 import fr.opensagres.xdocreport.template.formatter.FieldMetadata;
@@ -55,7 +57,7 @@ public class DocxBufferedDocument
     extends TransformedBufferedDocument
 {
 
-    private final DocXBufferedDocumentContentHandler handler;
+    protected final DocXBufferedDocumentContentHandler handler;
 
     private PBufferedRegion currentPRegion;
 
@@ -88,7 +90,7 @@ public class DocxBufferedDocument
         if ( isP( uri, localName, name ) )
         {
             // w:p element
-            currentPRegion = new PBufferedRegion(this, getCurrentElement(), uri, localName, name, attributes );
+            currentPRegion = new PBufferedRegion( this, getCurrentElement(), uri, localName, name, attributes );
             return currentPRegion;
         }
 
@@ -199,6 +201,26 @@ public class DocxBufferedDocument
             return super.createElement( parent, uri, localName, name, attributes );
 
         }
+        if ( isFootnoteReference( uri, localName, name ) )
+        {
+
+            // <w:footnoteReference w:id="1" />
+            int idIndex = attributes.getIndex( W_NS, ID_ATTR );
+            if ( idIndex != -1 )
+            {
+                String attrName = attributes.getQName( idIndex );
+                AttributesImpl attributesImpl = XMLUtils.toAttributesImpl( attributes );
+                attributesImpl.removeAttribute( idIndex );
+                String id = attributes.getValue( idIndex );
+                FootnoteReferenceBufferedRegion noteReference =
+                    new FootnoteReferenceBufferedRegion( handler, parent, uri, localName, name, attributesImpl );
+                noteReference.setId( attrName, id );
+                // return true;
+                return noteReference;
+            }
+            return super.createElement( parent, uri, localName, name, attributes );
+
+        }
         return super.createElement( parent, uri, localName, name, attributes );
     }
 
@@ -242,11 +264,11 @@ public class DocxBufferedDocument
         if ( isR( uri, localName, name ) && currentRRegion != null && currentFldSimpleRegion == null )
         {
             super.onEndEndElement( uri, localName, name );
-//            boolean hasScript = processScriptBeforeAfter( currentRRegion );
-//            if ( hasScript )
-//            {
-//                currentRRegion.reset();
-//            }
+            // boolean hasScript = processScriptBeforeAfter( currentRRegion );
+            // if ( hasScript )
+            // {
+            // currentRRegion.reset();
+            // }
             currentRRegion = null;
             return;
         }

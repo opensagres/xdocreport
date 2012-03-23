@@ -77,4 +77,9 @@ public class FldSimpleBufferedRegion
         }
     }
 
+    public void setNewTContent( String tContent )
+    {
+        getTRegion().setTextContent( tContent );
+    }
+
 }

@@ -5,6 +5,7 @@ import java.util.Map;
 import fr.opensagres.xdocreport.document.docx.preprocessor.DefaultStyle;
 import fr.opensagres.xdocreport.document.docx.preprocessor.HyperlinkRegistry;
 import fr.opensagres.xdocreport.document.docx.preprocessor.HyperlinkUtils;
+import fr.opensagres.xdocreport.document.docx.preprocessor.sax.notes.FootnoteRegistry;
 import fr.opensagres.xdocreport.document.docx.preprocessor.sax.numbering.NumberingRegistry;
 import fr.opensagres.xdocreport.document.docx.textstyling.DocxDefaultStylesGenerator;
 import fr.opensagres.xdocreport.document.docx.textstyling.IDocxStylesGenerator;
@@ -75,6 +76,12 @@ public class DocxContextHelper
     public static NumberingRegistry getNumberingRegistry( IContext context )
     {
         return (NumberingRegistry) context.get( NUMBERING_REGISTRY_KEY );
+    }
+
+    public static void putFootnoteRegistry( IContext context, FootnoteRegistry registry )
+    {
+        context.put( FootnoteRegistry.KEY, registry );
+
     }
 
 }

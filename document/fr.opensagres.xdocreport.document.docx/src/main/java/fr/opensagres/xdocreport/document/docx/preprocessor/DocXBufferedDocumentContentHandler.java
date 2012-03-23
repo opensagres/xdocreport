@@ -63,9 +63,9 @@ public class DocXBufferedDocumentContentHandler
     private boolean tParsing = false;
 
     protected DocXBufferedDocumentContentHandler( String entryName, FieldsMetadata fieldsMetadata,
-                                                  IDocumentFormatter formater, Map<String, Object> context )
+                                                  IDocumentFormatter formater, Map<String, Object> sharedContext )
     {
-        super( entryName, fieldsMetadata, formater, context );
+        super( entryName, fieldsMetadata, formater, sharedContext );
     }
 
     @Override
@@ -230,7 +230,7 @@ public class DocXBufferedDocumentContentHandler
         FldSimpleBufferedRegion currentFldSimpleRegion = bufferedDocument.getCurrentFldSimpleRegion();
         if ( isFldSimple( uri, localName, name ) && currentFldSimpleRegion != null )
         {
-            // it's end of fldSimple and it's Mergefield; ignore the element
+            // it's end of fldSimple and it's Mergefield=> ignore the element
             String fieldName = currentFldSimpleRegion.getFieldName();
             if ( fieldName == null )
             {

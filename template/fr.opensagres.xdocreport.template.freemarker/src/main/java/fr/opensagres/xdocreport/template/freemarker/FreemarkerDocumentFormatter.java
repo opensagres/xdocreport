@@ -560,7 +560,7 @@ public class FreemarkerDocumentFormatter
                                                  syntaxWithDirective ? StringUtils.TRUE : StringUtils.FALSE, "\""
                                                      + documentKind + "\"", "\"" + elementId + "\"",
                                                  TemplateContextHelper.CONTEXT_KEY, "\"" + entryName + "\"" ) );
-        newContent.append( END_ASSIGN_DIRECTIVE );
+        newContent.append( CLOSE_ASSIGN_DIRECTIVE );
         return newContent.toString();
     }
 

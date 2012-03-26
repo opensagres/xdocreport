@@ -85,6 +85,7 @@ public class DocxReport
 
     private static final String[] DEFAULT_XML_ENTRIES = { WORD_DOCUMENT_XML_ENTRY, WORD_STYLES_XML_ENTRY,
         WORD_HEADER_XML_ENTRY, WORD_FOOTER_XML_ENTRY, WORD_RELS_XMLRELS_XML_ENTRY, WORD_FOOTNOTES_XML_ENTRY,
+        WORD_ENDNOTES_XML_ENTRY,
         WORD_NUMBERING_XML_ENTRY };
 
     private Set<String> allEntryNamesHyperlinks;

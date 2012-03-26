@@ -27,6 +27,7 @@ package fr.opensagres.xdocreport.document.docx;
 import static fr.opensagres.xdocreport.document.docx.DocxConstants.CONTENT_TYPES_XML_ENTRY;
 import static fr.opensagres.xdocreport.document.docx.DocxConstants.MIME_MAPPING;
 import static fr.opensagres.xdocreport.document.docx.DocxConstants.WORD_DOCUMENT_XML_ENTRY;
+import static fr.opensagres.xdocreport.document.docx.DocxConstants.WORD_ENDNOTES_XML_ENTRY;
 import static fr.opensagres.xdocreport.document.docx.DocxConstants.WORD_FOOTER_XML_ENTRY;
 import static fr.opensagres.xdocreport.document.docx.DocxConstants.WORD_FOOTNOTES_XML_ENTRY;
 import static fr.opensagres.xdocreport.document.docx.DocxConstants.WORD_HEADER_XML_ENTRY;
@@ -61,10 +62,11 @@ import fr.opensagres.xdocreport.document.docx.preprocessor.HyperlinkRegistry;
 import fr.opensagres.xdocreport.document.docx.preprocessor.HyperlinkUtils;
 import fr.opensagres.xdocreport.document.docx.preprocessor.InitialHyperlinkMap;
 import fr.opensagres.xdocreport.document.docx.preprocessor.sax.contenttypes.DocxContentTypesPreprocessor;
-import fr.opensagres.xdocreport.document.docx.preprocessor.sax.notes.DocxFootnotesPreprocessor;
-import fr.opensagres.xdocreport.document.docx.preprocessor.sax.notes.FootnoteRegistry;
-import fr.opensagres.xdocreport.document.docx.preprocessor.sax.notes.FootnoteUtils;
-import fr.opensagres.xdocreport.document.docx.preprocessor.sax.notes.InitialFootNoteInfoMap;
+import fr.opensagres.xdocreport.document.docx.preprocessor.sax.notes.InitialNoteInfoMap;
+import fr.opensagres.xdocreport.document.docx.preprocessor.sax.notes.NoteRegistry;
+import fr.opensagres.xdocreport.document.docx.preprocessor.sax.notes.NoteUtils;
+import fr.opensagres.xdocreport.document.docx.preprocessor.sax.notes.endnotes.DocxEndnotesPreprocessor;
+import fr.opensagres.xdocreport.document.docx.preprocessor.sax.notes.footnotes.DocxFootnotesPreprocessor;
 import fr.opensagres.xdocreport.document.docx.preprocessor.sax.numbering.DocxNumberingPreprocessor;
 import fr.opensagres.xdocreport.document.docx.preprocessor.sax.rels.DocxDocumentXMLRelsPreprocessor;
 import fr.opensagres.xdocreport.document.docx.preprocessor.sax.styles.DocxStylesPreprocessor;
@@ -91,8 +93,10 @@ public class DocxReport
 
     private DefaultStyle defaultStyle;
 
-    private InitialFootNoteInfoMap initialFootNoteInfoMap;
+    private InitialNoteInfoMap initialFootNoteInfoMap;
 
+    private InitialNoteInfoMap initialEndNoteInfoMap;
+    
     public DocxReport()
     {
         this.defaultStyle = new DefaultStyle();
@@ -108,6 +112,7 @@ public class DocxReport
     {
         super.addPreprocessor( WORD_STYLES_XML_ENTRY, DocxStylesPreprocessor.INSTANCE );
         super.addPreprocessor( WORD_FOOTNOTES_XML_ENTRY, DocxFootnotesPreprocessor.INSTANCE );
+        super.addPreprocessor( WORD_ENDNOTES_XML_ENTRY, DocxEndnotesPreprocessor.INSTANCE );
         // super.addPreprocessor( WORD_DOCUMENT_XML_ENTRY, DocxDocumentPreprocessor.INSTANCE );
         // super.addPreprocessor( WORD_HEADER_XML_ENTRY, DocxDocumentPreprocessor.INSTANCE );
         // super.addPreprocessor( WORD_FOOTER_XML_ENTRY, DocxDocumentPreprocessor.INSTANCE );
@@ -205,7 +210,9 @@ public class DocxReport
                 }
             }
             // 2) Footnotes
-            initialFootNoteInfoMap = FootnoteUtils.getInitialFootNoteInfoMap( sharedContext );
+            initialFootNoteInfoMap = NoteUtils.getInitialFootNoteInfoMap( sharedContext );
+            // 3) Endnotes
+            initialEndNoteInfoMap = NoteUtils.getInitialEndNoteInfoMap( sharedContext );            
         }
     }
 
@@ -229,7 +236,12 @@ public class DocxReport
         // 5) Footnotes registry if need
         if ( initialFootNoteInfoMap != null )
         {
-            DocxContextHelper.putFootnoteRegistry( context, new FootnoteRegistry(initialFootNoteInfoMap) );
+            DocxContextHelper.putFootnoteRegistry( context, new NoteRegistry() );
+        }
+        // 6) Endnotes registry if need
+        if ( initialEndNoteInfoMap != null )
+        {
+            DocxContextHelper.putEndnoteRegistry( context, new NoteRegistry() );
         }
     }
 

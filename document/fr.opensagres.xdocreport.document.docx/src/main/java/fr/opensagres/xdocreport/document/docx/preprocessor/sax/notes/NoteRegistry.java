@@ -14,45 +14,40 @@ import fr.opensagres.xdocreport.template.IContext;
 import fr.opensagres.xdocreport.template.ITemplateEngine;
 import fr.opensagres.xdocreport.template.TemplateContextHelper;
 
-public class FootnoteRegistry
+public class NoteRegistry
 {
-    public static final String KEY = "___FootnoteRegistry";
-
-    private InitialFootNoteInfoMap initialFootNoteInfoMap;
     
-    private Map<String, List<FootnoteInfo>> footnotesMap;
+    public static final String REGISTER_NOTE_METHOD = "registerNote";
+    public static final String GET_NOTES_METHOD = "getNotes";
 
-    public FootnoteRegistry( InitialFootNoteInfoMap initialFootNoteInfoMap )
-    {
-        this.initialFootNoteInfoMap=initialFootNoteInfoMap;
-    }
+    private Map<String, List<NoteInfo>> notesMap;
 
-    public String registerFootnote( String id, Object content)
+    public String registerNote( String id, Object content)
         throws XDocReportException, IOException
     {
-        if ( footnotesMap == null )
+        if ( notesMap == null )
         {
-            footnotesMap = new HashMap<String, List<FootnoteInfo>>();
+            notesMap = new HashMap<String, List<NoteInfo>>();
         }
-        List<FootnoteInfo> footnotes = footnotesMap.get( id );
+        List<NoteInfo> footnotes = notesMap.get( id );
         if ( footnotes == null )
         {
-            footnotes = new ArrayList<FootnoteInfo>();
-            footnotesMap.put( id, footnotes );
+            footnotes = new ArrayList<NoteInfo>();
+            notesMap.put( id, footnotes );
         }
         String newId = "" + ( footnotes.size() + 1 );
        
-        footnotes.add( new FootnoteInfo( newId, content.toString() ) );
+        footnotes.add( new NoteInfo( newId, content.toString() ) );
         return newId;
     }
     
-    public List<FootnoteInfo> getFootnotes( String id )
+    public List<NoteInfo> getNotes( String id )
     {
-        if ( footnotesMap == null )
+        if ( notesMap == null )
         {
             return Collections.emptyList();
         }
-        List<FootnoteInfo> footnotes = footnotesMap.get( id );
+        List<NoteInfo> footnotes = notesMap.get( id );
         if ( footnotes == null )
         {
             return Collections.emptyList();

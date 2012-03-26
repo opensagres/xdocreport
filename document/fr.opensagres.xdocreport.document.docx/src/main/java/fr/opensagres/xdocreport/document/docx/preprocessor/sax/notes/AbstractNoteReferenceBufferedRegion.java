@@ -1,6 +1,7 @@
 package fr.opensagres.xdocreport.document.docx.preprocessor.sax.notes;
 
 import java.util.Date;
+import java.util.Map;
 
 import org.xml.sax.Attributes;
 
@@ -9,7 +10,7 @@ import fr.opensagres.xdocreport.document.preprocessor.sax.BufferedAttribute;
 import fr.opensagres.xdocreport.document.preprocessor.sax.BufferedElement;
 import fr.opensagres.xdocreport.template.formatter.IDocumentFormatter;
 
-public class FootnoteReferenceBufferedRegion
+public abstract class AbstractNoteReferenceBufferedRegion
     extends BufferedElement
 {
 
@@ -17,7 +18,7 @@ public class FootnoteReferenceBufferedRegion
 
     private BufferedAttribute idAttribute;
 
-    public FootnoteReferenceBufferedRegion( DocXBufferedDocumentContentHandler handler, BufferedElement parent,
+    public AbstractNoteReferenceBufferedRegion( DocXBufferedDocumentContentHandler handler, BufferedElement parent,
                                             String uri, String localName, String name, Attributes attributes )
     {
         super( parent, uri, localName, name, attributes );
@@ -41,25 +42,26 @@ public class FootnoteReferenceBufferedRegion
         if ( handler.hasSharedContext() && formatter != null )
         {
 
-            InitialFootNoteInfoMap infos = FootnoteUtils.getInitialFootNoteInfoMap( handler.getSharedContext() );
+            InitialNoteInfoMap infos = getInitialNoteInfoMap( handler.getSharedContext() );
             if ( infos != null )
             {
                 String id = idAttribute.getValue();
-                FootnoteInfo info = infos.get( id );
+                NoteInfo info = infos.get( id );
                 if ( info != null )
                 {
                     String name= "___footnote";
-                    // String newId =
-                    // handler.getFormatter().getFunctionDirective( FootnoteRegistry.KEY, "registerFootnote",
-                    // "'" + id + "'", TemplateContextHelper.CONTEXT_KEY );
+
                     StringBuilder newId = new StringBuilder();
                     newId.append( formatter.getDefineDirective( name, info.getContent()) );
-                    //newId.append( "#set($a = $" + name + ")" );
-                    newId.append( formatter.getFunctionDirective( FootnoteRegistry.KEY, "registerFootnote", "'" + id
+                    newId.append( formatter.getFunctionDirective( getNoteRegistryKey(), NoteRegistry.REGISTER_NOTE_METHOD, "'" + id
                         + "'", name ) );
                     idAttribute.setValue( newId.toString() );
                 }
             }
         }
     }
+
+    protected abstract String getNoteRegistryKey();
+    
+    protected abstract InitialNoteInfoMap getInitialNoteInfoMap( Map<String, Object> sharedContext );
 }

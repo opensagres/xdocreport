@@ -1,4 +1,4 @@
-package fr.opensagres.xdocreport.document.docx.preprocessor.sax.notes;
+package fr.opensagres.xdocreport.document.docx.preprocessor.sax.notes.footnotes;
 
 import java.util.Map;
 

@@ -1,24 +1,27 @@
 package fr.opensagres.xdocreport.document.docx.preprocessor.sax.notes;
 
+import java.util.Map;
+
 import org.xml.sax.Attributes;
 
 import fr.opensagres.xdocreport.core.utils.StringUtils;
+import fr.opensagres.xdocreport.document.docx.preprocessor.DocXBufferedDocumentContentHandler;
 import fr.opensagres.xdocreport.document.preprocessor.sax.BufferedAttribute;
 import fr.opensagres.xdocreport.document.preprocessor.sax.BufferedElement;
 import fr.opensagres.xdocreport.template.formatter.IDocumentFormatter;
 
-public class FootnoteBufferedRegion
+public abstract class AbstractNoteBufferedRegion
     extends BufferedElement
 {
 
-    private final DocxFootnotesDocumentContentHandler handler;
+    private final DocXBufferedDocumentContentHandler handler;
 
     private BufferedAttribute idAttribute;
 
     private boolean containsField;
 
-    public FootnoteBufferedRegion( DocxFootnotesDocumentContentHandler handler, BufferedElement parent, String uri,
-                                   String localName, String name, Attributes attributes )
+    public AbstractNoteBufferedRegion( DocXBufferedDocumentContentHandler handler, BufferedElement parent, String uri,
+                                       String localName, String name, Attributes attributes )
     {
         super( parent, uri, localName, name, attributes );
         this.handler = handler;
@@ -42,29 +45,31 @@ public class FootnoteBufferedRegion
                 return;
             }
 
-            String content = null;
+            String content = "";
             if ( isContainsField() )
             {
                 content = super.getInnerText();
-                super.setInnerText( formatter.formatAsSimpleField( true, true, "___NoEscapeInfo", "content" ) );
+                super.setInnerText( formatter.formatAsSimpleField( true, true, NoteInfo.CONTEXT_KEY,
+                                                                   NoteInfo.CONTENT_PROPERTY ) );
             }
 
-            InitialFootNoteInfoMap infos = FootnoteUtils.getInitialFootNoteInfoMap( handler.getSharedContext() );
+            InitialNoteInfoMap infos = getInitialNoteInfoMap( handler.getSharedContext() );
             if ( infos == null )
             {
-                infos = new InitialFootNoteInfoMap();
-                FootnoteUtils.putInitialFootNoteInfoMap( handler.getSharedContext(), infos );
+                infos = new InitialNoteInfoMap();
+                putInitialNoteInfoMap( handler.getSharedContext(), infos );
             }
 
-            FootnoteInfo info = new FootnoteInfo( id, content );
+            NoteInfo info = new NoteInfo( id, content );
             infos.put( id, info );
 
-            String newId = formatter.formatAsSimpleField( true, "___NoEscapeInfo", "id" );
+            String newId = formatter.formatAsSimpleField( true, NoteInfo.CONTEXT_KEY, NoteInfo.ID_PROPERTY );
             idAttribute.setValue( newId );
 
             String listName =
-                formatter.getFunctionDirective( false, FootnoteRegistry.KEY, "getFootnotes", "'" + id + "'" );
-            String before = formatter.getStartLoopDirective( "___NoEscapeInfo", listName );
+                formatter.getFunctionDirective( false, getNoteRegistryKey(), NoteRegistry.GET_NOTES_METHOD, "'" + id
+                    + "'" );
+            String before = formatter.getStartLoopDirective( NoteInfo.CONTEXT_KEY, listName );
 
             if ( StringUtils.isNotEmpty( this.getStartTagElement().getBefore() ) )
             {
@@ -85,6 +90,10 @@ public class FootnoteBufferedRegion
         // idAttribute.setValue( id );
     }
 
+    protected abstract InitialNoteInfoMap getInitialNoteInfoMap( Map<String, Object> sharedContext );
+
+    protected abstract void putInitialNoteInfoMap( Map<String, Object> sharedContext, InitialNoteInfoMap infos );
+
     public void setId( String name, String value )
     {
         if ( idAttribute == null )
@@ -103,4 +112,6 @@ public class FootnoteBufferedRegion
     {
         return containsField;
     }
+
+    protected abstract String getNoteRegistryKey();
 }

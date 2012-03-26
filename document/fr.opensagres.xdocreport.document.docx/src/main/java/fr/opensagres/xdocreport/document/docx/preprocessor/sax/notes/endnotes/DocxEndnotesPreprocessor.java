@@ -22,25 +22,32 @@
  * OF CONTRACT, TORT OR OTHERWISE,  ARISING FROM, OUT OF OR IN CONNECTION
  * WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
-package fr.opensagres.xdocreport.document.docx.preprocessor.sax.notes;
+package fr.opensagres.xdocreport.document.docx.preprocessor.sax.notes.endnotes;
 
-import java.util.HashMap;
+import java.util.Map;
 
-public class InitialFootNoteInfoMap
-    extends HashMap<String, FootnoteInfo>
+import fr.opensagres.xdocreport.document.preprocessor.IXDocPreprocessor;
+import fr.opensagres.xdocreport.document.preprocessor.sax.BufferedDocumentContentHandler;
+import fr.opensagres.xdocreport.document.preprocessor.sax.SAXXDocPreprocessor;
+import fr.opensagres.xdocreport.template.formatter.FieldsMetadata;
+import fr.opensagres.xdocreport.template.formatter.IDocumentFormatter;
+
+/**
+ * This processor modify the XML entry word/endnotes.xml
+ */
+public class DocxEndnotesPreprocessor
+    extends SAXXDocPreprocessor
 {
 
-    private boolean modified = false;
+    public static final IXDocPreprocessor INSTANCE = new DocxEndnotesPreprocessor();
 
     @Override
-    public FootnoteInfo remove( Object key )
+    protected BufferedDocumentContentHandler createBufferedDocumentContentHandler( String entryName,
+                                                                                   FieldsMetadata fieldsMetadata,
+                                                                                   IDocumentFormatter formater,
+                                                                                   Map<String, Object> sharedContext )
     {
-        this.modified = true;
-        return super.remove( key );
+        return new DocxEndnotesDocumentContentHandler( entryName, fieldsMetadata, formater, sharedContext );
     }
 
-    public boolean isModified()
-    {
-        return modified;
-    }
 }

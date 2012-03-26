@@ -90,11 +90,14 @@ public class PBufferedRegion
 
     private final DocxBufferedDocument document;
 
+    private boolean containsField;
+
     public PBufferedRegion( DocxBufferedDocument document, BufferedElement parent, String uri, String localName,
                             String name, Attributes attributes )
     {
         super( parent, uri, localName, name, attributes );
         this.document = document;
+        this.containsField = false;
     }
 
     @Override
@@ -172,11 +175,12 @@ public class PBufferedRegion
                         fieldName = firstR.getFieldName();
                         if ( fieldName != null )
                         {
-                            
-                            if (document.processScriptBeforeAfter( firstR )) {
+
+                            if ( document.processScriptBeforeAfter( firstR ) )
+                            {
                                 rReseted = true;
                             }
-                            
+
                             for ( RBufferedRegion r : rMerged )
                             {
                                 toRemove.add( r );
@@ -211,6 +215,7 @@ public class PBufferedRegion
                     // the t content with fieldName
                     rBufferedRegion.setTContent( fieldName );
                     fieldNameSetted = true;
+                    containsField = true;
                 }
                 else
                 {
@@ -221,6 +226,12 @@ public class PBufferedRegion
         }
         rBufferedRegions.removeAll( toRemove );
         super.removeAll( toRemove );
+    }
+
+    public boolean isContainsField()
+    {
+        // TODO Auto-generated method stub
+        return false;
     }
 
 }

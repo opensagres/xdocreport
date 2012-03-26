@@ -2,6 +2,7 @@ package fr.opensagres.xdocreport.document.docx.preprocessor.sax.notes;
 
 import org.xml.sax.Attributes;
 
+import fr.opensagres.xdocreport.core.utils.StringUtils;
 import fr.opensagres.xdocreport.document.preprocessor.sax.BufferedAttribute;
 import fr.opensagres.xdocreport.document.preprocessor.sax.BufferedElement;
 import fr.opensagres.xdocreport.template.formatter.IDocumentFormatter;
@@ -34,11 +35,18 @@ public class FootnoteBufferedRegion
         if ( handler.hasSharedContext() )
         {
             String id = idAttribute.getValue();
+
+            Integer intId = StringUtils.asInteger( id );
+            if ( intId == null || intId < 1 )
+            {
+                return;
+            }
+
             String content = null;
             if ( isContainsField() )
             {
                 content = super.getInnerText();
-                super.setInnerText( formatter.formatAsSimpleField( true, "___info", "content" ) );
+                super.setInnerText( formatter.formatAsSimpleField( true, true, "___NoEscapeInfo", "content" ) );
             }
 
             InitialFootNoteInfoMap infos = FootnoteUtils.getInitialFootNoteInfoMap( handler.getSharedContext() );
@@ -51,14 +59,21 @@ public class FootnoteBufferedRegion
             FootnoteInfo info = new FootnoteInfo( id, content );
             infos.put( id, info );
 
-            String newId = formatter.formatAsSimpleField( true, "___info", "id" );
+            String newId = formatter.formatAsSimpleField( true, "___NoEscapeInfo", "id" );
             idAttribute.setValue( newId );
-            
-            String listName= formatter.getFunctionDirective( FootnoteRegistry.KEY, "getFootnotes", "\"" + id + "\"");
-            String before = formatter.getStartLoopDirective( "___info", listName );
-            
-            this.setContentBeforeStartTagElement( before );
 
+            String listName =
+                formatter.getFunctionDirective( false, FootnoteRegistry.KEY, "getFootnotes", "'" + id + "'" );
+            String before = formatter.getStartLoopDirective( "___NoEscapeInfo", listName );
+
+            if ( StringUtils.isNotEmpty( this.getStartTagElement().getBefore() ) )
+            {
+                before = this.getStartTagElement().getBefore() + before;
+            }
+            else
+            {
+                this.setContentBeforeStartTagElement( before );
+            }
             String after = formatter.getEndLoopDirective( "" );
             this.setContentAfterEndTagElement( after );
 

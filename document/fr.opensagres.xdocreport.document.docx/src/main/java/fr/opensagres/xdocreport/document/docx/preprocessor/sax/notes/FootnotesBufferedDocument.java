@@ -4,6 +4,7 @@ import static fr.opensagres.xdocreport.document.docx.DocxConstants.ID_ATTR;
 import static fr.opensagres.xdocreport.document.docx.DocxConstants.W_NS;
 import static fr.opensagres.xdocreport.document.docx.DocxUtils.isFldSimple;
 import static fr.opensagres.xdocreport.document.docx.DocxUtils.isFootnote;
+import static fr.opensagres.xdocreport.document.docx.DocxUtils.isP;
 
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
@@ -12,6 +13,7 @@ import org.xml.sax.helpers.AttributesImpl;
 import fr.opensagres.xdocreport.core.utils.XMLUtils;
 import fr.opensagres.xdocreport.document.docx.preprocessor.DocxBufferedDocument;
 import fr.opensagres.xdocreport.document.docx.preprocessor.FldSimpleBufferedRegion;
+import fr.opensagres.xdocreport.document.docx.preprocessor.PBufferedRegion;
 import fr.opensagres.xdocreport.document.preprocessor.sax.BufferedElement;
 
 public class FootnotesBufferedDocument
@@ -68,6 +70,16 @@ public class FootnotesBufferedDocument
                 return;
             }
 
+            if ( isP( uri, localName, name ) && getCurrentPRegion() != null )
+            {
+                PBufferedRegion pRegion =getCurrentPRegion();
+                super.onEndEndElement( uri, localName, name );
+                if (pRegion.isContainsField() && !pRegion.isReseted()) {
+                    currentFootnoteRegion.setContainsField( true );
+                }
+                return;
+            }
+            
             if ( isFootnote( uri, localName, name ) )
             {
                 currentFootnoteRegion.process();

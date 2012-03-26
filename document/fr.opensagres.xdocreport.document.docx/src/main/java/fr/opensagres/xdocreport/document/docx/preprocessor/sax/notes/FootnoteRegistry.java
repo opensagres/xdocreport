@@ -27,7 +27,7 @@ public class FootnoteRegistry
         this.initialFootNoteInfoMap=initialFootNoteInfoMap;
     }
 
-    public String registerFootnote( String id, IContext context )
+    public String registerFootnote( String id, Object content)
         throws XDocReportException, IOException
     {
         if ( footnotesMap == null )
@@ -41,17 +41,11 @@ public class FootnoteRegistry
             footnotesMap.put( id, footnotes );
         }
         String newId = "" + ( footnotes.size() + 1 );
-    
-        ITemplateEngine templateEngine = TemplateContextHelper.getTemplateEngine( context );
-        FootnoteInfo info = initialFootNoteInfoMap.get( id );
-
-        StringWriter content = new StringWriter();
-        templateEngine.process( "", context, new StringReader( info.getContent() ), content );
-
+       
         footnotes.add( new FootnoteInfo( newId, content.toString() ) );
         return newId;
     }
-
+    
     public List<FootnoteInfo> getFootnotes( String id )
     {
         if ( footnotesMap == null )

@@ -47,6 +47,8 @@ public interface IDocumentFormatter
 
     String getEndIfDirective( String fieldName );
 
+    String formatAsSimpleField( boolean noescape, boolean encloseInDirective, String... fields );
+    
     String formatAsSimpleField( boolean encloseInDirective, String... fields );
 
     String getImageDirective( String fieldName );
@@ -65,6 +67,8 @@ public interface IDocumentFormatter
 
     int getIndexOfScript( String fieldName );
 
+    String getFunctionDirective( boolean encloseInDirective, String key, String methodName, String... parameters );
+
     String getFunctionDirective( String key, String methodName, String... parameters );
 
     boolean hasDirective( String characters );
@@ -76,9 +80,13 @@ public interface IDocumentFormatter
 
     String getElseDirective();
 
+    String getSetDirective( String name, String value, boolean valueIsField );
+    
     String getSetDirective( String name, String value );
-    
+
     String getStartNoParse();
-    
+
     String getEndNoParse();
+
+    String getDefineDirective( String name, String value );
 }

@@ -1,11 +1,13 @@
 package fr.opensagres.xdocreport.document.docx.preprocessor.sax.notes;
 
+import java.util.Date;
+
 import org.xml.sax.Attributes;
 
 import fr.opensagres.xdocreport.document.docx.preprocessor.DocXBufferedDocumentContentHandler;
 import fr.opensagres.xdocreport.document.preprocessor.sax.BufferedAttribute;
 import fr.opensagres.xdocreport.document.preprocessor.sax.BufferedElement;
-import fr.opensagres.xdocreport.template.TemplateContextHelper;
+import fr.opensagres.xdocreport.template.formatter.IDocumentFormatter;
 
 public class FootnoteReferenceBufferedRegion
     extends BufferedElement
@@ -35,7 +37,8 @@ public class FootnoteReferenceBufferedRegion
 
     private void process()
     {
-        if ( handler.hasSharedContext() && handler.getFormatter() != null )
+        IDocumentFormatter formatter = handler.getFormatter();
+        if ( handler.hasSharedContext() && formatter != null )
         {
 
             InitialFootNoteInfoMap infos = FootnoteUtils.getInitialFootNoteInfoMap( handler.getSharedContext() );
@@ -45,13 +48,18 @@ public class FootnoteReferenceBufferedRegion
                 FootnoteInfo info = infos.get( id );
                 if ( info != null )
                 {
-                    String newId =
-                        handler.getFormatter().getFunctionDirective( FootnoteRegistry.KEY, "registerFootnote",
-                                                                     "\"" + id + "\"", TemplateContextHelper.CONTEXT_KEY );
-                    idAttribute.setValue( newId );
+                    String name= "___footnote";
+                    // String newId =
+                    // handler.getFormatter().getFunctionDirective( FootnoteRegistry.KEY, "registerFootnote",
+                    // "'" + id + "'", TemplateContextHelper.CONTEXT_KEY );
+                    StringBuilder newId = new StringBuilder();
+                    newId.append( formatter.getDefineDirective( name, info.getContent()) );
+                    //newId.append( "#set($a = $" + name + ")" );
+                    newId.append( formatter.getFunctionDirective( FootnoteRegistry.KEY, "registerFootnote", "'" + id
+                        + "'", name ) );
+                    idAttribute.setValue( newId.toString() );
                 }
             }
         }
     }
-
 }

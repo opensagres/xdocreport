@@ -93,6 +93,12 @@ public class VelocityDocumentFormatter
 
     private static final String END_NOPARSE = "]]#";
 
+    private static final String START_DEFINE_DIRECTIVE = "#define(";
+
+    private static final Object CLOSE_DEFINE_DIRECTIVE = ")";
+
+    private static final Object END_DEFINE_DIRECTIVE = "#end";
+
     public String formatAsFieldItemList( String content, String fieldName, boolean forceAsField )
     {
         int type = getModelFieldType( content, fieldName );
@@ -236,10 +242,13 @@ public class VelocityDocumentFormatter
         return directive.toString();
     }
 
-    public String getFunctionDirective( String key, String methodName, String... parameters )
+    public String getFunctionDirective( boolean encloseInDirective, String key, String methodName, String... parameters )
     {
         StringBuilder directive = new StringBuilder();
-        directive.append( DOLLAR_START_BRACKET );
+        if ( encloseInDirective )
+        {
+            directive.append( DOLLAR_START_BRACKET );
+        }
         directive.append( key );
         directive.append( '.' );
         directive.append( methodName );
@@ -261,11 +270,18 @@ public class VelocityDocumentFormatter
                 directive.append( p );
             }
         }
-        directive.append( END_IMAGE_DIRECTIVE );
+        if ( encloseInDirective )
+        {
+            directive.append( END_IMAGE_DIRECTIVE );
+        }
+        else
+        {
+            directive.append( ')' );
+        }
         return directive.toString();
     }
 
-    public String formatAsSimpleField( boolean encloseInDirective, String... fields )
+    public String formatAsSimpleField( boolean noescape, boolean encloseInDirective, String... fields )
     {
         StringBuilder field = new StringBuilder();
         if ( encloseInDirective )
@@ -527,17 +543,24 @@ public class VelocityDocumentFormatter
     {
         return characters.indexOf( "#" ) != -1;
     }
-    
-    public String getSetDirective( String name, String value )
+
+    public String getSetDirective( String name, String value, boolean valueIsField )
     {
         StringBuilder newContent = new StringBuilder( START_SET_DIRECTIVE );
-        newContent.append( formatAsSimpleField( true, name) );
+        newContent.append( formatAsSimpleField( true, name ) );
         newContent.append( EQUALS );
-        newContent.append( formatAsSimpleField( true, value) );
+        if ( valueIsField )
+        {
+            newContent.append( formatAsSimpleField( true, value ) );
+        }
+        else
+        {
+            newContent.append( value );
+        }
         newContent.append( END_SET_DIRECTIVE );
         return newContent.toString();
     }
-    
+
     public String getStartNoParse()
     {
         return START_NOPARSE;
@@ -546,5 +569,15 @@ public class VelocityDocumentFormatter
     public String getEndNoParse()
     {
         return END_NOPARSE;
+    }
+
+    public String getDefineDirective( String name, String value )
+    {
+        StringBuilder newContent = new StringBuilder( START_DEFINE_DIRECTIVE );
+        newContent.append( formatAsSimpleField( true, name ) );
+        newContent.append( CLOSE_DEFINE_DIRECTIVE );
+        newContent.append( value );
+        newContent.append( END_DEFINE_DIRECTIVE );
+        return newContent.toString();
     }
 }

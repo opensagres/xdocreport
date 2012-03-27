@@ -27,12 +27,17 @@ package fr.opensagres.xdocreport.document.images;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import fr.opensagres.xdocreport.core.io.IOUtils;
+import fr.opensagres.xdocreport.core.logging.LogUtils;
 
 public abstract class AbstractInputStreamImageProvider
     extends AbstractImageProvider
 {
+
+    private static final Logger LOGGER = LogUtils.getLogger( AbstractInputStreamImageProvider.class );
 
     public AbstractInputStreamImageProvider( boolean keepTemplateImageSize )
     {
@@ -56,6 +61,22 @@ public abstract class AbstractInputStreamImageProvider
 
     protected abstract InputStream getInputStream()
         throws IOException;
+
+    protected boolean doIsValid()
+    {
+        try
+        {
+            return getInputStream() != null;
+        }
+        catch ( IOException e )
+        {
+            if ( LOGGER.isLoggable( Level.SEVERE ) )
+            {
+                LOGGER.log( Level.SEVERE, "Error while getting the input stream of the image", e );
+            }
+            return false;
+        }
+    }
 
     @Override
     protected SimpleImageInfo loadImageInfo()

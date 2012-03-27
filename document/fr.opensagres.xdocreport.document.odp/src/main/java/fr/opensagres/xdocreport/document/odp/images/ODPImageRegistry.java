@@ -29,9 +29,10 @@ import fr.opensagres.xdocreport.core.io.IEntryReaderProvider;
 import fr.opensagres.xdocreport.core.io.IEntryWriterProvider;
 import fr.opensagres.xdocreport.document.images.AbstractImageRegistry;
 import fr.opensagres.xdocreport.document.images.ImageProviderInfo;
+import fr.opensagres.xdocreport.template.formatter.FieldsMetadata;
 
 /**
- * ODS image registry.
+ * ODP image registry.
  * 
  * @author Angelo ZERR
  */
@@ -42,9 +43,9 @@ public class ODPImageRegistry
     private static final String IMAGE_BASE_PATH = "Pictures/";
 
     public ODPImageRegistry( IEntryReaderProvider readerProvider, IEntryWriterProvider writerProvider,
-                             IEntryOutputStreamProvider outputStreamProvider )
+                             IEntryOutputStreamProvider outputStreamProvider, FieldsMetadata fieldsMetadata )
     {
-        super( readerProvider, writerProvider, outputStreamProvider );
+        super( readerProvider, writerProvider, outputStreamProvider, fieldsMetadata );
     }
 
     @Override

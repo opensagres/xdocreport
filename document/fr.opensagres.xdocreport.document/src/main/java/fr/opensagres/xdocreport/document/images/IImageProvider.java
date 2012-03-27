@@ -28,6 +28,7 @@ import java.io.IOException;
 import java.io.OutputStream;
 
 import fr.opensagres.xdocreport.core.document.ImageFormat;
+import fr.opensagres.xdocreport.template.formatter.NullImageStrategy;
 
 /**
  * Image provider is used as "context" to manage dynamic images in the document source (odt, docx...).
@@ -120,4 +121,25 @@ public interface IImageProvider
      * @return
      */
     boolean isResize();
+
+    /**
+     * Returns the strategy to use when the stream of the image is null.
+     * 
+     * @return
+     */
+    NullImageStrategy getStrategy();
+
+    /**
+     * Set the strategy to use when the stream of the image is null.
+     * 
+     * @param strategy
+     */
+    void setStrategy( NullImageStrategy strategy );
+
+    /**
+     * Returns true if the image provider is valid (ex : input stream not null) and false otherwise.
+     * 
+     * @return
+     */
+    boolean isValid();
 }

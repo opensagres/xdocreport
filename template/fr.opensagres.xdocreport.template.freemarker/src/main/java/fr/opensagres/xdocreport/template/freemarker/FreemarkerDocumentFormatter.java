@@ -80,10 +80,9 @@ public class FreemarkerDocumentFormatter
 
     private static final String END_IF_DIRECTIVE = "[/#if]";
 
-    private static final String START_IMAGE_DIRECTIVE = DOLLAR_TOTKEN + TemplateContextHelper.IMAGE_REGISTRY_KEY
-        + ".registerImage(";
+    private static final String START_IMAGE_DIRECTIVE = TemplateContextHelper.IMAGE_REGISTRY_KEY + ".registerImage(";
 
-    private static final String END_IMAGE_DIRECTIVE = ")}";
+    private static final String END_IMAGE_DIRECTIVE = ")";
 
     private static final String START_IMAGE_WIDTH_DIRECTIVE = DOLLAR_TOTKEN + TemplateContextHelper.IMAGE_REGISTRY_KEY
         + ".getWidth(";
@@ -210,6 +209,10 @@ public class FreemarkerDocumentFormatter
     {
         StringBuilder directive = new StringBuilder( START_IMAGE_DIRECTIVE );
         directive.append( fieldName );
+        directive.append( ",'" );
+        directive.append( fieldName );
+        directive.append( "'," );
+        directive.append( TemplateContextHelper.CONTEXT_KEY );
         directive.append( END_IMAGE_DIRECTIVE );
         return directive.toString();
     }
@@ -256,13 +259,10 @@ public class FreemarkerDocumentFormatter
                 directive.append( parameters[i] );
             }
         }
+        directive.append( ')' );
         if ( encloseInDirective )
         {
-            directive.append( END_IMAGE_DIRECTIVE );
-        }
-        else
-        {
-            directive.append( ')' );
+            directive.append( '}' );
         }
         return directive.toString();
     }

@@ -106,4 +106,9 @@ public class ImageProviderInfo
         return getImageBasePath() + getImageFileName();
     }
 
+    public boolean isValid()
+    {        
+        return true;
+    }
+
 }

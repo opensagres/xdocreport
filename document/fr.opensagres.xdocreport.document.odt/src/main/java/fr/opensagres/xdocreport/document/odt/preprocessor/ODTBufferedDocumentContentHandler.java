@@ -45,12 +45,14 @@ import org.xml.sax.helpers.AttributesImpl;
 
 import fr.opensagres.xdocreport.core.document.DocumentKind;
 import fr.opensagres.xdocreport.core.utils.StringUtils;
+import fr.opensagres.xdocreport.document.images.AbstractImageRegistry;
 import fr.opensagres.xdocreport.document.odt.textstyling.IODTStylesGenerator;
 import fr.opensagres.xdocreport.document.odt.textstyling.ODTStylesGeneratorProvider;
 import fr.opensagres.xdocreport.document.preprocessor.sax.BufferedElement;
 import fr.opensagres.xdocreport.document.preprocessor.sax.IBufferedRegion;
 import fr.opensagres.xdocreport.document.preprocessor.sax.TransformedBufferedDocumentContentHandler;
 import fr.opensagres.xdocreport.document.textstyling.ITransformResult;
+import fr.opensagres.xdocreport.template.TemplateContextHelper;
 import fr.opensagres.xdocreport.template.formatter.FieldMetadata;
 import fr.opensagres.xdocreport.template.formatter.FieldsMetadata;
 import fr.opensagres.xdocreport.template.formatter.IDocumentFormatter;
@@ -139,10 +141,29 @@ public class ODTBufferedDocumentContentHandler
                     if ( dynamicImageName != null && formatter != null )
                     {
 
+                        // insert before start bookmark image script (Velocity,
+                        // Freemarker)
+                        // #set($___imageInfo=${imageRegistry.registerImage($logo,'logo',$___context)})
+                        // #if($___imageInfo)
+                        String set =
+                            formatter.getSetDirective( AbstractImageRegistry.IMAGE_INFO,
+                                                       formatter.getImageDirective( dynamicImageName ), false );
+                        String imageInfoIf = formatter.getStartIfDirective( AbstractImageRegistry.IMAGE_INFO );
+
+                        StringBuilder before = new StringBuilder();
+                        before.append( set );
+                        before.append( imageInfoIf );
+
+                        String after = formatter.getEndIfDirective( AbstractImageRegistry.IMAGE_INFO );
                         if ( StringUtils.isNotEmpty( getStartNoParse() ) )
                         {
-                            getCurrentElement().setContentBeforeStartTagElement( getEndNoParse() );
-                            getCurrentElement().setContentAfterEndTagElement( getStartNoParse() );
+                            getCurrentElement().setContentBeforeStartTagElement( getEndNoParse() + before.toString() );
+                            getCurrentElement().setContentAfterEndTagElement( getStartNoParse() + after.toString() );
+                        }
+                        else
+                        {
+                            getCurrentElement().setContentBeforeStartTagElement( before.toString() );
+                            getCurrentElement().setContentAfterEndTagElement( after.toString() );
                         }
 
                         // Modify svg:width="21pt" svg:height="22.51pt" with
@@ -183,11 +204,17 @@ public class ODTBufferedDocumentContentHandler
         {
             if ( dynamicImageName != null && formatter != null )
             {
-                String newHref = formatter.getImageDirective( dynamicImageName );
-                AttributesImpl attributesImpl = toAttributesImpl( attributes );
-                int index = attributesImpl.getIndex( XLINK_NS, HREF_ATTR );
+
+                int index = attributes.getIndex( XLINK_NS, HREF_ATTR );
                 if ( index != -1 )
                 {
+                    // ${imageRegistry.getPath(___imageInfo,'Pictures/100000000000001C0000001EE8812A78.png')}
+                    String href = attributes.getValue( index );
+                    String newHref =
+                        formatter.getFunctionDirective( TemplateContextHelper.IMAGE_REGISTRY_KEY, "getPath",
+                                                        AbstractImageRegistry.IMAGE_INFO, "'" + href + "'" );
+
+                    AttributesImpl attributesImpl = toAttributesImpl( attributes );
                     attributesImpl.setValue( index, newHref );
                     attributes = attributesImpl;
                 }

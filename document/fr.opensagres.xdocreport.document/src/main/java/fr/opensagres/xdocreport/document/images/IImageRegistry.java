@@ -28,6 +28,7 @@ import java.io.IOException;
 import java.util.List;
 
 import fr.opensagres.xdocreport.core.XDocReportException;
+import fr.opensagres.xdocreport.template.IContext;
 
 /**
  * Image registry used to store the {@link IImageProvider} used in the "context", copy the binary data of the images in
@@ -44,8 +45,8 @@ public interface IImageRegistry
      * @return
      * @throws XDocReportException
      */
-    String registerImage( IImageProvider imageProvider )
-        throws XDocReportException;
+    ImageProviderInfo registerImage( Object imageProvider, String fieldName, IContext context )
+        throws XDocReportException, IOException;
 
     /**
      * Called before processing of the template engine.

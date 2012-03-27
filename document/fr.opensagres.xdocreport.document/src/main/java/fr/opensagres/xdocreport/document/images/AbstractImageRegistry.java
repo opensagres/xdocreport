@@ -34,6 +34,10 @@ import fr.opensagres.xdocreport.core.io.IEntryOutputStreamProvider;
 import fr.opensagres.xdocreport.core.io.IEntryReaderProvider;
 import fr.opensagres.xdocreport.core.io.IEntryWriterProvider;
 import fr.opensagres.xdocreport.core.io.IOUtils;
+import fr.opensagres.xdocreport.document.template.DocumentContextHelper;
+import fr.opensagres.xdocreport.template.IContext;
+import fr.opensagres.xdocreport.template.formatter.FieldsMetadata;
+import fr.opensagres.xdocreport.template.formatter.NullImageStrategy;
 
 /**
  * Abstract class for {@link IImageRegistry}.
@@ -41,6 +45,8 @@ import fr.opensagres.xdocreport.core.io.IOUtils;
 public abstract class AbstractImageRegistry
     implements IImageRegistry
 {
+
+    public static final String IMAGE_INFO = "___imageInfo";
 
     private static final String XDOCREPORT_PREFIX = "xdocreport_";
 
@@ -52,24 +58,112 @@ public abstract class AbstractImageRegistry
 
     protected final IEntryOutputStreamProvider outputStreamProvider;
 
+    private final FieldsMetadata fieldsMetadata;
+
+    private final NullImageStrategy defaultStrategy;
+
     public AbstractImageRegistry( IEntryReaderProvider readerProvider, IEntryWriterProvider writerProvider,
-                                  IEntryOutputStreamProvider outputStreamProvider )
+                                  IEntryOutputStreamProvider outputStreamProvider, FieldsMetadata fieldsMetadata )
     {
         this.readerProvider = readerProvider;
         this.writerProvider = writerProvider;
         this.outputStreamProvider = outputStreamProvider;
+        this.fieldsMetadata = fieldsMetadata;
+        this.defaultStrategy = ( fieldsMetadata != null ? fieldsMetadata.getStrategy() : null );
     }
 
-    public String registerImage( IImageProvider imageProvider )
+    public ImageProviderInfo registerImage( Object image, String fieldName, IContext context )
+        throws XDocReportException, IOException
+    {
+
+        // 1) Get image provider.
+        IImageProvider imageProvider = getImageProvider( image, fieldName, context );
+        if ( imageProvider == null )
+        {
+            return processNullImage( fieldName, imageProvider );
+        }
+        // 2) test if input stream of image provider is not null.
+        if ( !imageProvider.isValid() )
+        {
+            return processNullImage( fieldName, imageProvider );
+        }
+        // 3) Image provider is OK, create image info.
+        ImageProviderInfo info = createImageProviderInfo( imageProvider );
+        getImageProviderInfos().add( info );
+        return info;
+    }
+
+    private ImageProviderInfo processNullImage( String fieldName, IImageProvider imageProvider )
         throws XDocReportException
+    {
+        NullImageStrategy strategy = getStrategy( imageProvider, getFieldStrategy( fieldName ), defaultStrategy );
+        switch ( strategy )
+        {
+            case ThrowsError:
+                throw new XDocReportException( "Image provider for field [" + fieldName + "] cannot be null!" );
+            case RemoveImageTemplate:
+                return null;
+            case KeepImageTemplate:
+                // TODO...
+        }
+        return null;
+    }
+
+    private NullImageStrategy getStrategy( IImageProvider imageProvider, NullImageStrategy fieldStrategy,
+                                           NullImageStrategy defaultStrategy )
+    {
+        NullImageStrategy strategy = null;
+        // 1) Retrieves the strategy from the image provider.
+        if ( imageProvider != null )
+        {
+            strategy = imageProvider.getStrategy();
+        }
+        if ( strategy == null )
+        {
+            // 2) Retrieves the strategy from the field of the fields metadata.
+            strategy = fieldStrategy;
+        }
+        if ( strategy == null )
+        {
+            // 3) Retrieves the strategy from the fields metadata.
+            strategy = defaultStrategy;
+        }
+        if ( strategy == null )
+        {
+            // None strategy, use the the throw stragegy to thow an error when image provider or stream is null.
+            strategy = NullImageStrategy.ThrowsError;
+        }
+        return strategy;
+    }
+
+    private NullImageStrategy getFieldStrategy( String fieldName )
+    {
+        if ( fieldsMetadata == null )
+        {
+            return null;
+        }
+        // fieldsMetadata.getImageFieldName( fieldName );
+        return null;
+    }
+
+    private IImageProvider getImageProvider( Object imageProvider, String fieldName, IContext context )
+        throws XDocReportException, IOException
     {
         if ( imageProvider == null )
         {
-            throw new XDocReportException( "Image provider cannot be null!" );
+            return null;
         }
-        ImageProviderInfo info = createImageProviderInfo( imageProvider );
-        getImageProviderInfos().add( info );
-        return getPath( info );
+        if ( imageProvider instanceof IImageProvider )
+        {
+            return (IImageProvider) imageProvider;
+        }
+
+        IImageHandler handler = DocumentContextHelper.getImageHandler( context );
+        if ( handler != null )
+        {
+            return handler.getImageProvider( imageProvider, fieldName );
+        }
+        return null;
     }
 
     public List<ImageProviderInfo> getImageProviderInfos()
@@ -111,7 +205,7 @@ public abstract class AbstractImageRegistry
             // 1) Save binary images
             saveBinaryImages();
 
-            // 3) dispose
+            // 2) dispose
             imageProviderInfos.clear();
             imageProviderInfos = null;
         }
@@ -152,6 +246,13 @@ public abstract class AbstractImageRegistry
 
     protected abstract String getImageBasePath();
 
+    public String getPath( ImageProviderInfo info, String defaultPath ) {
+        if (info.isValid()) {
+            return getPath(info);
+        }
+        return defaultPath;
+    }
+    
     protected abstract String getPath( ImageProviderInfo info );
 
     public String getWidth( IImageProvider imageProvider, String defaultWidth )
@@ -174,6 +275,11 @@ public abstract class AbstractImageRegistry
             return getSize( height );
         }
         return defaultHeight;
+    }
+
+    public FieldsMetadata getFieldsMetadata()
+    {
+        return fieldsMetadata;
     }
 
     protected abstract String getSize( float sizeAsPixel );

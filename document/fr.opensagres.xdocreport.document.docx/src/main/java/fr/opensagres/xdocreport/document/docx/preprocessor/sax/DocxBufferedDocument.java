@@ -51,10 +51,12 @@ import fr.opensagres.xdocreport.document.docx.DocxUtils;
 import fr.opensagres.xdocreport.document.docx.preprocessor.sax.hyperlinks.HyperlinkBufferedRegion;
 import fr.opensagres.xdocreport.document.docx.preprocessor.sax.notes.endnotes.EndnoteReferenceBufferedRegion;
 import fr.opensagres.xdocreport.document.docx.preprocessor.sax.notes.footnotes.FootnoteReferenceBufferedRegion;
+import fr.opensagres.xdocreport.document.images.AbstractImageRegistry;
 import fr.opensagres.xdocreport.document.preprocessor.sax.BufferedElement;
 import fr.opensagres.xdocreport.document.preprocessor.sax.TransformedBufferedDocument;
 import fr.opensagres.xdocreport.template.formatter.FieldMetadata;
 import fr.opensagres.xdocreport.template.formatter.FieldsMetadata;
+import fr.opensagres.xdocreport.template.formatter.IDocumentFormatter;
 
 public class DocxBufferedDocument
     extends TransformedBufferedDocument
@@ -151,6 +153,26 @@ public class DocxBufferedDocument
                     currentBookmark =
                         new BookmarkBufferedRegion( bookmarkName, imageFieldName, parent, uri, localName,
                                                     imageFieldName, attributes );
+
+                    IDocumentFormatter formatter = handler.getFormatter();
+                    if ( formatter != null )
+                    {
+                        // insert before start bookmark image script (Velocity,
+                        // Freemarker)
+                        // #set($___imageInfo=${imageRegistry.registerImage($logo,'logo',$___context)})
+                        // #if($___imageInfo)
+                        String set =
+                            formatter.getSetDirective( AbstractImageRegistry.IMAGE_INFO,
+                                                       formatter.getImageDirective( handler.processRowIfNeeded( currentBookmark.getImageFieldName(),
+                                                                                                                true ) ),
+                                                       false );
+                        String imageInfoIf = formatter.getStartIfDirective( AbstractImageRegistry.IMAGE_INFO );
+                        StringBuilder before = new StringBuilder();
+                        before.append( set );
+                        before.append( imageInfoIf );
+                        currentBookmark.setContentBeforeStartTagElement( before.toString() );
+
+                    }
                     return currentBookmark;
                 }
             }
@@ -159,23 +181,23 @@ public class DocxBufferedDocument
 
         if ( isBookmarkEnd( uri, localName, name ) )
         {
-            // w:bookmarkEnd
-            // boolean result = super.doStartElement(uri, localName, name,
-            // attributes);
-            // if (currentBookmark != null) {
-            // currentRegion = currentBookmark.getParent();
-            // }
+            BufferedElement bookmarkEnd = super.createElement( parent, uri, localName, name, attributes );
+            if ( currentBookmark != null )
+            {
+                IDocumentFormatter formatter = handler.getFormatter();
+                if ( formatter != null )
+                {
+                    // #end (of #if($___imageInfo))
+                    bookmarkEnd.setContentAfterEndTagElement( formatter.getEndIfDirective( AbstractImageRegistry.IMAGE_INFO ) );
+                }
+            }
             currentBookmark = null;
-            return super.createElement( parent, uri, localName, name, attributes );
-            // return result;
+            return bookmarkEnd;
         }
 
         if ( isDrawing( uri, localName, name ) )
         {
-            if ( currentBookmark != null )
-            {
 
-            }
             BufferedElement element = super.createElement( parent, uri, localName, name, attributes );
             if ( StringUtils.isNotEmpty( handler.getStartNoParse() ) )
             {
@@ -188,7 +210,6 @@ public class DocxBufferedDocument
         if ( isHyperlink( uri, localName, name ) )
         {
             // <w:hyperlink r:id="rId5" w:history="1">
-
             int idIndex = attributes.getIndex( R_NS, ID_ATTR );
             if ( idIndex != -1 )
             {
@@ -198,7 +219,6 @@ public class DocxBufferedDocument
                 String id = attributes.getValue( idIndex );
                 currentHyperlink = new HyperlinkBufferedRegion( handler, parent, uri, localName, name, attributesImpl );
                 currentHyperlink.setId( attrName, id );
-                // return true;
                 return currentHyperlink;
             }
             return super.createElement( parent, uri, localName, name, attributes );
@@ -218,11 +238,10 @@ public class DocxBufferedDocument
                 FootnoteReferenceBufferedRegion noteReference =
                     new FootnoteReferenceBufferedRegion( handler, parent, uri, localName, name, attributesImpl );
                 noteReference.setId( attrName, id );
-                
-                if (currentRRegion != null) {
-                    currentRRegion.setContainsNote(true);
+                if ( currentRRegion != null )
+                {
+                    currentRRegion.setContainsNote( true );
                 }
-                
                 return noteReference;
             }
             return super.createElement( parent, uri, localName, name, attributes );
@@ -242,17 +261,14 @@ public class DocxBufferedDocument
                 EndnoteReferenceBufferedRegion noteReference =
                     new EndnoteReferenceBufferedRegion( handler, parent, uri, localName, name, attributesImpl );
                 noteReference.setId( attrName, id );
-
-                if (currentRRegion != null) {
-                    currentRRegion.setContainsNote(true);
+                if ( currentRRegion != null )
+                {
+                    currentRRegion.setContainsNote( true );
                 }
-                
                 return noteReference;
             }
             return super.createElement( parent, uri, localName, name, attributes );
-
         }
-
         return super.createElement( parent, uri, localName, name, attributes );
     }
 

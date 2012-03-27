@@ -92,6 +92,6 @@ public class ODSReport
                                                   IEntryWriterProvider writerProvider,
                                                   IEntryOutputStreamProvider outputStreamProvider )
     {
-        return new ODSImageRegistry( readerProvider, writerProvider, outputStreamProvider );
+        return new ODSImageRegistry( readerProvider, writerProvider, outputStreamProvider, getFieldsMetadata() );
     }
 }

@@ -92,6 +92,6 @@ public class PPTXReport
                                                   IEntryWriterProvider writerProvider,
                                                   IEntryOutputStreamProvider outputStreamProvider )
     {
-        return new PPTXImageRegistry( readerProvider, writerProvider, outputStreamProvider );
+        return new PPTXImageRegistry( readerProvider, writerProvider, outputStreamProvider, getFieldsMetadata() );
     }
 }

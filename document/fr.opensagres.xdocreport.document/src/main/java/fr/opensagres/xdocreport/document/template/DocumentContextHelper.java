@@ -26,6 +26,7 @@ package fr.opensagres.xdocreport.document.template;
 
 import java.util.Map;
 
+import fr.opensagres.xdocreport.document.images.IImageHandler;
 import fr.opensagres.xdocreport.document.images.IImageRegistry;
 import fr.opensagres.xdocreport.document.preprocessor.sax.BufferedElement;
 import fr.opensagres.xdocreport.document.registry.TextStylingRegistry;
@@ -39,6 +40,8 @@ public class DocumentContextHelper
 {
 
     public static final String ELEMENTS_KEY = "___Elements";
+
+    private static final String IMAGE_HANDLER_KEY = "___imageHandler";
 
     /**
      * Register the given elements cache in the given context.
@@ -102,4 +105,14 @@ public class DocumentContextHelper
         return (IImageRegistry) context.get( TemplateContextHelper.IMAGE_REGISTRY_KEY );
     }
 
+    public static void putImageHandler( IContext context, IImageHandler imageHandler )
+    {
+        context.put( IMAGE_HANDLER_KEY, imageHandler );
+
+    }
+
+    public static IImageHandler getImageHandler( IContext context )
+    {
+        return (IImageHandler) context.get( IMAGE_HANDLER_KEY );
+    }
 }

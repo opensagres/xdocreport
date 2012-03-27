@@ -141,7 +141,7 @@ public class DocxReport
                                                   IEntryWriterProvider writerProvider,
                                                   IEntryOutputStreamProvider outputStreamProvider )
     {
-        return new DocxImageRegistry( readerProvider, writerProvider, outputStreamProvider );
+        return new DocxImageRegistry( readerProvider, writerProvider, outputStreamProvider, getFieldsMetadata() );
     }
 
     @Override

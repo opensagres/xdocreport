@@ -205,7 +205,12 @@ public class VelocityDocumentFormatter
         {
             directive.append( "$" );
         }
+        directive.append( fieldName );        
+        directive.append( ",'" );
         directive.append( fieldName );
+        directive.append( "'," );
+        directive.append( "$" );
+        directive.append( TemplateContextHelper.CONTEXT_KEY );        
         directive.append( END_IMAGE_DIRECTIVE );
         return directive.toString();
     }

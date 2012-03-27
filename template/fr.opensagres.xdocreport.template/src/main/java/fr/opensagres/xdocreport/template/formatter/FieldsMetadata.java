@@ -81,6 +81,8 @@ public class FieldsMetadata
 
     private boolean evaluateEngineOnlyForFields;
 
+    private NullImageStrategy strategy;
+
     public FieldsMetadata()
     {
         this( null );
@@ -98,6 +100,7 @@ public class FieldsMetadata
         this.afterTableCellToken = DEFAULT_AFTER_TABLE_CELL_TOKEN;
         setTemplateEngineKind( templateEngineKind );
         this.evaluateEngineOnlyForFields = false;
+        this.strategy = null;
     }
 
     /**
@@ -530,6 +533,26 @@ public class FieldsMetadata
     public void setEvaluateEngineOnlyForFields( boolean evaluateEngineOnlyForFields )
     {
         this.evaluateEngineOnlyForFields = evaluateEngineOnlyForFields;
+    }
+
+    /**
+     * Returns the "global" strategy to use when the stream of the image is null.
+     * 
+     * @return
+     */
+    public NullImageStrategy getStrategy()
+    {
+        return strategy;
+    }
+
+    /**
+     * Set the "global" strategy to use when the stream of the image is null.
+     * 
+     * @param strategy
+     */
+    public void setStrategy( NullImageStrategy strategy )
+    {
+        this.strategy = strategy;
     }
 
 }

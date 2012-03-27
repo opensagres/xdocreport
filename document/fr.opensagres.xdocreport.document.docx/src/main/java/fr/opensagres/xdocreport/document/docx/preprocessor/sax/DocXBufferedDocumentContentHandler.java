@@ -45,7 +45,9 @@ import org.xml.sax.SAXException;
 import org.xml.sax.helpers.AttributesImpl;
 
 import fr.opensagres.xdocreport.core.utils.StringUtils;
+import fr.opensagres.xdocreport.document.images.AbstractImageRegistry;
 import fr.opensagres.xdocreport.document.preprocessor.sax.TransformedBufferedDocumentContentHandler;
+import fr.opensagres.xdocreport.template.TemplateContextHelper;
 import fr.opensagres.xdocreport.template.formatter.FieldMetadata;
 import fr.opensagres.xdocreport.template.formatter.FieldsMetadata;
 import fr.opensagres.xdocreport.template.formatter.IDocumentFormatter;
@@ -140,17 +142,19 @@ public class DocXBufferedDocumentContentHandler
             BookmarkBufferedRegion currentBookmark = bufferedDocument.getCurrentBookmark();
             // <a:blip r:embed="rId5" />
             if ( currentBookmark != null && formatter != null )
-            {                
-                // modify "embed" attribute with image script (Velocity,
-                // Freemarker)
-                // <a:blip
-                // r:embed="${imageRegistry.registerImage($bookmarkName)}" />
-                String newEmbed =
-                    formatter.getImageDirective( processRowIfNeeded( currentBookmark.getImageFieldName(), true ) );
-                if ( StringUtils.isNotEmpty( newEmbed ) )
+            {
+                int index = attributes.getIndex( R_NS, EMBED_ATTR );
+                if ( index >= 0 )
                 {
+                    // modify "embed" attribute with image script (Velocity,
+                    // Freemarker)
+                    // <a:blip
+                    // r:embed="${imageRegistry.getPath(___imageInfo,'rId5')}" />
+                    String embed = attributes.getValue( index );
+                    String newEmbed =
+                        formatter.getFunctionDirective( TemplateContextHelper.IMAGE_REGISTRY_KEY, "getPath",
+                                                        AbstractImageRegistry.IMAGE_INFO, "'" + embed + "'" );
                     AttributesImpl attr = toAttributesImpl( attributes );
-                    int index = attr.getIndex( R_NS, EMBED_ATTR );
                     attr.setValue( index, newEmbed );
                     attributes = attr;
                 }

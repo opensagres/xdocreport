@@ -22,7 +22,7 @@
  * OF CONTRACT, TORT OR OTHERWISE,  ARISING FROM, OUT OF OR IN CONNECTION
  * WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
-package fr.opensagres.xdocreport.document.docx.preprocessor;
+package fr.opensagres.xdocreport.document.docx.preprocessor.sax;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -220,7 +220,9 @@ public class PBufferedRegion
                 else
                 {
                     // remove
-                    toRemove.add( rBufferedRegion );
+                    if (!rBufferedRegion.isContainsNote()) {
+                        toRemove.add( rBufferedRegion );
+                    }                    
                 }
             }
         }

@@ -22,32 +22,34 @@
  * OF CONTRACT, TORT OR OTHERWISE,  ARISING FROM, OUT OF OR IN CONNECTION
  * WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
-package fr.opensagres.xdocreport.document.docx.preprocessor;
+package fr.opensagres.xdocreport.document.docx.preprocessor.sax.hyperlinks;
 
-import java.util.Map;
-
-import fr.opensagres.xdocreport.document.preprocessor.IXDocPreprocessor;
-import fr.opensagres.xdocreport.document.preprocessor.sax.BufferedDocumentContentHandler;
-import fr.opensagres.xdocreport.document.preprocessor.sax.SAXXDocPreprocessor;
-import fr.opensagres.xdocreport.template.formatter.FieldsMetadata;
-import fr.opensagres.xdocreport.template.formatter.IDocumentFormatter;
+import java.util.HashMap;
 
 /**
- * DOCX preprocessor to generate lazy Freemarker/Velocity loop directive in the table row which contains a list fields.
+ * Map which stores the initial Relationship type of Hyperlink declared in the "word/_rels/document.xml.rels".
+ * 
+ * <pre>
+ * 	<Relationship Id="rId1" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/hyperlink" 
+ * 				  Target="mailto:$mail" 
+ * 				  TargetMode="External" />
+ * </pre>
  */
-public class DocxPreprocessor
-    extends SAXXDocPreprocessor
+public class InitialHyperlinkMap
+    extends HashMap<String, HyperlinkInfo>
 {
 
-    public static final IXDocPreprocessor INSTANCE = new DocxPreprocessor();
+    private boolean modified = false;
 
     @Override
-    protected BufferedDocumentContentHandler createBufferedDocumentContentHandler( String entryName,
-                                                                                   FieldsMetadata fieldsMetadata,
-                                                                                   IDocumentFormatter formater,
-                                                                                   Map<String, Object> context )
+    public HyperlinkInfo remove( Object key )
     {
-        return new DocXBufferedDocumentContentHandler( entryName, fieldsMetadata, formater, context );
+        this.modified = true;
+        return super.remove( key );
     }
 
+    public boolean isModified()
+    {
+        return modified;
+    }
 }

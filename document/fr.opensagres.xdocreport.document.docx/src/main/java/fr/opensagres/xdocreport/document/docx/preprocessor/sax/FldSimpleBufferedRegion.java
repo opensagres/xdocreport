@@ -22,76 +22,64 @@
  * OF CONTRACT, TORT OR OTHERWISE,  ARISING FROM, OUT OF OR IN CONNECTION
  * WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
-package fr.opensagres.xdocreport.document.docx.preprocessor;
+package fr.opensagres.xdocreport.document.docx.preprocessor.sax;
 
 import org.xml.sax.Attributes;
 
 import fr.opensagres.xdocreport.document.preprocessor.sax.BufferedElement;
-import fr.opensagres.xdocreport.document.preprocessor.sax.StringBufferedRegion;
 import fr.opensagres.xdocreport.document.preprocessor.sax.TransformedBufferedDocumentContentHandler;
-import fr.opensagres.xdocreport.template.formatter.FieldMetadata;
 
-public class RBufferedRegion
+/**
+ * w:fldSimple with MERGEFIELD type and false otherwise. If element is w:fldSimple :
+ * 
+ * <pre>
+ * <w:fldSimple w:instr=" MERGEFIELD  ${name} ">
+ * 		<w:r w:rsidR="00396432">
+ * 			<w:rPr>
+ * 				<w:noProof/>
+ * 			</w:rPr>
+ * 			<w:t>�${name}�</w:t>
+ * 		</w:r>
+ * 	</w:fldSimple>
+ * </pre>
+ * 
+ * it is transformed to this content :
+ * 
+ * <pre>
+ * <w:r w:rsidR="00396432">
+ * 			<w:rPr>
+ * 				<w:noProof/>
+ * 				</w:rPr>
+ * 				<w:t>${name}</w:t>
+ * 		</w:r>
+ * </pre>
+ */
+public class FldSimpleBufferedRegion
     extends MergefieldBufferedRegion
 {
 
-    private String fldCharType;
-
-    private StringBufferedRegion tContentRegion = null;
-
-    private String originalInstrText;
-
-    private FieldMetadata fieldAsTextStyling;
-
-    public RBufferedRegion( TransformedBufferedDocumentContentHandler handler, BufferedElement parent, String uri,
-                            String localName, String name, Attributes attributes )
+    public FldSimpleBufferedRegion( TransformedBufferedDocumentContentHandler handler, BufferedElement parent,
+                                    String uri, String localName, String name, Attributes attributes )
     {
         super( handler, parent, uri, localName, name, attributes );
-        this.originalInstrText = null;
-    }
-
-    public void setFldCharType( String fldCharType )
-    {
-        this.fldCharType = fldCharType;
-    }
-
-    public String getFldCharType()
-    {
-        return fldCharType;
     }
 
     public void setTContent( String tContent )
     {
+        String fieldName = getFieldName();
+        if ( fieldName != null )
+        {
+            getTRegion().append( fieldName );
+        }
+        else
+        {
+            getTRegion().append( tContent );
+        }
+    }
+
+    public void setNewTContent( String tContent )
+    {
         getTRegion().setTextContent( tContent );
     }
 
-    @Override
-    public String setInstrText( String instrText, FieldMetadata fieldAsTextStyling )
-    {
-        this.originalInstrText = instrText;
-        this.fieldAsTextStyling = fieldAsTextStyling;
-        instrText = super.setInstrText( instrText, fieldAsTextStyling );
-        super.append( instrText );
-        return instrText;
-    }
-
-    public String getOriginalInstrText()
-    {
-        return originalInstrText;
-    }
-
-    public boolean hasInstrText()
-    {
-        return originalInstrText != null;
-    }
-
-    public String getTContent()
-    {
-        return getTRegion().getTextContent();
-    }
-
-    public FieldMetadata getFieldAsTextStyling()
-    {
-        return fieldAsTextStyling;
-    }
 }

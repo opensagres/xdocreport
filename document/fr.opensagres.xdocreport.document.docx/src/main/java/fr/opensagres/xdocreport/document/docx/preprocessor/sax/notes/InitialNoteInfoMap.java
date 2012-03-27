@@ -26,21 +26,14 @@ package fr.opensagres.xdocreport.document.docx.preprocessor.sax.notes;
 
 import java.util.HashMap;
 
+/**
+ * Map which contains the intial information (id+content) of the footnote+endnote.
+ * 
+ */
 public class InitialNoteInfoMap
     extends HashMap<String, NoteInfo>
 {
 
-    private boolean modified = false;
+    private static final long serialVersionUID = 7963065532761327721L;
 
-    @Override
-    public NoteInfo remove( Object key )
-    {
-        this.modified = true;
-        return super.remove( key );
-    }
-
-    public boolean isModified()
-    {
-        return modified;
-    }
 }

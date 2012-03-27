@@ -22,7 +22,7 @@
  * OF CONTRACT, TORT OR OTHERWISE,  ARISING FROM, OUT OF OR IN CONNECTION
  * WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
-package fr.opensagres.xdocreport.document.docx.preprocessor;
+package fr.opensagres.xdocreport.document.docx.preprocessor.sax.hyperlinks;
 
 import java.util.Map;
 

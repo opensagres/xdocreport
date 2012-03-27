@@ -3,8 +3,8 @@ package fr.opensagres.xdocreport.document.docx.template;
 import java.util.Map;
 
 import fr.opensagres.xdocreport.document.docx.preprocessor.DefaultStyle;
-import fr.opensagres.xdocreport.document.docx.preprocessor.HyperlinkRegistry;
-import fr.opensagres.xdocreport.document.docx.preprocessor.HyperlinkUtils;
+import fr.opensagres.xdocreport.document.docx.preprocessor.sax.hyperlinks.HyperlinkRegistry;
+import fr.opensagres.xdocreport.document.docx.preprocessor.sax.hyperlinks.HyperlinkUtils;
 import fr.opensagres.xdocreport.document.docx.preprocessor.sax.notes.NoteRegistry;
 import fr.opensagres.xdocreport.document.docx.preprocessor.sax.numbering.NumberingRegistry;
 import fr.opensagres.xdocreport.document.docx.textstyling.DocxDefaultStylesGenerator;

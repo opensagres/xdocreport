@@ -41,9 +41,9 @@ import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
 
 import fr.opensagres.xdocreport.document.docx.images.DocxImageRegistry;
-import fr.opensagres.xdocreport.document.docx.preprocessor.HyperlinkInfo;
-import fr.opensagres.xdocreport.document.docx.preprocessor.HyperlinkRegistry;
-import fr.opensagres.xdocreport.document.docx.preprocessor.HyperlinkUtils;
+import fr.opensagres.xdocreport.document.docx.preprocessor.sax.hyperlinks.HyperlinkInfo;
+import fr.opensagres.xdocreport.document.docx.preprocessor.sax.hyperlinks.HyperlinkRegistry;
+import fr.opensagres.xdocreport.document.docx.preprocessor.sax.hyperlinks.HyperlinkUtils;
 import fr.opensagres.xdocreport.document.docx.preprocessor.sax.numbering.NumberingRegistry;
 import fr.opensagres.xdocreport.document.preprocessor.sax.BufferedDocumentContentHandler;
 import fr.opensagres.xdocreport.document.preprocessor.sax.IBufferedRegion;

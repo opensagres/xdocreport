@@ -32,14 +32,14 @@ import static fr.opensagres.xdocreport.document.docx.DocxConstants.BOOKMARK_END_
 import static fr.opensagres.xdocreport.document.docx.DocxConstants.BOOKMARK_START_ELT;
 import static fr.opensagres.xdocreport.document.docx.DocxConstants.CONTENT_TYPES_XML;
 import static fr.opensagres.xdocreport.document.docx.DocxConstants.DRAWING_ELT;
+import static fr.opensagres.xdocreport.document.docx.DocxConstants.ENDNOTE_ELT;
+import static fr.opensagres.xdocreport.document.docx.DocxConstants.ENDNOTE_REFERENCE_ELT;
 import static fr.opensagres.xdocreport.document.docx.DocxConstants.EXTENT_ELT;
 import static fr.opensagres.xdocreport.document.docx.DocxConstants.EXT_ELT;
 import static fr.opensagres.xdocreport.document.docx.DocxConstants.FLDCHAR_ELT;
 import static fr.opensagres.xdocreport.document.docx.DocxConstants.FLDSIMPLE_ELT;
 import static fr.opensagres.xdocreport.document.docx.DocxConstants.FOOTNOTE_ELT;
 import static fr.opensagres.xdocreport.document.docx.DocxConstants.FOOTNOTE_REFERENCE_ELT;
-import static fr.opensagres.xdocreport.document.docx.DocxConstants.ENDNOTE_ELT;
-import static fr.opensagres.xdocreport.document.docx.DocxConstants.ENDNOTE_REFERENCE_ELT;
 import static fr.opensagres.xdocreport.document.docx.DocxConstants.HYPERLINK_ELT;
 import static fr.opensagres.xdocreport.document.docx.DocxConstants.INSTR_TEXT_ELT;
 import static fr.opensagres.xdocreport.document.docx.DocxConstants.NUMBERING_ELT;

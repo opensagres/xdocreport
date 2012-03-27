@@ -22,7 +22,7 @@
  * OF CONTRACT, TORT OR OTHERWISE,  ARISING FROM, OUT OF OR IN CONNECTION
  * WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
-package fr.opensagres.xdocreport.document.docx.preprocessor;
+package fr.opensagres.xdocreport.document.docx.preprocessor.sax;
 
 import static fr.opensagres.xdocreport.document.docx.DocxConstants.FLDCHARTYPE_ATTR;
 import static fr.opensagres.xdocreport.document.docx.DocxConstants.ID_ATTR;
@@ -33,10 +33,10 @@ import static fr.opensagres.xdocreport.document.docx.DocxConstants.W_NS;
 import static fr.opensagres.xdocreport.document.docx.DocxUtils.isBookmarkEnd;
 import static fr.opensagres.xdocreport.document.docx.DocxUtils.isBookmarkStart;
 import static fr.opensagres.xdocreport.document.docx.DocxUtils.isDrawing;
+import static fr.opensagres.xdocreport.document.docx.DocxUtils.isEndnoteReference;
 import static fr.opensagres.xdocreport.document.docx.DocxUtils.isFldChar;
 import static fr.opensagres.xdocreport.document.docx.DocxUtils.isFldSimple;
 import static fr.opensagres.xdocreport.document.docx.DocxUtils.isFootnoteReference;
-import static fr.opensagres.xdocreport.document.docx.DocxUtils.isEndnoteReference;
 import static fr.opensagres.xdocreport.document.docx.DocxUtils.isHyperlink;
 import static fr.opensagres.xdocreport.document.docx.DocxUtils.isP;
 import static fr.opensagres.xdocreport.document.docx.DocxUtils.isR;
@@ -48,6 +48,7 @@ import org.xml.sax.helpers.AttributesImpl;
 import fr.opensagres.xdocreport.core.utils.StringUtils;
 import fr.opensagres.xdocreport.core.utils.XMLUtils;
 import fr.opensagres.xdocreport.document.docx.DocxUtils;
+import fr.opensagres.xdocreport.document.docx.preprocessor.sax.hyperlinks.HyperlinkBufferedRegion;
 import fr.opensagres.xdocreport.document.docx.preprocessor.sax.notes.endnotes.EndnoteReferenceBufferedRegion;
 import fr.opensagres.xdocreport.document.docx.preprocessor.sax.notes.footnotes.FootnoteReferenceBufferedRegion;
 import fr.opensagres.xdocreport.document.preprocessor.sax.BufferedElement;
@@ -217,7 +218,11 @@ public class DocxBufferedDocument
                 FootnoteReferenceBufferedRegion noteReference =
                     new FootnoteReferenceBufferedRegion( handler, parent, uri, localName, name, attributesImpl );
                 noteReference.setId( attrName, id );
-                // return true;
+                
+                if (currentRRegion != null) {
+                    currentRRegion.setContainsNote(true);
+                }
+                
                 return noteReference;
             }
             return super.createElement( parent, uri, localName, name, attributes );
@@ -237,7 +242,11 @@ public class DocxBufferedDocument
                 EndnoteReferenceBufferedRegion noteReference =
                     new EndnoteReferenceBufferedRegion( handler, parent, uri, localName, name, attributesImpl );
                 noteReference.setId( attrName, id );
-                // return true;
+
+                if (currentRRegion != null) {
+                    currentRRegion.setContainsNote(true);
+                }
+                
                 return noteReference;
             }
             return super.createElement( parent, uri, localName, name, attributes );

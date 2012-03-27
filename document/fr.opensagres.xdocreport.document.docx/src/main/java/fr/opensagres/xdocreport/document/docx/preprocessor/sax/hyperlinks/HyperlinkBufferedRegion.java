@@ -22,7 +22,7 @@
  * OF CONTRACT, TORT OR OTHERWISE,  ARISING FROM, OUT OF OR IN CONNECTION
  * WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
-package fr.opensagres.xdocreport.document.docx.preprocessor;
+package fr.opensagres.xdocreport.document.docx.preprocessor.sax.hyperlinks;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -30,6 +30,8 @@ import java.util.List;
 import org.xml.sax.Attributes;
 
 import fr.opensagres.xdocreport.core.utils.StringUtils;
+import fr.opensagres.xdocreport.document.docx.preprocessor.sax.DocXBufferedDocumentContentHandler;
+import fr.opensagres.xdocreport.document.docx.preprocessor.sax.RBufferedRegion;
 import fr.opensagres.xdocreport.document.preprocessor.sax.BufferedAttribute;
 import fr.opensagres.xdocreport.document.preprocessor.sax.BufferedElement;
 import fr.opensagres.xdocreport.document.preprocessor.sax.ISavable;

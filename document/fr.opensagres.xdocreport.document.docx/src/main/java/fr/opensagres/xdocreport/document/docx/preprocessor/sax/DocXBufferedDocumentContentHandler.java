@@ -22,7 +22,7 @@
  * OF CONTRACT, TORT OR OTHERWISE,  ARISING FROM, OUT OF OR IN CONNECTION
  * WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
-package fr.opensagres.xdocreport.document.docx.preprocessor;
+package fr.opensagres.xdocreport.document.docx.preprocessor.sax;
 
 import static fr.opensagres.xdocreport.document.docx.DocxConstants.CX_ATTR;
 import static fr.opensagres.xdocreport.document.docx.DocxConstants.CY_ATTR;

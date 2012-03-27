@@ -28,8 +28,8 @@ import java.io.IOException;
 import java.util.Stack;
 
 import fr.opensagres.xdocreport.document.docx.preprocessor.DefaultStyle;
-import fr.opensagres.xdocreport.document.docx.preprocessor.HyperlinkRegistry;
-import fr.opensagres.xdocreport.document.docx.preprocessor.HyperlinkUtils;
+import fr.opensagres.xdocreport.document.docx.preprocessor.sax.hyperlinks.HyperlinkRegistry;
+import fr.opensagres.xdocreport.document.docx.preprocessor.sax.hyperlinks.HyperlinkUtils;
 import fr.opensagres.xdocreport.document.docx.preprocessor.sax.numbering.NumberingRegistry;
 import fr.opensagres.xdocreport.document.docx.template.DocxContextHelper;
 import fr.opensagres.xdocreport.document.preprocessor.sax.BufferedElement;

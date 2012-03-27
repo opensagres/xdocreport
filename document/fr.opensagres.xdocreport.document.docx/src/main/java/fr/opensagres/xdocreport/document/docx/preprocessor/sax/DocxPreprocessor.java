@@ -22,34 +22,32 @@
  * OF CONTRACT, TORT OR OTHERWISE,  ARISING FROM, OUT OF OR IN CONNECTION
  * WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
-package fr.opensagres.xdocreport.document.docx.preprocessor;
+package fr.opensagres.xdocreport.document.docx.preprocessor.sax;
 
-import java.util.HashMap;
+import java.util.Map;
+
+import fr.opensagres.xdocreport.document.preprocessor.IXDocPreprocessor;
+import fr.opensagres.xdocreport.document.preprocessor.sax.BufferedDocumentContentHandler;
+import fr.opensagres.xdocreport.document.preprocessor.sax.SAXXDocPreprocessor;
+import fr.opensagres.xdocreport.template.formatter.FieldsMetadata;
+import fr.opensagres.xdocreport.template.formatter.IDocumentFormatter;
 
 /**
- * Map which stores the initial Relationship type of Hyperlink declared in the "word/_rels/document.xml.rels".
- * 
- * <pre>
- * 	<Relationship Id="rId1" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/hyperlink" 
- * 				  Target="mailto:$mail" 
- * 				  TargetMode="External" />
- * </pre>
+ * DOCX preprocessor to generate lazy Freemarker/Velocity loop directive in the table row which contains a list fields.
  */
-public class InitialHyperlinkMap
-    extends HashMap<String, HyperlinkInfo>
+public class DocxPreprocessor
+    extends SAXXDocPreprocessor
 {
 
-    private boolean modified = false;
+    public static final IXDocPreprocessor INSTANCE = new DocxPreprocessor();
 
     @Override
-    public HyperlinkInfo remove( Object key )
+    protected BufferedDocumentContentHandler createBufferedDocumentContentHandler( String entryName,
+                                                                                   FieldsMetadata fieldsMetadata,
+                                                                                   IDocumentFormatter formater,
+                                                                                   Map<String, Object> context )
     {
-        this.modified = true;
-        return super.remove( key );
+        return new DocXBufferedDocumentContentHandler( entryName, fieldsMetadata, formater, context );
     }
 
-    public boolean isModified()
-    {
-        return modified;
-    }
 }

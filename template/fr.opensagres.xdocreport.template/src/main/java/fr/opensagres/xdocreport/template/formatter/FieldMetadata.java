@@ -48,6 +48,10 @@ public class FieldMetadata
 
     private boolean syntaxWithDirective;
 
+    private NullImageBehaviour behaviour;
+
+    private boolean useImageSize;
+
     public FieldMetadata( FieldsMetadata fieldsMetadata, String fieldName, boolean listType, String imageName,
                           String syntaxKind, boolean syntaxWithDirective )
     {
@@ -57,6 +61,8 @@ public class FieldMetadata
         setImageName( imageName );
         this.setSyntaxKind( syntaxKind );
         this.setSyntaxWithDirective( syntaxWithDirective );
+        this.behaviour = null;
+        this.useImageSize = false;
         fieldsMetadata.fields.add( this );
     }
 
@@ -174,4 +180,35 @@ public class FieldMetadata
     {
         return description;
     }
+
+    /**
+     * Returns the "field" behavior to use when the stream of the image is null.
+     * 
+     * @return
+     */
+    public NullImageBehaviour getBehaviour()
+    {
+        return behaviour;
+    }
+
+    /**
+     * Set the "field" behaviour to use when the stream of the image is null.
+     * 
+     * @param behaviour
+     */
+    public void setBehaviour( NullImageBehaviour behaviour )
+    {
+        this.behaviour = behaviour;
+    }
+
+    public boolean isUseImageSize()
+    {
+        return useImageSize;
+    }
+
+    public void setUseImageSize( boolean useImageSize )
+    {
+        this.useImageSize = useImageSize;
+    }
+
 }

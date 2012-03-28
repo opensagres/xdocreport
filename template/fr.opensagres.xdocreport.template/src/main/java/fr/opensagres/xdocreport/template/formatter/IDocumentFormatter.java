@@ -45,17 +45,13 @@ public interface IDocumentFormatter
 
     String getStartIfDirective( String fieldName );
 
+    String getStartIfDirective( String fieldName, boolean exists );
+    
     String getEndIfDirective( String fieldName );
 
     String formatAsSimpleField( boolean noescape, boolean encloseInDirective, String... fields );
     
     String formatAsSimpleField( boolean encloseInDirective, String... fields );
-
-    String getImageDirective( String fieldName );
-
-    String getImageWidthDirective( String fieldName, String defaultWidth );
-
-    String getImageHeightDirective( String fieldName, String defaultHeight );
 
     boolean containsInterpolation( String content );
 

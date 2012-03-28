@@ -46,6 +46,8 @@ import org.xml.sax.helpers.AttributesImpl;
 import fr.opensagres.xdocreport.core.document.DocumentKind;
 import fr.opensagres.xdocreport.core.utils.StringUtils;
 import fr.opensagres.xdocreport.document.images.AbstractImageRegistry;
+import fr.opensagres.xdocreport.document.images.IImageRegistry;
+import fr.opensagres.xdocreport.document.images.ImageProviderInfo;
 import fr.opensagres.xdocreport.document.odt.textstyling.IODTStylesGenerator;
 import fr.opensagres.xdocreport.document.odt.textstyling.ODTStylesGeneratorProvider;
 import fr.opensagres.xdocreport.document.preprocessor.sax.BufferedElement;
@@ -146,10 +148,19 @@ public class ODTBufferedDocumentContentHandler
                         // #set($___imageInfo=${imageRegistry.registerImage($logo,'logo',$___context)})
                         // #if($___imageInfo)
                         String set =
-                            formatter.getSetDirective( AbstractImageRegistry.IMAGE_INFO,
-                                                       formatter.getImageDirective( dynamicImageName ), false );
-                        String imageInfoIf = formatter.getStartIfDirective( AbstractImageRegistry.IMAGE_INFO );
-
+                            formatter.getSetDirective( IImageRegistry.IMAGE_INFO,
+                                                       formatter.getFunctionDirective( false,
+                                                                                       TemplateContextHelper.IMAGE_REGISTRY_KEY,
+                                                                                       IImageRegistry.REGISTER_IMAGE_METHOD,
+                                                                                       dynamicImageName,
+                                                                                       "'" + drawName + "'",
+                                                                                       TemplateContextHelper.CONTEXT_KEY ),
+                                                       false );
+                        String imageInfoIf =
+                            formatter.getStartIfDirective( formatter.formatAsSimpleField( false,
+                                                                                          AbstractImageRegistry.IMAGE_INFO,
+                                                                                          ImageProviderInfo.NOT_REMOVE_IMAGE_TEMPLATE_METHOD ),
+                                                           false );
                         StringBuilder before = new StringBuilder();
                         before.append( set );
                         before.append( imageInfoIf );
@@ -175,13 +186,19 @@ public class ODTBufferedDocumentContentHandler
                         if ( widthIndex != -1 )
                         {
                             String defaultWidth = attributes.getValue( widthIndex );
-                            newWith = formatter.getImageWidthDirective( dynamicImageName, defaultWidth );
+                            newWith =
+                                formatter.getFunctionDirective( TemplateContextHelper.IMAGE_REGISTRY_KEY,
+                                                                IImageRegistry.GET_WIDTH_METHOD,
+                                                                IImageRegistry.IMAGE_INFO, "'" + defaultWidth + "'" );
                         }
                         int heightIndex = attributes.getIndex( SVG_NS, HEIGHT_ATTR );
                         if ( heightIndex != -1 )
                         {
                             String defaultHeight = attributes.getValue( heightIndex );
-                            newHeight = formatter.getImageHeightDirective( dynamicImageName, defaultHeight );
+                            newHeight =
+                                formatter.getFunctionDirective( TemplateContextHelper.IMAGE_REGISTRY_KEY,
+                                                                IImageRegistry.GET_HEIGHT_METHOD,
+                                                                IImageRegistry.IMAGE_INFO, "'" + defaultHeight + "'" );
                         }
                         if ( newWith != null || newHeight != null )
                         {
@@ -211,7 +228,8 @@ public class ODTBufferedDocumentContentHandler
                     // ${imageRegistry.getPath(___imageInfo,'Pictures/100000000000001C0000001EE8812A78.png')}
                     String href = attributes.getValue( index );
                     String newHref =
-                        formatter.getFunctionDirective( TemplateContextHelper.IMAGE_REGISTRY_KEY, "getPath",
+                        formatter.getFunctionDirective( TemplateContextHelper.IMAGE_REGISTRY_KEY,
+                                                        IImageRegistry.GET_PATH_METHOD,
                                                         AbstractImageRegistry.IMAGE_INFO, "'" + href + "'" );
 
                     AttributesImpl attributesImpl = toAttributesImpl( attributes );

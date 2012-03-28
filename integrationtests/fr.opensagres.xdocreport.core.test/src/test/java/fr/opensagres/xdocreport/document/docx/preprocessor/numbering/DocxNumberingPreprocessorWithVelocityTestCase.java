@@ -59,8 +59,8 @@ public class DocxNumberingPreprocessorWithVelocityTestCase
                             + "<w:num w:numId=\"$___NumberInfo.NumId\">" 
                                 + "<w:abstractNumId w:val=\"$___NumberInfo.AbstractNumId\"/>" 
                             + "</w:num>" 
-                        + "#end" 
-                     + "#end"
+                        + "#{end}" 
+                     + "#{end}"
                 
                 + "</w:numbering>", writer.toString() );       
         
@@ -121,8 +121,8 @@ public class DocxNumberingPreprocessorWithVelocityTestCase
                             + "<w:num w:numId=\"$___NumberInfo.NumId\">" 
                                 + "<w:abstractNumId w:val=\"$___NumberInfo.AbstractNumId\"/>" 
                             + "</w:num>" 
-                        + "#end" 
-                     + "#end"
+                        + "#{end}" 
+                     + "#{end}"
                         
                 + "</w:numbering>", writer.toString() );        
         
@@ -184,8 +184,8 @@ public class DocxNumberingPreprocessorWithVelocityTestCase
                             + "<w:num w:numId=\"$___NumberInfo.NumId\">" 
                                 + "<w:abstractNumId w:val=\"$___NumberInfo.AbstractNumId\"/>" 
                             + "</w:num>" 
-                        + "#end" 
-                     + "#end"
+                        + "#{end}" 
+                     + "#{end}"
                 
                 + "</w:numbering>", writer.toString() );        
         

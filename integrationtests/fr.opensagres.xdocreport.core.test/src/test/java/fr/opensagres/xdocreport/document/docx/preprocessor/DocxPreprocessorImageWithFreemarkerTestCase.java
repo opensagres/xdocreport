@@ -137,6 +137,9 @@ public class DocxPreprocessorImageWithFreemarkerTestCase
                           + "xmlns:w=\"http://schemas.openxmlformats.org/wordprocessingml/2006/main\" "
                           + "xmlns:wne=\"http://schemas.microsoft.com/office/word/2006/wordml\">"
                           + "<w:p w:rsidR=\"0064051C\" w:rsidRDefault=\"0064051C\">"
+                          
+                          + "[#assign ___imageInfo=___ImageRegistry.registerImage(logo,'logo',___context)][#if ___imageInfo.notRemoveImageTemplate]"
+                          
                           + "<w:bookmarkStart w:id=\"0\" w:name=\"logo\"/>"
                           + "<w:r>"
                           + "<w:rPr>"
@@ -144,8 +147,10 @@ public class DocxPreprocessorImageWithFreemarkerTestCase
                           + "</w:rPr>"
                           + "<w:drawing>"
                           + "<wp:inline distT=\"0\" distB=\"0\" distL=\"0\" distR=\"0\">"
+                          
                           // + "<wp:extent cx=\"266700\" cy=\"285750\"/>"
-                          + "<wp:extent cx=\"${imageRegistry.getWidth(logo,'266700')}\" cy=\"${imageRegistry.getHeight(logo,'285750')}\"/>"
+                          + "<wp:extent cx=\"${___ImageRegistry.getWidth(___imageInfo,'266700')}\" cy=\"${___ImageRegistry.getHeight(___imageInfo,'285750')}\"/>"
+                          
                           + "<wp:effectExtent l=\"19050\" t=\"0\" r=\"0\" b=\"0\"/>"
                           + "<wp:docPr id=\"1\" name=\"Image 0\" descr=\"template.png\"/>"
                           + "<wp:cNvGraphicFramePr>"
@@ -157,9 +162,7 @@ public class DocxPreprocessorImageWithFreemarkerTestCase
                           + "<pic:nvPicPr>" + "<pic:cNvPr id=\"0\" name=\"template.png\"/>" + "<pic:cNvPicPr/>"
                           + "</pic:nvPicPr>" + "<pic:blipFill>"
 
-                          + "<a:blip r:embed=\"${"
-                          + TemplateContextHelper.IMAGE_REGISTRY_KEY
-                          + ".registerImage(logo)}\"/>"
+                          + "<a:blip r:embed=\"${___ImageRegistry.getPath(___imageInfo,'rId5')}\"/>"
 
                           + "<a:stretch>"
                           + "<a:fillRect/>"
@@ -169,7 +172,7 @@ public class DocxPreprocessorImageWithFreemarkerTestCase
                           + "<a:xfrm>"
                           + "<a:off x=\"0\" y=\"0\"/>"
                           // + "<a:ext cx=\"266700\" cy=\"285750\"/>"
-                          + "<a:ext cx=\"${imageRegistry.getWidth(logo,'266700')}\" cy=\"${imageRegistry.getHeight(logo,'285750')}\"/>"
+                          + "<a:ext cx=\"${___ImageRegistry.getWidth(___imageInfo,'266700')}\" cy=\"${___ImageRegistry.getHeight(___imageInfo,'285750')}\"/>"
                           + "</a:xfrm>"
                           + "<a:prstGeom prst=\"rect\">"
                           + "<a:avLst/>"
@@ -180,7 +183,11 @@ public class DocxPreprocessorImageWithFreemarkerTestCase
                           + "</a:graphic>"
                           + "</wp:inline>"
                           + "</w:drawing>"
-                          + "</w:r>" + "<w:bookmarkEnd w:id=\"0\"/>" + "</w:p>" + "</w:document>", writer.toString() );
+                          + "</w:r>" + "<w:bookmarkEnd w:id=\"0\"/>" 
+                          
+                          + "[/#if]"
+                          
+                          + "</w:p>" + "</w:document>", writer.toString() );
     }
 
     public void testImageWithListFieldInTable()
@@ -573,6 +580,9 @@ public class DocxPreprocessorImageWithFreemarkerTestCase
                           + "<w:tcW w:w=\"1403\" w:type=\"dxa\"/>"
                           + "</w:tcPr>"
                           + "<w:p w:rsidR=\"00855D40\" w:rsidRDefault=\"00855D40\">"
+                          
+                          + "[#assign ___imageInfo=___ImageRegistry.registerImage(item_developers.photo,'photo',___context)][#if ___imageInfo.notRemoveImageTemplate]"
+                          
                           + "<w:bookmarkStart w:id=\"0\" w:name=\"photo\"/>"
                           + "<w:r>"
                           + "<w:rPr>"
@@ -581,7 +591,8 @@ public class DocxPreprocessorImageWithFreemarkerTestCase
                           + "<w:drawing>"
                           + "<wp:inline distT=\"0\" distB=\"0\" distL=\"0\" distR=\"0\">"
                           // + "<wp:extent cx=\"266700\" cy=\"285750\"/>"
-                          + "<wp:extent cx=\"${imageRegistry.getWidth(item_developers.photo,'266700')}\" cy=\"${imageRegistry.getHeight(item_developers.photo,'285750')}\"/>"
+                          + "<wp:extent cx=\"${___ImageRegistry.getWidth(___imageInfo,'266700')}\" cy=\"${___ImageRegistry.getHeight(___imageInfo,'285750')}\"/>"
+                          
                           + "<wp:effectExtent l=\"19050\" t=\"0\" r=\"0\" b=\"0\"/>"
                           + "<wp:docPr id=\"1\" name=\"Image 0\" descr=\"template.png\"/>"
                           + "<wp:cNvGraphicFramePr>"
@@ -594,9 +605,7 @@ public class DocxPreprocessorImageWithFreemarkerTestCase
                           + "</pic:nvPicPr>" + "<pic:blipFill>"
 
                           // + "<a:blip r:embed=\"rId5\"/>"
-                          + "<a:blip r:embed=\"${"
-                          + TemplateContextHelper.IMAGE_REGISTRY_KEY
-                          + ".registerImage(item_developers.photo)}\"/>"
+                          + "<a:blip r:embed=\"${___ImageRegistry.getPath(___imageInfo,'rId5')}\"/>"
 
                           + "<a:stretch>"
                           + "<a:fillRect/>"
@@ -606,7 +615,7 @@ public class DocxPreprocessorImageWithFreemarkerTestCase
                           + "<a:xfrm>"
                           + "<a:off x=\"0\" y=\"0\"/>"
                           // + "<a:ext cx=\"266700\" cy=\"285750\"/>"
-                          + "<a:ext cx=\"${imageRegistry.getWidth(item_developers.photo,'266700')}\" cy=\"${imageRegistry.getHeight(item_developers.photo,'285750')}\"/>"
+                          + "<a:ext cx=\"${___ImageRegistry.getWidth(___imageInfo,'266700')}\" cy=\"${___ImageRegistry.getHeight(___imageInfo,'285750')}\"/>"
                           + "</a:xfrm>"
                           + "<a:prstGeom prst=\"rect\">"
                           + "<a:avLst/>"
@@ -617,7 +626,11 @@ public class DocxPreprocessorImageWithFreemarkerTestCase
                           + "</a:graphic>"
                           + "</wp:inline>"
                           + "</w:drawing>"
-                          + "</w:r>" + "<w:bookmarkEnd w:id=\"0\"/>" + "</w:p>" + "</w:tc>" + "</w:tr>"
+                          + "</w:r>" + "<w:bookmarkEnd w:id=\"0\"/>" 
+                          
+                          + "[/#if]"
+                          
+                          + "</w:p>" + "</w:tc>" + "</w:tr>"
 
                           + "[/#list]"
 

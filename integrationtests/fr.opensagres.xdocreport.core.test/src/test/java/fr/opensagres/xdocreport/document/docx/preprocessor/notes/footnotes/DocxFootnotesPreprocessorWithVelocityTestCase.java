@@ -107,7 +107,7 @@ public class DocxFootnotesPreprocessorWithVelocityTestCase
                             + "$___NoEscapeNoteInfo.Content"
                             + "</w:footnote>"
                             
-                        + "#end"
+                        + "#{end}"
                         
                          + ""
                          + " </w:footnotes>", writer.toString() );       
@@ -191,7 +191,7 @@ public class DocxFootnotesPreprocessorWithVelocityTestCase
                                 + "<w:rStyle w:val=\"Appelnotedebasdep\"/>"
                             + "</w:rPr>"
                             //+ "<w:footnoteReference w:id=\"2\"/>"
-                            + "<w:footnoteReference w:id=\"#define($___note)XXXX#end${___FootnoteRegistry.registerNote('2',$___note)}\"/>"
+                            + "<w:footnoteReference w:id=\"#define($___note)XXXX#{end}${___FootnoteRegistry.registerNote('2',$___note)}\"/>"
                             + "</w:r>"                
                         
                          + " </w:document>", writer.toString() );       

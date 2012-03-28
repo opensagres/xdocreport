@@ -216,7 +216,7 @@ public class DocxPreprocessorHyperlinkWithVelocityTestCase
                           + "</w:r>" + "<w:proofErr w:type=\"spellEnd\"/>" + "</w:hyperlink>" + "</w:p>" + "</w:tc>"
                           + "</w:tr>"
 
-                          + "#end"
+                          + "#{end}"
 
                           + "</w:tbl>" + "</w:document>", writer.toString() );
     }

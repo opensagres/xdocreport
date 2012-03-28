@@ -1,6 +1,6 @@
 package fr.opensagres.xdocreport.template.formatter;
 
-public enum NullImageStrategy
+public enum NullImageBehaviour
 {
 
     ThrowsError, RemoveImageTemplate, KeepImageTemplate

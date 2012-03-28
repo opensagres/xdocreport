@@ -106,17 +106,24 @@ public class ODTPreprocessorImageWithFreemarkerTestCase
                           + "xmlns:xlink=\"http://www.w3.org/1999/xlink\" "
                           + "xmlns:draw=\"urn:oasis:names:tc:opendocument:xmlns:drawing:1.0\">"
                           + "<text:p text:style-name=\"Standard\">"
+                          
+                          + "[#assign ___imageInfo=___ImageRegistry.registerImage(logo,'logo',___context)][#if ___imageInfo.notRemoveImageTemplate]"
+                          
                           + "<draw:frame draw:style-name=\"fr1\" draw:name=\"logo\" text:anchor-type=\"paragraph\" svg:x=\"69.96pt\" svg:y=\"18.31pt\" "
                           // + "svg:width=\"21pt\" "
-                          + "svg:width=\"${imageRegistry.getWidth(logo,'21pt')}\" "
+                          + "svg:width=\"${___ImageRegistry.getWidth(___imageInfo,'21pt')}\" "
                           // + "svg:height=\"22.51pt\" "
-                          + "svg:height=\"${imageRegistry.getHeight(logo,'22.51pt')}\" " + "draw:z-index=\"0\">"
+                          + "svg:height=\"${___ImageRegistry.getHeight(___imageInfo,'22.51pt')}\" " + "draw:z-index=\"0\">"
                           + "<draw:image "
 
-                          + "xlink:href=\"${" + TemplateContextHelper.IMAGE_REGISTRY_KEY + ".registerImage(logo)}\" "
+                          + "xlink:href=\"${___ImageRegistry.getPath(___imageInfo,'Pictures/100000000000001C0000001EE8812A78.png')}\" "
 
                           + "xlink:type=\"simple\" xlink:show=\"embed\" xlink:actuate=\"onLoad\"/>"
-                          + "</draw:frame>Project logo :</text:p>" + "</office:document-content>", writer.toString() );
+                          + "</draw:frame>" 
+                          
+                          + "[/#if]"
+                          
+                          + "Project logo :</text:p>" + "</office:document-content>", writer.toString() );
     }
 
     public void testImageWithListFieldInTable()
@@ -235,16 +242,24 @@ public class ODTPreprocessorImageWithFreemarkerTestCase
             + "</table:table-cell>"
             + "<table:table-cell table:style-name=\"Tableau1.A2\" office:value-type=\"string\">"
             + "<text:p text:style-name=\"Standard\">"
+            
+            + "[#assign ___imageInfo=___ImageRegistry.registerImage(item_developers.Photo,'developers.Photo',___context)][#if ___imageInfo.notRemoveImageTemplate]"
+            
             + "<draw:frame draw:style-name=\"fr1\" draw:name=\"developers.Photo\" text:anchor-type=\"paragraph\" "
             // + "svg:width=\"21pt\" "
-            + "svg:width=\"${imageRegistry.getWidth(item_developers.Photo,'21pt')}\" "
+            + "svg:width=\"${___ImageRegistry.getWidth(___imageInfo,'21pt')}\" "
             // + "svg:height=\"22.51pt\" "
-            + "svg:height=\"${imageRegistry.getHeight(item_developers.Photo,'22.51pt')}\" " + "draw:z-index=\"0\">"
+            + "svg:height=\"${___ImageRegistry.getHeight(___imageInfo,'22.51pt')}\" " + "draw:z-index=\"0\">"
             + "<draw:image "
 
-            + "xlink:href=\"${" + TemplateContextHelper.IMAGE_REGISTRY_KEY + ".registerImage(item_developers.Photo)}\" "
+            + "xlink:href=\"${___ImageRegistry.getPath(___imageInfo,'Pictures/100000000000001C0000001EE8812A78.png')}\" "
 
-            + "xlink:type=\"simple\" xlink:show=\"embed\" xlink:actuate=\"onLoad\"/>" + "</draw:frame>" + "</text:p>"
+            + "xlink:type=\"simple\" xlink:show=\"embed\" xlink:actuate=\"onLoad\"/>" 
+            + "</draw:frame>" 
+            
+            + "[/#if]"
+            
+            + "</text:p>"
             + "</table:table-cell>" + "</table:table-row>"
 
             + "[/#list]"

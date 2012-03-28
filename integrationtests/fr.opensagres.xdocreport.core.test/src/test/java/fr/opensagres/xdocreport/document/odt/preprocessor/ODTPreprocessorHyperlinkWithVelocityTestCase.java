@@ -133,7 +133,7 @@ public class ODTPreprocessorHyperlinkWithVelocityTestCase
 
                           + "</table:table-row>"
 
-                          + "#end"
+                          + "#{end}"
 
                           + "</table:table>" + "</office:document-content>", writer.toString() );
 

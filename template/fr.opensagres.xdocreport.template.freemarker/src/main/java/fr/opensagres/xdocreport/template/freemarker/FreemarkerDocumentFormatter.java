@@ -80,20 +80,6 @@ public class FreemarkerDocumentFormatter
 
     private static final String END_IF_DIRECTIVE = "[/#if]";
 
-    private static final String START_IMAGE_DIRECTIVE = TemplateContextHelper.IMAGE_REGISTRY_KEY + ".registerImage(";
-
-    private static final String END_IMAGE_DIRECTIVE = ")";
-
-    private static final String START_IMAGE_WIDTH_DIRECTIVE = DOLLAR_TOTKEN + TemplateContextHelper.IMAGE_REGISTRY_KEY
-        + ".getWidth(";
-
-    private static final String END_IMAGE_WIDTH_DIRECTIVE = ")}";
-
-    private static final String START_IMAGE_HEIGHT_DIRECTIVE = DOLLAR_TOTKEN + TemplateContextHelper.IMAGE_REGISTRY_KEY
-        + ".getHeight(";
-
-    private static final String END_IMAGE_HEIGHT_DIRECTIVE = ")}";
-
     private static final String START_NOESCAPE = "[#noescape]";
 
     private static final String END_NOESCAPE = "[/#noescape]";
@@ -205,42 +191,6 @@ public class FreemarkerDocumentFormatter
 
     }
 
-    public String getImageDirective( String fieldName )
-    {
-        StringBuilder directive = new StringBuilder( START_IMAGE_DIRECTIVE );
-        directive.append( fieldName );
-        directive.append( ",'" );
-        directive.append( fieldName );
-        directive.append( "'," );
-        directive.append( TemplateContextHelper.CONTEXT_KEY );
-        directive.append( END_IMAGE_DIRECTIVE );
-        return directive.toString();
-    }
-
-    public String getImageWidthDirective( String fieldName, String defaultWidth )
-    {
-        StringBuilder directive = new StringBuilder( START_IMAGE_WIDTH_DIRECTIVE );
-        directive.append( fieldName );
-        directive.append( ',' );
-        directive.append( '\'' );
-        directive.append( defaultWidth );
-        directive.append( '\'' );
-        directive.append( END_IMAGE_WIDTH_DIRECTIVE );
-        return directive.toString();
-    }
-
-    public String getImageHeightDirective( String fieldName, String defaultHeight )
-    {
-        StringBuilder directive = new StringBuilder( START_IMAGE_HEIGHT_DIRECTIVE );
-        directive.append( fieldName );
-        directive.append( ',' );
-        directive.append( '\'' );
-        directive.append( defaultHeight );
-        directive.append( '\'' );
-        directive.append( END_IMAGE_HEIGHT_DIRECTIVE );
-        return directive.toString();
-    }
-
     public String getFunctionDirective( boolean encloseInDirective, String key, String methodName, String... parameters )
     {
         StringBuilder directive = new StringBuilder( encloseInDirective ? DOLLAR_TOTKEN : "" );
@@ -303,11 +253,14 @@ public class FreemarkerDocumentFormatter
         return field.toString();
     }
 
-    public String getStartIfDirective( String fieldName )
+    public String getStartIfDirective( String fieldName, boolean exists )
     {
         StringBuilder directive = new StringBuilder( START_IF_DIRECTIVE );
         directive.append( fieldName );
-        directive.append( "??" );
+        if ( exists )
+        {
+            directive.append( "??" );
+        }
         directive.append( ']' );
         return directive.toString();
     }

@@ -26,7 +26,7 @@ package fr.opensagres.xdocreport.document.images;
 
 import java.io.IOException;
 
-import fr.opensagres.xdocreport.template.formatter.NullImageStrategy;
+import fr.opensagres.xdocreport.template.formatter.NullImageBehaviour;
 
 /**
  * Base class for image provider.
@@ -49,14 +49,14 @@ public abstract class AbstractImageProvider
 
     private boolean resize;
 
-    private NullImageStrategy strategy;
+    private NullImageBehaviour behaviour;
     
     private Boolean valid;
 
     public AbstractImageProvider( boolean useImageSize )
     {
         this.useImageSize = useImageSize;
-        this.strategy = null;
+        this.behaviour = null;
     }
 
     /*
@@ -228,22 +228,22 @@ public abstract class AbstractImageProvider
 
     /*
      * (non-Javadoc)
-     * @see fr.opensagres.xdocreport.document.images.IImageProvider#getStrategy()
+     * @see fr.opensagres.xdocreport.document.images.IImageProvider#getBehaviour()
      */
-    public NullImageStrategy getStrategy()
+    public NullImageBehaviour getBehaviour()
     {
-        return strategy;
+        return behaviour;
     }
 
     /*
      * (non-Javadoc)
      * @see
-     * fr.opensagres.xdocreport.document.images.IImageProvider#setStrategy(fr.opensagres.xdocreport.document.images.
-     * NullImageStrategy)
+     * fr.opensagres.xdocreport.document.images.IImageProvider#setBehaviour(fr.opensagres.xdocreport.document.images.
+     * NullImageBehaviour)
      */
-    public void setStrategy( NullImageStrategy strategy )
+    public void setBehaviour( NullImageBehaviour behaviour )
     {
-        this.strategy = strategy;
+        this.behaviour = behaviour;
     }
 
     public boolean isValid()

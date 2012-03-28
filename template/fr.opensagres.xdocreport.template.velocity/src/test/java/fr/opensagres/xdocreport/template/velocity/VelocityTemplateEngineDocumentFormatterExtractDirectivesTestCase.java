@@ -74,7 +74,7 @@ public class VelocityTemplateEngineDocumentFormatterExtractDirectivesTestCase
         throws Exception
     {
         VelocityDocumentFormatter formatter = new VelocityDocumentFormatter();
-        String content = "xxxx#foreach($d in $developers)yyy#end";
+        String content = "xxxx#foreach($d in $developers)yyy#{end}";
 
         DirectivesStack directives = new DirectivesStack();
         int nbDirective = formatter.extractListDirectiveInfo( content, directives );
@@ -98,7 +98,7 @@ public class VelocityTemplateEngineDocumentFormatterExtractDirectivesTestCase
         assertEquals( "developers", directive.getSequence() );
         assertEquals( "d", directive.getItem() );
 
-        content = "#end";
+        content = "#{end}";
         nbDirective = formatter.extractListDirectiveInfo( content, directives );
 
         assertEquals( -1, nbDirective );
@@ -119,7 +119,7 @@ public class VelocityTemplateEngineDocumentFormatterExtractDirectivesTestCase
         assertEquals( DirectiveType.IF, directives.get( 0 ).getType() );
         IfDirective directive = (IfDirective) directives.get( 0 );
         assertEquals( "#if($d)", directive.getStartDirective() );
-        assertEquals( "#end", directive.getEndDirective() );
+        assertEquals( "#{end}", directive.getEndDirective() );
     }
 
     public void testLoopAndIf1()
@@ -142,7 +142,7 @@ public class VelocityTemplateEngineDocumentFormatterExtractDirectivesTestCase
         assertEquals( DirectiveType.IF, directives.get( 1 ).getType() );
         IfDirective ifDirective = (IfDirective) directives.get( 1 );
         assertEquals( "#if($d)", ifDirective.getStartDirective() );
-        assertEquals( "#end", ifDirective.getEndDirective() );
+        assertEquals( "#{end}", ifDirective.getEndDirective() );
     }
 
     public void testIfAndLoop1()
@@ -160,7 +160,7 @@ public class VelocityTemplateEngineDocumentFormatterExtractDirectivesTestCase
         assertEquals( DirectiveType.IF, directives.get( 0 ).getType() );
         IfDirective ifDirective = (IfDirective) directives.get( 0 );
         assertEquals( "#if($d)", ifDirective.getStartDirective() );
-        assertEquals( "#end", ifDirective.getEndDirective() );
+        assertEquals( "#{end}", ifDirective.getEndDirective() );
 
         assertEquals( DirectiveType.LOOP, directives.get( 1 ).getType() );
         LoopDirective loopDirective = (LoopDirective) directives.get( 1 );

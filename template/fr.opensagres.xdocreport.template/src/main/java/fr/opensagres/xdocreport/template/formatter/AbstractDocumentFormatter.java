@@ -169,4 +169,9 @@ public abstract class AbstractDocumentFormatter
     {
         return getSetDirective( name, value, true );
     }
+    
+    public String getStartIfDirective( String fieldName )
+    {
+        return getStartIfDirective( fieldName, true );
+    }
 }

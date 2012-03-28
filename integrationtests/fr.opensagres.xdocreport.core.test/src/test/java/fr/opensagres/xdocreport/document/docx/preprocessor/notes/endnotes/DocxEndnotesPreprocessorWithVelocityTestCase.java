@@ -107,7 +107,7 @@ public class DocxEndnotesPreprocessorWithVelocityTestCase
                             + "$___NoEscapeNoteInfo.Content"
                             + "</w:endnote>"
                             
-                        + "#end"
+                        + "#{end}"
                         
                          + ""
                          + " </w:endnotes>", writer.toString() );       
@@ -191,7 +191,7 @@ public class DocxEndnotesPreprocessorWithVelocityTestCase
                                 + "<w:rStyle w:val=\"Appelnotedebasdep\"/>"
                             + "</w:rPr>"
                             //+ "<w:endnoteReference w:id=\"2\"/>"
-                            + "<w:endnoteReference w:id=\"#define($___note)XXXX#end${___EndnoteRegistry.registerNote('2',$___note)}\"/>"
+                            + "<w:endnoteReference w:id=\"#define($___note)XXXX#{end}${___EndnoteRegistry.registerNote('2',$___note)}\"/>"
                             + "</w:r>"                
                         
                          + " </w:document>", writer.toString() );       

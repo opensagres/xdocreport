@@ -46,6 +46,7 @@ import org.xml.sax.helpers.AttributesImpl;
 
 import fr.opensagres.xdocreport.core.utils.StringUtils;
 import fr.opensagres.xdocreport.document.images.AbstractImageRegistry;
+import fr.opensagres.xdocreport.document.images.IImageRegistry;
 import fr.opensagres.xdocreport.document.preprocessor.sax.TransformedBufferedDocumentContentHandler;
 import fr.opensagres.xdocreport.template.TemplateContextHelper;
 import fr.opensagres.xdocreport.template.formatter.FieldMetadata;
@@ -59,6 +60,10 @@ import fr.opensagres.xdocreport.template.formatter.IDocumentFormatter;
 public class DocXBufferedDocumentContentHandler
     extends TransformedBufferedDocumentContentHandler<DocxBufferedDocument>
 {
+
+    private static final String W_TR = "w:tr";
+
+    private static final String W_TC = "w:tc";
 
     private boolean instrTextParsing;
 
@@ -79,13 +84,13 @@ public class DocXBufferedDocumentContentHandler
     @Override
     protected String getTableRowName()
     {
-        return "w:tr";
+        return W_TR;
     }
 
     @Override
     protected String getTableCellName()
     {
-        return "w:tc";
+        return W_TC;
     }
 
     @Override
@@ -152,7 +157,8 @@ public class DocXBufferedDocumentContentHandler
                     // r:embed="${imageRegistry.getPath(___imageInfo,'rId5')}" />
                     String embed = attributes.getValue( index );
                     String newEmbed =
-                        formatter.getFunctionDirective( TemplateContextHelper.IMAGE_REGISTRY_KEY, "getPath",
+                        formatter.getFunctionDirective( TemplateContextHelper.IMAGE_REGISTRY_KEY,
+                                                        IImageRegistry.GET_PATH_METHOD,
                                                         AbstractImageRegistry.IMAGE_INFO, "'" + embed + "'" );
                     AttributesImpl attr = toAttributesImpl( attributes );
                     attr.setValue( index, newEmbed );
@@ -171,8 +177,8 @@ public class DocXBufferedDocumentContentHandler
                 // modify "cx" and "cy" attribute with image script (Velocity,
                 // Freemarker)
                 // <wp:extent
-                // cx="${imageRegistry.getWidth($bookmarkName, '1262380')}"
-                // cy="${imageRegistry.getHeight($bookmarkName, '1352550')}" />
+                // cx="${imageRegistry.getWidth(___imageInfo, '1262380')}"
+                // cy="${imageRegistry.getHeight(___imageInfo, '1352550')}" />
                 String newCX = null;
                 String newCY = null;
                 int cxIndex = attributes.getIndex( CX_ATTR );
@@ -180,16 +186,18 @@ public class DocXBufferedDocumentContentHandler
                 {
                     String oldCX = attributes.getValue( cxIndex );
                     newCX =
-                        formatter.getImageWidthDirective( processRowIfNeeded( currentBookmark.getImageFieldName(), true ),
-                                                          oldCX );
+                        formatter.getFunctionDirective( TemplateContextHelper.IMAGE_REGISTRY_KEY,
+                                                        IImageRegistry.GET_WIDTH_METHOD, IImageRegistry.IMAGE_INFO, "'"
+                                                            + oldCX + "'" );
                 }
                 int cyIndex = attributes.getIndex( CY_ATTR );
                 if ( cyIndex != -1 )
                 {
                     String oldCY = attributes.getValue( cyIndex );
                     newCY =
-                        formatter.getImageHeightDirective( processRowIfNeeded( currentBookmark.getImageFieldName(),
-                                                                               true ), oldCY );
+                        formatter.getFunctionDirective( TemplateContextHelper.IMAGE_REGISTRY_KEY,
+                                                        IImageRegistry.GET_HEIGHT_METHOD, IImageRegistry.IMAGE_INFO,
+                                                        "'" + oldCY + "'" );
                 }
                 if ( newCX != null || newCY != null )
                 {

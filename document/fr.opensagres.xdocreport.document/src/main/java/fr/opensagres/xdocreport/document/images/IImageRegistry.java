@@ -37,6 +37,12 @@ import fr.opensagres.xdocreport.template.IContext;
 public interface IImageRegistry
 {
 
+    public static final String IMAGE_INFO = "___imageInfo";
+    public static final String REGISTER_IMAGE_METHOD = "registerImage";
+    public static final String GET_WIDTH_METHOD = "getWidth";
+    public static final String GET_HEIGHT_METHOD = "getHeight";
+    public static final String GET_PATH_METHOD = "getPath";
+
     /**
      * Register the instance of imageProvider in the registry. This done when context model is tracked while processing
      * of the template engine.
@@ -80,7 +86,7 @@ public interface IImageRegistry
      * @return
      * @throws IOException
      */
-    String getWidth( IImageProvider imageProvider, String defaultWidth )
+    String getWidth( ImageProviderInfo info, String defaultWidth )
         throws IOException;
 
     /**
@@ -91,6 +97,6 @@ public interface IImageRegistry
      * @return
      * @throws IOException
      */
-    String getHeight( IImageProvider imageProvider, String defaultHeight )
+    String getHeight( ImageProviderInfo info, String defaultHeight )
         throws IOException;
 }

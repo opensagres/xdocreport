@@ -81,7 +81,9 @@ public class FieldsMetadata
 
     private boolean evaluateEngineOnlyForFields;
 
-    private NullImageStrategy strategy;
+    private NullImageBehaviour behaviour;
+
+    private boolean useImageSize;
 
     public FieldsMetadata()
     {
@@ -100,7 +102,8 @@ public class FieldsMetadata
         this.afterTableCellToken = DEFAULT_AFTER_TABLE_CELL_TOKEN;
         setTemplateEngineKind( templateEngineKind );
         this.evaluateEngineOnlyForFields = false;
-        this.strategy = null;
+        this.behaviour = null;
+        this.useImageSize = false;
     }
 
     /**
@@ -110,7 +113,37 @@ public class FieldsMetadata
      */
     public FieldMetadata addFieldAsImage( String fieldName )
     {
-        return addFieldAsImage( fieldName, fieldName );
+        return addFieldAsImage( fieldName, isUseImageSize() );
+    }
+
+    /**
+     * Add a field name which is considered as an image.
+     * 
+     * @param fieldName
+     */
+    public FieldMetadata addFieldAsImage( String fieldName, boolean useImageSize )
+    {
+        return addFieldAsImage( fieldName, fieldName, null, useImageSize );
+    }
+
+    /**
+     * Add a field name which is considered as an image.
+     * 
+     * @param fieldName
+     */
+    public FieldMetadata addFieldAsImage( String fieldName, NullImageBehaviour behaviour )
+    {
+        return addFieldAsImage( fieldName, fieldName, behaviour, isUseImageSize() );
+    }
+
+    /**
+     * Add a field name which is considered as an image.
+     * 
+     * @param fieldName
+     */
+    public FieldMetadata addFieldAsImage( String fieldName, NullImageBehaviour behaviour, boolean useImageSize )
+    {
+        return addFieldAsImage( fieldName, fieldName, behaviour, useImageSize );
     }
 
     /**
@@ -121,7 +154,32 @@ public class FieldsMetadata
      */
     public FieldMetadata addFieldAsImage( String imageName, String fieldName )
     {
-        return addField( fieldName, null, imageName, null, null );
+        return addFieldAsImage( imageName, fieldName, isUseImageSize() );
+    }
+
+    public FieldMetadata addFieldAsImage( String imageName, String fieldName, boolean useImageSize )
+    {
+        return addFieldAsImage( imageName, fieldName, null, useImageSize );
+    }
+
+    public FieldMetadata addFieldAsImage( String imageName, String fieldName, NullImageBehaviour behaviour )
+    {
+        return addFieldAsImage( imageName, fieldName, behaviour, isUseImageSize() );
+    }
+
+    /**
+     * Add a field name which is considered as an image.
+     * 
+     * @param imageName
+     * @param fieldName
+     */
+    public FieldMetadata addFieldAsImage( String imageName, String fieldName, NullImageBehaviour behaviour,
+                                          boolean useImageSize )
+    {
+        FieldMetadata field = addField( fieldName, null, imageName, null, null );
+        field.setBehaviour( behaviour );
+        field.setUseImageSize( useImageSize );
+        return field;
     }
 
     /**
@@ -183,7 +241,7 @@ public class FieldsMetadata
                                    Boolean syntaxWithDirective )
     {
         // Test if it exists fields with the given name
-        FieldMetadata exsitingField = fieldsAsImage.get( fieldName );
+        FieldMetadata exsitingField = getFieldAsImage( fieldName );
         if ( exsitingField == null )
         {
             exsitingField = fieldsAsList.get( fieldName );
@@ -220,6 +278,11 @@ public class FieldsMetadata
             }
             return exsitingField;
         }
+    }
+
+    public FieldMetadata getFieldAsImage( String fieldName )
+    {
+        return fieldsAsImage.get( fieldName );
     }
 
     /**
@@ -277,7 +340,7 @@ public class FieldsMetadata
         {
             return null;
         }
-        FieldMetadata metadata = fieldsAsImage.get( fieldName );
+        FieldMetadata metadata = getFieldAsImage( fieldName );
         if ( metadata != null )
         {
             return metadata.getFieldName();
@@ -536,23 +599,33 @@ public class FieldsMetadata
     }
 
     /**
-     * Returns the "global" strategy to use when the stream of the image is null.
+     * Returns the "global" behaviour to use when the stream of the image is null.
      * 
      * @return
      */
-    public NullImageStrategy getStrategy()
+    public NullImageBehaviour getBehaviour()
     {
-        return strategy;
+        return behaviour;
     }
 
     /**
-     * Set the "global" strategy to use when the stream of the image is null.
+     * Set the "global" behaviour to use when the stream of the image is null.
      * 
-     * @param strategy
+     * @param behaviour
      */
-    public void setStrategy( NullImageStrategy strategy )
+    public void setBehaviour( NullImageBehaviour behaviour )
     {
-        this.strategy = strategy;
+        this.behaviour = behaviour;
+    }
+
+    public boolean isUseImageSize()
+    {
+        return useImageSize;
+    }
+
+    public void setUseImageSize( boolean useImageSize )
+    {
+        this.useImageSize = useImageSize;
     }
 
 }

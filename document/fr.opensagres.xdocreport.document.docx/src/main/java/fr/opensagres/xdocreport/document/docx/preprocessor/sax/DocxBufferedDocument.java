@@ -52,8 +52,11 @@ import fr.opensagres.xdocreport.document.docx.preprocessor.sax.hyperlinks.Hyperl
 import fr.opensagres.xdocreport.document.docx.preprocessor.sax.notes.endnotes.EndnoteReferenceBufferedRegion;
 import fr.opensagres.xdocreport.document.docx.preprocessor.sax.notes.footnotes.FootnoteReferenceBufferedRegion;
 import fr.opensagres.xdocreport.document.images.AbstractImageRegistry;
+import fr.opensagres.xdocreport.document.images.IImageRegistry;
+import fr.opensagres.xdocreport.document.images.ImageProviderInfo;
 import fr.opensagres.xdocreport.document.preprocessor.sax.BufferedElement;
 import fr.opensagres.xdocreport.document.preprocessor.sax.TransformedBufferedDocument;
+import fr.opensagres.xdocreport.template.TemplateContextHelper;
 import fr.opensagres.xdocreport.template.formatter.FieldMetadata;
 import fr.opensagres.xdocreport.template.formatter.FieldsMetadata;
 import fr.opensagres.xdocreport.template.formatter.IDocumentFormatter;
@@ -159,14 +162,25 @@ public class DocxBufferedDocument
                     {
                         // insert before start bookmark image script (Velocity,
                         // Freemarker)
-                        // #set($___imageInfo=${imageRegistry.registerImage($logo,'logo',$___context)})
-                        // #if($___imageInfo)
+                        // #set($___imageInfo=${___imageRegistry.registerImage($logo,'logo',$___context)})
+                        // #if($___imageInfo.notRemoveImageTemplate)
                         String set =
-                            formatter.getSetDirective( AbstractImageRegistry.IMAGE_INFO,
-                                                       formatter.getImageDirective( handler.processRowIfNeeded( currentBookmark.getImageFieldName(),
-                                                                                                                true ) ),
+                            formatter.getSetDirective( IImageRegistry.IMAGE_INFO,
+                                                       formatter.getFunctionDirective( false,
+                                                                                       TemplateContextHelper.IMAGE_REGISTRY_KEY,
+                                                                                       IImageRegistry.REGISTER_IMAGE_METHOD,
+                                                                                       handler.processRowIfNeeded( currentBookmark.getImageFieldName(),
+                                                                                                                   true ),
+                                                                                       "'"
+                                                                                           + currentBookmark.getBookmarkName()
+                                                                                           + "'",
+                                                                                       TemplateContextHelper.CONTEXT_KEY ),
                                                        false );
-                        String imageInfoIf = formatter.getStartIfDirective( AbstractImageRegistry.IMAGE_INFO );
+                        String imageInfoIf =
+                            formatter.getStartIfDirective( formatter.formatAsSimpleField( false,
+                                                                                          AbstractImageRegistry.IMAGE_INFO,
+                                                                                          ImageProviderInfo.NOT_REMOVE_IMAGE_TEMPLATE_METHOD ),
+                                                           false );
                         StringBuilder before = new StringBuilder();
                         before.append( set );
                         before.append( imageInfoIf );
@@ -187,7 +201,7 @@ public class DocxBufferedDocument
                 IDocumentFormatter formatter = handler.getFormatter();
                 if ( formatter != null )
                 {
-                    // #end (of #if($___imageInfo))
+                    // #end (of #if($___imageInfo.notRemoveImageTemplate))
                     bookmarkEnd.setContentAfterEndTagElement( formatter.getEndIfDirective( AbstractImageRegistry.IMAGE_INFO ) );
                 }
             }

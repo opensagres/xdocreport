@@ -4,10 +4,10 @@
   <parent>
     <artifactId>tools</artifactId>
     <groupId>fr.opensagres.xdocreport</groupId>
-    <version>0.9.7</version>
+    <version>0.9.8-SNAPSHOT</version>
   </parent>
   <artifactId>fr.opensagres.xdocreport.openoffice.macro</artifactId>
-  <version>0.9.7</version>
+  <version>1.0.2</version>
   <packaging>pom</packaging>
   <build>
     <plugins>

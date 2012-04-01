@@ -26,7 +26,7 @@ public class DocxEndnotesPreprocessorWithFreemarkerTestCase
     {
         DocxEndnotesPreprocessor  preprocessor = new DocxEndnotesPreprocessor();
         InputStream stream =
-                        IOUtils.toInputStream( "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>" 
+                        IOUtils.toInputStream( "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>"
                 + "<w:endnotes"
                 + " xmlns:ve=\"http://schemas.openxmlformats.org/markup-compatibility/2006\""
                 + " xmlns:o=\"urn:schemas-microsoft-com:office:office\""
@@ -37,7 +37,7 @@ public class DocxEndnotesPreprocessorWithFreemarkerTestCase
                 + " xmlns:w10=\"urn:schemas-microsoft-com:office:word\""
                 + " xmlns:w=\"http://schemas.openxmlformats.org/wordprocessingml/2006/main\""
                 + " xmlns:wne=\"http://schemas.microsoft.com/office/word/2006/wordml\">"
-                
+
                     + "<w:endnote w:id=\"2\">"
                     + "<w:p w:rsidR=\"00D31606\" w:rsidRDefault=\"00D31606\" w:rsidP=\"000A7B59\">"
                         + "<w:r>"
@@ -58,16 +58,16 @@ public class DocxEndnotesPreprocessorWithFreemarkerTestCase
                             + "</w:r>"
                         + "</w:fldSimple>"
                     + "</w:p>"
-                    + "</w:endnote>"                
-                
-                 + " </w:endnotes>" );
+                    + "</w:endnote>"
+
+                 + " </w:endnotes>" ,"UTF-8");
 
         StringWriter writer = new StringWriter();
         IDocumentFormatter formatter = new FreemarkerDocumentFormatter();
         Map<String, Object> sharedContext = new HashMap<String, Object>();
         preprocessor.preprocess( "word/endnotes.xml", stream, writer, null, formatter, sharedContext );
 
-        Assert.assertEquals( "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>" 
+        Assert.assertEquals( "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>"
                         + "<w:endnotes"
                         + " xmlns:ve=\"http://schemas.openxmlformats.org/markup-compatibility/2006\""
                         + " xmlns:o=\"urn:schemas-microsoft-com:office:office\""
@@ -78,12 +78,12 @@ public class DocxEndnotesPreprocessorWithFreemarkerTestCase
                         + " xmlns:w10=\"urn:schemas-microsoft-com:office:word\""
                         + " xmlns:w=\"http://schemas.openxmlformats.org/wordprocessingml/2006/main\""
                         + " xmlns:wne=\"http://schemas.microsoft.com/office/word/2006/wordml\">"
-                        
+
                         + "[#list ___EndnoteRegistry.getNotes('2') as ___NoEscapeNoteInfo]"
-                        
+
                             //+ "<w:endnote w:id=\"2\">"
                             + "<w:endnote w:id=\"${___NoEscapeNoteInfo.id}\">"
-                            
+
                             //+ "<w:p w:rsidR=\"00D31606\" w:rsidRDefault=\"00D31606\" w:rsidP=\"000A7B59\">"
                             //    + "<w:r>"
                             //        + "<w:rPr>"
@@ -103,15 +103,15 @@ public class DocxEndnotesPreprocessorWithFreemarkerTestCase
                             //        + "</w:r>"
                             //    + "</w:fldSimple>"
                             //+ "</w:p>"
-                            
+
                             + "[#noescape]${___NoEscapeNoteInfo.content}[/#noescape]"
                             + "</w:endnote>"
-                            
+
                         + "[/#list]"
-                        
+
                          + ""
-                         + " </w:endnotes>", writer.toString() );       
-        
+                         + " </w:endnotes>", writer.toString() );
+
         InitialNoteInfoMap  infoMap = NoteUtils.getInitialEndNoteInfoMap( sharedContext );
         Assert.assertNotNull( infoMap );
         Assert.assertEquals(1, infoMap.values().size() );
@@ -131,19 +131,19 @@ public class DocxEndnotesPreprocessorWithFreemarkerTestCase
                                 + "<w:noProof/>"
                             + "</w:rPr>"
                     //        + "<w:t>«${d.mail}»</w:t>"
-                            + "<w:t>${d.mail}</w:t>"                    
+                            + "<w:t>${d.mail}</w:t>"
                         + "</w:r>"
                     //+ "</w:fldSimple>"
-                + "</w:p>", ((NoteInfo)infoMap.values().toArray( )[0]).getContent());        
+                + "</w:p>", ((NoteInfo)infoMap.values().toArray( )[0]).getContent());
     }
-    
+
     @Test
     public void testEndnoteReference()
         throws Exception
     {
         DocxPreprocessor preprocessor = new DocxPreprocessor();
         InputStream stream =
-                        IOUtils.toInputStream( "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>" 
+                        IOUtils.toInputStream( "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>"
                 + "<w:document"
                 + " xmlns:ve=\"http://schemas.openxmlformats.org/markup-compatibility/2006\""
                 + " xmlns:o=\"urn:schemas-microsoft-com:office:office\""
@@ -154,27 +154,27 @@ public class DocxEndnotesPreprocessorWithFreemarkerTestCase
                 + " xmlns:w10=\"urn:schemas-microsoft-com:office:word\""
                 + " xmlns:w=\"http://schemas.openxmlformats.org/wordprocessingml/2006/main\""
                 + " xmlns:wne=\"http://schemas.microsoft.com/office/word/2006/wordml\">"
-                
+
                     + "<w:r w:rsidR=\"00D31606\">"
                     + "<w:rPr>"
                         + "<w:rStyle w:val=\"Appelnotedebasdep\"/>"
                     + "</w:rPr>"
                     + "<w:endnoteReference w:id=\"2\"/>"
-                    + "</w:r>"                
-                
+                    + "</w:r>"
+
                  + " </w:document>" );
 
         StringWriter writer = new StringWriter();
         IDocumentFormatter formatter = new FreemarkerDocumentFormatter();
         Map<String, Object> sharedContext = new HashMap<String, Object>();
-        
+
         InitialNoteInfoMap  infoMap = new  InitialNoteInfoMap();
         NoteUtils.putInitialEndNoteInfoMap( sharedContext, infoMap   );
         infoMap.put( "2", new NoteInfo( "2", "XXXX" ) );
-        
+
         preprocessor.preprocess ( "word/document.xml", stream, writer, null, formatter, sharedContext );
 
-        Assert.assertEquals( "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>" 
+        Assert.assertEquals( "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>"
                         + "<w:document"
                         + " xmlns:ve=\"http://schemas.openxmlformats.org/markup-compatibility/2006\""
                         + " xmlns:o=\"urn:schemas-microsoft-com:office:office\""
@@ -185,15 +185,15 @@ public class DocxEndnotesPreprocessorWithFreemarkerTestCase
                         + " xmlns:w10=\"urn:schemas-microsoft-com:office:word\""
                         + " xmlns:w=\"http://schemas.openxmlformats.org/wordprocessingml/2006/main\""
                         + " xmlns:wne=\"http://schemas.microsoft.com/office/word/2006/wordml\">"
-                        
+
                             + "<w:r w:rsidR=\"00D31606\">"
                             + "<w:rPr>"
                                 + "<w:rStyle w:val=\"Appelnotedebasdep\"/>"
                             + "</w:rPr>"
                             //+ "<w:endnoteReference w:id=\"2\"/>"
                             + "<w:endnoteReference w:id=\"[#assign ___note]XXXX[/#assign]${___EndnoteRegistry.registerNote('2',___note)}\"/>"
-                            + "</w:r>"                
-                        
-                         + " </w:document>", writer.toString() );       
-        
+                            + "</w:r>"
+
+                         + " </w:document>", writer.toString() );
+
     }}

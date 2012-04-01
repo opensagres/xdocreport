@@ -1,14 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
   <modelVersion>4.0.0</modelVersion>
   <parent>
     <artifactId>tools</artifactId>
     <groupId>fr.opensagres.xdocreport</groupId>
-    <version>0.9.7-SNAPSHOT</version>
+    <version>0.9.7</version>
   </parent>
   <artifactId>fr.opensagres.xdocreport.openoffice.macro</artifactId>
-  <version>1.0.2</version>
+  <version>0.9.7</version>
   <packaging>pom</packaging>
   <build>
     <plugins>
@@ -21,10 +20,10 @@
                 <phase>package</phase>
                 <configuration>
 		 <target>
-                    <ant antfile="${basedir}/oxt-build.xml"  inheritAll="true" inheritRefs="true">
+                    <ant antfile="${basedir}/oxt-build.xml" inheritAll="true" inheritRefs="true">
                          <target name="oxt-package" />
                     </ant>
-                    <attachartifact file="${project.build.directory}/XDocReportDesignTool-${project.version}.oxt" type="oxt"/>
+                    <attachartifact file="${project.build.directory}/XDocReportDesignTool-${project.version}.oxt" type="oxt" />
                   </target>                
                 </configuration>
                 <goals>

@@ -83,7 +83,7 @@ public abstract class XWPFElementVisitor<T>
 
     /**
      * Main entry for visit XWPFDocument.
-     * 
+     *
      * @param out
      * @throws Exception
      */
@@ -139,7 +139,9 @@ public abstract class XWPFElementVisitor<T>
         PackagePart hdrPart = document.getPartById( headerRef.getId() );
         HdrDocument hdrDoc = HdrDocument.Factory.parse( hdrPart.getInputStream() );
         CTHdrFtr hdrFtr = hdrDoc.getHdr();
-        XWPFHeader hdr = new XWPFHeader( hdrFtr );
+
+        XWPFHeader hdr = new XWPFHeader( document, hdrFtr);
+
         return hdr;
     }
 
@@ -149,8 +151,10 @@ public abstract class XWPFElementVisitor<T>
         PackagePart hdrPart = document.getPartById( footerRef.getId() );
         FtrDocument hdrDoc = FtrDocument.Factory.parse( hdrPart.getInputStream() );
         CTHdrFtr hdrFtr = hdrDoc.getFtr();
-        XWPFFooter hdr = new XWPFFooter( hdrFtr );
-        return hdr;
+
+        XWPFFooter ftr = new XWPFFooter(document, hdrFtr);
+
+        return ftr;
     }
 
     protected abstract void visitHeader( CTHdrFtrRef headerRef )

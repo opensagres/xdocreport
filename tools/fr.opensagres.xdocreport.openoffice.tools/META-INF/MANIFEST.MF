@@ -1,32 +1,32 @@
 Manifest-Version: 1.0
-Export-Package: fr.opensagres.xdocreport;uses:="com.sun.star.registry,
- com.sun.star.lang,com.sun.star.util,com.sun.star.beans,fr.opensagres.
- xdocreport.gui,com.sun.star.uno,fr.opensagres.xdocreport.util,com.sun
- .star.lib.uno.helper,com.sun.star.frame,fr.opensagres.xdocreport.cont
- roller",fr.opensagres.xdocreport.controller;uses:="fr.opensagres.xdoc
- report.document.domain,fr.opensagres.xdocreport.remoting.javaclient",
- fr.opensagres.xdocreport.gui;uses:="javax.swing,fr.opensagres.xdocrep
- ort.controller,org.jdesktop.layout,fr.opensagres.xdocreport.document.
- domain,javax.swing.table,javax.swing.border",fr.opensagres.xdocreport
- .util
-Built-By: azerr
-Tool: Bnd-1.15.0
-Bundle-Name: fr.opensagres.xdocreport.openoffice.tools
+Built-By: pascalleclercq
 Created-By: Apache Maven Bundle Plugin
-Bundle-RequiredExecutionEnvironment: J2SE-1.5, JavaSE-1.6
-Build-Jdk: 1.6.0_23
-Bundle-Version: 0.9.7.SNAPSHOTv201203131003
-Bnd-LastModified: 1331629404593
-Bundle-ManifestVersion: 2
 Bundle-License: http://www.opensource.org/licenses/mit-license.php
-Bundle-Description: XDocReport means XML Document reporting. It's Java
-  API to merge XML document created with MS Office (docx) or OpenOffic
- e (odt), LibreOffice (odt) with a Java model to generate report and c
- onvert it if you need to another format (PDF, XHTML...).
 Import-Package: com.sun.star.beans,com.sun.star.frame,com.sun.star.lan
  g,com.sun.star.lib.uno.helper,com.sun.star.registry,com.sun.star.uno,
  com.sun.star.util,fr.opensagres.xdocreport.document.domain,fr.opensag
  res.xdocreport.remoting.javaclient,javax.swing,javax.swing.border,jav
  ax.swing.table,org.jdesktop.layout
+Bundle-RequiredExecutionEnvironment: J2SE-1.5, JavaSE-1.6
+Bnd-LastModified: 1333404242470
+Export-Package: fr.opensagres.xdocreport;uses:="com.sun.star.registry,
+ com.sun.star.lang,fr.opensagres.xdocreport.gui,com.sun.star.beans,com
+ .sun.star.util,fr.opensagres.xdocreport.util,com.sun.star.lib.uno.hel
+ per,com.sun.star.uno,com.sun.star.frame,fr.opensagres.xdocreport.cont
+ roller",fr.opensagres.xdocreport.controller;uses:="fr.opensagres.xdoc
+ report.document.domain,fr.opensagres.xdocreport.remoting.javaclient",
+ fr.opensagres.xdocreport.gui;uses:="javax.swing,org.jdesktop.layout,f
+ r.opensagres.xdocreport.controller,fr.opensagres.xdocreport.document.
+ domain,javax.swing.table,javax.swing.border",fr.opensagres.xdocreport
+ .util
+Bundle-Version: 0.9.8.SNAPSHOTv201204030002
+Bundle-Name: fr.opensagres.xdocreport.openoffice.tools
+Bundle-Description: XDocReport means XML Document reporting. It's Java
+  API to merge XML document created with MS Office (docx) or OpenOffic
+ e (odt), LibreOffice (odt) with a Java model to generate report and c
+ onvert it if you need to another format (PDF, XHTML...).
+Build-Jdk: 1.5.0_24
+Bundle-ManifestVersion: 2
 Bundle-SymbolicName: fr.opensagres.xdocreport.openoffice.tools
+Tool: Bnd-1.15.0
 

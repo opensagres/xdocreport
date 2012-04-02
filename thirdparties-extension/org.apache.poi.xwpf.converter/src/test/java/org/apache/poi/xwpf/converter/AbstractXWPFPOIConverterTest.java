@@ -67,6 +67,13 @@ public abstract class AbstractXWPFPOIConverterTest
     }
 
     @Test
+    public void testChineseCharacters()
+        throws IOException
+    {
+        doGenerate( "TestChineseCharacters.docx" );
+    }
+    
+    @Test
     public void testColor()
         throws IOException
     {

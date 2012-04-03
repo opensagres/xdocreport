@@ -9,11 +9,6 @@
   </parent>
   <packaging>pom</packaging>
   <modules>
-    <module>fr.opensagres.xdocreport.remoting.ws</module>
-    <module>fr.opensagres.xdocreport.remoting.rest</module>
-    <module>fr.opensagres.xdocreport.remoting.shared</module>
-    <module>fr.opensagres.xdocreport.remoting.api</module>
-    <module>fr.opensagres.xdocreport.remoting.javaclient</module>
 
     <module>fr.opensagres.xdocreport.remoting.resources</module>
   </modules>

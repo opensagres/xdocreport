@@ -7,7 +7,7 @@
     <version>0.9.8-SNAPSHOT</version>
   </parent>
   <artifactId>fr.opensagres.xdocreport.openoffice.macro</artifactId>
-  <version>1.0.2</version>
+  <version>0.9.8-SNAPSHOT</version>
   <packaging>pom</packaging>
   <build>
     <plugins>
@@ -24,7 +24,7 @@
                          <target name="oxt-package" />
                     </ant>
                     <attachartifact file="${project.build.directory}/XDocReportDesignTool-${project.version}.oxt" type="oxt" />
-                  </target>                
+                  </target>
                 </configuration>
                 <goals>
                   <goal>run</goal>

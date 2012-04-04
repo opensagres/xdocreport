@@ -48,7 +48,7 @@ public class APBufferedRegion
 
     private String itemNameList;
 
-    private List<String> ignoreLoopDirective;
+    private List<String> ignoreStartLoopDirective;
 
     public APBufferedRegion( PPTXSlideDocument document, BufferedElement parent, String uri, String localName,
                              String name, Attributes attributes )
@@ -56,7 +56,7 @@ public class APBufferedRegion
         super( parent, uri, localName, name, attributes );
         this.document = document;
         this.arBufferedRegions = new ArrayList<ARBufferedRegion>();
-        this.ignoreLoopDirective = null;
+        this.ignoreStartLoopDirective = null;
     }
 
     @Override
@@ -162,9 +162,10 @@ public class APBufferedRegion
                     this.itemNameList = formatter.extractItemNameList( content, fieldName, true );
                     if ( StringUtils.isNotEmpty( itemNameList ) )
                     {
-                        if ( !isIgnoreLoopDirective( itemNameList ) )
+                        if ( !isIgnoreStartLoopDirective( itemNameList ) )
                         {
                             setStartLoopDirective( formatter.getStartLoopDirective( itemNameList ) );
+                            addIgnoreStartLoopDirective( itemNameList );
                         }
                         return formatter.formatAsFieldItemList( content, fieldName, true );
                     }
@@ -174,7 +175,7 @@ public class APBufferedRegion
         return null;
     }
 
-    public void addEndLoopDirective( String itemNameList )
+    public void setEndLoopDirective( String itemNameList )
     {
         IDocumentFormatter formatter = document.getFormatter();
         this.endTagElement.setAfter( formatter.getEndLoopDirective( itemNameList ) );
@@ -200,23 +201,23 @@ public class APBufferedRegion
         this.level = level;
     }
 
-    public void addIgnoreLoopDirective( String itemNameList )
+    public void addIgnoreStartLoopDirective( String itemNameList )
     {
-        if ( ignoreLoopDirective == null )
+        if ( ignoreStartLoopDirective == null )
         {
-            ignoreLoopDirective = new ArrayList<String>();
+            ignoreStartLoopDirective = new ArrayList<String>();
 
         }
-        ignoreLoopDirective.add( itemNameList );
+        ignoreStartLoopDirective.add( itemNameList );
     }
 
-    public boolean isIgnoreLoopDirective( String itemNameList )
+    public boolean isIgnoreStartLoopDirective( String itemNameList )
     {
-        if ( ignoreLoopDirective == null )
+        if ( ignoreStartLoopDirective == null )
         {
             return false;
         }
-        return ignoreLoopDirective.contains( itemNameList );
+        return ignoreStartLoopDirective.contains( itemNameList );
     }
 
 }

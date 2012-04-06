@@ -36,11 +36,6 @@ public class StylableChunk
     extends Chunk
     implements IStylableElement
 {
-
-    private static final long serialVersionUID = 664309269352903329L;
-
-    private final IStylableFactory ownerDocument;
-
     private final IStylableContainer parent;
 
     private Style lastStyleApplied = null;
@@ -48,7 +43,6 @@ public class StylableChunk
     public StylableChunk( IStylableFactory ownerDocument, IStylableContainer parent, String textContent )
     {
         super( textContent );
-        this.ownerDocument = ownerDocument;
         this.parent = parent;
     }
 
@@ -59,16 +53,13 @@ public class StylableChunk
         StyleTextProperties textProperties = style.getTextProperties();
         if ( textProperties != null )
         {
-
             // background-color
             Color backgroundColor = textProperties.getBackgroundColor();
             if ( backgroundColor != null )
             {
                 super.setBackground( backgroundColor );
             }
-
         }
-
     }
 
     public Style getLastStyleApplied()

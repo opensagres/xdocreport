@@ -24,17 +24,15 @@
  */
 package org.odftoolkit.odfdom.converter.internal.itext;
 
-import com.lowagie.text.pdf.BaseFont;
-
 import fr.opensagres.xdocreport.itext.extension.font.AbstractFontRegistry;
 
 public class ODFFontRegistry
     extends AbstractFontRegistry
 {
 
-    private static final String TIMES_NEW_ROMAN_FONT_FAMILY_NAME = "Times New Roman";
+    //private static final String TIMES_NEW_ROMAN_FONT_FAMILY_NAME = "Times New Roman";
 
-    private static final String COURRIER_NEW_FONT_FAMILY_NAME = "Courier New";
+    //private static final String COURRIER_NEW_FONT_FAMILY_NAME = "Courier New";
 
     private static final ODFFontRegistry INSTANCE = new ODFFontRegistry();
 

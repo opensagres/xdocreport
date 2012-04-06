@@ -30,7 +30,6 @@ import java.util.List;
 import org.odftoolkit.odfdom.converter.ODFConverterException;
 import org.odftoolkit.odfdom.converter.internal.itext.StyleEngineForIText;
 import org.odftoolkit.odfdom.converter.internal.itext.styles.Style;
-import org.odftoolkit.odfdom.converter.internal.itext.styles.StyleMargin;
 import org.odftoolkit.odfdom.converter.internal.itext.styles.StylePageLayoutProperties;
 import org.odftoolkit.odfdom.dom.style.OdfStyleFamily;
 
@@ -223,7 +222,6 @@ public class StylableDocument
         StylePageLayoutProperties pageLayoutProperties = style.getPageLayoutProperties();
         if ( pageLayoutProperties != null )
         {
-
             // width/height
             Float width = pageLayoutProperties.getWidth();
             Float height = pageLayoutProperties.getHeight();
@@ -234,29 +232,23 @@ public class StylableDocument
             }
 
             // margin
-            StyleMargin margin = pageLayoutProperties.getMargin();
-            if ( margin != null )
+            if ( pageLayoutProperties.getMarginTop() != null )
             {
-
-                if ( margin.getMarginTop() != null )
-                {
-                    originMarginTop = margin.getMarginTop();
-                }
-                if ( margin.getMarginBottom() != null )
-                {
-                    originMarginBottom = margin.getMarginBottom();
-                }
-                if ( margin.getMarginRight() != null )
-                {
-                    originMarginRight = margin.getMarginRight();
-                }
-                if ( margin.getMarginLeft() != null )
-                {
-                    originMarginLeft = margin.getMarginLeft();
-                }
-
-                super.setMargins( originMarginLeft, originMarginRight, originMarginTop, originMarginBottom );
+                originMarginTop = pageLayoutProperties.getMarginTop();
             }
+            if ( pageLayoutProperties.getMarginBottom() != null )
+            {
+                originMarginBottom = pageLayoutProperties.getMarginBottom();
+            }
+            if ( pageLayoutProperties.getMarginLeft() != null )
+            {
+                originMarginLeft = pageLayoutProperties.getMarginLeft();
+            }
+            if ( pageLayoutProperties.getMarginRight() != null )
+            {
+                originMarginRight = pageLayoutProperties.getMarginRight();
+            }
+            super.setMargins( originMarginLeft, originMarginRight, originMarginTop, originMarginBottom );
 
             // orientation
             PageOrientation orientation = pageLayoutProperties.getOrientation();
@@ -265,7 +257,6 @@ public class StylableDocument
                 super.setOrientation( orientation );
             }
         }
-
     }
 
     public Style getLastStyleApplied()

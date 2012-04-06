@@ -28,7 +28,6 @@ import java.awt.Color;
 
 import org.odftoolkit.odfdom.converter.internal.itext.styles.Style;
 import org.odftoolkit.odfdom.converter.internal.itext.styles.StyleBorder;
-import org.odftoolkit.odfdom.converter.internal.itext.styles.StylePadding;
 import org.odftoolkit.odfdom.converter.internal.itext.styles.StyleTableCellProperties;
 import org.odftoolkit.odfdom.converter.internal.itext.styles.StyleTableRowProperties;
 import org.odftoolkit.odfdom.converter.internal.utils.StyleUtils;
@@ -82,7 +81,6 @@ public class StylableTableCell
         StyleTableCellProperties tableCellProperties = style.getTableCellProperties();
         if ( tableCellProperties != null )
         {
-
             // background-color
             Color backgroundColor = tableCellProperties.getBackgroundColor();
             if ( backgroundColor != null )
@@ -111,48 +109,46 @@ public class StylableTableCell
             StyleUtils.applyStyles( borderRight, this );
 
             // padding
-            StylePadding padding = tableCellProperties.getPadding();
+            Float padding = tableCellProperties.getPadding();
             if ( padding != null )
             {
-
-                // padding
-                if ( padding.getPadding() != null )
-                {
-                    super.setPadding( padding.getPadding() );
-                }
-
-                // padding-top
-                if ( padding.getPaddingTop() != null )
-                {
-                    super.setPaddingTop( padding.getPaddingTop() );
-                }
-
-                // padding-bottom
-                if ( padding.getPaddingBottom() != null )
-                {
-                    super.setPaddingBottom( padding.getPaddingBottom() );
-                }
-
-                // padding-right
-                if ( padding.getPaddingRight() != null )
-                {
-                    super.setPaddingRight( padding.getPaddingRight() );
-                }
-
-                // padding-left
-                if ( padding.getPaddingLeft() != null )
-                {
-                    super.setPaddingLeft( padding.getPaddingLeft() );
-                }
+                super.setPadding( padding );
             }
 
-            // Alignment
+            // padding-top
+            Float paddingTop = tableCellProperties.getPaddingTop();
+            if ( paddingTop != null )
+            {
+                super.setPaddingTop( paddingTop );
+            }
+
+            // padding-bottom
+            Float paddingBottom = tableCellProperties.getPaddingBottom();
+            if ( paddingBottom != null )
+            {
+                super.setPaddingBottom( paddingBottom );
+            }
+
+            // padding-left
+            Float paddingLeft = tableCellProperties.getPaddingLeft();
+            if ( paddingLeft != null )
+            {
+                super.setPaddingLeft( paddingLeft );
+            }
+
+            // padding-right
+            Float paddingRight = tableCellProperties.getPaddingRight();
+            if ( paddingRight != null )
+            {
+                super.setPaddingRight( paddingRight );
+            }
+
+            // vertical-alignment
             int verticalAlignment = tableCellProperties.getVerticalAlignment();
             if ( verticalAlignment != Element.ALIGN_UNDEFINED )
             {
                 super.setVerticalAlignment( verticalAlignment );
             }
-
         }
     }
 

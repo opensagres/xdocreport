@@ -35,8 +35,6 @@ import org.odftoolkit.odfdom.converter.internal.itext.styles.StyleBorder;
 import org.odftoolkit.odfdom.converter.internal.itext.styles.StyleColumnProperties;
 import org.odftoolkit.odfdom.converter.internal.itext.styles.StyleColumnsProperties;
 import org.odftoolkit.odfdom.converter.internal.itext.styles.StyleHeaderFooterProperties;
-import org.odftoolkit.odfdom.converter.internal.itext.styles.StyleMargin;
-import org.odftoolkit.odfdom.converter.internal.itext.styles.StylePadding;
 import org.odftoolkit.odfdom.converter.internal.itext.styles.StylePageLayoutProperties;
 import org.odftoolkit.odfdom.converter.internal.itext.styles.StyleParagraphProperties;
 import org.odftoolkit.odfdom.converter.internal.itext.styles.StyleSectionProperties;
@@ -649,6 +647,7 @@ public class StyleEngineForIText
         {
             tableCellProperties.setBorder( new StyleBorder( border, BorderType.ALL ) );
         }
+
         // border-bottom
         String borderBottom = ele.getFoBorderBottomAttribute();
         if ( StringUtils.isNotEmpty( borderBottom ) )
@@ -677,65 +676,39 @@ public class StyleEngineForIText
             tableCellProperties.setBorderTop( new StyleBorder( borderTop, BorderType.TOP ) );
         }
 
-        StylePadding stylePadding = null;
         // padding
         String padding = ele.getFoPaddingAttribute();
         if ( StringUtils.isNotEmpty( padding ) )
         {
-            if ( stylePadding == null )
-            {
-                stylePadding = new StylePadding();
-            }
-            stylePadding.setPadding( ODFUtils.getDimensionAsPoint( padding ) );
+            tableCellProperties.setPadding( ODFUtils.getDimensionAsPoint( padding ) );
         }
 
         // padding-bottom
         String paddingBottom = ele.getFoPaddingBottomAttribute();
         if ( StringUtils.isNotEmpty( paddingBottom ) )
         {
-            if ( stylePadding == null )
-            {
-                stylePadding = new StylePadding();
-            }
-            stylePadding.setPaddingBottom( ODFUtils.getDimensionAsPoint( paddingBottom ) );
+            tableCellProperties.setPaddingBottom( ODFUtils.getDimensionAsPoint( paddingBottom ) );
         }
 
         // padding-left
         String paddingLeft = ele.getFoPaddingLeftAttribute();
         if ( StringUtils.isNotEmpty( paddingLeft ) )
         {
-            if ( stylePadding == null )
-            {
-                stylePadding = new StylePadding();
-            }
-            stylePadding.setPaddingLeft( ODFUtils.getDimensionAsPoint( paddingLeft ) );
+            tableCellProperties.setPaddingLeft( ODFUtils.getDimensionAsPoint( paddingLeft ) );
         }
 
-        // padding-bottom
+        // padding-right
         String paddingRight = ele.getFoPaddingRightAttribute();
         if ( StringUtils.isNotEmpty( paddingRight ) )
         {
-            if ( stylePadding == null )
-            {
-                stylePadding = new StylePadding();
-            }
-            stylePadding.setPaddingRight( ODFUtils.getDimensionAsPoint( paddingRight ) );
+            tableCellProperties.setPaddingRight( ODFUtils.getDimensionAsPoint( paddingRight ) );
         }
 
         // padding-top
         String paddingTop = ele.getFoPaddingTopAttribute();
         if ( StringUtils.isNotEmpty( paddingTop ) )
         {
-            if ( stylePadding == null )
-            {
-                stylePadding = new StylePadding();
-            }
-            stylePadding.setPaddingTop( ODFUtils.getDimensionAsPoint( paddingTop ) );
-        }
-
-        if ( stylePadding != null )
-        {
-            tableCellProperties.setPadding( stylePadding );
+            tableCellProperties.setPaddingTop( ODFUtils.getDimensionAsPoint( paddingTop ) );
         }
 
         // vertical-align
@@ -815,46 +788,39 @@ public class StyleEngineForIText
             // cssStyleSheet.setCSSProperty("border-top", borderTop);
         }
 
-        StyleMargin styleMargin = pageLayoutProperties.getMargin();
-        if ( styleMargin == null )
-        {
-            styleMargin = new StyleMargin();
-            pageLayoutProperties.setMargin( styleMargin );
-        }
-
         // margin
         String margin = ele.getFoMarginAttribute();
         if ( StringUtils.isNotEmpty( margin ) )
         {
-            styleMargin.setMargin( ODFUtils.getDimensionAsPoint( margin ) );
+            pageLayoutProperties.setMargin( ODFUtils.getDimensionAsPoint( margin ) );
         }
 
         // margin-bottom
         String marginBottom = ele.getFoMarginBottomAttribute();
         if ( StringUtils.isNotEmpty( marginBottom ) )
         {
-            styleMargin.setMarginBottom( ODFUtils.getDimensionAsPoint( marginBottom ) );
+            pageLayoutProperties.setMarginBottom( ODFUtils.getDimensionAsPoint( marginBottom ) );
         }
 
         // margin-left
         String marginLeft = ele.getFoMarginLeftAttribute();
         if ( StringUtils.isNotEmpty( marginLeft ) )
         {
-            styleMargin.setMarginLeft( ODFUtils.getDimensionAsPoint( marginLeft ) );
+            pageLayoutProperties.setMarginLeft( ODFUtils.getDimensionAsPoint( marginLeft ) );
         }
 
-        // margin-bottom
+        // margin-right
         String marginRight = ele.getFoMarginRightAttribute();
         if ( StringUtils.isNotEmpty( marginRight ) )
         {
-            styleMargin.setMarginRight( ODFUtils.getDimensionAsPoint( marginRight ) );
+            pageLayoutProperties.setMarginRight( ODFUtils.getDimensionAsPoint( marginRight ) );
         }
 
         // margin-top
         String marginTop = ele.getFoMarginTopAttribute();
         if ( StringUtils.isNotEmpty( marginTop ) )
         {
-            styleMargin.setMarginTop( ODFUtils.getDimensionAsPoint( marginTop ) );
+            pageLayoutProperties.setMarginTop( ODFUtils.getDimensionAsPoint( marginTop ) );
         }
 
         // padding

@@ -259,13 +259,6 @@ public class ElementVisitorForIText
     {
         StylableParagraph paragraph = document.createParagraph( currentContainer );
         applyStyles( ele, paragraph );
-        if ( ele.getTextContent().length() == 0 )
-        {
-            // no content in the paragraph
-            // ex : <text:p text:style-name="Standard"></text:p>
-            // add blank Chunk
-            paragraph.add( new Chunk( " " ) );
-        }
         addITextContainer( ele, paragraph );
 
     }

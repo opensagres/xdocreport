@@ -295,6 +295,25 @@ public class StylableParagraph
         if ( !elementPostProcessed )
         {
             elementPostProcessed = true;
+
+            // add space if this paragraph is empty
+            // otherwise it's height will be zero
+            boolean empty = true;
+            ArrayList<Chunk> chunks = getChunks();
+            for ( Chunk chunk : chunks )
+            {
+                if ( chunk.getContent() != null && chunk.getContent().length() > 0 || chunk.getImage() != null )
+                {
+                    empty = false;
+                    break;
+                }
+            }
+            if ( empty )
+            {
+                super.add( new Chunk( " " ) );
+            }
+
+            // adjust line height and baseline
             if ( font != null && font.getBaseFont() != null )
             {
                 // iText and open office computes proportional line height differently
@@ -317,7 +336,7 @@ public class StylableParagraph
                 // again this may be inaccurate if fonts with different size are used in this paragraph
                 float itextdescender = -font.getBaseFont().getFontDescriptor( BaseFont.DESCENT, size ); // negative
                 float textRise = itextdescender * multiplier;
-                ArrayList<Chunk> chunks = getChunks();
+                chunks = getChunks();
                 for ( Chunk chunk : chunks )
                 {
                     Font f = chunk.getFont();
@@ -339,6 +358,7 @@ public class StylableParagraph
                     chunk.setTextRise( chunk.getTextRise() + textRise );
                 }
             }
+
             // wrap this paragraph into a table if necessary
             if ( wrapperCell != null )
             {

@@ -107,8 +107,8 @@ public class StylableParagraph
         if ( paragraphProperties != null )
         {
             // break-before
-            boolean breakBeforeColumn = paragraphProperties.isBreakBeforeColumn();
-            boolean breakBeforePage = paragraphProperties.isBreakBeforePage();
+            boolean breakBeforeColumn = Boolean.TRUE.equals( paragraphProperties.getBreakBeforeColumn() );
+            boolean breakBeforePage = Boolean.TRUE.equals( paragraphProperties.getBreakBeforePage() );
             if ( breakBeforeColumn || breakBeforePage )
             {
                 handleBreak( breakBeforeColumn, breakBeforePage );
@@ -152,8 +152,8 @@ public class StylableParagraph
             }
 
             // first line indentation
-            boolean autoTextIndent = paragraphProperties.isAutoTextIndent();
-            if ( autoTextIndent )
+            Boolean autoTextIndent = paragraphProperties.getAutoTextIndent();
+            if ( Boolean.TRUE.equals( autoTextIndent ) )
             {
                 float fontSize = font != null ? font.getCalculatedSize() : Font.DEFAULTSIZE;
                 super.setFirstLineIndent( 1.3f * fontSize );
@@ -183,8 +183,11 @@ public class StylableParagraph
             }
 
             // keep together on the same page
-            boolean keepTogether = paragraphProperties.isKeepTogether();
-            super.setKeepTogether( keepTogether );
+            Boolean keepTogether = paragraphProperties.getKeepTogether();
+            if ( keepTogether != null )
+            {
+                super.setKeepTogether( keepTogether );
+            }
 
             // background color
             Color backgroundColor = paragraphProperties.getBackgroundColor();

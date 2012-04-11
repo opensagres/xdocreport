@@ -36,7 +36,7 @@ public class StyleParagraphProperties
 
     private int alignment = Element.ALIGN_UNDEFINED;
 
-    private boolean autoTextIndent = false;
+    private Boolean autoTextIndent;
 
     private Color backgroundColor;
 
@@ -50,11 +50,11 @@ public class StyleParagraphProperties
 
     private StyleBorder borderTop;
 
-    private boolean breakBeforeColumn = false;
+    private Boolean breakBeforeColumn;
 
-    private boolean breakBeforePage = false;
+    private Boolean breakBeforePage;
 
-    private boolean keepTogether = false;
+    private Boolean keepTogether;
 
     private Float lineHeight;
 
@@ -90,9 +90,9 @@ public class StyleParagraphProperties
         {
             alignment = paragraphProperties.getAlignment();
         }
-        if ( paragraphProperties.isAutoTextIndent() != autoTextIndent )
+        if ( paragraphProperties.getAutoTextIndent() != null )
         {
-            autoTextIndent = paragraphProperties.isAutoTextIndent();
+            autoTextIndent = paragraphProperties.getAutoTextIndent();
         }
         if ( paragraphProperties.getBackgroundColor() != null )
         {
@@ -118,24 +118,21 @@ public class StyleParagraphProperties
         {
             borderTop = paragraphProperties.getBorderTop();
         }
-        if ( paragraphProperties.isBreakBeforeColumn() != breakBeforeColumn )
+        if ( paragraphProperties.getBreakBeforeColumn() != null )
         {
-            breakBeforeColumn = paragraphProperties.isBreakBeforeColumn();
+            breakBeforeColumn = paragraphProperties.getBreakBeforeColumn();
         }
-        if ( paragraphProperties.isBreakBeforePage() != breakBeforePage )
+        if ( paragraphProperties.getBreakBeforePage() != null )
         {
-            breakBeforePage = paragraphProperties.isBreakBeforePage();
+            breakBeforePage = paragraphProperties.getBreakBeforePage();
         }
-        if ( paragraphProperties.isKeepTogether() != keepTogether )
+        if ( paragraphProperties.getKeepTogether() != null )
         {
-            keepTogether = paragraphProperties.isKeepTogether();
+            keepTogether = paragraphProperties.getKeepTogether();
         }
         if ( paragraphProperties.getLineHeight() != null )
         {
             lineHeight = paragraphProperties.getLineHeight();
-        }
-        if ( paragraphProperties.isLineHeightProportional() != lineHeightProportional )
-        {
             lineHeightProportional = paragraphProperties.isLineHeightProportional();
         }
         if ( paragraphProperties.getMargin() != null )
@@ -174,12 +171,12 @@ public class StyleParagraphProperties
         this.alignment = alignment;
     }
 
-    public boolean isAutoTextIndent()
+    public Boolean getAutoTextIndent()
     {
         return autoTextIndent;
     }
 
-    public void setAutoTextIndent( boolean autoTextIndent )
+    public void setAutoTextIndent( Boolean autoTextIndent )
     {
         this.autoTextIndent = autoTextIndent;
     }
@@ -244,32 +241,32 @@ public class StyleParagraphProperties
         this.borderTop = borderTop;
     }
 
-    public boolean isBreakBeforeColumn()
+    public Boolean getBreakBeforeColumn()
     {
         return breakBeforeColumn;
     }
 
-    public void setBreakBeforeColumn( boolean breakBeforeColumn )
+    public void setBreakBeforeColumn( Boolean breakBeforeColumn )
     {
         this.breakBeforeColumn = breakBeforeColumn;
     }
 
-    public boolean isBreakBeforePage()
+    public Boolean getBreakBeforePage()
     {
         return breakBeforePage;
     }
 
-    public void setBreakBeforePage( boolean breakBeforePage )
+    public void setBreakBeforePage( Boolean breakBeforePage )
     {
         this.breakBeforePage = breakBeforePage;
     }
 
-    public boolean isKeepTogether()
+    public Boolean getKeepTogether()
     {
         return keepTogether;
     }
 
-    public void setKeepTogether( boolean keepTogether )
+    public void setKeepTogether( Boolean keepTogether )
     {
         this.keepTogether = keepTogether;
     }

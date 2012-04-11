@@ -400,22 +400,37 @@ public class StyleEngineForIText
 
         // keep-together
         String keepTogether = ele.getFoKeepTogetherAttribute();
-        if ( FoKeepTogetherAttribute.Value.ALWAYS.toString().equals( keepTogether ) )
+        if ( StringUtils.isNotEmpty( keepTogether ) )
         {
-            paragraphProperties.setKeepTogether( true );
+            if ( FoKeepTogetherAttribute.Value.ALWAYS.toString().equals( keepTogether ) )
+            {
+                paragraphProperties.setKeepTogether( Boolean.TRUE );
+            }
+            else
+            {
+                paragraphProperties.setKeepTogether( Boolean.FALSE );
+            }
         }
 
         // fo:break-before
         String breakBefore = ele.getFoBreakBeforeAttribute();
-        if ( FoBreakBeforeAttribute.Value.PAGE.toString().equals( breakBefore ) )
+        if ( StringUtils.isNotEmpty( breakBefore ) )
         {
-            paragraphProperties.setBreakBeforeColumn( false );
-            paragraphProperties.setBreakBeforePage( true );
-        }
-        else if ( FoBreakBeforeAttribute.Value.COLUMN.toString().equals( breakBefore ) )
-        {
-            paragraphProperties.setBreakBeforeColumn( true );
-            paragraphProperties.setBreakBeforePage( false );
+            if ( FoBreakBeforeAttribute.Value.PAGE.toString().equals( breakBefore ) )
+            {
+                paragraphProperties.setBreakBeforeColumn( Boolean.FALSE );
+                paragraphProperties.setBreakBeforePage( Boolean.TRUE );
+            }
+            else if ( FoBreakBeforeAttribute.Value.COLUMN.toString().equals( breakBefore ) )
+            {
+                paragraphProperties.setBreakBeforeColumn( Boolean.TRUE );
+                paragraphProperties.setBreakBeforePage( Boolean.FALSE );
+            }
+            else
+            {
+                paragraphProperties.setBreakBeforeColumn( Boolean.FALSE );
+                paragraphProperties.setBreakBeforePage( Boolean.FALSE );
+            }
         }
 
         super.visit( ele );

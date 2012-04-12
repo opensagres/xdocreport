@@ -141,7 +141,8 @@ public class ElementVisitorForIText
     {
         String name = ele.getStyleNameAttribute();
         String pageLayoutName = ele.getStylePageLayoutNameAttribute();
-        currentMasterPage = new StylableMasterPage( name, pageLayoutName );
+        String nextStyleName = ele.getStyleNextStyleNameAttribute();
+        currentMasterPage = new StylableMasterPage( name, pageLayoutName, nextStyleName );
         document.addMasterPage( currentMasterPage );
         super.visit( ele );
         currentMasterPage = null;

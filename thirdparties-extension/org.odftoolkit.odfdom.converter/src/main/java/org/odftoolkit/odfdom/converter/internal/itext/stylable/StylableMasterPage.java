@@ -31,10 +31,13 @@ public class StylableMasterPage
 {
     private final String pageLayoutName;
 
-    public StylableMasterPage( String name, String pageLayoutName )
+    private final String nextStyleName;
+
+    public StylableMasterPage( String name, String pageLayoutName, String nextStyleName )
     {
         super( name );
         this.pageLayoutName = pageLayoutName;
+        this.nextStyleName = nextStyleName;
     }
 
     public String getPageLayoutName()
@@ -42,4 +45,8 @@ public class StylableMasterPage
         return pageLayoutName;
     }
 
+    public String getNextStyleName()
+    {
+        return nextStyleName;
+    }
 }

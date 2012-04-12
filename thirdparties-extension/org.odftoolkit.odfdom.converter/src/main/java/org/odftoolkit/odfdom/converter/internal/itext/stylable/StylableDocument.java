@@ -188,6 +188,36 @@ public class StylableDocument
         setColIdx( 0 );
     }
 
+    private Style setNextActiveMasterPageIfNecessary()
+    {
+        // called on page break
+        // return new page style if changed
+        if ( activeMasterPage != null )
+        {
+            String nextMasterPageStyleName = activeMasterPage.getNextStyleName();
+            if ( nextMasterPageStyleName != null && nextMasterPageStyleName.length() > 0 )
+            {
+                StylableMasterPage nextMasterPage = getMasterPage( nextMasterPageStyleName );
+                if ( nextMasterPage != null )
+                {
+                    // activate next master page
+                    Style style = getStyleMasterPage( nextMasterPage );
+                    if ( style != null )
+                    {
+                        // step 1 - apply styles like page dimensions and orientation
+                        this.applyStyles( style );
+                    }
+                    // step 2 - set header/footer if any, it needs page dimensions from step 1
+                    super.setActiveMasterPage( nextMasterPage );
+                    //
+                    activeMasterPage = nextMasterPage;
+                    return style;
+                }
+            }
+        }
+        return null;
+    }
+
     public StylableMasterPage getActiveMasterPage()
     {
         return activeMasterPage;
@@ -323,10 +353,23 @@ public class StylableDocument
         {
             // flush pending content
             flushTable();
+            // check if master page change necessary
+            Style nextStyle = setNextActiveMasterPageIfNecessary();
             // document new page
             super.newPage();
             // initialize column layout for new page
-            layoutTable = StylableDocumentSection.cloneAndClearTable( layoutTable, false );
+            if ( nextStyle == null )
+            {
+                // ordinary page break
+                layoutTable = StylableDocumentSection.cloneAndClearTable( layoutTable, false );
+            }
+            else
+            {
+                // page break with new master page activation
+                // style changed so recreate table
+                layoutTable =
+                    StylableDocumentSection.createLayoutTable( getPageWidth(), getAdjustedPageHeight(), nextStyle );
+            }
             setColIdx( 0 );
             simulateText();
         }

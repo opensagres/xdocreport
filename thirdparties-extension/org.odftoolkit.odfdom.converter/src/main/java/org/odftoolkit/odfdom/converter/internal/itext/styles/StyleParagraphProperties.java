@@ -33,7 +33,6 @@ import com.lowagie.text.Element;
  */
 public class StyleParagraphProperties
 {
-
     private int alignment = Element.ALIGN_UNDEFINED;
 
     private Boolean autoTextIndent;
@@ -50,15 +49,11 @@ public class StyleParagraphProperties
 
     private StyleBorder borderTop;
 
-    private Boolean breakBeforeColumn;
-
-    private Boolean breakBeforePage;
+    private StyleBreak breakBefore;
 
     private Boolean keepTogether;
 
-    private Float lineHeight;
-
-    private boolean lineHeightProportional = true;
+    private StyleLineHeight lineHeight;
 
     private Float margin;
 
@@ -118,13 +113,9 @@ public class StyleParagraphProperties
         {
             borderTop = paragraphProperties.getBorderTop();
         }
-        if ( paragraphProperties.getBreakBeforeColumn() != null )
+        if ( paragraphProperties.getBreakBefore() != null )
         {
-            breakBeforeColumn = paragraphProperties.getBreakBeforeColumn();
-        }
-        if ( paragraphProperties.getBreakBeforePage() != null )
-        {
-            breakBeforePage = paragraphProperties.getBreakBeforePage();
+            breakBefore = paragraphProperties.getBreakBefore();
         }
         if ( paragraphProperties.getKeepTogether() != null )
         {
@@ -133,7 +124,6 @@ public class StyleParagraphProperties
         if ( paragraphProperties.getLineHeight() != null )
         {
             lineHeight = paragraphProperties.getLineHeight();
-            lineHeightProportional = paragraphProperties.isLineHeightProportional();
         }
         if ( paragraphProperties.getMargin() != null )
         {
@@ -241,24 +231,14 @@ public class StyleParagraphProperties
         this.borderTop = borderTop;
     }
 
-    public Boolean getBreakBeforeColumn()
+    public StyleBreak getBreakBefore()
     {
-        return breakBeforeColumn;
+        return breakBefore;
     }
 
-    public void setBreakBeforeColumn( Boolean breakBeforeColumn )
+    public void setBreakBefore( StyleBreak breakBefore )
     {
-        this.breakBeforeColumn = breakBeforeColumn;
-    }
-
-    public Boolean getBreakBeforePage()
-    {
-        return breakBeforePage;
-    }
-
-    public void setBreakBeforePage( Boolean breakBeforePage )
-    {
-        this.breakBeforePage = breakBeforePage;
+        this.breakBefore = breakBefore;
     }
 
     public Boolean getKeepTogether()
@@ -271,24 +251,14 @@ public class StyleParagraphProperties
         this.keepTogether = keepTogether;
     }
 
-    public Float getLineHeight()
+    public StyleLineHeight getLineHeight()
     {
         return lineHeight;
     }
 
-    public void setLineHeight( Float lineHeight )
+    public void setLineHeight( StyleLineHeight lineHeight )
     {
         this.lineHeight = lineHeight;
-    }
-
-    public boolean isLineHeightProportional()
-    {
-        return lineHeightProportional;
-    }
-
-    public void setLineHeightProportional( boolean lineHeightProportional )
-    {
-        this.lineHeightProportional = lineHeightProportional;
     }
 
     public Float getMargin()

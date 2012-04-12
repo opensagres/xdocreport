@@ -32,9 +32,11 @@ import java.util.Map;
 import org.odftoolkit.odfdom.converter.internal.AbstractStyleEngine;
 import org.odftoolkit.odfdom.converter.internal.itext.styles.Style;
 import org.odftoolkit.odfdom.converter.internal.itext.styles.StyleBorder;
+import org.odftoolkit.odfdom.converter.internal.itext.styles.StyleBreak;
 import org.odftoolkit.odfdom.converter.internal.itext.styles.StyleColumnProperties;
 import org.odftoolkit.odfdom.converter.internal.itext.styles.StyleColumnsProperties;
 import org.odftoolkit.odfdom.converter.internal.itext.styles.StyleHeaderFooterProperties;
+import org.odftoolkit.odfdom.converter.internal.itext.styles.StyleLineHeight;
 import org.odftoolkit.odfdom.converter.internal.itext.styles.StylePageLayoutProperties;
 import org.odftoolkit.odfdom.converter.internal.itext.styles.StyleParagraphProperties;
 import org.odftoolkit.odfdom.converter.internal.itext.styles.StyleSectionProperties;
@@ -278,8 +280,8 @@ public class StyleEngineForIText
         String lineHeight = ele.getFoLineHeightAttribute();
         if ( StringUtils.isNotEmpty( lineHeight ) )
         {
-            paragraphProperties.setLineHeight( ODFUtils.getDimensionAsPoint( lineHeight ) );
-            paragraphProperties.setLineHeightProportional( ODFUtils.hasPercentUnit( lineHeight ) );
+            paragraphProperties.setLineHeight( new StyleLineHeight( ODFUtils.getDimensionAsPoint( lineHeight ),
+                                                                    ODFUtils.hasPercentUnit( lineHeight ) ) );
         }
 
         // margin
@@ -418,18 +420,15 @@ public class StyleEngineForIText
         {
             if ( FoBreakBeforeAttribute.Value.PAGE.toString().equals( breakBefore ) )
             {
-                paragraphProperties.setBreakBeforeColumn( Boolean.FALSE );
-                paragraphProperties.setBreakBeforePage( Boolean.TRUE );
+                paragraphProperties.setBreakBefore( StyleBreak.createWithPageBreak() );
             }
             else if ( FoBreakBeforeAttribute.Value.COLUMN.toString().equals( breakBefore ) )
             {
-                paragraphProperties.setBreakBeforeColumn( Boolean.TRUE );
-                paragraphProperties.setBreakBeforePage( Boolean.FALSE );
+                paragraphProperties.setBreakBefore( StyleBreak.createWithColumnBreak() );
             }
             else
             {
-                paragraphProperties.setBreakBeforeColumn( Boolean.FALSE );
-                paragraphProperties.setBreakBeforePage( Boolean.FALSE );
+                paragraphProperties.setBreakBefore( StyleBreak.createWithNoBreak() );
             }
         }
 

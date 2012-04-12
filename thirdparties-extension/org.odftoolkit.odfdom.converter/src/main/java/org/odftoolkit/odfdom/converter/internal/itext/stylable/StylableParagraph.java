@@ -29,6 +29,8 @@ import java.util.ArrayList;
 
 import org.odftoolkit.odfdom.converter.internal.itext.styles.Style;
 import org.odftoolkit.odfdom.converter.internal.itext.styles.StyleBorder;
+import org.odftoolkit.odfdom.converter.internal.itext.styles.StyleBreak;
+import org.odftoolkit.odfdom.converter.internal.itext.styles.StyleLineHeight;
 import org.odftoolkit.odfdom.converter.internal.itext.styles.StyleParagraphProperties;
 import org.odftoolkit.odfdom.converter.internal.itext.styles.StyleTextProperties;
 import org.odftoolkit.odfdom.converter.internal.utils.StyleUtils;
@@ -107,11 +109,10 @@ public class StylableParagraph
         if ( paragraphProperties != null )
         {
             // break-before
-            boolean breakBeforeColumn = Boolean.TRUE.equals( paragraphProperties.getBreakBeforeColumn() );
-            boolean breakBeforePage = Boolean.TRUE.equals( paragraphProperties.getBreakBeforePage() );
-            if ( breakBeforeColumn || breakBeforePage )
+            StyleBreak breakBefore = paragraphProperties.getBreakBefore();
+            if ( breakBefore != null )
             {
-                handleBreak( breakBeforeColumn, breakBeforePage );
+                handleBreak( breakBefore );
             }
 
             // alignment
@@ -168,17 +169,16 @@ public class StylableParagraph
             }
 
             // line height
-            Float lineHeight = paragraphProperties.getLineHeight();
-            if ( lineHeight != null )
+            StyleLineHeight lineHeight = paragraphProperties.getLineHeight();
+            if ( lineHeight != null && lineHeight.getLineHeight() != null )
             {
-                boolean lineHeightProportional = paragraphProperties.isLineHeightProportional();
-                if ( lineHeightProportional )
+                if ( lineHeight.isLineHeightProportional() )
                 {
-                    super.setMultipliedLeading( lineHeight );
+                    super.setMultipliedLeading( lineHeight.getLineHeight() );
                 }
                 else
                 {
-                    super.setLeading( lineHeight );
+                    super.setLeading( lineHeight.getLineHeight() );
                 }
             }
 
@@ -233,18 +233,21 @@ public class StylableParagraph
         }
     }
 
-    private void handleBreak( boolean columnBreak, boolean pageBreak )
+    private void handleBreak( StyleBreak styleBreak )
     {
-        IBreakHandlingContainer b = StylableDocumentSection.getIBreakHandlingContainer( parent );
-        if ( b != null )
+        if ( styleBreak.isColumnBreak() || styleBreak.isPageBreak() )
         {
-            if ( columnBreak )
+            IBreakHandlingContainer b = StylableDocumentSection.getIBreakHandlingContainer( parent );
+            if ( b != null )
             {
-                b.columnBreak();
-            }
-            else if ( pageBreak )
-            {
-                b.pageBreak();
+                if ( styleBreak.isColumnBreak() )
+                {
+                    b.columnBreak();
+                }
+                else if ( styleBreak.isPageBreak() )
+                {
+                    b.pageBreak();
+                }
             }
         }
     }

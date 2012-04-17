@@ -69,7 +69,6 @@
     </text:list-item>
   </text:list>
   <text:p>
-    <text:span/>
     <text:span text:style-name="XDocReport_Bold">bold text</text:span>
     <text:span text:style-name="XDocReport_Italic">italic text </text:span>
     <text:a xlink:href="http://code.google.com/p/xdocreport" xlink:type="simple">XDocReport</text:a>

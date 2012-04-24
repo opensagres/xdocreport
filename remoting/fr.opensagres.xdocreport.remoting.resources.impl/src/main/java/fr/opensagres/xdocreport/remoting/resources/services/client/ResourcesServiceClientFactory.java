@@ -22,8 +22,10 @@
  * OF CONTRACT, TORT OR OTHERWISE,  ARISING FROM, OUT OF OR IN CONNECTION
  * WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
-package fr.opensagres.xdocreport.remoting.resources.services;
+package fr.opensagres.xdocreport.remoting.resources.services.client;
 
+import fr.opensagres.xdocreport.remoting.resources.services.ResourcesService;
+import fr.opensagres.xdocreport.remoting.resources.services.ServiceType;
 import fr.opensagres.xdocreport.remoting.resources.services.rest.client.JAXRSResourcesServiceClientFactory;
 import fr.opensagres.xdocreport.remoting.resources.services.ws.client.JAXWSResourcesServiceClientFactory;
 

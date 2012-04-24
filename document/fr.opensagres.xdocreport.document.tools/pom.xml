@@ -8,7 +8,7 @@
 
 	<artifactId>fr.opensagres.xdocreport.document.tools</artifactId>
 	<build>
-	
+
 		<plugins>
 			<plugin>
 				<artifactId>maven-assembly-plugin</artifactId>
@@ -19,8 +19,8 @@
 				</configuration>
 				<executions>
 					<execution>
-						<id>make-assembly</id> 
-						<phase>package</phase> 
+						<id>make-assembly</id>
+						<phase>package</phase>
 						<goals>
 							<goal>single</goal>
 						</goals>
@@ -45,7 +45,7 @@
 			<groupId>fr.opensagres.xdocreport</groupId>
 			<artifactId>fr.opensagres.xdocreport.document.odt</artifactId>
 			<version>0.9.8-SNAPSHOT</version>
-		</dependency>		
+		</dependency>
 		<dependency>
 			<groupId>fr.opensagres.xdocreport</groupId>
 			<artifactId>fr.opensagres.xdocreport.template.freemarker</artifactId>
@@ -56,26 +56,26 @@
 			<artifactId>fr.opensagres.xdocreport.template.velocity</artifactId>
 			<version>0.9.8-SNAPSHOT</version>
 		</dependency>
-		
+
 		<dependency>
 			<groupId>fr.opensagres.xdocreport</groupId>
-			<artifactId>fr.opensagres.xdocreport.remoting.resources</artifactId>
+			<artifactId>fr.opensagres.xdocreport.remoting.resources.impl</artifactId>
 			<version>0.9.8-SNAPSHOT</version>
 		</dependency>
 		<dependency>
 			<groupId>fr.opensagres.xdocreport</groupId>
 			<artifactId>fr.opensagres.xdocreport.openoffice.macro</artifactId>
             <type>oxt</type>
-			<version>1.0.2</version>
+			<version>0.9.8-SNAPSHOT</version>
 		</dependency>
-		
-		<!-- Use JAX-WS CXF implementation  -->	
+
+		<!-- Use JAX-WS CXF implementation  -->
 		<dependency>
 	      <groupId>org.apache.cxf</groupId>
 	      <artifactId>cxf-rt-frontend-jaxws</artifactId>
 	      <version>2.4.0</version>
 	    </dependency>
-	    							
+
 	 <!-- Jetty is extremely convenient for testing REST and WS -->
 	    <dependency>
 	      <groupId>org.eclipse.jetty</groupId>
@@ -83,20 +83,20 @@
 	      <version>7.4.2.v20110526</version>
 	      <scope>test</scope>
 	    </dependency>
-	
+
 	    <dependency>
 	      <groupId>org.eclipse.jetty</groupId>
 	      <artifactId>jetty-servlet</artifactId>
 	      <version>7.4.2.v20110526</version>
 	      <scope>test</scope>
 	    </dependency>
-	
+
 	    <dependency>
 	      <groupId>org.eclipse.jetty</groupId>
 	      <artifactId>jetty-webapp</artifactId>
 	      <version>7.4.2.v20110526</version>
 	      <scope>test</scope>
 	    </dependency>
-	    								
+
 	</dependencies>
 </project>

@@ -11,6 +11,6 @@
   <modules>
 
     <module>fr.opensagres.xdocreport.remoting.resources</module>
-    <module>fr.opensagres.xdocreport.remoting.resources.domain</module>
+    <module>fr.opensagres.xdocreport.remoting.resources.impl</module>
   </modules>
 </project>

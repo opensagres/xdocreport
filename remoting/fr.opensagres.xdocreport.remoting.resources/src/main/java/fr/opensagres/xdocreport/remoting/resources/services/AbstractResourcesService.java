@@ -4,7 +4,7 @@ import java.io.ByteArrayInputStream;
 import java.util.ArrayList;
 import java.util.List;
 
-import fr.opensagres.xdocreport.core.XDocReportException;
+
 import fr.opensagres.xdocreport.remoting.resources.domain.BinaryData;
 import fr.opensagres.xdocreport.remoting.resources.domain.Resource;
 
@@ -30,11 +30,11 @@ public abstract class AbstractResourcesService
     }
 
     protected ByteArrayInputStream getInputStream( byte[] content )
-        throws XDocReportException
+
     {
         if ( content == null )
         {
-            throw new XDocReportException( "Byte array of the document cannot be null." );
+            throw new IllegalArgumentException( "Byte array of the document cannot be null." );
         }
         return new ByteArrayInputStream( content );
     }

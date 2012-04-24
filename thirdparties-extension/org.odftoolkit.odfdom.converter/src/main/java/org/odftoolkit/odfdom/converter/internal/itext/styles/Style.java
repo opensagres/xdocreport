@@ -50,6 +50,8 @@ public class Style
 
     private StyleTableCellProperties tableCellProperties;
 
+    private StyleGraphicProperties graphicProperties;
+
     private StyleSectionProperties sectionProperties;
 
     private StyleColumnsProperties columnsProperties;
@@ -142,6 +144,22 @@ public class Style
             if ( style.getTableCellProperties() != null )
             {
                 tableCellProperties.merge( style.getTableCellProperties() );
+            }
+        }
+
+        // Merge graphic properties
+        if ( graphicProperties == null )
+        {
+            if ( style.getGraphicProperties() != null )
+            {
+                graphicProperties = new StyleGraphicProperties( style.getGraphicProperties() );
+            }
+        }
+        else
+        {
+            if ( style.getGraphicProperties() != null )
+            {
+                graphicProperties.merge( style.getGraphicProperties() );
             }
         }
     }
@@ -239,6 +257,16 @@ public class Style
     public void setTableCellProperties( StyleTableCellProperties tableCellProperties )
     {
         this.tableCellProperties = tableCellProperties;
+    }
+
+    public StyleGraphicProperties getGraphicProperties()
+    {
+        return graphicProperties;
+    }
+
+    public void setGraphicProperties( StyleGraphicProperties graphicProperties )
+    {
+        this.graphicProperties = graphicProperties;
     }
 
     public StyleSectionProperties getSectionProperties()

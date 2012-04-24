@@ -84,6 +84,13 @@
       <version>7.4.2.v20110526</version>
       <scope>test</scope>
     </dependency>
-            
+
+    <dependency>
+    	<groupId>fr.opensagres.xdocreport</groupId>
+    	<artifactId>
+    		fr.opensagres.xdocreport.remoting.resources.domain
+    	</artifactId>
+    	<version>0.9.8-SNAPSHOT</version>
+    </dependency>
   </dependencies>
 </project>

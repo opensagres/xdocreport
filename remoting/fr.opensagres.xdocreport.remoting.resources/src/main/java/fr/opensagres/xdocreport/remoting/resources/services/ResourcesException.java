@@ -4,7 +4,12 @@ public class ResourcesException
     extends RuntimeException
 {
 
-    public ResourcesException( String message )
+    /**
+	 *
+	 */
+	private static final long serialVersionUID = 540848168001129189L;
+
+	public ResourcesException( String message )
     {
         super( message );
     }

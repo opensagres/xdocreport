@@ -25,6 +25,7 @@
 package fr.opensagres.xdocreport.document.tools.remoting.resources;
 
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.FileWriter;
@@ -167,9 +168,9 @@ public class Main
         throws IOException, ResourcesException
     {
         BinaryData data = client.download( resourcePath );
-        if ( data.getStream() != null )
+        if ( data.getContent() != null )
         {
-            createFile( data.getStream(), outFile );
+            createFile( data.getContent(), outFile );
         }
         else
         {
@@ -222,9 +223,13 @@ public class Main
     }
 
     private static void processUpload( ResourcesService client, String resourceId, File out )
-        throws ResourcesException, FileNotFoundException
+        throws ResourcesException, IOException
     {
-        BinaryData data = new BinaryData( out );
+
+    	FileInputStream input= new FileInputStream(out);
+
+    	byte[] content=IOUtils.toByteArray(input);
+        BinaryData data = new BinaryData( content, out.getName() );
         data.setResourceId( resourceId );
         client.upload( data );
 

@@ -105,8 +105,8 @@ public class JAXWSResourcesServiceClientTestCase
 
         BinaryData document = client.download( resourceId );
         Assert.assertNotNull( document );
-        Assert.assertNotNull( document.getStream() );
-        createFile( document.getStream(), resourceId );
+        Assert.assertNotNull( document.getContent() );
+        createFile( document.getContent(), resourceId );
     }
 
     @Test
@@ -117,8 +117,8 @@ public class JAXWSResourcesServiceClientTestCase
         ResourcesService client = JAXWSResourcesServiceClientFactory.create( BASE_ADDRESS );
         BinaryData document = client.download( resourceId );
         Assert.assertNotNull( document );
-        Assert.assertNotNull( document.getStream() );
-        createFile( document.getStream(), resourceId );
+        Assert.assertNotNull( document.getContent() );
+        createFile( document.getContent(), resourceId );
     }
 
     @Test
@@ -138,12 +138,12 @@ public class JAXWSResourcesServiceClientTestCase
         // }
     }
 
-    private void createFile( InputStream stream, String filename )
+    private void createFile( byte[] stream, String filename )
         throws FileNotFoundException, IOException
     {
         File aFile = new File( tempFolder, this.getClass().getSimpleName() + "_" + filename );
         FileOutputStream fos = new FileOutputStream( aFile );
-        IOUtils.copy( stream, fos );
+        IOUtils.write( stream, fos );
     }
 
     @Test

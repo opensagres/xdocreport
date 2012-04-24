@@ -36,11 +36,12 @@ import javax.ws.rs.core.MultivaluedMap;
 import javax.ws.rs.ext.MessageBodyReader;
 import javax.ws.rs.ext.Provider;
 
+import fr.opensagres.xdocreport.core.io.IOUtils;
 import fr.opensagres.xdocreport.remoting.resources.domain.BinaryData;
 
 /**
  * {@link MessageBodyReader} used by JAXRS to read the {@link BinaryData} from an Http request
- * 
+ *
  * @author <a href="mailto:tdelprat@nuxeo.com">Tiry</a>
  */
 @Provider
@@ -70,7 +71,8 @@ public class BinaryDataMessageBodyReader
 
         String resourceId = httpHeaders.getFirst( "X-resourceId" );
 
-        BinaryData data = new BinaryData( entityStream, filename, mimetype );
+        byte[] content=IOUtils.toByteArray(entityStream);
+        BinaryData data = new BinaryData( content, filename, mimetype );
         data.setResourceId( resourceId );
 
         return data;

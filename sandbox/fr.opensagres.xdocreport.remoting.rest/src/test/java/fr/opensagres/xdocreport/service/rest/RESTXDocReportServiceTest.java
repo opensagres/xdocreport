@@ -191,6 +191,7 @@ System.out.println(client.getCurrentURI());
     }
 
 
+    @Ignore
     @Test
     public void processReportWithOptions()
         throws IOException

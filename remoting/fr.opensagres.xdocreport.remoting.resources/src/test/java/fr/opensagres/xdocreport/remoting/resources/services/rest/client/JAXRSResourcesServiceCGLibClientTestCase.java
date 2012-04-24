@@ -125,8 +125,8 @@ public class JAXRSResourcesServiceCGLibClientTestCase
             JAXRSClientFactory.create( BASE_ADDRESS, JAXRSResourcesService.class, Providers.get() );
         BinaryData document = client.download( resourceId );
         Assert.assertNotNull( document );
-        Assert.assertNotNull( document.getStream() );
-        createFile( document.getStream(), resourceId );
+        Assert.assertNotNull( document.getContent() );
+        createFile( document.getContent(), resourceId );
     }
 
     @Test
@@ -138,18 +138,18 @@ public class JAXRSResourcesServiceCGLibClientTestCase
             JAXRSClientFactory.create( BASE_ADDRESS, JAXRSResourcesService.class, Providers.get() );
         BinaryData document = client.download( resourceId );
         Assert.assertNotNull( document );
-        Assert.assertNotNull( document.getStream() );
-        createFile( document.getStream(), resourceId );
+        Assert.assertNotNull( document.getContent() );
+        createFile( document.getContent(), resourceId );
     }
 
-    private void createFile( InputStream stream, String filename )
+    private void createFile( byte[] content, String filename )
         throws FileNotFoundException, IOException
     {
         File aFile = new File( tempFolder, this.getClass().getSimpleName() + "_" + filename );
         FileOutputStream fos = new FileOutputStream( aFile );
-        IOUtils.copy( stream, fos );
+        IOUtils.write(content, fos );
     }
-    
+
     public static void main( String[] args ) throws IOException
     {
         String resourceId = "Opensagres____ODTCV.odt";
@@ -164,16 +164,16 @@ public class JAXRSResourcesServiceCGLibClientTestCase
         //httpClientPolicy.setConnectionTimeout(36000);
         //httpClientPolicy.setAllowChunking(false);
         http.setClient(httpClientPolicy);
-        
+
         config.getInInterceptors().add(new LoggingInInterceptor());
         config.getOutInterceptors().add(new LoggingOutInterceptor());
-        
+
         BinaryData dataIn = new BinaryData();
         dataIn.setResourceId( resourceId );
         dataIn.setContent( document );
 
         client.upload( dataIn );
-        
+
     }
 
     @Test

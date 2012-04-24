@@ -122,16 +122,16 @@ public class JAXRSResourcesServiceWebClientTestCase
         BinaryData document =
             client.path( path.toString() ).accept( MediaType.APPLICATION_JSON_TYPE ).get( BinaryData.class );
         Assert.assertNotNull( document );
-        Assert.assertNotNull( document.getStream() );
-        createFile( document.getStream(), resourcePath );
+        Assert.assertNotNull( document.getContent() );
+        createFile( document.getContent(), resourcePath );
     }
 
-    private void createFile( InputStream stream, String filename )
+    private void createFile( byte[] stream, String filename )
         throws FileNotFoundException, IOException
     {
         File aFile = new File( tempFolder, this.getClass().getSimpleName() + "_" + filename );
         FileOutputStream fos = new FileOutputStream( aFile );
-        IOUtils.copy( stream, fos );
+        IOUtils.write( stream, fos );
     }
 
     // @Test

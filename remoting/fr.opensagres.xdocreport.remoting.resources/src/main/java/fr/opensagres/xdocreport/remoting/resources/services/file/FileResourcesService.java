@@ -2,6 +2,7 @@ package fr.opensagres.xdocreport.remoting.resources.services.file;
 
 import java.io.ByteArrayInputStream;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -40,7 +41,9 @@ public abstract class FileResourcesService
         File file = new File( getRootFolder(), resourcePath );
         try
         {
-            BinaryData data = new BinaryData( file );
+        	FileInputStream input = new FileInputStream(file);
+        	byte[] content=IOUtils.toByteArray(input);
+            BinaryData data = new BinaryData( content, file.getName() );
             data.setResourceId( resourceId );
             return data;
         }

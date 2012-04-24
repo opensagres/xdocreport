@@ -28,19 +28,32 @@ import java.awt.Color;
 
 public class StyleTableProperties
 {
-
     private Color backgroundColor;
 
     private Float width;
 
     public StyleTableProperties()
     {
-
     }
 
     public StyleTableProperties( StyleTableProperties tableProperties )
     {
-        this.backgroundColor = tableProperties.backgroundColor;
+        if ( tableProperties != null )
+        {
+            merge( tableProperties );
+        }
+    }
+
+    public void merge( StyleTableProperties tableProperties )
+    {
+        if ( tableProperties.getBackgroundColor() != null )
+        {
+            backgroundColor = tableProperties.getBackgroundColor();
+        }
+        if ( tableProperties.getWidth() != null )
+        {
+            width = tableProperties.getWidth();
+        }
     }
 
     public Color getBackgroundColor()
@@ -62,13 +75,4 @@ public class StyleTableProperties
     {
         this.width = width;
     }
-
-    public void merge( StyleTableProperties tableProperties )
-    {
-        if ( tableProperties.getBackgroundColor() != null )
-        {
-            backgroundColor = tableProperties.getBackgroundColor();
-        }
-    }
-
 }

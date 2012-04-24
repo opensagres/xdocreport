@@ -37,10 +37,7 @@ public class StylablePhrase
     extends Phrase
     implements IStylableContainer
 {
-
     private static final long serialVersionUID = 664309269352903329L;
-
-    private final IStylableFactory ownerDocument;
 
     private IStylableContainer parent;
 
@@ -48,7 +45,6 @@ public class StylablePhrase
 
     public StylablePhrase( IStylableFactory ownerDocument, IStylableContainer parent )
     {
-        this.ownerDocument = ownerDocument;
         this.parent = parent;
     }
 
@@ -104,6 +100,5 @@ public class StylablePhrase
 
     public void setITextContainer( IITextContainer container )
     {
-
     }
 }

@@ -28,7 +28,6 @@ import java.awt.Color;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.io.Writer;
-import java.net.MalformedURLException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -42,6 +41,7 @@ import org.odftoolkit.odfdom.converter.internal.itext.stylable.StylableDocument;
 import org.odftoolkit.odfdom.converter.internal.itext.stylable.StylableDocumentSection;
 import org.odftoolkit.odfdom.converter.internal.itext.stylable.StylableHeaderFooter;
 import org.odftoolkit.odfdom.converter.internal.itext.stylable.StylableHeading;
+import org.odftoolkit.odfdom.converter.internal.itext.stylable.StylableImage;
 import org.odftoolkit.odfdom.converter.internal.itext.stylable.StylableList;
 import org.odftoolkit.odfdom.converter.internal.itext.stylable.StylableListItem;
 import org.odftoolkit.odfdom.converter.internal.itext.stylable.StylableMasterPage;
@@ -80,13 +80,11 @@ import org.odftoolkit.odfdom.pkg.OdfElement;
 import org.w3c.dom.Node;
 import org.w3c.dom.Text;
 
-import com.lowagie.text.BadElementException;
 import com.lowagie.text.Chunk;
 import com.lowagie.text.DocumentException;
 import com.lowagie.text.Element;
 import com.lowagie.text.Font;
 import com.lowagie.text.Image;
-import com.lowagie.text.pdf.PdfPCell;
 
 import fr.opensagres.xdocreport.utils.StringUtils;
 
@@ -141,7 +139,8 @@ public class ElementVisitorForIText
     {
         String name = ele.getStyleNameAttribute();
         String pageLayoutName = ele.getStylePageLayoutNameAttribute();
-        currentMasterPage = new StylableMasterPage( name, pageLayoutName );
+        String nextStyleName = ele.getStyleNextStyleNameAttribute();
+        currentMasterPage = new StylableMasterPage( name, pageLayoutName, nextStyleName );
         document.addMasterPage( currentMasterPage );
         super.visit( ele );
         currentMasterPage = null;
@@ -259,13 +258,6 @@ public class ElementVisitorForIText
     {
         StylableParagraph paragraph = document.createParagraph( currentContainer );
         applyStyles( ele, paragraph );
-        if ( ele.getTextContent().length() == 0 )
-        {
-            // no content in the paragraph
-            // ex : <text:p text:style-name="Standard"></text:p>
-            // add blank Chunk
-            paragraph.add( new Chunk( " " ) );
-        }
         addITextContainer( ele, paragraph );
 
     }
@@ -420,63 +412,46 @@ public class ElementVisitorForIText
             byte[] imageStream = odfDocument.getPackage().getBytes( href );
             if ( imageStream != null )
             {
-                try
+                Image imageObj = StylableImage.getImage( imageStream );
+                if ( imageObj != null )
                 {
-                    Image image = Image.getInstance( imageStream );
-                    if ( image != null )
+                    DrawFrameElement frame = null;
+                    Float x = null;
+                    Float y = null;
+                    Float width = null;
+                    Float height = null;
+                    // set width, height....image
+                    Node parentNode = ele.getParentNode();
+                    if ( parentNode instanceof DrawFrameElement )
                     {
-                        String x = null;
-                        String y = null;
-                        String width = null;
-                        String height = null;
-                        // set width, height....image
-                        Node parentNode = ele.getParentNode();
-                        if ( parentNode instanceof DrawFrameElement )
+                        frame = (DrawFrameElement) parentNode;
+                        String svgX = frame.getSvgXAttribute();
+                        if ( StringUtils.isNotEmpty( svgX ) )
                         {
-                            DrawFrameElement frame = (DrawFrameElement) parentNode;
-                            x = frame.getSvgXAttribute();
-                            y = frame.getSvgYAttribute();
-                            width = frame.getSvgWidthAttribute();
-                            height = frame.getSvgHeightAttribute();
+                            x = ODFUtils.getDimensionAsPoint( svgX );
                         }
-                        if ( StringUtils.isNotEmpty( x ) && StringUtils.isNotEmpty( y ) )
+                        String svgY = frame.getSvgYAttribute();
+                        if ( StringUtils.isNotEmpty( svgY ) )
                         {
-                            image.setAbsolutePosition( ODFUtils.getDimensionAsPoint( x ),
-                                                       ODFUtils.getDimensionAsPoint( y ) );
+                            y = ODFUtils.getDimensionAsPoint( svgY );
                         }
-                        if ( StringUtils.isNotEmpty( width ) )
+                        String svgWidth = frame.getSvgWidthAttribute();
+                        if ( StringUtils.isNotEmpty( svgWidth ) )
                         {
-                            image.scaleAbsoluteWidth( ODFUtils.getDimensionAsPoint( width ) );
+                            width = ODFUtils.getDimensionAsPoint( svgWidth );
                         }
-                        if ( StringUtils.isNotEmpty( height ) )
+                        String svgHeight = frame.getSvgHeightAttribute();
+                        if ( StringUtils.isNotEmpty( svgHeight ) )
                         {
-                            image.scaleAbsoluteHeight( ODFUtils.getDimensionAsPoint( height ) );
-                        }
-                        IStylableContainer parent = currentContainer.getParent();
-                        if ( parent instanceof PdfPCell )
-                        {
-                            // When image is included into a Table Cell, we must
-                            // use PdfPCell#setImage
-                            // otherwise the image will not appear. Why???
-                            ( (PdfPCell) parent ).setImage( image );
-                        }
-                        else
-                        {
-                            currentContainer.addElement( image );
+                            height = ODFUtils.getDimensionAsPoint( svgHeight );
                         }
                     }
-                }
-                catch ( BadElementException e )
-                {
-                    // TODO : display log
-                }
-                catch ( MalformedURLException e )
-                {
-                    // TODO : display log
-                }
-                catch ( IOException e )
-                {
-                    // TODO : display log
+                    StylableImage image = new StylableImage( document, currentContainer, imageObj, x, y, width, height );
+                    if ( frame != null )
+                    {
+                        applyStyles( frame, image );
+                    }
+                    addITextElement( image.getElement() );
                 }
             }
         }
@@ -516,7 +491,7 @@ public class ElementVisitorForIText
         {
             chunk.applyStyles( style );
         }
-        addITextElement( chunk );
+        addITextElement( chunk.getElement() );
         return chunk;
     }
 

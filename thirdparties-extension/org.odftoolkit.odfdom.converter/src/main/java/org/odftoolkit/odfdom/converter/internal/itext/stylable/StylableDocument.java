@@ -30,7 +30,6 @@ import java.util.List;
 import org.odftoolkit.odfdom.converter.ODFConverterException;
 import org.odftoolkit.odfdom.converter.internal.itext.StyleEngineForIText;
 import org.odftoolkit.odfdom.converter.internal.itext.styles.Style;
-import org.odftoolkit.odfdom.converter.internal.itext.styles.StyleMargin;
 import org.odftoolkit.odfdom.converter.internal.itext.styles.StylePageLayoutProperties;
 import org.odftoolkit.odfdom.dom.style.OdfStyleFamily;
 
@@ -189,6 +188,36 @@ public class StylableDocument
         setColIdx( 0 );
     }
 
+    private Style setNextActiveMasterPageIfNecessary()
+    {
+        // called on page break
+        // return new page style if changed
+        if ( activeMasterPage != null )
+        {
+            String nextMasterPageStyleName = activeMasterPage.getNextStyleName();
+            if ( nextMasterPageStyleName != null && nextMasterPageStyleName.length() > 0 )
+            {
+                StylableMasterPage nextMasterPage = getMasterPage( nextMasterPageStyleName );
+                if ( nextMasterPage != null )
+                {
+                    // activate next master page
+                    Style style = getStyleMasterPage( nextMasterPage );
+                    if ( style != null )
+                    {
+                        // step 1 - apply styles like page dimensions and orientation
+                        this.applyStyles( style );
+                    }
+                    // step 2 - set header/footer if any, it needs page dimensions from step 1
+                    super.setActiveMasterPage( nextMasterPage );
+                    //
+                    activeMasterPage = nextMasterPage;
+                    return style;
+                }
+            }
+        }
+        return null;
+    }
+
     public StylableMasterPage getActiveMasterPage()
     {
         return activeMasterPage;
@@ -223,7 +252,6 @@ public class StylableDocument
         StylePageLayoutProperties pageLayoutProperties = style.getPageLayoutProperties();
         if ( pageLayoutProperties != null )
         {
-
             // width/height
             Float width = pageLayoutProperties.getWidth();
             Float height = pageLayoutProperties.getHeight();
@@ -234,29 +262,23 @@ public class StylableDocument
             }
 
             // margin
-            StyleMargin margin = pageLayoutProperties.getMargin();
-            if ( margin != null )
+            if ( pageLayoutProperties.getMarginTop() != null )
             {
-
-                if ( margin.getMarginTop() != null )
-                {
-                    originMarginTop = margin.getMarginTop();
-                }
-                if ( margin.getMarginBottom() != null )
-                {
-                    originMarginBottom = margin.getMarginBottom();
-                }
-                if ( margin.getMarginRight() != null )
-                {
-                    originMarginRight = margin.getMarginRight();
-                }
-                if ( margin.getMarginLeft() != null )
-                {
-                    originMarginLeft = margin.getMarginLeft();
-                }
-
-                super.setMargins( originMarginLeft, originMarginRight, originMarginTop, originMarginBottom );
+                originMarginTop = pageLayoutProperties.getMarginTop();
             }
+            if ( pageLayoutProperties.getMarginBottom() != null )
+            {
+                originMarginBottom = pageLayoutProperties.getMarginBottom();
+            }
+            if ( pageLayoutProperties.getMarginLeft() != null )
+            {
+                originMarginLeft = pageLayoutProperties.getMarginLeft();
+            }
+            if ( pageLayoutProperties.getMarginRight() != null )
+            {
+                originMarginRight = pageLayoutProperties.getMarginRight();
+            }
+            super.setMargins( originMarginLeft, originMarginRight, originMarginTop, originMarginBottom );
 
             // orientation
             PageOrientation orientation = pageLayoutProperties.getOrientation();
@@ -265,7 +287,6 @@ public class StylableDocument
                 super.setOrientation( orientation );
             }
         }
-
     }
 
     public Style getLastStyleApplied()
@@ -332,10 +353,23 @@ public class StylableDocument
         {
             // flush pending content
             flushTable();
+            // check if master page change necessary
+            Style nextStyle = setNextActiveMasterPageIfNecessary();
             // document new page
             super.newPage();
             // initialize column layout for new page
-            layoutTable = StylableDocumentSection.cloneAndClearTable( layoutTable, false );
+            if ( nextStyle == null )
+            {
+                // ordinary page break
+                layoutTable = StylableDocumentSection.cloneAndClearTable( layoutTable, false );
+            }
+            else
+            {
+                // page break with new master page activation
+                // style changed so recreate table
+                layoutTable =
+                    StylableDocumentSection.createLayoutTable( getPageWidth(), getAdjustedPageHeight(), nextStyle );
+            }
             setColIdx( 0 );
             simulateText();
         }

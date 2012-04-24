@@ -42,6 +42,8 @@ public class PTxBodyBufferedRegion
 
     private List<APBufferedRegion> apBufferedRegions = new ArrayList<APBufferedRegion>();
 
+    private List<String> ignoreEndLoopDirective;
+
     public PTxBodyBufferedRegion( BufferedElement parent, String uri, String localName, String name,
                                   Attributes attributes )
     {
@@ -84,12 +86,20 @@ public class PTxBodyBufferedRegion
                 }
                 if ( nextP != null )
                 {
-                    nextP.addIgnoreLoopDirective( itemNameList );
-                    nextP.addEndLoopDirective( itemNameList );
+                    nextP.addIgnoreStartLoopDirective( itemNameList );
+                    if ( !isIgnoreEndLoopDirective( itemNameList ) )
+                    {
+                        nextP.setEndLoopDirective( itemNameList );
+                        addIgnoreEndLoopDirective( itemNameList );
+                    }
                 }
                 else
                 {
-                    p.addEndLoopDirective( itemNameList );
+                    if ( !isIgnoreEndLoopDirective( itemNameList ) )
+                    {
+                        p.setEndLoopDirective( itemNameList );
+                        addIgnoreEndLoopDirective( itemNameList );
+                    }
                 }
             }
 
@@ -119,4 +129,22 @@ public class PTxBodyBufferedRegion
         return lastP;
     }
 
+    public void addIgnoreEndLoopDirective( String itemNameList )
+    {
+        if ( ignoreEndLoopDirective == null )
+        {
+            ignoreEndLoopDirective = new ArrayList<String>();
+
+        }
+        ignoreEndLoopDirective.add( itemNameList );
+    }
+
+    public boolean isIgnoreEndLoopDirective( String itemNameList )
+    {
+        if ( ignoreEndLoopDirective == null )
+        {
+            return false;
+        }
+        return ignoreEndLoopDirective.contains( itemNameList );
+    }
 }

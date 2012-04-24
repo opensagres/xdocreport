@@ -72,15 +72,17 @@ public abstract class AbstractNoteBufferedRegion
             }
 
             // Get the new inner text of the footnote/endnote
-            // 1) if there are fields to evaluate the inner text of the note is replaced by [#noescape]${___NoEscapeNoteInfo.content}[/#noescape]
+            // 1) if there are fields to evaluate the inner text of the note is replaced by
+            // [#noescape]${___NoEscapeNoteInfo.content}[/#noescape]
             // 2) if there are NO fields to evaluate, the note keep the initial inner text.
             String content = "";
             if ( isContainsField() )
             {
                 // the note as fields to evaluate by the template engine.
-                // 1) the inner text of the note must be evaluated by the word/document.xml entry and stores it in note registry.
+                // 1) the inner text of the note must be evaluated by the word/document.xml entry and stores it in note
+                // registry.
                 content = super.getInnerText();
-                // 2) the inner text is replaced by the content (evaluated in the word/document.xml)  
+                // 2) the inner text is replaced by the content (evaluated in the word/document.xml)
                 super.setInnerText( formatter.formatAsSimpleField( true, true, NoteInfo.CONTEXT_KEY,
                                                                    NoteInfo.CONTENT_PROPERTY ) );
             }
@@ -106,18 +108,11 @@ public abstract class AbstractNoteBufferedRegion
                 formatter.getFunctionDirective( false, getNoteRegistryKey(), NoteRegistry.GET_NOTES_METHOD, "'" + id
                     + "'" );
             String before = formatter.getStartLoopDirective( NoteInfo.CONTEXT_KEY, listName );
-            if ( StringUtils.isNotEmpty( this.getStartTagElement().getBefore() ) )
-            {
-                before = this.getStartTagElement().getBefore() + before;
-            }
-            else
-            {
-                this.setContentBeforeStartTagElement( before );
-            }
-            
+            this.setContentBeforeStartTagElement( before );
+
             // [#list ___FootnoteRegistry.getNotes('1') as ___NoEscapeNoteInfo]
             // <w:footnote w:id="${___NoEscapeNoteInfo.id}"
-            //[#noescape]${___NoEscapeNoteInfo.content}[/#noescape]
+            // [#noescape]${___NoEscapeNoteInfo.content}[/#noescape]
             // [#list]
             String after = formatter.getEndLoopDirective( "" );
             this.setContentAfterEndTagElement( after );

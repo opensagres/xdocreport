@@ -43,6 +43,7 @@ public class StylableChapter
     extends ExtendedChapter
     implements IStylableContainer
 {
+    private static final long serialVersionUID = 664309269352903329L;
 
     private final StylableDocument ownerDocument;
 

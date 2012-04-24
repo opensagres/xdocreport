@@ -29,6 +29,8 @@ import java.util.ArrayList;
 
 import org.odftoolkit.odfdom.converter.internal.itext.styles.Style;
 import org.odftoolkit.odfdom.converter.internal.itext.styles.StyleBorder;
+import org.odftoolkit.odfdom.converter.internal.itext.styles.StyleBreak;
+import org.odftoolkit.odfdom.converter.internal.itext.styles.StyleLineHeight;
 import org.odftoolkit.odfdom.converter.internal.itext.styles.StyleParagraphProperties;
 import org.odftoolkit.odfdom.converter.internal.itext.styles.StyleTextProperties;
 import org.odftoolkit.odfdom.converter.internal.utils.StyleUtils;
@@ -107,11 +109,10 @@ public class StylableParagraph
         if ( paragraphProperties != null )
         {
             // break-before
-            boolean breakBeforeColumn = paragraphProperties.isBreakBeforeColumn();
-            boolean breakBeforePage = paragraphProperties.isBreakBeforePage();
-            if ( breakBeforeColumn || breakBeforePage )
+            StyleBreak breakBefore = paragraphProperties.getBreakBefore();
+            if ( breakBefore != null )
             {
-                handleBreak( breakBeforeColumn, breakBeforePage );
+                handleBreak( breakBefore );
             }
 
             // alignment
@@ -152,8 +153,8 @@ public class StylableParagraph
             }
 
             // first line indentation
-            boolean autoTextIndent = paragraphProperties.isAutoTextIndent();
-            if ( autoTextIndent )
+            Boolean autoTextIndent = paragraphProperties.getAutoTextIndent();
+            if ( Boolean.TRUE.equals( autoTextIndent ) )
             {
                 float fontSize = font != null ? font.getCalculatedSize() : Font.DEFAULTSIZE;
                 super.setFirstLineIndent( 1.3f * fontSize );
@@ -168,23 +169,25 @@ public class StylableParagraph
             }
 
             // line height
-            Float lineHeight = paragraphProperties.getLineHeight();
-            if ( lineHeight != null )
+            StyleLineHeight lineHeight = paragraphProperties.getLineHeight();
+            if ( lineHeight != null && lineHeight.getLineHeight() != null )
             {
-                boolean lineHeightProportional = paragraphProperties.isLineHeightProportional();
-                if ( lineHeightProportional )
+                if ( lineHeight.isLineHeightProportional() )
                 {
-                    super.setMultipliedLeading( lineHeight );
+                    super.setMultipliedLeading( lineHeight.getLineHeight() );
                 }
                 else
                 {
-                    super.setLeading( lineHeight );
+                    super.setLeading( lineHeight.getLineHeight() );
                 }
             }
 
             // keep together on the same page
-            boolean keepTogether = paragraphProperties.isKeepTogether();
-            super.setKeepTogether( keepTogether );
+            Boolean keepTogether = paragraphProperties.getKeepTogether();
+            if ( keepTogether != null )
+            {
+                super.setKeepTogether( keepTogether );
+            }
 
             // background color
             Color backgroundColor = paragraphProperties.getBackgroundColor();
@@ -230,18 +233,21 @@ public class StylableParagraph
         }
     }
 
-    private void handleBreak( boolean columnBreak, boolean pageBreak )
+    private void handleBreak( StyleBreak styleBreak )
     {
-        IBreakHandlingContainer b = StylableDocumentSection.getIBreakHandlingContainer( parent );
-        if ( b != null )
+        if ( styleBreak.isColumnBreak() || styleBreak.isPageBreak() )
         {
-            if ( columnBreak )
+            IBreakHandlingContainer b = StylableDocumentSection.getIBreakHandlingContainer( parent );
+            if ( b != null )
             {
-                b.columnBreak();
-            }
-            else if ( pageBreak )
-            {
-                b.pageBreak();
+                if ( styleBreak.isColumnBreak() )
+                {
+                    b.columnBreak();
+                }
+                else if ( styleBreak.isPageBreak() )
+                {
+                    b.pageBreak();
+                }
             }
         }
     }
@@ -295,6 +301,25 @@ public class StylableParagraph
         if ( !elementPostProcessed )
         {
             elementPostProcessed = true;
+
+            // add space if this paragraph is empty
+            // otherwise it's height will be zero
+            boolean empty = true;
+            ArrayList<Chunk> chunks = getChunks();
+            for ( Chunk chunk : chunks )
+            {
+                if ( chunk.getContent() != null && chunk.getContent().length() > 0 || chunk.getImage() != null )
+                {
+                    empty = false;
+                    break;
+                }
+            }
+            if ( empty )
+            {
+                super.add( new Chunk( " " ) );
+            }
+
+            // adjust line height and baseline
             if ( font != null && font.getBaseFont() != null )
             {
                 // iText and open office computes proportional line height differently
@@ -317,7 +342,7 @@ public class StylableParagraph
                 // again this may be inaccurate if fonts with different size are used in this paragraph
                 float itextdescender = -font.getBaseFont().getFontDescriptor( BaseFont.DESCENT, size ); // negative
                 float textRise = itextdescender * multiplier;
-                ArrayList<Chunk> chunks = getChunks();
+                chunks = getChunks();
                 for ( Chunk chunk : chunks )
                 {
                     Font f = chunk.getFont();
@@ -339,6 +364,7 @@ public class StylableParagraph
                     chunk.setTextRise( chunk.getTextRise() + textRise );
                 }
             }
+
             // wrap this paragraph into a table if necessary
             if ( wrapperCell != null )
             {

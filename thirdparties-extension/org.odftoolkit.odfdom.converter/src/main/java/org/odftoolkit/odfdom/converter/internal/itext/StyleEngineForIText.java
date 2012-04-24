@@ -849,6 +849,13 @@ public class StyleEngineForIText
             currentStyle.setTableRowProperties( tableRowProperties );
         }
 
+        // min-height
+        String minHeight = ele.getStyleMinRowHeightAttribute();
+        if ( StringUtils.isNotEmpty( minHeight ) )
+        {
+            tableRowProperties.setMinRowHeight( ODFUtils.getDimensionAsPoint( minHeight ) );
+        }
+
         // height
         String height = ele.getStyleRowHeightAttribute();
         if ( StringUtils.isNotEmpty( height ) )

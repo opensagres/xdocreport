@@ -26,7 +26,9 @@ package org.odftoolkit.odfdom.converter.internal.itext.styles;
 
 public class StyleTableRowProperties
 {
-    private Float rowHeight = null;
+    private Float minRowHeight;
+
+    private Float rowHeight;
 
     public StyleTableRowProperties()
     {
@@ -42,10 +44,24 @@ public class StyleTableRowProperties
 
     public void merge( StyleTableRowProperties tableRowProperties )
     {
+        if ( tableRowProperties.getMinRowHeight() != null )
+        {
+            minRowHeight = tableRowProperties.getMinRowHeight();
+        }
         if ( tableRowProperties.getRowHeight() != null )
         {
             rowHeight = tableRowProperties.getRowHeight();
         }
+    }
+
+    public Float getMinRowHeight()
+    {
+        return minRowHeight;
+    }
+
+    public void setMinRowHeight( Float minRowHeight )
+    {
+        this.minRowHeight = minRowHeight;
     }
 
     public Float getRowHeight()

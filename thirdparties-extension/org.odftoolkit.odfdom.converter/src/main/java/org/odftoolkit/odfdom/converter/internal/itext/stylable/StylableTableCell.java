@@ -72,6 +72,12 @@ public class StylableTableCell
         StyleTableRowProperties tableRowProperties = style.getTableRowProperties();
         if ( tableRowProperties != null )
         {
+            Float minRowHeight = tableRowProperties.getMinRowHeight();
+            if ( minRowHeight != null )
+            {
+                super.setMinimumHeight( minRowHeight );
+            }
+
             Float rowHeight = tableRowProperties.getRowHeight();
             if ( rowHeight != null )
             {

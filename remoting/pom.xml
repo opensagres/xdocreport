@@ -12,5 +12,6 @@
 
     <module>fr.opensagres.xdocreport.remoting.resources</module>
     <module>fr.opensagres.xdocreport.remoting.resources.impl</module>
+    <module>fr.opensagres.xdocreport.remoting.resources.client</module>
   </modules>
 </project>

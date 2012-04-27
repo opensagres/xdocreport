@@ -59,8 +59,14 @@
 
 		<dependency>
 			<groupId>fr.opensagres.xdocreport</groupId>
+			<artifactId>fr.opensagres.xdocreport.remoting.resources.client</artifactId>
+			<version>0.9.8-SNAPSHOT</version>
+		</dependency>
+		<dependency>
+			<groupId>fr.opensagres.xdocreport</groupId>
 			<artifactId>fr.opensagres.xdocreport.remoting.resources.impl</artifactId>
 			<version>0.9.8-SNAPSHOT</version>
+			<scope>test</scope>
 		</dependency>
 		<dependency>
 			<groupId>fr.opensagres.xdocreport</groupId>

@@ -36,7 +36,7 @@ public interface IStylableFactory
 
     StylableAnchor createAnchor( IStylableContainer parent );
 
-    StylableList createList( IStylableContainer parent );
+    StylableList createList( IStylableContainer parent, int listLevel );
 
     StylableListItem createListItem( IStylableContainer parent );
 

@@ -30,6 +30,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.odftoolkit.odfdom.converter.internal.AbstractStyleEngine;
+import org.odftoolkit.odfdom.converter.internal.itext.stylable.StylableImage;
 import org.odftoolkit.odfdom.converter.internal.itext.styles.Style;
 import org.odftoolkit.odfdom.converter.internal.itext.styles.StyleBorder;
 import org.odftoolkit.odfdom.converter.internal.itext.styles.StyleBreak;
@@ -38,6 +39,8 @@ import org.odftoolkit.odfdom.converter.internal.itext.styles.StyleColumnsPropert
 import org.odftoolkit.odfdom.converter.internal.itext.styles.StyleGraphicProperties;
 import org.odftoolkit.odfdom.converter.internal.itext.styles.StyleHeaderFooterProperties;
 import org.odftoolkit.odfdom.converter.internal.itext.styles.StyleLineHeight;
+import org.odftoolkit.odfdom.converter.internal.itext.styles.StyleListProperties;
+import org.odftoolkit.odfdom.converter.internal.itext.styles.StyleNumFormat;
 import org.odftoolkit.odfdom.converter.internal.itext.styles.StylePageLayoutProperties;
 import org.odftoolkit.odfdom.converter.internal.itext.styles.StyleParagraphProperties;
 import org.odftoolkit.odfdom.converter.internal.itext.styles.StyleSectionProperties;
@@ -52,6 +55,7 @@ import org.odftoolkit.odfdom.dom.attribute.fo.FoBreakBeforeAttribute;
 import org.odftoolkit.odfdom.dom.attribute.fo.FoFontStyleAttribute;
 import org.odftoolkit.odfdom.dom.attribute.fo.FoFontWeightAttribute;
 import org.odftoolkit.odfdom.dom.attribute.fo.FoKeepTogetherAttribute;
+import org.odftoolkit.odfdom.dom.attribute.style.StyleNumFormatAttribute;
 import org.odftoolkit.odfdom.dom.attribute.style.StyleTextLineThroughStyleAttribute;
 import org.odftoolkit.odfdom.dom.attribute.style.StyleTextUnderlineStyleAttribute;
 import org.odftoolkit.odfdom.dom.attribute.style.StyleWrapAttribute;
@@ -65,6 +69,8 @@ import org.odftoolkit.odfdom.dom.element.style.StyleDefaultStyleElement;
 import org.odftoolkit.odfdom.dom.element.style.StyleFooterStyleElement;
 import org.odftoolkit.odfdom.dom.element.style.StyleGraphicPropertiesElement;
 import org.odftoolkit.odfdom.dom.element.style.StyleHeaderFooterPropertiesElement;
+import org.odftoolkit.odfdom.dom.element.style.StyleListLevelLabelAlignmentElement;
+import org.odftoolkit.odfdom.dom.element.style.StyleListLevelPropertiesElement;
 import org.odftoolkit.odfdom.dom.element.style.StylePageLayoutElement;
 import org.odftoolkit.odfdom.dom.element.style.StylePageLayoutPropertiesElement;
 import org.odftoolkit.odfdom.dom.element.style.StyleParagraphPropertiesElement;
@@ -74,10 +80,15 @@ import org.odftoolkit.odfdom.dom.element.style.StyleTableCellPropertiesElement;
 import org.odftoolkit.odfdom.dom.element.style.StyleTablePropertiesElement;
 import org.odftoolkit.odfdom.dom.element.style.StyleTableRowPropertiesElement;
 import org.odftoolkit.odfdom.dom.element.style.StyleTextPropertiesElement;
+import org.odftoolkit.odfdom.dom.element.text.TextListLevelStyleBulletElement;
+import org.odftoolkit.odfdom.dom.element.text.TextListLevelStyleImageElement;
+import org.odftoolkit.odfdom.dom.element.text.TextListLevelStyleNumberElement;
 import org.odftoolkit.odfdom.dom.element.text.TextListStyleElement;
 import org.w3c.dom.Node;
 
 import com.lowagie.text.Element;
+import com.lowagie.text.Font;
+import com.lowagie.text.Image;
 
 import fr.opensagres.xdocreport.itext.extension.PageOrientation;
 import fr.opensagres.xdocreport.utils.BorderType;
@@ -104,7 +115,8 @@ public class StyleEngineForIText
 
     private Style currentStyle = null;
 
-    // private StyleForItext currentStyle;
+    private Integer currentTextLevel;
+
     private final PDFViaITextOptions options;
 
     private final Map<String, Style> stylesMap = new HashMap<String, Style>();
@@ -166,6 +178,10 @@ public class StyleEngineForIText
             else if ( styleBase instanceof StylePageLayoutElement )
             {
                 styleName = ( (StylePageLayoutElement) styleBase ).getStyleNameAttribute();
+            }
+            else if ( styleBase instanceof TextListStyleElement )
+            {
+                styleName = ( (TextListStyleElement) styleBase ).getStyleNameAttribute();
             }
         }
 
@@ -703,7 +719,19 @@ public class StyleEngineForIText
         String fontSize = ele.getFoFontSizeAttribute();
         if ( StringUtils.isNotEmpty( fontSize ) )
         {
-            textProperties.setFontSize( ODFUtils.getDimensionAsPoint( fontSize ) );
+            if ( ODFUtils.hasPercentUnit( fontSize ) )
+            {
+                // relative
+                if ( textProperties.getFontSize() != Font.UNDEFINED )
+                {
+                    textProperties.setFontSize( textProperties.getFontSize() * ODFUtils.getDimensionAsPoint( fontSize ) );
+                }
+            }
+            else
+            {
+                // absolute
+                textProperties.setFontSize( ODFUtils.getDimensionAsPoint( fontSize ) );
+            }
         }
 
         // font-style
@@ -871,7 +899,6 @@ public class StyleEngineForIText
     @Override
     public void visit( StyleTableCellPropertiesElement ele )
     {
-
         StyleTableCellProperties tableCellProperties = currentStyle.getTableCellProperties();
         if ( tableCellProperties == null )
         {
@@ -1010,6 +1037,236 @@ public class StyleEngineForIText
         super.visit( ele );
     }
 
+    // list styling is a bit complicated because of nesting
+    // we flatten the structure into a map of {list-level->StyleListProperties}
+    //
+    // 1st level - text:list-style --- enclosing style
+    // 2nd level --- text:list-level-style-bullet --- if list item label is a char
+    // 2nd level --- text:list-level-style-image --- if list item label is an image
+    // 2nd level --- text:list-level-style-number --- if list item label is a number
+    // 3rd level ----- style:list-level-properties --- optional image dimensions
+    // 4th level ------- style:list-level-label-alignment --- indentation info
+    @Override
+    public void visit( TextListStyleElement ele )
+    {
+        computeStyle( ele, false );
+    }
+
+    @Override
+    public void visit( TextListLevelStyleBulletElement ele )
+    {
+        Integer textLevel = ele.getTextLevelAttribute();
+        if ( textLevel == null )
+        {
+            return;
+        }
+        currentTextLevel = textLevel;
+        StyleListProperties listProperties = getStyleListProperties();
+
+        // text style to apply to list item label
+        String styleName = ele.getTextStyleNameAttribute();
+        if ( StringUtils.isNotEmpty( styleName ) )
+        {
+            // TODO what if this style is not computed yet?
+            Style style = getStyle( "text", styleName, null );
+            currentStyle.merge( style );
+        }
+
+        // bullet-char
+        String bulletChar = ele.getTextBulletCharAttribute();
+        if ( StringUtils.isNotEmpty( bulletChar ) )
+        {
+            listProperties.setBulletChar( bulletChar );
+        }
+
+        // num-prefix
+        String numPrefix = ele.getStyleNumPrefixAttribute();
+        if ( StringUtils.isNotEmpty( numPrefix ) )
+        {
+            listProperties.setNumPrefix( numPrefix );
+        }
+
+        // num-suffix
+        String numSuffix = ele.getStyleNumSuffixAttribute();
+        if ( StringUtils.isNotEmpty( numSuffix ) )
+        {
+            listProperties.setNumSuffix( numSuffix );
+        }
+
+        super.visit( ele );
+        currentTextLevel = 0;
+    }
+
+    @Override
+    public void visit( TextListLevelStyleImageElement ele )
+    {
+        Integer textLevel = ele.getTextLevelAttribute();
+        if ( textLevel == null )
+        {
+            return;
+        }
+        currentTextLevel = textLevel;
+        StyleListProperties listProperties = getStyleListProperties();
+
+        // image href
+        String href = ele.getXlinkHrefAttribute();
+        if ( StringUtils.isNotEmpty( href ) )
+        {
+            byte[] imageStream = odfDocument.getPackage().getBytes( href );
+            if ( imageStream != null )
+            {
+                Image imageObj = StylableImage.getImage( imageStream );
+                if ( imageObj != null )
+                {
+                    listProperties.setImage( imageObj );
+                }
+            }
+        }
+
+        super.visit( ele );
+        currentTextLevel = 0;
+    }
+
+    @Override
+    public void visit( TextListLevelStyleNumberElement ele )
+    {
+        Integer textLevel = ele.getTextLevelAttribute();
+        if ( textLevel == null )
+        {
+            return;
+        }
+        currentTextLevel = textLevel;
+        StyleListProperties listProperties = getStyleListProperties();
+
+        // text style to apply to list item label
+        String styleName = ele.getTextStyleNameAttribute();
+        if ( StringUtils.isNotEmpty( styleName ) )
+        {
+            // TODO what if this style is not computed yet?
+            Style style = getStyle( "text", styleName, null );
+            currentStyle.merge( style );
+        }
+
+        // start-value
+        Integer startValue = ele.getTextStartValueAttribute();
+        if ( startValue != null )
+        {
+            listProperties.setStartValue( startValue );
+        }
+
+        // num-prefix
+        String numPrefix = ele.getStyleNumPrefixAttribute();
+        if ( StringUtils.isNotEmpty( numPrefix ) )
+        {
+            listProperties.setNumPrefix( numPrefix );
+        }
+
+        // num-suffix
+        String numSuffix = ele.getStyleNumSuffixAttribute();
+        if ( StringUtils.isNotEmpty( numSuffix ) )
+        {
+            listProperties.setNumSuffix( numSuffix );
+        }
+
+        // num-format
+        String numFormat = ele.getStyleNumFormatAttribute();
+        if ( StringUtils.isNotEmpty( numFormat ) )
+        {
+            if ( StyleNumFormatAttribute.Value.a.toString().equals( numFormat ) )
+            {
+                listProperties.setNumFormat( StyleNumFormat.createAlphabetical( true ) );
+            }
+            else if ( StyleNumFormatAttribute.Value.A.toString().equals( numFormat ) )
+            {
+                listProperties.setNumFormat( StyleNumFormat.createAlphabetical( false ) );
+            }
+            else if ( StyleNumFormatAttribute.Value.i.toString().equals( numFormat ) )
+            {
+                listProperties.setNumFormat( StyleNumFormat.createRoman( true ) );
+            }
+            else if ( StyleNumFormatAttribute.Value.I.toString().equals( numFormat ) )
+            {
+                listProperties.setNumFormat( StyleNumFormat.createRoman( false ) );
+            }
+            else
+            {
+                listProperties.setNumFormat( StyleNumFormat.createNumerical() );
+            }
+        }
+
+        super.visit( ele );
+        currentTextLevel = 0;
+    }
+
+    @Override
+    public void visit( StyleListLevelPropertiesElement ele )
+    {
+        if ( currentTextLevel == null )
+        {
+            return;
+        }
+        StyleListProperties listProperties = getStyleListProperties();
+
+        // width
+        String width = ele.getFoWidthAttribute();
+        if ( StringUtils.isNotEmpty( width ) )
+        {
+            listProperties.setWidth( ODFUtils.getDimensionAsPoint( width ) );
+        }
+
+        // height
+        String height = ele.getFoHeightAttribute();
+        if ( StringUtils.isNotEmpty( height ) )
+        {
+            listProperties.setHeight( ODFUtils.getDimensionAsPoint( height ) );
+        }
+
+        super.visit( ele );
+    }
+
+    @Override
+    public void visit( StyleListLevelLabelAlignmentElement ele )
+    {
+        if ( currentTextLevel == null )
+        {
+            return;
+        }
+        StyleListProperties listProperties = getStyleListProperties();
+
+        // margin-left
+        String marginLeft = ele.getFoMarginLeftAttribute();
+        if ( StringUtils.isNotEmpty( marginLeft ) )
+        {
+            listProperties.setMarginLeft( ODFUtils.getDimensionAsPoint( marginLeft ) );
+        }
+
+        // text-indent
+        String textIndent = ele.getFoTextIndentAttribute();
+        if ( StringUtils.isNotEmpty( textIndent ) )
+        {
+            listProperties.setTextIndent( ODFUtils.getDimensionAsPoint( textIndent ) );
+        }
+
+        super.visit( ele );
+    }
+
+    private StyleListProperties getStyleListProperties()
+    {
+        Map<Integer, StyleListProperties> listPropertiesMap = currentStyle.getListPropertiesMap();
+        if ( listPropertiesMap == null )
+        {
+            listPropertiesMap = new HashMap<Integer, StyleListProperties>();
+            currentStyle.setListPropertiesMap( listPropertiesMap );
+        }
+        StyleListProperties listProperties = listPropertiesMap.get( currentTextLevel );
+        if ( listProperties == null )
+        {
+            listProperties = new StyleListProperties();
+            listPropertiesMap.put( currentTextLevel, listProperties );
+        }
+        return listProperties;
+    }
+
     // visit //style:section-properties
     @Override
     public void visit( StyleSectionPropertiesElement ele )
@@ -1118,11 +1375,6 @@ public class StyleEngineForIText
         super.visit( ele );
     }
 
-    public void visit( TextListStyleElement ele )
-    {
-        // visit((OdfElement) ele);
-    }
-
     private String getStyleId( String familyName, String styleName )
     {
         StringBuilder className = new StringBuilder();
@@ -1137,8 +1389,56 @@ public class StyleEngineForIText
         return className.toString();
     }
 
-    public Style getStyle( String familyName, String styleName )
+    private Style getStyle( String familyName, String styleName )
     {
         return stylesMap.get( getStyleId( familyName, styleName ) );
+    }
+
+    public Style getStyle( String familyName, String styleName, Style parentElementStyle )
+    {
+        String newStyleName = null;
+        String newFamilyName = null;
+        String newMasterPageName = null;
+        Style style = getStyle( familyName, styleName );
+        if ( style != null )
+        {
+            newStyleName = style.getStyleName();
+            newFamilyName = style.getFamilyName();
+            newMasterPageName = style.getMasterPageName();
+        }
+        else if ( parentElementStyle != null )
+        {
+            newStyleName = parentElementStyle.getStyleName();
+            newFamilyName = parentElementStyle.getFamilyName();
+            newMasterPageName = parentElementStyle.getMasterPageName();
+        }
+        // create style
+        // merge order should be:
+        // 1 default style
+        // 2 parent element style
+        // 3 current style
+        Style newStyle = new Style( newStyleName, newFamilyName, newMasterPageName );
+        if ( parentElementStyle != null )
+        {
+            // parent element style contains default style
+            newStyle.merge( parentElementStyle );
+        }
+        else
+        {
+            // merge default styles
+            for ( Style s : stylesMap.values() )
+            {
+                if ( s.getStyleName() == null )
+                {
+                    newStyle.merge( s );
+                }
+            }
+        }
+        // merge current style
+        if ( style != null )
+        {
+            newStyle.merge( style );
+        }
+        return newStyle;
     }
 }

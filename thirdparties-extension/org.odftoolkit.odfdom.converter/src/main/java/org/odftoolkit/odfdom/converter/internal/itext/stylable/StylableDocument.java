@@ -112,9 +112,9 @@ public class StylableDocument
         return new StylableAnchor( this, parent );
     }
 
-    public StylableList createList( IStylableContainer parent )
+    public StylableList createList( IStylableContainer parent, int listLevel )
     {
-        return new StylableList( this, parent );
+        return new StylableList( this, parent, listLevel );
     }
 
     public StylableListItem createListItem( IStylableContainer parent )
@@ -225,7 +225,7 @@ public class StylableDocument
 
     public Style getStyleMasterPage( StylableMasterPage masterPage )
     {
-        Style style = styleEngine.getStyle( OdfStyleFamily.List.getName(), masterPage.getPageLayoutName() );
+        Style style = styleEngine.getStyle( OdfStyleFamily.List.getName(), masterPage.getPageLayoutName(), null );
         return style;
     }
 

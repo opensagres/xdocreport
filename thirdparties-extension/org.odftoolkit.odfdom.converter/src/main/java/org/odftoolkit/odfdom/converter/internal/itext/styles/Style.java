@@ -25,6 +25,7 @@
 package org.odftoolkit.odfdom.converter.internal.itext.styles;
 
 import java.util.List;
+import java.util.Map;
 
 public class Style
 {
@@ -52,6 +53,8 @@ public class Style
 
     private StyleGraphicProperties graphicProperties;
 
+    private Map<Integer, StyleListProperties> listPropertiesMap;
+
     private StyleSectionProperties sectionProperties;
 
     private StyleColumnsProperties columnsProperties;
@@ -67,6 +70,36 @@ public class Style
 
     public void merge( Style style )
     {
+        // propagate properties which are not fully merged
+        if ( style.getPageLayoutProperties() != null )
+        {
+            pageLayoutProperties = style.getPageLayoutProperties();
+        }
+        if ( style.getHeaderProperties() != null )
+        {
+            headerProperties = style.getHeaderProperties();
+        }
+        if ( style.getFooterProperties() != null )
+        {
+            footerProperties = style.getFooterProperties();
+        }
+        if ( style.getListPropertiesMap() != null )
+        {
+            listPropertiesMap = style.getListPropertiesMap();
+        }
+        if ( style.getSectionProperties() != null )
+        {
+            sectionProperties = style.getSectionProperties();
+        }
+        if ( style.getColumnsProperties() != null )
+        {
+            columnsProperties = style.getColumnsProperties();
+        }
+        if ( style.getColumnPropertiesList() != null )
+        {
+            columnPropertiesList = style.getColumnPropertiesList();
+        }
+
         // Merge paragraph properties
         if ( paragraphProperties == null )
         {
@@ -267,6 +300,16 @@ public class Style
     public void setGraphicProperties( StyleGraphicProperties graphicProperties )
     {
         this.graphicProperties = graphicProperties;
+    }
+
+    public Map<Integer, StyleListProperties> getListPropertiesMap()
+    {
+        return listPropertiesMap;
+    }
+
+    public void setListPropertiesMap( Map<Integer, StyleListProperties> listPropertiesMap )
+    {
+        this.listPropertiesMap = listPropertiesMap;
     }
 
     public StyleSectionProperties getSectionProperties()

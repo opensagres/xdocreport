@@ -94,10 +94,9 @@ import fr.opensagres.xdocreport.utils.StringUtils;
 public class ElementVisitorForIText
     extends ElementVisitorConverter
 {
-
     private final StyleEngineForIText styleEngine;
 
-    private final PDFViaITextOptions options;
+    // private final PDFViaITextOptions options;
 
     private List<Integer> currentHeadingNumbering;
 
@@ -111,12 +110,14 @@ public class ElementVisitorForIText
 
     private Style currentRowStyle;
 
+    private int currentListLevel;
+
     public ElementVisitorForIText( OdfDocument odfDocument, OutputStream out, Writer writer,
                                    StyleEngineForIText styleEngine, PDFViaITextOptions options )
     {
         super( odfDocument, out, writer );
         this.styleEngine = styleEngine;
-        this.options = options != null ? options : PDFViaITextOptions.create();
+        // this.options = options != null ? options : PDFViaITextOptions.create();
         // Create document
         try
         {
@@ -343,7 +344,7 @@ public class ElementVisitorForIText
     @Override
     public void visit( TableTableRowElement ele )
     {
-        currentRowStyle = getStyle( ele );
+        currentRowStyle = getStyle( ele, null );
         super.visit( ele );
         currentRowStyle = null;
     }
@@ -383,10 +384,11 @@ public class ElementVisitorForIText
     @Override
     public void visit( TextListElement ele )
     {
-        // int level = 1;
-        StylableList list = document.createList( currentContainer );
-        // applyStyles(ele, list);
+        currentListLevel++;
+        StylableList list = document.createList( currentContainer, currentListLevel );
+        applyStyles( ele, list );
         addITextContainer( ele, list );
+        currentListLevel--;
     }
 
     // ---------------------- visit text:listitem
@@ -394,11 +396,8 @@ public class ElementVisitorForIText
     @Override
     public void visit( TextListItemElement ele )
     {
-        // int level = 1;
         StylableListItem listItem = document.createListItem( currentContainer );
-        // applyStyles(ele, list);
         addITextContainer( ele, listItem );
-
     }
 
     // ---------------------- visit draw:image
@@ -462,10 +461,6 @@ public class ElementVisitorForIText
     @Override
     public void visit( TextSoftPageBreakElement ele )
     {
-        if ( options.isPreserveSoftPageBreaks() )
-        {
-            // switched off after section implementation
-        }
     }
 
     // ---------------------- visit text:line-break
@@ -534,9 +529,9 @@ public class ElementVisitorForIText
         currentContainer.addElement( element );
     }
 
-    private void applyStyles( OdfStylableElement ele, IStylableElement element )
+    private void applyStyles( OdfElement ele, IStylableElement element )
     {
-        Style style = getStyle( ele );
+        Style style = getStyle( ele, element );
         if ( style != null )
         {
             if ( parseOfficeTextElement )
@@ -562,13 +557,40 @@ public class ElementVisitorForIText
         }
     }
 
-    private Style getStyle( OdfStylableElement ele )
+    private Style getStyle( OdfElement e, IStylableElement element )
     {
-        String styleName = ele.getStyleName();
-        String familyName = ele.getStyleFamily() != null ? ele.getStyleFamily().getName() : null;
+        Style style = null;
+        Style parentElementStyle = element != null ? getParentElementStyle( element ) : null;
+        if ( e instanceof OdfStylableElement )
+        {
+            OdfStylableElement ele = (OdfStylableElement) e;
 
-        Style style = styleEngine.getStyle( familyName, styleName );
+            String styleName = ele.getStyleName();
+            String familyName = ele.getStyleFamily() != null ? ele.getStyleFamily().getName() : null;
+
+            style = styleEngine.getStyle( familyName, styleName, parentElementStyle );
+        }
+        else if ( e instanceof TextListElement )
+        {
+            TextListElement ele = (TextListElement) e;
+
+            String styleName = ele.getTextStyleNameAttribute();
+
+            style = styleEngine.getStyle( "list", styleName, parentElementStyle );
+        }
         return style;
     }
 
+    private Style getParentElementStyle( IStylableElement element )
+    {
+        for ( IStylableContainer c = element.getParent(); c != null; c = c.getParent() )
+        {
+            Style style = c.getLastStyleApplied();
+            if ( style != null )
+            {
+                return style;
+            }
+        }
+        return null;
+    }
 }

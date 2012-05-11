@@ -67,6 +67,7 @@ import org.odftoolkit.odfdom.dom.element.table.TableTableCellElement;
 import org.odftoolkit.odfdom.dom.element.table.TableTableElement;
 import org.odftoolkit.odfdom.dom.element.table.TableTableRowElement;
 import org.odftoolkit.odfdom.dom.element.text.TextAElement;
+import org.odftoolkit.odfdom.dom.element.text.TextBookmarkElement;
 import org.odftoolkit.odfdom.dom.element.text.TextHElement;
 import org.odftoolkit.odfdom.dom.element.text.TextLineBreakElement;
 import org.odftoolkit.odfdom.dom.element.text.TextListElement;
@@ -312,11 +313,17 @@ public class ElementVisitorForIText
             linkFont.setColor( Color.BLUE );
         }
 
-        // TODO ; manage internal link
         // set the link
         anchor.setReference( reference );
         // Add to current container.
         addITextContainer( ele, anchor );
+    }
+
+    @Override
+    public void visit( TextBookmarkElement ele )
+    {
+        // destination for a local anchor
+        createChunk( "\u00A0", ele.getTextNameAttribute() );
     }
 
     // ---------------------- visit table:table (ex : <table:table
@@ -474,17 +481,20 @@ public class ElementVisitorForIText
     @Override
     protected void processTextNode( Text node )
     {
-        createChunk( node );
+        createChunk( node.getTextContent(), null );
     }
 
-    private Chunk createChunk( Text node )
+    private Chunk createChunk( String textContent, String localDestinationName )
     {
-        String textContent = node.getTextContent();
         StylableChunk chunk = document.createChunk( currentContainer, textContent );
         Style style = currentContainer.getLastStyleApplied();
         if ( style != null )
         {
             chunk.applyStyles( style );
+        }
+        if ( localDestinationName != null )
+        {
+            chunk.setLocalDestination( localDestinationName );
         }
         addITextElement( chunk.getElement() );
         return chunk;

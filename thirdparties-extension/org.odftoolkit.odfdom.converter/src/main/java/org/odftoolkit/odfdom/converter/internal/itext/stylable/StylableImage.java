@@ -33,6 +33,8 @@ import com.lowagie.text.Chunk;
 import com.lowagie.text.Element;
 import com.lowagie.text.Image;
 
+import fr.opensagres.xdocreport.itext.extension.ExtendedImage;
+
 /**
  * fixes for pdf conversion by Leszek Piotrowicz <leszekp@safe-mail.net>
  */
@@ -96,22 +98,23 @@ public class StylableImage
         if ( chunk == null )
         {
             float offsetX = x != null ? x : 0.0f;
-            float offsetY = y != null ? y : 0.0f;
-            if ( runThrough )
-            {
-                // reduce line height
-                // so subsequent text will run through the image, not below
-                offsetY += image.getScaledHeight();
-            }
             // negate offsetY because open office and iText vertical coordinates
             // are interpreted differently
-            // in open office negative offset means "move down"
-            // but in iText it means "move up"
-            chunk = new Chunk( image, offsetX, -offsetY );
+            // in open office negative offset means "move up"
+            // but in iText it means "move down"
+            float offsetY = y != null ? -y : 0.0f;
+            // iText image workaround
+            // iText cannot draw an image higher than current vertical position
+            // we create special image with y coordinate offset
+            // this offset will be used while drawing by ExtendedPdfContentByte
+            ExtendedImage extImg = new ExtendedImage( image, offsetY );
+            // if run-through set line height to zero
+            // so subsequent text will run through the image, not below
+            chunk = new Chunk( extImg, offsetX, runThrough ? -image.getScaledHeight() : 0.0f );
         }
         return chunk;
     }
-
+    
     public static Image getImage( byte[] imgb )
     {
         try

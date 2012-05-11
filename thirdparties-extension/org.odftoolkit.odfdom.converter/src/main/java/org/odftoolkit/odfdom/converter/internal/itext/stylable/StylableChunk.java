@@ -31,6 +31,7 @@ import org.odftoolkit.odfdom.converter.internal.itext.styles.StyleTextProperties
 
 import com.lowagie.text.Chunk;
 import com.lowagie.text.Element;
+import com.lowagie.text.Font;
 
 public class StylableChunk
     extends Chunk
@@ -53,6 +54,13 @@ public class StylableChunk
         StyleTextProperties textProperties = style.getTextProperties();
         if ( textProperties != null )
         {
+            // font
+            Font font = textProperties.getFont();
+            if ( font != null )
+            {
+                super.setFont( font );
+            }
+
             // background-color
             Color backgroundColor = textProperties.getBackgroundColor();
             if ( backgroundColor != null )

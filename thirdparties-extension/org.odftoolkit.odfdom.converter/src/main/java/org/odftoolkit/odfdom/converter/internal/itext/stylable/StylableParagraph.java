@@ -308,7 +308,7 @@ public class StylableParagraph
             ArrayList<Chunk> chunks = getChunks();
             for ( Chunk chunk : chunks )
             {
-                if ( chunk.getContent() != null && chunk.getContent().length() > 0 || chunk.getImage() != null )
+                if ( chunk.getImage() == null && chunk.getContent() != null && chunk.getContent().length() > 0 )
                 {
                     empty = false;
                     break;
@@ -316,7 +316,7 @@ public class StylableParagraph
             }
             if ( empty )
             {
-                super.add( new Chunk( " " ) );
+                super.add( new Chunk( "\u00A0" ) ); // non breaking space
             }
 
             // adjust line height and baseline
@@ -341,7 +341,7 @@ public class StylableParagraph
                 // we raise all paragraph text by some amount
                 // again this may be inaccurate if fonts with different size are used in this paragraph
                 float itextdescender = -font.getBaseFont().getFontDescriptor( BaseFont.DESCENT, size ); // negative
-                float textRise = itextdescender * multiplier;
+                float textRise = itextdescender + getTotalLeading() - font.getSize() * multiplier;
                 chunks = getChunks();
                 for ( Chunk chunk : chunks )
                 {

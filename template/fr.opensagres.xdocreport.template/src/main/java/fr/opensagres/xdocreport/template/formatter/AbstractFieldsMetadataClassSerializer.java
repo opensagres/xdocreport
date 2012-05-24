@@ -32,147 +32,152 @@ import java.lang.reflect.Method;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import fr.opensagres.xdocreport.core.XDocReportException;
 
 /**
  * Abstract class for Fields metadata serializer.
  */
-public abstract class AbstractFieldsMetadataClassSerializer
-    implements IFieldsMetadataClassSerializer
-{
+public abstract class AbstractFieldsMetadataClassSerializer implements
+		IFieldsMetadataClassSerializer {
 
-    private final String id;
+	private final String id;
 
-    private final String description;
+	private final String description;
 
-    // package name to exclude while processing
-    private final List<String> excludedPackages;
+	// package name to exclude while processing
+	private final List<String> excludedPackages;
 
-    public AbstractFieldsMetadataClassSerializer( String id, String description )
-    {
-        this.id = id;
-        this.description = description;
-        this.excludedPackages = new ArrayList<String>();
-        this.excludedPackages.add( "java." );
-    }
+	private final Set<Class<?>> hasBeenProcessed = new HashSet<Class<?>>();
 
-    public String getId()
-    {
-        return id;
-    }
+	public AbstractFieldsMetadataClassSerializer(String id, String description) {
+		this.id = id;
+		this.description = description;
+		this.excludedPackages = new ArrayList<String>();
+		this.excludedPackages.add("java.");
+	}
 
-    public String getDescription()
-    {
-        return description;
-    }
+	public String getId() {
+		return id;
+	}
 
-    /*
-     * (non-Javadoc)
-     * @see fr.opensagres.xdocreport.template.formatter.IFieldsMetadataClassSerializer
-     * #load(fr.opensagres.xdocreport.template.formatter.FieldsMetadata, java.lang.String, java.lang.Class)
-     */
-    public void load( FieldsMetadata fieldsMetadata, String key, Class<?> clazz )
-        throws XDocReportException
-    {
-        load( fieldsMetadata, key, clazz, false );
-    }
+	public String getDescription() {
+		return description;
+	}
 
-    /*
-     * (non-Javadoc)
-     * @see fr.opensagres.xdocreport.template.formatter.IFieldsMetadataClassSerializer
-     * #load(fr.opensagres.xdocreport.template.formatter.FieldsMetadata, java.lang.String, java.lang.Class, boolean)
-     */
-    public void load( FieldsMetadata fieldsMetadata, String key, Class<?> clazz, boolean listType )
-        throws XDocReportException
-    {
-        try
-        {
-            process( fieldsMetadata, key, clazz, listType );
-        }
-        catch ( Exception e )
-        {
-            throw new XDocReportException( e );
-        }
-    }
+	/*
+	 * (non-Javadoc)
+	 *
+	 * @see
+	 * fr.opensagres.xdocreport.template.formatter.IFieldsMetadataClassSerializer
+	 * #load(fr.opensagres.xdocreport.template.formatter.FieldsMetadata,
+	 * java.lang.String, java.lang.Class)
+	 */
+	public void load(FieldsMetadata fieldsMetadata, String key, Class<?> clazz)
+			throws XDocReportException {
+		load(fieldsMetadata, key, clazz, false);
+	}
 
-    private void process( FieldsMetadata fieldsMetadata, String key, Class<?> clazz, boolean listType )
-        throws IntrospectionException
-    {
-        String fieldName = null;
-        BeanInfo infos = Introspector.getBeanInfo( clazz );
-        PropertyDescriptor[] desc = infos.getPropertyDescriptors();
-        for ( int i = 0; i < desc.length; i++ )
-        {
-            Method method = desc[i].getReadMethod();
-            if ( isGetterMethod( method ) )
-            {
-                Class returnTypeClass = method.getReturnType();
-                if ( Iterable.class.isAssignableFrom( returnTypeClass ) )
-                {
-                    // process generic collection
-                    Type collectionType = method.getGenericReturnType();
-                    if ( collectionType != null && ( collectionType instanceof ParameterizedType ) )
-                    {
-                        ParameterizedType parameterizedType = (ParameterizedType) method.getGenericReturnType();
-                        Type[] types = parameterizedType.getActualTypeArguments();
-                        if ( types.length == 1 )
-                        {
-                            Class itemClazz = (Class) types[0];
-                            fieldName = getFieldName( key, desc[i].getName() );
-                            process( fieldsMetadata, fieldName, itemClazz, listType );
-                            // process(fieldsMetadata,name + "." +
-                            // desc[i].getName()+"[]"+clazz.getSimpleName(),clazz,
-                            // false);
-                        }
-                    }
-                }
-                else
-                {
-                    fieldName = getFieldName( key, desc[i].getName() );
-                    if ( isClassToExclude( returnTypeClass ) )
-                    {
-                        fieldsMetadata.addField( fieldName, listType, null, null, null );
-                    }
-                    else
-                    {
-                        process( fieldsMetadata, fieldName, returnTypeClass, listType );
-                    }
-                }
-            }
-        }
-    }
+	/*
+	 * (non-Javadoc)
+	 *
+	 * @see
+	 * fr.opensagres.xdocreport.template.formatter.IFieldsMetadataClassSerializer
+	 * #load(fr.opensagres.xdocreport.template.formatter.FieldsMetadata,
+	 * java.lang.String, java.lang.Class, boolean)
+	 */
+	public void load(FieldsMetadata fieldsMetadata, String key, Class<?> clazz,
+			boolean listType) throws XDocReportException {
+		try {
+			process(fieldsMetadata, key, clazz, listType);
+		} catch (Exception e) {
+			throw new XDocReportException(e);
+		}
+	}
 
-    /**
-     * Return true if package of the given class start with list of package to exclude and false otherwise.
-     *
-     * @param clazz
-     * @return
-     */
-    private boolean isClassToExclude( Class clazz )
-    {
-        if ( clazz != null && clazz.getPackage() != null )
-        {
-            String packageName = clazz.getPackage().getName();
-            for ( String excludePackageName : excludedPackages )
-            {
-                if ( packageName.startsWith( excludePackageName ) )
-                    return true;
-            }
-        }
-        return false;
-    }
+	private void process(FieldsMetadata fieldsMetadata, String key,
+			Class<?> clazz, boolean listType) throws IntrospectionException {
+		if (!hasBeenProcessed.contains(clazz))
+		{
 
-    private boolean isGetterMethod( Method method )
-    {
-        if ( method == null )
-        {
-            return false;
-        }
-        String name = method.getName();
-        return !name.equals( "getClass" ) && ( name.startsWith( "get" ) || name.startsWith( "is" ) );
-    }
+			hasBeenProcessed.add(clazz);
+			String fieldName = null;
+			BeanInfo infos = Introspector.getBeanInfo(clazz);
 
-    protected abstract String getFieldName( String key, String getterName );
+			PropertyDescriptor[] desc = infos.getPropertyDescriptors();
+			for (int i = 0; i < desc.length; i++) {
+				Method method = desc[i].getReadMethod();
+				if (isGetterMethod(method)) {
+					Class returnTypeClass = method.getReturnType();
+					if (Iterable.class.isAssignableFrom(returnTypeClass)) {
+						// process generic collection
+						Type collectionType = method.getGenericReturnType();
+						if (collectionType != null
+								&& (collectionType instanceof ParameterizedType)) {
+							ParameterizedType parameterizedType = (ParameterizedType) method
+									.getGenericReturnType();
+							Type[] types = parameterizedType
+									.getActualTypeArguments();
+							if (types.length == 1) {
+								Class itemClazz = (Class) types[0];
+								fieldName = getFieldName(key, desc[i].getName());
+
+								if(!fieldsMetadata.getFieldsAsList().contains(fieldName)){
+										process(fieldsMetadata, fieldName, itemClazz,
+													listType);
+
+								}
+							}
+						}
+					} else {
+						fieldName = getFieldName(key, desc[i].getName());
+						if(!fieldsMetadata.getFieldsAsList().contains(fieldName)){
+
+
+						if (isClassToExclude(returnTypeClass)) {
+							fieldsMetadata.addField(fieldName, listType, null,
+									null, null);
+						} else {
+							process(fieldsMetadata, fieldName, returnTypeClass,
+									listType);
+						}
+						}
+					}
+				}
+			}
+
+		}
+	}
+
+	/**
+	 * Return true if package of the given class start with list of package to
+	 * exclude and false otherwise.
+	 *
+	 * @param clazz
+	 * @return
+	 */
+	private boolean isClassToExclude(Class clazz) {
+		if (clazz != null && clazz.getPackage() != null) {
+			String packageName = clazz.getPackage().getName();
+			for (String excludePackageName : excludedPackages) {
+				if (packageName.startsWith(excludePackageName))
+					return true;
+			}
+		}
+		return false;
+	}
+
+	private boolean isGetterMethod(Method method) {
+		if (method == null) {
+			return false;
+		}
+		String name = method.getName();
+		return !name.equals("getClass")
+				&& (name.startsWith("get") || name.startsWith("is"));
+	}
+
+	protected abstract String getFieldName(String key, String getterName);
 }

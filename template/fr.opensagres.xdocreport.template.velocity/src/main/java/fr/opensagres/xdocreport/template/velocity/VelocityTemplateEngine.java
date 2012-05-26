@@ -142,35 +142,37 @@ public class VelocityTemplateEngine
         }
         velocityEngineProperties = new Properties();
 	
-	//Copy default velocity.properties
-	Properties velocityDefaultProperties = getVelocityDefaultProperties();
-	if(velocityDefaultProperties != null){
-		velocityEngineProperties.putAll(velocityDefaultProperties);
-	}
-
-        // Initialize properties to use XDocReportEntryResourceLoader to
-        // load template from entry name of XDocArchive.
-        velocityEngineProperties.setProperty( "resource.loader", "file, class, jar ,report" );
-        velocityEngineProperties.setProperty( "report.resource.loader.class",
-                                              XDocReportEntryResourceLoader.class.getName() );
-        velocityEngineProperties.setProperty( "report.resource.loader.cache", "true" );
-        velocityEngineProperties.setProperty( "report.resource.loader.modificationCheckInterval", "1" );
-
-        // Disable log for Velocity to avoid to generate velocity.log (by
-        // default)
-        try
-        {
-            if ( Class.forName( "org.apache.velocity.runtime.log.NullLogChute" ) != null )
-            {
-                // Don't crash Velocity if NullLogChute doesn't exist
-                velocityEngineProperties.setProperty( RuntimeConstants.RUNTIME_LOG_LOGSYSTEM_CLASS,
-                                                      "org.apache.velocity.runtime.log.NullLogChute" );
-            }
-        }
-        catch ( Throwable e )
-        {
-            // Do nothing
-        }
+        //Copy default velocity.properties
+        Properties velocityDefaultProperties = getVelocityDefaultProperties();
+		if(velocityDefaultProperties != null){
+			velocityEngineProperties.putAll(velocityDefaultProperties);
+		}else{
+			//Only if default velocity properties are not reads at velocity.properties
+	
+	        // Initialize properties to use XDocReportEntryResourceLoader to
+	        // load template from entry name of XDocArchive.
+	        velocityEngineProperties.setProperty( "resource.loader", "file, class, jar ,report" );
+	        velocityEngineProperties.setProperty( "report.resource.loader.class",
+	                                              XDocReportEntryResourceLoader.class.getName() );
+	        velocityEngineProperties.setProperty( "report.resource.loader.cache", "true" );
+	        velocityEngineProperties.setProperty( "report.resource.loader.modificationCheckInterval", "1" );
+	
+	        // Disable log for Velocity to avoid to generate velocity.log (by
+	        // default)
+	        try
+	        {
+	            if ( Class.forName( "org.apache.velocity.runtime.log.NullLogChute" ) != null )
+	            {
+	                // Don't crash Velocity if NullLogChute doesn't exist
+	                velocityEngineProperties.setProperty( RuntimeConstants.RUNTIME_LOG_LOGSYSTEM_CLASS,
+	                                                      "org.apache.velocity.runtime.log.NullLogChute" );
+	            }
+	        }
+	        catch ( Throwable e )
+	        {
+	            // Do nothing
+	        }
+		}
         return velocityEngineProperties;
     }
 

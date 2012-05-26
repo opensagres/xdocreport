@@ -42,11 +42,13 @@ public class FreemarkerDocumentFormatter
     extends AbstractDocumentFormatter
 {
 
-    private static final String END_ASSIGN_DIRECTIVE = "]";
+    private static final String START_ASSIGN_DIRECTIVE = "[#assign ";
+
+    private static final String CLOSE_ASSIGN_DIRECTIVE = "]";
+
+    private static final String END_ASSIGN_DIRECTIVE = "[/#assign]";
 
     private static final String EQUALS = "=";
-
-    private static final String START_ASSIGN_DIRECTIVE = "[#assign ";
 
     private static final String START_LIST_DIRECTIVE = "[#list ";
 
@@ -77,21 +79,6 @@ public class FreemarkerDocumentFormatter
     private static final String ELSE_DIRECTIVE = "[#else]";
 
     private static final String END_IF_DIRECTIVE = "[/#if]";
-
-    private static final String START_IMAGE_DIRECTIVE = DOLLAR_TOTKEN + TemplateContextHelper.IMAGE_REGISTRY_KEY
-        + ".registerImage(";
-
-    private static final String END_IMAGE_DIRECTIVE = ")}";
-
-    private static final String START_IMAGE_WIDTH_DIRECTIVE = DOLLAR_TOTKEN + TemplateContextHelper.IMAGE_REGISTRY_KEY
-        + ".getWidth(";
-
-    private static final String END_IMAGE_WIDTH_DIRECTIVE = ")}";
-
-    private static final String START_IMAGE_HEIGHT_DIRECTIVE = DOLLAR_TOTKEN + TemplateContextHelper.IMAGE_REGISTRY_KEY
-        + ".getHeight(";
-
-    private static final String END_IMAGE_HEIGHT_DIRECTIVE = ")}";
 
     private static final String START_NOESCAPE = "[#noescape]";
 
@@ -204,46 +191,9 @@ public class FreemarkerDocumentFormatter
 
     }
 
-    public String getImageDirective( String fieldName )
+    public String getFunctionDirective( boolean encloseInDirective, String key, String methodName, String... parameters )
     {
-        StringBuilder directive = new StringBuilder( START_IMAGE_DIRECTIVE );
-        directive.append( fieldName );
-        directive.append( END_IMAGE_DIRECTIVE );
-        return directive.toString();
-    }
-
-    public String getImageWidthDirective( String fieldName, String defaultWidth )
-    {
-        StringBuilder directive = new StringBuilder( START_IMAGE_WIDTH_DIRECTIVE );
-        directive.append( fieldName );
-        directive.append( ',' );
-        directive.append( '\'' );
-        directive.append( defaultWidth );
-        directive.append( '\'' );
-        directive.append( END_IMAGE_WIDTH_DIRECTIVE );
-        return directive.toString();
-    }
-
-    public String getImageHeightDirective( String fieldName, String defaultHeight )
-    {
-        StringBuilder directive = new StringBuilder( START_IMAGE_HEIGHT_DIRECTIVE );
-        directive.append( fieldName );
-        directive.append( ',' );
-        directive.append( '\'' );
-        directive.append( defaultHeight );
-        directive.append( '\'' );
-        directive.append( END_IMAGE_HEIGHT_DIRECTIVE );
-        return directive.toString();
-    }
-
-    public String getFunctionDirective( String key, String methodName, String... parameters )
-    {
-        return getFunctionDirective( key, methodName, true, parameters );
-    }
-
-    public String getFunctionDirective( String key, String methodName, boolean withDollar, String... parameters )
-    {
-        StringBuilder directive = new StringBuilder( withDollar ? DOLLAR_TOTKEN : "" );
+        StringBuilder directive = new StringBuilder( encloseInDirective ? DOLLAR_TOTKEN : "" );
         directive.append( key );
         directive.append( '.' );
         directive.append( methodName );
@@ -259,20 +209,21 @@ public class FreemarkerDocumentFormatter
                 directive.append( parameters[i] );
             }
         }
-        if ( withDollar )
+        directive.append( ')' );
+        if ( encloseInDirective )
         {
-            directive.append( END_IMAGE_DIRECTIVE );
-        }
-        else
-        {
-            directive.append( ")" );
+            directive.append( '}' );
         }
         return directive.toString();
     }
 
-    public String formatAsSimpleField( boolean encloseInDirective, String... fields )
+    public String formatAsSimpleField( boolean noescape, boolean encloseInDirective, String... fields )
     {
         StringBuilder field = new StringBuilder();
+        if ( noescape )
+        {
+            field.append( START_NOESCAPE );
+        }
         if ( encloseInDirective )
         {
             field.append( DOLLAR_TOTKEN );
@@ -295,14 +246,21 @@ public class FreemarkerDocumentFormatter
         {
             field.append( '}' );
         }
+        if ( noescape )
+        {
+            field.append( END_NOESCAPE );
+        }
         return field.toString();
     }
 
-    public String getStartIfDirective( String fieldName )
+    public String getStartIfDirective( String fieldName, boolean exists )
     {
         StringBuilder directive = new StringBuilder( START_IF_DIRECTIVE );
         directive.append( fieldName );
-        directive.append( "??" );
+        if ( exists )
+        {
+            directive.append( "??" );
+        }
         directive.append( ']' );
         return directive.toString();
     }
@@ -549,13 +507,13 @@ public class FreemarkerDocumentFormatter
         StringBuilder newContent = new StringBuilder( START_ASSIGN_DIRECTIVE );
         newContent.append( getVariableName( variableIndex ) );
         newContent.append( EQUALS );
-        newContent.append( getFunctionDirective( TemplateContextHelper.TEXT_STYLING_REGISTRY_KEY,
-                                                 TemplateContextHelper.TRANSFORM_METHOD, false,
+        newContent.append( getFunctionDirective( false, TemplateContextHelper.TEXT_STYLING_REGISTRY_KEY,
+                                                 TemplateContextHelper.TRANSFORM_METHOD,
                                                  removeInterpolation( fieldName ), "\"" + syntaxKind + "\"",
                                                  syntaxWithDirective ? StringUtils.TRUE : StringUtils.FALSE, "\""
                                                      + documentKind + "\"", "\"" + elementId + "\"",
                                                  TemplateContextHelper.CONTEXT_KEY, "\"" + entryName + "\"" ) );
-        newContent.append( END_ASSIGN_DIRECTIVE );
+        newContent.append( CLOSE_ASSIGN_DIRECTIVE );
         return newContent.toString();
     }
 
@@ -567,13 +525,13 @@ public class FreemarkerDocumentFormatter
         return result.toString();
     }
 
-    public String getSetDirective( String name, String value )
+    public String getSetDirective( String name, String value, boolean valueIsField )
     {
         StringBuilder newContent = new StringBuilder( START_ASSIGN_DIRECTIVE );
         newContent.append( name );
         newContent.append( EQUALS );
         newContent.append( value );
-        newContent.append( END_ASSIGN_DIRECTIVE );
+        newContent.append( CLOSE_ASSIGN_DIRECTIVE );
         return newContent.toString();
     }
 
@@ -585,5 +543,15 @@ public class FreemarkerDocumentFormatter
     public String getEndNoParse()
     {
         return END_NOPARSE;
+    }
+
+    public String getDefineDirective( String name, String value )
+    {
+        StringBuilder newContent = new StringBuilder( START_ASSIGN_DIRECTIVE );
+        newContent.append( name );
+        newContent.append( CLOSE_ASSIGN_DIRECTIVE );
+        newContent.append( value );
+        newContent.append( END_ASSIGN_DIRECTIVE );
+        return newContent.toString();
     }
 }

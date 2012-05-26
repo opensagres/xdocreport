@@ -28,7 +28,6 @@ import java.awt.Color;
 
 import org.odftoolkit.odfdom.converter.internal.itext.styles.Style;
 import org.odftoolkit.odfdom.converter.internal.itext.styles.StyleBorder;
-import org.odftoolkit.odfdom.converter.internal.itext.styles.StylePadding;
 import org.odftoolkit.odfdom.converter.internal.itext.styles.StyleTableCellProperties;
 import org.odftoolkit.odfdom.converter.internal.itext.styles.StyleTableRowProperties;
 import org.odftoolkit.odfdom.converter.internal.utils.StyleUtils;
@@ -43,18 +42,15 @@ import fr.opensagres.xdocreport.itext.extension.IITextContainer;
  */
 public class StylableTableCell
     extends PdfPCell
-    implements IStylableContainer
+    implements IStylableContainer, IBoundsLimitContainer
 {
-
-    private static final long serialVersionUID = 664309269352903329L;
-
-    private final IStylableFactory ownerDocument;
+    private final StylableDocument ownerDocument;
 
     private final IStylableContainer parent;
 
     private Style lastStyleApplied = null;
 
-    public StylableTableCell( IStylableFactory ownerDocument, IStylableContainer parent )
+    public StylableTableCell( StylableDocument ownerDocument, IStylableContainer parent )
     {
         this.ownerDocument = ownerDocument;
         this.parent = parent;
@@ -76,6 +72,12 @@ public class StylableTableCell
         StyleTableRowProperties tableRowProperties = style.getTableRowProperties();
         if ( tableRowProperties != null )
         {
+            Float minRowHeight = tableRowProperties.getMinRowHeight();
+            if ( minRowHeight != null )
+            {
+                super.setMinimumHeight( minRowHeight );
+            }
+
             Float rowHeight = tableRowProperties.getRowHeight();
             if ( rowHeight != null )
             {
@@ -85,7 +87,6 @@ public class StylableTableCell
         StyleTableCellProperties tableCellProperties = style.getTableCellProperties();
         if ( tableCellProperties != null )
         {
-
             // background-color
             Color backgroundColor = tableCellProperties.getBackgroundColor();
             if ( backgroundColor != null )
@@ -114,48 +115,46 @@ public class StylableTableCell
             StyleUtils.applyStyles( borderRight, this );
 
             // padding
-            StylePadding padding = tableCellProperties.getPadding();
+            Float padding = tableCellProperties.getPadding();
             if ( padding != null )
             {
-
-                // padding
-                if ( padding.getPadding() != null )
-                {
-                    super.setPadding( padding.getPadding() );
-                }
-
-                // padding-top
-                if ( padding.getPaddingTop() != null )
-                {
-                    super.setPaddingTop( padding.getPaddingTop() );
-                }
-
-                // padding-bottom
-                if ( padding.getPaddingBottom() != null )
-                {
-                    super.setPaddingBottom( padding.getPaddingBottom() );
-                }
-
-                // padding-right
-                if ( padding.getPaddingRight() != null )
-                {
-                    super.setPaddingRight( padding.getPaddingRight() );
-                }
-
-                // padding-left
-                if ( padding.getPaddingLeft() != null )
-                {
-                    super.setPaddingLeft( padding.getPaddingLeft() );
-                }
+                super.setPadding( padding );
             }
 
-            // Alignment
+            // padding-top
+            Float paddingTop = tableCellProperties.getPaddingTop();
+            if ( paddingTop != null )
+            {
+                super.setPaddingTop( paddingTop );
+            }
+
+            // padding-bottom
+            Float paddingBottom = tableCellProperties.getPaddingBottom();
+            if ( paddingBottom != null )
+            {
+                super.setPaddingBottom( paddingBottom );
+            }
+
+            // padding-left
+            Float paddingLeft = tableCellProperties.getPaddingLeft();
+            if ( paddingLeft != null )
+            {
+                super.setPaddingLeft( paddingLeft );
+            }
+
+            // padding-right
+            Float paddingRight = tableCellProperties.getPaddingRight();
+            if ( paddingRight != null )
+            {
+                super.setPaddingRight( paddingRight );
+            }
+
+            // vertical-alignment
             int verticalAlignment = tableCellProperties.getVerticalAlignment();
             if ( verticalAlignment != Element.ALIGN_UNDEFINED )
             {
                 super.setVerticalAlignment( verticalAlignment );
             }
-
         }
     }
 
@@ -174,6 +173,31 @@ public class StylableTableCell
         return this;
     }
 
+    public float getWidthLimit()
+    {
+        float width = 0.0f;
+        if ( parent != null && parent instanceof StylableTable )
+        {
+            StylableTable table = (StylableTable) parent;
+            // we have to determine this cell index in parent table
+            // we assume that this cell is not added yet
+            // and it will be added at parent table current column index
+            int colIdx = table.getColIdx();
+            float[] widths = table.getAbsoluteWidths();
+            for ( int i = 0; i < getColspan(); i++ )
+            {
+                width += widths[colIdx + i];
+            }
+        }
+        return width > 0.0f ? width : ownerDocument.getPageWidth();
+    }
+
+    public float getHeightLimit()
+    {
+        // no height limit
+        return -1.0f;
+    }
+
     public IITextContainer getITextContainer()
     {
         return parent;
@@ -181,6 +205,5 @@ public class StylableTableCell
 
     public void setITextContainer( IITextContainer container )
     {
-
     }
 }

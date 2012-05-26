@@ -3,14 +3,14 @@
 	<parent>
 		<artifactId>thirdparties-extension</artifactId>
 		<groupId>fr.opensagres.xdocreport</groupId>
-		<version>0.9.7-SNAPSHOT</version>
+		<version>0.9.8-SNAPSHOT</version>
 	</parent>
 	<artifactId>org.apache.poi.xwpf.converter</artifactId>
 	<dependencies>
 		<dependency>
 			<groupId>org.apache.poi</groupId>
 			<artifactId>poi-ooxml</artifactId>
-			<version>3.7</version>
+			<version>3.8</version>
 			<exclusions>
 				<!-- surprisingly this artifect contains a subset of org.apache.poi:ooxml-schemas:1.1 -->
 				<exclusion>
@@ -27,7 +27,7 @@
 		<dependency>
 			<groupId>fr.opensagres.xdocreport</groupId>
 			<artifactId>fr.opensagres.xdocreport.itext.extension</artifactId>
-			<version>0.9.7-SNAPSHOT</version>
+			<version>0.9.8-SNAPSHOT</version>
 		</dependency>
 	</dependencies>
 </project>

@@ -28,6 +28,7 @@ import java.io.IOException;
 import java.util.List;
 
 import fr.opensagres.xdocreport.core.XDocReportException;
+import fr.opensagres.xdocreport.template.IContext;
 
 /**
  * Image registry used to store the {@link IImageProvider} used in the "context", copy the binary data of the images in
@@ -35,6 +36,12 @@ import fr.opensagres.xdocreport.core.XDocReportException;
  */
 public interface IImageRegistry
 {
+
+    public static final String IMAGE_INFO = "___imageInfo";
+    public static final String REGISTER_IMAGE_METHOD = "registerImage";
+    public static final String GET_WIDTH_METHOD = "getWidth";
+    public static final String GET_HEIGHT_METHOD = "getHeight";
+    public static final String GET_PATH_METHOD = "getPath";
 
     /**
      * Register the instance of imageProvider in the registry. This done when context model is tracked while processing
@@ -44,8 +51,8 @@ public interface IImageRegistry
      * @return
      * @throws XDocReportException
      */
-    String registerImage( IImageProvider imageProvider )
-        throws XDocReportException;
+    ImageProviderInfo registerImage( Object imageProvider, String fieldName, IContext context )
+        throws XDocReportException, IOException;
 
     /**
      * Called before processing of the template engine.
@@ -79,7 +86,7 @@ public interface IImageRegistry
      * @return
      * @throws IOException
      */
-    String getWidth( IImageProvider imageProvider, String defaultWidth )
+    String getWidth( ImageProviderInfo info, String defaultWidth )
         throws IOException;
 
     /**
@@ -90,6 +97,6 @@ public interface IImageRegistry
      * @return
      * @throws IOException
      */
-    String getHeight( IImageProvider imageProvider, String defaultHeight )
+    String getHeight( ImageProviderInfo info, String defaultHeight )
         throws IOException;
 }

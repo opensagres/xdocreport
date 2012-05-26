@@ -30,7 +30,7 @@ import java.util.HashMap;
 
 import junit.framework.TestCase;
 import fr.opensagres.xdocreport.core.io.IOUtils;
-import fr.opensagres.xdocreport.document.docx.preprocessor.DocxPreprocessor;
+import fr.opensagres.xdocreport.document.docx.preprocessor.sax.DocxPreprocessor;
 
 /**
  * {@link DocxPreprocessor} JUNit tests.

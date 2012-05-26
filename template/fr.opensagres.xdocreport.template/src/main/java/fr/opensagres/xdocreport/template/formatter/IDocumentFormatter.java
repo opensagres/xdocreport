@@ -45,15 +45,13 @@ public interface IDocumentFormatter
 
     String getStartIfDirective( String fieldName );
 
+    String getStartIfDirective( String fieldName, boolean exists );
+    
     String getEndIfDirective( String fieldName );
 
+    String formatAsSimpleField( boolean noescape, boolean encloseInDirective, String... fields );
+    
     String formatAsSimpleField( boolean encloseInDirective, String... fields );
-
-    String getImageDirective( String fieldName );
-
-    String getImageWidthDirective( String fieldName, String defaultWidth );
-
-    String getImageHeightDirective( String fieldName, String defaultHeight );
 
     boolean containsInterpolation( String content );
 
@@ -64,6 +62,8 @@ public interface IDocumentFormatter
     String extractModelTokenPrefix( String newContent );
 
     int getIndexOfScript( String fieldName );
+
+    String getFunctionDirective( boolean encloseInDirective, String key, String methodName, String... parameters );
 
     String getFunctionDirective( String key, String methodName, String... parameters );
 
@@ -76,9 +76,13 @@ public interface IDocumentFormatter
 
     String getElseDirective();
 
+    String getSetDirective( String name, String value, boolean valueIsField );
+    
     String getSetDirective( String name, String value );
-    
+
     String getStartNoParse();
-    
+
     String getEndNoParse();
+
+    String getDefineDirective( String name, String value );
 }

@@ -3,8 +3,9 @@ package fr.opensagres.xdocreport.document.docx.template;
 import java.util.Map;
 
 import fr.opensagres.xdocreport.document.docx.preprocessor.DefaultStyle;
-import fr.opensagres.xdocreport.document.docx.preprocessor.HyperlinkRegistry;
-import fr.opensagres.xdocreport.document.docx.preprocessor.HyperlinkUtils;
+import fr.opensagres.xdocreport.document.docx.preprocessor.sax.hyperlinks.HyperlinkRegistry;
+import fr.opensagres.xdocreport.document.docx.preprocessor.sax.hyperlinks.HyperlinkUtils;
+import fr.opensagres.xdocreport.document.docx.preprocessor.sax.notes.NoteRegistry;
 import fr.opensagres.xdocreport.document.docx.preprocessor.sax.numbering.NumberingRegistry;
 import fr.opensagres.xdocreport.document.docx.textstyling.DocxDefaultStylesGenerator;
 import fr.opensagres.xdocreport.document.docx.textstyling.IDocxStylesGenerator;
@@ -17,7 +18,11 @@ public class DocxContextHelper
     public static final String STYLES_GENERATOR_KEY = "___NoEscapeStylesGenerator";
 
     public static final String NUMBERING_REGISTRY_KEY = "___NumberingRegistry";
+    
+    public static final String FOOTNOTE_REGISTRY_KEY = "___FootnoteRegistry";
 
+    public static final String ENDNOTE_REGISTRY_KEY = "___EndnoteRegistry";
+    
     public static void putHyperlinkRegistry( IContext context, String entryName, HyperlinkRegistry registry )
     {
         String key = HyperlinkUtils.getHyperlinkRegistryKey( entryName );
@@ -77,4 +82,15 @@ public class DocxContextHelper
         return (NumberingRegistry) context.get( NUMBERING_REGISTRY_KEY );
     }
 
+    public static void putFootnoteRegistry( IContext context, NoteRegistry registry )
+    {
+        context.put( FOOTNOTE_REGISTRY_KEY, registry );
+
+    }
+
+    public static void putEndnoteRegistry( IContext context, NoteRegistry registry )
+    {
+        context.put( ENDNOTE_REGISTRY_KEY, registry );
+
+    }
 }

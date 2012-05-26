@@ -31,6 +31,10 @@ import java.util.Map;
 
 import junit.framework.TestCase;
 import fr.opensagres.xdocreport.core.io.IOUtils;
+import fr.opensagres.xdocreport.document.docx.preprocessor.sax.DocxPreprocessor;
+import fr.opensagres.xdocreport.document.docx.preprocessor.sax.hyperlinks.HyperlinkInfo;
+import fr.opensagres.xdocreport.document.docx.preprocessor.sax.hyperlinks.HyperlinkUtils;
+import fr.opensagres.xdocreport.document.docx.preprocessor.sax.hyperlinks.InitialHyperlinkMap;
 import fr.opensagres.xdocreport.template.formatter.FieldsMetadata;
 import fr.opensagres.xdocreport.template.formatter.IDocumentFormatter;
 import fr.opensagres.xdocreport.template.velocity.VelocityDocumentFormatter;
@@ -212,7 +216,7 @@ public class DocxPreprocessorHyperlinkWithVelocityTestCase
                           + "</w:r>" + "<w:proofErr w:type=\"spellEnd\"/>" + "</w:hyperlink>" + "</w:p>" + "</w:tc>"
                           + "</w:tr>"
 
-                          + "#end"
+                          + "#{end}"
 
                           + "</w:tbl>" + "</w:document>", writer.toString() );
     }

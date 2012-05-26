@@ -27,21 +27,68 @@ package fr.opensagres.xdocreport.template.freemarker;
 import java.io.Reader;
 import java.io.StringReader;
 
-import junit.framework.TestCase;
+import org.junit.Assert;
+import org.junit.Ignore;
+import org.junit.Test;
+
 import fr.opensagres.xdocreport.template.FieldExtractor;
 import fr.opensagres.xdocreport.template.FieldsExtractor;
 
 public class FreemarkerTemplateEngineExtractVariablesTestCase
-    extends TestCase
+
 {
 
+    @Test
     public void testExtractVariables()
         throws Exception
     {
         Reader reader = new StringReader( "Hello ${name}!" );
         FieldsExtractor<FieldExtractor> extractor = FieldsExtractor.create();
         new FreemarkerTemplateEngine().extractFields( reader, "hello", extractor );
-        assertEquals( 1, extractor.getFields().size() );
-        assertEquals( "name", extractor.getFields().get( 0 ).getName() );
+        Assert.assertEquals( 1, extractor.getFields().size() );
+        Assert.assertEquals( "name", extractor.getFields().get( 0 ).getName() );
+    }
+
+    @Ignore( "How to do that with Freemarker?" )
+    @Test
+    public void testExtractVariableInList()
+        throws Exception
+    {
+        Reader reader = new StringReader( "[#list developers as d] ${d} [/#list]" );
+        FieldsExtractor<FieldExtractor> extractor = FieldsExtractor.create();
+        new FreemarkerTemplateEngine().extractFields( reader, "hello", extractor );
+        Assert.assertEquals( 1, extractor.getFields().size() );
+        Assert.assertEquals( "developers", extractor.getFields().get( 0 ).getName() );
+    }
+
+    @Ignore( "How to do that with Freemarker?" )
+    @Test
+    public void testExtractVariableInListWithFieldName()
+        throws Exception
+    {
+        Reader reader = new StringReader( "[#list developers as d] ${d.name} ${d.lastName} [/#list]" );
+        FieldsExtractor<FieldExtractor> extractor = FieldsExtractor.create();
+        new FreemarkerTemplateEngine().extractFields( reader, "hello", extractor );
+        Assert.assertEquals( 2, extractor.getFields().size() );
+        Assert.assertEquals( "developers.name", extractor.getFields().get( 0 ).getName() );
+        Assert.assertTrue( extractor.getFields().get( 0 ).isList() );
+        Assert.assertEquals( "developers.lastName", extractor.getFields().get( 1 ).getName() );
+        Assert.assertTrue( extractor.getFields().get( 1 ).isList() );
+    }
+
+    @Ignore( "How to do that with Freemarker?" )
+    @Test
+    public void testExtractVariableInListWithFieldNameAndSimpleField()
+        throws Exception
+    {
+        Reader reader = new StringReader( "[#list developers as d] ${d.name} ${d.lastName} ${user} [/#list]" );
+        FieldsExtractor<FieldExtractor> extractor = FieldsExtractor.create();
+        new FreemarkerTemplateEngine().extractFields( reader, "hello", extractor );
+        Assert.assertEquals( 3, extractor.getFields().size() );
+        Assert.assertEquals( "developers.name", extractor.getFields().get( 0 ).getName() );
+        Assert.assertTrue( extractor.getFields().get( 0 ).isList() );
+        Assert.assertEquals( "developers.lastName", extractor.getFields().get( 1 ).getName() );
+        Assert.assertEquals( "user", extractor.getFields().get( 2 ).getName() );
+        Assert.assertFalse( extractor.getFields().get( 2 ).isList() );
     }
 }

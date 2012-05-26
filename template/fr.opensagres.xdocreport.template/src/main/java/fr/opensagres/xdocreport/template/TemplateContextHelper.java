@@ -38,7 +38,7 @@ public class TemplateContextHelper
     
     public static final String TRANSFORM_METHOD = "transform";
     
-    public static final String IMAGE_REGISTRY_KEY = "imageRegistry";
+    public static final String IMAGE_REGISTRY_KEY = "___ImageRegistry";
 
     /**
      * Register the given context in the given context. With that it's possible to retrieves the context in template

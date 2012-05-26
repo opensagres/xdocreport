@@ -30,13 +30,17 @@ import java.util.List;
 import java.util.Map;
 
 import org.odftoolkit.odfdom.converter.internal.AbstractStyleEngine;
+import org.odftoolkit.odfdom.converter.internal.itext.stylable.StylableImage;
 import org.odftoolkit.odfdom.converter.internal.itext.styles.Style;
 import org.odftoolkit.odfdom.converter.internal.itext.styles.StyleBorder;
+import org.odftoolkit.odfdom.converter.internal.itext.styles.StyleBreak;
 import org.odftoolkit.odfdom.converter.internal.itext.styles.StyleColumnProperties;
 import org.odftoolkit.odfdom.converter.internal.itext.styles.StyleColumnsProperties;
+import org.odftoolkit.odfdom.converter.internal.itext.styles.StyleGraphicProperties;
 import org.odftoolkit.odfdom.converter.internal.itext.styles.StyleHeaderFooterProperties;
-import org.odftoolkit.odfdom.converter.internal.itext.styles.StyleMargin;
-import org.odftoolkit.odfdom.converter.internal.itext.styles.StylePadding;
+import org.odftoolkit.odfdom.converter.internal.itext.styles.StyleLineHeight;
+import org.odftoolkit.odfdom.converter.internal.itext.styles.StyleListProperties;
+import org.odftoolkit.odfdom.converter.internal.itext.styles.StyleNumFormat;
 import org.odftoolkit.odfdom.converter.internal.itext.styles.StylePageLayoutProperties;
 import org.odftoolkit.odfdom.converter.internal.itext.styles.StyleParagraphProperties;
 import org.odftoolkit.odfdom.converter.internal.itext.styles.StyleSectionProperties;
@@ -51,8 +55,10 @@ import org.odftoolkit.odfdom.dom.attribute.fo.FoBreakBeforeAttribute;
 import org.odftoolkit.odfdom.dom.attribute.fo.FoFontStyleAttribute;
 import org.odftoolkit.odfdom.dom.attribute.fo.FoFontWeightAttribute;
 import org.odftoolkit.odfdom.dom.attribute.fo.FoKeepTogetherAttribute;
+import org.odftoolkit.odfdom.dom.attribute.style.StyleNumFormatAttribute;
 import org.odftoolkit.odfdom.dom.attribute.style.StyleTextLineThroughStyleAttribute;
 import org.odftoolkit.odfdom.dom.attribute.style.StyleTextUnderlineStyleAttribute;
+import org.odftoolkit.odfdom.dom.attribute.style.StyleWrapAttribute;
 import org.odftoolkit.odfdom.dom.element.OdfStyleBase;
 import org.odftoolkit.odfdom.dom.element.office.OfficeAutomaticStylesElement;
 import org.odftoolkit.odfdom.dom.element.office.OfficeMasterStylesElement;
@@ -61,7 +67,10 @@ import org.odftoolkit.odfdom.dom.element.style.StyleColumnElement;
 import org.odftoolkit.odfdom.dom.element.style.StyleColumnsElement;
 import org.odftoolkit.odfdom.dom.element.style.StyleDefaultStyleElement;
 import org.odftoolkit.odfdom.dom.element.style.StyleFooterStyleElement;
+import org.odftoolkit.odfdom.dom.element.style.StyleGraphicPropertiesElement;
 import org.odftoolkit.odfdom.dom.element.style.StyleHeaderFooterPropertiesElement;
+import org.odftoolkit.odfdom.dom.element.style.StyleListLevelLabelAlignmentElement;
+import org.odftoolkit.odfdom.dom.element.style.StyleListLevelPropertiesElement;
 import org.odftoolkit.odfdom.dom.element.style.StylePageLayoutElement;
 import org.odftoolkit.odfdom.dom.element.style.StylePageLayoutPropertiesElement;
 import org.odftoolkit.odfdom.dom.element.style.StyleParagraphPropertiesElement;
@@ -71,10 +80,15 @@ import org.odftoolkit.odfdom.dom.element.style.StyleTableCellPropertiesElement;
 import org.odftoolkit.odfdom.dom.element.style.StyleTablePropertiesElement;
 import org.odftoolkit.odfdom.dom.element.style.StyleTableRowPropertiesElement;
 import org.odftoolkit.odfdom.dom.element.style.StyleTextPropertiesElement;
+import org.odftoolkit.odfdom.dom.element.text.TextListLevelStyleBulletElement;
+import org.odftoolkit.odfdom.dom.element.text.TextListLevelStyleImageElement;
+import org.odftoolkit.odfdom.dom.element.text.TextListLevelStyleNumberElement;
 import org.odftoolkit.odfdom.dom.element.text.TextListStyleElement;
 import org.w3c.dom.Node;
 
 import com.lowagie.text.Element;
+import com.lowagie.text.Font;
+import com.lowagie.text.Image;
 
 import fr.opensagres.xdocreport.itext.extension.PageOrientation;
 import fr.opensagres.xdocreport.utils.BorderType;
@@ -101,7 +115,8 @@ public class StyleEngineForIText
 
     private Style currentStyle = null;
 
-    // private StyleForItext currentStyle;
+    private Integer currentTextLevel;
+
     private final PDFViaITextOptions options;
 
     private final Map<String, Style> stylesMap = new HashMap<String, Style>();
@@ -164,6 +179,10 @@ public class StyleEngineForIText
             {
                 styleName = ( (StylePageLayoutElement) styleBase ).getStyleNameAttribute();
             }
+            else if ( styleBase instanceof TextListStyleElement )
+            {
+                styleName = ( (TextListStyleElement) styleBase ).getStyleNameAttribute();
+            }
         }
 
         String styleId = getStyleId( familyName, styleName );
@@ -223,6 +242,227 @@ public class StyleEngineForIText
         return style;
     }
 
+    public void visit( StylePageLayoutPropertiesElement ele )
+    {
+        StylePageLayoutProperties pageLayoutProperties = currentStyle.getPageLayoutProperties();
+        if ( pageLayoutProperties == null )
+        {
+            pageLayoutProperties = new StylePageLayoutProperties();
+            currentStyle.setPageLayoutProperties( pageLayoutProperties );
+        }
+
+        // background-color
+        String backgroundColor = ele.getFoBackgroundColorAttribute();
+        if ( StringUtils.isNotEmpty( backgroundColor ) )
+        {
+            // cssStyleSheet.setCSSProperty("background-color",
+            // backgroundColor);
+        }
+
+        // border
+        String border = ele.getFoBorderAttribute();
+        if ( StringUtils.isNotEmpty( border ) )
+        {
+            // cssStyleSheet.setCSSProperty("border", border);
+        }
+
+        // border-bottom
+        String borderBottom = ele.getFoBorderBottomAttribute();
+        if ( StringUtils.isNotEmpty( borderBottom ) )
+        {
+            // cssStyleSheet.setCSSProperty("border-bottom", borderBottom);
+        }
+
+        // border-left
+        String borderLeft = ele.getFoBorderLeftAttribute();
+        if ( StringUtils.isNotEmpty( borderLeft ) )
+        {
+            // cssStyleSheet.setCSSProperty("border-left", borderLeft);
+        }
+
+        // border-bottom
+        String borderRight = ele.getFoBorderRightAttribute();
+        if ( StringUtils.isNotEmpty( borderRight ) )
+        {
+            // cssStyleSheet.setCSSProperty("border-right", borderRight);
+        }
+
+        // border-top
+        String borderTop = ele.getFoBorderTopAttribute();
+        if ( StringUtils.isNotEmpty( borderTop ) )
+        {
+            // cssStyleSheet.setCSSProperty("border-top", borderTop);
+        }
+
+        // margin
+        String margin = ele.getFoMarginAttribute();
+        if ( StringUtils.isNotEmpty( margin ) )
+        {
+            pageLayoutProperties.setMargin( ODFUtils.getDimensionAsPoint( margin ) );
+        }
+
+        // margin-bottom
+        String marginBottom = ele.getFoMarginBottomAttribute();
+        if ( StringUtils.isNotEmpty( marginBottom ) )
+        {
+            pageLayoutProperties.setMarginBottom( ODFUtils.getDimensionAsPoint( marginBottom ) );
+        }
+
+        // margin-left
+        String marginLeft = ele.getFoMarginLeftAttribute();
+        if ( StringUtils.isNotEmpty( marginLeft ) )
+        {
+            pageLayoutProperties.setMarginLeft( ODFUtils.getDimensionAsPoint( marginLeft ) );
+        }
+
+        // margin-right
+        String marginRight = ele.getFoMarginRightAttribute();
+        if ( StringUtils.isNotEmpty( marginRight ) )
+        {
+            pageLayoutProperties.setMarginRight( ODFUtils.getDimensionAsPoint( marginRight ) );
+        }
+
+        // margin-top
+        String marginTop = ele.getFoMarginTopAttribute();
+        if ( StringUtils.isNotEmpty( marginTop ) )
+        {
+            pageLayoutProperties.setMarginTop( ODFUtils.getDimensionAsPoint( marginTop ) );
+        }
+
+        // padding
+        String padding = ele.getFoPaddingAttribute();
+        if ( StringUtils.isNotEmpty( padding ) )
+        {
+            // cssStyleSheet.setCSSProperty("padding", padding);
+        }
+
+        // padding-bottom
+        String paddingBottom = ele.getFoPaddingBottomAttribute();
+        if ( StringUtils.isNotEmpty( paddingBottom ) )
+        {
+            // cssStyleSheet.setCSSProperty("padding-bottom", paddingBottom);
+        }
+
+        // padding-left
+        String paddingLeft = ele.getFoPaddingLeftAttribute();
+        if ( StringUtils.isNotEmpty( paddingLeft ) )
+        {
+            // cssStyleSheet.setCSSProperty("padding-left", paddingLeft);
+        }
+
+        // padding-bottom
+        String paddingRight = ele.getFoPaddingRightAttribute();
+        if ( StringUtils.isNotEmpty( paddingRight ) )
+        {
+            // cssStyleSheet.setCSSProperty("padding-right", paddingRight);
+        }
+
+        // padding-top
+        String paddingTop = ele.getFoPaddingTopAttribute();
+        if ( StringUtils.isNotEmpty( paddingTop ) )
+        {
+            // cssStyleSheet.setCSSProperty("padding-top", paddingTop);
+        }
+
+        // height
+        String height = ele.getFoPageHeightAttribute();
+        if ( StringUtils.isNotEmpty( height ) )
+        {
+            pageLayoutProperties.setHeight( ODFUtils.getDimensionAsPoint( height ) );
+        }
+
+        // width
+        String width = ele.getFoPageWidthAttribute();
+        if ( StringUtils.isNotEmpty( width ) )
+        {
+            pageLayoutProperties.setWidth( ODFUtils.getDimensionAsPoint( width ) );
+        }
+
+        // orientation
+        String orientation = ele.getStylePrintOrientationAttribute();
+        if ( StringUtils.isNotEmpty( orientation ) )
+        {
+            if ( LANDSCAPE.equals( orientation ) )
+            {
+                pageLayoutProperties.setOrientation( PageOrientation.Landscape );
+            }
+            else if ( PORTRAIT.equals( orientation ) )
+            {
+                pageLayoutProperties.setOrientation( PageOrientation.Portrait );
+            }
+
+        }
+        super.visit( ele );
+
+    }
+
+    public void visit( StyleHeaderFooterPropertiesElement ele )
+    {
+        Node parentNode = ele.getParentNode();
+        boolean footer = StyleFooterStyleElement.ELEMENT_NAME.getLocalName().equals( parentNode.getLocalName() );
+
+        StyleHeaderFooterProperties headerFooterProperties = null;
+        if ( !footer )
+        {
+            headerFooterProperties = currentStyle.getHeaderProperties();
+            if ( headerFooterProperties == null )
+            {
+                headerFooterProperties = new StyleHeaderFooterProperties();
+                currentStyle.setHeaderProperties( headerFooterProperties );
+            }
+        }
+        else
+        {
+            headerFooterProperties = currentStyle.getFooterProperties();
+            if ( headerFooterProperties == null )
+            {
+                headerFooterProperties = new StyleHeaderFooterProperties();
+                currentStyle.setFooterProperties( headerFooterProperties );
+            }
+        }
+
+        // min-height
+        String minHeight = ele.getFoMinHeightAttribute();
+        if ( StringUtils.isNotEmpty( minHeight ) )
+        {
+            headerFooterProperties.setMinHeight( ODFUtils.getDimensionAsPoint( minHeight ) );
+        }
+
+        // margin
+        String margin = ele.getFoMarginAttribute();
+        if ( StringUtils.isNotEmpty( margin ) )
+        {
+            headerFooterProperties.setMargin( ODFUtils.getDimensionAsPoint( margin ) );
+        }
+
+        // margin-bottom
+        String marginBottom = ele.getFoMarginBottomAttribute();
+        if ( StringUtils.isNotEmpty( marginBottom ) )
+        {
+            headerFooterProperties.setMarginBottom( ODFUtils.getDimensionAsPoint( marginBottom ) );
+        }
+
+        // margin-left
+        String marginLeft = ele.getFoMarginLeftAttribute();
+        if ( StringUtils.isNotEmpty( marginLeft ) )
+        {
+            headerFooterProperties.setMarginLeft( ODFUtils.getDimensionAsPoint( marginLeft ) );
+        }
+
+        // margin-right
+        String marginRight = ele.getFoMarginRightAttribute();
+        if ( StringUtils.isNotEmpty( marginRight ) )
+        {
+            headerFooterProperties.setMarginRight( ODFUtils.getDimensionAsPoint( marginRight ) );
+        }
+        // margin-top
+        String marginTop = ele.getFoMarginTopAttribute();
+        if ( StringUtils.isNotEmpty( marginTop ) )
+        {
+            headerFooterProperties.setMarginTop( ODFUtils.getDimensionAsPoint( marginTop ) );
+        }
+    }
+
     // visit //style:paragraph-properties
     @Override
     public void visit( StyleParagraphPropertiesElement ele )
@@ -280,8 +520,8 @@ public class StyleEngineForIText
         String lineHeight = ele.getFoLineHeightAttribute();
         if ( StringUtils.isNotEmpty( lineHeight ) )
         {
-            paragraphProperties.setLineHeight( ODFUtils.getDimensionAsPoint( lineHeight ) );
-            paragraphProperties.setLineHeightProportional( ODFUtils.hasPercentUnit( lineHeight ) );
+            paragraphProperties.setLineHeight( new StyleLineHeight( ODFUtils.getDimensionAsPoint( lineHeight ),
+                                                                    ODFUtils.hasPercentUnit( lineHeight ) ) );
         }
 
         // margin
@@ -402,22 +642,34 @@ public class StyleEngineForIText
 
         // keep-together
         String keepTogether = ele.getFoKeepTogetherAttribute();
-        if ( FoKeepTogetherAttribute.Value.ALWAYS.toString().equals( keepTogether ) )
+        if ( StringUtils.isNotEmpty( keepTogether ) )
         {
-            paragraphProperties.setKeepTogether( true );
+            if ( FoKeepTogetherAttribute.Value.ALWAYS.toString().equals( keepTogether ) )
+            {
+                paragraphProperties.setKeepTogether( Boolean.TRUE );
+            }
+            else
+            {
+                paragraphProperties.setKeepTogether( Boolean.FALSE );
+            }
         }
 
         // fo:break-before
         String breakBefore = ele.getFoBreakBeforeAttribute();
-        if ( FoBreakBeforeAttribute.Value.PAGE.toString().equals( breakBefore ) )
+        if ( StringUtils.isNotEmpty( breakBefore ) )
         {
-            paragraphProperties.setBreakBeforeColumn( false );
-            paragraphProperties.setBreakBeforePage( true );
-        }
-        else if ( FoBreakBeforeAttribute.Value.COLUMN.toString().equals( breakBefore ) )
-        {
-            paragraphProperties.setBreakBeforeColumn( true );
-            paragraphProperties.setBreakBeforePage( false );
+            if ( FoBreakBeforeAttribute.Value.PAGE.toString().equals( breakBefore ) )
+            {
+                paragraphProperties.setBreakBefore( StyleBreak.createWithPageBreak() );
+            }
+            else if ( FoBreakBeforeAttribute.Value.COLUMN.toString().equals( breakBefore ) )
+            {
+                paragraphProperties.setBreakBefore( StyleBreak.createWithColumnBreak() );
+            }
+            else
+            {
+                paragraphProperties.setBreakBefore( StyleBreak.createWithNoBreak() );
+            }
         }
 
         super.visit( ele );
@@ -467,7 +719,19 @@ public class StyleEngineForIText
         String fontSize = ele.getFoFontSizeAttribute();
         if ( StringUtils.isNotEmpty( fontSize ) )
         {
-            textProperties.setFontSize( ODFUtils.getDimensionAsPoint( fontSize ) );
+            if ( ODFUtils.hasPercentUnit( fontSize ) )
+            {
+                // relative
+                if ( textProperties.getFontSize() != Font.UNDEFINED )
+                {
+                    textProperties.setFontSize( textProperties.getFontSize() * ODFUtils.getDimensionAsPoint( fontSize ) );
+                }
+            }
+            else
+            {
+                // absolute
+                textProperties.setFontSize( ODFUtils.getDimensionAsPoint( fontSize ) );
+            }
         }
 
         // font-style
@@ -613,6 +877,13 @@ public class StyleEngineForIText
             currentStyle.setTableRowProperties( tableRowProperties );
         }
 
+        // min-height
+        String minHeight = ele.getStyleMinRowHeightAttribute();
+        if ( StringUtils.isNotEmpty( minHeight ) )
+        {
+            tableRowProperties.setMinRowHeight( ODFUtils.getDimensionAsPoint( minHeight ) );
+        }
+
         // height
         String height = ele.getStyleRowHeightAttribute();
         if ( StringUtils.isNotEmpty( height ) )
@@ -628,7 +899,6 @@ public class StyleEngineForIText
     @Override
     public void visit( StyleTableCellPropertiesElement ele )
     {
-
         StyleTableCellProperties tableCellProperties = currentStyle.getTableCellProperties();
         if ( tableCellProperties == null )
         {
@@ -649,6 +919,7 @@ public class StyleEngineForIText
         {
             tableCellProperties.setBorder( new StyleBorder( border, BorderType.ALL ) );
         }
+
         // border-bottom
         String borderBottom = ele.getFoBorderBottomAttribute();
         if ( StringUtils.isNotEmpty( borderBottom ) )
@@ -677,65 +948,39 @@ public class StyleEngineForIText
             tableCellProperties.setBorderTop( new StyleBorder( borderTop, BorderType.TOP ) );
         }
 
-        StylePadding stylePadding = null;
         // padding
         String padding = ele.getFoPaddingAttribute();
         if ( StringUtils.isNotEmpty( padding ) )
         {
-            if ( stylePadding == null )
-            {
-                stylePadding = new StylePadding();
-            }
-            stylePadding.setPadding( ODFUtils.getDimensionAsPoint( padding ) );
+            tableCellProperties.setPadding( ODFUtils.getDimensionAsPoint( padding ) );
         }
 
         // padding-bottom
         String paddingBottom = ele.getFoPaddingBottomAttribute();
         if ( StringUtils.isNotEmpty( paddingBottom ) )
         {
-            if ( stylePadding == null )
-            {
-                stylePadding = new StylePadding();
-            }
-            stylePadding.setPaddingBottom( ODFUtils.getDimensionAsPoint( paddingBottom ) );
+            tableCellProperties.setPaddingBottom( ODFUtils.getDimensionAsPoint( paddingBottom ) );
         }
 
         // padding-left
         String paddingLeft = ele.getFoPaddingLeftAttribute();
         if ( StringUtils.isNotEmpty( paddingLeft ) )
         {
-            if ( stylePadding == null )
-            {
-                stylePadding = new StylePadding();
-            }
-            stylePadding.setPaddingLeft( ODFUtils.getDimensionAsPoint( paddingLeft ) );
+            tableCellProperties.setPaddingLeft( ODFUtils.getDimensionAsPoint( paddingLeft ) );
         }
 
-        // padding-bottom
+        // padding-right
         String paddingRight = ele.getFoPaddingRightAttribute();
         if ( StringUtils.isNotEmpty( paddingRight ) )
         {
-            if ( stylePadding == null )
-            {
-                stylePadding = new StylePadding();
-            }
-            stylePadding.setPaddingRight( ODFUtils.getDimensionAsPoint( paddingRight ) );
+            tableCellProperties.setPaddingRight( ODFUtils.getDimensionAsPoint( paddingRight ) );
         }
 
         // padding-top
         String paddingTop = ele.getFoPaddingTopAttribute();
         if ( StringUtils.isNotEmpty( paddingTop ) )
         {
-            if ( stylePadding == null )
-            {
-                stylePadding = new StylePadding();
-            }
-            stylePadding.setPaddingTop( ODFUtils.getDimensionAsPoint( paddingTop ) );
-        }
-
-        if ( stylePadding != null )
-        {
-            tableCellProperties.setPadding( stylePadding );
+            tableCellProperties.setPaddingTop( ODFUtils.getDimensionAsPoint( paddingTop ) );
         }
 
         // vertical-align
@@ -763,199 +1008,263 @@ public class StyleEngineForIText
         super.visit( ele );
     }
 
-    public void visit( StylePageLayoutPropertiesElement ele )
+    // visit //style:graphic-properties
+    @Override
+    public void visit( StyleGraphicPropertiesElement ele )
     {
-        StylePageLayoutProperties pageLayoutProperties = currentStyle.getPageLayoutProperties();
-        if ( pageLayoutProperties == null )
+        StyleGraphicProperties graphicProperties = currentStyle.getGraphicProperties();
+        if ( graphicProperties == null )
         {
-            pageLayoutProperties = new StylePageLayoutProperties();
-            currentStyle.setPageLayoutProperties( pageLayoutProperties );
+            graphicProperties = new StyleGraphicProperties();
+            currentStyle.setGraphicProperties( graphicProperties );
         }
 
-        // background-color
-        String backgroundColor = ele.getFoBackgroundColorAttribute();
-        if ( StringUtils.isNotEmpty( backgroundColor ) )
+        // wrap
+        String wrap = ele.getStyleWrapAttribute();
+        if ( StringUtils.isNotEmpty( wrap ) )
         {
-            // cssStyleSheet.setCSSProperty("background-color",
-            // backgroundColor);
+            if ( StyleWrapAttribute.Value.RUN_THROUGH.toString().equals( wrap ) )
+            {
+                graphicProperties.setRunThrough( Boolean.TRUE );
+            }
+            else
+            {
+                // other values are not supported
+                graphicProperties.setRunThrough( Boolean.FALSE );
+            }
         }
 
-        // border
-        String border = ele.getFoBorderAttribute();
-        if ( StringUtils.isNotEmpty( border ) )
+        super.visit( ele );
+    }
+
+    // list styling is a bit complicated because of nesting
+    // we flatten the structure into a map of {list-level->StyleListProperties}
+    //
+    // 1st level - text:list-style --- enclosing style
+    // 2nd level --- text:list-level-style-bullet --- if list item label is a char
+    // 2nd level --- text:list-level-style-image --- if list item label is an image
+    // 2nd level --- text:list-level-style-number --- if list item label is a number
+    // 3rd level ----- style:list-level-properties --- optional image dimensions
+    // 4th level ------- style:list-level-label-alignment --- indentation info
+    @Override
+    public void visit( TextListStyleElement ele )
+    {
+        computeStyle( ele, false );
+    }
+
+    @Override
+    public void visit( TextListLevelStyleBulletElement ele )
+    {
+        Integer textLevel = ele.getTextLevelAttribute();
+        if ( textLevel == null )
         {
-            // cssStyleSheet.setCSSProperty("border", border);
+            return;
+        }
+        currentTextLevel = textLevel;
+        StyleListProperties listProperties = getStyleListProperties();
+
+        // text style to apply to list item label
+        String styleName = ele.getTextStyleNameAttribute();
+        if ( StringUtils.isNotEmpty( styleName ) )
+        {
+            // TODO what if this style is not computed yet?
+            Style style = getStyle( "text", styleName, null );
+            currentStyle.merge( style );
         }
 
-        // border-bottom
-        String borderBottom = ele.getFoBorderBottomAttribute();
-        if ( StringUtils.isNotEmpty( borderBottom ) )
+        // bullet-char
+        String bulletChar = ele.getTextBulletCharAttribute();
+        if ( StringUtils.isNotEmpty( bulletChar ) )
         {
-            // cssStyleSheet.setCSSProperty("border-bottom", borderBottom);
+            listProperties.setBulletChar( bulletChar );
         }
 
-        // border-left
-        String borderLeft = ele.getFoBorderLeftAttribute();
-        if ( StringUtils.isNotEmpty( borderLeft ) )
+        // num-prefix
+        String numPrefix = ele.getStyleNumPrefixAttribute();
+        if ( StringUtils.isNotEmpty( numPrefix ) )
         {
-            // cssStyleSheet.setCSSProperty("border-left", borderLeft);
+            listProperties.setNumPrefix( numPrefix );
         }
 
-        // border-bottom
-        String borderRight = ele.getFoBorderRightAttribute();
-        if ( StringUtils.isNotEmpty( borderRight ) )
+        // num-suffix
+        String numSuffix = ele.getStyleNumSuffixAttribute();
+        if ( StringUtils.isNotEmpty( numSuffix ) )
         {
-            // cssStyleSheet.setCSSProperty("border-right", borderRight);
+            listProperties.setNumSuffix( numSuffix );
         }
 
-        // border-top
-        String borderTop = ele.getFoBorderTopAttribute();
-        if ( StringUtils.isNotEmpty( borderTop ) )
+        super.visit( ele );
+        currentTextLevel = 0;
+    }
+
+    @Override
+    public void visit( TextListLevelStyleImageElement ele )
+    {
+        Integer textLevel = ele.getTextLevelAttribute();
+        if ( textLevel == null )
         {
-            // cssStyleSheet.setCSSProperty("border-top", borderTop);
+            return;
+        }
+        currentTextLevel = textLevel;
+        StyleListProperties listProperties = getStyleListProperties();
+
+        // image href
+        String href = ele.getXlinkHrefAttribute();
+        if ( StringUtils.isNotEmpty( href ) )
+        {
+            byte[] imageStream = odfDocument.getPackage().getBytes( href );
+            if ( imageStream != null )
+            {
+                Image imageObj = StylableImage.getImage( imageStream );
+                if ( imageObj != null )
+                {
+                    listProperties.setImage( imageObj );
+                }
+            }
         }
 
-        StyleMargin styleMargin = pageLayoutProperties.getMargin();
-        if ( styleMargin == null )
+        super.visit( ele );
+        currentTextLevel = 0;
+    }
+
+    @Override
+    public void visit( TextListLevelStyleNumberElement ele )
+    {
+        Integer textLevel = ele.getTextLevelAttribute();
+        if ( textLevel == null )
         {
-            styleMargin = new StyleMargin();
-            pageLayoutProperties.setMargin( styleMargin );
+            return;
+        }
+        currentTextLevel = textLevel;
+        StyleListProperties listProperties = getStyleListProperties();
+
+        // text style to apply to list item label
+        String styleName = ele.getTextStyleNameAttribute();
+        if ( StringUtils.isNotEmpty( styleName ) )
+        {
+            // TODO what if this style is not computed yet?
+            Style style = getStyle( "text", styleName, null );
+            currentStyle.merge( style );
         }
 
-        // margin
-        String margin = ele.getFoMarginAttribute();
-        if ( StringUtils.isNotEmpty( margin ) )
+        // start-value
+        Integer startValue = ele.getTextStartValueAttribute();
+        if ( startValue != null )
         {
-            styleMargin.setMargin( ODFUtils.getDimensionAsPoint( margin ) );
+            listProperties.setStartValue( startValue );
         }
 
-        // margin-bottom
-        String marginBottom = ele.getFoMarginBottomAttribute();
-        if ( StringUtils.isNotEmpty( marginBottom ) )
+        // num-prefix
+        String numPrefix = ele.getStyleNumPrefixAttribute();
+        if ( StringUtils.isNotEmpty( numPrefix ) )
         {
-            styleMargin.setMarginBottom( ODFUtils.getDimensionAsPoint( marginBottom ) );
+            listProperties.setNumPrefix( numPrefix );
         }
+
+        // num-suffix
+        String numSuffix = ele.getStyleNumSuffixAttribute();
+        if ( StringUtils.isNotEmpty( numSuffix ) )
+        {
+            listProperties.setNumSuffix( numSuffix );
+        }
+
+        // num-format
+        String numFormat = ele.getStyleNumFormatAttribute();
+        if ( StringUtils.isNotEmpty( numFormat ) )
+        {
+            if ( StyleNumFormatAttribute.Value.a.toString().equals( numFormat ) )
+            {
+                listProperties.setNumFormat( StyleNumFormat.createAlphabetical( true ) );
+            }
+            else if ( StyleNumFormatAttribute.Value.A.toString().equals( numFormat ) )
+            {
+                listProperties.setNumFormat( StyleNumFormat.createAlphabetical( false ) );
+            }
+            else if ( StyleNumFormatAttribute.Value.i.toString().equals( numFormat ) )
+            {
+                listProperties.setNumFormat( StyleNumFormat.createRoman( true ) );
+            }
+            else if ( StyleNumFormatAttribute.Value.I.toString().equals( numFormat ) )
+            {
+                listProperties.setNumFormat( StyleNumFormat.createRoman( false ) );
+            }
+            else
+            {
+                listProperties.setNumFormat( StyleNumFormat.createNumerical() );
+            }
+        }
+
+        super.visit( ele );
+        currentTextLevel = 0;
+    }
+
+    @Override
+    public void visit( StyleListLevelPropertiesElement ele )
+    {
+        if ( currentTextLevel == null )
+        {
+            return;
+        }
+        StyleListProperties listProperties = getStyleListProperties();
+
+        // width
+        String width = ele.getFoWidthAttribute();
+        if ( StringUtils.isNotEmpty( width ) )
+        {
+            listProperties.setWidth( ODFUtils.getDimensionAsPoint( width ) );
+        }
+
+        // height
+        String height = ele.getFoHeightAttribute();
+        if ( StringUtils.isNotEmpty( height ) )
+        {
+            listProperties.setHeight( ODFUtils.getDimensionAsPoint( height ) );
+        }
+
+        super.visit( ele );
+    }
+
+    @Override
+    public void visit( StyleListLevelLabelAlignmentElement ele )
+    {
+        if ( currentTextLevel == null )
+        {
+            return;
+        }
+        StyleListProperties listProperties = getStyleListProperties();
 
         // margin-left
         String marginLeft = ele.getFoMarginLeftAttribute();
         if ( StringUtils.isNotEmpty( marginLeft ) )
         {
-            styleMargin.setMarginLeft( ODFUtils.getDimensionAsPoint( marginLeft ) );
+            listProperties.setMarginLeft( ODFUtils.getDimensionAsPoint( marginLeft ) );
         }
 
-        // margin-bottom
-        String marginRight = ele.getFoMarginRightAttribute();
-        if ( StringUtils.isNotEmpty( marginRight ) )
+        // text-indent
+        String textIndent = ele.getFoTextIndentAttribute();
+        if ( StringUtils.isNotEmpty( textIndent ) )
         {
-            styleMargin.setMarginRight( ODFUtils.getDimensionAsPoint( marginRight ) );
+            listProperties.setTextIndent( ODFUtils.getDimensionAsPoint( textIndent ) );
         }
 
-        // margin-top
-        String marginTop = ele.getFoMarginTopAttribute();
-        if ( StringUtils.isNotEmpty( marginTop ) )
-        {
-            styleMargin.setMarginTop( ODFUtils.getDimensionAsPoint( marginTop ) );
-        }
-
-        // padding
-        String padding = ele.getFoPaddingAttribute();
-        if ( StringUtils.isNotEmpty( padding ) )
-        {
-            // cssStyleSheet.setCSSProperty("padding", padding);
-        }
-
-        // padding-bottom
-        String paddingBottom = ele.getFoPaddingBottomAttribute();
-        if ( StringUtils.isNotEmpty( paddingBottom ) )
-        {
-            // cssStyleSheet.setCSSProperty("padding-bottom", paddingBottom);
-        }
-
-        // padding-left
-        String paddingLeft = ele.getFoPaddingLeftAttribute();
-        if ( StringUtils.isNotEmpty( paddingLeft ) )
-        {
-            // cssStyleSheet.setCSSProperty("padding-left", paddingLeft);
-        }
-
-        // padding-bottom
-        String paddingRight = ele.getFoPaddingRightAttribute();
-        if ( StringUtils.isNotEmpty( paddingRight ) )
-        {
-            // cssStyleSheet.setCSSProperty("padding-right", paddingRight);
-        }
-
-        // padding-top
-        String paddingTop = ele.getFoPaddingTopAttribute();
-        if ( StringUtils.isNotEmpty( paddingTop ) )
-        {
-            // cssStyleSheet.setCSSProperty("padding-top", paddingTop);
-        }
-
-        // height
-        String height = ele.getFoPageHeightAttribute();
-        if ( StringUtils.isNotEmpty( height ) )
-        {
-            pageLayoutProperties.setHeight( ODFUtils.getDimensionAsPoint( height ) );
-        }
-
-        // width
-        String width = ele.getFoPageWidthAttribute();
-        if ( StringUtils.isNotEmpty( width ) )
-        {
-            pageLayoutProperties.setWidth( ODFUtils.getDimensionAsPoint( width ) );
-        }
-
-        // orientation
-        String orientation = ele.getStylePrintOrientationAttribute();
-        if ( StringUtils.isNotEmpty( orientation ) )
-        {
-            if ( LANDSCAPE.equals( orientation ) )
-            {
-                pageLayoutProperties.setOrientation( PageOrientation.Landscape );
-            }
-            else if ( PORTRAIT.equals( orientation ) )
-            {
-                pageLayoutProperties.setOrientation( PageOrientation.Portrait );
-            }
-
-        }
         super.visit( ele );
-
     }
 
-    public void visit( StyleHeaderFooterPropertiesElement ele )
+    private StyleListProperties getStyleListProperties()
     {
-        Node parentNode = ele.getParentNode();
-        boolean footer = StyleFooterStyleElement.ELEMENT_NAME.getLocalName().equals( parentNode.getLocalName() );
-
-        StyleHeaderFooterProperties headerFooterProperties = null;
-        if ( !footer )
+        Map<Integer, StyleListProperties> listPropertiesMap = currentStyle.getListPropertiesMap();
+        if ( listPropertiesMap == null )
         {
-            headerFooterProperties = currentStyle.getHeaderProperties();
-            if ( headerFooterProperties == null )
-            {
-                headerFooterProperties = new StyleHeaderFooterProperties();
-                currentStyle.setHeaderProperties( headerFooterProperties );
-            }
+            listPropertiesMap = new HashMap<Integer, StyleListProperties>();
+            currentStyle.setListPropertiesMap( listPropertiesMap );
         }
-        else
+        StyleListProperties listProperties = listPropertiesMap.get( currentTextLevel );
+        if ( listProperties == null )
         {
-            headerFooterProperties = currentStyle.getFooterProperties();
-            if ( headerFooterProperties == null )
-            {
-                headerFooterProperties = new StyleHeaderFooterProperties();
-                currentStyle.setFooterProperties( headerFooterProperties );
-            }
+            listProperties = new StyleListProperties();
+            listPropertiesMap.put( currentTextLevel, listProperties );
         }
-
-        // min-height
-        String minHeight = ele.getFoMinHeightAttribute();
-        if ( StringUtils.isNotEmpty( minHeight ) )
-        {
-            headerFooterProperties.setMinHeight( ODFUtils.getDimensionAsPoint( minHeight ) );
-        }
-
+        return listProperties;
     }
 
     // visit //style:section-properties
@@ -1066,11 +1375,6 @@ public class StyleEngineForIText
         super.visit( ele );
     }
 
-    public void visit( TextListStyleElement ele )
-    {
-        // visit((OdfElement) ele);
-    }
-
     private String getStyleId( String familyName, String styleName )
     {
         StringBuilder className = new StringBuilder();
@@ -1085,9 +1389,56 @@ public class StyleEngineForIText
         return className.toString();
     }
 
-    public Style getStyle( String familyName, String styleName )
+    private Style getStyle( String familyName, String styleName )
     {
         return stylesMap.get( getStyleId( familyName, styleName ) );
     }
 
+    public Style getStyle( String familyName, String styleName, Style parentElementStyle )
+    {
+        String newStyleName = null;
+        String newFamilyName = null;
+        String newMasterPageName = null;
+        Style style = getStyle( familyName, styleName );
+        if ( style != null )
+        {
+            newStyleName = style.getStyleName();
+            newFamilyName = style.getFamilyName();
+            newMasterPageName = style.getMasterPageName();
+        }
+        else if ( parentElementStyle != null )
+        {
+            newStyleName = parentElementStyle.getStyleName();
+            newFamilyName = parentElementStyle.getFamilyName();
+            newMasterPageName = parentElementStyle.getMasterPageName();
+        }
+        // create style
+        // merge order should be:
+        // 1 default style
+        // 2 parent element style
+        // 3 current style
+        Style newStyle = new Style( newStyleName, newFamilyName, newMasterPageName );
+        if ( parentElementStyle != null )
+        {
+            // parent element style contains default style
+            newStyle.merge( parentElementStyle );
+        }
+        else
+        {
+            // merge default styles
+            for ( Style s : stylesMap.values() )
+            {
+                if ( s.getStyleName() == null )
+                {
+                    newStyle.merge( s );
+                }
+            }
+        }
+        // merge current style
+        if ( style != null )
+        {
+            newStyle.merge( style );
+        }
+        return newStyle;
+    }
 }

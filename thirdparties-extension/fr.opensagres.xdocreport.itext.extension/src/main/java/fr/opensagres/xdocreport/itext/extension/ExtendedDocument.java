@@ -38,7 +38,6 @@ public class ExtendedDocument
     extends Document
     implements IITextContainer
 {
-
     private Map<String, MasterPage> masterPagesCache = new HashMap<String, MasterPage>();
 
     private MasterPage defaultMasterPage;
@@ -61,7 +60,7 @@ public class ExtendedDocument
         throws DocumentException
     {
         super( rectangle );
-        this.writer = PdfWriter.getInstance( this, out );
+        this.writer = ExtendedPdfWriter.getInstance( this, out );
         headerFooter = new ExtendedHeaderFooter( this );
 
         writer.setPageEvent( headerFooter );
@@ -76,7 +75,7 @@ public class ExtendedDocument
         throws DocumentException
     {
         super( rectangle, marginLeft, marginRight, marginTop, marginBottom );
-        this.writer = PdfWriter.getInstance( this, out );
+        this.writer = ExtendedPdfWriter.getInstance( this, out );
         headerFooter = new ExtendedHeaderFooter( this );
         writer.setPageEvent( headerFooter );
         this.originMarginTop = marginTop;
@@ -88,7 +87,7 @@ public class ExtendedDocument
     public ExtendedDocument( OutputStream out )
         throws DocumentException
     {
-        this.writer = PdfWriter.getInstance( this, out );
+        this.writer = ExtendedPdfWriter.getInstance( this, out );
         headerFooter = new ExtendedHeaderFooter( this );
         writer.setPageEvent( headerFooter );
         this.originMarginTop = marginTop;

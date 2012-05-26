@@ -26,7 +26,6 @@
 package fr.opensagres.xdocreport.remoting.resources.services.rest;
 
 import java.io.IOException;
-import java.io.InputStream;
 import java.io.OutputStream;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Type;
@@ -45,7 +44,7 @@ import fr.opensagres.xdocreport.remoting.resources.domain.BinaryData;
  * <p>
  * To allow streaming the binday data is directly sent inside the Http body and the other attributes are passed as http
  * header (it avoids to use MultiPart encoding)
- * 
+ *
  * @author <a href="mailto:tdelprat@nuxeo.com">Tiry</a>
  */
 @Provider
@@ -68,13 +67,13 @@ public class BinaryDataMessageBodyWriter
         throws IOException, WebApplicationException
     {
 
-        InputStream in = t.getStream();
+        byte[] content = t.getContent();
 
         httpHeaders.add( "Content-Disposition", "attachement;filename=" + t.getFileName() );
         httpHeaders.add( "Content-Type", t.getMimeType() );
         httpHeaders.add( "X-resourceId", t.getResourceId() );
+        IOUtils.write(content, entityStream);
 
-        IOUtils.copy( in, entityStream);
     }
 
 }

@@ -46,6 +46,10 @@ public class DocxConstants
 
     public static final String WORD_RELS_XMLRELS_XML_ENTRY = "word/_rels/*.xml.rels";
 
+    public static final String WORD_FOOTNOTES_XML_ENTRY = "word/footnotes.xml";
+
+    public static final String WORD_ENDNOTES_XML_ENTRY = "word/endnotes.xml";
+
     public static final String WORD_NUMBERING_XML_ENTRY = "word/numbering.xml";
 
     public static final String W_NS = "http://schemas.openxmlformats.org/wordprocessingml/2006/main";
@@ -111,7 +115,7 @@ public class DocxConstants
     public static final String CY_ATTR = "cy";
 
     public static final String DRAWING_ELT = "drawing";
-    
+
     // hyperlink
     public static final String HYPERLINK_ELT = "hyperlink";
 
@@ -129,6 +133,14 @@ public class DocxConstants
 
     public static final String ID_ATTR = "id";
 
+    public static final String FOOTNOTE_ELT = "footnote";
+
+    public static final String FOOTNOTE_REFERENCE_ELT = "footnoteReference";
+
+    public static final String ENDNOTE_ELT = "endnote";
+    
+    public static final String ENDNOTE_REFERENCE_ELT = "endnoteReference";
+    
     // [Content_Types].xml
     public static final String CONTENT_TYPES_XML = "[Content_Types].xml";
 

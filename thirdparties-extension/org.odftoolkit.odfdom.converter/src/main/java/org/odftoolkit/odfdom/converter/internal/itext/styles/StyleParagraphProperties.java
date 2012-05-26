@@ -33,10 +33,9 @@ import com.lowagie.text.Element;
  */
 public class StyleParagraphProperties
 {
-
     private int alignment = Element.ALIGN_UNDEFINED;
 
-    private boolean autoTextIndent = false;
+    private Boolean autoTextIndent;
 
     private Color backgroundColor;
 
@@ -50,15 +49,11 @@ public class StyleParagraphProperties
 
     private StyleBorder borderTop;
 
-    private boolean breakBeforeColumn = false;
+    private StyleBreak breakBefore;
 
-    private boolean breakBeforePage = false;
+    private Boolean keepTogether;
 
-    private boolean keepTogether = false;
-
-    private Float lineHeight;
-
-    private boolean lineHeightProportional = true;
+    private StyleLineHeight lineHeight;
 
     private Float margin;
 
@@ -90,9 +85,9 @@ public class StyleParagraphProperties
         {
             alignment = paragraphProperties.getAlignment();
         }
-        if ( paragraphProperties.isAutoTextIndent() != autoTextIndent )
+        if ( paragraphProperties.getAutoTextIndent() != null )
         {
-            autoTextIndent = paragraphProperties.isAutoTextIndent();
+            autoTextIndent = paragraphProperties.getAutoTextIndent();
         }
         if ( paragraphProperties.getBackgroundColor() != null )
         {
@@ -118,25 +113,17 @@ public class StyleParagraphProperties
         {
             borderTop = paragraphProperties.getBorderTop();
         }
-        if ( paragraphProperties.isBreakBeforeColumn() != breakBeforeColumn )
+        if ( paragraphProperties.getBreakBefore() != null )
         {
-            breakBeforeColumn = paragraphProperties.isBreakBeforeColumn();
+            breakBefore = paragraphProperties.getBreakBefore();
         }
-        if ( paragraphProperties.isBreakBeforePage() != breakBeforePage )
+        if ( paragraphProperties.getKeepTogether() != null )
         {
-            breakBeforePage = paragraphProperties.isBreakBeforePage();
-        }
-        if ( paragraphProperties.isKeepTogether() != keepTogether )
-        {
-            keepTogether = paragraphProperties.isKeepTogether();
+            keepTogether = paragraphProperties.getKeepTogether();
         }
         if ( paragraphProperties.getLineHeight() != null )
         {
             lineHeight = paragraphProperties.getLineHeight();
-        }
-        if ( paragraphProperties.isLineHeightProportional() != lineHeightProportional )
-        {
-            lineHeightProportional = paragraphProperties.isLineHeightProportional();
         }
         if ( paragraphProperties.getMargin() != null )
         {
@@ -174,12 +161,12 @@ public class StyleParagraphProperties
         this.alignment = alignment;
     }
 
-    public boolean isAutoTextIndent()
+    public Boolean getAutoTextIndent()
     {
         return autoTextIndent;
     }
 
-    public void setAutoTextIndent( boolean autoTextIndent )
+    public void setAutoTextIndent( Boolean autoTextIndent )
     {
         this.autoTextIndent = autoTextIndent;
     }
@@ -244,54 +231,34 @@ public class StyleParagraphProperties
         this.borderTop = borderTop;
     }
 
-    public boolean isBreakBeforeColumn()
+    public StyleBreak getBreakBefore()
     {
-        return breakBeforeColumn;
+        return breakBefore;
     }
 
-    public void setBreakBeforeColumn( boolean breakBeforeColumn )
+    public void setBreakBefore( StyleBreak breakBefore )
     {
-        this.breakBeforeColumn = breakBeforeColumn;
+        this.breakBefore = breakBefore;
     }
 
-    public boolean isBreakBeforePage()
-    {
-        return breakBeforePage;
-    }
-
-    public void setBreakBeforePage( boolean breakBeforePage )
-    {
-        this.breakBeforePage = breakBeforePage;
-    }
-
-    public boolean isKeepTogether()
+    public Boolean getKeepTogether()
     {
         return keepTogether;
     }
 
-    public void setKeepTogether( boolean keepTogether )
+    public void setKeepTogether( Boolean keepTogether )
     {
         this.keepTogether = keepTogether;
     }
 
-    public Float getLineHeight()
+    public StyleLineHeight getLineHeight()
     {
         return lineHeight;
     }
 
-    public void setLineHeight( Float lineHeight )
+    public void setLineHeight( StyleLineHeight lineHeight )
     {
         this.lineHeight = lineHeight;
-    }
-
-    public boolean isLineHeightProportional()
-    {
-        return lineHeightProportional;
-    }
-
-    public void setLineHeightProportional( boolean lineHeightProportional )
-    {
-        this.lineHeightProportional = lineHeightProportional;
     }
 
     public Float getMargin()

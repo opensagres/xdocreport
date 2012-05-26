@@ -24,60 +24,73 @@
  */
 package org.odftoolkit.odfdom.converter.internal.itext.stylable;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.odftoolkit.odfdom.converter.internal.itext.styles.Style;
 
+import com.lowagie.text.Chunk;
 import com.lowagie.text.Element;
-import com.lowagie.text.Font;
 import com.lowagie.text.ListItem;
+import com.lowagie.text.Phrase;
 
 import fr.opensagres.xdocreport.itext.extension.IITextContainer;
 
+/**
+ * fixes for pdf conversion by Leszek Piotrowicz <leszekp@safe-mail.net>
+ */
 public class StylableListItem
     extends ListItem
     implements IStylableContainer
 {
-
     private static final long serialVersionUID = 664309269352903329L;
-
-    private final IStylableFactory ownerDocument;
 
     private IStylableContainer parent;
 
-    private Style lastStyleApplied = null;
+    private List<Element> elements = new ArrayList<Element>();
 
     public StylableListItem( IStylableFactory ownerDocument, IStylableContainer parent )
     {
-        this.ownerDocument = ownerDocument;
         this.parent = parent;
+    }
+
+    public StylableListItem( Phrase phrase )
+    {
+        super( phrase );
+    }
+
+    public List<Element> getElements()
+    {
+        return elements;
     }
 
     public void addElement( Element element )
     {
-        super.add( element );
+        elements.add( element );
+    }
+
+    @Override
+    public void setListSymbol( Chunk symbol )
+    {
+        Chunk chunk = new Chunk( symbol );
+        // adjust chunk attributes like text rise
+        // use StylableParagraph mechanism
+        StylableParagraph p = new StylableParagraph( null, null );
+        p.setFont( chunk.getFont() );
+        p.addElement( chunk );
+        p.getElement(); // post-processing here
+        chunk = (Chunk) p.getChunks().get( 0 );
+
+        super.setListSymbol( chunk );
     }
 
     public void applyStyles( Style style )
     {
-        this.lastStyleApplied = style;
-
-        // Font
-        Font font = null;// style.getFont();
-        if ( font != null )
-        {
-            super.setFont( font );
-        }
-        // Alignment
-        int alignment = 0;// style.getAlignment();
-        if ( alignment != Element.ALIGN_UNDEFINED )
-        {
-            super.setAlignment( alignment );
-        }
-
     }
 
     public Style getLastStyleApplied()
     {
-        return lastStyleApplied;
+        return null;
     }
 
     public IStylableContainer getParent()
@@ -97,6 +110,5 @@ public class StylableListItem
 
     public void setITextContainer( IITextContainer container )
     {
-
     }
 }

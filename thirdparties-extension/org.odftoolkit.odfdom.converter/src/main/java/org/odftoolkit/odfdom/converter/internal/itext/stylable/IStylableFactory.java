@@ -24,18 +24,23 @@
  */
 package org.odftoolkit.odfdom.converter.internal.itext.stylable;
 
+import java.util.List;
+
 public interface IStylableFactory
 {
-
     StylableParagraph createParagraph( IStylableContainer parent );
+
+    StylableHeading createHeading( IStylableContainer parent, List<Integer> headingNumbering );
 
     StylablePhrase createPhrase( IStylableContainer parent );
 
     StylableAnchor createAnchor( IStylableContainer parent );
 
-    StylableList createList( IStylableContainer parent );
+    StylableList createList( IStylableContainer parent, int listLevel );
 
     StylableListItem createListItem( IStylableContainer parent );
+
+    StylableDocumentSection createDocumentSection( IStylableContainer parent, boolean inHeaderFooter );
 
     StylableTable createTable( IStylableContainer parent, int numColumns );
 
@@ -48,5 +53,4 @@ public interface IStylableFactory
     StylableSection createSection( IStylableContainer parent, StylableParagraph title, int numberDepth );
 
     StylableChapter getCurrentChapter();
-
 }

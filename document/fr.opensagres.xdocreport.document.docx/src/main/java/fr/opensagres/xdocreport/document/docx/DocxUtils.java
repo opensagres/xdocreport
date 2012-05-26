@@ -32,10 +32,14 @@ import static fr.opensagres.xdocreport.document.docx.DocxConstants.BOOKMARK_END_
 import static fr.opensagres.xdocreport.document.docx.DocxConstants.BOOKMARK_START_ELT;
 import static fr.opensagres.xdocreport.document.docx.DocxConstants.CONTENT_TYPES_XML;
 import static fr.opensagres.xdocreport.document.docx.DocxConstants.DRAWING_ELT;
+import static fr.opensagres.xdocreport.document.docx.DocxConstants.ENDNOTE_ELT;
+import static fr.opensagres.xdocreport.document.docx.DocxConstants.ENDNOTE_REFERENCE_ELT;
 import static fr.opensagres.xdocreport.document.docx.DocxConstants.EXTENT_ELT;
 import static fr.opensagres.xdocreport.document.docx.DocxConstants.EXT_ELT;
 import static fr.opensagres.xdocreport.document.docx.DocxConstants.FLDCHAR_ELT;
 import static fr.opensagres.xdocreport.document.docx.DocxConstants.FLDSIMPLE_ELT;
+import static fr.opensagres.xdocreport.document.docx.DocxConstants.FOOTNOTE_ELT;
+import static fr.opensagres.xdocreport.document.docx.DocxConstants.FOOTNOTE_REFERENCE_ELT;
 import static fr.opensagres.xdocreport.document.docx.DocxConstants.HYPERLINK_ELT;
 import static fr.opensagres.xdocreport.document.docx.DocxConstants.INSTR_TEXT_ELT;
 import static fr.opensagres.xdocreport.document.docx.DocxConstants.NUMBERING_ELT;
@@ -269,4 +273,25 @@ public class DocxUtils
     {
         return W_NS.equals( uri ) && DRAWING_ELT.equals( localName );
     }
+
+    public static boolean isFootnote( String uri, String localName, String name )
+    {
+        return W_NS.equals( uri ) && FOOTNOTE_ELT.equals( localName );
+    }
+
+    public static boolean isEndnote( String uri, String localName, String name )
+    {
+        return W_NS.equals( uri ) && ENDNOTE_ELT.equals( localName );
+    }
+    
+    public static boolean isFootnoteReference( String uri, String localName, String name )
+    {
+        return ( W_NS.equals( uri ) && FOOTNOTE_REFERENCE_ELT.equals( localName ) );
+    }
+
+    public static boolean isEndnoteReference( String uri, String localName, String name )
+    {
+        return ( W_NS.equals( uri ) && ENDNOTE_REFERENCE_ELT.equals( localName ) );
+    }
+
 }

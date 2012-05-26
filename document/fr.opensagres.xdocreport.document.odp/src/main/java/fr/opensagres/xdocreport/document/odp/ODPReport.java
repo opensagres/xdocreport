@@ -92,7 +92,7 @@ public class ODPReport
                                                   IEntryWriterProvider writerProvider,
                                                   IEntryOutputStreamProvider outputStreamProvider )
     {
-        return new ODPImageRegistry( readerProvider, writerProvider, outputStreamProvider );
+        return new ODPImageRegistry( readerProvider, writerProvider, outputStreamProvider, getFieldsMetadata() );
     }
 
 }

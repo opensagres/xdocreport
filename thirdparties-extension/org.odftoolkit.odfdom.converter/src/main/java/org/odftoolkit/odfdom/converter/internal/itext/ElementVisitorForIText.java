@@ -24,29 +24,33 @@
  */
 package org.odftoolkit.odfdom.converter.internal.itext;
 
+import java.awt.Color;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.io.Writer;
-import java.net.MalformedURLException;
+import java.util.ArrayList;
+import java.util.List;
 
 import org.odftoolkit.odfdom.converter.ODFConverterException;
 import org.odftoolkit.odfdom.converter.internal.ElementVisitorConverter;
 import org.odftoolkit.odfdom.converter.internal.itext.stylable.IStylableContainer;
 import org.odftoolkit.odfdom.converter.internal.itext.stylable.IStylableElement;
 import org.odftoolkit.odfdom.converter.internal.itext.stylable.StylableAnchor;
-import org.odftoolkit.odfdom.converter.internal.itext.stylable.StylableChapter;
 import org.odftoolkit.odfdom.converter.internal.itext.stylable.StylableChunk;
 import org.odftoolkit.odfdom.converter.internal.itext.stylable.StylableDocument;
+import org.odftoolkit.odfdom.converter.internal.itext.stylable.StylableDocumentSection;
 import org.odftoolkit.odfdom.converter.internal.itext.stylable.StylableHeaderFooter;
+import org.odftoolkit.odfdom.converter.internal.itext.stylable.StylableHeading;
+import org.odftoolkit.odfdom.converter.internal.itext.stylable.StylableImage;
 import org.odftoolkit.odfdom.converter.internal.itext.stylable.StylableList;
 import org.odftoolkit.odfdom.converter.internal.itext.stylable.StylableListItem;
 import org.odftoolkit.odfdom.converter.internal.itext.stylable.StylableMasterPage;
 import org.odftoolkit.odfdom.converter.internal.itext.stylable.StylableParagraph;
 import org.odftoolkit.odfdom.converter.internal.itext.stylable.StylablePhrase;
-import org.odftoolkit.odfdom.converter.internal.itext.stylable.StylableSection;
 import org.odftoolkit.odfdom.converter.internal.itext.stylable.StylableTable;
 import org.odftoolkit.odfdom.converter.internal.itext.stylable.StylableTableCell;
 import org.odftoolkit.odfdom.converter.internal.itext.styles.Style;
+import org.odftoolkit.odfdom.converter.internal.itext.styles.StyleTextProperties;
 import org.odftoolkit.odfdom.converter.internal.utils.ODFUtils;
 import org.odftoolkit.odfdom.converter.itext.PDFViaITextOptions;
 import org.odftoolkit.odfdom.doc.OdfDocument;
@@ -63,11 +67,13 @@ import org.odftoolkit.odfdom.dom.element.table.TableTableCellElement;
 import org.odftoolkit.odfdom.dom.element.table.TableTableElement;
 import org.odftoolkit.odfdom.dom.element.table.TableTableRowElement;
 import org.odftoolkit.odfdom.dom.element.text.TextAElement;
+import org.odftoolkit.odfdom.dom.element.text.TextBookmarkElement;
 import org.odftoolkit.odfdom.dom.element.text.TextHElement;
 import org.odftoolkit.odfdom.dom.element.text.TextLineBreakElement;
 import org.odftoolkit.odfdom.dom.element.text.TextListElement;
 import org.odftoolkit.odfdom.dom.element.text.TextListItemElement;
 import org.odftoolkit.odfdom.dom.element.text.TextPElement;
+import org.odftoolkit.odfdom.dom.element.text.TextSectionElement;
 import org.odftoolkit.odfdom.dom.element.text.TextSoftPageBreakElement;
 import org.odftoolkit.odfdom.dom.element.text.TextSpanElement;
 import org.odftoolkit.odfdom.dom.element.text.TextTabElement;
@@ -75,12 +81,11 @@ import org.odftoolkit.odfdom.pkg.OdfElement;
 import org.w3c.dom.Node;
 import org.w3c.dom.Text;
 
-import com.lowagie.text.BadElementException;
 import com.lowagie.text.Chunk;
 import com.lowagie.text.DocumentException;
 import com.lowagie.text.Element;
+import com.lowagie.text.Font;
 import com.lowagie.text.Image;
-import com.lowagie.text.pdf.PdfPCell;
 
 import fr.opensagres.xdocreport.utils.StringUtils;
 
@@ -90,10 +95,11 @@ import fr.opensagres.xdocreport.utils.StringUtils;
 public class ElementVisitorForIText
     extends ElementVisitorConverter
 {
-
     private final StyleEngineForIText styleEngine;
 
-    private final PDFViaITextOptions options;
+    // private final PDFViaITextOptions options;
+
+    private List<Integer> currentHeadingNumbering;
 
     private IStylableContainer currentContainer;
 
@@ -105,12 +111,14 @@ public class ElementVisitorForIText
 
     private Style currentRowStyle;
 
+    private int currentListLevel;
+
     public ElementVisitorForIText( OdfDocument odfDocument, OutputStream out, Writer writer,
                                    StyleEngineForIText styleEngine, PDFViaITextOptions options )
     {
         super( odfDocument, out, writer );
         this.styleEngine = styleEngine;
-        this.options = options != null ? options : PDFViaITextOptions.create();
+        // this.options = options != null ? options : PDFViaITextOptions.create();
         // Create document
         try
         {
@@ -133,7 +141,8 @@ public class ElementVisitorForIText
     {
         String name = ele.getStyleNameAttribute();
         String pageLayoutName = ele.getStylePageLayoutNameAttribute();
-        currentMasterPage = new StylableMasterPage( name, pageLayoutName );
+        String nextStyleName = ele.getStyleNextStyleNameAttribute();
+        currentMasterPage = new StylableMasterPage( name, pageLayoutName, nextStyleName );
         document.addMasterPage( currentMasterPage );
         super.visit( ele );
         currentMasterPage = null;
@@ -149,6 +158,7 @@ public class ElementVisitorForIText
         Style style = document.getStyleMasterPage( currentMasterPage );
         if ( style != null )
         {
+            document.applyStyles( style );
             header.applyStyles( style );
         }
         currentMasterPage.setHeader( header );
@@ -175,6 +185,7 @@ public class ElementVisitorForIText
         Style style = document.getStyleMasterPage( currentMasterPage );
         if ( style != null )
         {
+            document.applyStyles( style );
             footer.applyStyles( style );
         }
         currentMasterPage.setFooter( footer );
@@ -200,8 +211,16 @@ public class ElementVisitorForIText
         this.parseOfficeTextElement = true;
         currentContainer = document;
         super.visit( ele );
-        addCurrentChapterIfNeeded();
         this.parseOfficeTextElement = false;
+    }
+
+    @Override
+    public void visit( TextSectionElement ele )
+    {
+        StylableDocumentSection documentSection =
+            document.createDocumentSection( currentContainer, !parseOfficeTextElement );
+        applyStyles( ele, documentSection );
+        addITextContainer( ele, documentSection );
     }
 
     // ---------------------- visit //text:h
@@ -209,60 +228,29 @@ public class ElementVisitorForIText
     @Override
     public void visit( TextHElement ele )
     {
-        int level = ele.getTextOutlineLevelAttribute() != null ? ele.getTextOutlineLevelAttribute() : 1;
-
-        // 1) Create title of the chapter
-        StylableParagraph title = document.createParagraph( (IStylableContainer) null );
-        // apply style for the title font, color, bold style...
-        applyStyles( ele, title );
-        // loop for Text node to add text in the title without add the paragraph
-        // to the current container.
-        addITextContainer( ele, title, false );
-
-        // 2) Create a chapter or section according level title
-        if ( level == 1 )
+        // compute heading numbering (ie 1.3.1)
+        int outlineLevel = ele.getTextOutlineLevelAttribute() != null ? ele.getTextOutlineLevelAttribute() : 1;
+        if ( currentHeadingNumbering == null )
         {
-            // It's text:h with level one, create a chapter
-
-            // Create chapter without adding it to the current container.
-            // Chapter must be added to the container AFTER it is filled.
-            currentContainer = addCurrentChapterIfNeeded();
-            StylableChapter chapter = document.createChapter( currentContainer, title );
-            // apply style for the chapter title border, background color...
-            applyStyles( ele, chapter );
-            // Current container is chapter
-            currentContainer = chapter;
+            currentHeadingNumbering = new ArrayList<Integer>();
         }
-        else
+        while ( currentHeadingNumbering.size() > outlineLevel )
         {
-            // It's text:h with another level, create a section and add it to
-            // the current chapter
-            StylableChapter currentChapter = document.getCurrentChapter();
-
-            // Current container is section
-            StylableSection section = (StylableSection) currentChapter.addSection( title );
-            // apply style for the section title border, background color...
-            applyStyles( ele, section );
-            currentContainer = section;
-
+            currentHeadingNumbering.remove( currentHeadingNumbering.size() - 1 );
         }
-    }
-
-    /**
-     * This method add the current chapter to the parent container of teh chapter if current container is chapter.
-     * 
-     * @return parent container of the current chapter otherwise returns current container.
-     */
-    private IStylableContainer addCurrentChapterIfNeeded()
-    {
-        StylableChapter currentChapter = document.getCurrentChapter();
-        if ( currentChapter != null )
+        if ( currentHeadingNumbering.size() == outlineLevel )
         {
-            IStylableContainer parentContainer = currentChapter.getParent();
-            parentContainer.addElement( currentChapter );
-            return parentContainer;
+            currentHeadingNumbering.set( outlineLevel - 1, currentHeadingNumbering.get( outlineLevel - 1 ) + 1 );
         }
-        return currentContainer;
+        while ( currentHeadingNumbering.size() < outlineLevel )
+        {
+            currentHeadingNumbering.add( 1 );
+        }
+
+        StylableHeading heading =
+            document.createHeading( currentContainer, new ArrayList<Integer>( currentHeadingNumbering ) );
+        applyStyles( ele, heading );
+        addITextContainer( ele, heading );
     }
 
     // ---------------------- visit //text:p
@@ -272,13 +260,6 @@ public class ElementVisitorForIText
     {
         StylableParagraph paragraph = document.createParagraph( currentContainer );
         applyStyles( ele, paragraph );
-        if ( ele.getTextContent().length() == 0 )
-        {
-            // no content in the paragraph
-            // ex : <text:p text:style-name="Standard"></text:p>
-            // add blank Chunk
-            paragraph.add( Chunk.NEWLINE );
-        }
         addITextContainer( ele, paragraph );
 
     }
@@ -311,21 +292,38 @@ public class ElementVisitorForIText
         String reference = ele.getXlinkHrefAttribute();
         applyStyles( ele, anchor );
 
-        // set color moved to StylableAnchor
-        /*
-         * if ( anchor.getFont().getColor() == null ) { // if no color was applied to the link // get the font of the
-         * paragraph and set blue color. Font linkFont = anchor.getFont(); Style style =
-         * currentContainer.getLastStyleApplied(); if ( style != null ) { StyleTextProperties textProperties =
-         * style.getTextProperties(); if ( textProperties != null ) { Font font = textProperties.getFont(); if ( font !=
-         * null ) { linkFont = new Font( font ); anchor.setFont( linkFont ); } } } // Color blueColor = //
-         * ColorRegistryForIText.getInstance().getColor("#0000CC"); linkFont.setColor( Color.BLUE ); }
-         */
+        if ( anchor.getFont().getColor() == null )
+        {
+            // if no color was applied to the link get the font of the paragraph and set blue color.
+            Font linkFont = anchor.getFont();
+            Style style = currentContainer.getLastStyleApplied();
+            if ( style != null )
+            {
+                StyleTextProperties textProperties = style.getTextProperties();
+                if ( textProperties != null )
+                {
+                    Font font = textProperties.getFont();
+                    if ( font != null )
+                    {
+                        linkFont = new Font( font );
+                        anchor.setFont( linkFont );
+                    }
+                }
+            }
+            linkFont.setColor( Color.BLUE );
+        }
 
-        // TODO ; manage internal link
         // set the link
         anchor.setReference( reference );
         // Add to current container.
         addITextContainer( ele, anchor );
+    }
+
+    @Override
+    public void visit( TextBookmarkElement ele )
+    {
+        // destination for a local anchor
+        createChunk( "\u00A0", ele.getTextNameAttribute() );
     }
 
     // ---------------------- visit table:table (ex : <table:table
@@ -353,7 +351,7 @@ public class ElementVisitorForIText
     @Override
     public void visit( TableTableRowElement ele )
     {
-        currentRowStyle = getStyle( ele );
+        currentRowStyle = getStyle( ele, null );
         super.visit( ele );
         currentRowStyle = null;
     }
@@ -393,10 +391,11 @@ public class ElementVisitorForIText
     @Override
     public void visit( TextListElement ele )
     {
-        // int level = 1;
-        StylableList list = document.createList( currentContainer );
-        // applyStyles(ele, list);
+        currentListLevel++;
+        StylableList list = document.createList( currentContainer, currentListLevel );
+        applyStyles( ele, list );
         addITextContainer( ele, list );
+        currentListLevel--;
     }
 
     // ---------------------- visit text:listitem
@@ -404,11 +403,8 @@ public class ElementVisitorForIText
     @Override
     public void visit( TextListItemElement ele )
     {
-        // int level = 1;
         StylableListItem listItem = document.createListItem( currentContainer );
-        // applyStyles(ele, list);
         addITextContainer( ele, listItem );
-
     }
 
     // ---------------------- visit draw:image
@@ -422,63 +418,46 @@ public class ElementVisitorForIText
             byte[] imageStream = odfDocument.getPackage().getBytes( href );
             if ( imageStream != null )
             {
-                try
+                Image imageObj = StylableImage.getImage( imageStream );
+                if ( imageObj != null )
                 {
-                    Image image = Image.getInstance( imageStream );
-                    if ( image != null )
+                    DrawFrameElement frame = null;
+                    Float x = null;
+                    Float y = null;
+                    Float width = null;
+                    Float height = null;
+                    // set width, height....image
+                    Node parentNode = ele.getParentNode();
+                    if ( parentNode instanceof DrawFrameElement )
                     {
-                        String x = null;
-                        String y = null;
-                        String width = null;
-                        String height = null;
-                        // set width, height....image
-                        Node parentNode = ele.getParentNode();
-                        if ( parentNode instanceof DrawFrameElement )
+                        frame = (DrawFrameElement) parentNode;
+                        String svgX = frame.getSvgXAttribute();
+                        if ( StringUtils.isNotEmpty( svgX ) )
                         {
-                            DrawFrameElement frame = (DrawFrameElement) parentNode;
-                            x = frame.getSvgXAttribute();
-                            y = frame.getSvgYAttribute();
-                            width = frame.getSvgWidthAttribute();
-                            height = frame.getSvgHeightAttribute();
+                            x = ODFUtils.getDimensionAsPoint( svgX );
                         }
-                        if ( StringUtils.isNotEmpty( x ) && StringUtils.isNotEmpty( y ) )
+                        String svgY = frame.getSvgYAttribute();
+                        if ( StringUtils.isNotEmpty( svgY ) )
                         {
-                            image.setAbsolutePosition( ODFUtils.getDimensionAsPoint( x ),
-                                                       ODFUtils.getDimensionAsPoint( y ) );
+                            y = ODFUtils.getDimensionAsPoint( svgY );
                         }
-                        if ( StringUtils.isNotEmpty( width ) )
+                        String svgWidth = frame.getSvgWidthAttribute();
+                        if ( StringUtils.isNotEmpty( svgWidth ) )
                         {
-                            image.scaleAbsoluteWidth( ODFUtils.getDimensionAsPoint( width ) );
+                            width = ODFUtils.getDimensionAsPoint( svgWidth );
                         }
-                        if ( StringUtils.isNotEmpty( height ) )
+                        String svgHeight = frame.getSvgHeightAttribute();
+                        if ( StringUtils.isNotEmpty( svgHeight ) )
                         {
-                            image.scaleAbsoluteHeight( ODFUtils.getDimensionAsPoint( height ) );
-                        }
-                        IStylableContainer parent = currentContainer.getParent();
-                        if ( parent instanceof PdfPCell )
-                        {
-                            // When image is included into a Table Cell, we must
-                            // use PdfPCell#setImage
-                            // otherwise the image will not appear. Why???
-                            ( (PdfPCell) parent ).setImage( image );
-                        }
-                        else
-                        {
-                            currentContainer.addElement( image );
+                            height = ODFUtils.getDimensionAsPoint( svgHeight );
                         }
                     }
-                }
-                catch ( BadElementException e )
-                {
-                    // TODO : display log
-                }
-                catch ( MalformedURLException e )
-                {
-                    // TODO : display log
-                }
-                catch ( IOException e )
-                {
-                    // TODO : display log
+                    StylableImage image = new StylableImage( document, currentContainer, imageObj, x, y, width, height );
+                    if ( frame != null )
+                    {
+                        applyStyles( frame, image );
+                    }
+                    addITextElement( image.getElement() );
                 }
             }
         }
@@ -489,10 +468,6 @@ public class ElementVisitorForIText
     @Override
     public void visit( TextSoftPageBreakElement ele )
     {
-        if ( options.isPreserveSoftPageBreaks() )
-        {
-            document.newPage();
-        }
     }
 
     // ---------------------- visit text:line-break
@@ -506,19 +481,22 @@ public class ElementVisitorForIText
     @Override
     protected void processTextNode( Text node )
     {
-        createChunk( node );
+        createChunk( node.getTextContent(), null );
     }
 
-    private Chunk createChunk( Text node )
+    private Chunk createChunk( String textContent, String localDestinationName )
     {
-        String textContent = node.getTextContent();
         StylableChunk chunk = document.createChunk( currentContainer, textContent );
         Style style = currentContainer.getLastStyleApplied();
         if ( style != null )
         {
             chunk.applyStyles( style );
         }
-        addITextElement( chunk );
+        if ( localDestinationName != null )
+        {
+            chunk.setLocalDestination( localDestinationName );
+        }
+        addITextElement( chunk.getElement() );
         return chunk;
     }
 
@@ -561,9 +539,9 @@ public class ElementVisitorForIText
         currentContainer.addElement( element );
     }
 
-    private void applyStyles( OdfStylableElement ele, IStylableElement element )
+    private void applyStyles( OdfElement ele, IStylableElement element )
     {
-        Style style = getStyle( ele );
+        Style style = getStyle( ele, element );
         if ( style != null )
         {
             if ( parseOfficeTextElement )
@@ -589,13 +567,40 @@ public class ElementVisitorForIText
         }
     }
 
-    private Style getStyle( OdfStylableElement ele )
+    private Style getStyle( OdfElement e, IStylableElement element )
     {
-        String styleName = ele.getStyleName();
-        String familyName = ele.getStyleFamily() != null ? ele.getStyleFamily().getName() : null;
+        Style style = null;
+        Style parentElementStyle = element != null ? getParentElementStyle( element ) : null;
+        if ( e instanceof OdfStylableElement )
+        {
+            OdfStylableElement ele = (OdfStylableElement) e;
 
-        Style style = styleEngine.getStyle( familyName, styleName );
+            String styleName = ele.getStyleName();
+            String familyName = ele.getStyleFamily() != null ? ele.getStyleFamily().getName() : null;
+
+            style = styleEngine.getStyle( familyName, styleName, parentElementStyle );
+        }
+        else if ( e instanceof TextListElement )
+        {
+            TextListElement ele = (TextListElement) e;
+
+            String styleName = ele.getTextStyleNameAttribute();
+
+            style = styleEngine.getStyle( "list", styleName, parentElementStyle );
+        }
         return style;
     }
 
+    private Style getParentElementStyle( IStylableElement element )
+    {
+        for ( IStylableContainer c = element.getParent(); c != null; c = c.getParent() )
+        {
+            Style style = c.getLastStyleApplied();
+            if ( style != null )
+            {
+                return style;
+            }
+        }
+        return null;
+    }
 }

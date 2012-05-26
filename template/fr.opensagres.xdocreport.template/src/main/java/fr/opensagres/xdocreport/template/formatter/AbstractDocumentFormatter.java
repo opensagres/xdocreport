@@ -154,4 +154,24 @@ public abstract class AbstractDocumentFormatter
         key.append( variableIndex );
         return key.toString();
     }
+
+    public String formatAsSimpleField( boolean encloseInDirective, String... fields )
+    {
+        return formatAsSimpleField( false, encloseInDirective, fields );
+    }
+
+    public String getFunctionDirective( String key, String methodName, String... parameters )
+    {
+        return getFunctionDirective( true, key, methodName, parameters );
+    }
+    
+    public String getSetDirective( String name, String value )
+    {
+        return getSetDirective( name, value, true );
+    }
+    
+    public String getStartIfDirective( String fieldName )
+    {
+        return getStartIfDirective( fieldName, true );
+    }
 }

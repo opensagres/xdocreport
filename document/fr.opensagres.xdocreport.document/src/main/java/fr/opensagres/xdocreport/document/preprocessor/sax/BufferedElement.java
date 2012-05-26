@@ -521,4 +521,56 @@ public class BufferedElement
         return name;
     }
 
+    public String getInnerText()
+    {
+        StringWriter writer = new StringWriter();
+        List<ISavable> regions = startTagElement.regions;
+        boolean startTagParsing = true;
+        for ( ISavable region : regions )
+        {
+            if ( startTagParsing )
+            {
+                if ( region instanceof BufferedStartTagElement )
+                {
+                    startTagParsing = false;
+                }
+            }
+            if ( !startTagParsing )
+            {
+                try
+                {
+                    region.save( writer );
+                }
+                catch ( IOException e )
+                {
+                    // Should never thrown.
+                }
+            }
+        }
+        return writer.toString();
+    }
+
+    public void setInnerText( String innerText )
+    {
+        List<ISavable> regionsToAdd = new ArrayList<ISavable>();
+        List<ISavable> regions = startTagElement.regions;
+        boolean startTagParsing = true;
+        for ( ISavable region : regions )
+        {
+            startTagParsing = !( region instanceof BufferedStartTagElement );
+            if ( startTagParsing )
+            {
+                regionsToAdd.add( region );
+            }
+            else
+            {
+                break;
+            }
+        }
+        startTagElement.reset();
+        startTagElement.regions.addAll( regionsToAdd );
+        startTagElement.append( innerText );
+
+    }
+
 }

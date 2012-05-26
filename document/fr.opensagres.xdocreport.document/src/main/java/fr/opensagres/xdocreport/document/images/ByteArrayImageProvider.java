@@ -122,4 +122,9 @@ public class ByteArrayImageProvider
         return new SimpleImageInfo( imageByteArray );
     }
 
+    protected boolean doIsValid()
+    {
+        return getImageByteArray() != null;
+    }
+
 }

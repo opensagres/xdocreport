@@ -26,6 +26,8 @@ package fr.opensagres.xdocreport.document.images;
 
 import java.io.IOException;
 
+import fr.opensagres.xdocreport.template.formatter.NullImageBehaviour;
+
 /**
  * Base class for image provider.
  */
@@ -47,9 +49,14 @@ public abstract class AbstractImageProvider
 
     private boolean resize;
 
+    private NullImageBehaviour behaviour;
+    
+    private Boolean valid;
+
     public AbstractImageProvider( boolean useImageSize )
     {
         this.useImageSize = useImageSize;
+        this.behaviour = null;
     }
 
     /*
@@ -218,4 +225,35 @@ public abstract class AbstractImageProvider
      */
     protected abstract SimpleImageInfo loadImageInfo()
         throws IOException;
+
+    /*
+     * (non-Javadoc)
+     * @see fr.opensagres.xdocreport.document.images.IImageProvider#getBehaviour()
+     */
+    public NullImageBehaviour getBehaviour()
+    {
+        return behaviour;
+    }
+
+    /*
+     * (non-Javadoc)
+     * @see
+     * fr.opensagres.xdocreport.document.images.IImageProvider#setBehaviour(fr.opensagres.xdocreport.document.images.
+     * NullImageBehaviour)
+     */
+    public void setBehaviour( NullImageBehaviour behaviour )
+    {
+        this.behaviour = behaviour;
+    }
+
+    public boolean isValid()
+    {
+        if (valid == null) {
+            valid = doIsValid();
+        }
+        return valid;
+    }
+
+    protected abstract boolean doIsValid();
+    
 }

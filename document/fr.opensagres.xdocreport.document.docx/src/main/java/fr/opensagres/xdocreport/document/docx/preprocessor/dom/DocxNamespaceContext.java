@@ -3,7 +3,6 @@ package fr.opensagres.xdocreport.document.docx.preprocessor.dom;
 import javax.xml.namespace.NamespaceContext;
 
 import fr.opensagres.xdocreport.core.utils.MapNamespaceContext;
-import fr.opensagres.xdocreport.document.docx.DocxConstants;
 
 public class DocxNamespaceContext
     extends MapNamespaceContext

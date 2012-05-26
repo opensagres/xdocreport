@@ -50,6 +50,7 @@ import fr.opensagres.xdocreport.core.io.IEntryWriterProvider;
 import fr.opensagres.xdocreport.core.io.XDocArchive;
 import fr.opensagres.xdocreport.core.logging.LogUtils;
 import fr.opensagres.xdocreport.core.utils.StringUtils;
+import fr.opensagres.xdocreport.document.images.DefaultImageHandler;
 import fr.opensagres.xdocreport.document.images.IImageRegistry;
 import fr.opensagres.xdocreport.document.preprocessor.IXDocPreprocessor;
 import fr.opensagres.xdocreport.document.preprocessor.sax.BufferedElement;
@@ -306,6 +307,12 @@ public abstract class AbstractXDocReport
         FieldsMetadata fieldsMetadata = new FieldsMetadata();
         setFieldsMetadata( fieldsMetadata );
         return fieldsMetadata;
+    }
+
+    public void preprocess()
+        throws XDocReportException, IOException
+    {
+        setDocumentArchive( getOriginalDocumentArchive() );
     }
 
     /**
@@ -777,6 +784,11 @@ public abstract class AbstractXDocReport
             if ( imageRegistry != null )
             {
                 DocumentContextHelper.putImageRegistry( context, imageRegistry );
+                
+                // Register default image handler if needed.
+                if (DocumentContextHelper.getImageHandler( context ) == null) {
+                    DocumentContextHelper.putImageHandler( context, DefaultImageHandler.getInstance() );
+                }                
                 imageRegistry.preProcess();
             }
         }

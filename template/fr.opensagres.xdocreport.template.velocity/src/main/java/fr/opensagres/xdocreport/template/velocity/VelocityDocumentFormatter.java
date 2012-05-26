@@ -54,7 +54,7 @@ public class VelocityDocumentFormatter
 
     private static final String IN_DIRECTIVE = " in ";
 
-    private static final String END_FOREACH_DIRECTIVE = "#end";
+    private static final String END_FOREACH_DIRECTIVE = "#{end}";
 
     private static final String DOLLAR_TOTKEN = "$";
 
@@ -66,32 +66,23 @@ public class VelocityDocumentFormatter
 
     private final static int NO_VELOCITY_FIELD = 3;
 
-    private static final String START_IMAGE_DIRECTIVE = DOLLAR_START_BRACKET + TemplateContextHelper.IMAGE_REGISTRY_KEY
-        + ".registerImage(";
-
-    private static final String END_IMAGE_DIRECTIVE = ")}";
-
-    private static final String START_IMAGE_WIDTH_DIRECTIVE = DOLLAR_START_BRACKET
-        + TemplateContextHelper.IMAGE_REGISTRY_KEY + ".getWidth(";
-
-    private static final String END_IMAGE_WIDTH_DIRECTIVE = ")}";
-
-    private static final String START_IMAGE_HEIGHT_DIRECTIVE = DOLLAR_START_BRACKET
-        + TemplateContextHelper.IMAGE_REGISTRY_KEY + ".getHeight(";
-
-    private static final String END_IMAGE_HEIGHT_DIRECTIVE = ")}";
-
     private static final String START_IF_DIRECTIVE = "#if(";
 
     private static final String ELSE_DIRECTIVE = "#{else}";
 
-    private static final String END_IF_DIRECTIVE = "#end";
+    private static final String END_IF_DIRECTIVE = "#{end}";
 
     private static final String VELOCITY_COUNT = "$velocityCount";
 
     private static final String START_NOPARSE = "#[[";
 
     private static final String END_NOPARSE = "]]#";
+
+    private static final String START_DEFINE_DIRECTIVE = "#define(";
+
+    private static final Object CLOSE_DEFINE_DIRECTIVE = ")";
+
+    private static final Object END_DEFINE_DIRECTIVE = "#{end}";
 
     public String formatAsFieldItemList( String content, String fieldName, boolean forceAsField )
     {
@@ -192,54 +183,13 @@ public class VelocityDocumentFormatter
         return ITEM_TOKEN_OPEN_BRACKET;
     }
 
-    public String getImageDirective( String fieldName )
-    {
-        StringBuilder directive = new StringBuilder( START_IMAGE_DIRECTIVE );
-        if ( !fieldName.startsWith( "$" ) )
-        {
-            directive.append( "$" );
-        }
-        directive.append( fieldName );
-        directive.append( END_IMAGE_DIRECTIVE );
-        return directive.toString();
-    }
-
-    public String getImageWidthDirective( String fieldName, String defaultWidth )
-    {
-        StringBuilder directive = new StringBuilder( START_IMAGE_WIDTH_DIRECTIVE );
-        if ( !fieldName.startsWith( "$" ) )
-        {
-            directive.append( "$" );
-        }
-        directive.append( fieldName );
-        directive.append( ',' );
-        directive.append( '\'' );
-        directive.append( defaultWidth );
-        directive.append( '\'' );
-        directive.append( END_IMAGE_WIDTH_DIRECTIVE );
-        return directive.toString();
-    }
-
-    public String getImageHeightDirective( String fieldName, String defaultHeight )
-    {
-        StringBuilder directive = new StringBuilder( START_IMAGE_HEIGHT_DIRECTIVE );
-        if ( !fieldName.startsWith( "$" ) )
-        {
-            directive.append( "$" );
-        }
-        directive.append( fieldName );
-        directive.append( ',' );
-        directive.append( '\'' );
-        directive.append( defaultHeight );
-        directive.append( '\'' );
-        directive.append( END_IMAGE_HEIGHT_DIRECTIVE );
-        return directive.toString();
-    }
-
-    public String getFunctionDirective( String key, String methodName, String... parameters )
+    public String getFunctionDirective( boolean encloseInDirective, String key, String methodName, String... parameters )
     {
         StringBuilder directive = new StringBuilder();
-        directive.append( DOLLAR_START_BRACKET );
+        if ( encloseInDirective )
+        {
+            directive.append( DOLLAR_START_BRACKET );
+        }
         directive.append( key );
         directive.append( '.' );
         directive.append( methodName );
@@ -254,18 +204,28 @@ public class VelocityDocumentFormatter
                 {
                     directive.append( ',' );
                 }
-                if ( p.startsWith( "___" ) )
-                {
-                    p = "$" + p;
-                }
+                p = addDollarIfNeed( p );
                 directive.append( p );
             }
         }
-        directive.append( END_IMAGE_DIRECTIVE );
+        directive.append( ')' );
+        if ( encloseInDirective )
+        {
+            directive.append( '}' );
+        }
         return directive.toString();
     }
 
-    public String formatAsSimpleField( boolean encloseInDirective, String... fields )
+    private String addDollarIfNeed( String p )
+    {
+        if ( !p.startsWith( "$" ) && ( p.startsWith( "___" ) || ( !p.startsWith( "'" ) && !p.startsWith( "\"" ) ) ) )
+        {
+            return "$" + p;
+        }
+        return p;
+    }
+
+    public String formatAsSimpleField( boolean noescape, boolean encloseInDirective, String... fields )
     {
         StringBuilder field = new StringBuilder();
         if ( encloseInDirective )
@@ -289,7 +249,7 @@ public class VelocityDocumentFormatter
         return field.toString();
     }
 
-    public String getStartIfDirective( String fieldName )
+    public String getStartIfDirective( String fieldName, boolean exists )
     {
         StringBuilder directive = new StringBuilder( START_IF_DIRECTIVE );
         if ( !fieldName.startsWith( DOLLAR_TOTKEN ) )
@@ -527,17 +487,25 @@ public class VelocityDocumentFormatter
     {
         return characters.indexOf( "#" ) != -1;
     }
-    
-    public String getSetDirective( String name, String value )
+
+    public String getSetDirective( String name, String value, boolean valueIsField )
     {
         StringBuilder newContent = new StringBuilder( START_SET_DIRECTIVE );
-        newContent.append( formatAsSimpleField( true, name) );
+        newContent.append( formatAsSimpleField( true, name ) );
         newContent.append( EQUALS );
-        newContent.append( formatAsSimpleField( true, value) );
+        if ( valueIsField )
+        {
+            newContent.append( formatAsSimpleField( true, value ) );
+        }
+        else
+        {
+            value = addDollarIfNeed( value );
+            newContent.append( value );
+        }
         newContent.append( END_SET_DIRECTIVE );
         return newContent.toString();
     }
-    
+
     public String getStartNoParse()
     {
         return START_NOPARSE;
@@ -546,5 +514,15 @@ public class VelocityDocumentFormatter
     public String getEndNoParse()
     {
         return END_NOPARSE;
+    }
+
+    public String getDefineDirective( String name, String value )
+    {
+        StringBuilder newContent = new StringBuilder( START_DEFINE_DIRECTIVE );
+        newContent.append( formatAsSimpleField( true, name ) );
+        newContent.append( CLOSE_DEFINE_DIRECTIVE );
+        newContent.append( value );
+        newContent.append( END_DEFINE_DIRECTIVE );
+        return newContent.toString();
     }
 }

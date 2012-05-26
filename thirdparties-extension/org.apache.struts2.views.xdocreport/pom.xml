@@ -3,13 +3,13 @@
 	<parent>
 		<artifactId>thirdparties-extension</artifactId>
 		<groupId>fr.opensagres.xdocreport</groupId>
-		<version>0.9.7-SNAPSHOT</version>
+		<version>0.9.8-SNAPSHOT</version>
 	</parent>
 	<artifactId>org.apache.struts2.views.xdocreport</artifactId>
 	<dependencies>
 		<dependency>
 			<groupId>fr.opensagres.xdocreport</groupId>
-			<version>0.9.7-SNAPSHOT</version>
+			<version>0.9.8-SNAPSHOT</version>
 			<artifactId>fr.opensagres.xdocreport.template</artifactId>
 		</dependency>
 
@@ -29,12 +29,12 @@
 		<dependency>
 			<groupId>fr.opensagres.xdocreport</groupId>
 			<artifactId>fr.opensagres.xdocreport.converter</artifactId>
-			<version>0.9.7-SNAPSHOT</version>
+			<version>0.9.8-SNAPSHOT</version>
 		</dependency>
 		<dependency>
 			<groupId>fr.opensagres.xdocreport</groupId>
 			<artifactId>fr.opensagres.xdocreport.document</artifactId>
-			<version>0.9.7-SNAPSHOT</version>
+			<version>0.9.8-SNAPSHOT</version>
 		</dependency>
 		<dependency>
 			<groupId>javax.servlet</groupId>

@@ -24,24 +24,15 @@
  */
 package fr.opensagres.xdocreport.remoting.resources.domain;
 
-import java.io.ByteArrayInputStream;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.io.InputStream;
-
 import javax.xml.bind.annotation.XmlMimeType;
 import javax.xml.bind.annotation.XmlRootElement;
-import javax.xml.bind.annotation.XmlTransient;
 
-import fr.opensagres.xdocreport.core.io.IOUtils;
 
 /**
  * Represention of a Binary Stream.
  * <p>
  * This class tries to avoid as much as possible to avoid loading the binary data in the JVM Memory.
- * 
+ *
  * @author <a href="mailto:tdelprat@nuxeo.com">Tiry</a>
  */
 @XmlRootElement
@@ -52,7 +43,7 @@ public class BinaryData
 
     private String resourceId;
 
-    private InputStream in;
+    private byte[] content;
 
     private String fileName;
 
@@ -64,37 +55,50 @@ public class BinaryData
     {
     }
 
-    public BinaryData( File file )
-        throws FileNotFoundException
-    {
-        this( file, DEFAULT_MIMETYPE );
-    }
 
-    public BinaryData( File file, String mimetype )
-        throws FileNotFoundException
-    {
-        this( new FileInputStream( file ), file.getName(), mimetype, file.length() );
-    }
+//
+//    public BinaryData( File file )
+//        throws FileNotFoundException
+//    {
+//        this( file, DEFAULT_MIMETYPE );
+//    }
+//
+//    public BinaryData( File file, String mimetype )
+//        throws FileNotFoundException
+//    {
+//        this( new FileInputStream( file ), file.getName(), mimetype, file.length() );
+//    }
+//
+//    public BinaryData( InputStream in, String filename )
+//    {
+//        this( in, filename, DEFAULT_MIMETYPE, -1 );
+//    }
+//
+//    public BinaryData( InputStream in, String filename, String mimetype )
+//    {
+//        this( in, filename, mimetype, -1 );
+//    }
+//
+//    public BinaryData( InputStream in, String filename, String mimetype, long length )
+//    {
+//        this.in = in;
+//        this.fileName = filename;
+//        this.mimeType = mimetype;
+//        this.length = length;
+//    }
 
-    public BinaryData( InputStream in, String filename )
-    {
-        this( in, filename, DEFAULT_MIMETYPE, -1 );
-    }
+    public BinaryData(byte[] content, String fileName) {
+		this(content,fileName,DEFAULT_MIMETYPE);
+	}
+    public BinaryData(byte[] content, String fileName, String mimeType) {
+		super();
+		this.content = content;
+		this.fileName = fileName;
+		this.mimeType = mimeType;
+	}
 
-    public BinaryData( InputStream in, String filename, String mimetype )
-    {
-        this( in, filename, mimetype, -1 );
-    }
 
-    public BinaryData( InputStream in, String filename, String mimetype, long length )
-    {
-        this.in = in;
-        this.fileName = filename;
-        this.mimeType = mimetype;
-        this.length = length;
-    }
-
-    public String getResourceId()
+	public String getResourceId()
     {
         return resourceId;
     }
@@ -110,20 +114,12 @@ public class BinaryData
     @XmlMimeType( DEFAULT_MIMETYPE )
     public byte[] getContent()
     {
-        try
-        {
-            return IOUtils.toByteArray( in );
-        }
-        catch ( IOException e )
-        {
-            e.printStackTrace(); // XXX boo
-            return null;
-        }
+        return content;
     }
 
     public void setContent( byte[] content )
     {
-        in = new ByteArrayInputStream( content );
+        this.content=content;
     }
 
     public String getFileName()
@@ -156,10 +152,10 @@ public class BinaryData
         this.length = length;
     }
 
-    @XmlTransient
-    public InputStream getStream()
-    {
-        return in;
-    }
+//    @XmlTransient
+//    public InputStream getStream()
+//    {
+//        return in;
+//    }
 
 }

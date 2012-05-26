@@ -29,8 +29,8 @@ import junit.framework.Assert;
 import org.junit.Test;
 
 import fr.opensagres.xdocreport.document.docx.preprocessor.DefaultStyle;
-import fr.opensagres.xdocreport.document.docx.preprocessor.HyperlinkInfo;
-import fr.opensagres.xdocreport.document.docx.preprocessor.HyperlinkRegistry;
+import fr.opensagres.xdocreport.document.docx.preprocessor.sax.hyperlinks.HyperlinkInfo;
+import fr.opensagres.xdocreport.document.docx.preprocessor.sax.hyperlinks.HyperlinkRegistry;
 import fr.opensagres.xdocreport.document.docx.template.DocxContextHelper;
 import fr.opensagres.xdocreport.document.preprocessor.sax.BufferedElement;
 import fr.opensagres.xdocreport.document.textstyling.IDocumentHandler;

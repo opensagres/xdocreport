@@ -29,14 +29,22 @@ public class FieldExtractor
 
     private final String name;
 
-    public FieldExtractor( String name )
+    private final boolean list;
+
+    public FieldExtractor( String name, boolean list )
     {
         this.name = name;
+        this.list = list;
     }
 
     public String getName()
     {
         return name;
+    }
+
+    public boolean isList()
+    {
+        return list;
     }
 
 }

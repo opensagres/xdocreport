@@ -74,7 +74,7 @@ public class PPTXSlidePreprocessorWithVelocityTestCase
             + "<a:r>" + "<a:rPr lang=\"fr-FR\" dirty=\"0\" err=\"1\" smtClean=\"0\"/>"
             + "<a:t>$item_developers.Name</a:t>" + "</a:r>" + "<a:endParaRPr lang=\"fr-FR\" dirty=\"0\"/>" + "</a:p>"
 
-            + "#end"
+            + "#{end}"
 
             + "</p:txBody>" + "</p:sld>", writer.toString() );
     }
@@ -161,7 +161,7 @@ public class PPTXSlidePreprocessorWithVelocityTestCase
             + "<a:r>" + "<a:rPr lang=\"fr-FR\" smtClean=\"0\"/>" + "<a:t>$item_developers.Mail</a:t>" + "</a:r>"
             + "<a:endParaRPr lang=\"fr-FR\" dirty=\"0\"/>" + "</a:p>"
 
-            + "#end"
+            + "#{end}"
 
             + "</p:txBody>" + "</p:sld>", writer.toString() );
     }

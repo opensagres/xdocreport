@@ -57,18 +57,6 @@ public class StylableHeaderFooter
         tableCell.setPadding( 0.0f );
     }
 
-    private void computeWidth()
-    {
-        // compute width as page width - margins
-        float headerFooterWidth =
-            ownerDocument.getPageSize().getWidth() - ownerDocument.getOriginMarginLeft()
-                - ownerDocument.getOriginMarginRight();
-        if ( getTotalWidth() != headerFooterWidth )
-        {
-            setTotalWidth( headerFooterWidth );
-        }
-    }
-
     public StylableTableCell getTableCell()
     {
         return tableCell;
@@ -86,13 +74,48 @@ public class StylableHeaderFooter
             {
                 tableCell.setMinimumHeight( minHeight );
             }
-        }
 
+            Float margin = headerFooterProperties.getMargin();
+            if ( margin != null )
+            {
+                tableCell.setPadding( margin );
+            }
+            Float marginBottom = headerFooterProperties.getMarginBottom();
+            if ( marginBottom != null )
+            {
+                tableCell.setPaddingBottom( marginBottom );
+            }
+            Float marginLeft = headerFooterProperties.getMarginLeft();
+            if ( marginLeft != null )
+            {
+                tableCell.setPaddingLeft( marginLeft );
+            }
+            Float marginRight = headerFooterProperties.getMarginRight();
+            if ( marginRight != null )
+            {
+                tableCell.setPaddingRight( marginRight );
+            }
+            Float marginTop = headerFooterProperties.getMarginTop();
+            if ( marginTop != null )
+            {
+                tableCell.setPaddingTop( marginTop );
+            }
+        }
+    }
+
+    private void setWidthIfNecessary()
+    {
+        // compute width as page width - margins
+        float headerFooterWidth = ownerDocument.right() - ownerDocument.left();
+        if ( getTotalWidth() != headerFooterWidth )
+        {
+            setTotalWidth( headerFooterWidth );
+        }
     }
 
     public float getTotalHeight()
     {
-        computeWidth();
+        setWidthIfNecessary();
         return super.getRowHeight( 0 );
     }
 
@@ -104,7 +127,7 @@ public class StylableHeaderFooter
     @Override
     public float writeSelectedRows( int rowStart, int rowEnd, float xPos, float yPos, PdfContentByte canvas )
     {
-        computeWidth();
+        setWidthIfNecessary();
         return super.writeSelectedRows( rowStart, rowEnd, xPos, yPos, canvas );
     }
 }

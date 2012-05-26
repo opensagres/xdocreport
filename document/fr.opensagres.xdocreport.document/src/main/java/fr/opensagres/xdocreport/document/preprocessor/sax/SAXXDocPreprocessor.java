@@ -64,9 +64,9 @@ public abstract class SAXXDocPreprocessor
             if ( document != null )
             {
                 document.save( writer );
-//                StringWriter s = new StringWriter();
-//                document.save( s );
-//                System.err.println( s );
+//                 StringWriter s = new StringWriter();
+//                 document.save( s );
+//                 System.err.println( s );
                 return true;
             }
 

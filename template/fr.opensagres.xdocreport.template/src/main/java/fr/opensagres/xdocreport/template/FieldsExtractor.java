@@ -32,7 +32,7 @@ public class FieldsExtractor<T extends FieldExtractor>
 
     private List<T> fields = new ArrayList<T>();
 
-    public T addFieldName( String fieldName )
+    public T addFieldName( String fieldName, boolean list )
     {
         for ( T field : fields )
         {
@@ -41,8 +41,11 @@ public class FieldsExtractor<T extends FieldExtractor>
                 return null;
             }
         }
-        T field = createField( fieldName );
-        fields.add( field );
+        T field = createField( fieldName, list );
+        if ( field != null )
+        {
+            fields.add( field );
+        }
         return field;
     }
 
@@ -51,9 +54,9 @@ public class FieldsExtractor<T extends FieldExtractor>
         return fields;
     }
 
-    protected T createField( String fieldName )
+    protected T createField( String fieldName, boolean list )
     {
-        return (T) new FieldExtractor( fieldName );
+        return (T) new FieldExtractor( fieldName, list );
     }
 
     public static FieldsExtractor<FieldExtractor> create()

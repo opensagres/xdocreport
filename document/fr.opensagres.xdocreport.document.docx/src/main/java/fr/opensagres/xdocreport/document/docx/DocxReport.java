@@ -27,7 +27,9 @@ package fr.opensagres.xdocreport.document.docx;
 import static fr.opensagres.xdocreport.document.docx.DocxConstants.CONTENT_TYPES_XML_ENTRY;
 import static fr.opensagres.xdocreport.document.docx.DocxConstants.MIME_MAPPING;
 import static fr.opensagres.xdocreport.document.docx.DocxConstants.WORD_DOCUMENT_XML_ENTRY;
+import static fr.opensagres.xdocreport.document.docx.DocxConstants.WORD_ENDNOTES_XML_ENTRY;
 import static fr.opensagres.xdocreport.document.docx.DocxConstants.WORD_FOOTER_XML_ENTRY;
+import static fr.opensagres.xdocreport.document.docx.DocxConstants.WORD_FOOTNOTES_XML_ENTRY;
 import static fr.opensagres.xdocreport.document.docx.DocxConstants.WORD_HEADER_XML_ENTRY;
 import static fr.opensagres.xdocreport.document.docx.DocxConstants.WORD_NUMBERING_XML_ENTRY;
 import static fr.opensagres.xdocreport.document.docx.DocxConstants.WORD_RELS_XMLRELS_XML_ENTRY;
@@ -54,12 +56,17 @@ import fr.opensagres.xdocreport.core.io.XDocArchive;
 import fr.opensagres.xdocreport.document.AbstractXDocReport;
 import fr.opensagres.xdocreport.document.docx.images.DocxImageRegistry;
 import fr.opensagres.xdocreport.document.docx.preprocessor.DefaultStyle;
-import fr.opensagres.xdocreport.document.docx.preprocessor.DocxPreprocessor;
-import fr.opensagres.xdocreport.document.docx.preprocessor.HyperlinkContentHandler;
-import fr.opensagres.xdocreport.document.docx.preprocessor.HyperlinkRegistry;
-import fr.opensagres.xdocreport.document.docx.preprocessor.HyperlinkUtils;
-import fr.opensagres.xdocreport.document.docx.preprocessor.InitialHyperlinkMap;
+import fr.opensagres.xdocreport.document.docx.preprocessor.sax.DocxPreprocessor;
 import fr.opensagres.xdocreport.document.docx.preprocessor.sax.contenttypes.DocxContentTypesPreprocessor;
+import fr.opensagres.xdocreport.document.docx.preprocessor.sax.hyperlinks.HyperlinkContentHandler;
+import fr.opensagres.xdocreport.document.docx.preprocessor.sax.hyperlinks.HyperlinkRegistry;
+import fr.opensagres.xdocreport.document.docx.preprocessor.sax.hyperlinks.HyperlinkUtils;
+import fr.opensagres.xdocreport.document.docx.preprocessor.sax.hyperlinks.InitialHyperlinkMap;
+import fr.opensagres.xdocreport.document.docx.preprocessor.sax.notes.InitialNoteInfoMap;
+import fr.opensagres.xdocreport.document.docx.preprocessor.sax.notes.NoteRegistry;
+import fr.opensagres.xdocreport.document.docx.preprocessor.sax.notes.NoteUtils;
+import fr.opensagres.xdocreport.document.docx.preprocessor.sax.notes.endnotes.DocxEndnotesPreprocessor;
+import fr.opensagres.xdocreport.document.docx.preprocessor.sax.notes.footnotes.DocxFootnotesPreprocessor;
 import fr.opensagres.xdocreport.document.docx.preprocessor.sax.numbering.DocxNumberingPreprocessor;
 import fr.opensagres.xdocreport.document.docx.preprocessor.sax.rels.DocxDocumentXMLRelsPreprocessor;
 import fr.opensagres.xdocreport.document.docx.preprocessor.sax.styles.DocxStylesPreprocessor;
@@ -77,7 +84,9 @@ public class DocxReport
     private static final long serialVersionUID = -2323716817951928168L;
 
     private static final String[] DEFAULT_XML_ENTRIES = { WORD_DOCUMENT_XML_ENTRY, WORD_STYLES_XML_ENTRY,
-        WORD_HEADER_XML_ENTRY, WORD_FOOTER_XML_ENTRY, WORD_RELS_XMLRELS_XML_ENTRY, WORD_NUMBERING_XML_ENTRY };
+        WORD_HEADER_XML_ENTRY, WORD_FOOTER_XML_ENTRY, WORD_RELS_XMLRELS_XML_ENTRY, WORD_FOOTNOTES_XML_ENTRY,
+        WORD_ENDNOTES_XML_ENTRY,
+        WORD_NUMBERING_XML_ENTRY };
 
     private Set<String> allEntryNamesHyperlinks;
 
@@ -85,6 +94,10 @@ public class DocxReport
 
     private DefaultStyle defaultStyle;
 
+    private InitialNoteInfoMap initialFootNoteInfoMap;
+
+    private InitialNoteInfoMap initialEndNoteInfoMap;
+    
     public DocxReport()
     {
         this.defaultStyle = new DefaultStyle();
@@ -99,6 +112,8 @@ public class DocxReport
     protected void registerPreprocessors()
     {
         super.addPreprocessor( WORD_STYLES_XML_ENTRY, DocxStylesPreprocessor.INSTANCE );
+        super.addPreprocessor( WORD_FOOTNOTES_XML_ENTRY, DocxFootnotesPreprocessor.INSTANCE );
+        super.addPreprocessor( WORD_ENDNOTES_XML_ENTRY, DocxEndnotesPreprocessor.INSTANCE );
         // super.addPreprocessor( WORD_DOCUMENT_XML_ENTRY, DocxDocumentPreprocessor.INSTANCE );
         // super.addPreprocessor( WORD_HEADER_XML_ENTRY, DocxDocumentPreprocessor.INSTANCE );
         // super.addPreprocessor( WORD_FOOTER_XML_ENTRY, DocxDocumentPreprocessor.INSTANCE );
@@ -126,7 +141,7 @@ public class DocxReport
                                                   IEntryWriterProvider writerProvider,
                                                   IEntryOutputStreamProvider outputStreamProvider )
     {
-        return new DocxImageRegistry( readerProvider, writerProvider, outputStreamProvider );
+        return new DocxImageRegistry( readerProvider, writerProvider, outputStreamProvider, getFieldsMetadata() );
     }
 
     @Override
@@ -172,6 +187,7 @@ public class DocxReport
                 throw new XDocReportException( e );
             }
         }
+        // Default style
         sharedContext.put( DocxContextHelper.DEFAULT_STYLE_KEY, defaultStyle );
     }
 
@@ -183,6 +199,7 @@ public class DocxReport
         // Compute if the docx has dynamic hyperlink
         if ( sharedContext != null )
         {
+            // 1) Hyperlink
             InitialHyperlinkMap hyperlinkMap = null;
             modifiedEntryNamesHyperlinks = new HashSet<String>();
             for ( String entryName : allEntryNamesHyperlinks )
@@ -193,6 +210,10 @@ public class DocxReport
                     modifiedEntryNamesHyperlinks.add( entryName );
                 }
             }
+            // 2) Footnotes
+            initialFootNoteInfoMap = NoteUtils.getInitialFootNoteInfoMap( sharedContext );
+            // 3) Endnotes
+            initialEndNoteInfoMap = NoteUtils.getInitialEndNoteInfoMap( sharedContext );            
         }
     }
 
@@ -213,6 +234,16 @@ public class DocxReport
         DocxContextHelper.putDefaultStyle( context, defaultStyle );
         // 4) Register styles generator if not exists.
         DocxContextHelper.getStylesGenerator( context );
+        // 5) Footnotes registry if need
+        if ( initialFootNoteInfoMap != null )
+        {
+            DocxContextHelper.putFootnoteRegistry( context, new NoteRegistry() );
+        }
+        // 6) Endnotes registry if need
+        if ( initialEndNoteInfoMap != null )
+        {
+            DocxContextHelper.putEndnoteRegistry( context, new NoteRegistry() );
+        }
     }
 
     @Override
@@ -221,4 +252,5 @@ public class DocxReport
     {
         super.onAfterProcessTemplateEngine( context, outputArchive );
     }
+
 }

@@ -158,14 +158,21 @@ public class ODTDocumentHandler
     public void startParagraph()
         throws IOException
     {
-        super.setTextLocation( TextLocation.End );
-        internalStartParagraph( false );
+        if ( paragraphsStack.isEmpty() || !paragraphsStack.peek() )
+        {
+            super.setTextLocation( TextLocation.End );
+            internalStartParagraph( false );
+        }
     }
 
     public void endParagraph()
         throws IOException
     {
+        // paragraphs inside a list are skipped
+        // if ( !paragraphsStack.peek() )
+        // {
         internalEndParagraph();
+        // }
     }
 
     private void internalStartParagraph( boolean containerIsList )

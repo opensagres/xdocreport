@@ -25,10 +25,10 @@
 package org.odftoolkit.odfdom.converter.internal.itext.styles;
 
 import java.util.List;
+import java.util.Map;
 
 public class Style
 {
-
     private final String styleName;
 
     private final String familyName;
@@ -51,6 +51,10 @@ public class Style
 
     private StyleTableCellProperties tableCellProperties;
 
+    private StyleGraphicProperties graphicProperties;
+
+    private Map<Integer, StyleListProperties> listPropertiesMap;
+
     private StyleSectionProperties sectionProperties;
 
     private StyleColumnsProperties columnsProperties;
@@ -66,6 +70,36 @@ public class Style
 
     public void merge( Style style )
     {
+        // propagate properties which are not fully merged
+        if ( style.getPageLayoutProperties() != null )
+        {
+            pageLayoutProperties = style.getPageLayoutProperties();
+        }
+        if ( style.getHeaderProperties() != null )
+        {
+            headerProperties = style.getHeaderProperties();
+        }
+        if ( style.getFooterProperties() != null )
+        {
+            footerProperties = style.getFooterProperties();
+        }
+        if ( style.getListPropertiesMap() != null )
+        {
+            listPropertiesMap = style.getListPropertiesMap();
+        }
+        if ( style.getSectionProperties() != null )
+        {
+            sectionProperties = style.getSectionProperties();
+        }
+        if ( style.getColumnsProperties() != null )
+        {
+            columnsProperties = style.getColumnsProperties();
+        }
+        if ( style.getColumnPropertiesList() != null )
+        {
+            columnPropertiesList = style.getColumnPropertiesList();
+        }
+
         // Merge paragraph properties
         if ( paragraphProperties == null )
         {
@@ -98,7 +132,7 @@ public class Style
             }
         }
 
-        // Merge table-cell properties
+        // Merge table properties
         if ( tableProperties == null )
         {
             if ( style.getTableProperties() != null )
@@ -111,6 +145,22 @@ public class Style
             if ( style.getTableProperties() != null )
             {
                 tableProperties.merge( style.getTableProperties() );
+            }
+        }
+
+        // Merge table-row properties
+        if ( tableRowProperties == null )
+        {
+            if ( style.getTableRowProperties() != null )
+            {
+                tableRowProperties = new StyleTableRowProperties( style.getTableRowProperties() );
+            }
+        }
+        else
+        {
+            if ( style.getTableRowProperties() != null )
+            {
+                tableRowProperties.merge( style.getTableRowProperties() );
             }
         }
 
@@ -129,6 +179,67 @@ public class Style
                 tableCellProperties.merge( style.getTableCellProperties() );
             }
         }
+
+        // Merge graphic properties
+        if ( graphicProperties == null )
+        {
+            if ( style.getGraphicProperties() != null )
+            {
+                graphicProperties = new StyleGraphicProperties( style.getGraphicProperties() );
+            }
+        }
+        else
+        {
+            if ( style.getGraphicProperties() != null )
+            {
+                graphicProperties.merge( style.getGraphicProperties() );
+            }
+        }
+    }
+
+    public String getStyleName()
+    {
+        return styleName;
+    }
+
+    public String getFamilyName()
+    {
+        return familyName;
+    }
+
+    public String getMasterPageName()
+    {
+        return masterPageName;
+    }
+
+    public StylePageLayoutProperties getPageLayoutProperties()
+    {
+        return pageLayoutProperties;
+    }
+
+    public void setPageLayoutProperties( StylePageLayoutProperties pageLayoutProperties )
+    {
+        this.pageLayoutProperties = pageLayoutProperties;
+    }
+
+    public StyleHeaderFooterProperties getHeaderProperties()
+    {
+        return headerProperties;
+    }
+
+    public void setHeaderProperties( StyleHeaderFooterProperties headerProperties )
+    {
+        this.headerProperties = headerProperties;
+    }
+
+    public StyleHeaderFooterProperties getFooterProperties()
+    {
+        return footerProperties;
+    }
+
+    public void setFooterProperties( StyleHeaderFooterProperties footerProperties )
+    {
+        this.footerProperties = footerProperties;
     }
 
     public StyleParagraphProperties getParagraphProperties()
@@ -181,6 +292,26 @@ public class Style
         this.tableCellProperties = tableCellProperties;
     }
 
+    public StyleGraphicProperties getGraphicProperties()
+    {
+        return graphicProperties;
+    }
+
+    public void setGraphicProperties( StyleGraphicProperties graphicProperties )
+    {
+        this.graphicProperties = graphicProperties;
+    }
+
+    public Map<Integer, StyleListProperties> getListPropertiesMap()
+    {
+        return listPropertiesMap;
+    }
+
+    public void setListPropertiesMap( Map<Integer, StyleListProperties> listPropertiesMap )
+    {
+        this.listPropertiesMap = listPropertiesMap;
+    }
+
     public StyleSectionProperties getSectionProperties()
     {
         return sectionProperties;
@@ -209,55 +340,5 @@ public class Style
     public void setColumnPropertiesList( List<StyleColumnProperties> columnPropertiesList )
     {
         this.columnPropertiesList = columnPropertiesList;
-    }
-
-    public StylePageLayoutProperties getPageLayoutProperties()
-    {
-        return pageLayoutProperties;
-    }
-
-    public void setPageLayoutProperties( StylePageLayoutProperties pageLayoutProperties )
-    {
-        this.pageLayoutProperties = pageLayoutProperties;
-    }
-
-    public StyleHeaderFooterProperties getHeaderProperties()
-    {
-        return headerProperties;
-    }
-
-    public void setHeaderProperties( StyleHeaderFooterProperties headerProperties )
-    {
-        this.headerProperties = headerProperties;
-    }
-
-    public StyleHeaderFooterProperties getFooterProperties()
-    {
-        return footerProperties;
-    }
-
-    public void setFooterProperties( StyleHeaderFooterProperties footerProperties )
-    {
-        this.footerProperties = footerProperties;
-    }
-
-    public void setMasterPageName( String masterPageName )
-    {
-        this.masterPageName = masterPageName;
-    }
-
-    public String getStyleName()
-    {
-        return styleName;
-    }
-
-    public String getFamilyName()
-    {
-        return familyName;
-    }
-
-    public String getMasterPageName()
-    {
-        return masterPageName;
     }
 }

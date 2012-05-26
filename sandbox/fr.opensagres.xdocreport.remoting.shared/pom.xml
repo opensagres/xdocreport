@@ -1,0 +1,38 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+  <parent>
+		<artifactId>sandbox</artifactId>
+		<groupId>fr.opensagres.xdocreport</groupId>
+		<version>0.9.8-SNAPSHOT</version>
+	</parent>
+  <artifactId>fr.opensagres.xdocreport.remoting.shared</artifactId>
+  <dependencies>
+
+
+   <dependency>
+       <groupId>fr.opensagres.xdocreport</groupId>
+       <artifactId>fr.opensagres.xdocreport.document</artifactId>
+       <version>0.9.8-SNAPSHOT</version>
+     </dependency>
+  <!-- API (non transitive depdendencies) -->
+
+    <dependency>
+      <groupId>org.apache.geronimo.specs</groupId>
+      <artifactId>geronimo-jaxrs_1.1_spec</artifactId>
+      <version>1.0</version>
+      <scope>provided</scope>
+    </dependency>
+
+    <dependency>
+      <groupId>org.apache.geronimo.specs</groupId>
+      <artifactId>geronimo-jaxb_2.1_spec</artifactId>
+      <version>1.0</version>
+      <scope>provided</scope>
+    </dependency>
+    <dependency>
+      <groupId>fr.opensagres.xdocreport</groupId>
+      <artifactId>fr.opensagres.xdocreport.remoting.api</artifactId>
+      <version>0.9.8-SNAPSHOT</version>
+    </dependency>
+  </dependencies>
+</project>

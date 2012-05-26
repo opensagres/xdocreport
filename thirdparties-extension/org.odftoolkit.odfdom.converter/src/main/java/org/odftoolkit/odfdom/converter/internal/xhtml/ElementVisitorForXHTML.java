@@ -268,7 +268,10 @@ public class ElementVisitorForXHTML
         }
         finally
         {
-            columnsWidth = null;
+            if ( columnsWidth != null )
+            {
+                columnsWidth = null;
+            }
         }
     }
 
@@ -334,7 +337,10 @@ public class ElementVisitorForXHTML
         }
         finally
         {
-            cellIndex = -1;
+            if ( cellIndex != -1 )
+            {
+                cellIndex = -1;
+            }
         }
     }
 

@@ -27,6 +27,12 @@ package org.odftoolkit.odfdom.converter;
 public class ODFConverterException
     extends RuntimeException
 {
+    private static final long serialVersionUID = 664309269352903329L;
+
+    public ODFConverterException( String msg )
+    {
+        super( msg );
+    }
 
     public ODFConverterException( Throwable e )
     {

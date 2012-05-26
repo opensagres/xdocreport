@@ -25,7 +25,7 @@
 package fr.opensagres.xdocreport.document.tools.remoting.resources;
 
 import java.io.File;
-import java.io.FileNotFoundException;
+import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -40,9 +40,9 @@ import fr.opensagres.xdocreport.remoting.resources.domain.BinaryData;
 import fr.opensagres.xdocreport.remoting.resources.domain.Resource;
 import fr.opensagres.xdocreport.remoting.resources.services.ResourcesException;
 import fr.opensagres.xdocreport.remoting.resources.services.ResourcesService;
-import fr.opensagres.xdocreport.remoting.resources.services.ResourcesServiceClientFactory;
 import fr.opensagres.xdocreport.remoting.resources.services.ResourcesServiceName;
 import fr.opensagres.xdocreport.remoting.resources.services.ServiceType;
+import fr.opensagres.xdocreport.remoting.resources.services.client.ResourcesServiceClientFactory;
 
 public class Main
 {
@@ -167,9 +167,9 @@ public class Main
         throws IOException, ResourcesException
     {
         BinaryData data = client.download( resourcePath );
-        if ( data.getStream() != null )
+        if ( data.getContent() != null )
         {
-            createFile( data.getStream(), outFile );
+            createFile( data.getContent(), outFile );
         }
         else
         {
@@ -222,9 +222,13 @@ public class Main
     }
 
     private static void processUpload( ResourcesService client, String resourceId, File out )
-        throws ResourcesException, FileNotFoundException
+        throws ResourcesException, IOException
     {
-        BinaryData data = new BinaryData( out );
+
+    	FileInputStream input= new FileInputStream(out);
+
+    	byte[] content=IOUtils.toByteArray(input);
+        BinaryData data = new BinaryData( content, out.getName() );
         data.setResourceId( resourceId );
         client.upload( data );
 

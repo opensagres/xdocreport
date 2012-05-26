@@ -35,9 +35,9 @@ public class BufferedTagElement
     extends BufferedRegion
 {
 
-    private String before;
+    private StringBuilder before;
 
-    private String after;
+    private StringBuilder after;
 
     public BufferedTagElement( BufferedElement ownerElement )
     {
@@ -50,33 +50,47 @@ public class BufferedTagElement
     {
         if ( before != null )
         {
-            writer.write( before );
+            writer.write( before.toString() );
         }
         super.save( writer );
         if ( after != null )
         {
-            writer.write( after );
+            writer.write( after.toString() );
         }
     }
 
     public void setBefore( String before )
     {
-        this.before = before;
+        if ( this.before == null )
+        {
+            this.before = new StringBuilder( before );
+        }
+        else
+        {
+            this.before.append( before );
+        }
     }
 
     public String getBefore()
     {
-        return before;
+        return before != null ? before.toString() : null;
     }
 
     public void setAfter( String after )
     {
-        this.after = after;
+        if ( this.after == null )
+        {
+            this.after = new StringBuilder( after );
+        }
+        else
+        {
+            this.after.append( after );
+        }
     }
 
     public String getAfter()
     {
-        return after;
+        return after != null ? after.toString() : null;
     }
 
 }

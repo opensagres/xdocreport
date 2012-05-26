@@ -25,6 +25,7 @@
 package fr.opensagres.xdocreport.template.velocity;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.Reader;
 import java.io.Writer;
 import java.util.Properties;
@@ -176,22 +177,20 @@ public class VelocityTemplateEngine
     /**
      * Reads 'velocity.properties' from classpath 
      * 
-     * @return <code>Properties</code> loaded or <code>null</code> if is not found 
-     * 
-     * @throws XDocReportException if IOException is catched reading 'velocity.properties'
+     * @return <code>Properties</code> loaded or <code>null</code> if is not found
      */
-    public synchronized Properties getVelocityDefaultProperties() throws XDocReportException {
-	InputStream is =  this.getClass().getClassLoader().getResourceAsStream("velocity.properties");
-	if(is != null){
-		try {
-			Properties p = new Properties();
-			p.load(is);
-			return p;
-		} catch (IOException e) {
-			throw new XDocReportException(e);
+    public synchronized Properties getVelocityDefaultProperties(){
+    	InputStream is =  this.getClass().getClassLoader().getResourceAsStream("velocity.properties");
+		if(is != null){
+			try {
+				Properties p = new Properties();
+				p.load(is);
+				return p;
+			} catch (IOException e) {
+				return null;
+			}
 		}
-	}
-	return null;
+		return null;
     }
 
     public IDocumentFormatter getDocumentFormatter()

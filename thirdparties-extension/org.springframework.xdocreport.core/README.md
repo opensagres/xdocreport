@@ -12,7 +12,7 @@ Only needs reference to templates directory
 
 <pre>
     &lt;bean class="java.lang.String" id="templatesDirectory"&gt;
-    	&lt;constructor-arg type="String" value="target/classes/templates/" /&gt;
+      &lt;constructor-arg type="String" value="target/classes/templates/" /&gt;
     &lt;/bean&gt;
     
     &lt;bean id="velocityTest" class="org.springframework.xdocreport.core.impl.TemplatesServiceImpl"&gt;
@@ -20,7 +20,7 @@ Only needs reference to templates directory
     &lt;/bean&gt;
 </pre>
 
-## Use [TemplatesServiceImplTest.java]https://github.com/alediator/xdocreport/blob/master/thirdparties-extension/org.springframework.xdocreport.core/src/test/java/org/springframework/xdocreport/core/impl/TemplatesServiceImplTest.java ##
+## Use ([TemplatesServiceImplTest.java](https://github.com/alediator/xdocreport/blob/master/thirdparties-extension/org.springframework.xdocreport.core/src/test/java/org/springframework/xdocreport/core/impl/TemplatesServiceImplTest.java)) ##
 
 To use from another service reference the service from a bean:
 
@@ -44,7 +44,11 @@ InputStream is = velocityTest.generateTemplate(values, HELLO_WORLD);
 
 ## More ##
 
-I'm adapting some code with:
+I'm adapting some code with in a Spring MVC evolution of [xdocreport-demo](https://github.com/pascalleclercq/xdocreport-demo) with this functionality:
 
-* Use from Spring MVC evolution of [xdocreport-demo](https://github.com/pascalleclercq/xdocreport-demo)
 * Simply mashup with spring security and a database saving data from reports generated
+* Connectors model for auto load data from:
+ * Databases
+ * Third-party WS
+ * Redmine
+* Rest service for report generation

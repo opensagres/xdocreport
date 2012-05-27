@@ -1,23 +1,50 @@
-# M&oacute;dulo de generaci&oacute;n de informes #
+# Xdocreport with simple Spring service #
 
-Aplicaci&oacute;n de gesti&oacute;n de plantillas y generaci&oacute;n de informes para el proyecto AE-SOA.
+Declare a template directory with your templates and call to this service.
 
-Basada en [demo de xdocreport](https://github.com/alediator/xdocreport-demo)
+## [TemplatesService.java](https://github.com/alediator/xdocreport/blob/master/thirdparties-extension/org.springframework.xdocreport.core/src/main/java/org/springframework/xdocreport/core/TemplatesService.java) ##
 
-Se compone de cuatro módulos:
+Simplify use to obtain a report.
 
-* Administración de usuarios y grupos de usuario
-* Administración de plantillas
-* Administración de datos manuales
-* Generación de informes
+## [applicationContext.xml](https://github.com/alediator/xdocreport/blob/master/thirdparties-extension/org.springframework.xdocreport.core/src/main/resources/applicationContext.xml) ##
 
-## Versiones ##
+Only needs reference to templates directory 
 
-* [DES](http://ae-soa-apps:8080/xdocreport-app-0.2-SNAPSHOT)
-* [PRE](http://aefpalabsoa01:8080/xdocreport-app-1.0-rc1)
+<pre>
+    &lt;bean class="java.lang.String" id="templatesDirectory"&gt;
+    	&lt;constructor-arg type="String" value="target/classes/templates/" /&gt;
+    &lt;/bean&gt;
+    
+    &lt;bean id="velocityTest" class="org.springframework.xdocreport.core.impl.TemplatesServiceImpl"&gt;
+    	&lt;property name="templatesDirectory"&gt;&lt;ref bean="templatesDirectory"/&gt;&lt;/property&gt;
+    &lt;/bean&gt;
+</pre>
 
-## Referencias ##
+## Use [TemplatesServiceImplTest.java]https://github.com/alediator/xdocreport/blob/master/thirdparties-extension/org.springframework.xdocreport.core/src/test/java/org/springframework/xdocreport/core/impl/TemplatesServiceImplTest.java ##
 
-* [An&aacute;lisis Funcional](https://docs.google.com/a/emergya.com/document/d/16fp3BsdobntZYSzJaSbAbl62_OHiUd6tGVnkh74DFPE/edit)
-* [Dise&ntilde;o t&eacute;cnico](https://docs.google.com/a/emergya.com/document/d/1uIRI7-kwKu2Q-U0o0zyurqwWmQT5MAz0nF_nH_0FL_g/edit)
-* [Manual de usuario](https://docs.google.com/a/emergya.com/document/d/1Wt7cEH5sLoItr1X3UO-OUytVepTJhuijCHPYyRSyTGk/edit)
+To use from another service reference the service from a bean:
+
+<pre>
+	@Resource
+	private TemplatesService velocityTest;
+</pre>
+
+, create a parameter map:
+
+<pre>
+		Map&lt;String, String&gt; values = new HashMap&lt;String, String&gt;();
+		values.put(HELLO_WORLD_NAME, HELLO_WORLD_NAME_VALUE);
+</pre>
+
+and call to the service:
+
+<pre>
+InputStream is = velocityTest.generateTemplate(values, HELLO_WORLD);
+</pre>
+
+## More ##
+
+I'm adapting some code with:
+
+* Use from Spring MVC evolution of [xdocreport-demo](https://github.com/pascalleclercq/xdocreport-demo)
+* Simply mashup with spring security and a database saving data from reports generated

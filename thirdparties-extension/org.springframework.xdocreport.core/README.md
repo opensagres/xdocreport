@@ -20,7 +20,22 @@ Only needs reference to templates directory
     &lt;/bean&gt;
 </pre>
 
-## Use ([TemplatesServiceImplTest.java](https://github.com/alediator/xdocreport/blob/master/thirdparties-extension/org.springframework.xdocreport.core/src/test/java/org/springframework/xdocreport/core/impl/TemplatesServiceImplTest.java)) ##
+## Use  ##
+
+### From pom.xml ###
+
+Only adds the dependency:
+
+<pre>
+		&lt;!-- XDOCREPORT DEPENDENCIES --&gt;
+		&lt;dependency&gt;
+			&lt;groupId&gt;fr.opensagres.xdocreport&lt;/groupId&gt;
+			&lt;artifactId&gt;org.springframework.xdocreport.core&lt;/artifactId&gt;
+			&lt;version&gt;${xdocreport.version}&lt;/version&gt;
+		&lt;/dependency&gt;
+</pre>
+
+### From a bean ([TemplatesServiceImplTest.java](https://github.com/alediator/xdocreport/blob/master/thirdparties-extension/org.springframework.xdocreport.core/src/test/java/org/springframework/xdocreport/core/impl/TemplatesServiceImplTest.java)) ###
 
 To use from another service reference the service from a bean:
 

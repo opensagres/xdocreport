@@ -228,7 +228,10 @@ public class Main
     	FileInputStream input= new FileInputStream(out);
 
     	byte[] content=IOUtils.toByteArray(input);
-        BinaryData data = new BinaryData( content, out.getName() );
+      //  BinaryData data = new BinaryData( content, out.getName() );
+        BinaryData data = new BinaryData( );
+        data.setContent(input);
+        data.setFileName(out.getName());
         data.setResourceId( resourceId );
         client.upload( data );
 

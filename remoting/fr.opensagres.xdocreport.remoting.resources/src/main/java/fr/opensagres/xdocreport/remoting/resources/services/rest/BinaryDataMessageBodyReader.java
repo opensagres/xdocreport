@@ -71,8 +71,12 @@ public class BinaryDataMessageBodyReader
 
         String resourceId = httpHeaders.getFirst( "X-resourceId" );
 
-        byte[] content=IOUtils.toByteArray(entityStream);
-        BinaryData data = new BinaryData( content, filename, mimetype );
+      //  byte[] content=IOUtils.toByteArray(entityStream);
+        //BinaryData data = new BinaryData( entityStream, filename, mimetype );
+        BinaryData data = new BinaryData( );
+        data.setContent(entityStream);
+        data.setFileName(filename);
+        data.setMimeType(mimetype);
         data.setResourceId( resourceId );
 
         return data;

@@ -138,12 +138,12 @@ public class JAXWSResourcesServiceClientTestCase
         // }
     }
 
-    private void createFile( byte[] stream, String filename )
+    private void createFile( InputStream stream, String filename )
         throws FileNotFoundException, IOException
     {
         File aFile = new File( tempFolder, this.getClass().getSimpleName() + "_" + filename );
         FileOutputStream fos = new FileOutputStream( aFile );
-        IOUtils.write( stream, fos );
+        IOUtils.copy( stream, fos );
     }
 
     @Test
@@ -152,7 +152,7 @@ public class JAXWSResourcesServiceClientTestCase
     {
         String resourceId = "ZzzNewSimple_" + this.getClass().getSimpleName() + ".docx";
         ResourcesService client = JAXWSResourcesServiceClientFactory.create( BASE_ADDRESS );
-        byte[] document = IOUtils.toByteArray( Data.class.getResourceAsStream( "Simple.docx" ) );
+        InputStream document =  Data.class.getResourceAsStream( "Simple.docx" ) ;
 
         BinaryData dataIn = new BinaryData();
         dataIn.setResourceId( resourceId );
@@ -174,7 +174,7 @@ public class JAXWSResourcesServiceClientTestCase
     {
         String resourceId = "ZzzCustom____NewCustomSimple_" + this.getClass().getSimpleName() + ".docx";
         ResourcesService client = JAXWSResourcesServiceClientFactory.create( BASE_ADDRESS );
-        byte[] document = IOUtils.toByteArray( Data.class.getResourceAsStream( "Simple.docx" ) );
+        InputStream document =  Data.class.getResourceAsStream( "Simple.docx" ) ;
 
         BinaryData dataIn = new BinaryData();
         dataIn.setResourceId( resourceId );

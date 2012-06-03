@@ -43,7 +43,10 @@ public abstract class FileResourcesService
         {
         	FileInputStream input = new FileInputStream(file);
         	byte[] content=IOUtils.toByteArray(input);
-            BinaryData data = new BinaryData( content, file.getName() );
+            //BinaryData data = new BinaryData( content, file.getName() );
+        	BinaryData data = new BinaryData( );
+        	data.setContent(input);
+        	data.setFileName(file.getName());
             data.setResourceId( resourceId );
             return data;
         }
@@ -61,18 +64,18 @@ public abstract class FileResourcesService
     public void upload( BinaryData data ) throws ResourcesException
     {
         String resourceId = data.getResourceId();
-        byte[] content = data.getContent();
+        InputStream input = data.getContent();
         String resourcePath = getResourcePath( resourceId );
         File file = new File( getRootFolder(), resourcePath );
         if ( !file.getParentFile().exists() )
         {
             file.getParentFile().mkdirs();
         }
-        InputStream input = null;
+
         OutputStream output = null;
         try
         {
-            input = new ByteArrayInputStream( content );
+
             output = new FileOutputStream( file );
             IOUtils.copyLarge( input, output );
         }

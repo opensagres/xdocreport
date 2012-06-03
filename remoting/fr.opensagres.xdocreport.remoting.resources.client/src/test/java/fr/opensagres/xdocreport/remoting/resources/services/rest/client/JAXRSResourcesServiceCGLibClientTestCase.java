@@ -142,12 +142,12 @@ public class JAXRSResourcesServiceCGLibClientTestCase
         createFile( document.getContent(), resourceId );
     }
 
-    private void createFile( byte[] content, String filename )
+    private void createFile( InputStream content, String filename )
         throws FileNotFoundException, IOException
     {
         File aFile = new File( tempFolder, this.getClass().getSimpleName() + "_" + filename );
         FileOutputStream fos = new FileOutputStream( aFile );
-        IOUtils.write(content, fos );
+        IOUtils.copy(content, fos );
     }
 
     public static void main( String[] args ) throws IOException
@@ -155,7 +155,7 @@ public class JAXRSResourcesServiceCGLibClientTestCase
         String resourceId = "Opensagres____ODTCV.odt";
         ResourcesService client =
             JAXRSClientFactory.create( "http://xdocreport.opensagres.cloudbees.net/cxf", JAXRSResourcesService.class, Providers.get() );
-        byte[] document = IOUtils.toByteArray( Data.class.getResourceAsStream( "Simple.docx" ) );
+        InputStream document = Data.class.getResourceAsStream( "Simple.docx" ) ;
 
         ClientConfiguration config = WebClient.getConfig(client);
         HTTPConduit http = (HTTPConduit)config.getConduit();
@@ -183,7 +183,7 @@ public class JAXRSResourcesServiceCGLibClientTestCase
         String resourceId = "ZzzNewSimple_" + this.getClass().getSimpleName() + ".docx";
         ResourcesService client =
             JAXRSClientFactory.create( BASE_ADDRESS, JAXRSResourcesService.class, Providers.get() );
-        byte[] document = IOUtils.toByteArray( Data.class.getResourceAsStream( "Simple.docx" ) );
+        InputStream document =  Data.class.getResourceAsStream( "Simple.docx" ) ;
 
         BinaryData dataIn = new BinaryData();
         dataIn.setResourceId( resourceId );
@@ -207,7 +207,7 @@ public class JAXRSResourcesServiceCGLibClientTestCase
         String resourceId = "ZzzCustom____NewCustomSimple_" + this.getClass().getSimpleName() + ".docx";
         ResourcesService client =
             JAXRSClientFactory.create( BASE_ADDRESS, JAXRSResourcesService.class, Providers.get() );
-        byte[] document = IOUtils.toByteArray( Data.class.getResourceAsStream( "Simple.docx" ) );
+        InputStream document =  Data.class.getResourceAsStream( "Simple.docx" ) ;
 
         BinaryData dataIn = new BinaryData();
         dataIn.setResourceId( resourceId );

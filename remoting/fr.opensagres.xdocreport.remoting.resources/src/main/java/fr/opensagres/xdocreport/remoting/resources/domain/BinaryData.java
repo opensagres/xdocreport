@@ -24,6 +24,8 @@
  */
 package fr.opensagres.xdocreport.remoting.resources.domain;
 
+import java.io.InputStream;
+
 import javax.xml.bind.annotation.XmlMimeType;
 import javax.xml.bind.annotation.XmlRootElement;
 
@@ -43,7 +45,7 @@ public class BinaryData
 
     private String resourceId;
 
-    private byte[] content;
+    private InputStream content;
 
     private String fileName;
 
@@ -87,15 +89,15 @@ public class BinaryData
 //        this.length = length;
 //    }
 
-    public BinaryData(byte[] content, String fileName) {
-		this(content,fileName,DEFAULT_MIMETYPE);
-	}
-    public BinaryData(byte[] content, String fileName, String mimeType) {
-		super();
-		this.content = content;
-		this.fileName = fileName;
-		this.mimeType = mimeType;
-	}
+//    public BinaryData(byte[] content, String fileName) {
+//		this(content,fileName,DEFAULT_MIMETYPE);
+//	}
+//    public BinaryData(byte[] content, String fileName, String mimeType) {
+//		super();
+//		this.content = content;
+//		this.fileName = fileName;
+//		this.mimeType = mimeType;
+//	}
 
 
 	public String getResourceId()
@@ -112,12 +114,12 @@ public class BinaryData
      * This method is only here for JAXB and compatibility
      */
     @XmlMimeType( DEFAULT_MIMETYPE )
-    public byte[] getContent()
+    public InputStream getContent()
     {
         return content;
     }
 
-    public void setContent( byte[] content )
+    public void setContent(InputStream content )
     {
         this.content=content;
     }

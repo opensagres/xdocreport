@@ -1,11 +1,9 @@
 package fr.opensagres.xdocreport.remoting.resources.services.file;
 
-import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -16,6 +14,7 @@ import fr.opensagres.xdocreport.remoting.resources.domain.BinaryData;
 import fr.opensagres.xdocreport.remoting.resources.domain.Filter;
 import fr.opensagres.xdocreport.remoting.resources.domain.LargeBinaryData;
 import fr.opensagres.xdocreport.remoting.resources.domain.Resource;
+import fr.opensagres.xdocreport.remoting.resources.domain.ResourceType;
 import fr.opensagres.xdocreport.remoting.resources.services.AbstractResourcesService;
 import fr.opensagres.xdocreport.remoting.resources.services.ResourcesException;
 import fr.opensagres.xdocreport.remoting.resources.services.rest.JAXRSResourcesService;
@@ -124,7 +123,7 @@ public abstract class FileResourcesService
         }
         if ( file.isDirectory() )
         {
-            resource.setType( Resource.FOLDER_TYPE );
+            resource.setType( ResourceType.FOLDER );
             File[] files = file.listFiles();
             if ( files.length > 0 )
             {
@@ -137,7 +136,7 @@ public abstract class FileResourcesService
         }
         else
         {
-            resource.setType( Resource.FILE_TYPE );
+            resource.setType( ResourceType.FILE );
         }
 
         return resource;

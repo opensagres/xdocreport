@@ -34,13 +34,6 @@ import javax.xml.bind.annotation.XmlRootElement;
 @XmlRootElement
 public class Resource
 {
-    /**
-     * Types of resource.
-     */
-
-    public static int FOLDER_TYPE = 0;
-
-    public static int FILE_TYPE = 1;
 
     private String id;
 
@@ -48,11 +41,11 @@ public class Resource
 
     private List<Resource> children;
 
-    private int type;
+    private ResourceType type;
 
     /**
      * Returns the unique resource id.
-     * 
+     *
      * @return the unique resource id.
      */
     public String getId()
@@ -62,7 +55,7 @@ public class Resource
 
     /**
      * Set the unique resource id
-     * 
+     *
      * @param id the unique resource id
      */
     public void setId( String id )
@@ -72,7 +65,7 @@ public class Resource
 
     /**
      * Returns the resource name.
-     * 
+     *
      * @return the resource name.
      */
     public String getName()
@@ -82,7 +75,7 @@ public class Resource
 
     /**
      * Set the resource name.
-     * 
+     *
      * @param name the resource name.
      */
     public void setName( String name )
@@ -92,27 +85,27 @@ public class Resource
 
     /**
      * Returns the resource type (folder or file).
-     * 
+     *
      * @return the resource type (folder or file).
      */
-    public int getType()
+    public ResourceType getType()
     {
         return type;
     }
 
     /**
      * Set the resource type (folder or file).
-     * 
+     *
      * @param type the resource type (folder or file).
      */
-    public void setType( int type )
+    public void setType( ResourceType type )
     {
         this.type = type;
     }
 
     /**
      * Returns the children resources of this resource.
-     * 
+     *
      * @return the children resources of this resource.
      */
     public List<Resource> getChildren()
@@ -122,7 +115,7 @@ public class Resource
 
     /**
      * Set the children resources of this resource.
-     * 
+     *
      * @param children the children resources of this resource.
      */
     public void setChildren( List<Resource> children )

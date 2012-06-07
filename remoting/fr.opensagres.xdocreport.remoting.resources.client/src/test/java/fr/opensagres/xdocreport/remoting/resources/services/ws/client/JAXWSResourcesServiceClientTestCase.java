@@ -19,6 +19,7 @@ import fr.opensagres.xdocreport.core.io.IOUtils;
 import fr.opensagres.xdocreport.remoting.resources.Data;
 import fr.opensagres.xdocreport.remoting.resources.domain.BinaryData;
 import fr.opensagres.xdocreport.remoting.resources.domain.Resource;
+import fr.opensagres.xdocreport.remoting.resources.domain.ResourceType;
 import fr.opensagres.xdocreport.remoting.resources.services.FileUtils;
 import fr.opensagres.xdocreport.remoting.resources.services.ResourceComparator;
 import fr.opensagres.xdocreport.remoting.resources.services.ResourcesException;
@@ -88,9 +89,9 @@ public class JAXWSResourcesServiceClientTestCase
         Collections.sort( root.getChildren(), ResourceComparator.INSTANCE );
 
         Assert.assertEquals( "Custom", root.getChildren().get( 0 ).getName() );
-        Assert.assertEquals( Resource.FOLDER_TYPE, root.getChildren().get( 0 ).getType() );
+        Assert.assertEquals( ResourceType.FOLDER, root.getChildren().get( 0 ).getType() );
         Assert.assertEquals( "Opensagres", root.getChildren().get( 1 ).getName() );
-        Assert.assertEquals( Resource.FOLDER_TYPE, root.getChildren().get( 1 ).getType() );
+        Assert.assertEquals( ResourceType.FOLDER, root.getChildren().get( 1 ).getType() );
         Assert.assertEquals( "Simple.docx", root.getChildren().get( 2 ).getName() );
         Assert.assertEquals( "Simple.odt", root.getChildren().get( 3 ).getName() );
 

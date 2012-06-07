@@ -36,7 +36,7 @@ import fr.opensagres.xdocreport.template.formatter.FieldsMetadata;
 public class VelocityFieldsMetadataClassSerializerTestCase
 {
 
-    private class Project
+	protected class Project
     {
 
         private final String name;
@@ -52,7 +52,7 @@ public class VelocityFieldsMetadataClassSerializerTestCase
         }
     }
 
-    private class Role
+    protected class Role
     {
 
         private final String name;
@@ -68,7 +68,7 @@ public class VelocityFieldsMetadataClassSerializerTestCase
         }
     }
 
-    private static class Developer
+    protected static class Developer
     {
 
         private final String name;

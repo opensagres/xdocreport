@@ -230,7 +230,7 @@ public class Main
     	byte[] content=IOUtils.toByteArray(input);
       //  BinaryData data = new BinaryData( content, out.getName() );
         BinaryData data = new BinaryData( );
-        data.setContent(input);
+        data.setContent(content);
         data.setFileName(out.getName());
         data.setResourceId( resourceId );
         client.upload( data );

@@ -34,13 +34,15 @@ public enum ResourcesServiceName
 
     /**
      * Returns the enum {@link ResourcesServiceName} from the given String value and null if not found.
-     * 
+     *
      * @param value
      * @return
      */
     public static ResourcesServiceName getServiceName( String value )
     {
+
         ResourcesServiceName[] names = ResourcesServiceName.values();
+
         ResourcesServiceName currentName = null;
         for ( int i = 0; i < names.length; i++ )
         {

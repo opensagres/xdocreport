@@ -4,6 +4,7 @@ import java.util.List;
 
 import fr.opensagres.xdocreport.remoting.resources.domain.BinaryData;
 import fr.opensagres.xdocreport.remoting.resources.domain.Filter;
+import fr.opensagres.xdocreport.remoting.resources.domain.LargeBinaryData;
 import fr.opensagres.xdocreport.remoting.resources.domain.Resource;
 import fr.opensagres.xdocreport.remoting.resources.services.DelegateResourcesService;
 import fr.opensagres.xdocreport.remoting.resources.services.ResourcesException;
@@ -60,5 +61,22 @@ public class JAXRSResourcesServiceImpl
     {
         super.upload( dataIn );
     }
+
+	public LargeBinaryData downloadLarge(String resourceId)
+			throws ResourcesException {
+		return getDelegate().downloadLarge(resourceId);
+
+	}
+
+	@Override
+	protected JAXRSResourcesService getDelegate() {
+		return (JAXRSResourcesService)super.getDelegate();
+	}
+
+
+	public void uploadLarge(LargeBinaryData data) throws ResourcesException {
+		 getDelegate().uploadLarge(data);
+
+	}
 
 }

@@ -45,7 +45,7 @@ import fr.opensagres.xdocreport.remoting.resources.domain.BinaryData;
  * @author <a href="mailto:tdelprat@nuxeo.com">Tiry</a>
  */
 @Provider
-public class BinaryDataMessageBodyReader
+public class LargeBinaryDataMessageBodyReader
     implements MessageBodyReader<BinaryData>
 {
 

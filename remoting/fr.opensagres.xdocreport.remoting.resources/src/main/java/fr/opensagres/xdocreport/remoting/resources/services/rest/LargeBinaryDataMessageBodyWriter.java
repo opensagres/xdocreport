@@ -26,58 +26,55 @@
 package fr.opensagres.xdocreport.remoting.resources.services.rest;
 
 import java.io.IOException;
-import java.io.InputStream;
+import java.io.OutputStream;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Type;
 
 import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.MultivaluedMap;
-import javax.ws.rs.ext.MessageBodyReader;
+import javax.ws.rs.ext.MessageBodyWriter;
 import javax.ws.rs.ext.Provider;
 
 import fr.opensagres.xdocreport.core.io.IOUtils;
 import fr.opensagres.xdocreport.remoting.resources.domain.BinaryData;
 
 /**
- * {@link MessageBodyReader} used by JAXRS to read the {@link BinaryData} from an Http request
+ * {@link MessageBodyWriter} that streams an {@link BinaryData} object in an Http response.
+ * <p>
+ * To allow streaming the binday data is directly sent inside the Http body and the other attributes are passed as http
+ * header (it avoids to use MultiPart encoding)
  *
  * @author <a href="mailto:tdelprat@nuxeo.com">Tiry</a>
  */
 @Provider
-public class BinaryDataMessageBodyReader
-    implements MessageBodyReader<BinaryData>
+public class LargeBinaryDataMessageBodyWriter
+    implements MessageBodyWriter<BinaryData>
 {
 
-    public boolean isReadable( Class<?> type, Type genericType, Annotation[] annotations, MediaType mediaType )
+    public boolean isWriteable( Class<?> type, Type genericType, Annotation[] annotations, MediaType mediaType )
     {
         return BinaryData.class.isAssignableFrom( type );
     }
 
-    public BinaryData readFrom( Class<BinaryData> type, Type genericType, Annotation[] annotations,
-                                MediaType mediaType, MultivaluedMap<String, String> httpHeaders,
-                                InputStream entityStream )
+    public long getSize( BinaryData t, Class<?> type, Type genericType, Annotation[] annotations, MediaType mediaType )
+    {
+        return t.getLength();
+    }
+
+    public void writeTo( BinaryData t, Class<?> type, Type genericType, Annotation[] annotations, MediaType mediaType,
+                         MultivaluedMap<String, Object> httpHeaders, OutputStream entityStream )
         throws IOException, WebApplicationException
     {
 
-        String filename = "";
-        String cd = httpHeaders.getFirst( "Content-Disposition" );
-        if ( cd != null )
-        {
-            filename = cd.replace( "attachement;filename=", "" );
-        }
+        byte[] content = t.getContent();
 
-        String mimetype = httpHeaders.getFirst( "Content-Type" );
+        httpHeaders.add( "Content-Disposition", "attachement;filename=" + t.getFileName() );
+        httpHeaders.add( "Content-Type", t.getMimeType() );
+        httpHeaders.add( "X-resourceId", t.getResourceId() );
+        IOUtils.write(content, entityStream);
 
-        String resourceId = httpHeaders.getFirst( "X-resourceId" );
 
-        byte[] content=IOUtils.toByteArray(entityStream);
-        BinaryData data = new BinaryData( );
-        data.setContent(content);
-        data.setFileName(filename);
-        data.setMimeType(mimetype);
-        data.setResourceId( resourceId );
-
-        return data;
     }
+
 }

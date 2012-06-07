@@ -32,6 +32,7 @@ import javax.ws.rs.core.Application;
 
 import fr.opensagres.xdocreport.remoting.resources.services.ResourcesService;
 import fr.opensagres.xdocreport.remoting.resources.services.ResourcesServicesRegistry;
+import fr.opensagres.xdocreport.remoting.resources.services.rest.JAXRSResourcesService;
 import fr.opensagres.xdocreport.remoting.resources.services.rest.Providers;
 
 public class JAXRSResourcesApplication
@@ -76,7 +77,7 @@ public class JAXRSResourcesApplication
         HashSet<Object> singletons = new HashSet<Object>();
         // register here Providers
         singletons.addAll( Providers.get() );
-        List<ResourcesService> services = getRegistry().getServices();
+        List<JAXRSResourcesService> services = getRegistry().getJaxRsResourcesService();
         for ( final ResourcesService service : services )
         {
             singletons.add( new JAXRSResourcesServiceImpl( service ) );

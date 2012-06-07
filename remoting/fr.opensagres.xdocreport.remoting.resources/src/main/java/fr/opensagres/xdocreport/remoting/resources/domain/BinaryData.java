@@ -24,9 +24,6 @@
  */
 package fr.opensagres.xdocreport.remoting.resources.domain;
 
-import java.io.InputStream;
-
-import javax.xml.bind.annotation.XmlMimeType;
 import javax.xml.bind.annotation.XmlRootElement;
 
 
@@ -45,60 +42,13 @@ public class BinaryData
 
     private String resourceId;
 
-    private InputStream content;
+    private byte[] content;
 
     private String fileName;
 
     private String mimeType = DEFAULT_MIMETYPE;
 
     private long length;
-
-    public BinaryData()
-    {
-    }
-
-
-//
-//    public BinaryData( File file )
-//        throws FileNotFoundException
-//    {
-//        this( file, DEFAULT_MIMETYPE );
-//    }
-//
-//    public BinaryData( File file, String mimetype )
-//        throws FileNotFoundException
-//    {
-//        this( new FileInputStream( file ), file.getName(), mimetype, file.length() );
-//    }
-//
-//    public BinaryData( InputStream in, String filename )
-//    {
-//        this( in, filename, DEFAULT_MIMETYPE, -1 );
-//    }
-//
-//    public BinaryData( InputStream in, String filename, String mimetype )
-//    {
-//        this( in, filename, mimetype, -1 );
-//    }
-//
-//    public BinaryData( InputStream in, String filename, String mimetype, long length )
-//    {
-//        this.in = in;
-//        this.fileName = filename;
-//        this.mimeType = mimetype;
-//        this.length = length;
-//    }
-
-//    public BinaryData(byte[] content, String fileName) {
-//		this(content,fileName,DEFAULT_MIMETYPE);
-//	}
-//    public BinaryData(byte[] content, String fileName, String mimeType) {
-//		super();
-//		this.content = content;
-//		this.fileName = fileName;
-//		this.mimeType = mimeType;
-//	}
-
 
 	public String getResourceId()
     {
@@ -110,19 +60,6 @@ public class BinaryData
         this.resourceId = resourceId;
     }
 
-    /*
-     * This method is only here for JAXB and compatibility
-     */
-    @XmlMimeType( DEFAULT_MIMETYPE )
-    public InputStream getContent()
-    {
-        return content;
-    }
-
-    public void setContent(InputStream content )
-    {
-        this.content=content;
-    }
 
     public String getFileName()
     {
@@ -154,10 +91,14 @@ public class BinaryData
         this.length = length;
     }
 
-//    @XmlTransient
-//    public InputStream getStream()
-//    {
-//        return in;
-//    }
+	public byte[] getContent() {
+		return content;
+	}
+
+	public void setContent(byte[] content) {
+		this.content = content;
+	}
+
+
 
 }

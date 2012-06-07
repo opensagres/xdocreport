@@ -14,12 +14,14 @@ import fr.opensagres.xdocreport.core.io.IOUtils;
 import fr.opensagres.xdocreport.core.utils.StringUtils;
 import fr.opensagres.xdocreport.remoting.resources.domain.BinaryData;
 import fr.opensagres.xdocreport.remoting.resources.domain.Filter;
+import fr.opensagres.xdocreport.remoting.resources.domain.LargeBinaryData;
 import fr.opensagres.xdocreport.remoting.resources.domain.Resource;
 import fr.opensagres.xdocreport.remoting.resources.services.AbstractResourcesService;
 import fr.opensagres.xdocreport.remoting.resources.services.ResourcesException;
+import fr.opensagres.xdocreport.remoting.resources.services.rest.JAXRSResourcesService;
 
 public abstract class FileResourcesService
-    extends AbstractResourcesService
+    extends AbstractResourcesService implements JAXRSResourcesService
 {
 
     private final File rootFolder;
@@ -45,7 +47,7 @@ public abstract class FileResourcesService
         	byte[] content=IOUtils.toByteArray(input);
             //BinaryData data = new BinaryData( content, file.getName() );
         	BinaryData data = new BinaryData( );
-        	data.setContent(input);
+        	data.setContent(content);
         	data.setFileName(file.getName());
             data.setResourceId( resourceId );
             return data;
@@ -61,10 +63,20 @@ public abstract class FileResourcesService
         return StringUtils.replaceAll( resourceId, "____", "/" );
     }
 
+    public LargeBinaryData downloadLarge(String resourceId)
+    		throws ResourcesException {
+    	// TODO Auto-generated method stub
+    	return null;
+    }
+
+    public void uploadLarge(LargeBinaryData data) throws ResourcesException {
+    	// TODO Auto-generated method stub
+
+    }
     public void upload( BinaryData data ) throws ResourcesException
     {
         String resourceId = data.getResourceId();
-        InputStream input = data.getContent();
+        byte[] input = data.getContent();
         String resourcePath = getResourcePath( resourceId );
         File file = new File( getRootFolder(), resourcePath );
         if ( !file.getParentFile().exists() )
@@ -77,7 +89,7 @@ public abstract class FileResourcesService
         {
 
             output = new FileOutputStream( file );
-            IOUtils.copyLarge( input, output );
+            IOUtils.write( input, output );
         }
         catch ( IOException e )
         {
@@ -85,10 +97,7 @@ public abstract class FileResourcesService
         }
         finally
         {
-            if ( input != null )
-            {
-                IOUtils.closeQuietly( input );
-            }
+
             if ( output != null )
             {
                 IOUtils.closeQuietly( output );

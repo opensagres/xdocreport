@@ -138,12 +138,13 @@ public class JAXWSResourcesServiceClientTestCase
         // }
     }
 
-    private void createFile( InputStream stream, String filename )
+    private void createFile( byte[] stream, String filename )
         throws FileNotFoundException, IOException
     {
         File aFile = new File( tempFolder, this.getClass().getSimpleName() + "_" + filename );
         FileOutputStream fos = new FileOutputStream( aFile );
-        IOUtils.copy( stream, fos );
+        IOUtils.write( stream, fos );
+        fos.close();
     }
 
     @Test
@@ -156,7 +157,7 @@ public class JAXWSResourcesServiceClientTestCase
 
         BinaryData dataIn = new BinaryData();
         dataIn.setResourceId( resourceId );
-        dataIn.setContent( document );
+        dataIn.setContent( IOUtils.toByteArray(document) );
         client.upload( dataIn );
 
         // Test if file was uploaded in the target/resources folder
@@ -178,7 +179,7 @@ public class JAXWSResourcesServiceClientTestCase
 
         BinaryData dataIn = new BinaryData();
         dataIn.setResourceId( resourceId );
-        dataIn.setContent( document );
+        dataIn.setContent( IOUtils.toByteArray(document) );
         client.upload( dataIn );
 
         // Test if file was uploaded in the target/resources folder

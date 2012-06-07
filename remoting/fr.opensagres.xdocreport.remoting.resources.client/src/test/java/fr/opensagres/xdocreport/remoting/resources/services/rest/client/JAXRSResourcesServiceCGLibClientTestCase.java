@@ -142,12 +142,13 @@ public class JAXRSResourcesServiceCGLibClientTestCase
         createFile( document.getContent(), resourceId );
     }
 
-    private void createFile( InputStream content, String filename )
+    private void createFile( byte[] content, String filename )
         throws FileNotFoundException, IOException
     {
         File aFile = new File( tempFolder, this.getClass().getSimpleName() + "_" + filename );
         FileOutputStream fos = new FileOutputStream( aFile );
-        IOUtils.copy(content, fos );
+        IOUtils.write(content, fos );
+        fos.close();
     }
 
     public static void main( String[] args ) throws IOException
@@ -170,7 +171,7 @@ public class JAXRSResourcesServiceCGLibClientTestCase
 
         BinaryData dataIn = new BinaryData();
         dataIn.setResourceId( resourceId );
-        dataIn.setContent( document );
+        dataIn.setContent( IOUtils.toByteArray(document) );
 
         client.upload( dataIn );
 
@@ -187,7 +188,7 @@ public class JAXRSResourcesServiceCGLibClientTestCase
 
         BinaryData dataIn = new BinaryData();
         dataIn.setResourceId( resourceId );
-        dataIn.setContent( document );
+        dataIn.setContent( IOUtils.toByteArray(document) );
 
         client.upload( dataIn );
 
@@ -211,7 +212,7 @@ public class JAXRSResourcesServiceCGLibClientTestCase
 
         BinaryData dataIn = new BinaryData();
         dataIn.setResourceId( resourceId );
-        dataIn.setContent( document );
+        dataIn.setContent( IOUtils.toByteArray(document) );
 
         client.upload( dataIn );
 

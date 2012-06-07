@@ -26,7 +26,6 @@
 package fr.opensagres.xdocreport.remoting.resources.services.rest;
 
 import java.io.IOException;
-import java.io.InputStream;
 import java.io.OutputStream;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Type;
@@ -68,13 +67,13 @@ public class BinaryDataMessageBodyWriter
         throws IOException, WebApplicationException
     {
 
-        InputStream content = t.getContent();
+        byte[] content = t.getContent();
 
         httpHeaders.add( "Content-Disposition", "attachement;filename=" + t.getFileName() );
         httpHeaders.add( "Content-Type", t.getMimeType() );
         httpHeaders.add( "X-resourceId", t.getResourceId() );
-        //IOUtils.write(content, entityStream);
-        IOUtils.copyLarge(content, entityStream);
+        IOUtils.write(content, entityStream);
+
 
     }
 

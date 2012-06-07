@@ -9,6 +9,7 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 
 import fr.opensagres.xdocreport.remoting.resources.domain.BinaryData;
+import fr.opensagres.xdocreport.remoting.resources.domain.LargeBinaryData;
 import fr.opensagres.xdocreport.remoting.resources.domain.Resource;
 import fr.opensagres.xdocreport.remoting.resources.services.ResourcesException;
 import fr.opensagres.xdocreport.remoting.resources.services.ResourcesService;
@@ -42,7 +43,19 @@ public interface JAXRSResourcesService
     @POST
     @Path( "/upload" )
     //@Consumes( MediaType.APPLICATION_JSON )
-    void upload( BinaryData data )
-        throws ResourcesException;
+    void upload( BinaryData data ) throws ResourcesException;
+
+
+    @GET
+    @Path( "/downloadLarge/{resourceId}" )
+    @Consumes( MediaType.APPLICATION_JSON )
+    @Produces( MediaType.WILDCARD )
+    LargeBinaryData downloadLarge( @PathParam( "resourceId" ) String resourceId ) throws ResourcesException;
+
+    @POST
+    @Path( "/uploadLarge" )
+    //@Consumes( MediaType.APPLICATION_JSON )
+    void uploadLarge( LargeBinaryData data ) throws ResourcesException;
+
 
 }

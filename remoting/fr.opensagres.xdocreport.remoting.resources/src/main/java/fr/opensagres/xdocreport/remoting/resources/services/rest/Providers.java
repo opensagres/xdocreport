@@ -30,7 +30,7 @@ import java.util.List;
 
 /**
  * Helper class to hold JAXRS Providers config
- * 
+ *
  * @author <a href="mailto:tdelprat@nuxeo.com">Tiry</a>
  */
 public class Providers
@@ -45,6 +45,8 @@ public class Providers
             providers = new ArrayList<Object>();
             providers.add( new BinaryDataMessageBodyReader() );
             providers.add( new BinaryDataMessageBodyWriter() );
+            providers.add( new LargeBinaryDataMessageBodyReader() );
+            providers.add( new LargeBinaryDataMessageBodyWriter() );
         }
         return providers;
     }

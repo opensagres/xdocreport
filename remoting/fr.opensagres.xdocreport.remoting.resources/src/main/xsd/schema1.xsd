@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<xs:schema version="1.0" targetNamespace="domain.resources.remoting.xdocreport.opensagres.fr" xmlns:tns="domain.resources.remoting.xdocreport.opensagres.fr" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+
+  <xs:element name="binaryData" type="tns:binaryData"/>
+
+  <xs:element name="filter" type="tns:filter"/>
+
+  <xs:element name="largeBinaryData" type="tns:largeBinaryData"/>
+
+  <xs:element name="propertyRepresentation" type="tns:propertyRepresentation"/>
+
+  <xs:element name="resource" type="tns:resource"/>
+
+  <xs:complexType name="resource">
+    <xs:sequence>
+      <xs:element name="children" type="tns:resource" nillable="true" minOccurs="0" maxOccurs="unbounded"/>
+      <xs:element name="id" type="xs:string" minOccurs="0"/>
+      <xs:element name="name" type="xs:string" minOccurs="0"/>
+      <xs:element name="type" type="tns:resourceType" minOccurs="0"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="propertyRepresentation">
+    <xs:sequence>
+      <xs:element name="name" type="xs:string" minOccurs="0"/>
+      <xs:element name="value" type="xs:string" minOccurs="0"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="binaryData">
+    <xs:sequence>
+      <xs:element name="content" type="xs:base64Binary" minOccurs="0"/>
+      <xs:element name="fileName" type="xs:string" minOccurs="0"/>
+      <xs:element name="length" type="xs:long"/>
+      <xs:element name="mimeType" type="xs:string" minOccurs="0"/>
+      <xs:element name="resourceId" type="xs:string" minOccurs="0"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="filter">
+    <xs:sequence>
+      <xs:element name="properties" type="tns:propertyRepresentation" nillable="true" minOccurs="0" maxOccurs="unbounded"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="largeBinaryData">
+    <xs:sequence>
+      <xs:element name="content" type="tns:inputStream" minOccurs="0"/>
+      <xs:element name="fileName" type="xs:string" minOccurs="0"/>
+      <xs:element name="length" type="xs:long"/>
+      <xs:element name="mimeType" type="xs:string" minOccurs="0"/>
+      <xs:element name="resourceId" type="xs:string" minOccurs="0"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="inputStream" abstract="true">
+    <xs:sequence/>
+  </xs:complexType>
+
+  <xs:simpleType name="resourceType">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="FOLDER"/>
+      <xs:enumeration value="FILE"/>
+    </xs:restriction>
+  </xs:simpleType>
+</xs:schema>
+

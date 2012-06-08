@@ -26,6 +26,7 @@
 package fr.opensagres.xdocreport.remoting.resources.services.rest;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.OutputStream;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Type;
@@ -37,7 +38,7 @@ import javax.ws.rs.ext.MessageBodyWriter;
 import javax.ws.rs.ext.Provider;
 
 import fr.opensagres.xdocreport.core.io.IOUtils;
-import fr.opensagres.xdocreport.remoting.resources.domain.BinaryData;
+import fr.opensagres.xdocreport.remoting.resources.domain.LargeBinaryData;
 
 /**
  * {@link MessageBodyWriter} that streams an {@link BinaryData} object in an Http response.
@@ -49,30 +50,30 @@ import fr.opensagres.xdocreport.remoting.resources.domain.BinaryData;
  */
 @Provider
 public class LargeBinaryDataMessageBodyWriter
-    implements MessageBodyWriter<BinaryData>
+    implements MessageBodyWriter<LargeBinaryData>
 {
 
     public boolean isWriteable( Class<?> type, Type genericType, Annotation[] annotations, MediaType mediaType )
     {
-        return BinaryData.class.isAssignableFrom( type );
+        return LargeBinaryData.class.isAssignableFrom( type );
     }
 
-    public long getSize( BinaryData t, Class<?> type, Type genericType, Annotation[] annotations, MediaType mediaType )
+    public long getSize( LargeBinaryData t, Class<?> type, Type genericType, Annotation[] annotations, MediaType mediaType )
     {
         return t.getLength();
     }
 
-    public void writeTo( BinaryData t, Class<?> type, Type genericType, Annotation[] annotations, MediaType mediaType,
+    public void writeTo( LargeBinaryData t, Class<?> type, Type genericType, Annotation[] annotations, MediaType mediaType,
                          MultivaluedMap<String, Object> httpHeaders, OutputStream entityStream )
         throws IOException, WebApplicationException
     {
 
-        byte[] content = t.getContent();
+        InputStream content = t.getContent();
 
         httpHeaders.add( "Content-Disposition", "attachement;filename=" + t.getFileName() );
         httpHeaders.add( "Content-Type", t.getMimeType() );
         httpHeaders.add( "X-resourceId", t.getResourceId() );
-        IOUtils.write(content, entityStream);
+        IOUtils.copyLarge(content, entityStream);
 
 
     }

@@ -4,9 +4,8 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.OutputStream;
-import java.util.ArrayList;
-import java.util.Collections;
 
 import fr.opensagres.xdocreport.core.io.IOUtils;
 import fr.opensagres.xdocreport.core.utils.StringUtils;
@@ -44,7 +43,7 @@ public abstract class FileResourcesService
         {
         	FileInputStream input = new FileInputStream(file);
         	byte[] content=IOUtils.toByteArray(input);
-            //BinaryData data = new BinaryData( content, file.getName() );
+
         	BinaryData data = new BinaryData( );
         	data.setContent(content);
         	data.setFileName(file.getName());
@@ -64,12 +63,58 @@ public abstract class FileResourcesService
 
     public LargeBinaryData downloadLarge(String resourceId)
     		throws ResourcesException {
-    	// TODO Auto-generated method stub
-    	return null;
+    	String resourcePath = getResourcePath( resourceId );
+        File file = new File( getRootFolder(), resourcePath );
+        try
+        {
+        	FileInputStream input = new FileInputStream(file);
+        	LargeBinaryData data = new LargeBinaryData( );
+        	data.setContent(input);
+        	data.setFileName(file.getName());
+            data.setResourceId( resourceId );
+            return data;
+        }
+        catch ( Exception e )
+        {
+            throw new ResourcesException( e );
+        }
+
     }
 
     public void uploadLarge(LargeBinaryData data) throws ResourcesException {
-    	// TODO Auto-generated method stub
+
+        String resourceId = data.getResourceId();
+        InputStream input = data.getContent();
+        String resourcePath = getResourcePath( resourceId );
+        File file = new File( getRootFolder(), resourcePath );
+        if ( !file.getParentFile().exists() )
+        {
+            file.getParentFile().mkdirs();
+        }
+
+        OutputStream output = null;
+        try
+        {
+
+            output = new FileOutputStream( file );
+            IOUtils.copyLarge( input, output );
+        }
+        catch ( IOException e )
+        {
+            throw new ResourcesException( e );
+        }
+        finally
+        {
+
+        	if ( input != null )
+            {
+                IOUtils.closeQuietly( input );
+            }
+            if ( output != null )
+            {
+                IOUtils.closeQuietly( output );
+            }
+        }
 
     }
     public void upload( BinaryData data ) throws ResourcesException
@@ -116,7 +161,7 @@ public abstract class FileResourcesService
         // resource.setId( getId(file, linkedResource) );
         // resource.setParent( linkedResource );
         resource.setName( file.getName() );
-        resource.setChildren( Collections.EMPTY_LIST );
+        //resource.setChildren( Collections.EMPTY_LIST );
         if ( linkedResource != null )
         {
             linkedResource.getChildren().add( resource );
@@ -127,7 +172,7 @@ public abstract class FileResourcesService
             File[] files = file.listFiles();
             if ( files.length > 0 )
             {
-                resource.setChildren( new ArrayList<Resource>() );
+                //resource.setChildren( new ArrayList<Resource>() );
                 for ( int i = 0; i < files.length; i++ )
                 {
                     toResource( files[i], resource );

@@ -36,8 +36,7 @@ import javax.ws.rs.core.MultivaluedMap;
 import javax.ws.rs.ext.MessageBodyReader;
 import javax.ws.rs.ext.Provider;
 
-import fr.opensagres.xdocreport.core.io.IOUtils;
-import fr.opensagres.xdocreport.remoting.resources.domain.BinaryData;
+import fr.opensagres.xdocreport.remoting.resources.domain.LargeBinaryData;
 
 /**
  * {@link MessageBodyReader} used by JAXRS to read the {@link BinaryData} from an Http request
@@ -46,15 +45,15 @@ import fr.opensagres.xdocreport.remoting.resources.domain.BinaryData;
  */
 @Provider
 public class LargeBinaryDataMessageBodyReader
-    implements MessageBodyReader<BinaryData>
+    implements MessageBodyReader<LargeBinaryData>
 {
 
     public boolean isReadable( Class<?> type, Type genericType, Annotation[] annotations, MediaType mediaType )
     {
-        return BinaryData.class.isAssignableFrom( type );
+        return LargeBinaryData.class.isAssignableFrom( type );
     }
 
-    public BinaryData readFrom( Class<BinaryData> type, Type genericType, Annotation[] annotations,
+    public LargeBinaryData readFrom( Class<LargeBinaryData> type, Type genericType, Annotation[] annotations,
                                 MediaType mediaType, MultivaluedMap<String, String> httpHeaders,
                                 InputStream entityStream )
         throws IOException, WebApplicationException
@@ -71,9 +70,9 @@ public class LargeBinaryDataMessageBodyReader
 
         String resourceId = httpHeaders.getFirst( "X-resourceId" );
 
-        byte[] content=IOUtils.toByteArray(entityStream);
-        BinaryData data = new BinaryData( );
-        data.setContent(content);
+
+        LargeBinaryData data = new LargeBinaryData( );
+        data.setContent(entityStream);
         data.setFileName(filename);
         data.setMimeType(mimetype);
         data.setResourceId( resourceId );

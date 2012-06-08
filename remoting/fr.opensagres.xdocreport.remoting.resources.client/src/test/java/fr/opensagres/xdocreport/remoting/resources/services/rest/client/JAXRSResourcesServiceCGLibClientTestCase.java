@@ -124,6 +124,7 @@ public class JAXRSResourcesServiceCGLibClientTestCase
         String resourceId = "Simple.docx";
         ResourcesService client =
             JAXRSClientFactory.create( BASE_ADDRESS, JAXRSResourcesService.class, Providers.get() );
+
         BinaryData document = client.download( resourceId );
         Assert.assertNotNull( document );
         Assert.assertNotNull( document.getContent() );

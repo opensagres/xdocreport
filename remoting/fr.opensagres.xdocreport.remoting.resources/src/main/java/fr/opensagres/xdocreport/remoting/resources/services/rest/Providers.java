@@ -43,8 +43,6 @@ public class Providers
         if ( providers == null )
         {
             providers = new ArrayList<Object>();
-            providers.add( new BinaryDataMessageBodyReader() );
-            providers.add( new BinaryDataMessageBodyWriter() );
             providers.add( new LargeBinaryDataMessageBodyReader() );
             providers.add( new LargeBinaryDataMessageBodyWriter() );
         }

@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?><xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:tns="http://services.resources.remoting.xdocreport.opensagres.fr/" attributeFormDefault="unqualified" elementFormDefault="unqualified" targetNamespace="http://services.resources.remoting.xdocreport.opensagres.fr/">
+  <xs:element name="binaryData" type="tns:binaryData"/>
+  <xs:element name="resource" type="tns:resource"/>
+  <xs:complexType name="resource">
+    <xs:sequence>
+      <xs:element maxOccurs="unbounded" minOccurs="0" name="children" nillable="true" type="tns:resource"/>
+      <xs:element minOccurs="0" name="id" type="xs:string"/>
+      <xs:element minOccurs="0" name="name" type="xs:string"/>
+      <xs:element minOccurs="0" name="type" type="tns:resourceType"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="binaryData">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="content" type="xs:base64Binary"/>
+      <xs:element minOccurs="0" name="fileName" type="xs:string"/>
+      <xs:element name="length" type="xs:long"/>
+      <xs:element minOccurs="0" name="mimeType" type="xs:string"/>
+      <xs:element minOccurs="0" name="resourceId" type="xs:string"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="filter">
+    <xs:sequence>
+      <xs:element maxOccurs="unbounded" minOccurs="0" name="properties" nillable="true" type="tns:propertyRepresentation"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="propertyRepresentation">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="name" type="xs:string"/>
+      <xs:element minOccurs="0" name="value" type="xs:string"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:simpleType name="resourceType">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="FOLDER"/>
+      <xs:enumeration value="FILE"/>
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:element name="ResourcesException" type="tns:ResourcesException"/>
+  <xs:complexType name="ResourcesException">
+    <xs:sequence/>
+  </xs:complexType>
+</xs:schema>

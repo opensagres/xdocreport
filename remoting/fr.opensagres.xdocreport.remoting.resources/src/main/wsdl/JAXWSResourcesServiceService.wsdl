@@ -1,0 +1,185 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<wsdl:definitions name="JAXWSResourcesServiceService" targetNamespace="http://services.resources.remoting.xdocreport.opensagres.fr/" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:tns="http://services.resources.remoting.xdocreport.opensagres.fr/" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:soap12="http://schemas.xmlsoap.org/wsdl/soap12/">
+  <wsdl:types>
+<schema xmlns="http://www.w3.org/2001/XMLSchema">
+<import namespace="http://services.resources.remoting.xdocreport.opensagres.fr/" schemaLocation="JAXWSResourcesServiceService_schema1.xsd"/>
+</schema>
+  </wsdl:types>
+  <wsdl:message name="download1">
+    <wsdl:part name="parameters" element="tns:download1">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="getRoot1Response">
+    <wsdl:part name="parameters" element="tns:getRootResponse1">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="downloadResponse">
+    <wsdl:part name="parameters" element="tns:downloadResponse">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="download">
+    <wsdl:part name="parameters" element="tns:download">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="getRootResponse">
+    <wsdl:part name="parameters" element="tns:getRootResponse">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="upload">
+    <wsdl:part name="parameters" element="tns:upload">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="ResourcesException">
+    <wsdl:part name="ResourcesException" element="tns:ResourcesException">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="getRoot">
+    <wsdl:part name="parameters" element="tns:getRoot">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="uploadResponse">
+    <wsdl:part name="parameters" element="tns:uploadResponse">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="download1Response">
+    <wsdl:part name="parameters" element="tns:downloadResponse1">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="getRoot1">
+    <wsdl:part name="parameters" element="tns:getRoot1">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="getName">
+    <wsdl:part name="parameters" element="tns:getName">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="getNameResponse">
+    <wsdl:part name="parameters" element="tns:getNameResponse">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:portType name="ResourcesService">
+    <wsdl:operation name="getRoot">
+      <wsdl:input name="getRoot" message="tns:getRoot">
+    </wsdl:input>
+      <wsdl:output name="getRootResponse" message="tns:getRootResponse">
+    </wsdl:output>
+      <wsdl:fault name="ResourcesException" message="tns:ResourcesException">
+    </wsdl:fault>
+    </wsdl:operation>
+    <wsdl:operation name="download1">
+      <wsdl:input name="download1" message="tns:download1">
+    </wsdl:input>
+      <wsdl:output name="download1Response" message="tns:download1Response">
+    </wsdl:output>
+      <wsdl:fault name="ResourcesException" message="tns:ResourcesException">
+    </wsdl:fault>
+    </wsdl:operation>
+    <wsdl:operation name="upload">
+      <wsdl:input name="upload" message="tns:upload">
+    </wsdl:input>
+      <wsdl:output name="uploadResponse" message="tns:uploadResponse">
+    </wsdl:output>
+      <wsdl:fault name="ResourcesException" message="tns:ResourcesException">
+    </wsdl:fault>
+    </wsdl:operation>
+    <wsdl:operation name="getName">
+      <wsdl:input name="getName" message="tns:getName">
+    </wsdl:input>
+      <wsdl:output name="getNameResponse" message="tns:getNameResponse">
+    </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="getRoot1">
+      <wsdl:input name="getRoot1" message="tns:getRoot1">
+    </wsdl:input>
+      <wsdl:output name="getRoot1Response" message="tns:getRoot1Response">
+    </wsdl:output>
+      <wsdl:fault name="ResourcesException" message="tns:ResourcesException">
+    </wsdl:fault>
+    </wsdl:operation>
+    <wsdl:operation name="download">
+      <wsdl:input name="download" message="tns:download">
+    </wsdl:input>
+      <wsdl:output name="downloadResponse" message="tns:downloadResponse">
+    </wsdl:output>
+      <wsdl:fault name="ResourcesException" message="tns:ResourcesException">
+    </wsdl:fault>
+    </wsdl:operation>
+  </wsdl:portType>
+  <wsdl:binding name="JAXWSResourcesServiceServiceSoapBinding" type="tns:ResourcesService">
+    <soap12:binding style="document" transport="http://schemas.xmlsoap.org/soap/http"/>
+    <wsdl:operation name="getRoot">
+      <soap12:operation soapAction="urn:GetRoot" style="document"/>
+      <wsdl:input name="getRoot">
+        <soap12:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="getRootResponse">
+        <soap12:body use="literal"/>
+      </wsdl:output>
+      <wsdl:fault name="ResourcesException">
+        <soap12:fault name="ResourcesException" use="literal"/>
+      </wsdl:fault>
+    </wsdl:operation>
+    <wsdl:operation name="download1">
+      <soap12:operation soapAction="urn:Download1" style="document"/>
+      <wsdl:input name="download1">
+        <soap12:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="download1Response">
+        <soap12:body use="literal"/>
+      </wsdl:output>
+      <wsdl:fault name="ResourcesException">
+        <soap12:fault name="ResourcesException" use="literal"/>
+      </wsdl:fault>
+    </wsdl:operation>
+    <wsdl:operation name="getName">
+      <soap12:operation soapAction="urn:GetName" style="document"/>
+      <wsdl:input name="getName">
+        <soap12:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="getNameResponse">
+        <soap12:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="upload">
+      <soap12:operation soapAction="urn:Upload" style="document"/>
+      <wsdl:input name="upload">
+        <soap12:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="uploadResponse">
+        <soap12:body use="literal"/>
+      </wsdl:output>
+      <wsdl:fault name="ResourcesException">
+        <soap12:fault name="ResourcesException" use="literal"/>
+      </wsdl:fault>
+    </wsdl:operation>
+    <wsdl:operation name="getRoot1">
+      <soap12:operation soapAction="urn:GetRoot1" style="document"/>
+      <wsdl:input name="getRoot1">
+        <soap12:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="getRoot1Response">
+        <soap12:body use="literal"/>
+      </wsdl:output>
+      <wsdl:fault name="ResourcesException">
+        <soap12:fault name="ResourcesException" use="literal"/>
+      </wsdl:fault>
+    </wsdl:operation>
+    <wsdl:operation name="download">
+      <soap12:operation soapAction="urn:Download" style="document"/>
+      <wsdl:input name="download">
+        <soap12:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="downloadResponse">
+        <soap12:body use="literal"/>
+      </wsdl:output>
+      <wsdl:fault name="ResourcesException">
+        <soap12:fault name="ResourcesException" use="literal"/>
+      </wsdl:fault>
+    </wsdl:operation>
+  </wsdl:binding>
+  <wsdl:service name="JAXWSResourcesServiceService">
+    <wsdl:port name="ResourcesServicePort" binding="tns:JAXWSResourcesServiceServiceSoapBinding">
+      <soap12:address location="http://localhost:9090/ResourcesServicePort"/>
+    </wsdl:port>
+  </wsdl:service>
+</wsdl:definitions>

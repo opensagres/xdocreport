@@ -4,29 +4,30 @@
 <schema xmlns="http://www.w3.org/2001/XMLSchema">
 <import namespace="http://services.resources.remoting.xdocreport.opensagres.fr/" schemaLocation="JAXWSResourcesServiceService_schema1.xsd"/>
 </schema>
-  </wsdl:types>
+        <xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema" targetNamespace="http://services.resources.remoting.xdocreport.opensagres.fr/"><xsd:element name="in" type="xsd:string"></xsd:element><xsd:element name="out" type="xsd:string"></xsd:element></xsd:schema>
+    </wsdl:types>
   <wsdl:message name="download1">
-    <wsdl:part name="parameters" element="tns:download1">
+    <wsdl:part name="resourceId" type="xsd:string">
     </wsdl:part>
   </wsdl:message>
   <wsdl:message name="getRoot1Response">
-    <wsdl:part name="parameters" element="tns:getRootResponse1">
+    <wsdl:part name="" type="tns:resource">
     </wsdl:part>
   </wsdl:message>
   <wsdl:message name="downloadResponse">
-    <wsdl:part name="parameters" element="tns:downloadResponse">
+    <wsdl:part name="" type="tns:binaryData">
     </wsdl:part>
   </wsdl:message>
   <wsdl:message name="download">
-    <wsdl:part name="parameters" element="tns:download">
+    <wsdl:part name="resourceIds" type="xsd:string">
     </wsdl:part>
   </wsdl:message>
   <wsdl:message name="getRootResponse">
-    <wsdl:part name="parameters" element="tns:getRootResponse">
+    <wsdl:part name="" type="tns:resource">
     </wsdl:part>
   </wsdl:message>
   <wsdl:message name="upload">
-    <wsdl:part name="parameters" element="tns:upload">
+    <wsdl:part name="content" type="tns:binaryData">
     </wsdl:part>
   </wsdl:message>
   <wsdl:message name="ResourcesException">
@@ -34,28 +35,28 @@
     </wsdl:part>
   </wsdl:message>
   <wsdl:message name="getRoot">
-    <wsdl:part name="parameters" element="tns:getRoot">
-    </wsdl:part>
   </wsdl:message>
   <wsdl:message name="uploadResponse">
-    <wsdl:part name="parameters" element="tns:uploadResponse">
-    </wsdl:part>
   </wsdl:message>
   <wsdl:message name="download1Response">
-    <wsdl:part name="parameters" element="tns:downloadResponse1">
+    <wsdl:part name="" type="tns:binaryData">
     </wsdl:part>
   </wsdl:message>
   <wsdl:message name="getRoot1">
-    <wsdl:part name="parameters" element="tns:getRoot1">
+    <wsdl:part name="filter" type="tns:filter">
     </wsdl:part>
   </wsdl:message>
   <wsdl:message name="getName">
-    <wsdl:part name="parameters" element="tns:getName">
-    </wsdl:part>
   </wsdl:message>
   <wsdl:message name="getNameResponse">
-    <wsdl:part name="parameters" element="tns:getNameResponse">
+    <wsdl:part name="name" type="xsd:string">
     </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="getRoot3Request">
+  	<wsdl:part name="getRoot3Request" type="tns:binaryData"></wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="getRoot3Response">
+  	<wsdl:part name="getRoot3Response" type="tns:resource"></wsdl:part>
   </wsdl:message>
   <wsdl:portType name="ResourcesService">
     <wsdl:operation name="getRoot">

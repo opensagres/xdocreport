@@ -115,13 +115,13 @@ public class JAXRSResourcesServiceClient
         return client.path( ResourcesServiceName.root ).accept( MediaType.APPLICATION_JSON ).get( Resource.class );
     }
 
-    public Resource getRoot( Filter filter )
+    public Resource getRootWithFilter( Filter filter )
     {
         reset();
         return null;
     }
 
-    public List<BinaryData> download( List<String> resourceIds )
+    public List<BinaryData> downloadMultiple( List<String> resourceIds )
     {
         reset();
         return null;

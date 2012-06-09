@@ -105,16 +105,16 @@ public class JAXWSResourcesServiceClient
         return client.getRoot();
     }
 
-    public Resource getRoot( Filter filter )
+    public Resource getRootWithFilter( Filter filter )
         throws ResourcesException
     {
-        return client.getRoot( filter );
+        return client.getRootWithFilter( filter );
     }
 
-    public List<BinaryData> download( List<String> resourceIds )
+    public List<BinaryData> downloadMultiple( List<String> resourceIds )
         throws ResourcesException
     {
-        return client.download( resourceIds );
+        return client.downloadMultiple( resourceIds );
     }
 
     public BinaryData download( String resourceId )

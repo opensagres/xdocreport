@@ -52,10 +52,10 @@ public interface ResourcesService
     Resource getRoot()
         throws ResourcesException;
 
-    Resource getRoot( Filter filter )
+    Resource getRootWithFilter( Filter filter )
         throws ResourcesException;
 
-    List<BinaryData> download( List<String> resourceIds )
+    List<BinaryData> downloadMultiple( List<String> resourceIds )
         throws ResourcesException;
 
     /**

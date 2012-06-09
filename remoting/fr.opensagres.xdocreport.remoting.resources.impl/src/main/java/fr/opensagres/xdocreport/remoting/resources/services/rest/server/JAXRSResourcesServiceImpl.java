@@ -35,10 +35,10 @@ public class JAXRSResourcesServiceImpl
     }
 
     @Override
-    public Resource getRoot( Filter filter )
+    public Resource getRootWithFilter( Filter filter )
         throws ResourcesException
     {
-        return super.getRoot( filter );
+        return super.getRootWithFilter( filter );
     }
 
     @Override
@@ -49,10 +49,10 @@ public class JAXRSResourcesServiceImpl
     }
 
     @Override
-    public List<BinaryData> download( List<String> resourceIds )
+    public List<BinaryData> downloadMultiple( List<String> resourceIds )
         throws ResourcesException
     {
-        return super.download( resourceIds );
+        return super.downloadMultiple( resourceIds );
     }
 
     @Override

@@ -28,16 +28,16 @@ public class DelegateResourcesService
         return getDelegate().getRoot();
     }
 
-    public Resource getRoot( Filter filter )
+    public Resource getRootWithFilter( Filter filter )
         throws ResourcesException
     {
-        return getDelegate().getRoot( filter );
+        return getDelegate().getRootWithFilter( filter );
     }
 
-    public List<BinaryData> download( List<String> resourceIds )
+    public List<BinaryData> downloadMultiple( List<String> resourceIds )
         throws ResourcesException
     {
-        return getDelegate().download( resourceIds );
+        return getDelegate().downloadMultiple( resourceIds );
     }
 
     public BinaryData download( String resourceId )

@@ -14,10 +14,10 @@ public abstract class AbstractResourcesService
     public Resource getRoot()
         throws ResourcesException
     {
-        return getRoot( null );
+        return getRootWithFilter( null );
     }
 
-    public List<BinaryData> download( List<String> resourceIds )
+    public List<BinaryData> downloadMultiple( List<String> resourceIds )
         throws ResourcesException
     {
         List<BinaryData> contents = new ArrayList<BinaryData>( resourceIds.size() );

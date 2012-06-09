@@ -35,12 +35,12 @@ public interface JAXWSResourcesService
         throws ResourcesException;
 
     @WebMethod( operationName = "getRoot1")
-    Resource getRoot( @WebParam( name = "filter" )
+    Resource getRootWithFilter( @WebParam( name = "filter" )
     Filter filter )
         throws ResourcesException;
 
     @WebMethod( operationName = "download")
-    List<BinaryData> download( @WebParam( name = "resourceIds" )
+    List<BinaryData> downloadMultiple( @WebParam( name = "resourceIds" )
     List<String> resourceIds )
         throws ResourcesException;
 

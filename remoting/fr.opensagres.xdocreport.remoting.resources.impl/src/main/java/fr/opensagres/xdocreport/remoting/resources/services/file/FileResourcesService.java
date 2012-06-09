@@ -29,7 +29,7 @@ public abstract class FileResourcesService
         this.rootFolder = rootFolder;
     }
 
-    public Resource getRoot( Filter filter )
+    public Resource getRootWithFilter( Filter filter )
     {
         return toResource( getRootFolder(), null );
     }

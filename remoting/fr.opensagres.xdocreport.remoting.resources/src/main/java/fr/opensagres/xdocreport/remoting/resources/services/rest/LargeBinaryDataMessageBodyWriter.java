@@ -38,6 +38,7 @@ import javax.ws.rs.ext.MessageBodyWriter;
 import javax.ws.rs.ext.Provider;
 
 import fr.opensagres.xdocreport.core.io.IOUtils;
+import fr.opensagres.xdocreport.remoting.resources.domain.BinaryData;
 import fr.opensagres.xdocreport.remoting.resources.domain.LargeBinaryData;
 
 /**

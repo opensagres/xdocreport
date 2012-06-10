@@ -1,15 +1,24 @@
-<?xml version="1.0" encoding="utf-8"?><xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:tns="http://services.resources.remoting.xdocreport.opensagres.fr/" attributeFormDefault="unqualified" elementFormDefault="unqualified" targetNamespace="http://services.resources.remoting.xdocreport.opensagres.fr/">
-  <xs:element name="binaryData" type="tns:binaryData"/>
-  <xs:element name="resource" type="tns:resource"/>
-  <xs:complexType name="resource">
+<?xml version="1.0" encoding="utf-8"?><xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:tns="http://ws.services.resources.remoting.xdocreport.opensagres.fr/" elementFormDefault="unqualified" targetNamespace="http://ws.services.resources.remoting.xdocreport.opensagres.fr/" version="1.0">
+<xs:element name="binaryData" type="tns:binaryData"/>
+<xs:element name="download" type="tns:download"/>
+<xs:element name="downloadMultiple" type="tns:downloadMultiple"/>
+<xs:element name="downloadMultipleResponse" type="tns:downloadMultipleResponse"/>
+<xs:element name="downloadResponse" type="tns:downloadResponse"/>
+<xs:element name="getName" type="tns:getName"/>
+<xs:element name="getNameResponse" type="tns:getNameResponse"/>
+<xs:element name="getRoot" type="tns:getRoot"/>
+<xs:element name="getRootResponse" type="tns:getRootResponse"/>
+<xs:element name="getRootWithFilter" type="tns:getRootWithFilter"/>
+<xs:element name="getRootWithFilterResponse" type="tns:getRootWithFilterResponse"/>
+<xs:element name="resource" type="tns:resource"/>
+<xs:element name="upload" type="tns:upload"/>
+<xs:element name="uploadResponse" type="tns:uploadResponse"/>
+<xs:complexType name="upload">
     <xs:sequence>
-      <xs:element maxOccurs="unbounded" minOccurs="0" name="children" nillable="true" type="tns:resource"/>
-      <xs:element minOccurs="0" name="id" type="xs:string"/>
-      <xs:element minOccurs="0" name="name" type="xs:string"/>
-      <xs:element minOccurs="0" name="type" type="tns:resourceType"/>
+      <xs:element minOccurs="0" name="data" type="tns:binaryData"/>
     </xs:sequence>
   </xs:complexType>
-  <xs:complexType name="binaryData">
+<xs:complexType name="binaryData">
     <xs:sequence>
       <xs:element minOccurs="0" name="content" type="xs:base64Binary"/>
       <xs:element minOccurs="0" name="fileName" type="xs:string"/>
@@ -18,25 +27,78 @@
       <xs:element minOccurs="0" name="resourceId" type="xs:string"/>
     </xs:sequence>
   </xs:complexType>
-  <xs:complexType name="filter">
+<xs:complexType name="uploadResponse">
+    <xs:sequence/>
+  </xs:complexType>
+<xs:complexType name="getRoot">
+    <xs:sequence/>
+  </xs:complexType>
+<xs:complexType name="getRootResponse">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="return" type="tns:resource"/>
+    </xs:sequence>
+  </xs:complexType>
+<xs:complexType name="resource">
+    <xs:sequence>
+      <xs:element maxOccurs="unbounded" minOccurs="0" name="children" nillable="true" type="tns:resource"/>
+      <xs:element minOccurs="0" name="id" type="xs:string"/>
+      <xs:element minOccurs="0" name="name" type="xs:string"/>
+      <xs:element minOccurs="0" name="type" type="tns:resourceType"/>
+    </xs:sequence>
+  </xs:complexType>
+<xs:complexType name="getName">
+    <xs:sequence/>
+  </xs:complexType>
+<xs:complexType name="getNameResponse">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="return" type="xs:string"/>
+    </xs:sequence>
+  </xs:complexType>
+<xs:complexType name="downloadMultiple">
+    <xs:sequence>
+      <xs:element maxOccurs="unbounded" minOccurs="0" name="resourceIds" type="xs:string"/>
+    </xs:sequence>
+  </xs:complexType>
+<xs:complexType name="downloadMultipleResponse">
+    <xs:sequence>
+      <xs:element maxOccurs="unbounded" minOccurs="0" name="return" type="tns:binaryData"/>
+    </xs:sequence>
+  </xs:complexType>
+<xs:complexType name="download">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="resourceId" type="xs:string"/>
+    </xs:sequence>
+  </xs:complexType>
+<xs:complexType name="downloadResponse">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="return" type="tns:binaryData"/>
+    </xs:sequence>
+  </xs:complexType>
+<xs:complexType name="getRootWithFilter">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="filter" type="tns:filter"/>
+    </xs:sequence>
+  </xs:complexType>
+<xs:complexType name="filter">
     <xs:sequence>
       <xs:element maxOccurs="unbounded" minOccurs="0" name="properties" nillable="true" type="tns:propertyRepresentation"/>
     </xs:sequence>
   </xs:complexType>
-  <xs:complexType name="propertyRepresentation">
+<xs:complexType name="propertyRepresentation">
     <xs:sequence>
       <xs:element minOccurs="0" name="name" type="xs:string"/>
       <xs:element minOccurs="0" name="value" type="xs:string"/>
     </xs:sequence>
   </xs:complexType>
-  <xs:simpleType name="resourceType">
+<xs:complexType name="getRootWithFilterResponse">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="return" type="tns:resource"/>
+    </xs:sequence>
+  </xs:complexType>
+<xs:simpleType name="resourceType">
     <xs:restriction base="xs:string">
       <xs:enumeration value="FOLDER"/>
       <xs:enumeration value="FILE"/>
     </xs:restriction>
   </xs:simpleType>
-  <xs:element name="ResourcesException" type="tns:ResourcesException"/>
-  <xs:complexType name="ResourcesException">
-    <xs:sequence/>
-  </xs:complexType>
 </xs:schema>

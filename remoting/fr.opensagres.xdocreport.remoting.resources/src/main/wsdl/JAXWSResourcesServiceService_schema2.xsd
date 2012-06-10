@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?><xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:ns1="http://ws.services.resources.remoting.xdocreport.opensagres.fr/" targetNamespace="http://domain.resources.remoting.xdocreport.opensagres.fr/" version="1.0">
+<xs:import namespace="http://ws.services.resources.remoting.xdocreport.opensagres.fr/" schemaLocation="JAXWSResourcesServiceService_schema1.xsd"/>
+<xs:element name="binaryData" type="ns1:binaryData"/>
+<xs:element name="resource" type="ns1:resource"/>
+</xs:schema>

@@ -43,13 +43,15 @@ import fr.opensagres.xdocreport.core.logging.LogUtils;
 import fr.opensagres.xdocreport.core.utils.StringUtils;
 import fr.opensagres.xdocreport.remoting.resources.domain.BinaryData;
 import fr.opensagres.xdocreport.remoting.resources.domain.Filter;
+import fr.opensagres.xdocreport.remoting.resources.domain.LargeBinaryData;
 import fr.opensagres.xdocreport.remoting.resources.domain.Resource;
-import fr.opensagres.xdocreport.remoting.resources.services.ResourcesService;
+import fr.opensagres.xdocreport.remoting.resources.services.ResourcesException;
 import fr.opensagres.xdocreport.remoting.resources.services.ResourcesServiceName;
+import fr.opensagres.xdocreport.remoting.resources.services.rest.JAXRSResourcesService;
 import fr.opensagres.xdocreport.remoting.resources.services.rest.Providers;
 
 public class JAXRSResourcesServiceClient
-    implements ResourcesService
+    implements JAXRSResourcesService
 {
 
     /**
@@ -140,8 +142,7 @@ public class JAXRSResourcesServiceClient
     {
         reset();
         // Use Void.class to throw an exception of there is HTTP error.s
-        client.path( ResourcesServiceName.upload.name() ).accept( MediaType.TEXT_PLAIN ).type( MediaType.APPLICATION_JSON ).post( data,
-                                                                                                                                  Void.class );
+        client.path( ResourcesServiceName.upload.name() ).accept( MediaType.TEXT_PLAIN ).type( MediaType.APPLICATION_JSON ).post( data,Void.class );
     }
 
     protected void reset()
@@ -149,4 +150,24 @@ public class JAXRSResourcesServiceClient
         client.reset();
 
     }
+
+	@Override
+	public LargeBinaryData downloadLarge(String resourceId)
+			throws ResourcesException {
+		reset();
+		
+		
+        StringBuilder path = new StringBuilder( "downloadLarge" );
+        path.append( "/" );
+        path.append( resourceId );
+        return client.path( path.toString() ).accept( MediaType.APPLICATION_JSON_TYPE ).get( LargeBinaryData.class );
+	}
+
+	@Override
+	public void uploadLarge(LargeBinaryData data) throws ResourcesException {
+	    reset();
+        // Use Void.class to throw an exception of there is HTTP error.s
+        client.path( "uploadLarge" ).accept( MediaType.TEXT_PLAIN ).type( MediaType.APPLICATION_JSON ).post( data,Void.class );
+		
+	}
 }

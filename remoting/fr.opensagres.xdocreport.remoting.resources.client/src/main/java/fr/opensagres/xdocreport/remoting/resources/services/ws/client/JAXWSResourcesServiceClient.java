@@ -34,7 +34,7 @@ public class JAXWSResourcesServiceClient
      */
     private static final Logger LOGGER = LogUtils.getLogger( JAXWSResourcesServiceClient.class.getName() );
 
-    private final ResourcesService client;
+    private final JAXWSResourcesService client;
 
     public JAXWSResourcesServiceClient( String baseAddress, String user, String password, Long connectionTimeout,
                                         Boolean allowChunking )

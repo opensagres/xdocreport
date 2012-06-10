@@ -26,6 +26,7 @@ package fr.opensagres.xdocreport.document.tools.remoting.resources;
 
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -39,10 +40,13 @@ import fr.opensagres.xdocreport.document.tools.internal.ArgContext;
 import fr.opensagres.xdocreport.remoting.resources.domain.BinaryData;
 import fr.opensagres.xdocreport.remoting.resources.domain.Resource;
 import fr.opensagres.xdocreport.remoting.resources.services.ResourcesException;
-import fr.opensagres.xdocreport.remoting.resources.services.ResourcesService;
+
 import fr.opensagres.xdocreport.remoting.resources.services.ResourcesServiceName;
 import fr.opensagres.xdocreport.remoting.resources.services.ServiceType;
-import fr.opensagres.xdocreport.remoting.resources.services.client.ResourcesServiceClientFactory;
+import fr.opensagres.xdocreport.remoting.resources.services.rest.JAXRSResourcesService;
+import fr.opensagres.xdocreport.remoting.resources.services.rest.client.JAXRSResourcesServiceClientFactory;
+import fr.opensagres.xdocreport.remoting.resources.services.ws.JAXWSResourcesService;
+import fr.opensagres.xdocreport.remoting.resources.services.ws.client.JAXWSResourcesServiceClientFactory;
 
 public class Main
 {
@@ -119,10 +123,24 @@ public class Main
                                  String out, ArgContext context )
         throws IOException, ResourcesException
     {
-        String resources = null;
-        ResourcesService client =
-            ResourcesServiceClientFactory.create( baseAddress, serviceType, user, password, connectionTimeout,
-                                                  allowChunking );
+        
+        if ( serviceType == ServiceType.REST ){
+        	processJAXRS(baseAddress,  user,  password,  connectionTimeout,
+                     allowChunking,  serviceName,
+                     out,  context);
+        } else {
+        	processJAXWS(baseAddress,  user,  password,  connectionTimeout,
+                    allowChunking,  serviceName,
+                    out,  context);
+        }
+        
+    }
+
+    private static void processJAXRS(String baseAddress, String user,
+			String password, Long connectionTimeout, Boolean allowChunking,
+			ResourcesServiceName serviceName, String out, ArgContext context) throws IOException {
+    	String resources = null;
+    	JAXRSResourcesService client= JAXRSResourcesServiceClientFactory.create( baseAddress, user, password, connectionTimeout, allowChunking );
         switch ( serviceName )
         {
             case name:
@@ -140,9 +158,71 @@ public class Main
                 processUpload( client, resources, out );
                 break;
         }
-    }
+		
+	}
 
-    private static void processDownload( ResourcesService client, String resources, String out )
+	private static void processJAXWS(String baseAddress, String user,
+			String password, Long connectionTimeout, Boolean allowChunking,
+			ResourcesServiceName serviceName, String out, ArgContext context) throws IOException {
+    	 String resources = null;
+        JAXWSResourcesService client= JAXWSResourcesServiceClientFactory.create( baseAddress, user, password, connectionTimeout, allowChunking );
+        switch ( serviceName )
+        {
+            case name:
+                processName( client.getName(), new File( out ) );
+                break;
+            case root:
+                processRoot( client.getRoot(), new File( out ) );
+                break;
+            case download:
+                resources = context.get( "-resources" );
+                processDownload( client, resources, out );
+                break;
+            case upload:
+                resources = context.get( "-resources" );
+                processUpload( client, resources, out );
+                break;
+        }
+		
+	}
+
+	private static void processUpload(JAXWSResourcesService client,
+			String resources, String out) throws IOException {
+
+		 if ( StringUtils.isEmpty( resources ) )
+	        {
+	            throw new IOException( "resources must be not empty" );
+	        }
+	        if ( resources.indexOf( ";" ) == -1 )
+	        {
+	            BinaryData data = createBinaryDataFromFile(resources, new File( out ));
+	            client.upload( data );
+	        }
+	        else
+	        {
+	            // TODO : manage list of uppload
+	        }
+
+	        // String[] resources= s.split( ";" );
+	        // String[] outs= out.split( ";" );
+		
+	}
+
+
+	private static BinaryData createBinaryDataFromFile(String resourceId,
+			File file) throws FileNotFoundException, IOException {
+		FileInputStream input= new FileInputStream(file);
+
+    	byte[] content=IOUtils.toByteArray(input);
+      //  BinaryData data = new BinaryData( content, out.getName() );
+        BinaryData data = new BinaryData( );
+        data.setContent(content);
+        data.setFileName(file.getName());
+        data.setResourceId( resourceId );
+		return data;
+	}
+
+	private static void processDownload( JAXRSResourcesService client, String resources, String out )
         throws IOException, ResourcesException
     {
         if ( StringUtils.isEmpty( resources ) )
@@ -151,7 +231,9 @@ public class Main
         }
         if ( resources.indexOf( ";" ) == -1 )
         {
-            processDownload( client, resources, new File( out ) );
+            
+            BinaryData data = client.download( resources );
+            binaryDataContentToFile(new File( out ), data);
         }
         else
         {
@@ -162,12 +244,32 @@ public class Main
         // String[] outs= out.split( ";" );
 
     }
+    private static void processDownload( JAXWSResourcesService client, String resources, String out )
+            throws IOException, ResourcesException
+        {
+            if ( StringUtils.isEmpty( resources ) )
+            {
+                throw new IOException( "resources must be not empty" );
+            }
+            if ( resources.indexOf( ";" ) == -1 )
+            {
+                
+                BinaryData data = client.download( resources );
+                binaryDataContentToFile(new File( out ), data);
+            }
+            else
+            {
+                // TODO : manage list of download
+            }
 
-    private static void processDownload( ResourcesService client, String resourcePath, File outFile )
-        throws IOException, ResourcesException
-    {
-        BinaryData data = client.download( resourcePath );
-        if ( data.getContent() != null )
+            // String[] resources= s.split( ";" );
+            // String[] outs= out.split( ";" );
+
+        }
+
+	private static void binaryDataContentToFile(File outFile, BinaryData data)
+			throws IOException {
+		if ( data.getContent() != null )
         {
             createFile( data.getContent(), outFile );
         }
@@ -175,7 +277,7 @@ public class Main
         {
             createFile( data.getContent(), outFile );
         }
-    }
+	}
 
     private static void createFile( byte[] flux, File outFile )
         throws IOException
@@ -200,7 +302,7 @@ public class Main
         IOUtils.copy( input, out );
     }
 
-    private static void processUpload( ResourcesService client, String resources, String out )
+    private static void processUpload( JAXRSResourcesService client, String resources, String out )
         throws IOException, ResourcesException
     {
         if ( StringUtils.isEmpty( resources ) )
@@ -209,7 +311,9 @@ public class Main
         }
         if ( resources.indexOf( ";" ) == -1 )
         {
-            processUpload( client, resources, new File( out ) );
+        	BinaryData data = createBinaryDataFromFile(resources, new File( out ));
+            client.upload( data );
+
         }
         else
         {
@@ -221,21 +325,6 @@ public class Main
 
     }
 
-    private static void processUpload( ResourcesService client, String resourceId, File out )
-        throws ResourcesException, IOException
-    {
-
-    	FileInputStream input= new FileInputStream(out);
-
-    	byte[] content=IOUtils.toByteArray(input);
-      //  BinaryData data = new BinaryData( content, out.getName() );
-        BinaryData data = new BinaryData( );
-        data.setContent(content);
-        data.setFileName(out.getName());
-        data.setResourceId( resourceId );
-        client.upload( data );
-
-    }
 
     private static void processRoot( Resource root, File file )
         throws IOException

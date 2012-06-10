@@ -23,7 +23,7 @@ import fr.opensagres.xdocreport.remoting.resources.domain.ResourceType;
 import fr.opensagres.xdocreport.remoting.resources.services.FileUtils;
 import fr.opensagres.xdocreport.remoting.resources.services.ResourceComparator;
 import fr.opensagres.xdocreport.remoting.resources.services.ResourcesException;
-import fr.opensagres.xdocreport.remoting.resources.services.ResourcesService;
+import fr.opensagres.xdocreport.remoting.resources.services.ws.JAXWSResourcesService;
 
 public class JAXWSResourcesServiceClientTestCase
 {
@@ -64,7 +64,7 @@ public class JAXWSResourcesServiceClientTestCase
     @Test
     public void name()
     {
-        ResourcesService client = JAXWSResourcesServiceClientFactory.create( BASE_ADDRESS );
+    	JAXWSResourcesService client = JAXWSResourcesServiceClientFactory.create( BASE_ADDRESS );
         String name = client.getName();
         Assert.assertEquals( "Test-RepositoryService", name );
     }
@@ -73,7 +73,7 @@ public class JAXWSResourcesServiceClientTestCase
     public void root()
         throws ResourcesException
     {
-        ResourcesService client = JAXWSResourcesServiceClientFactory.create( BASE_ADDRESS );
+    	JAXWSResourcesService client = JAXWSResourcesServiceClientFactory.create( BASE_ADDRESS );
         Resource root = client.getRoot();
 
         // Document coming from the folder
@@ -102,7 +102,7 @@ public class JAXWSResourcesServiceClientTestCase
         throws FileNotFoundException, IOException, ResourcesException
     {
         String resourceId = "Simple.docx";
-        ResourcesService client = JAXWSResourcesServiceClientFactory.create( BASE_ADDRESS );
+        JAXWSResourcesService client = JAXWSResourcesServiceClientFactory.create( BASE_ADDRESS );
 
         BinaryData document = client.download( resourceId );
         Assert.assertNotNull( document );
@@ -115,7 +115,7 @@ public class JAXWSResourcesServiceClientTestCase
         throws FileNotFoundException, IOException, ResourcesException
     {
         String resourceId = "Custom____CustomSimple.docx";
-        ResourcesService client = JAXWSResourcesServiceClientFactory.create( BASE_ADDRESS );
+        JAXWSResourcesService client = JAXWSResourcesServiceClientFactory.create( BASE_ADDRESS );
         BinaryData document = client.download( resourceId );
         Assert.assertNotNull( document );
         Assert.assertNotNull( document.getContent() );
@@ -127,7 +127,7 @@ public class JAXWSResourcesServiceClientTestCase
         throws FileNotFoundException, IOException, ResourcesException
     {
         String resourceId = "XXXXX.docx";
-        ResourcesService client = JAXWSResourcesServiceClientFactory.create( BASE_ADDRESS );
+        JAXWSResourcesService client = JAXWSResourcesServiceClientFactory.create( BASE_ADDRESS );
 
         // try
         // {
@@ -153,7 +153,7 @@ public class JAXWSResourcesServiceClientTestCase
         throws FileNotFoundException, IOException, ResourcesException
     {
         String resourceId = "ZzzNewSimple_" + this.getClass().getSimpleName() + ".docx";
-        ResourcesService client = JAXWSResourcesServiceClientFactory.create( BASE_ADDRESS );
+        JAXWSResourcesService client = JAXWSResourcesServiceClientFactory.create( BASE_ADDRESS );
         InputStream document =  Data.class.getResourceAsStream( "Simple.docx" ) ;
 
         BinaryData dataIn = new BinaryData();
@@ -175,7 +175,7 @@ public class JAXWSResourcesServiceClientTestCase
         throws FileNotFoundException, IOException, ResourcesException
     {
         String resourceId = "ZzzCustom____NewCustomSimple_" + this.getClass().getSimpleName() + ".docx";
-        ResourcesService client = JAXWSResourcesServiceClientFactory.create( BASE_ADDRESS );
+        JAXWSResourcesService client = JAXWSResourcesServiceClientFactory.create( BASE_ADDRESS );
         InputStream document =  Data.class.getResourceAsStream( "Simple.docx" ) ;
 
         BinaryData dataIn = new BinaryData();

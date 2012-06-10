@@ -9,12 +9,9 @@ import javax.jws.WebService;
 import fr.opensagres.xdocreport.remoting.resources.domain.BinaryData;
 import fr.opensagres.xdocreport.remoting.resources.domain.Filter;
 import fr.opensagres.xdocreport.remoting.resources.domain.Resource;
-import fr.opensagres.xdocreport.remoting.resources.services.ResourcesException;
-import fr.opensagres.xdocreport.remoting.resources.services.ResourcesService;
 
 @WebService( name = "ResourcesService" )
 public interface JAXWSResourcesService
-    extends ResourcesService
 {
 
     /**
@@ -22,7 +19,7 @@ public interface JAXWSResourcesService
      *
      * @return
      */
-    @WebMethod( operationName = "getName")
+    @WebMethod
     String getName();
 
     /**
@@ -30,19 +27,16 @@ public interface JAXWSResourcesService
      *
      * @return
      */
-    @WebMethod( operationName = "getRoot")
-    Resource getRoot()
-        throws ResourcesException;
+    @WebMethod
+    Resource getRoot();
 
-    @WebMethod( operationName = "getRoot1")
+    @WebMethod
     Resource getRootWithFilter( @WebParam( name = "filter" )
-    Filter filter )
-        throws ResourcesException;
+    Filter filter );
 
-    @WebMethod( operationName = "download")
+    @WebMethod
     List<BinaryData> downloadMultiple( @WebParam( name = "resourceIds" )
-    List<String> resourceIds )
-        throws ResourcesException;
+    List<String> resourceIds );
 
     /**
      * Download the content of the given unique resource id.
@@ -50,13 +44,11 @@ public interface JAXWSResourcesService
      * @param resourcePath the unique resource id.
      * @return the byte array of the content of the given resourcePath.
      */
-    @WebMethod( operationName = "download1")
+    @WebMethod
     BinaryData download( @WebParam( name = "resourceId" )
-    String resourceId )
-        throws ResourcesException;
+    String resourceId );
 
-    @WebMethod( operationName = "upload")
+    @WebMethod
     void upload( @WebParam( name = "data" )
-    BinaryData data )
-        throws ResourcesException;
+    BinaryData data );
 }

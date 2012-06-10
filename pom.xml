@@ -166,7 +166,7 @@
           </reportPlugins>
         </configuration>
       </plugin>
-      <plugin>
+     <!--  <plugin>
         <groupId>org.codehaus.mojo</groupId>
         <artifactId>cobertura-maven-plugin</artifactId>
         <configuration>
@@ -176,10 +176,6 @@
           <aggregate>true</aggregate>
         </configuration>
 
-        <!-- <configuration> <instrumentation> <ignores> <ignore>com.example.boringcode.*</ignore>
-          </ignores> <excludes> <exclude>com/example/dullcode/**/*.class</exclude>
-          <exclude>com/example/**/*Test.class</exclude> </excludes> </instrumentation>
-          </configuration> -->
         <executions>
           <execution>
             <goals>
@@ -187,7 +183,7 @@
             </goals>
           </execution>
         </executions>
-      </plugin>
+      </plugin> -->
     </plugins>
     <pluginManagement>
       <plugins>
@@ -202,7 +198,7 @@
         </plugin>
         <plugin>
           <artifactId>maven-deploy-plugin</artifactId>
-          <version>2.6</version>
+          <version>2.7</version>
         </plugin>
         <plugin>
           <groupId>com.mycila.maven-license-plugin</groupId>
@@ -228,11 +224,11 @@
         </plugin>
         <plugin>
           <artifactId>maven-assembly-plugin</artifactId>
-          <version>2.2.1</version>
+          <version>2.3</version>
         </plugin>
         <plugin>
           <artifactId>maven-enforcer-plugin</artifactId>
-          <version>1.0.1</version>
+          <version>1.1</version>
         </plugin>
         <plugin>
           <artifactId>maven-failsafe-plugin</artifactId>

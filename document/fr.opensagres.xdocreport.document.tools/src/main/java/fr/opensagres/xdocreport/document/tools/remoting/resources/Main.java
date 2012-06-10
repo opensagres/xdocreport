@@ -40,7 +40,6 @@ import fr.opensagres.xdocreport.document.tools.internal.ArgContext;
 import fr.opensagres.xdocreport.remoting.resources.domain.BinaryData;
 import fr.opensagres.xdocreport.remoting.resources.domain.Resource;
 import fr.opensagres.xdocreport.remoting.resources.services.ResourcesException;
-
 import fr.opensagres.xdocreport.remoting.resources.services.ResourcesServiceName;
 import fr.opensagres.xdocreport.remoting.resources.services.ServiceType;
 import fr.opensagres.xdocreport.remoting.resources.services.rest.JAXRSResourcesService;

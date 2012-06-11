@@ -37,7 +37,6 @@ import javax.ws.rs.core.MultivaluedMap;
 import javax.ws.rs.ext.MessageBodyWriter;
 import javax.ws.rs.ext.Provider;
 
-import fr.opensagres.xdocreport.core.io.IOUtils;
 import fr.opensagres.xdocreport.remoting.resources.domain.BinaryData;
 import fr.opensagres.xdocreport.remoting.resources.domain.LargeBinaryData;
 
@@ -74,9 +73,28 @@ public class LargeBinaryDataMessageBodyWriter
         httpHeaders.add( "Content-Disposition", "attachement;filename=" + t.getFileName() );
         httpHeaders.add( "Content-Type", t.getMimeType() );
         httpHeaders.add( "X-resourceId", t.getResourceId() );
-        IOUtils.copyLarge(content, entityStream);
+        copyLarge(content, entityStream);
 
 
     }
+    
+    /**
+     * The default buffer size to use.
+     */
+    private static final int DEFAULT_BUFFER_SIZE = 1024 * 4;
+
+    private long copyLarge( InputStream input, OutputStream output )
+            throws IOException
+        {
+            byte[] buffer = new byte[DEFAULT_BUFFER_SIZE];
+            long count = 0;
+            int n = 0;
+            while ( -1 != ( n = input.read( buffer ) ) )
+            {
+                output.write( buffer, 0, n );
+                count += n;
+            }
+            return count;
+        }
 
 }

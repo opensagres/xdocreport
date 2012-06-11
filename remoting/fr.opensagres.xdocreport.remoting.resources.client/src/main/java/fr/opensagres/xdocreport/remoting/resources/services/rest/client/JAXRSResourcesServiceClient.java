@@ -151,7 +151,7 @@ public class JAXRSResourcesServiceClient
 
     }
 
-	@Override
+	
 	public LargeBinaryData downloadLarge(String resourceId)
 			throws ResourcesException {
 		reset();
@@ -163,7 +163,7 @@ public class JAXRSResourcesServiceClient
         return client.path( path.toString() ).accept( MediaType.APPLICATION_JSON_TYPE ).get( LargeBinaryData.class );
 	}
 
-	@Override
+
 	public void uploadLarge(LargeBinaryData data) throws ResourcesException {
 	    reset();
         // Use Void.class to throw an exception of there is HTTP error.s

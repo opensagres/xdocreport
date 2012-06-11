@@ -22,7 +22,6 @@ import fr.opensagres.xdocreport.remoting.resources.domain.BinaryData;
 import fr.opensagres.xdocreport.remoting.resources.domain.Filter;
 import fr.opensagres.xdocreport.remoting.resources.domain.Resource;
 import fr.opensagres.xdocreport.remoting.resources.services.ResourcesException;
-import fr.opensagres.xdocreport.remoting.resources.services.ResourcesService;
 import fr.opensagres.xdocreport.remoting.resources.services.ws.JAXWSResourcesService;
 
 public class JAXWSResourcesServiceClient
@@ -100,7 +99,6 @@ public class JAXWSResourcesServiceClient
     }
 
     public Resource getRoot()
-        throws ResourcesException
     {
         return client.getRoot();
     }

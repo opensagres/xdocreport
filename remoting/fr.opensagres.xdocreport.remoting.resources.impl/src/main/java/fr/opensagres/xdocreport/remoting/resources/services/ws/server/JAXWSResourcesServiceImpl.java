@@ -10,11 +10,12 @@ import fr.opensagres.xdocreport.remoting.resources.domain.Resource;
 import fr.opensagres.xdocreport.remoting.resources.services.DelegateResourcesService;
 import fr.opensagres.xdocreport.remoting.resources.services.ResourcesException;
 import fr.opensagres.xdocreport.remoting.resources.services.ResourcesService;
+import fr.opensagres.xdocreport.remoting.resources.services.ws.JAXWSResourcesService;
 
 @WebService( endpointInterface = "fr.opensagres.xdocreport.remoting.resources.services.ws.JAXWSResourcesService", serviceName = "ResourcesServiceService" )
 public class JAXWSResourcesServiceImpl
     extends DelegateResourcesService
-    implements ResourcesService
+    implements JAXWSResourcesService
 {
 
     public JAXWSResourcesServiceImpl( ResourcesService delegate )
@@ -30,7 +31,6 @@ public class JAXWSResourcesServiceImpl
 
     @Override
     public Resource getRoot()
-        throws ResourcesException
     {
         return super.getRoot();
     }

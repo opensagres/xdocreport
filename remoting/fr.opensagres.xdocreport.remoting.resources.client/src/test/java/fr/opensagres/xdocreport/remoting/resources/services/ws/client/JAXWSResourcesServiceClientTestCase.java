@@ -13,6 +13,7 @@ import org.eclipse.jetty.servlet.ServletHolder;
 import org.junit.AfterClass;
 import org.junit.Assert;
 import org.junit.BeforeClass;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import fr.opensagres.xdocreport.core.io.IOUtils;
@@ -61,6 +62,7 @@ public class JAXWSResourcesServiceClientTestCase
         server.start();
     }
 
+    
     @Test
     public void name()
     {
@@ -80,6 +82,7 @@ public class JAXWSResourcesServiceClientTestCase
         // src/test/resources/fr/opensagres/xdocreport/resources/repository
         // See class MockRepositoryService
         Assert.assertNotNull( root );
+        
         Assert.assertEquals( "resources_jaxws", root.getName() );
         Assert.assertTrue( root.getChildren().size() >= 4 );
 

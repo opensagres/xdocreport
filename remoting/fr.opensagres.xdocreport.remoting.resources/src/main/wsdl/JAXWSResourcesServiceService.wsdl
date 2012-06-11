@@ -1,32 +1,30 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<wsdl:definitions name="JAXWSResourcesServiceService"
- targetNamespace="http://ws.services.resources.remoting.xdocreport.opensagres.fr/" 
- xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:tns="http://ws.services.resources.remoting.xdocreport.opensagres.fr/" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+<wsdl:definitions name="JAXWSResourcesServiceService" targetNamespace="http://ws.services.resources.remoting.xdocreport.opensagres.fr/" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:tns="http://domain.resources.remoting.xdocreport.opensagres.fr/" xmlns:ws="http://ws.services.resources.remoting.xdocreport.opensagres.fr/"  xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/">
   <wsdl:types>
-
-<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema">
-<xs:import namespace="http://ws.services.resources.remoting.xdocreport.opensagres.fr/" schemaLocation="JAXWSResourcesServiceService_schema1.xsd"/>
-</xs:schema>
-
+<schema xmlns="http://www.w3.org/2001/XMLSchema">
+<import namespace="http://domain.resources.remoting.xdocreport.opensagres.fr/" schemaLocation="JAXWSResourcesServiceService_schema1.xsd"/>
+</schema>
   </wsdl:types>
   <wsdl:message name="getRootWithFilter">
-    <wsdl:part name="filter" type="tns:filter">
+    <wsdl:part name="filter" element="tns:filter">
     </wsdl:part>
   </wsdl:message>
   <wsdl:message name="getNameResponse">
-    <wsdl:part name="parameters" type="xs:string">
+    <wsdl:part name="parameters" element="tns:parameters">
     </wsdl:part>
   </wsdl:message>
+  <wsdl:message name="getName">
+  </wsdl:message>
   <wsdl:message name="getRootWithFilterResponse">
-    <wsdl:part name="resource" type="tns:resource">
+    <wsdl:part name="resource" element="tns:resource">
     </wsdl:part>
   </wsdl:message>
   <wsdl:message name="upload">
-    <wsdl:part name="content" type="tns:binaryData">
+    <wsdl:part name="content" element="tns:content">
     </wsdl:part>
   </wsdl:message>
   <wsdl:message name="getRootResponse">
-    <wsdl:part name="resource" type="tns:resource">
+    <wsdl:part name="resource" element="tns:resource">
     </wsdl:part>
   </wsdl:message>
   <wsdl:message name="downloadMultipleResponse">
@@ -36,7 +34,7 @@
   <wsdl:message name="getRoot">
   </wsdl:message>
   <wsdl:message name="download">
-    <wsdl:part name="resourceId" type="xs:string">
+    <wsdl:part name="resourceId" element="tns:resourceId">
     </wsdl:part>
   </wsdl:message>
   <wsdl:message name="downloadResponse">
@@ -49,49 +47,45 @@
   </wsdl:message>
   <wsdl:message name="uploadResponse">
   </wsdl:message>
-  <wsdl:message name="getRootRequest">
-  	<wsdl:part name="parameters" element="tns:getRoot"></wsdl:part>
-  </wsdl:message>
-  <wsdl:message name="getNameRequest">
-  </wsdl:message>
   <wsdl:portType name="JAXWSResourcesService">
     <wsdl:operation name="upload">
-      <wsdl:input name="upload" message="tns:upload">
+      <wsdl:input name="upload" message="ws:upload">
     </wsdl:input>
-      <wsdl:output name="uploadResponse" message="tns:uploadResponse">
+      <wsdl:output name="uploadResponse" message="ws:uploadResponse">
     </wsdl:output>
     </wsdl:operation>
     <wsdl:operation name="getRoot">
-<wsdl:input name="getRoot" message="tns:getRoot">
+      <wsdl:input name="getRoot" message="ws:getRoot">
     </wsdl:input>
-            <wsdl:output name="getRootResponse" message="tns:getRootResponse">
+      <wsdl:output name="getRootResponse" message="ws:getRootResponse">
     </wsdl:output>
     </wsdl:operation>
     <wsdl:operation name="getName">
-            <wsdl:input message="tns:getNameRequest"></wsdl:input>
-            <wsdl:output name="getNameResponse" message="tns:getNameResponse">
+      <wsdl:input name="getName" message="ws:getName">
+    </wsdl:input>
+      <wsdl:output name="getNameResponse" message="ws:getNameResponse">
     </wsdl:output>
     </wsdl:operation>
     <wsdl:operation name="downloadMultiple">
-      <wsdl:input name="downloadMultiple" message="tns:downloadMultiple">
+      <wsdl:input name="downloadMultiple" message="ws:downloadMultiple">
     </wsdl:input>
-      <wsdl:output name="downloadMultipleResponse" message="tns:downloadMultipleResponse">
+      <wsdl:output name="downloadMultipleResponse" message="ws:downloadMultipleResponse">
     </wsdl:output>
     </wsdl:operation>
     <wsdl:operation name="download">
-      <wsdl:input name="download" message="tns:download">
+      <wsdl:input name="download" message="ws:download">
     </wsdl:input>
-      <wsdl:output name="downloadResponse" message="tns:downloadResponse">
+      <wsdl:output name="downloadResponse" message="ws:downloadResponse">
     </wsdl:output>
     </wsdl:operation>
     <wsdl:operation name="getRootWithFilter">
-      <wsdl:input name="getRootWithFilter" message="tns:getRootWithFilter">
+      <wsdl:input name="getRootWithFilter" message="ws:getRootWithFilter">
     </wsdl:input>
-      <wsdl:output name="getRootWithFilterResponse" message="tns:getRootWithFilterResponse">
+      <wsdl:output name="getRootWithFilterResponse" message="ws:getRootWithFilterResponse">
     </wsdl:output>
     </wsdl:operation>
   </wsdl:portType>
-  <wsdl:binding name="JAXWSResourcesServiceServiceSoapBinding" type="tns:JAXWSResourcesService">
+  <wsdl:binding name="JAXWSResourcesServiceServiceSoapBinding" type="ws:JAXWSResourcesService">
     <soap:binding style="document" transport="http://schemas.xmlsoap.org/soap/http"/>
     <wsdl:operation name="upload">
       <soap:operation soapAction="" style="document"/>
@@ -103,7 +97,7 @@
       </wsdl:output>
     </wsdl:operation>
     <wsdl:operation name="getRoot">
-      <soap:operation soapAction="" style="document"/>
+      <soap:operation soapAction="getRoot" style="document"/>
       <wsdl:input name="getRoot">
         <soap:body use="literal"/>
       </wsdl:input>
@@ -121,7 +115,10 @@
       </wsdl:output>
     </wsdl:operation>
     <wsdl:operation name="getName">
-      <soap:operation soapAction="" style="document" />      
+      <soap:operation soapAction="getName" style="document"/>
+      <wsdl:input name="getName">
+        <soap:body use="literal"/>
+      </wsdl:input>
       <wsdl:output name="getNameResponse">
         <soap:body use="literal"/>
       </wsdl:output>
@@ -146,8 +143,8 @@
     </wsdl:operation>
   </wsdl:binding>
   <wsdl:service name="JAXWSResourcesServiceService">
-    <wsdl:port name="ResourcesServicePort" binding="tns:JAXWSResourcesServiceServiceSoapBinding">
-      <soap:address location="http://localhost:9090/ResourcesServicePort"/>
+    <wsdl:port name="JAXWSResourcesServicePort" binding="ws:JAXWSResourcesServiceServiceSoapBinding">
+      <soap:address location="http://localhost:9090/JAXWSResourcesServicePort"/>
     </wsdl:port>
   </wsdl:service>
 </wsdl:definitions>

@@ -11,7 +11,9 @@
       <xs:element name="length" type="xs:long"/>
       <xs:element minOccurs="0" name="mimeType" type="xs:string"/>
       <xs:element minOccurs="0" name="resourceId" type="xs:string"/>
+       <xs:any processContents="lax" namespace="##other" minOccurs="0" maxOccurs="unbounded"/>
     </xs:sequence>
+    <xs:anyAttribute namespace="##other" processContents="skip"/>
   </xs:complexType>
   <xs:complexType name="resource">
     <xs:sequence>
@@ -19,7 +21,9 @@
       <xs:element minOccurs="0" name="id" type="xs:string"/>
       <xs:element minOccurs="0" name="name" type="xs:string"/>
       <xs:element minOccurs="0" name="type" type="tns:resourceType"/>
+       <xs:any processContents="lax" namespace="##other" minOccurs="0" maxOccurs="unbounded"/>
     </xs:sequence>
+    <xs:anyAttribute namespace="##other" processContents="skip"/>
   </xs:complexType>
   <xs:complexType name="downloadMultiple">
     <xs:sequence>
@@ -34,13 +38,17 @@
   <xs:complexType name="filter">
     <xs:sequence>
       <xs:element maxOccurs="unbounded" minOccurs="0" name="properties" nillable="true" type="tns:propertyRepresentation"/>
+      <xs:any namespace="##any" minOccurs="0"/>
     </xs:sequence>
+    <xs:anyAttribute namespace="##other" processContents="skip"/>
   </xs:complexType>
   <xs:complexType name="propertyRepresentation">
     <xs:sequence>
       <xs:element minOccurs="0" name="name" type="xs:string"/>
       <xs:element minOccurs="0" name="value" type="xs:string"/>
+       <xs:any processContents="lax" namespace="##other" minOccurs="0" maxOccurs="unbounded"/>
     </xs:sequence>
+    <xs:anyAttribute namespace="##other" processContents="skip"/>
   </xs:complexType>
   <xs:simpleType name="resourceType">
     <xs:restriction base="xs:string">

@@ -48,10 +48,11 @@ import javax.xml.bind.annotation.XmlType;
 })
 public class LargeBinaryData {
 
+	private static final String DEFAULT_MIMETYPE = "application/octet-stream";
     protected InputStream content;
     protected String fileName;
     protected long length;
-    protected String mimeType;
+    protected String mimeType = DEFAULT_MIMETYPE;
     protected String resourceId;
 
     /**

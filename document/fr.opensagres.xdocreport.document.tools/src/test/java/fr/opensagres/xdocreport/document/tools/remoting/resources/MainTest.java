@@ -135,6 +135,18 @@ public class MainTest
     }
 
     @Test
+    public void downloadALargeFileInFolder()
+        throws Exception
+    {
+        String fileToDownload = "Custom____CustomSimple.docx";
+        File downlodedFile = new File( tempFolder, "DownlodedCustomSimple.docx" );
+        String[] args =
+            { "-baseAddress", BASE_ADDRESS, "-serviceName", ResourcesServiceName.downloadLarge.name(), "-resources",
+                fileToDownload, "-out", downlodedFile.getPath() };
+        Main.main( args );
+        Assert.assertTrue( downlodedFile.exists() );
+    }
+    @Test
     public void uploadARootFile()
         throws Exception
     {
@@ -142,6 +154,20 @@ public class MainTest
         String resourceId = "NewSimple.docx";
         String[] args =
             { "-baseAddress", BASE_ADDRESS, "-serviceName", ResourcesServiceName.upload.name(), "-resources",
+                resourceId, "-out", fileToUploadFile.getPath() };
+        Main.main( args );
+        File uploadedFile = new File( resourcesFolder, "NewSimple.docx" );
+        Assert.assertTrue( uploadedFile.exists() );
+    }
+
+    @Test
+    public void uploadLargeARootFile()
+        throws Exception
+    {
+        File fileToUploadFile = new File( srcFolder, "Simple.docx" );
+        String resourceId = "NewSimple.docx";
+        String[] args =
+            { "-baseAddress", BASE_ADDRESS, "-serviceName", "uploadLarge", "-resources",
                 resourceId, "-out", fileToUploadFile.getPath() };
         Main.main( args );
         File uploadedFile = new File( resourcesFolder, "NewSimple.docx" );
@@ -161,7 +187,7 @@ public class MainTest
         File uploadedFile = new File( resourcesFolder, "XXX/NewSimple.docx" );
         Assert.assertTrue( uploadedFile.exists() );
     }
-    
+
     @AfterClass
     public static void stopServer()
         throws Exception

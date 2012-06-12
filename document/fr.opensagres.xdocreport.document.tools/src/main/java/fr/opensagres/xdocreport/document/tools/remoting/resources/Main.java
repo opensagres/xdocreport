@@ -38,6 +38,7 @@ import fr.opensagres.xdocreport.core.io.IOUtils;
 import fr.opensagres.xdocreport.core.utils.StringUtils;
 import fr.opensagres.xdocreport.document.tools.internal.ArgContext;
 import fr.opensagres.xdocreport.remoting.resources.domain.BinaryData;
+import fr.opensagres.xdocreport.remoting.resources.domain.LargeBinaryData;
 import fr.opensagres.xdocreport.remoting.resources.domain.Resource;
 import fr.opensagres.xdocreport.remoting.resources.services.ResourcesException;
 import fr.opensagres.xdocreport.remoting.resources.services.ResourcesServiceName;
@@ -122,7 +123,7 @@ public class Main
                                  String out, ArgContext context )
         throws IOException, ResourcesException
     {
-        
+
         if ( serviceType == ServiceType.REST ){
         	processJAXRS(baseAddress,  user,  password,  connectionTimeout,
                      allowChunking,  serviceName,
@@ -132,7 +133,7 @@ public class Main
                     allowChunking,  serviceName,
                     out,  context);
         }
-        
+
     }
 
     private static void processJAXRS(String baseAddress, String user,
@@ -156,8 +157,63 @@ public class Main
                 resources = context.get( "-resources" );
                 processUpload( client, resources, out );
                 break;
+            case uploadLarge:
+                resources = context.get( "-resources" );
+                processUploadLargeLargeFile( client, resources, out );
+                break;
+            case downloadLarge:
+                resources = context.get( "-resources" );
+                processDownloadLargeFile( client, resources, out );
+                break;
+
         }
-		
+
+	}
+
+	private static void processDownloadLargeFile(JAXRSResourcesService client,
+			String resources, String out) throws IOException {
+		 if ( StringUtils.isEmpty( resources ) )
+	        {
+	            throw new IOException( "resources must be not empty" );
+	        }
+	        if ( resources.indexOf( ";" ) == -1 )
+	        {
+
+	            LargeBinaryData data = client.downloadLarge( resources );
+	            binaryDataContentToFile(new File( out ), data);
+	        }
+	        else
+	        {
+	            // TODO : manage list of download
+	        }
+
+	        // String[] resources= s.split( ";" );
+	        // String[] outs= out.split( ";" );
+
+
+	}
+
+	private static void processUploadLargeLargeFile(JAXRSResourcesService client,
+			String resources, String out) throws IOException {
+		  if ( StringUtils.isEmpty( resources ) )
+	        {
+	            throw new IOException( "resources must be not empty" );
+	        }
+	        if ( resources.indexOf( ";" ) == -1 )
+	        {
+	        	LargeBinaryData data = createLargeBinaryDataFromFile(resources, new File( out ));
+	            client.uploadLarge( data );
+
+	        }
+	        else
+	        {
+	            // TODO : manage list of uppload
+	        }
+
+	        // String[] resources= s.split( ";" );
+	        // String[] outs= out.split( ";" );
+
+
 	}
 
 	private static void processJAXWS(String baseAddress, String user,
@@ -182,7 +238,7 @@ public class Main
                 processUpload( client, resources, out );
                 break;
         }
-		
+
 	}
 
 	private static void processUpload(JAXWSResourcesService client,
@@ -204,9 +260,21 @@ public class Main
 
 	        // String[] resources= s.split( ";" );
 	        // String[] outs= out.split( ";" );
-		
+
 	}
 
+	private static LargeBinaryData createLargeBinaryDataFromFile(String resourceId,
+			File file) throws FileNotFoundException, IOException {
+		FileInputStream input= new FileInputStream(file);
+
+
+      //  BinaryData data = new BinaryData( content, out.getName() );
+		LargeBinaryData data = new  LargeBinaryData( );
+        data.setContent(input);
+        data.setFileName(file.getName());
+        data.setResourceId( resourceId );
+		return data;
+	}
 
 	private static BinaryData createBinaryDataFromFile(String resourceId,
 			File file) throws FileNotFoundException, IOException {
@@ -230,7 +298,7 @@ public class Main
         }
         if ( resources.indexOf( ";" ) == -1 )
         {
-            
+
             BinaryData data = client.download( resources );
             binaryDataContentToFile(new File( out ), data);
         }
@@ -252,7 +320,7 @@ public class Main
             }
             if ( resources.indexOf( ";" ) == -1 )
             {
-                
+
                 BinaryData data = client.download( resources );
                 binaryDataContentToFile(new File( out ), data);
             }
@@ -278,6 +346,17 @@ public class Main
         }
 	}
 
+	private static void binaryDataContentToFile(File outFile, LargeBinaryData data)
+			throws IOException {
+		if ( data.getContent() != null )
+        {
+            createFile( data.getContent(), outFile );
+        }
+        else
+        {
+            createFile( data.getContent(), outFile );
+        }
+	}
     private static void createFile( byte[] flux, File outFile )
         throws IOException
     {

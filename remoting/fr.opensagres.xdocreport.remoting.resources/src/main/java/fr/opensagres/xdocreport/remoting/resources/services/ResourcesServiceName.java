@@ -30,7 +30,7 @@ package fr.opensagres.xdocreport.remoting.resources.services;
 public enum ResourcesServiceName
 {
 
-    name, root, download, upload;
+    name, root, download, upload,uploadLarge,downloadLarge;
 
     /**
      * Returns the enum {@link ResourcesServiceName} from the given String value and null if not found.

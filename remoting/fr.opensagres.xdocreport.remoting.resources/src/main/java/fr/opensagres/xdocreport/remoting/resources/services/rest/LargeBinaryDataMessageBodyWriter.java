@@ -45,7 +45,7 @@ import fr.opensagres.xdocreport.remoting.resources.domain.LargeBinaryData;
  * <p>
  * To allow streaming the binday data is directly sent inside the Http body and the other attributes are passed as http
  * header (it avoids to use MultiPart encoding)
- *
+ * 
  * @author <a href="mailto:tdelprat@nuxeo.com">Tiry</a>
  */
 @Provider
@@ -58,43 +58,43 @@ public class LargeBinaryDataMessageBodyWriter
         return LargeBinaryData.class.isAssignableFrom( type );
     }
 
-    public long getSize( LargeBinaryData t, Class<?> type, Type genericType, Annotation[] annotations, MediaType mediaType )
+    public long getSize( LargeBinaryData t, Class<?> type, Type genericType, Annotation[] annotations,
+                         MediaType mediaType )
     {
-        return t.getLength();
+        long n = t.getLength();
+        // allow Streaming if we don't know the size of the Binary Data
+        return n <= 0 ? -1 : n;
     }
 
-    public void writeTo( LargeBinaryData t, Class<?> type, Type genericType, Annotation[] annotations, MediaType mediaType,
-                         MultivaluedMap<String, Object> httpHeaders, OutputStream entityStream )
+    public void writeTo( LargeBinaryData t, Class<?> type, Type genericType, Annotation[] annotations,
+                         MediaType mediaType, MultivaluedMap<String, Object> httpHeaders, OutputStream entityStream )
         throws IOException, WebApplicationException
     {
-
         InputStream content = t.getContent();
-
         httpHeaders.add( "Content-Disposition", "attachement;filename=" + t.getFileName() );
         httpHeaders.add( "Content-Type", t.getMimeType() );
         httpHeaders.add( "X-resourceId", t.getResourceId() );
-        copyLarge(content, entityStream);
-
-
+        copyLarge( content, entityStream );
+        entityStream.flush();
     }
-    
+
     /**
      * The default buffer size to use.
      */
     private static final int DEFAULT_BUFFER_SIZE = 1024 * 4;
 
     private long copyLarge( InputStream input, OutputStream output )
-            throws IOException
+        throws IOException
+    {
+        byte[] buffer = new byte[DEFAULT_BUFFER_SIZE];
+        long count = 0;
+        int n = 0;
+        while ( -1 != ( n = input.read( buffer ) ) )
         {
-            byte[] buffer = new byte[DEFAULT_BUFFER_SIZE];
-            long count = 0;
-            int n = 0;
-            while ( -1 != ( n = input.read( buffer ) ) )
-            {
-                output.write( buffer, 0, n );
-                count += n;
-            }
-            return count;
+            output.write( buffer, 0, n );
+            count += n;
         }
+        return count;
+    }
 
 }

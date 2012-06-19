@@ -490,7 +490,7 @@ Sub RepositoryDocHandler_startElement( cName As String, oAttributes As com.sun.s
 		Dim isFolder as Boolean	
 		
 		resourceName = oAttributes.getValueByName(&quot;name&quot;)
-		isFolder = (oAttributes.getValueByName(&quot;type&quot;) = 0)
+		isFolder = (oAttributes.getValueByName(&quot;type&quot;) = "FOLDER")
 		
 		If (gParentNode is Nothing) Then 
 			treeNode = gTreeDataModel.createNode( resourceName, true )	

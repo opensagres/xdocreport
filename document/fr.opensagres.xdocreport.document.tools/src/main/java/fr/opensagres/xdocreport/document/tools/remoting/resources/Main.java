@@ -299,7 +299,7 @@ public class Main
         if ( resources.indexOf( ";" ) == -1 )
         {
 
-            BinaryData data = client.download( resources );
+            LargeBinaryData data = client.downloadLarge( resources );
             binaryDataContentToFile(new File( out ), data);
         }
         else

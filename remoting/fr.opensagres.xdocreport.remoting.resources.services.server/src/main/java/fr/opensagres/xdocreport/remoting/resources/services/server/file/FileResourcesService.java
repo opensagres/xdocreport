@@ -170,15 +170,14 @@ public abstract class FileResourcesService
         return rootFolder;
     }
 
-    public Resource toSimpleResource( File file, Resource linkedResource )
+    public Resource toSimpleResource( File file, Resource parent )
     {
         boolean directory = file.isDirectory();
         Resource resource =
-            ResourceFactory.createResource( file.getName(), directory ? ResourceType.FOLDER : ResourceType.FILE,
-                                           linkedResource );
+            ResourceFactory.createResource( file.getName(), directory ? ResourceType.CATEGORY : ResourceType.DOCUMENT,
+                                           parent );
         if ( directory )
         {
-            resource.setType( ResourceType.FOLDER );
             File[] files = file.listFiles();
             if ( files.length > 0 )
             {
@@ -191,15 +190,15 @@ public abstract class FileResourcesService
         return resource;
     }
 
-    public Resource toResource( File file, Resource linkedResource )
+    public Resource toResource( File file, Resource parent )
     {
         if ( templateHierarchy && file.isFile() )
         {
-            return ResourceFactory.createTemplate( file.getName(), linkedResource );
+            return ResourceFactory.createTemplate( file.getName(), parent );
         }
         else
         {
-            return toSimpleResource( file, linkedResource );
+            return toSimpleResource( file, parent );
         }
     }
 

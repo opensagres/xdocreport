@@ -465,7 +465,7 @@ public class Main
     {
         switch ( resource.getType() )
         {
-            case FILE:
+            case DOCUMENT:
                 // Document
                 return "document";
             case TEMPLATE:

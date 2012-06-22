@@ -39,7 +39,7 @@ public class ResourceFactory
      */
     public static Resource createCategory( String name, Resource parent )
     {
-        return createResource( name, ResourceType.FOLDER, parent );
+        return createResource( name, ResourceType.CATEGORY, parent );
     }
 
     /**
@@ -51,7 +51,7 @@ public class ResourceFactory
      */
     public static Resource createDocument( String name, Resource parent )
     {
-        return createResource( name, ResourceType.FILE, parent );
+        return createResource( name, ResourceType.DOCUMENT, parent );
     }
 
     /**

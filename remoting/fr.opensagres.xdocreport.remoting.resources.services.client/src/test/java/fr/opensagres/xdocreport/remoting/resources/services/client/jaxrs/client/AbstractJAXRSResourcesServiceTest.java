@@ -123,9 +123,9 @@ public abstract class AbstractJAXRSResourcesServiceTest {
 	    Collections.sort( root.getChildren(), ResourceComparator.INSTANCE );
 
 	    Assert.assertEquals( "Custom", root.getChildren().get( 0 ).getName() );
-	    Assert.assertEquals( ResourceType.FOLDER, root.getChildren().get( 0 ).getType() );
+	    Assert.assertEquals( ResourceType.CATEGORY, root.getChildren().get( 0 ).getType() );
 	    Assert.assertEquals( "Opensagres", root.getChildren().get( 1 ).getName() );
-	    Assert.assertEquals( ResourceType.FOLDER, root.getChildren().get( 1 ).getType() );
+	    Assert.assertEquals( ResourceType.CATEGORY, root.getChildren().get( 1 ).getType() );
 	    Assert.assertEquals( "Simple.docx", root.getChildren().get( 2 ).getName() );
 	    Assert.assertEquals( "Simple.odt", root.getChildren().get( 3 ).getName() );
 

@@ -15,6 +15,7 @@ import javax.xml.bind.annotation.XmlType;
  *   &lt;restriction base="{http://www.w3.org/2001/XMLSchema}string">
  *     &lt;enumeration value="FOLDER"/>
  *     &lt;enumeration value="FILE"/>
+ *     &lt;enumeration value="TEMPLATE"/>
  *   &lt;/restriction>
  * &lt;/simpleType>
  * </pre>
@@ -25,7 +26,8 @@ import javax.xml.bind.annotation.XmlType;
 public enum ResourceType {
 
     FOLDER,
-    FILE;
+    FILE,
+    TEMPLATE;
 
     public String value() {
         return name();

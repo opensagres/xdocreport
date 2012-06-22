@@ -16,13 +16,18 @@ public abstract class WebAppResourcesServiceListener
 
     private ServletContext servletContext;
 
-    private File webAppFolder;
+    //private File webAppFolder;
 
     private File rootFolder;
 
     public WebAppResourcesServiceListener()
     {
-        super( null );
+        this( false );
+    }
+
+    public WebAppResourcesServiceListener( boolean templateHierarchy )
+    {
+        super( null, templateHierarchy );
         this.servletContext = null;
         this.rootFolder = null;
         ResourcesServicesRegistry.getRegistry().addService( this );

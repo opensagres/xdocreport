@@ -13,20 +13,30 @@ import fr.opensagres.xdocreport.remoting.resources.domain.BinaryData;
 import fr.opensagres.xdocreport.remoting.resources.domain.Filter;
 import fr.opensagres.xdocreport.remoting.resources.domain.LargeBinaryData;
 import fr.opensagres.xdocreport.remoting.resources.domain.Resource;
+import fr.opensagres.xdocreport.remoting.resources.domain.ResourceFactory;
 import fr.opensagres.xdocreport.remoting.resources.domain.ResourceType;
 import fr.opensagres.xdocreport.remoting.resources.services.AbstractResourcesService;
 import fr.opensagres.xdocreport.remoting.resources.services.ResourcesException;
 import fr.opensagres.xdocreport.remoting.resources.services.rest.JAXRSResourcesService;
 
 public abstract class FileResourcesService
-    extends AbstractResourcesService implements JAXRSResourcesService
+    extends AbstractResourcesService
+    implements JAXRSResourcesService
 {
 
     private final File rootFolder;
 
+    private final boolean templateHierarchy;
+
     public FileResourcesService( File rootFolder )
     {
+        this( rootFolder, false );
+    }
+
+    public FileResourcesService( File rootFolder, boolean templateHierarchy )
+    {
         this.rootFolder = rootFolder;
+        this.templateHierarchy = templateHierarchy;
     }
 
     public Resource getRootWithFilter( Filter filter )
@@ -41,12 +51,12 @@ public abstract class FileResourcesService
         File file = new File( getRootFolder(), resourcePath );
         try
         {
-        	FileInputStream input = new FileInputStream(file);
-        	byte[] content=IOUtils.toByteArray(input);
+            FileInputStream input = new FileInputStream( file );
+            byte[] content = IOUtils.toByteArray( input );
 
-        	BinaryData data = new BinaryData( );
-        	data.setContent(content);
-        	data.setFileName(file.getName());
+            BinaryData data = new BinaryData();
+            data.setContent( content );
+            data.setFileName( file.getName() );
             data.setResourceId( resourceId );
             return data;
         }
@@ -61,16 +71,17 @@ public abstract class FileResourcesService
         return StringUtils.replaceAll( resourceId, "____", "/" );
     }
 
-    public LargeBinaryData downloadLarge(String resourceId)
-    		throws ResourcesException {
-    	String resourcePath = getResourcePath( resourceId );
+    public LargeBinaryData downloadLarge( String resourceId )
+        throws ResourcesException
+    {
+        String resourcePath = getResourcePath( resourceId );
         File file = new File( getRootFolder(), resourcePath );
         try
         {
-        	FileInputStream input = new FileInputStream(file);
-        	LargeBinaryData data = new LargeBinaryData( );
-        	data.setContent(input);
-        	data.setFileName(file.getName());
+            FileInputStream input = new FileInputStream( file );
+            LargeBinaryData data = new LargeBinaryData();
+            data.setContent( input );
+            data.setFileName( file.getName() );
             data.setResourceId( resourceId );
             return data;
         }
@@ -81,7 +92,9 @@ public abstract class FileResourcesService
 
     }
 
-    public void uploadLarge(LargeBinaryData data) throws ResourcesException {
+    public void uploadLarge( LargeBinaryData data )
+        throws ResourcesException
+    {
 
         String resourceId = data.getResourceId();
         InputStream input = data.getContent();
@@ -106,7 +119,7 @@ public abstract class FileResourcesService
         finally
         {
 
-        	if ( input != null )
+            if ( input != null )
             {
                 IOUtils.closeQuietly( input );
             }
@@ -117,7 +130,9 @@ public abstract class FileResourcesService
         }
 
     }
-    public void upload( BinaryData data ) throws ResourcesException
+
+    public void upload( BinaryData data )
+        throws ResourcesException
     {
         String resourceId = data.getResourceId();
         byte[] input = data.getContent();
@@ -155,36 +170,37 @@ public abstract class FileResourcesService
         return rootFolder;
     }
 
-    public static Resource toResource( File file, Resource linkedResource )
+    public Resource toSimpleResource( File file, Resource linkedResource )
     {
-        Resource resource = new Resource();
-        // resource.setId( getId(file, linkedResource) );
-        // resource.setParent( linkedResource );
-        resource.setName( file.getName() );
-        //resource.setChildren( Collections.EMPTY_LIST );
-        if ( linkedResource != null )
-        {
-            linkedResource.getChildren().add( resource );
-        }
-        if ( file.isDirectory() )
+        boolean directory = file.isDirectory();
+        Resource resource =
+            ResourceFactory.createResource( file.getName(), directory ? ResourceType.FOLDER : ResourceType.FILE,
+                                           linkedResource );
+        if ( directory )
         {
             resource.setType( ResourceType.FOLDER );
             File[] files = file.listFiles();
             if ( files.length > 0 )
             {
-                //resource.setChildren( new ArrayList<Resource>() );
                 for ( int i = 0; i < files.length; i++ )
                 {
                     toResource( files[i], resource );
                 }
             }
         }
+        return resource;
+    }
+
+    public Resource toResource( File file, Resource linkedResource )
+    {
+        if ( templateHierarchy && file.isFile() )
+        {
+            return ResourceFactory.createTemplate( file.getName(), linkedResource );
+        }
         else
         {
-            resource.setType( ResourceType.FILE );
+            return toSimpleResource( file, linkedResource );
         }
-
-        return resource;
     }
 
 }

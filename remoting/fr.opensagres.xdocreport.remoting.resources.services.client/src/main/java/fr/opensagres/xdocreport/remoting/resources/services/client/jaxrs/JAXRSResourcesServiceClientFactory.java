@@ -1,6 +1,6 @@
 package fr.opensagres.xdocreport.remoting.resources.services.client.jaxrs;
 
-import fr.opensagres.xdocreport.remoting.resources.services.rest.JAXRSResourcesService;
+import fr.opensagres.xdocreport.remoting.resources.services.jaxrs.JAXRSResourcesService;
 
 
 public class JAXRSResourcesServiceClientFactory

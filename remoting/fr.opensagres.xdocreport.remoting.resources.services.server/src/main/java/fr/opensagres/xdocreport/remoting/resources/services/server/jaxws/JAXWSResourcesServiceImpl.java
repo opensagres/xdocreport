@@ -10,7 +10,7 @@ import fr.opensagres.xdocreport.remoting.resources.domain.Resource;
 import fr.opensagres.xdocreport.remoting.resources.services.DelegateResourcesService;
 import fr.opensagres.xdocreport.remoting.resources.services.ResourcesException;
 import fr.opensagres.xdocreport.remoting.resources.services.ResourcesService;
-import fr.opensagres.xdocreport.remoting.resources.services.ws.JAXWSResourcesService;
+import fr.opensagres.xdocreport.remoting.resources.services.jaxws.JAXWSResourcesService;
 
 @WebService( endpointInterface = "fr.opensagres.xdocreport.remoting.resources.services.ws.JAXWSResourcesService", serviceName = "ResourcesServiceService" )
 public class JAXWSResourcesServiceImpl

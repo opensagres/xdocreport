@@ -13,7 +13,6 @@ import org.eclipse.jetty.servlet.ServletHolder;
 import org.junit.AfterClass;
 import org.junit.Assert;
 import org.junit.BeforeClass;
-import org.junit.Ignore;
 import org.junit.Test;
 
 import fr.opensagres.xdocreport.core.io.IOUtils;
@@ -24,8 +23,7 @@ import fr.opensagres.xdocreport.remoting.resources.domain.ResourceType;
 import fr.opensagres.xdocreport.remoting.resources.services.FileUtils;
 import fr.opensagres.xdocreport.remoting.resources.services.ResourceComparator;
 import fr.opensagres.xdocreport.remoting.resources.services.ResourcesException;
-import fr.opensagres.xdocreport.remoting.resources.services.client.jaxws.JAXWSResourcesServiceClientFactory;
-import fr.opensagres.xdocreport.remoting.resources.services.ws.JAXWSResourcesService;
+import fr.opensagres.xdocreport.remoting.resources.services.jaxws.JAXWSResourcesService;
 
 public class JAXWSResourcesServiceClientTestCase
 {

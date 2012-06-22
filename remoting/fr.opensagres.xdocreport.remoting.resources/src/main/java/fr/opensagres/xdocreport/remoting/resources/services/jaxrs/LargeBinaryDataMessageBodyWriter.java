@@ -23,61 +23,78 @@
  * WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package fr.opensagres.xdocreport.remoting.resources.services.rest;
+package fr.opensagres.xdocreport.remoting.resources.services.jaxrs;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.OutputStream;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Type;
 
 import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.MultivaluedMap;
-import javax.ws.rs.ext.MessageBodyReader;
+import javax.ws.rs.ext.MessageBodyWriter;
 import javax.ws.rs.ext.Provider;
 
 import fr.opensagres.xdocreport.remoting.resources.domain.BinaryData;
 import fr.opensagres.xdocreport.remoting.resources.domain.LargeBinaryData;
 
 /**
- * {@link MessageBodyReader} used by JAXRS to read the {@link BinaryData} from an Http request
- *
+ * {@link MessageBodyWriter} that streams an {@link BinaryData} object in an Http response.
+ * <p>
+ * To allow streaming the binday data is directly sent inside the Http body and the other attributes are passed as http
+ * header (it avoids to use MultiPart encoding)
+ * 
  * @author <a href="mailto:tdelprat@nuxeo.com">Tiry</a>
  */
 @Provider
-public class LargeBinaryDataMessageBodyReader
-    implements MessageBodyReader<LargeBinaryData>
+public class LargeBinaryDataMessageBodyWriter
+    implements MessageBodyWriter<LargeBinaryData>
 {
 
-    public boolean isReadable( Class<?> type, Type genericType, Annotation[] annotations, MediaType mediaType )
+    public boolean isWriteable( Class<?> type, Type genericType, Annotation[] annotations, MediaType mediaType )
     {
         return LargeBinaryData.class.isAssignableFrom( type );
     }
 
-    public LargeBinaryData readFrom( Class<LargeBinaryData> type, Type genericType, Annotation[] annotations,
-                                MediaType mediaType, MultivaluedMap<String, String> httpHeaders,
-                                InputStream entityStream )
+    public long getSize( LargeBinaryData t, Class<?> type, Type genericType, Annotation[] annotations,
+                         MediaType mediaType )
+    {
+        long n = t.getLength();
+        // allow Streaming if we don't know the size of the Binary Data
+        return n <= 0 ? -1 : n;
+    }
+
+    public void writeTo( LargeBinaryData t, Class<?> type, Type genericType, Annotation[] annotations,
+                         MediaType mediaType, MultivaluedMap<String, Object> httpHeaders, OutputStream entityStream )
         throws IOException, WebApplicationException
     {
-
-        String filename = "";
-        String cd = httpHeaders.getFirst( "Content-Disposition" );
-        if ( cd != null )
-        {
-            filename = cd.replace( "attachement;filename=", "" );
-        }
-
-        String mimetype = httpHeaders.getFirst( "Content-Type" );
-
-        String resourceId = httpHeaders.getFirst( "X-resourceId" );
-
-
-        LargeBinaryData data = new LargeBinaryData( );
-        data.setContent(entityStream);
-        data.setFileName(filename);
-        data.setMimeType(mimetype);
-        data.setResourceId( resourceId );
-
-        return data;
+        InputStream content = t.getContent();
+        httpHeaders.add( "Content-Disposition", "attachement;filename=" + t.getFileName() );
+        httpHeaders.add( "Content-Type", t.getMimeType() );
+        httpHeaders.add( "X-resourceId", t.getResourceId() );
+        copyLarge( content, entityStream );
+        entityStream.flush();
     }
+
+    /**
+     * The default buffer size to use.
+     */
+    private static final int DEFAULT_BUFFER_SIZE = 1024 * 4;
+
+    private long copyLarge( InputStream input, OutputStream output )
+        throws IOException
+    {
+        byte[] buffer = new byte[DEFAULT_BUFFER_SIZE];
+        long count = 0;
+        int n = 0;
+        while ( -1 != ( n = input.read( buffer ) ) )
+        {
+            output.write( buffer, 0, n );
+            count += n;
+        }
+        return count;
+    }
+
 }

@@ -47,8 +47,8 @@ import fr.opensagres.xdocreport.remoting.resources.domain.LargeBinaryData;
 import fr.opensagres.xdocreport.remoting.resources.domain.Resource;
 import fr.opensagres.xdocreport.remoting.resources.services.ResourcesException;
 import fr.opensagres.xdocreport.remoting.resources.services.ResourcesServiceName;
-import fr.opensagres.xdocreport.remoting.resources.services.rest.JAXRSResourcesService;
-import fr.opensagres.xdocreport.remoting.resources.services.rest.Providers;
+import fr.opensagres.xdocreport.remoting.resources.services.jaxrs.JAXRSResourcesService;
+import fr.opensagres.xdocreport.remoting.resources.services.jaxrs.Providers;
 
 public class JAXRSResourcesServiceClient
     implements JAXRSResourcesService

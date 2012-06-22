@@ -45,8 +45,8 @@ import fr.opensagres.xdocreport.remoting.resources.services.ResourcesServiceName
 import fr.opensagres.xdocreport.remoting.resources.services.ServiceType;
 import fr.opensagres.xdocreport.remoting.resources.services.client.jaxrs.JAXRSResourcesServiceClientFactory;
 import fr.opensagres.xdocreport.remoting.resources.services.client.jaxws.JAXWSResourcesServiceClientFactory;
-import fr.opensagres.xdocreport.remoting.resources.services.rest.JAXRSResourcesService;
-import fr.opensagres.xdocreport.remoting.resources.services.ws.JAXWSResourcesService;
+import fr.opensagres.xdocreport.remoting.resources.services.jaxrs.JAXRSResourcesService;
+import fr.opensagres.xdocreport.remoting.resources.services.jaxws.JAXWSResourcesService;
 
 public class Main
 {

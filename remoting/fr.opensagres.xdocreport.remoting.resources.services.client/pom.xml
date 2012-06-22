@@ -10,7 +10,7 @@
 
 	<dependency>
   		<groupId>fr.opensagres.xdocreport</groupId>
-  		<artifactId>fr.opensagres.xdocreport.remoting.resources.impl</artifactId>
+  		<artifactId>fr.opensagres.xdocreport.remoting.resources.services.server</artifactId>
   		<version>0.9.8-SNAPSHOT</version>
   		<scope>test</scope>
 	</dependency>

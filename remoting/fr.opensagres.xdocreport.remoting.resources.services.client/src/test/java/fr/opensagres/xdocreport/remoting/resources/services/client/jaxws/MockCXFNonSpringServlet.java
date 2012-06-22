@@ -7,7 +7,7 @@ import javax.xml.ws.Endpoint;
 import org.apache.cxf.transport.servlet.CXFNonSpringServlet;
 
 import fr.opensagres.xdocreport.remoting.resources.services.MockResourcesService;
-import fr.opensagres.xdocreport.remoting.resources.services.ws.server.JAXWSResourcesServiceImpl;
+import fr.opensagres.xdocreport.remoting.resources.services.server.jaxws.JAXWSResourcesServiceImpl;
 
 public class MockCXFNonSpringServlet
     extends CXFNonSpringServlet

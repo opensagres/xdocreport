@@ -25,7 +25,7 @@
 package fr.opensagres.xdocreport.remoting.resources.services.client.jaxrs;
 
 import fr.opensagres.xdocreport.remoting.resources.services.MockResourcesService;
-import fr.opensagres.xdocreport.remoting.resources.services.rest.server.JAXRSResourcesApplication;
+import fr.opensagres.xdocreport.remoting.resources.services.server.jaxrs.JAXRSResourcesApplication;
 
 public class MockJAXRSResourcesApplication
     extends JAXRSResourcesApplication

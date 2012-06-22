@@ -29,7 +29,7 @@ import fr.opensagres.xdocreport.remoting.resources.services.FileUtils;
 import fr.opensagres.xdocreport.remoting.resources.services.ResourceComparator;
 import fr.opensagres.xdocreport.remoting.resources.services.ResourcesServiceName;
 import fr.opensagres.xdocreport.remoting.resources.services.client.jaxrs.MockJAXRSResourcesApplication;
-import fr.opensagres.xdocreport.remoting.resources.services.rest.Providers;
+import fr.opensagres.xdocreport.remoting.resources.services.jaxrs.Providers;
 
 public class JAXRSResourcesServiceWebClientTestCase
 {

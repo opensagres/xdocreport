@@ -1,4 +1,4 @@
-package fr.opensagres.xdocreport.remoting.resources.services.ws;
+package fr.opensagres.xdocreport.remoting.resources.services.jaxws;
 
 import javax.jws.WebMethod;
 import javax.jws.WebParam;

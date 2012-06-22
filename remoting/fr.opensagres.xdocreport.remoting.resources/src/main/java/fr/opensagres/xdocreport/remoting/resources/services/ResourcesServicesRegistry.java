@@ -3,7 +3,7 @@ package fr.opensagres.xdocreport.remoting.resources.services;
 import java.util.ArrayList;
 import java.util.List;
 
-import fr.opensagres.xdocreport.remoting.resources.services.rest.JAXRSResourcesService;
+import fr.opensagres.xdocreport.remoting.resources.services.jaxrs.JAXRSResourcesService;
 
 public class ResourcesServicesRegistry
 {

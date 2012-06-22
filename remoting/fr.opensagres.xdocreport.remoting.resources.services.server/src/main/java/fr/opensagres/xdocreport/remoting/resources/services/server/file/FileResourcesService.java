@@ -17,7 +17,7 @@ import fr.opensagres.xdocreport.remoting.resources.domain.ResourceFactory;
 import fr.opensagres.xdocreport.remoting.resources.domain.ResourceType;
 import fr.opensagres.xdocreport.remoting.resources.services.AbstractResourcesService;
 import fr.opensagres.xdocreport.remoting.resources.services.ResourcesException;
-import fr.opensagres.xdocreport.remoting.resources.services.rest.JAXRSResourcesService;
+import fr.opensagres.xdocreport.remoting.resources.services.jaxrs.JAXRSResourcesService;
 
 public abstract class FileResourcesService
     extends AbstractResourcesService

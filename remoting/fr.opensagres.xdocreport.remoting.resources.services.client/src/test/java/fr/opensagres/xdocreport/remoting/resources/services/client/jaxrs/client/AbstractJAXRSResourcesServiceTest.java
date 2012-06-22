@@ -33,8 +33,8 @@ import fr.opensagres.xdocreport.remoting.resources.services.FileUtils;
 import fr.opensagres.xdocreport.remoting.resources.services.ResourceComparator;
 import fr.opensagres.xdocreport.remoting.resources.services.ResourcesException;
 import fr.opensagres.xdocreport.remoting.resources.services.client.jaxrs.MockJAXRSResourcesApplication;
-import fr.opensagres.xdocreport.remoting.resources.services.rest.JAXRSResourcesService;
-import fr.opensagres.xdocreport.remoting.resources.services.rest.Providers;
+import fr.opensagres.xdocreport.remoting.resources.services.jaxrs.JAXRSResourcesService;
+import fr.opensagres.xdocreport.remoting.resources.services.jaxrs.Providers;
 
 public abstract class AbstractJAXRSResourcesServiceTest {
 

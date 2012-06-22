@@ -32,8 +32,8 @@ import javax.ws.rs.core.Application;
 
 import fr.opensagres.xdocreport.remoting.resources.services.ResourcesService;
 import fr.opensagres.xdocreport.remoting.resources.services.ResourcesServicesRegistry;
-import fr.opensagres.xdocreport.remoting.resources.services.rest.JAXRSResourcesService;
-import fr.opensagres.xdocreport.remoting.resources.services.rest.Providers;
+import fr.opensagres.xdocreport.remoting.resources.services.jaxrs.JAXRSResourcesService;
+import fr.opensagres.xdocreport.remoting.resources.services.jaxrs.Providers;
 
 public class JAXRSResourcesApplication
     extends Application

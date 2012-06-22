@@ -1,4 +1,4 @@
-package fr.opensagres.xdocreport.remoting.resources.services.rest;
+package fr.opensagres.xdocreport.remoting.resources.services.jaxrs;
 
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;

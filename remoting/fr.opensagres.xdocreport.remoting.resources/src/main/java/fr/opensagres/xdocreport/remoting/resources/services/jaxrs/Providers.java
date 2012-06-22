@@ -23,7 +23,7 @@
  * WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package fr.opensagres.xdocreport.remoting.resources.services.rest;
+package fr.opensagres.xdocreport.remoting.resources.services.jaxrs;
 
 import java.util.ArrayList;
 import java.util.List;

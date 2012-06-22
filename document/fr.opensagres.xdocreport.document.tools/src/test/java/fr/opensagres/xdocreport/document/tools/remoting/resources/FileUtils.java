@@ -18,7 +18,6 @@ package fr.opensagres.xdocreport.document.tools.remoting.resources;
  */
 
 import java.io.File;
-import java.io.FileFilter;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
@@ -28,11 +27,7 @@ import java.io.OutputStream;
 import java.net.URL;
 import java.util.Collection;
 import java.util.Date;
-import java.util.Iterator;
 import java.util.List;
-import java.util.zip.CRC32;
-import java.util.zip.CheckedInputStream;
-import java.util.zip.Checksum;
 
 import fr.opensagres.xdocreport.core.io.IOUtils;
 import fr.opensagres.xdocreport.core.io.internal.LineIterator;

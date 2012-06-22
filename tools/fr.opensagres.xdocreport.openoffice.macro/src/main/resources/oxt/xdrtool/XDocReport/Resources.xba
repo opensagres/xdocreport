@@ -143,10 +143,10 @@ Public Function ExecuteRepositoryServiceClient (ByVal baseAddress as String, ByV
 	
 	Dim message as String
 	message= &quot;Executing &quot;
-	If (serviceType = &quot;REST&quot;) Then 
-		message= message + &quot;REST Service&quot;
-	Else 
+	If (serviceType = &quot;JAXWS&quot;) Then 
 		message= message + &quot;WEB Service (SOAP)&quot;
+	Else 
+		message= message + &quot;REST Service&quot;	
 	End If
 	message= message + &quot; &quot; + baseAddress	
     If Not (Right(baseAddress, 1) = &quot;/&quot;)Then
@@ -484,13 +484,13 @@ Dim treeNode as Object
 Dim treeNodeIndex as Integer
 	
 Sub RepositoryDocHandler_startElement( cName As String, oAttributes As com.sun.star.xml.sax.XAttributeList )	
-	If (cName = &quot;resource&quot; ) Then		
+	If (cName = &quot;category&quot; or cName = &quot;document&quot; or cName = &quot;template&quot; ) Then		
 		treeNodeIndex = treeNodeIndex + 1
 		Dim resourceName as String
 		Dim isFolder as Boolean	
 		
 		resourceName = oAttributes.getValueByName(&quot;name&quot;)
-		isFolder = (oAttributes.getValueByName(&quot;type&quot;) = "FOLDER")
+		isFolder = (cName &lt;&gt; &quot;document&quot;)
 		
 		If (gParentNode is Nothing) Then 
 			treeNode = gTreeDataModel.createNode( resourceName, true )	
@@ -532,7 +532,7 @@ End Sub
 
 
 Sub RepositoryDocHandler_endElement( cName As String )
-	If (cName = &quot;resource&quot; ) Then	
+	If (cName = &quot;category&quot; or cName = &quot;document&quot; or cName = &quot;template&quot; ) Then	
 		If (treeNode Is Nothing) Then 
 			&apos; Last TreeNode is a file and folder is closed
 			&apos; =&gt; Get parent tree node

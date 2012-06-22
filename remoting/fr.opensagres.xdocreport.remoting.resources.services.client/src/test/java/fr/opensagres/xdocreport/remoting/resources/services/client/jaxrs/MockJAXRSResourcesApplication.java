@@ -22,10 +22,10 @@
  * OF CONTRACT, TORT OR OTHERWISE,  ARISING FROM, OUT OF OR IN CONNECTION
  * WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
-package fr.opensagres.xdocreport.document.tools.remoting.resources.rest;
+package fr.opensagres.xdocreport.remoting.resources.services.client.jaxrs;
 
-import fr.opensagres.xdocreport.document.tools.remoting.resources.MockResourcesService;
-import fr.opensagres.xdocreport.remoting.resources.services.server.jaxrs.JAXRSResourcesApplication;
+import fr.opensagres.xdocreport.remoting.resources.services.MockResourcesService;
+import fr.opensagres.xdocreport.remoting.resources.services.rest.server.JAXRSResourcesApplication;
 
 public class MockJAXRSResourcesApplication
     extends JAXRSResourcesApplication
@@ -34,6 +34,6 @@ public class MockJAXRSResourcesApplication
     public MockJAXRSResourcesApplication()
     {
         super.getRegistry().clear();
-        super.getRegistry().addService( new MockResourcesService() );
+        super.getRegistry().addService( new MockResourcesService("resources") );
     }
 }

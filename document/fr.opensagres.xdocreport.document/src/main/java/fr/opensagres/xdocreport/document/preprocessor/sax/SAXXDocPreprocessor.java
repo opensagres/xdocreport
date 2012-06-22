@@ -26,6 +26,7 @@ package fr.opensagres.xdocreport.document.preprocessor.sax;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.StringWriter;
 import java.io.Writer;
 import java.util.Map;
 
@@ -64,9 +65,9 @@ public abstract class SAXXDocPreprocessor
             if ( document != null )
             {
                 document.save( writer );
-//                 StringWriter s = new StringWriter();
-//                 document.save( s );
-//                 System.err.println( s );
+                 StringWriter s = new StringWriter();
+                 document.save( s );
+                 System.err.println( s );
                 return true;
             }
 

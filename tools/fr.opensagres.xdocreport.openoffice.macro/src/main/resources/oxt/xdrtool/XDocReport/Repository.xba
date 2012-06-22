@@ -48,12 +48,12 @@ Private Sub OpenRepositoryDialog(ByVal mode as Boolean)
 			gRepositoryDialog.getControl(&quot;BaseAddressTextField&quot;).Text= gBaseAddress
 			gRepositoryDialog.getControl(&quot;UserTextField&quot;).Text = user
 			gRepositoryDialog.getControl(&quot;PasswordTextField&quot;).Text = password
-			If (serviceType = &quot;REST&quot;) Then 
-				gRepositoryDialog.getControl(&quot;RESTOptionButton&quot;).State = True
-				gRepositoryDialog.getControl(&quot;SOAPOptionButton&quot;).State = False				
-			Else
+			If (serviceType = &quot;JAXWS&quot;) Then 
 				gRepositoryDialog.getControl(&quot;RESTOptionButton&quot;).State = False			
-				gRepositoryDialog.getControl(&quot;SOAPOptionButton&quot;).State = True		
+				gRepositoryDialog.getControl(&quot;SOAPOptionButton&quot;).State = True					
+			Else
+				gRepositoryDialog.getControl(&quot;RESTOptionButton&quot;).State = True
+				gRepositoryDialog.getControl(&quot;SOAPOptionButton&quot;).State = False							
 			End If
 			gRepositoryDialog.getControl(&quot;AllowedChunkingCheckBox&quot;).State = 0
 			If (chunk = &quot;true&quot;) Then 
@@ -81,9 +81,9 @@ Public Sub SaveRepository
 	baseAddress = gRepositoryDialog.getControl(&quot;BaseAddressTextField&quot;).Text
 	user = gRepositoryDialog.getControl(&quot;UserTextField&quot;).Text
 	password = gRepositoryDialog.getControl(&quot;PasswordTextField&quot;).Text
-	serviceType = &quot;REST&quot;
+	serviceType = &quot;JAXRS&quot;
 	If (gRepositoryDialog.getControl(&quot;SOAPOptionButton&quot;).State = True) Then 
-		serviceType = &quot;SOAP&quot;
+		serviceType = &quot;JAXWS&quot;
 	End If
 	If (gRepositoryDialog.getControl(&quot;AllowedChunkingCheckBox&quot;).State = 1) Then 
 		chunk = &quot;true&quot;

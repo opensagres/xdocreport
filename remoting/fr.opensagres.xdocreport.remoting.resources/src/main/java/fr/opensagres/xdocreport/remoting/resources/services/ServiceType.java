@@ -30,5 +30,5 @@ package fr.opensagres.xdocreport.remoting.resources.services;
 public enum ServiceType
 {
 
-    REST, SOAP
+    JAXRS, JAXWS
 }

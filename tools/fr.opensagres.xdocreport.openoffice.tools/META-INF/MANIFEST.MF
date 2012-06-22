@@ -15,8 +15,8 @@ Bundle-Name: fr.opensagres.xdocreport.openoffice.tools
 Created-By: Apache Maven Bundle Plugin
 Bundle-RequiredExecutionEnvironment: J2SE-1.5, JavaSE-1.6
 Build-Jdk: 1.6.0_23
-Bundle-Version: 0.9.8.SNAPSHOTv201206221645
-Bnd-LastModified: 1340376395640
+Bundle-Version: 0.9.8.SNAPSHOTv201206221733
+Bnd-LastModified: 1340379293875
 Bundle-ManifestVersion: 2
 Bundle-License: http://www.opensource.org/licenses/mit-license.php
 Bundle-Description: XDocReport means XML Document reporting. It's Java

@@ -46,6 +46,6 @@ public class ResourcesServicesRegistry
     public void clear()
     {
         this.services.clear();
-
+        this.jaxRsResourcesService.clear();
     }
 }

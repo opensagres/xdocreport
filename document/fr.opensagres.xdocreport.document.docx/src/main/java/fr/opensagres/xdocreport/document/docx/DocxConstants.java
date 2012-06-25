@@ -132,6 +132,8 @@ public class DocxConstants
     public static final String NUM_ELT = "num";
 
     public static final String ID_ATTR = "id";
+    
+    public static final String TYPE_ATTR = "type";
 
     public static final String FOOTNOTE_ELT = "footnote";
 

@@ -25,6 +25,7 @@
 package fr.opensagres.xdocreport.document.docx.preprocessor.sax.notes;
 
 import static fr.opensagres.xdocreport.document.docx.DocxConstants.ID_ATTR;
+import static fr.opensagres.xdocreport.document.docx.DocxConstants.TYPE_ATTR;
 import static fr.opensagres.xdocreport.document.docx.DocxConstants.W_NS;
 import static fr.opensagres.xdocreport.document.docx.DocxUtils.isFldSimple;
 import static fr.opensagres.xdocreport.document.docx.DocxUtils.isP;
@@ -68,6 +69,7 @@ public abstract class AbstractNotesBufferedDocument
                 String id = attributes.getValue( idIndex );
                 currentNoteRegion = createNoteBufferedRegion( uri, localName, name, attributesImpl );
                 currentNoteRegion.setId( attrName, id );
+                currentNoteRegion.setType( attributes.getValue( W_NS, TYPE_ATTR ) );
                 return currentNoteRegion;
             }
         }

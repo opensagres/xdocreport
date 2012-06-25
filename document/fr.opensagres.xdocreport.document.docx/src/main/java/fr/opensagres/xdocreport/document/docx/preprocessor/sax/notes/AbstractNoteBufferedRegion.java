@@ -42,6 +42,8 @@ public abstract class AbstractNoteBufferedRegion
 
     private BufferedAttribute idAttribute;
 
+    private String type;
+    
     private boolean containsField;
 
     public AbstractNoteBufferedRegion( DocXBufferedDocumentContentHandler handler, BufferedElement parent, String uri,
@@ -62,11 +64,10 @@ public abstract class AbstractNoteBufferedRegion
         if ( handler.hasSharedContext() )
         {
             String id = idAttribute.getValue();
-
-            Integer intId = StringUtils.asInteger( id );
-            if ( intId == null || intId < 1 )
+            
+            if ( !StringUtils.isEmpty( type ))
             {
-                // w:id of the footnote/enednote < 0 (it's a separator) don't process it.
+                // w:id of the footnote/endnote have a type (it's a separator/continuationSeparator) don't process it.
                 // Ex: <w:footnote w:type="separator" w:id="-1">
                 return;
             }
@@ -143,5 +144,10 @@ public abstract class AbstractNoteBufferedRegion
         return containsField;
     }
 
+    public void setType( String type )
+    {
+        this.type = type;
+    }
+    
     protected abstract String getNoteRegistryKey();
 }

@@ -26,6 +26,11 @@ package fr.opensagres.xdocreport.document.textstyling;
 
 import java.io.IOException;
 
+import fr.opensagres.xdocreport.document.textstyling.properties.HeaderProperties;
+import fr.opensagres.xdocreport.document.textstyling.properties.ListItemProperties;
+import fr.opensagres.xdocreport.document.textstyling.properties.ListProperties;
+import fr.opensagres.xdocreport.document.textstyling.properties.ParagraphProperties;
+
 /**
  * Handler to build a document.
  */
@@ -53,7 +58,7 @@ public interface IDocumentHandler
     /**
      * Start paragraph.
      */
-    void startParagraph()
+    void startParagraph( ParagraphProperties properties )
         throws IOException;
 
     /**
@@ -88,8 +93,10 @@ public interface IDocumentHandler
 
     /**
      * Start ordered list.
+     * 
+     * @param properties
      */
-    void startOrderedList()
+    void startOrderedList( ListProperties properties )
         throws IOException;
 
     /**
@@ -100,8 +107,10 @@ public interface IDocumentHandler
 
     /**
      * Start unordered list.
-     */
-    void startUnorderedList()
+     * 
+     * @param properties
+      */
+    void startUnorderedList (ListProperties properties )
         throws IOException;
 
     /**
@@ -113,7 +122,7 @@ public interface IDocumentHandler
     /**
      * Start list item.
      */
-    void startListItem()
+    void startListItem( ListItemProperties properties )
         throws IOException;
 
     /**
@@ -136,7 +145,7 @@ public interface IDocumentHandler
      * @param level
      * @throws IOException
      */
-    void startHeading( int level )
+    void startHeading( int level, HeaderProperties properties )
         throws IOException;
 
     /**

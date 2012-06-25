@@ -29,7 +29,6 @@ package fr.opensagres.xdocreport.document.odt.textstyling;
  * Interface for ODT Style generator
  * 
  * @author <a href="mailto:tdelprat@nuxeo.com">Tiry</a>
- *
  */
 public interface IODTStylesGenerator
 {
@@ -37,64 +36,73 @@ public interface IODTStylesGenerator
      * @param styleName
      * @return the level of the header associated to this style (-1 if this is not a header style)
      */
-    public abstract int getHeaderStyleNameLevel(String styleName);
-    
+    int getHeaderStyleNameLevel( String styleName );
+
     /**
      * @param level
      * @return the name of the style for a given header level
      */
-    public abstract String getHeaderStyleName( int level );
+    String getHeaderStyleName( int level );
 
     /**
      * @param level
      * @return header style declaration for a given level
      */
-    public abstract String generateHeaderStyle( int level );
+    String generateHeaderStyle( int level );
 
     /**
      * @return the style definition for lists (both ul and ol)
      */
-    public abstract String generateListStyle();
+    String generateListStyle();
 
     /**
      * @return number of available header styles
      */
-    public abstract int getHeaderStylesCount();
-    
+    int getHeaderStylesCount();
+
     /**
      * @return style name for Ordered Lists
      */
-    public abstract String getOLStyleName();
-    
+    String getOLStyleName();
+
     /**
      * @return style name for unordered Lists
      */
-    public abstract String getULStyleName();
-    
-    
+    String getULStyleName();
+
     /**
      * @return the suffix used to name the style for list items
      */
-    public abstract String getListItemParagraphStyleNameSuffix();
-    
+    String getListItemParagraphStyleNameSuffix();
+
     /**
      * @return the style declaration for Blod, italic ...
      */
-    public abstract String generateTextStyles();
-    
+    String generateTextStyles();
+
     /**
      * @return the name of the style used for Bold
      */
-    public abstract String getBoldStyleName();
-    
+    String getBoldStyleName();
+
     /**
      * @return the name of the style used for Italic
      */
-    public abstract String getItalicStyleName();
+    String getItalicStyleName();
 
     /**
-     * 
      * @return the name of the style used for italic + bold
-     */    
-    public abstract String getBoldItalicStyleName();
+     */
+    String getBoldItalicStyleName();
+
+    String getParaBreakBeforeStyleName();
+
+    String getParaBreakAfterStyleName();
+
+    /**
+     * Returns the paragraph styles for page break.
+     * 
+     * @return
+     */
+    String generateParagraphStyles();
 }

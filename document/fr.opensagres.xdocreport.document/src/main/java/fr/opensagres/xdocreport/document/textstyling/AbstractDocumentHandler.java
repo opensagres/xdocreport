@@ -30,6 +30,7 @@ import java.io.Writer;
 import java.util.Stack;
 
 import fr.opensagres.xdocreport.document.preprocessor.sax.BufferedElement;
+import fr.opensagres.xdocreport.document.textstyling.properties.ListProperties;
 import fr.opensagres.xdocreport.template.IContext;
 
 /**
@@ -71,11 +72,11 @@ public abstract class AbstractDocumentHandler
         getCurrentWriter().write( s );
     }
 
-    public final void startOrderedList()
+    public final void startOrderedList( ListProperties properties )
         throws IOException
     {
         listStack.push( true );
-        doStartOrderedList();
+        doStartOrderedList( properties );
     }
 
     public final void endOrderedList()
@@ -85,11 +86,11 @@ public abstract class AbstractDocumentHandler
         doEndOrderedList();
     }
 
-    public final void startUnorderedList()
+    public final void startUnorderedList( ListProperties properties )
         throws IOException
     {
         listStack.push( false );
-        doStartUnorderedList();
+        doStartUnorderedList( properties );
     }
 
     public final void endUnorderedList()
@@ -229,15 +230,15 @@ public abstract class AbstractDocumentHandler
         return result.toString();
     }
 
+    protected abstract void doStartUnorderedList( ListProperties properties )
+        throws IOException;
+
+    protected abstract void doStartOrderedList( ListProperties properties )
+        throws IOException;
+
     protected abstract void doEndUnorderedList()
         throws IOException;
 
     protected abstract void doEndOrderedList()
-        throws IOException;
-
-    protected abstract void doStartUnorderedList()
-        throws IOException;
-
-    protected abstract void doStartOrderedList()
         throws IOException;
 }

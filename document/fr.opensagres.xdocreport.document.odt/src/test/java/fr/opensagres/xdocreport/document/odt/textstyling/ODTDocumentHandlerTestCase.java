@@ -49,8 +49,7 @@ public class ODTDocumentHandlerTestCase
         formatter.transform( "<b>A&nbsp;B</b>", handler );
 
         Assert.assertEquals( "", handler.getTextBefore() );
-        Assert.assertEquals( "<text:span text:style-name=\"XDocReport_Bold\" >A B</text:span>",
-                             handler.getTextBody() );
+        Assert.assertEquals( "<text:span text:style-name=\"XDocReport_Bold\" >A B</text:span>", handler.getTextBody() );
         Assert.assertEquals( "", handler.getTextEnd() );
     }
 
@@ -66,8 +65,7 @@ public class ODTDocumentHandlerTestCase
         formatter.transform( "<b>text</b>", handler );
 
         Assert.assertEquals( "", handler.getTextBefore() );
-        Assert.assertEquals( "<text:span text:style-name=\"XDocReport_Bold\" >text</text:span>",
-                             handler.getTextBody() );
+        Assert.assertEquals( "<text:span text:style-name=\"XDocReport_Bold\" >text</text:span>", handler.getTextBody() );
         Assert.assertEquals( "", handler.getTextEnd() );
     }
 
@@ -83,8 +81,7 @@ public class ODTDocumentHandlerTestCase
         formatter.transform( "<strong>text</strong>", handler );
 
         Assert.assertEquals( "", handler.getTextBefore() );
-        Assert.assertEquals( "<text:span text:style-name=\"XDocReport_Bold\" >text</text:span>",
-                             handler.getTextBody() );
+        Assert.assertEquals( "<text:span text:style-name=\"XDocReport_Bold\" >text</text:span>", handler.getTextBody() );
         Assert.assertEquals( "", handler.getTextEnd() );
     }
 
@@ -133,19 +130,20 @@ public class ODTDocumentHandlerTestCase
         IDocumentHandler handler = new ODTDocumentHandler( parent, context, "content.xml" );
         formatter.transform( "<a href=\"http://code.google.com/p/xdocreport/\" >XDocReport</a>", handler );
 
-//        Assert.assertEquals( "", handler.getTextBefore() );
-//        Assert.assertEquals( "<w:hyperlink r:id=\"___rId0\" w:history=\"1\"> <w:proofErr w:type=\"spellStart\" /><w:r w:rsidRPr=\"001D30B5\"><w:rPr><w:rStyle w:val=\"XDocReport_Hyperlink\" /></w:rPr><w:t>XDocReport</w:t></w:r><w:proofErr w:type=\"spellEnd\" /></w:hyperlink>",
-//                             handler.getTextBody() );
-//        Assert.assertEquals( "", handler.getTextEnd() );
+        // Assert.assertEquals( "", handler.getTextBefore() );
+        // Assert.assertEquals(
+        // "<w:hyperlink r:id=\"___rId0\" w:history=\"1\"> <w:proofErr w:type=\"spellStart\" /><w:r w:rsidRPr=\"001D30B5\"><w:rPr><w:rStyle w:val=\"XDocReport_Hyperlink\" /></w:rPr><w:t>XDocReport</w:t></w:r><w:proofErr w:type=\"spellEnd\" /></w:hyperlink>",
+        // handler.getTextBody() );
+        // Assert.assertEquals( "", handler.getTextEnd() );
 
-//        HyperlinkRegistry registry = ODTContextHelper.getHyperlinkRegistry( context, "content.xml" );
-//        Assert.assertNotNull( registry );
-//        Assert.assertEquals( 1, registry.getHyperlinks().size() );
-//
-//        HyperlinkInfo hyperlinkInfo = registry.getHyperlinks().get( 0 );
-//        Assert.assertEquals( "___rId0", hyperlinkInfo.getId() );
-//        Assert.assertEquals( "http://code.google.com/p/xdocreport/", hyperlinkInfo.getTarget() );
-//        Assert.assertEquals( "External", hyperlinkInfo.getTargetMode() );
+        // HyperlinkRegistry registry = ODTContextHelper.getHyperlinkRegistry( context, "content.xml" );
+        // Assert.assertNotNull( registry );
+        // Assert.assertEquals( 1, registry.getHyperlinks().size() );
+        //
+        // HyperlinkInfo hyperlinkInfo = registry.getHyperlinks().get( 0 );
+        // Assert.assertEquals( "___rId0", hyperlinkInfo.getId() );
+        // Assert.assertEquals( "http://code.google.com/p/xdocreport/", hyperlinkInfo.getTarget() );
+        // Assert.assertEquals( "External", hyperlinkInfo.getTargetMode() );
     }
 
     @Test
@@ -155,29 +153,30 @@ public class ODTDocumentHandlerTestCase
         IContext context = new MockContext();
         // Add default style (in real context, this DefaultStyle is added by ODTStylesPreprocessor which search
         // hyperlink style from the word/styles.xml entry of the docx)
-//        DefaultStyle defaultStyle = new DefaultStyle();
-//        defaultStyle.setHyperLinkStyleId( "DefaultHyperlink" );
-//        ODTContextHelper.putDefaultStyle( context, defaultStyle );
-//
-//        BufferedElement parent = null;
-//
-//        ITextStylingTransformer formatter = HTMLTextStylingTransformer.INSTANCE;
-//        IDocumentHandler handler = new ODTDocumentHandler( parent, context, "content.xml" );
-//        formatter.transform( "<a href=\"http://code.google.com/p/xdocreport/\" >XDocReport</a>", handler );
-//
-//        Assert.assertEquals( "", handler.getTextBefore() );
-//        Assert.assertEquals( "<w:hyperlink r:id=\"___rId0\" w:history=\"1\"> <w:proofErr w:type=\"spellStart\" /><w:r w:rsidRPr=\"001D30B5\"><w:rPr><w:rStyle w:val=\"DefaultHyperlink\" /></w:rPr><w:t>XDocReport</w:t></w:r><w:proofErr w:type=\"spellEnd\" /></w:hyperlink>",
-//                             handler.getTextBody() );
-//        Assert.assertEquals( "", handler.getTextEnd() );
-//
-//        HyperlinkRegistry registry = ODTContextHelper.getHyperlinkRegistry( context, "content.xml" );
-//        Assert.assertNotNull( registry );
-//        Assert.assertEquals( 1, registry.getHyperlinks().size() );
-//
-//        HyperlinkInfo hyperlinkInfo = registry.getHyperlinks().get( 0 );
-//        Assert.assertEquals( "___rId0", hyperlinkInfo.getId() );
-//        Assert.assertEquals( "http://code.google.com/p/xdocreport/", hyperlinkInfo.getTarget() );
-//        Assert.assertEquals( "External", hyperlinkInfo.getTargetMode() );
+        // DefaultStyle defaultStyle = new DefaultStyle();
+        // defaultStyle.setHyperLinkStyleId( "DefaultHyperlink" );
+        // ODTContextHelper.putDefaultStyle( context, defaultStyle );
+        //
+        // BufferedElement parent = null;
+        //
+        // ITextStylingTransformer formatter = HTMLTextStylingTransformer.INSTANCE;
+        // IDocumentHandler handler = new ODTDocumentHandler( parent, context, "content.xml" );
+        // formatter.transform( "<a href=\"http://code.google.com/p/xdocreport/\" >XDocReport</a>", handler );
+        //
+        // Assert.assertEquals( "", handler.getTextBefore() );
+        // Assert.assertEquals(
+        // "<w:hyperlink r:id=\"___rId0\" w:history=\"1\"> <w:proofErr w:type=\"spellStart\" /><w:r w:rsidRPr=\"001D30B5\"><w:rPr><w:rStyle w:val=\"DefaultHyperlink\" /></w:rPr><w:t>XDocReport</w:t></w:r><w:proofErr w:type=\"spellEnd\" /></w:hyperlink>",
+        // handler.getTextBody() );
+        // Assert.assertEquals( "", handler.getTextEnd() );
+        //
+        // HyperlinkRegistry registry = ODTContextHelper.getHyperlinkRegistry( context, "content.xml" );
+        // Assert.assertNotNull( registry );
+        // Assert.assertEquals( 1, registry.getHyperlinks().size() );
+        //
+        // HyperlinkInfo hyperlinkInfo = registry.getHyperlinks().get( 0 );
+        // Assert.assertEquals( "___rId0", hyperlinkInfo.getId() );
+        // Assert.assertEquals( "http://code.google.com/p/xdocreport/", hyperlinkInfo.getTarget() );
+        // Assert.assertEquals( "External", hyperlinkInfo.getTargetMode() );
     }
 
     @Test
@@ -194,13 +193,12 @@ public class ODTDocumentHandlerTestCase
 
         Assert.assertEquals( "", handler.getTextBefore() );
         Assert.assertEquals( "<text:span>xxx</text:span>", handler.getTextBody() );
-        Assert.assertEquals( "<text:h text:style-name=\"Heading_20_1\" text:outline-level=\"1\">Title1</text:h>" +
-        		"<text:h text:style-name=\"Heading_20_2\" text:outline-level=\"2\">Title2</text:h>" +
-        		"<text:h text:style-name=\"Heading_20_3\" text:outline-level=\"3\">Title3</text:h>" +
-        		"<text:h text:style-name=\"Heading_20_4\" text:outline-level=\"4\">Title4</text:h>" +
-        		"<text:h text:style-name=\"Heading_20_5\" text:outline-level=\"5\">Title5</text:h>" +
-        		"<text:h text:style-name=\"Heading_20_6\" text:outline-level=\"6\">Title6</text:h>",
-                             handler.getTextEnd() );
+        Assert.assertEquals( "<text:h text:style-name=\"Heading_20_1\" text:outline-level=\"1\">Title1</text:h>"
+            + "<text:h text:style-name=\"Heading_20_2\" text:outline-level=\"2\">Title2</text:h>"
+            + "<text:h text:style-name=\"Heading_20_3\" text:outline-level=\"3\">Title3</text:h>"
+            + "<text:h text:style-name=\"Heading_20_4\" text:outline-level=\"4\">Title4</text:h>"
+            + "<text:h text:style-name=\"Heading_20_5\" text:outline-level=\"5\">Title5</text:h>"
+            + "<text:h text:style-name=\"Heading_20_6\" text:outline-level=\"6\">Title6</text:h>", handler.getTextEnd() );
     }
 
     @Test
@@ -210,10 +208,10 @@ public class ODTDocumentHandlerTestCase
         IContext context = new MockContext();
         // Add default style (in real context, this DefaultStyle is added by ODTStylesPreprocessor which search
         // heading style from the word/styles.xml entry of the docx)
-//        DefaultStyle defaultStyle = new DefaultStyle();
-//        defaultStyle.addHeaderStyle( 1, "Heading1" );
-//        defaultStyle.addHeaderStyle( 2, "Heading2" );
-//        ODTContextHelper.putDefaultStyle( context, defaultStyle );
+        // DefaultStyle defaultStyle = new DefaultStyle();
+        // defaultStyle.addHeaderStyle( 1, "Heading1" );
+        // defaultStyle.addHeaderStyle( 2, "Heading2" );
+        // ODTContextHelper.putDefaultStyle( context, defaultStyle );
 
         BufferedElement parent = null;
 
@@ -222,15 +220,15 @@ public class ODTDocumentHandlerTestCase
         formatter.transform( "xxx<h1>Title1</h1><h2>Title2</h2><h3>Title3</h3><h4>Title4</h4><h5>Title5</h5><h6>Title6</h6>",
                              handler );
 
-//        Assert.assertEquals( "", handler.getTextBefore() );
-//        Assert.assertEquals( "<w:r><w:t xml:space=\"preserve\" >xxx</w:t></w:r>", handler.getTextBody() );
-//        Assert.assertEquals( "<w:p><w:pPr><w:pStyle w:val=\"Heading1\" /></w:pPr><w:r><w:t>Title1</w:t></w:r></w:p>"
-//                                 + "<w:p><w:pPr><w:pStyle w:val=\"Heading2\" /></w:pPr><w:r><w:t>Title2</w:t></w:r></w:p>"
-//                                 + "<w:p><w:pPr><w:pStyle w:val=\"XDocReport_Heading_3\" /></w:pPr><w:r><w:t>Title3</w:t></w:r></w:p>"
-//                                 + "<w:p><w:pPr><w:pStyle w:val=\"XDocReport_Heading_4\" /></w:pPr><w:r><w:t>Title4</w:t></w:r></w:p>"
-//                                 + "<w:p><w:pPr><w:pStyle w:val=\"XDocReport_Heading_5\" /></w:pPr><w:r><w:t>Title5</w:t></w:r></w:p>"
-//                                 + "<w:p><w:pPr><w:pStyle w:val=\"XDocReport_Heading_6\" /></w:pPr><w:r><w:t>Title6</w:t></w:r></w:p>",
-//                             handler.getTextEnd() );
+        // Assert.assertEquals( "", handler.getTextBefore() );
+        // Assert.assertEquals( "<w:r><w:t xml:space=\"preserve\" >xxx</w:t></w:r>", handler.getTextBody() );
+        // Assert.assertEquals( "<w:p><w:pPr><w:pStyle w:val=\"Heading1\" /></w:pPr><w:r><w:t>Title1</w:t></w:r></w:p>"
+        // + "<w:p><w:pPr><w:pStyle w:val=\"Heading2\" /></w:pPr><w:r><w:t>Title2</w:t></w:r></w:p>"
+        // + "<w:p><w:pPr><w:pStyle w:val=\"XDocReport_Heading_3\" /></w:pPr><w:r><w:t>Title3</w:t></w:r></w:p>"
+        // + "<w:p><w:pPr><w:pStyle w:val=\"XDocReport_Heading_4\" /></w:pPr><w:r><w:t>Title4</w:t></w:r></w:p>"
+        // + "<w:p><w:pPr><w:pStyle w:val=\"XDocReport_Heading_5\" /></w:pPr><w:r><w:t>Title5</w:t></w:r></w:p>"
+        // + "<w:p><w:pPr><w:pStyle w:val=\"XDocReport_Heading_6\" /></w:pPr><w:r><w:t>Title6</w:t></w:r></w:p>",
+        // handler.getTextEnd() );
     }
 
     @Test
@@ -247,9 +245,8 @@ public class ODTDocumentHandlerTestCase
 
         Assert.assertEquals( "", handler.getTextBefore() );
         Assert.assertEquals( "", handler.getTextBody() );
-        Assert.assertEquals( "<text:h text:style-name=\"Heading_20_1\" text:outline-level=\"1\">Title1</text:h>" +
-        		"<text:p><text:span>paragraph1</text:span></text:p>",
-                             handler.getTextEnd() );
+        Assert.assertEquals( "<text:h text:style-name=\"Heading_20_1\" text:outline-level=\"1\">Title1</text:h>"
+            + "<text:p><text:span>paragraph1</text:span></text:p>", handler.getTextEnd() );
     }
 
     @Test
@@ -266,9 +263,8 @@ public class ODTDocumentHandlerTestCase
 
         Assert.assertEquals( "", handler.getTextBefore() );
         Assert.assertEquals( "", handler.getTextBody() );
-        Assert.assertEquals( "<text:h text:style-name=\"Heading_20_1\" text:outline-level=\"1\">Title1</text:h>" +
-        		"<text:p><text:span>paragraph1</text:span></text:p>",
-                             handler.getTextEnd() );
+        Assert.assertEquals( "<text:h text:style-name=\"Heading_20_1\" text:outline-level=\"1\">Title1</text:h>"
+            + "<text:p><text:span>paragraph1</text:span></text:p>", handler.getTextEnd() );
     }
 
     @Test
@@ -287,6 +283,22 @@ public class ODTDocumentHandlerTestCase
         Assert.assertEquals( "", handler.getTextBody() );
         Assert.assertEquals( "<text:h text:style-name=\"Heading_20_1\" text:outline-level=\"1\">Title1</text:h><text:p><text:span>text</text:span><text:p><text:span>paragraph</text:span></text:p></text:p>",
                              handler.getTextEnd() );
+    }
+
+    @Test
+    public void testParagraphAtFirst()
+        throws Exception
+    {
+        IContext context = new MockContext();
+        BufferedElement parent = null;
+
+        ITextStylingTransformer formatter = HTMLTextStylingTransformer.INSTANCE;
+        IDocumentHandler handler = new ODTDocumentHandler( parent, context, "content.xml" );
+        formatter.transform( "<p>bla bla bla</p>", handler );
+
+        Assert.assertEquals( "", handler.getTextBefore() );
+        Assert.assertEquals( "", handler.getTextBody() );
+        Assert.assertEquals( "<text:p><text:span>bla bla bla</text:span></text:p>", handler.getTextEnd() );
     }
 
     @Test
@@ -314,10 +326,10 @@ public class ODTDocumentHandlerTestCase
         IContext context = new MockContext();
         // Add default style (in real context, this DefaultStyle is added by ODTNumberingPreprocessor which search
         // numbering from the word/numbering.xml entry of the docx)
-//        DefaultStyle defaultStyle = new DefaultStyle();
-//        //defaultStyle.setNumIdForOrdererList( 2 );
-//        ODTContextHelper.putDefaultStyle( context, defaultStyle );
-        
+        // DefaultStyle defaultStyle = new DefaultStyle();
+        // //defaultStyle.setNumIdForOrdererList( 2 );
+        // ODTContextHelper.putDefaultStyle( context, defaultStyle );
+
         BufferedElement parent = null;
 
         ITextStylingTransformer formatter = HTMLTextStylingTransformer.INSTANCE;
@@ -326,19 +338,11 @@ public class ODTDocumentHandlerTestCase
 
         Assert.assertEquals( "", handler.getTextBefore() );
         Assert.assertEquals( "", handler.getTextBody() );
-        Assert.assertEquals( "<text:list text:style-name=\"XDocReport_OL\">" +
-                                "<text:list-item text:style-name=\"XDocReport_OL\">" +
-                                    "<text:p text:style-name=\"XDocReport_OL_P\">" +
-                                        "<text:span>item1</text:span>" +
-                                    "</text:p>" +
-                                 "</text:list-item>" +
-                                 "<text:list-item text:style-name=\"XDocReport_OL\">" +
-                                     "<text:p text:style-name=\"XDocReport_OL_P\">" +
-                                         "<text:span>item2</text:span>" +
-                                     "</text:p>" +
-                                 "</text:list-item>" +
-                             "</text:list>",
-                             handler.getTextEnd() );
+        Assert.assertEquals( "<text:list text:style-name=\"XDocReport_OL\">"
+            + "<text:list-item text:style-name=\"XDocReport_OL\">" + "<text:p text:style-name=\"XDocReport_OL_P\">"
+            + "<text:span>item1</text:span>" + "</text:p>" + "</text:list-item>"
+            + "<text:list-item text:style-name=\"XDocReport_OL\">" + "<text:p text:style-name=\"XDocReport_OL_P\">"
+            + "<text:span>item2</text:span>" + "</text:p>" + "</text:list-item>" + "</text:list>", handler.getTextEnd() );
     }
 
     @Test
@@ -348,10 +352,10 @@ public class ODTDocumentHandlerTestCase
         IContext context = new MockContext();
         // Add default style (in real context, this DefaultStyle is added by ODTNumberingPreprocessor which search
         // numbering from the word/numbering.xml entry of the docx)
-//        DefaultStyle defaultStyle = new DefaultStyle();
-//        //defaultStyle.setNumIdForOrdererList( 2 );
-//        ODTContextHelper.putDefaultStyle( context, defaultStyle );
-        
+        // DefaultStyle defaultStyle = new DefaultStyle();
+        // //defaultStyle.setNumIdForOrdererList( 2 );
+        // ODTContextHelper.putDefaultStyle( context, defaultStyle );
+
         BufferedElement parent = null;
 
         ITextStylingTransformer formatter = HTMLTextStylingTransformer.INSTANCE;
@@ -360,21 +364,13 @@ public class ODTDocumentHandlerTestCase
 
         Assert.assertEquals( "", handler.getTextBefore() );
         Assert.assertEquals( "", handler.getTextBody() );
-        Assert.assertEquals( "<text:list text:style-name=\"XDocReport_OL\">" +
-                                "<text:list-item text:style-name=\"XDocReport_OL\">" +
-                                    "<text:p text:style-name=\"XDocReport_OL_P\">" +
-                                        "<text:span>item1</text:span>" +
-                                    "</text:p>" +
-                                 "</text:list-item>" +
-                                 "<text:list-item text:style-name=\"XDocReport_OL\">" +
-                                     "<text:p text:style-name=\"XDocReport_OL_P\">" +
-                                         "<text:span>item2</text:span>" +
-                                     "</text:p>" +
-                                 "</text:list-item>" +
-                             "</text:list>",
-                             handler.getTextEnd() );
+        Assert.assertEquals( "<text:list text:style-name=\"XDocReport_OL\">"
+            + "<text:list-item text:style-name=\"XDocReport_OL\">" + "<text:p text:style-name=\"XDocReport_OL_P\">"
+            + "<text:span>item1</text:span>" + "</text:p>" + "</text:list-item>"
+            + "<text:list-item text:style-name=\"XDocReport_OL\">" + "<text:p text:style-name=\"XDocReport_OL_P\">"
+            + "<text:span>item2</text:span>" + "</text:p>" + "</text:list-item>" + "</text:list>", handler.getTextEnd() );
     }
-    
+
     @Test
     public void testUnorderedList()
         throws Exception
@@ -382,10 +378,10 @@ public class ODTDocumentHandlerTestCase
         IContext context = new MockContext();
         // Add default style (in real context, this DefaultStyle is added by ODTNumberingPreprocessor which search
         // numbering from the word/numbering.xml entry of the docx)
-//        DefaultStyle defaultStyle = new DefaultStyle();
-//        //defaultStyle.setNumIdForUnordererList( 1 );
-//        ODTContextHelper.putDefaultStyle( context, defaultStyle );
-        
+        // DefaultStyle defaultStyle = new DefaultStyle();
+        // //defaultStyle.setNumIdForUnordererList( 1 );
+        // ODTContextHelper.putDefaultStyle( context, defaultStyle );
+
         BufferedElement parent = null;
 
         ITextStylingTransformer formatter = HTMLTextStylingTransformer.INSTANCE;
@@ -406,10 +402,10 @@ public class ODTDocumentHandlerTestCase
         IContext context = new MockContext();
         // Add default style (in real context, this DefaultStyle is added by ODTNumberingPreprocessor which search
         // numbering from the word/numbering.xml entry of the docx)
-//        DefaultStyle defaultStyle = new DefaultStyle();
-//        //defaultStyle.setNumIdForUnordererList( 1 );
-//        ODTContextHelper.putDefaultStyle( context, defaultStyle );
-        
+        // DefaultStyle defaultStyle = new DefaultStyle();
+        // //defaultStyle.setNumIdForUnordererList( 1 );
+        // ODTContextHelper.putDefaultStyle( context, defaultStyle );
+
         BufferedElement parent = null;
 
         ITextStylingTransformer formatter = HTMLTextStylingTransformer.INSTANCE;
@@ -422,7 +418,6 @@ public class ODTDocumentHandlerTestCase
                              handler.getTextEnd() );
     }
 
-
     @Test
     public void testComplexList()
         throws Exception
@@ -430,36 +425,18 @@ public class ODTDocumentHandlerTestCase
         IContext context = new MockContext();
         // Add default style (in real context, this DefaultStyle is added by ODTNumberingPreprocessor which search
         // numbering from the word/numbering.xml entry of the docx)
-//        DefaultStyle defaultStyle = new DefaultStyle();
-//        //defaultStyle.setNumIdForUnordererList( 1 );
-//        ODTContextHelper.putDefaultStyle( context, defaultStyle );
-        
+        // DefaultStyle defaultStyle = new DefaultStyle();
+        // //defaultStyle.setNumIdForUnordererList( 1 );
+        // ODTContextHelper.putDefaultStyle( context, defaultStyle );
+
         BufferedElement parent = null;
 
         ITextStylingTransformer formatter = HTMLTextStylingTransformer.INSTANCE;
         IDocumentHandler handler = new ODTDocumentHandler( parent, context, "content.xml" );
-        formatter.transform( "<ul>" +
-                                "<li>" +
-                                    "<strong>Bold</strong> style." +
-                                    "<ul>" +
-                                        "<li>zaza</li>" +
-                                        "<li>zaza</li>" +
-                                        "<li>zaza</li>" +
-                                     "</ul>" +
-                                "</li>" +
-                                "<li><em>Italic</em> style." +
-                                    "<ul>" +
-                                        "<li>zazaaa</li>" +
-                                        "<li>zzzzzzzzzzzz" +
-                                            "<ul>" +
-                                                "<li>ddddddddddddddddddd</li>" +
-                                            "</ul>" +
-                                        "</li>" +
-                                    "</ul>" +
-                                "</li>" +
-                                "<li><strong><em>BoldAndItalic</em></strong> style." +
-                                "</li>" +
-                             "</ul>", handler );
+        formatter.transform( "<ul>" + "<li>" + "<strong>Bold</strong> style." + "<ul>" + "<li>zaza</li>"
+            + "<li>zaza</li>" + "<li>zaza</li>" + "</ul>" + "</li>" + "<li><em>Italic</em> style." + "<ul>"
+            + "<li>zazaaa</li>" + "<li>zzzzzzzzzzzz" + "<ul>" + "<li>ddddddddddddddddddd</li>" + "</ul>" + "</li>"
+            + "</ul>" + "</li>" + "<li><strong><em>BoldAndItalic</em></strong> style." + "</li>" + "</ul>", handler );
 
         Assert.assertEquals( "", handler.getTextBefore() );
         Assert.assertEquals( "", handler.getTextBody() );
@@ -467,8 +444,40 @@ public class ODTDocumentHandlerTestCase
                              handler.getTextEnd() );
     }
 
-    
-    
+    @Test
+    public void testPageBreakBefore()
+        throws Exception
+    {
+        IContext context = new MockContext();
+        BufferedElement parent = null;
+
+        ITextStylingTransformer formatter = HTMLTextStylingTransformer.INSTANCE;
+        IDocumentHandler handler = new ODTDocumentHandler( parent, context, "content.xml" );
+        formatter.transform( "<p style=\"page-break-before:always;\">bla bla bla</p>", handler );
+
+        Assert.assertEquals( "", handler.getTextBefore() );
+        Assert.assertEquals( "", handler.getTextBody() );
+        Assert.assertEquals( "<text:p text:style-name=\"XDocReport_ParaBreakBefore\"><text:span>bla bla bla</text:span></text:p>",
+                             handler.getTextEnd() );
+    }
+
+    @Test
+    public void testPageBreakAfter()
+        throws Exception
+    {
+        IContext context = new MockContext();
+        BufferedElement parent = null;
+
+        ITextStylingTransformer formatter = HTMLTextStylingTransformer.INSTANCE;
+        IDocumentHandler handler = new ODTDocumentHandler( parent, context, "content.xml" );
+        formatter.transform( "<p style=\"page-break-after:always;\">bla bla bla</p>", handler );
+
+        Assert.assertEquals( "", handler.getTextBefore() );
+        Assert.assertEquals( "", handler.getTextBody() );
+        Assert.assertEquals( "<text:p text:style-name=\"XDocReport_ParaBreakAfter\"><text:span>bla bla bla</text:span></text:p>",
+                             handler.getTextEnd() );
+    }
+
     @Test
     public void testAll()
         throws Exception

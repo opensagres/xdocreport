@@ -296,6 +296,23 @@ public class DocxDocumentHandlerTestCase
     }
 
     @Test
+    public void testParagraphAtFirst()
+        throws Exception
+    {
+        IContext context = new MockContext();
+        BufferedElement parent = null;
+
+        ITextStylingTransformer formatter = HTMLTextStylingTransformer.INSTANCE;
+        IDocumentHandler handler = new DocxDocumentHandler( parent, context, "word/document.xml" );
+        formatter.transform( "<p>bla bla bla</p>", handler );
+
+        Assert.assertEquals( "", handler.getTextBefore() );
+        Assert.assertEquals( "", handler.getTextBody() );
+        Assert.assertEquals( "<w:p><w:r><w:t xml:space=\"preserve\" >bla bla bla</w:t></w:r></w:p>",
+                             handler.getTextEnd() );
+    }
+
+    @Test
     public void testParagraph()
         throws Exception
     {
@@ -314,6 +331,40 @@ public class DocxDocumentHandlerTestCase
     }
 
     @Test
+    public void testParagraphPageBreakBefore()
+        throws Exception
+    {
+        IContext context = new MockContext();
+        BufferedElement parent = null;
+
+        ITextStylingTransformer formatter = HTMLTextStylingTransformer.INSTANCE;
+        IDocumentHandler handler = new DocxDocumentHandler( parent, context, "word/document.xml" );
+        formatter.transform( "<p style=\"page-break-before:always;\">bla bla bla</p>", handler );
+
+        Assert.assertEquals( "", handler.getTextBefore() );
+        Assert.assertEquals( "", handler.getTextBody() );
+        Assert.assertEquals( "<w:p><w:r><w:br w:type=\"page\" /></w:r></w:p><w:p><w:r><w:t xml:space=\"preserve\" >bla bla bla</w:t></w:r></w:p>",
+                             handler.getTextEnd() );
+    }
+
+    @Test
+    public void testParagraphWithPageBreakAfter()
+        throws Exception
+    {
+        IContext context = new MockContext();
+        BufferedElement parent = null;
+
+        ITextStylingTransformer formatter = HTMLTextStylingTransformer.INSTANCE;
+        IDocumentHandler handler = new DocxDocumentHandler( parent, context, "word/document.xml" );
+        formatter.transform( "<p style=\"page-break-after:always;\">bla bla bla</p>", handler );
+
+        Assert.assertEquals( "", handler.getTextBefore() );
+        Assert.assertEquals( "", handler.getTextBody() );
+        Assert.assertEquals( "<w:p><w:r><w:t xml:space=\"preserve\" >bla bla bla</w:t></w:r></w:p><w:p><w:r><w:br w:type=\"page\" /></w:r></w:p>",
+                             handler.getTextEnd() );
+    }
+
+    @Test
     public void testOrderedList()
         throws Exception
     {
@@ -321,9 +372,9 @@ public class DocxDocumentHandlerTestCase
         // Add default style (in real context, this DefaultStyle is added by DocxNumberingPreprocessor which search
         // numbering from the word/numbering.xml entry of the docx)
         DefaultStyle defaultStyle = new DefaultStyle();
-        //defaultStyle.setNumIdForOrdererList( 2 );
+        // defaultStyle.setNumIdForOrdererList( 2 );
         DocxContextHelper.putDefaultStyle( context, defaultStyle );
-        
+
         BufferedElement parent = null;
 
         ITextStylingTransformer formatter = HTMLTextStylingTransformer.INSTANCE;
@@ -345,9 +396,9 @@ public class DocxDocumentHandlerTestCase
         // Add default style (in real context, this DefaultStyle is added by DocxNumberingPreprocessor which search
         // numbering from the word/numbering.xml entry of the docx)
         DefaultStyle defaultStyle = new DefaultStyle();
-        //defaultStyle.setNumIdForUnordererList( 1 );
+        // defaultStyle.setNumIdForUnordererList( 1 );
         DocxContextHelper.putDefaultStyle( context, defaultStyle );
-        
+
         BufferedElement parent = null;
 
         ITextStylingTransformer formatter = HTMLTextStylingTransformer.INSTANCE;
@@ -358,8 +409,8 @@ public class DocxDocumentHandlerTestCase
         Assert.assertEquals( "", handler.getTextBody() );
         Assert.assertEquals( "", handler.getTextBody() );
         Assert.assertEquals( "<w:p><w:pPr><w:numPr><w:ilvl w:val=\"0\" /><w:numId w:val=\"0\" /></w:numPr></w:pPr><w:r><w:t xml:space=\"preserve\" >item1</w:t></w:r></w:p>"
-                        + "<w:p><w:pPr><w:numPr><w:ilvl w:val=\"0\" /><w:numId w:val=\"0\" /></w:numPr></w:pPr><w:r><w:t xml:space=\"preserve\" >item2</w:t></w:r></w:p>"
-                        + "<w:p><w:pPr><w:numPr><w:ilvl w:val=\"0\" /><w:numId w:val=\"1\" /></w:numPr></w:pPr><w:r><w:t xml:space=\"preserve\" >item1</w:t></w:r></w:p>"
+                                 + "<w:p><w:pPr><w:numPr><w:ilvl w:val=\"0\" /><w:numId w:val=\"0\" /></w:numPr></w:pPr><w:r><w:t xml:space=\"preserve\" >item2</w:t></w:r></w:p>"
+                                 + "<w:p><w:pPr><w:numPr><w:ilvl w:val=\"0\" /><w:numId w:val=\"1\" /></w:numPr></w:pPr><w:r><w:t xml:space=\"preserve\" >item1</w:t></w:r></w:p>"
                                  + "<w:p><w:pPr><w:numPr><w:ilvl w:val=\"0\" /><w:numId w:val=\"1\" /></w:numPr></w:pPr><w:r><w:t xml:space=\"preserve\" >item2</w:t></w:r></w:p>",
                              handler.getTextEnd() );
     }
@@ -372,9 +423,9 @@ public class DocxDocumentHandlerTestCase
         // Add default style (in real context, this DefaultStyle is added by DocxNumberingPreprocessor which search
         // numbering from the word/numbering.xml entry of the docx)
         DefaultStyle defaultStyle = new DefaultStyle();
-        //defaultStyle.setNumIdForUnordererList( 1 );
+        // defaultStyle.setNumIdForUnordererList( 1 );
         DocxContextHelper.putDefaultStyle( context, defaultStyle );
-        
+
         BufferedElement parent = null;
 
         ITextStylingTransformer formatter = HTMLTextStylingTransformer.INSTANCE;
@@ -388,7 +439,6 @@ public class DocxDocumentHandlerTestCase
                              handler.getTextEnd() );
     }
 
-
     @Test
     public void testComplexList()
         throws Exception
@@ -397,35 +447,17 @@ public class DocxDocumentHandlerTestCase
         // Add default style (in real context, this DefaultStyle is added by DocxNumberingPreprocessor which search
         // numbering from the word/numbering.xml entry of the docx)
         DefaultStyle defaultStyle = new DefaultStyle();
-        //defaultStyle.setNumIdForUnordererList( 1 );
+        // defaultStyle.setNumIdForUnordererList( 1 );
         DocxContextHelper.putDefaultStyle( context, defaultStyle );
-        
+
         BufferedElement parent = null;
 
         ITextStylingTransformer formatter = HTMLTextStylingTransformer.INSTANCE;
         IDocumentHandler handler = new DocxDocumentHandler( parent, context, "word/document.xml" );
-        formatter.transform( "<ul>" +
-                                "<li>" +
-                                    "<strong>Bold</strong> style." +
-                                    "<ul>" +
-                                        "<li>zaza</li>" +
-                                        "<li>zaza</li>" +
-                                        "<li>zaza</li>" +
-                                     "</ul>" +
-                                "</li>" +
-                                "<li><em>Italic</em> style." +
-                                    "<ul>" +
-                                        "<li>zazaaa</li>" +
-                                        "<li>zzzzzzzzzzzz" +
-                                            "<ul>" +
-                                                "<li>ddddddddddddddddddd</li>" +
-                                            "</ul>" +
-                                        "</li>" +
-                                    "</ul>" +
-                                "</li>" +
-                                "<li><strong><em>BoldAndItalic</em></strong> style." +
-                                "</li>" +
-                             "</ul>", handler );
+        formatter.transform( "<ul>" + "<li>" + "<strong>Bold</strong> style." + "<ul>" + "<li>zaza</li>"
+            + "<li>zaza</li>" + "<li>zaza</li>" + "</ul>" + "</li>" + "<li><em>Italic</em> style." + "<ul>"
+            + "<li>zazaaa</li>" + "<li>zzzzzzzzzzzz" + "<ul>" + "<li>ddddddddddddddddddd</li>" + "</ul>" + "</li>"
+            + "</ul>" + "</li>" + "<li><strong><em>BoldAndItalic</em></strong> style." + "</li>" + "</ul>", handler );
 
         Assert.assertEquals( "", handler.getTextBefore() );
         Assert.assertEquals( "", handler.getTextBody() );
@@ -433,8 +465,6 @@ public class DocxDocumentHandlerTestCase
                              handler.getTextEnd() );
     }
 
-    
-    
     @Test
     public void testAll()
         throws Exception

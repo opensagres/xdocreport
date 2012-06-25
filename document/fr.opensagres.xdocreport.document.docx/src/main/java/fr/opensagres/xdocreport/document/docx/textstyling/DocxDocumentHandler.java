@@ -34,6 +34,11 @@ import fr.opensagres.xdocreport.document.docx.preprocessor.sax.numbering.Numberi
 import fr.opensagres.xdocreport.document.docx.template.DocxContextHelper;
 import fr.opensagres.xdocreport.document.preprocessor.sax.BufferedElement;
 import fr.opensagres.xdocreport.document.textstyling.AbstractDocumentHandler;
+import fr.opensagres.xdocreport.document.textstyling.properties.ContainerProperties;
+import fr.opensagres.xdocreport.document.textstyling.properties.HeaderProperties;
+import fr.opensagres.xdocreport.document.textstyling.properties.ListItemProperties;
+import fr.opensagres.xdocreport.document.textstyling.properties.ListProperties;
+import fr.opensagres.xdocreport.document.textstyling.properties.ParagraphProperties;
 import fr.opensagres.xdocreport.template.IContext;
 
 /**
@@ -47,7 +52,7 @@ public class DocxDocumentHandler
 
     private boolean italicsing;
 
-    private Stack<Boolean> paragraphsStack;
+    private Stack<ParagraphProperties> paragraphsStack;
 
     private HyperlinkRegistry hyperlinkRegistry;
 
@@ -77,7 +82,7 @@ public class DocxDocumentHandler
     {
         this.bolding = false;
         this.italicsing = false;
-        this.paragraphsStack = new Stack<Boolean>();
+        this.paragraphsStack = new Stack<ParagraphProperties>();
     }
 
     public void endDocument()
@@ -168,39 +173,76 @@ public class DocxDocumentHandler
 
         if ( paragraphWasInserted && paragraphsStack.isEmpty() )
         {
-            startParagraph( false );
+            internalStartParagraph( null );
         }
     }
 
-    private void startParagraph( boolean realParagraph )
+    private void internalStartParagraph( ParagraphProperties properties )
         throws IOException
     {
         paragraphWasInserted = true;
         super.setTextLocation( TextLocation.End );
         super.write( "<w:p>" );
-        paragraphsStack.push( realParagraph );
+        paragraphsStack.push( properties );
     }
 
-    public void startParagraph()
+    public void startParagraph( ParagraphProperties properties )
         throws IOException
     {
+        processPageBreakBefore( properties );
         closeCurrentParagraph();
-        startParagraph( true );
+        internalStartParagraph( properties );
+    }
+
+    private void processPageBreakBefore( ContainerProperties properties )
+        throws IOException
+    {
+        if ( properties != null )
+        {
+            if ( properties.isPageBreakBefore() )
+            {
+                super.setTextLocation( TextLocation.End );
+                generatePageBreak();
+            }
+        }
+    }
+
+    private void processPageBreakAfter( ContainerProperties properties )
+        throws IOException
+    {
+        if ( properties != null )
+        {
+            if ( properties.isPageBreakAfter() )
+            {
+                super.setTextLocation( TextLocation.End );
+                generatePageBreak();
+            }
+        }
+    }
+
+    private void generatePageBreak()
+        throws IOException
+    {
+        super.write( "<w:p>" );
+        super.write( "<w:r>" );
+        super.write( "<w:br w:type=\"page\" />" );
+        super.write( "</w:r>" );
+        super.write( "</w:p>" );
     }
 
     public void endParagraph()
         throws IOException
     {
         super.write( "</w:p>" );
-        paragraphsStack.pop();
+        processPageBreakAfter( paragraphsStack.pop() );
     }
 
-    public void startListItem()
+    public void startListItem( ListItemProperties properties )
         throws IOException
     {
         // Close current paragraph
         closeCurrentParagraph();
-        startParagraph( false );
+        internalStartParagraph( null );
 
         super.write( "<w:pPr>" );
         // super.write( "<w:pStyle w:val=\"Paragraphedeliste\" />" );
@@ -226,15 +268,15 @@ public class DocxDocumentHandler
     public void endListItem()
         throws IOException
     {
-        //endParagraph();
+        // endParagraph();
     }
 
-    public void startHeading( int level )
+    public void startHeading( int level, HeaderProperties properties )
         throws IOException
     {
         // Close current paragraph
         closeCurrentParagraph();
-        startParagraph( false );
+        internalStartParagraph( null );
 
         // In docx, title is a paragraph with a style.
 
@@ -259,7 +301,7 @@ public class DocxDocumentHandler
     }
 
     @Override
-    protected void doStartOrderedList()
+    protected void doStartOrderedList(ListProperties properties)
         throws IOException
     {
         // if ( numbersStack.isEmpty() )
@@ -275,7 +317,7 @@ public class DocxDocumentHandler
     }
 
     @Override
-    protected void doStartUnorderedList()
+    protected void doStartUnorderedList(ListProperties properties)
         throws IOException
     {
         // if ( numbersStack.isEmpty() )

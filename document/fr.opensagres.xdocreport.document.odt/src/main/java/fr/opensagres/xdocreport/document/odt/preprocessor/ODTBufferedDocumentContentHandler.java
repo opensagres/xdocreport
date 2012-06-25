@@ -262,6 +262,8 @@ public class ODTBufferedDocumentContentHandler
                 IBufferedRegion region = getCurrentElement();
                 // Add bold, italic, bold+italic styles for text styling.
                 region.append( styleGen.generateTextStyles() );
+                // Add paragraph styles for text styling.
+                region.append( styleGen.generateParagraphStyles() );
                 // Add styles for lists
                 region.append( styleGen.generateListStyle() );
             }

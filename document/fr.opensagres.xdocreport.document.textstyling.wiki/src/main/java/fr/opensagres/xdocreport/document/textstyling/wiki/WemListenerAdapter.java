@@ -37,6 +37,9 @@ import org.wikimodel.wem.WikiStyle;
 
 import fr.opensagres.xdocreport.core.logging.LogUtils;
 import fr.opensagres.xdocreport.document.textstyling.IDocumentHandler;
+import fr.opensagres.xdocreport.document.textstyling.properties.ListItemProperties;
+import fr.opensagres.xdocreport.document.textstyling.properties.ListProperties;
+import fr.opensagres.xdocreport.document.textstyling.properties.ParagraphProperties;
 
 /**
  * Wiki Event Model Adaptor to call methods of {@link IDocumentHandler}.
@@ -133,13 +136,14 @@ public class WemListenerAdapter
     {
         try
         {
+            ListProperties properties = null;
             if ( ordered )
             {
-                documentHandler.startOrderedList();
+                documentHandler.startOrderedList( properties );
             }
             else
             {
-                documentHandler.startUnorderedList();
+                documentHandler.startUnorderedList( properties );
             }
         }
         catch ( IOException e )
@@ -153,7 +157,8 @@ public class WemListenerAdapter
     {
         try
         {
-            documentHandler.startListItem();
+            ListItemProperties properties = null;
+            documentHandler.startListItem( properties );
         }
         catch ( IOException e )
         {
@@ -225,7 +230,8 @@ public class WemListenerAdapter
     {
         try
         {
-            documentHandler.startParagraph();
+            ParagraphProperties properties = null;
+            documentHandler.startParagraph( properties );
         }
         catch ( IOException e )
         {

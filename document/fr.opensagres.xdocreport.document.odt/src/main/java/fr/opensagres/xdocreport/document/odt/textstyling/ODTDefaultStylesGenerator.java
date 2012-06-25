@@ -54,6 +54,10 @@ public class ODTDefaultStylesGenerator
 
     protected static final String BOLD_ITALIC_STYLE_NAME = "XDocReport_BoldItalic";
 
+    protected static final String PAGE_BREAK_BEFORE_PARAGRAPH_STYLE_NAME = "XDocReport_ParaBreakBefore";
+
+    protected static final String PAGE_BREAK_AFTER_PARAGRAPH_STYLE_NAME = "XDocReport_ParaBreakAfter";
+
     // font size for the default OOo Headers
     protected static String[] TITLE_FONT_SIZE = { "115%", "14pt", "14pt", "85%", "85%", "75%" };
 
@@ -112,6 +116,14 @@ public class ODTDefaultStylesGenerator
         region.append( generateStyle( BOLD_STYLE_NAME, true, false ) );
         region.append( generateStyle( ITALIC_STYLE_NAME, false, true ) );
         region.append( generateStyle( BOLD_ITALIC_STYLE_NAME, true, true ) );
+        return region.toString();
+    }
+
+    public String generateParagraphStyles()
+    {
+        StringBuilder region = new StringBuilder();
+        region.append( generateStylePageBreak( true ) );
+        region.append( generateStylePageBreak( false ) );
         return region.toString();
     }
 
@@ -279,4 +291,35 @@ public class ODTDefaultStylesGenerator
         return BOLD_ITALIC_STYLE_NAME;
     }
 
+    public String getParaBreakBeforeStyleName()
+    {
+        return PAGE_BREAK_BEFORE_PARAGRAPH_STYLE_NAME;
+    }
+
+    public String getParaBreakAfterStyleName()
+    {
+        return PAGE_BREAK_AFTER_PARAGRAPH_STYLE_NAME;
+    }
+
+    private String generateStylePageBreak( boolean pageBreakBefore )
+    {
+        String styleName =
+            pageBreakBefore ? PAGE_BREAK_BEFORE_PARAGRAPH_STYLE_NAME : PAGE_BREAK_AFTER_PARAGRAPH_STYLE_NAME;
+        StringBuilder style = new StringBuilder();
+        style.append( "<style:style style:name=\"" );
+        style.append( styleName );
+        style.append( "\" style:family=\"paragraph\" >" );
+        style.append( "<style:paragraph-properties" );
+        if ( pageBreakBefore )
+        {
+            style.append( " fo:break-before=\"page\"" );
+        }
+        else
+        {
+            style.append( " fo:break-after=\"page\"" );
+        }
+        style.append( " />" );
+        style.append( "</style:style>" );
+        return style.toString();
+    }
 }

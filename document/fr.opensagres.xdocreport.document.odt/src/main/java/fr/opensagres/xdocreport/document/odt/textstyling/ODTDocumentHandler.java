@@ -31,6 +31,10 @@ import java.util.Stack;
 
 import fr.opensagres.xdocreport.document.preprocessor.sax.BufferedElement;
 import fr.opensagres.xdocreport.document.textstyling.AbstractDocumentHandler;
+import fr.opensagres.xdocreport.document.textstyling.properties.HeaderProperties;
+import fr.opensagres.xdocreport.document.textstyling.properties.ListItemProperties;
+import fr.opensagres.xdocreport.document.textstyling.properties.ListProperties;
+import fr.opensagres.xdocreport.document.textstyling.properties.ParagraphProperties;
 import fr.opensagres.xdocreport.template.IContext;
 
 public class ODTDocumentHandler
@@ -151,17 +155,17 @@ public class ODTDocumentHandler
 
         if ( ( paragraphWasInserted && paragraphsStack.isEmpty() ) || closeHeader )
         {
-            internalStartParagraph( false );
+            internalStartParagraph( false, (String) null );
         }
     }
 
-    public void startParagraph()
+    public void startParagraph( ParagraphProperties properties )
         throws IOException
     {
         if ( paragraphsStack.isEmpty() || !paragraphsStack.peek() )
         {
             super.setTextLocation( TextLocation.End );
-            internalStartParagraph( false );
+            internalStartParagraph( false, properties );
         }
     }
 
@@ -175,10 +179,22 @@ public class ODTDocumentHandler
         // }
     }
 
-    private void internalStartParagraph( boolean containerIsList )
+    private void internalStartParagraph( boolean containerIsList, ParagraphProperties properties )
         throws IOException
     {
-        internalStartParagraph( containerIsList, null );
+        String styleName = null;
+        if ( properties != null )
+        {
+            if ( properties.isPageBreakAfter() )
+            {
+                styleName = styleGen.getParaBreakAfterStyleName();
+            }
+            else if ( properties.isPageBreakBefore() )
+            {
+                styleName = styleGen.getParaBreakBeforeStyleName();
+            }
+        }
+        internalStartParagraph( containerIsList, styleName );
     }
 
     private void internalStartParagraph( boolean containerIsList, String styleName )
@@ -210,7 +226,7 @@ public class ODTDocumentHandler
         }
     }
 
-    public void startHeading( int level )
+    public void startHeading( int level, HeaderProperties properties )
         throws IOException
     {
         endParagraphIfNeeded();
@@ -231,7 +247,7 @@ public class ODTDocumentHandler
     }
 
     @Override
-    protected void doStartOrderedList()
+    protected void doStartOrderedList( ListProperties properties )
         throws IOException
     {
         internalStartList( styleGen.getOLStyleName() );
@@ -245,7 +261,7 @@ public class ODTDocumentHandler
     }
 
     @Override
-    protected void doStartUnorderedList()
+    protected void doStartUnorderedList( ListProperties properties )
         throws IOException
     {
         internalStartList( styleGen.getULStyleName() );
@@ -300,7 +316,7 @@ public class ODTDocumentHandler
         }
     }
 
-    public void startListItem()
+    public void startListItem( ListItemProperties properties )
         throws IOException
     {
         if ( itemStyle != null )
@@ -311,7 +327,7 @@ public class ODTDocumentHandler
         else
         {
             super.write( "<text:list-item>" );
-            internalStartParagraph( true );
+            internalStartParagraph( true, (String) null );
         }
     }
 

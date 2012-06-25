@@ -31,6 +31,10 @@ import org.xml.sax.SAXException;
 import org.xml.sax.helpers.DefaultHandler;
 
 import fr.opensagres.xdocreport.document.textstyling.IDocumentHandler;
+import fr.opensagres.xdocreport.document.textstyling.properties.HeaderProperties;
+import fr.opensagres.xdocreport.document.textstyling.properties.ListItemProperties;
+import fr.opensagres.xdocreport.document.textstyling.properties.ListProperties;
+import fr.opensagres.xdocreport.document.textstyling.properties.ParagraphProperties;
 
 /**
  * SAX content handler used to parse HTML content and call the right method of {@link IDocumentHandler} according the
@@ -39,6 +43,8 @@ import fr.opensagres.xdocreport.document.textstyling.IDocumentHandler;
 public class HTMLTextStylingContentHandler
     extends DefaultHandler
 {
+
+    private static final String STYLE_ATTR = "style";
 
     // HTML elements for Bold style
     private static final String STRONG_ELT = "strong";
@@ -148,52 +154,64 @@ public class HTMLTextStylingContentHandler
             else if ( UL_ELT.equals( name ) )
             {
                 // Unordered List
-                startList( false );
+                ListProperties properties = StylesHelper.createListProperties( attributes.getValue( STYLE_ATTR ) );
+                startList( false, properties );
             }
             else if ( OL_ELT.equals( name ) )
             {
                 // Orderer List
-                startList( true );
+                ListProperties properties = StylesHelper.createListProperties( attributes.getValue( STYLE_ATTR ) );
+                startList( true, properties );
             }
             else if ( LI_ELT.equals( name ) )
             {
                 // List item
-                documentHandler.startListItem();
+                ListItemProperties properties =
+                    StylesHelper.createListItemProperties( attributes.getValue( STYLE_ATTR ) );
+                documentHandler.startListItem( properties );
             }
             else if ( P_ELT.equals( name ) )
             {
                 // Paragraph
-                documentHandler.startParagraph();
+                ParagraphProperties properties =
+                    StylesHelper.createParagraphProperties( attributes.getValue( STYLE_ATTR ) );
+                documentHandler.startParagraph( properties );
             }
             else if ( H1_ELT.equals( name ) )
             {
                 // Header 1
-                documentHandler.startHeading( 1 );
+                HeaderProperties properties = StylesHelper.createHeaderProperties( attributes.getValue( STYLE_ATTR ) );
+                documentHandler.startHeading( 1, properties );
             }
             else if ( H2_ELT.equals( name ) )
             {
                 // Header 2
-                documentHandler.startHeading( 2 );
+                HeaderProperties properties = StylesHelper.createHeaderProperties( attributes.getValue( STYLE_ATTR ) );
+                documentHandler.startHeading( 2, properties );
             }
             else if ( H3_ELT.equals( name ) )
             {
                 // Header 3
-                documentHandler.startHeading( 3 );
+                HeaderProperties properties = StylesHelper.createHeaderProperties( attributes.getValue( STYLE_ATTR ) );
+                documentHandler.startHeading( 3, properties );
             }
             else if ( H4_ELT.equals( name ) )
             {
                 // Header 4
-                documentHandler.startHeading( 4 );
+                HeaderProperties properties = StylesHelper.createHeaderProperties( attributes.getValue( STYLE_ATTR ) );
+                documentHandler.startHeading( 4, properties );
             }
             else if ( H5_ELT.equals( name ) )
             {
                 // Header 5
-                documentHandler.startHeading( 5 );
+                HeaderProperties properties = StylesHelper.createHeaderProperties( attributes.getValue( STYLE_ATTR ) );
+                documentHandler.startHeading( 5, properties );
             }
             else if ( H6_ELT.equals( name ) )
             {
                 // Header 6
-                documentHandler.startHeading( 6 );
+                HeaderProperties properties = StylesHelper.createHeaderProperties( attributes.getValue( STYLE_ATTR ) );
+                documentHandler.startHeading( 6, properties );
             }
             else if ( A_ELT.equals( name ) )
             {
@@ -323,17 +341,17 @@ public class HTMLTextStylingContentHandler
         super.characters( ch, start, length );
     }
 
-    private void startList( boolean ordered )
+    private void startList( boolean ordered, ListProperties properties )
         throws IOException
     {
         ignoreCharacters = true;
         if ( ordered )
         {
-            documentHandler.startOrderedList();
+            documentHandler.startOrderedList( properties );
         }
         else
         {
-            documentHandler.startUnorderedList();
+            documentHandler.startUnorderedList( properties );
         }
     }
 

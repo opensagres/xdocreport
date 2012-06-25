@@ -27,6 +27,10 @@ package fr.opensagres.xdocreport.document.textstyling.wiki.gwiki;
 import java.io.IOException;
 
 import fr.opensagres.xdocreport.document.textstyling.AbstractDocumentHandler;
+import fr.opensagres.xdocreport.document.textstyling.properties.HeaderProperties;
+import fr.opensagres.xdocreport.document.textstyling.properties.ListItemProperties;
+import fr.opensagres.xdocreport.document.textstyling.properties.ListProperties;
+import fr.opensagres.xdocreport.document.textstyling.properties.ParagraphProperties;
 
 /**
  * Basic Document handler implementation to build html fragment content.
@@ -76,7 +80,7 @@ public class HTMLDocumentHandler
         super.write( "</i>" );
     }
 
-    public void startListItem()
+    public void startListItem( ListItemProperties properties )
         throws IOException
     {
         super.write( "<li>" );
@@ -89,7 +93,7 @@ public class HTMLDocumentHandler
     }
 
     @Override
-    protected void doStartOrderedList()
+    protected void doStartOrderedList( ListProperties properties )
         throws IOException
     {
         super.write( "<ol>" );
@@ -103,7 +107,7 @@ public class HTMLDocumentHandler
     }
 
     @Override
-    protected void doStartUnorderedList()
+    protected void doStartUnorderedList( ListProperties properties )
         throws IOException
     {
         super.write( "<ul>" );
@@ -116,7 +120,7 @@ public class HTMLDocumentHandler
         super.write( "</ul>" );
     }
 
-    public void startParagraph()
+    public void startParagraph( ParagraphProperties properties )
         throws IOException
     {
         super.write( "<p>" );
@@ -128,7 +132,7 @@ public class HTMLDocumentHandler
         super.write( "</p>" );
     }
 
-    public void startHeading( int level )
+    public void startHeading( int level, HeaderProperties properties )
         throws IOException
     {
         super.write( "<h" );
@@ -145,21 +149,23 @@ public class HTMLDocumentHandler
         super.write( ">" );
     }
 
-    public void handleReference( String ref, String label ) throws IOException
+    public void handleReference( String ref, String label )
+        throws IOException
     {
         super.write( "<a href=\"" );
         super.write( ref );
         super.write( "\" >" );
         super.write( label );
         super.write( "</a>" );
-        
+
     }
-    
-    public void handleImage( String ref, String label ) throws IOException
+
+    public void handleImage( String ref, String label )
+        throws IOException
     {
         super.write( "<img src=\"" );
         super.write( ref );
         super.write( "/>" );
-        
+
     }
 }

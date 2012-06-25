@@ -55,6 +55,12 @@
     <style:style style:family="text" style:name="XDocReport_BoldItalic">
       <style:text-properties fo:font-style="italic" fo:font-weight="bold"/>
     </style:style>
+    <style:style style:family="paragraph" style:name="XDocReport_ParaBreakBefore">
+      <style:paragraph-properties fo:break-before="page"/>
+    </style:style>
+    <style:style style:family="paragraph" style:name="XDocReport_ParaBreakAfter">
+      <style:paragraph-properties fo:break-after="page"/>
+    </style:style>    
     <style:style style:family="paragraph"
       style:list-style-name="XDocReport_OL" style:name="XDocReport_OL_P" style:parent-style-name="Standard"/>
     <text:list-style style:name="XDocReport_OL">

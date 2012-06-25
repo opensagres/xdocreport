@@ -1,4 +1,4 @@
-package fr.opensagres.xdocreport.document.tools.remoting.resources;
+package fr.opensagres.xdocreport.document.tools.remoting.resources.services.client.jaxrs;
 
 import java.io.File;
 import java.io.FileReader;
@@ -14,9 +14,10 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 
 import fr.opensagres.xdocreport.core.io.IOUtils;
-import fr.opensagres.xdocreport.document.tools.remoting.resources.rest.MockJAXRSResourcesApplication;
+import fr.opensagres.xdocreport.document.tools.remoting.resources.FileUtils;
+import fr.opensagres.xdocreport.document.tools.remoting.resources.Main;
+import fr.opensagres.xdocreport.document.tools.remoting.resources.services.server.jaxrs.MockJAXRSResourcesApplication;
 import fr.opensagres.xdocreport.remoting.resources.services.ResourcesServiceName;
-
 
 public class MainTest
 {
@@ -146,6 +147,7 @@ public class MainTest
         Main.main( args );
         Assert.assertTrue( downlodedFile.exists() );
     }
+
     @Test
     public void uploadARootFile()
         throws Exception
@@ -167,7 +169,7 @@ public class MainTest
         File fileToUploadFile = new File( srcFolder, "Simple.docx" );
         String resourceId = "NewSimple.docx";
         String[] args =
-            { "-baseAddress", BASE_ADDRESS, "-serviceName", "uploadLarge", "-resources",
+            { "-baseAddress", BASE_ADDRESS, "-serviceName", ResourcesServiceName.uploadLarge.name(), "-resources",
                 resourceId, "-out", fileToUploadFile.getPath() };
         Main.main( args );
         File uploadedFile = new File( resourcesFolder, "NewSimple.docx" );

@@ -22,9 +22,9 @@
  * OF CONTRACT, TORT OR OTHERWISE,  ARISING FROM, OUT OF OR IN CONNECTION
  * WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
-package fr.opensagres.xdocreport.document.tools.remoting.resources.rest;
+package fr.opensagres.xdocreport.document.tools.remoting.resources.services.server.jaxrs;
 
-import fr.opensagres.xdocreport.document.tools.remoting.resources.MockResourcesService;
+import fr.opensagres.xdocreport.document.tools.remoting.resources.services.MockResourcesService;
 import fr.opensagres.xdocreport.remoting.resources.services.server.jaxrs.JAXRSResourcesApplication;
 
 public class MockJAXRSResourcesApplication

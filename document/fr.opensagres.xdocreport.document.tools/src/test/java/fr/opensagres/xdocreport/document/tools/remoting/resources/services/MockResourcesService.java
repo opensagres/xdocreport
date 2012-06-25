@@ -1,4 +1,4 @@
-package fr.opensagres.xdocreport.document.tools.remoting.resources;
+package fr.opensagres.xdocreport.document.tools.remoting.resources.services;
 
 import java.io.File;
 

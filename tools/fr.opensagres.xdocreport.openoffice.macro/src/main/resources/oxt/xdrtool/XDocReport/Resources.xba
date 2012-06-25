@@ -205,7 +205,12 @@ End Function
 Public Function ExecuteRepositoryServiceClient_Download(ByVal baseAddress as String, ByVal user as String, ByVal password as String, ByVal serviceType as String,  ByVal resourceId as String, ByVal downloadedFilePath as String, ByVal chunk as String, ByVal timeout as String) as String
 	ExecuteRepositoryServiceClient_Download = &quot;&quot;
 	Dim outFilePath as String
-	outFilePath = ExecuteRepositoryServiceClient(baseAddress, user, password, serviceType, &quot;download&quot;, resourceId, downloadedFilePath, chunk, timeout)
+	Dim methodName as String
+	methodName = &quot;downloadLarge&quot;
+	if (serviceType = &quot;JAXWS&quot;) Then 
+		methodName = &quot;download&quot;
+	End If
+	outFilePath = ExecuteRepositoryServiceClient(baseAddress, user, password, serviceType, methodName, resourceId, downloadedFilePath, chunk, timeout)
 	If (outFilePath &lt;&gt; &quot;&quot;) Then 
 		ExecuteRepositoryServiceClient_Download = outFilePath
 	End If
@@ -214,7 +219,13 @@ End Function
 Public Function ExecuteRepositoryServiceClient_Upload(ByVal baseAddress as String, ByVal user as String, ByVal password as String, ByVal serviceType as String,  ByVal resourceId as String, ByVal fileToUploadFilePath as String, ByVal chunk as String, ByVal timeout as String) as Boolean
 	ExecuteRepositoryServiceClient_Upload = False
 	Dim outFilePath as String
-	outFilePath = ExecuteRepositoryServiceClient(baseAddress, user, password, serviceType, &quot;upload&quot;, resourceId, fileToUploadFilePath, chunk, timeout)
+	Dim methodName as String
+	methodName = &quot;uploadLarge&quot;
+	if (serviceType = &quot;JAXWS&quot;) Then 
+		methodName = &quot;upload&quot;
+	End If
+	MsgBox methodName
+	outFilePath = ExecuteRepositoryServiceClient(baseAddress, user, password, serviceType, methodName, resourceId, fileToUploadFilePath, chunk, timeout)
 	If (outFilePath &lt;&gt; &quot;&quot;) Then 
 		ExecuteRepositoryServiceClient_Upload = True
 	End If

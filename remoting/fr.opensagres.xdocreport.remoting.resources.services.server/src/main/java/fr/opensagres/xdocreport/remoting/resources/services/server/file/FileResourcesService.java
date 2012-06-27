@@ -18,10 +18,11 @@ import fr.opensagres.xdocreport.remoting.resources.domain.ResourceType;
 import fr.opensagres.xdocreport.remoting.resources.services.AbstractResourcesService;
 import fr.opensagres.xdocreport.remoting.resources.services.ResourcesException;
 import fr.opensagres.xdocreport.remoting.resources.services.jaxrs.JAXRSResourcesService;
+import fr.opensagres.xdocreport.remoting.resources.services.jaxws.JAXWSResourcesService;
 
 public abstract class FileResourcesService
     extends AbstractResourcesService
-    implements JAXRSResourcesService
+    implements JAXRSResourcesService, JAXWSResourcesService
 {
 
     private final File rootFolder;
@@ -175,7 +176,7 @@ public abstract class FileResourcesService
         boolean directory = file.isDirectory();
         Resource resource =
             ResourceFactory.createResource( file.getName(), directory ? ResourceType.CATEGORY : ResourceType.DOCUMENT,
-                                           parent );
+                                            parent );
         if ( directory )
         {
             File[] files = file.listFiles();

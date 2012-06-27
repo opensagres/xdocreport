@@ -4,7 +4,6 @@ import java.util.List;
 
 /**
  * Resource Helper.
- * 
  */
 public class ResourceHelper {
 
@@ -49,26 +48,20 @@ public class ResourceHelper {
 	 */
 	public static Resource findFieldsMetadataFromMetaInf(Resource metaInf) {
 		List<Resource> resources = metaInf.getChildren();
-		String name = null;
 		for (Resource resource : resources) {
-			name = resource.getName();
-			if (name != null && name.endsWith(ResourceFactory.FIELDS_XML)) {
+			if (isFieldsMetadata(resource)) {
 				return resource;
 			}
 		}
 		return null;
 	}
 
-	/**
-	 * Update the resource if if needed.
-	 * 
-	 * @param resource
-	 */
-	public static void updateResourceId(Resource resource) {
-		String id = resource.getId();
-		if ((id == null || id.length() < 1)) {
-			resource.setId(getResourcePath(resource));
-		}
+	public static boolean isFieldsMetadata(Resource resource) {
+		return isFieldsMetadata(resource.getName());
+	}
+
+	public static boolean isFieldsMetadata(String name) {
+		return name != null && name.endsWith(ResourceFactory.FIELDS_XML);
 	}
 
 	/**

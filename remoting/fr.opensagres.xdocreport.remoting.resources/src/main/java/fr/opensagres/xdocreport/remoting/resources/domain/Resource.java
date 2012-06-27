@@ -48,8 +48,12 @@ public class Resource
 
     public static final String TYPE_PROPERTY = "type";
 
+    public static final String ID_NOT_NULL_PROPERTY = "idNotNull";
+
+    public static final String PATH_PROPERTY = "path";
+
     @XmlElement( nillable = true )
-    private final List<Resource> children = new ResourceList(this);
+    private final List<Resource> children = new ResourceList( this );
 
     protected String id;
 
@@ -59,6 +63,9 @@ public class Resource
 
     @XmlTransient
     protected Resource parent;
+
+    @XmlTransient
+    protected String path;
 
     /**
      * Gets the value of the children property.
@@ -78,6 +85,24 @@ public class Resource
     public List<Resource> getChildren()
     {
         return this.children;
+    }
+
+    public String getIdNotNull()
+    {
+        if ( id != null && id.length() > 0 )
+        {
+            return id;
+        }
+        return getPath();
+    }
+
+    public String getPath()
+    {
+        if ( path == null )
+        {
+            path = ResourceHelper.getResourcePath( this );
+        }
+        return path;
     }
 
     /**

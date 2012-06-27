@@ -58,4 +58,56 @@ public class ResourceHelper {
 		}
 		return null;
 	}
+
+	/**
+	 * Update the resource if if needed.
+	 * 
+	 * @param resource
+	 */
+	public static void updateResourceId(Resource resource) {
+		String id = resource.getId();
+		if ((id == null || id.length() < 1)) {
+			resource.setId(getResourcePath(resource));
+		}
+	}
+
+	/**
+	 * Returns the resource path of the given resource.
+	 * 
+	 * @param resource
+	 * @return
+	 */
+	public static String getResourcePath(Resource resource) {
+		StringBuilder path = new StringBuilder();
+		computePath(resource, path);
+		return path.toString();
+	}
+
+	/**
+	 * Compute the resource path of the given resource.
+	 * 
+	 * @param resource
+	 * @param path
+	 */
+	private static void computePath(Resource resource, StringBuilder path) {
+		Resource parent = resource.getParent();
+		insertPath(resource, path);
+		while (parent != null) {
+			insertPath(parent, path);
+			parent = parent.getParent();
+		}
+	}
+
+	/**
+	 * Insert path.
+	 * 
+	 * @param resource
+	 * @param path
+	 */
+	private static void insertPath(Resource resource, StringBuilder path) {
+		if (path.length() > 0) {
+			path.insert(0, '/');
+		}
+		path.insert(0, resource.getName());
+	}
 }

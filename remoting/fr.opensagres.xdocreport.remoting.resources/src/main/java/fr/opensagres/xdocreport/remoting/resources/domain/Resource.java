@@ -7,6 +7,7 @@ import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.bind.annotation.XmlTransient;
 import javax.xml.bind.annotation.XmlType;
 
 /**
@@ -37,7 +38,8 @@ public class Resource
 {
 
     // Constants for properties of getter/setter of Resource which can be used
-    // when you wish use reflection (ex:use Eclipse JFace Databinding, use Commons BeanUtils, etc...)
+    // when you wish use reflection (ex:use Eclipse JFace Databinding, use
+    // Commons BeanUtils, etc...)
     public static final String CHILDREN_PROPERTY = "children";
 
     public static final String ID_PROPERTY = "id";
@@ -47,13 +49,16 @@ public class Resource
     public static final String TYPE_PROPERTY = "type";
 
     @XmlElement( nillable = true )
-    protected List<Resource> children;
+    private final List<Resource> children = new ResourceList(this);
 
     protected String id;
 
     protected String name;
 
     protected ResourceType type;
+
+    @XmlTransient
+    protected Resource parent;
 
     /**
      * Gets the value of the children property.
@@ -72,10 +77,6 @@ public class Resource
      */
     public List<Resource> getChildren()
     {
-        if ( children == null )
-        {
-            children = new ArrayList<Resource>();
-        }
         return this.children;
     }
 
@@ -139,4 +140,45 @@ public class Resource
         this.type = value;
     }
 
+    /**
+     * Returns the parent resource.
+     * 
+     * @return
+     */
+    public Resource getParent()
+    {
+        return parent;
+    }
+
+    /**
+     * Resource List
+     */
+    private static class ResourceList
+        extends ArrayList<Resource>
+    {
+
+        private static final long serialVersionUID = -2498988261160544607L;
+
+        private final Resource parent;
+
+        public ResourceList( Resource parent )
+        {
+            this.parent = parent;
+        }
+
+        @Override
+        public boolean add( Resource e )
+        {
+            e.parent = parent;
+            return super.add( e );
+        }
+
+        @Override
+        public void add( int index, Resource element )
+        {
+            element.parent = parent;
+            super.add( index, element );
+        }
+
+    }
 }

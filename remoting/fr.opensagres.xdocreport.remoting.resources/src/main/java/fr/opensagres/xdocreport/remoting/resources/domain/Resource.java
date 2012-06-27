@@ -1,4 +1,3 @@
-
 package fr.opensagres.xdocreport.remoting.resources.domain;
 
 import java.util.ArrayList;
@@ -10,11 +9,11 @@ import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlType;
 
-
 /**
- * <p>Classe Java pour resource complex type.
- * 
- * <p>Le fragment de sch�ma suivant indique le contenu attendu figurant dans cette classe.
+ * <p>
+ * Classe Java pour resource complex type.
+ * <p>
+ * Le fragment de sch�ma suivant indique le contenu attendu figurant dans cette classe.
  * 
  * <pre>
  * &lt;complexType name="resource">
@@ -30,49 +29,51 @@ import javax.xml.bind.annotation.XmlType;
  *   &lt;/complexContent>
  * &lt;/complexType>
  * </pre>
- * 
- * 
  */
 @XmlRootElement
-@XmlAccessorType(XmlAccessType.FIELD)
-@XmlType(name = "resource", propOrder = {
-    "children",
-    "id",
-    "name",
-    "type"
-})
-public class Resource {
+@XmlAccessorType( XmlAccessType.FIELD )
+@XmlType( name = "resource", propOrder = { "children", "id", "name", "type" } )
+public class Resource
+{
 
-    @XmlElement(nillable = true)
+    // Constants for properties of getter/setter of Resource which can be used
+    // when you wish use reflection (ex:use Eclipse JFace Databinding, use Commons BeanUtils, etc...)
+    public static final String CHILDREN_PROPERTY = "children";
+
+    public static final String ID_PROPERTY = "id";
+
+    public static final String NAME_PROPERTY = "name";
+
+    public static final String TYPE_PROPERTY = "type";
+
+    @XmlElement( nillable = true )
     protected List<Resource> children;
+
     protected String id;
+
     protected String name;
+
     protected ResourceType type;
 
     /**
      * Gets the value of the children property.
-     * 
      * <p>
-     * This accessor method returns a reference to the live list,
-     * not a snapshot. Therefore any modification you make to the
-     * returned list will be present inside the JAXB object.
-     * This is why there is not a <CODE>set</CODE> method for the children property.
-     * 
+     * This accessor method returns a reference to the live list, not a snapshot. Therefore any modification you make to
+     * the returned list will be present inside the JAXB object. This is why there is not a <CODE>set</CODE> method for
+     * the children property.
      * <p>
      * For example, to add a new item, do as follows:
+     * 
      * <pre>
-     *    getChildren().add(newItem);
+     * getChildren().add( newItem );
      * </pre>
-     * 
-     * 
      * <p>
-     * Objects of the following type(s) are allowed in the list
-     * {@link Resource }
-     * 
-     * 
+     * Objects of the following type(s) are allowed in the list {@link Resource }
      */
-    public List<Resource> getChildren() {
-        if (children == null) {
+    public List<Resource> getChildren()
+    {
+        if ( children == null )
+        {
             children = new ArrayList<Resource>();
         }
         return this.children;
@@ -81,72 +82,60 @@ public class Resource {
     /**
      * Obtient la valeur de la propri�t� id.
      * 
-     * @return
-     *     possible object is
-     *     {@link String }
-     *     
+     * @return possible object is {@link String }
      */
-    public String getId() {
+    public String getId()
+    {
         return id;
     }
 
     /**
      * D�finit la valeur de la propri�t� id.
      * 
-     * @param value
-     *     allowed object is
-     *     {@link String }
-     *     
+     * @param value allowed object is {@link String }
      */
-    public void setId(String value) {
+    public void setId( String value )
+    {
         this.id = value;
     }
 
     /**
      * Obtient la valeur de la propri�t� name.
      * 
-     * @return
-     *     possible object is
-     *     {@link String }
-     *     
+     * @return possible object is {@link String }
      */
-    public String getName() {
+    public String getName()
+    {
         return name;
     }
 
     /**
      * D�finit la valeur de la propri�t� name.
      * 
-     * @param value
-     *     allowed object is
-     *     {@link String }
-     *     
+     * @param value allowed object is {@link String }
      */
-    public void setName(String value) {
+    public void setName( String value )
+    {
         this.name = value;
     }
 
     /**
      * Obtient la valeur de la propri�t� type.
      * 
-     * @return
-     *     possible object is
-     *     {@link ResourceType }
-     *     
+     * @return possible object is {@link ResourceType }
      */
-    public ResourceType getType() {
+    public ResourceType getType()
+    {
         return type;
     }
 
     /**
      * D�finit la valeur de la propri�t� type.
      * 
-     * @param value
-     *     allowed object is
-     *     {@link ResourceType }
-     *     
+     * @param value allowed object is {@link ResourceType }
      */
-    public void setType(ResourceType value) {
+    public void setType( ResourceType value )
+    {
         this.type = value;
     }
 

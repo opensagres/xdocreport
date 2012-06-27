@@ -6,9 +6,9 @@ package fr.opensagres.xdocreport.remoting.resources.domain;
 public class ResourceFactory
 {
 
-    private static final String META_INF = "META-INF";
+    public static final String META_INF = "META-INF";
 
-    private static final String FIELDS_XML = ".fields.xml";
+    public static final String FIELDS_XML = ".fields.xml";
 
     /**
      * Create generic resource.

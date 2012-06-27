@@ -5,6 +5,7 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.URLEncoder;
 import java.util.Collections;
 
 import org.apache.cxf.interceptor.LoggingInInterceptor;
@@ -157,9 +158,11 @@ public abstract class AbstractJAXRSResourcesServiceTest {
 	@Test
 	public void downloadAFileInFolder() throws FileNotFoundException,
 			IOException, ResourcesException {
-			    String resourceId = "Custom/CustomSimple.docx";
+		
+			    String resourceId = "Custom//CustomSimple.docx";
 			    JAXRSResourcesService client = getClient();
-			    BinaryData document = client.download( resourceId );
+			    //	URL encoder/decoder is necessay to allow "/" in the "resourceId" String
+			    BinaryData document = client.download( URLEncoder.encode(resourceId, "UTF-8") );
 			    assertDocument(document);
 			    createFile( document.getContent(), resourceId );
 			}

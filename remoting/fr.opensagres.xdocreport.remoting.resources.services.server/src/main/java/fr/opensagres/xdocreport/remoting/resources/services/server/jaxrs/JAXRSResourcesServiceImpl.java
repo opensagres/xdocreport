@@ -1,5 +1,7 @@
 package fr.opensagres.xdocreport.remoting.resources.services.server.jaxrs;
 
+import java.io.UnsupportedEncodingException;
+import java.net.URLDecoder;
 import java.util.List;
 
 import fr.opensagres.xdocreport.remoting.resources.domain.BinaryData;
@@ -45,7 +47,12 @@ public class JAXRSResourcesServiceImpl
     public BinaryData download( String resourceId )
         throws ResourcesException
     {
-        return super.download( resourceId );
+        try {
+        	//URL encoder/decoder is necessay to allow "/" in the "resourceId" String 
+			return super.download( URLDecoder.decode( resourceId,"UTF-8") );
+		} catch (UnsupportedEncodingException e) {
+			throw new ResourcesException(e.getMessage());
+		}
     }
 
     @Override

@@ -13,7 +13,12 @@ public class MockCXFNonSpringServlet
     extends CXFNonSpringServlet
 {
 
-    @Override
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = 4030924536903714778L;
+
+	@Override
     public void init( ServletConfig sc )
         throws ServletException
     {

@@ -20,7 +20,7 @@
 	</licenses>
 	<properties>
 		<maven.build.timestamp.format>yyyyMMddHHmm</maven.build.timestamp.format>
-    	<osgi-version-qualifier>${maven.build.timestamp}</osgi-version-qualifier>
+		<osgi-version-qualifier>${maven.build.timestamp}</osgi-version-qualifier>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<maven.build.timestamp.format>yyyyMMddHHmm</maven.build.timestamp.format>
 	</properties>
@@ -31,19 +31,6 @@
 			<artifactId>wagon-ftp</artifactId> <version>1.0</version> </extension> </extensions> -->
 
 		<plugins>
-			<plugin>
-				<artifactId>maven-clean-plugin</artifactId>
-				<configuration>
-					<filesets>
-						<fileset>
-							<directory>META-INF</directory>
-							<includes>
-								<include>MANIFEST.MF</include>
-							</includes>
-						</fileset>
-					</filesets>
-				</configuration>
-			</plugin>
 			<plugin>
 				<artifactId>maven-compiler-plugin</artifactId>
 				<configuration>
@@ -63,7 +50,7 @@
 				<artifactId>maven-jar-plugin</artifactId>
 				<configuration>
 					<archive>
-						<manifestFile>META-INF/MANIFEST.MF</manifestFile>
+						<manifestFile>${project.build.outputDirectory}/META-INF/MANIFEST.MF</manifestFile>
 					</archive>
 				</configuration>
 			</plugin>
@@ -82,7 +69,6 @@
 				</executions>
 				<configuration>
 					<!-- <unpackBundle>true</unpackBundle> -->
-					<manifestLocation>META-INF</manifestLocation>
 					<instructions>
 						<_include>TEMPLATE.MF</_include>
 						<_snapshot>${osgi-version-qualifier}</_snapshot>
@@ -96,9 +82,6 @@
 				<configuration>
 					<preparationGoals>clean install -DskipTests</preparationGoals>
 					<autoVersionSubmodules>true</autoVersionSubmodules>
-					<checkModificationExcludes>
-						<checkModificationExclude>META-INF/MANIFEST.MF</checkModificationExclude>
-					</checkModificationExcludes>
 				</configuration>
 			</plugin>
 			<plugin>

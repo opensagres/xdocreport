@@ -38,12 +38,5 @@
 			<artifactId>fr.opensagres.xdocreport.template</artifactId>
 			<version>0.9.8-SNAPSHOT</version>
 		</dependency>
-		
-		<dependency>
-			<groupId>org.apache.geronimo.specs</groupId>
-			<artifactId>geronimo-jaxb_2.1_spec</artifactId>
-			<version>1.0</version>
-			<optional>true</optional>
-		</dependency>
 	</dependencies>
 </project>

@@ -25,7 +25,6 @@
 package fr.opensagres.xdocreport.document.pptx.discovery;
 
 import java.io.InputStream;
-import java.io.StringReader;
 import java.io.StringWriter;
 import java.util.HashMap;
 

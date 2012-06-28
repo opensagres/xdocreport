@@ -28,6 +28,7 @@ import static fr.opensagres.xdocreport.core.utils.StringUtils.isNotEmpty;
 import static fr.opensagres.xdocreport.core.utils.XMLUtils.prettyPrint;
 import static fr.opensagres.xdocreport.template.utils.TemplateUtils.getCachedTemplateName;
 import static java.lang.String.format;
+
 import java.io.IOException;
 import java.io.Reader;
 import java.io.StringWriter;

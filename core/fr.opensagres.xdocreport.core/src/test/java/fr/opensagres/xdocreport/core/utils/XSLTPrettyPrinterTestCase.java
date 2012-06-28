@@ -31,7 +31,6 @@ import java.util.Arrays;
 
 import org.junit.Test;
 
-import fr.opensagres.xdocreport.core.internal.IndentNumberPrettyPrinter;
 import fr.opensagres.xdocreport.core.internal.XSLTPrettyPrinter;
 
 public class XSLTPrettyPrinterTestCase

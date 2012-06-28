@@ -27,7 +27,6 @@ package fr.opensagres.xdocreport.template.velocity;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.junit.Assert;
 import org.junit.Test;
 
 import fr.opensagres.xdocreport.core.XDocReportException;

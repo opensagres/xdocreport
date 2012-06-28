@@ -1,6 +1,5 @@
 package fr.opensagres.xdocreport.template.formatter.xsd;
 
-import java.io.File;
 import java.io.IOException;
 
 import javax.xml.bind.JAXBContext;
@@ -11,11 +10,7 @@ import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.transform.Result;
 import javax.xml.transform.dom.DOMResult;
-import javax.xml.transform.stream.StreamResult;
 
-import org.apache.xerces.impl.xs.XMLSchemaLoader;
-import org.apache.xerces.impl.xs.XSModelImpl;
-import org.apache.xerces.xs.XSModel;
 import org.w3c.dom.Document;
 
 import fr.opensagres.xdocreport.core.XDocReportException;

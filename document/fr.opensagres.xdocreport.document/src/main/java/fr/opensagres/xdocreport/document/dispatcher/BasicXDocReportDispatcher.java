@@ -28,8 +28,6 @@ import java.util.Collection;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
-import fr.opensagres.xdocreport.document.registry.XDocReportRegistry;
-
 public class BasicXDocReportDispatcher<T extends IXDocReportController>
     extends AbstractXDocReportDispatcher<T>
 {

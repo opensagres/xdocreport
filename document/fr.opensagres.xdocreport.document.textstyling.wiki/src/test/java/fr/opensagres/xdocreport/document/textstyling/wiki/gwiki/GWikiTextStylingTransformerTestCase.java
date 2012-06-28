@@ -30,7 +30,6 @@ import org.junit.Test;
 
 import fr.opensagres.xdocreport.document.textstyling.IDocumentHandler;
 import fr.opensagres.xdocreport.document.textstyling.ITextStylingTransformer;
-import fr.opensagres.xdocreport.document.textstyling.wiki.gwiki.GWikiTextStylingTransformer;
 
 public class GWikiTextStylingTransformerTestCase
 {

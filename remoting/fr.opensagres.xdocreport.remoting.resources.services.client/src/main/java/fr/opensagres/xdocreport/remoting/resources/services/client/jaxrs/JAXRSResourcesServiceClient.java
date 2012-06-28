@@ -41,6 +41,7 @@ import org.apache.cxf.jaxrs.client.WebClient;
 import org.apache.cxf.transport.http.HTTPConduit;
 import org.apache.cxf.transports.http.configuration.HTTPClientPolicy;
 
+import fr.opensagres.xdocreport.core.EncodingConstants;
 import fr.opensagres.xdocreport.core.logging.LogUtils;
 import fr.opensagres.xdocreport.core.utils.StringUtils;
 import fr.opensagres.xdocreport.remoting.resources.domain.BinaryData;
@@ -52,134 +53,144 @@ import fr.opensagres.xdocreport.remoting.resources.services.ResourcesServiceName
 import fr.opensagres.xdocreport.remoting.resources.services.jaxrs.JAXRSResourcesService;
 import fr.opensagres.xdocreport.remoting.resources.services.jaxrs.Providers;
 
-public class JAXRSResourcesServiceClient implements JAXRSResourcesService {
+public class JAXRSResourcesServiceClient
+    implements JAXRSResourcesService
+{
 
-	private static final String UTF_8 = "UTF-8";
+    /**
+     * Logger for this class
+     */
+    private static final Logger LOGGER = LogUtils.getLogger( JAXRSResourcesServiceClient.class.getName() );
 
-	/**
-	 * Logger for this class
-	 */
-	private static final Logger LOGGER = LogUtils
-			.getLogger(JAXRSResourcesServiceClient.class.getName());
+    private final WebClient client;
 
-	private final WebClient client;
+    public JAXRSResourcesServiceClient( String baseAddress, String username, String password, Long connectionTimeout,
+                                        Boolean allowChunking )
+    {
 
-	public JAXRSResourcesServiceClient(String baseAddress, String username,
-			String password, Long connectionTimeout, Boolean allowChunking) {
+        JAXRSClientFactoryBean bean = new JAXRSClientFactoryBean();
+        bean.setAddress( baseAddress );
 
-		JAXRSClientFactoryBean bean = new JAXRSClientFactoryBean();
-		bean.setAddress(baseAddress);
+        if ( StringUtils.isNotEmpty( username ) )
+        {
+            // setup basic auth
+            bean.setUsername( username );
+            bean.setPassword( password );
+        }
 
-		if (StringUtils.isNotEmpty(username)) {
-			// setup basic auth
-			bean.setUsername(username);
-			bean.setPassword(password);
-		}
+        // registrer here client side providers
+        bean.setProviders( Providers.get() );
 
-		// registrer here client side providers
-		bean.setProviders(Providers.get());
+        this.client = bean.createWebClient();
 
-		this.client = bean.createWebClient();
+        if ( connectionTimeout != null || allowChunking != null )
+        {
+            ClientConfiguration config = WebClient.getConfig( client );
+            HTTPConduit http = (HTTPConduit) config.getConduit();
+            HTTPClientPolicy httpClientPolicy = new HTTPClientPolicy();
+            if ( connectionTimeout != null )
+            {
+                httpClientPolicy.setConnectionTimeout( connectionTimeout );
+            }
+            if ( allowChunking != null )
+            {
+                httpClientPolicy.setAllowChunking( allowChunking );
+            }
+            http.setClient( httpClientPolicy );
 
-		if (connectionTimeout != null || allowChunking != null) {
-			ClientConfiguration config = WebClient.getConfig(client);
-			HTTPConduit http = (HTTPConduit) config.getConduit();
-			HTTPClientPolicy httpClientPolicy = new HTTPClientPolicy();
-			if (connectionTimeout != null) {
-				httpClientPolicy.setConnectionTimeout(connectionTimeout);
-			}
-			if (allowChunking != null) {
-				httpClientPolicy.setAllowChunking(allowChunking);
-			}
-			http.setClient(httpClientPolicy);
+        }
 
-		}
+        if ( LOGGER.isLoggable( Level.FINE ) )
+        {
+            ClientConfiguration config = WebClient.getConfig( client );
+            config.getInInterceptors().add( new LoggingInInterceptor() );
+            config.getOutInterceptors().add( new LoggingOutInterceptor() );
+        }
+    }
 
-		if (LOGGER.isLoggable(Level.FINE)) {
-			ClientConfiguration config = WebClient.getConfig(client);
-			config.getInInterceptors().add(new LoggingInInterceptor());
-			config.getOutInterceptors().add(new LoggingOutInterceptor());
-		}
-	}
+    public String getName()
+    {
+        reset();
+        return client.path( ResourcesServiceName.name ).accept( MediaType.TEXT_PLAIN ).get( String.class );
+    }
 
-	public String getName() {
-		reset();
-		return client.path(ResourcesServiceName.name)
-				.accept(MediaType.TEXT_PLAIN).get(String.class);
-	}
+    public Resource getRoot()
+    {
+        reset();
+        return client.path( ResourcesServiceName.root ).accept( MediaType.APPLICATION_JSON ).get( Resource.class );
+    }
 
-	public Resource getRoot() {
-		reset();
-		return client.path(ResourcesServiceName.root)
-				.accept(MediaType.APPLICATION_JSON).get(Resource.class);
-	}
+    public Resource getRootWithFilter( Filter filter )
+    {
+        reset();
+        return null;
+    }
 
-	public Resource getRootWithFilter(Filter filter) {
-		reset();
-		return null;
-	}
+    public List<BinaryData> downloadMultiple( List<String> resourceIds )
+    {
+        reset();
+        return null;
+    }
 
-	public List<BinaryData> downloadMultiple(List<String> resourceIds) {
-		reset();
-		return null;
-	}
+    public BinaryData download( String resourceId )
+    {
+        reset();
+        StringBuilder path = new StringBuilder( ResourcesServiceName.download.name() );
+        path.append( "/" );
+        path.append( getUnencodedResourceId( resourceId ) );
+        return client.path( path.toString() ).accept( MediaType.APPLICATION_JSON_TYPE ).get( BinaryData.class );
+    }
 
-	public BinaryData download(String resourceId) {
-		reset();
-		StringBuilder path = new StringBuilder(
-				ResourcesServiceName.download.name());
-		path.append("/");
-		path.append(getUnencodedResourceId(resourceId));
-		return client.path(path.toString())
-				.accept(MediaType.APPLICATION_JSON_TYPE).get(BinaryData.class);
-	}
+    public void upload( BinaryData data )
+    {
+        reset();
+        // Use Void.class to throw an exception of there is HTTP error.s
+        client.path( ResourcesServiceName.upload.name() ).accept( MediaType.TEXT_PLAIN ).type( MediaType.APPLICATION_JSON ).post( data,
+                                                                                                                                  Void.class );
+    }
 
-	public void upload(BinaryData data) {
-		reset();
-		// Use Void.class to throw an exception of there is HTTP error.s
-		client.path(ResourcesServiceName.upload.name())
-				.accept(MediaType.TEXT_PLAIN).type(MediaType.APPLICATION_JSON)
-				.post(data, Void.class);
-	}
+    protected void reset()
+    {
+        client.reset();
 
-	protected void reset() {
-		client.reset();
+    }
 
-	}
+    public LargeBinaryData downloadLarge( String resourceId )
+        throws ResourcesException
+    {
+        reset();
 
-	public LargeBinaryData downloadLarge(String resourceId)
-			throws ResourcesException {
-		reset();
+        StringBuilder path = new StringBuilder( ResourcesServiceName.downloadLarge.name() );
+        path.append( "/" );
+        path.append( getUnencodedResourceId( resourceId ) );
+        return client.path( path.toString() ).accept( MediaType.APPLICATION_JSON_TYPE ).get( LargeBinaryData.class );
+    }
 
-		StringBuilder path = new StringBuilder(
-				ResourcesServiceName.downloadLarge.name());
-		path.append("/");
-		path.append(getUnencodedResourceId(resourceId));
-		return client.path(path.toString())
-				.accept(MediaType.APPLICATION_JSON_TYPE)
-				.get(LargeBinaryData.class);
-	}
+    public void uploadLarge( LargeBinaryData data )
+        throws ResourcesException
+    {
+        reset();
+        // Use Void.class to throw an exception of there is HTTP error.s
+        client.path( ResourcesServiceName.uploadLarge.name() ).accept( MediaType.TEXT_PLAIN ).type( MediaType.APPLICATION_JSON ).post( data,
+                                                                                                                                       Void.class );
 
-	public void uploadLarge(LargeBinaryData data) throws ResourcesException {
-		reset();
-		// Use Void.class to throw an exception of there is HTTP error.s
-		client.path(ResourcesServiceName.uploadLarge.name())
-				.accept(MediaType.TEXT_PLAIN).type(MediaType.APPLICATION_JSON)
-				.post(data, Void.class);
+    }
 
-	}
-
-	/**
-	 * Resource id can contains '/', encode it.
-	 * 
-	 * @param resourceId
-	 * @return
-	 */
-	private String getUnencodedResourceId(String resourceId) {
-		try {
-			return URLEncoder.encode(resourceId, UTF_8);
-		} catch (UnsupportedEncodingException e) {
-			return resourceId;
-		}
-	}
+    /**
+     * Resource id can contains '/', encode it.
+     * 
+     * @param resourceId
+     * @return
+     */
+    private String getUnencodedResourceId( String resourceId )
+    {
+        try
+        {
+            return URLEncoder.encode( resourceId, EncodingConstants.UTF_8.name() );
+        }
+        catch ( UnsupportedEncodingException e )
+        {
+            return resourceId;
+        }
+    }
 }

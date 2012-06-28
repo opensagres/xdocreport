@@ -9,14 +9,14 @@ Export-Package: fr.opensagres.xdocreport;uses:="com.sun.star.registry,
  ort.controller,org.jdesktop.layout,fr.opensagres.xdocreport.document.
  domain,javax.swing.table,javax.swing.border",fr.opensagres.xdocreport
  .util
-Built-By: azerr
+Built-By: pascalleclercq
 Tool: Bnd-1.15.0
 Bundle-Name: fr.opensagres.xdocreport.openoffice.tools
 Created-By: Apache Maven Bundle Plugin
 Bundle-RequiredExecutionEnvironment: J2SE-1.5, JavaSE-1.6
-Build-Jdk: 1.6.0_23
-Bundle-Version: 0.9.8.SNAPSHOTv201206230131
-Bnd-LastModified: 1340407929359
+Build-Jdk: 1.6.0_22
+Bundle-Version: 0.9.8.SNAPSHOTv201206272316
+Bnd-LastModified: 1340831936980
 Bundle-ManifestVersion: 2
 Bundle-License: http://www.opensource.org/licenses/mit-license.php
 Bundle-Description: XDocReport means XML Document reporting. It's Java

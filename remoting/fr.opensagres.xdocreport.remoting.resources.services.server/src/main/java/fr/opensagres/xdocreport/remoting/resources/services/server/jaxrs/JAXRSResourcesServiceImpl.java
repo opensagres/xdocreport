@@ -4,6 +4,7 @@ import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
 import java.util.List;
 
+import fr.opensagres.xdocreport.core.EncodingConstants;
 import fr.opensagres.xdocreport.remoting.resources.domain.BinaryData;
 import fr.opensagres.xdocreport.remoting.resources.domain.Filter;
 import fr.opensagres.xdocreport.remoting.resources.domain.LargeBinaryData;
@@ -47,12 +48,15 @@ public class JAXRSResourcesServiceImpl
     public BinaryData download( String resourceId )
         throws ResourcesException
     {
-        try {
-        	//URL encoder/decoder is necessay to allow "/" in the "resourceId" String 
-			return super.download( URLDecoder.decode( resourceId,"UTF-8") );
-		} catch (UnsupportedEncodingException e) {
-			throw new ResourcesException(e.getMessage());
-		}
+        try
+        {
+            // URL encoder/decoder is necessay to allow "/" in the "resourceId" String
+            return super.download( URLDecoder.decode( resourceId, EncodingConstants.UTF_8.name() ) );
+        }
+        catch ( UnsupportedEncodingException e )
+        {
+            throw new ResourcesException( e.getMessage() );
+        }
     }
 
     @Override
@@ -69,21 +73,31 @@ public class JAXRSResourcesServiceImpl
         super.upload( dataIn );
     }
 
-	public LargeBinaryData downloadLarge(String resourceId)
-			throws ResourcesException {
-		return getDelegate().downloadLarge(resourceId);
+    public LargeBinaryData downloadLarge( String resourceId )
+        throws ResourcesException
+    {
+        try
+        {
+            // URL encoder/decoder is necessay to allow "/" in the "resourceId" String
+            return getDelegate().downloadLarge( URLDecoder.decode( resourceId, EncodingConstants.UTF_8.name() ) );
+        }
+        catch ( UnsupportedEncodingException e )
+        {
+            throw new ResourcesException( e.getMessage() );
+        }
+    }
 
-	}
+    @Override
+    protected JAXRSResourcesService getDelegate()
+    {
+        return (JAXRSResourcesService) super.getDelegate();
+    }
 
-	@Override
-	protected JAXRSResourcesService getDelegate() {
-		return (JAXRSResourcesService)super.getDelegate();
-	}
+    public void uploadLarge( LargeBinaryData data )
+        throws ResourcesException
+    {
+        getDelegate().uploadLarge( data );
 
-
-	public void uploadLarge(LargeBinaryData data) throws ResourcesException {
-		 getDelegate().uploadLarge(data);
-
-	}
+    }
 
 }

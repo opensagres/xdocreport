@@ -72,6 +72,7 @@
 					<instructions>
 						<_include>TEMPLATE.MF</_include>
 						<_snapshot>${osgi-version-qualifier}</_snapshot>
+						<_nouses>true</_nouses>
 						<Bundle-SymbolicName>${project.artifactId}</Bundle-SymbolicName>
 						<Bundle-RequiredExecutionEnvironment>J2SE-1.5, JavaSE-1.6</Bundle-RequiredExecutionEnvironment>
 					</instructions>

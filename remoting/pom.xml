@@ -16,12 +16,7 @@
 		<module>fr.opensagres.xdocreport.remoting.resources.services.server</module>
 	</modules>
 	<dependencies>
-		<dependency>
-			<groupId>javax.servlet</groupId>
-			<artifactId>servlet-api</artifactId>
-			<version>2.5</version>
-			<optional>true</optional>
-		</dependency>
+		
 		<dependency>
 			<groupId>org.apache.geronimo.specs</groupId>
 			<artifactId>geronimo-jaxrs_1.1_spec</artifactId>

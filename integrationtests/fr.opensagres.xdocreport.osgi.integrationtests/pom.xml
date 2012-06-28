@@ -1,4 +1,5 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 	<parent>
 		<artifactId>integrationtests</artifactId>
@@ -6,10 +7,10 @@
 		<version>0.9.8-SNAPSHOT</version>
 	</parent>
 	<artifactId>fr.opensagres.xdocreport.osgi.integrationtests</artifactId>
-	
+
 	<build>
 		<plugins>
-		<plugin>
+			<plugin>
 				<groupId>org.ops4j.pax.exam</groupId>
 				<artifactId>maven-paxexam-plugin</artifactId>
 				<version>1.2.1</version>
@@ -20,12 +21,8 @@
 							<goal>generate-depends-file</goal>
 						</goals>
 					</execution>
-					<!-- <execution>
-						<id>generate-config</id>
-						<goals>
-							<goal>generate-config</goal>
-						</goals>
-					</execution> -->
+					<!-- <execution> <id>generate-config</id> <goals> <goal>generate-config</goal> 
+						</goals> </execution> -->
 				</executions>
 			</plugin>
 
@@ -108,13 +105,13 @@
 			<artifactId>fr.opensagres.xdocreport.core</artifactId>
 			<version>0.9.8-SNAPSHOT</version>
 		</dependency>
-		
+
 		<dependency>
 			<groupId>fr.opensagres.xdocreport</groupId>
 			<artifactId>fr.opensagres.xdocreport.template</artifactId>
 			<version>0.9.8-SNAPSHOT</version>
 		</dependency>
-		
+
 		<dependency>
 			<groupId>fr.opensagres.xdocreport</groupId>
 			<artifactId>fr.opensagres.xdocreport.template.freemarker</artifactId>
@@ -140,7 +137,7 @@
 			<artifactId>fr.opensagres.xdocreport.converter.docx.xwpf</artifactId>
 			<version>0.9.8-SNAPSHOT</version>
 		</dependency>
-		
+
 		<dependency>
 			<groupId>fr.opensagres.xdocreport</groupId>
 			<artifactId>fr.opensagres.xdocreport.document</artifactId>
@@ -170,6 +167,48 @@
 			<groupId>fr.opensagres.xdocreport</groupId>
 			<artifactId>fr.opensagres.xdocreport.document.pptx</artifactId>
 			<version>0.9.8-SNAPSHOT</version>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.cxf</groupId>
+			<artifactId>cxf-bundle-minimal</artifactId>
+			<version>2.5.2</version>
+		</dependency>
+		<dependency>
+			<groupId>org.codehaus.jackson</groupId>
+			<artifactId>jackson-jaxrs</artifactId>
+			<version>1.9.0</version>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.cxf.dosgi</groupId>
+			<artifactId>
+				cxf-dosgi-ri-multibundle-distribution
+			</artifactId>
+			<version>1.3.1</version>
+			<exclusions>
+				<exclusion>
+					<artifactId>com.springsource.slf4j.api</artifactId>
+					<groupId>org.slf4j</groupId>
+				</exclusion>
+				<exclusion>
+					<artifactId>com.springsource.slf4j.jcl</artifactId>
+					<groupId>org.slf4j</groupId>
+				</exclusion>
+			</exclusions>
+		</dependency>
+		<dependency>
+			<groupId>javax.inject</groupId>
+			<artifactId>javax.inject</artifactId>
+			<version>1</version>
+		</dependency>
+		<dependency>
+			<groupId>fr.opensagres.xdocreport</groupId>
+  		  	<version>0.9.8-SNAPSHOT</version>
+			<artifactId>fr.opensagres.xdocreport.remoting.resources.services.server</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.slf4j</groupId>
+			<artifactId>slf4j-simple</artifactId>
+			<version>1.6.1</version>
 		</dependency>
 	</dependencies>
 </project>

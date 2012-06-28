@@ -1000,7 +1000,7 @@ public class FileUtils {
      * @throws java.io.UnsupportedEncodingException if the encoding is not supported by the VM
      * @since Commons IO 1.1
      */
-    public static List readLines(File file, String encoding) throws IOException {
+    public static List<String> readLines(File file, String encoding) throws IOException {
         InputStream in = null;
         try {
             in = openInputStream(file);
@@ -1019,7 +1019,7 @@ public class FileUtils {
      * @throws IOException in case of an I/O error
      * @since Commons IO 1.3
      */
-    public static List readLines(File file) throws IOException {
+    public static List<String> readLines(File file) throws IOException {
         return readLines(file, null);
     }
 
@@ -1151,7 +1151,7 @@ public class FileUtils {
      * @throws java.io.UnsupportedEncodingException if the encoding is not supported by the VM
      * @since Commons IO 1.1
      */
-    public static void writeLines(File file, String encoding, Collection lines) throws IOException {
+    public static void writeLines(File file, String encoding, Collection<String> lines) throws IOException {
         writeLines(file, encoding, lines, null);
     }
 
@@ -1165,7 +1165,7 @@ public class FileUtils {
      * @throws IOException in case of an I/O error
      * @since Commons IO 1.3
      */
-    public static void writeLines(File file, Collection lines) throws IOException {
+    public static void writeLines(File file, Collection<String> lines) throws IOException {
         writeLines(file, null, lines, null);
     }
 
@@ -1185,7 +1185,7 @@ public class FileUtils {
      * @throws java.io.UnsupportedEncodingException if the encoding is not supported by the VM
      * @since Commons IO 1.1
      */
-    public static void writeLines(File file, String encoding, Collection lines, String lineEnding) throws IOException {
+    public static void writeLines(File file, String encoding, Collection<String> lines, String lineEnding) throws IOException {
         OutputStream out = null;
         try {
             out = openOutputStream(file);
@@ -1206,7 +1206,7 @@ public class FileUtils {
      * @throws IOException in case of an I/O error
      * @since Commons IO 1.3
      */
-    public static void writeLines(File file, Collection lines, String lineEnding) throws IOException {
+    public static void writeLines(File file, Collection<String> lines, String lineEnding) throws IOException {
         writeLines(file, null, lines, lineEnding);
     }
 

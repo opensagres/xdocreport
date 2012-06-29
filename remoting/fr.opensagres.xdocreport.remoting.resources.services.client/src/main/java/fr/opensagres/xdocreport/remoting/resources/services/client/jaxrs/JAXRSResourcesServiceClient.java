@@ -25,8 +25,6 @@
 
 package fr.opensagres.xdocreport.remoting.resources.services.client.jaxrs;
 
-import java.io.UnsupportedEncodingException;
-import java.net.URLEncoder;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -41,7 +39,6 @@ import org.apache.cxf.jaxrs.client.WebClient;
 import org.apache.cxf.transport.http.HTTPConduit;
 import org.apache.cxf.transports.http.configuration.HTTPClientPolicy;
 
-import fr.opensagres.xdocreport.core.EncodingConstants;
 import fr.opensagres.xdocreport.core.logging.LogUtils;
 import fr.opensagres.xdocreport.core.utils.StringUtils;
 import fr.opensagres.xdocreport.remoting.resources.domain.BinaryData;
@@ -135,10 +132,7 @@ public class JAXRSResourcesServiceClient
     public BinaryData download( String resourceId )
     {
         reset();
-        StringBuilder path = new StringBuilder( ResourcesServiceName.download.name() );
-        path.append( "/" );
-        path.append( getUnencodedResourceId( resourceId ) );
-        return client.path( path.toString() ).accept( MediaType.APPLICATION_JSON_TYPE ).get( BinaryData.class );
+        return client.path( ResourcesServiceName.download.name() ).query( "resourceId", resourceId ).accept( MediaType.APPLICATION_JSON_TYPE ).get( BinaryData.class );
     }
 
     public void upload( BinaryData data )
@@ -159,11 +153,7 @@ public class JAXRSResourcesServiceClient
         throws ResourcesException
     {
         reset();
-
-        StringBuilder path = new StringBuilder( ResourcesServiceName.downloadLarge.name() );
-        path.append( "/" );
-        path.append( getUnencodedResourceId( resourceId ) );
-        return client.path( path.toString() ).accept( MediaType.APPLICATION_JSON_TYPE ).get( LargeBinaryData.class );
+        return client.path( ResourcesServiceName.downloadLarge.name() ).query( "resourceId", resourceId ).accept( MediaType.APPLICATION_JSON_TYPE ).get( LargeBinaryData.class );
     }
 
     public void uploadLarge( LargeBinaryData data )
@@ -176,21 +166,4 @@ public class JAXRSResourcesServiceClient
 
     }
 
-    /**
-     * Resource id can contains '/', encode it.
-     * 
-     * @param resourceId
-     * @return
-     */
-    private String getUnencodedResourceId( String resourceId )
-    {
-        try
-        {
-            return URLEncoder.encode( resourceId, EncodingConstants.UTF_8.name() );
-        }
-        catch ( UnsupportedEncodingException e )
-        {
-            return resourceId;
-        }
-    }
 }

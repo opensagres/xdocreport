@@ -1,10 +1,7 @@
 package fr.opensagres.xdocreport.remoting.resources.services.server.jaxrs;
 
-import java.io.UnsupportedEncodingException;
-import java.net.URLDecoder;
 import java.util.List;
 
-import fr.opensagres.xdocreport.core.EncodingConstants;
 import fr.opensagres.xdocreport.remoting.resources.domain.BinaryData;
 import fr.opensagres.xdocreport.remoting.resources.domain.Filter;
 import fr.opensagres.xdocreport.remoting.resources.domain.LargeBinaryData;
@@ -48,15 +45,8 @@ public class JAXRSResourcesServiceImpl
     public BinaryData download( String resourceId )
         throws ResourcesException
     {
-        try
-        {
-            // URL encoder/decoder is necessay to allow "/" in the "resourceId" String
-            return super.download( URLDecoder.decode( resourceId, EncodingConstants.UTF_8.name() ) );
-        }
-        catch ( UnsupportedEncodingException e )
-        {
-            throw new ResourcesException( e.getMessage() );
-        }
+        return super.download( resourceId );
+
     }
 
     @Override
@@ -76,15 +66,7 @@ public class JAXRSResourcesServiceImpl
     public LargeBinaryData downloadLarge( String resourceId )
         throws ResourcesException
     {
-        try
-        {
-            // URL encoder/decoder is necessay to allow "/" in the "resourceId" String
-            return getDelegate().downloadLarge( URLDecoder.decode( resourceId, EncodingConstants.UTF_8.name() ) );
-        }
-        catch ( UnsupportedEncodingException e )
-        {
-            throw new ResourcesException( e.getMessage() );
-        }
+        return getDelegate().downloadLarge( resourceId );
     }
 
     @Override

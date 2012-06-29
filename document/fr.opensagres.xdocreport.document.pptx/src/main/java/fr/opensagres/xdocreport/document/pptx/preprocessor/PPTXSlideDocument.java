@@ -27,6 +27,7 @@ package fr.opensagres.xdocreport.document.pptx.preprocessor;
 import static fr.opensagres.xdocreport.document.pptx.PPTXUtils.isAP;
 import static fr.opensagres.xdocreport.document.pptx.PPTXUtils.isAPPr;
 import static fr.opensagres.xdocreport.document.pptx.PPTXUtils.isAR;
+import static fr.opensagres.xdocreport.document.pptx.PPTXUtils.isATxBody;
 import static fr.opensagres.xdocreport.document.pptx.PPTXUtils.isPTxBody;
 
 import org.xml.sax.Attributes;
@@ -34,6 +35,9 @@ import org.xml.sax.SAXException;
 
 import fr.opensagres.xdocreport.core.utils.StringUtils;
 import fr.opensagres.xdocreport.document.pptx.PPTXConstants;
+import fr.opensagres.xdocreport.document.pptx.preprocessor.txbody.ATxBodyBufferedRegion;
+import fr.opensagres.xdocreport.document.pptx.preprocessor.txbody.PTxBodyBufferedRegion;
+import fr.opensagres.xdocreport.document.pptx.preprocessor.txbody.TxBodyBufferedRegion;
 import fr.opensagres.xdocreport.document.preprocessor.sax.BufferedElement;
 import fr.opensagres.xdocreport.document.preprocessor.sax.TransformedBufferedDocument;
 import fr.opensagres.xdocreport.template.formatter.FieldsMetadata;
@@ -47,7 +51,7 @@ public class PPTXSlideDocument
 
     private ARBufferedRegion currentARRegion;
 
-    private PTxBodyBufferedRegion currentTtxBodyRegion;
+    private TxBodyBufferedRegion currentTtxBodyRegion;
 
     private final PPTXSlideContentHandler handler;
 
@@ -76,6 +80,11 @@ public class PPTXSlideDocument
         if ( isPTxBody( uri, localName, name ) )
         {
             currentTtxBodyRegion = new PTxBodyBufferedRegion( parent, uri, localName, name, attributes );
+            return currentTtxBodyRegion;
+        }
+        if ( isATxBody( uri, localName, name ) )
+        {
+            currentTtxBodyRegion = new ATxBodyBufferedRegion( parent, uri, localName, name, attributes );
             return currentTtxBodyRegion;
         }
         if ( isAP( uri, localName, name ) )
@@ -119,7 +128,7 @@ public class PPTXSlideDocument
     @Override
     public void onEndEndElement( String uri, String localName, String name )
     {
-        if ( isPTxBody( uri, localName, name ) && currentTtxBodyRegion != null )
+        if ( ( isPTxBody( uri, localName, name ) || isATxBody( uri, localName, name ) ) && currentTtxBodyRegion != null )
         {
             super.onEndEndElement( uri, localName, name );
             currentTtxBodyRegion.process();

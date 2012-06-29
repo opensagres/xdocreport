@@ -22,7 +22,7 @@
  * OF CONTRACT, TORT OR OTHERWISE,  ARISING FROM, OUT OF OR IN CONNECTION
  * WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
-package fr.opensagres.xdocreport.document.pptx.preprocessor;
+package fr.opensagres.xdocreport.document.pptx.preprocessor.txbody;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -30,13 +30,14 @@ import java.util.List;
 import org.xml.sax.Attributes;
 
 import fr.opensagres.xdocreport.core.utils.StringUtils;
+import fr.opensagres.xdocreport.document.pptx.preprocessor.APBufferedRegion;
 import fr.opensagres.xdocreport.document.preprocessor.sax.BufferedElement;
 import fr.opensagres.xdocreport.document.preprocessor.sax.ISavable;
 
 /**
  * <p:txBody>
  */
-public class PTxBodyBufferedRegion
+public class TxBodyBufferedRegion
     extends BufferedElement
 {
 
@@ -44,7 +45,7 @@ public class PTxBodyBufferedRegion
 
     private List<String> ignoreEndLoopDirective;
 
-    public PTxBodyBufferedRegion( BufferedElement parent, String uri, String localName, String name,
+    public TxBodyBufferedRegion( BufferedElement parent, String uri, String localName, String name,
                                   Attributes attributes )
     {
         super( parent, uri, localName, name, attributes );

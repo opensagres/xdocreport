@@ -59,4 +59,10 @@ public class PPTXUtils
     {
         return ( P_NS.equals( uri ) && TXBODY_ELT.equals( localName ) );
     }
+    
+    public static boolean isATxBody( String uri, String localName, String name )
+    {
+        return ( A_NS.equals( uri ) && TXBODY_ELT.equals( localName ) );
+    }
+
 }

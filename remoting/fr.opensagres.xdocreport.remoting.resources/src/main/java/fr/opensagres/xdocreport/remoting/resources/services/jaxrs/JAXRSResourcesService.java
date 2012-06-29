@@ -4,8 +4,8 @@ import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
-import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
+import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
 
 import fr.opensagres.xdocreport.remoting.resources.domain.BinaryData;
@@ -33,29 +33,31 @@ public interface JAXRSResourcesService
         throws ResourcesException;
 
     @GET
-    @Path( "/download/{resourceId}" )
+    @Path( "/download" )
     @Consumes( MediaType.APPLICATION_JSON )
     @Produces( MediaType.WILDCARD )
-    BinaryData download( @PathParam( "resourceId" )
+    BinaryData download( @QueryParam( "resourceId" )
     String resourceId )
         throws ResourcesException;
 
     @POST
     @Path( "/upload" )
-    //@Consumes( MediaType.APPLICATION_JSON )
-    void upload( BinaryData data ) throws ResourcesException;
-
+    // @Consumes( MediaType.APPLICATION_JSON )
+    void upload( BinaryData data )
+        throws ResourcesException;
 
     @GET
-    @Path( "/downloadLarge/{resourceId}" )
+    @Path( "/downloadLarge" )
     @Consumes( MediaType.APPLICATION_JSON )
     @Produces( MediaType.WILDCARD )
-    LargeBinaryData downloadLarge( @PathParam( "resourceId" ) String resourceId ) throws ResourcesException;
+    LargeBinaryData downloadLarge( @QueryParam( "resourceId" )
+    String resourceId )
+        throws ResourcesException;
 
     @POST
     @Path( "/uploadLarge" )
-    //@Consumes( MediaType.APPLICATION_JSON )
-    void uploadLarge( LargeBinaryData data ) throws ResourcesException;
-
+    // @Consumes( MediaType.APPLICATION_JSON )
+    void uploadLarge( LargeBinaryData data )
+        throws ResourcesException;
 
 }

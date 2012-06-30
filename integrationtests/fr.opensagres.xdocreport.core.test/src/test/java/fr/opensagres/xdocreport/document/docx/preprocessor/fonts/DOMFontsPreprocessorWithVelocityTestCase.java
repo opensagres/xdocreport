@@ -14,7 +14,8 @@ import fr.opensagres.xdocreport.template.IContext;
 import fr.opensagres.xdocreport.template.ITemplateEngine;
 import fr.opensagres.xdocreport.template.formatter.IDocumentFormatter;
 import fr.opensagres.xdocreport.template.velocity.VelocityDocumentFormatter;
-import fr.opensagres.xdocreport.template.velocity.VelocityTemplateEngine;
+import fr.opensagres.xdocreport.template.velocity.discovery.VelocityTemplateEngineDiscovery;
+import fr.opensagres.xdocreport.template.velocity.internal.VelocityTemplateEngine;
 import fr.opensagres.xdocreport.template.velocity.internal.XDocVelocityContext;
 
 public class DOMFontsPreprocessorWithVelocityTestCase
@@ -77,7 +78,7 @@ public class DOMFontsPreprocessorWithVelocityTestCase
                         + " </w:document>", s );
 
         // 2) Test merge template with Java model 
-        ITemplateEngine templateEngine = new VelocityTemplateEngine();
+        ITemplateEngine templateEngine = new VelocityTemplateEngineDiscovery().createTemplateEngine();
         
         IContext context = new XDocVelocityContext();
         context.put( "name", "word" );
@@ -174,7 +175,7 @@ public class DOMFontsPreprocessorWithVelocityTestCase
                         + "</w:document>", s );
 
         // 2) Test merge template with Java model 
-        ITemplateEngine templateEngine = new VelocityTemplateEngine();
+        ITemplateEngine templateEngine = new VelocityTemplateEngineDiscovery().createTemplateEngine();
         
         IContext context = new XDocVelocityContext();
         context.put( "name", "word" );

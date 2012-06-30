@@ -30,6 +30,7 @@ import java.io.StringReader;
 import junit.framework.TestCase;
 import fr.opensagres.xdocreport.template.FieldExtractor;
 import fr.opensagres.xdocreport.template.FieldsExtractor;
+import fr.opensagres.xdocreport.template.velocity.discovery.VelocityTemplateEngineDiscovery;
 
 public class VelocityTemplateEngineExtractVariablesTestCase
     extends TestCase
@@ -40,7 +41,7 @@ public class VelocityTemplateEngineExtractVariablesTestCase
     {
         Reader reader = new StringReader( "Hello $name!" );
         FieldsExtractor<FieldExtractor> extractor = FieldsExtractor.create();
-        new VelocityTemplateEngine().extractFields( reader, "hello", extractor );
+        new  VelocityTemplateEngineDiscovery().createTemplateEngine().extractFields( reader, "hello", extractor );
         assertEquals( 1, extractor.getFields().size() );
         assertEquals( "name", extractor.getFields().get( 0 ).getName() );
     }

@@ -47,7 +47,7 @@ import fr.opensagres.xdocreport.document.registry.XDocReportRegistry;
 import fr.opensagres.xdocreport.template.IContext;
 import fr.opensagres.xdocreport.template.TemplateEngineKind;
 import fr.opensagres.xdocreport.template.freemarker.FreemarkerTemplateEngine;
-import fr.opensagres.xdocreport.template.velocity.VelocityTemplateEngine;
+import fr.opensagres.xdocreport.template.velocity.internal.VelocityTemplateEngine;
 
 /**
  * Test case for {@link XDocReportRegistry}.

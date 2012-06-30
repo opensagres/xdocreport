@@ -36,6 +36,7 @@ import fr.opensagres.xdocreport.template.ITemplateEngine;
 import fr.opensagres.xdocreport.template.config.AbstractTemplateEngineConfiguration;
 import fr.opensagres.xdocreport.template.config.ITemplateEngineConfiguration;
 import fr.opensagres.xdocreport.template.config.ReplaceText;
+import fr.opensagres.xdocreport.template.velocity.discovery.VelocityTemplateEngineDiscovery;
 
 public class VelocityTemplateEngineConfigurationTestCase
     extends TestCase
@@ -44,7 +45,7 @@ public class VelocityTemplateEngineConfigurationTestCase
     public void testEscapeXMLContext()
         throws Exception
     {
-        ITemplateEngine templateEngine = new VelocityTemplateEngine();
+        ITemplateEngine templateEngine = new  VelocityTemplateEngineDiscovery().createTemplateEngine();
 
         ITemplateEngineConfiguration configuration = new JUnitTemplateEngineConfiguration();
         templateEngine.setConfiguration( configuration );
@@ -61,7 +62,7 @@ public class VelocityTemplateEngineConfigurationTestCase
     public void testSpecialCharacterContext()
         throws Exception
     {
-        ITemplateEngine templateEngine = new VelocityTemplateEngine();
+        ITemplateEngine templateEngine =new  VelocityTemplateEngineDiscovery().createTemplateEngine();
 
         ITemplateEngineConfiguration configuration = new JUnitTemplateEngineConfiguration();
         templateEngine.setConfiguration( configuration );

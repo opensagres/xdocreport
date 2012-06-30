@@ -34,6 +34,7 @@ import java.util.List;
 import junit.framework.TestCase;
 import fr.opensagres.xdocreport.template.IContext;
 import fr.opensagres.xdocreport.template.ITemplateEngine;
+import fr.opensagres.xdocreport.template.velocity.discovery.VelocityTemplateEngineDiscovery;
 
 /**
  * Velocity context test case.
@@ -45,7 +46,7 @@ public class VelocityTemplateEngineContextTestCase
     public void testSimpleContext()
         throws Exception
     {
-        ITemplateEngine templateEngine = new VelocityTemplateEngine();
+        ITemplateEngine templateEngine = new  VelocityTemplateEngineDiscovery().createTemplateEngine();
 
         Reader reader = new StringReader( "Project: $projectName." );
         Writer writer = new StringWriter();
@@ -59,7 +60,7 @@ public class VelocityTemplateEngineContextTestCase
     public void testContextWithOneDot()
         throws Exception
     {
-        ITemplateEngine templateEngine = new VelocityTemplateEngine();
+        ITemplateEngine templateEngine = new  VelocityTemplateEngineDiscovery().createTemplateEngine();
 
         Reader reader = new StringReader( "Project: $project.name." );
         Writer writer = new StringWriter();
@@ -73,7 +74,7 @@ public class VelocityTemplateEngineContextTestCase
     public void testContextWithTwoDot()
         throws Exception
     {
-        ITemplateEngine templateEngine = new VelocityTemplateEngine();
+        ITemplateEngine templateEngine = new  VelocityTemplateEngineDiscovery().createTemplateEngine();
 
         Reader reader = new StringReader( "Project: $project.meta.name." );
         Writer writer = new StringWriter();
@@ -87,7 +88,7 @@ public class VelocityTemplateEngineContextTestCase
     public void testTwoContextWithTwoDot()
         throws Exception
     {
-        ITemplateEngine templateEngine = new VelocityTemplateEngine();
+        ITemplateEngine templateEngine = new  VelocityTemplateEngineDiscovery().createTemplateEngine();
 
         Reader reader =
             new StringReader( "Project: $project.meta.name. Users: #foreach ($user in $project.meta.users)$user #end" );

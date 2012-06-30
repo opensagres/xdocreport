@@ -37,7 +37,6 @@ import fr.opensagres.xdocreport.document.textstyling.BasicTransformResult;
 import fr.opensagres.xdocreport.document.textstyling.IDocumentHandler;
 import fr.opensagres.xdocreport.document.textstyling.ITextStylingTransformer;
 import fr.opensagres.xdocreport.document.textstyling.ITransformResult;
-import fr.opensagres.xdocreport.document.textstyling.TextStylingTransformerRegistry;
 import fr.opensagres.xdocreport.template.IContext;
 import fr.opensagres.xdocreport.template.ITemplateEngine;
 import fr.opensagres.xdocreport.template.TemplateContextHelper;

@@ -22,7 +22,7 @@
  * OF CONTRACT, TORT OR OTHERWISE,  ARISING FROM, OUT OF OR IN CONNECTION
  * WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
-package fr.opensagres.xdocreport.document.textstyling;
+package fr.opensagres.xdocreport.document.registry;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -30,6 +30,7 @@ import java.util.Map;
 import fr.opensagres.xdocreport.core.document.SyntaxKind;
 import fr.opensagres.xdocreport.core.registry.AbstractRegistry;
 import fr.opensagres.xdocreport.document.discovery.ITextStylingTransformerDiscovery;
+import fr.opensagres.xdocreport.document.textstyling.ITextStylingTransformer;
 
 /**
  * Text styling registry stores instance of {@link ITextStylingTransformer} for text styling kind {@link SyntaxKind}

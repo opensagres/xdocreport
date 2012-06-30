@@ -34,7 +34,7 @@ import fr.opensagres.xdocreport.core.io.IEntryOutputStreamProvider;
 import fr.opensagres.xdocreport.core.io.IEntryReaderProvider;
 import fr.opensagres.xdocreport.core.io.IEntryWriterProvider;
 import fr.opensagres.xdocreport.core.io.IOUtils;
-import fr.opensagres.xdocreport.document.template.DocumentContextHelper;
+import fr.opensagres.xdocreport.document.DocumentContextHelper;
 import fr.opensagres.xdocreport.template.IContext;
 import fr.opensagres.xdocreport.template.formatter.FieldMetadata;
 import fr.opensagres.xdocreport.template.formatter.FieldsMetadata;

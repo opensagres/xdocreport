@@ -32,7 +32,7 @@ import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
 
 import fr.opensagres.xdocreport.core.utils.StringUtils;
-import fr.opensagres.xdocreport.document.template.DocumentContextHelper;
+import fr.opensagres.xdocreport.document.DocumentContextHelper;
 import fr.opensagres.xdocreport.template.formatter.Directive;
 import fr.opensagres.xdocreport.template.formatter.DirectivesStack;
 import fr.opensagres.xdocreport.template.formatter.FieldMetadata;

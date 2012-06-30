@@ -56,7 +56,6 @@ import fr.opensagres.xdocreport.document.preprocessor.IXDocPreprocessor;
 import fr.opensagres.xdocreport.document.preprocessor.sax.BufferedElement;
 import fr.opensagres.xdocreport.document.registry.TextStylingRegistry;
 import fr.opensagres.xdocreport.document.registry.XDocReportRegistry;
-import fr.opensagres.xdocreport.document.template.DocumentContextHelper;
 import fr.opensagres.xdocreport.template.FieldsExtractor;
 import fr.opensagres.xdocreport.template.IContext;
 import fr.opensagres.xdocreport.template.ITemplateEngine;

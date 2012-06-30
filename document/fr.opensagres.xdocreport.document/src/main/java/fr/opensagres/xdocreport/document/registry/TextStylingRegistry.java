@@ -30,9 +30,9 @@ import java.util.HashMap;
 import java.util.Map;
 
 import fr.opensagres.xdocreport.core.registry.AbstractRegistry;
+import fr.opensagres.xdocreport.document.DocumentContextHelper;
 import fr.opensagres.xdocreport.document.discovery.ITextStylingDocumentHandlerFactoryDiscovery;
 import fr.opensagres.xdocreport.document.preprocessor.sax.BufferedElement;
-import fr.opensagres.xdocreport.document.template.DocumentContextHelper;
 import fr.opensagres.xdocreport.document.textstyling.BasicTransformResult;
 import fr.opensagres.xdocreport.document.textstyling.IDocumentHandler;
 import fr.opensagres.xdocreport.document.textstyling.ITextStylingTransformer;

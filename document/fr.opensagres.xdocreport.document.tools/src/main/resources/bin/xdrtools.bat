@@ -1,5 +1,5 @@
 @REM
-@REM Copyright (C) 2011 Angelo Zerr <angelo.zerr@gmail.com> and Pascal Leclercq <pascal.leclercq@gmail.com>
+@REM Copyright (C) 2011 The XDocReport Team <xdocreport@googlegroups.com>
 @REM
 @REM All rights reserved.
 @REM

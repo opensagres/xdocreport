@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
 
-    Copyright (C) 2011 Angelo Zerr <angelo.zerr@gmail.com> and Pascal Leclercq <pascal.leclercq@gmail.com>
+    Copyright (C) 2011 The XDocReport Team <xdocreport@googlegroups.com>
 
     All rights reserved.
 

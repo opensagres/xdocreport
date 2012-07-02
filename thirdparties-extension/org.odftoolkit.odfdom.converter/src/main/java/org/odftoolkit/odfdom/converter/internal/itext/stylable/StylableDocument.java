@@ -65,6 +65,8 @@ public class StylableDocument
 
     private boolean masterPageJustChanged;
 
+    private boolean documentEmpty = true;
+
     private PdfPTable layoutTable;
 
     private ColumnText text;
@@ -324,6 +326,7 @@ public class StylableDocument
         text.addElement( element );
         StylableDocumentSection.getCell( layoutTable, colIdx ).getColumn().addElement( element );
         simulateText();
+        documentEmpty = false;
     }
 
     public void columnBreak()
@@ -341,7 +344,11 @@ public class StylableDocument
 
     public void pageBreak()
     {
-        if ( masterPageJustChanged )
+        if ( documentEmpty )
+        {
+            // no element was added - ignore page break
+        }
+        else if ( masterPageJustChanged )
         {
             // we are just after master page change
             // move to a new page but do not initialize column layout

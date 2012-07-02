@@ -73,6 +73,7 @@ import org.odftoolkit.odfdom.dom.element.text.TextLineBreakElement;
 import org.odftoolkit.odfdom.dom.element.text.TextListElement;
 import org.odftoolkit.odfdom.dom.element.text.TextListItemElement;
 import org.odftoolkit.odfdom.dom.element.text.TextPElement;
+import org.odftoolkit.odfdom.dom.element.text.TextSElement;
 import org.odftoolkit.odfdom.dom.element.text.TextSectionElement;
 import org.odftoolkit.odfdom.dom.element.text.TextSoftPageBreakElement;
 import org.odftoolkit.odfdom.dom.element.text.TextSpanElement;
@@ -476,6 +477,14 @@ public class ElementVisitorForIText
     public void visit( TextLineBreakElement ele )
     {
         currentContainer.addElement( Chunk.NEWLINE );
+    }
+
+    // ---------------------- visit text:s
+
+    @Override
+    public void visit( TextSElement ele )
+    {
+        currentContainer.addElement( new Chunk( " " ) );
     }
 
     @Override

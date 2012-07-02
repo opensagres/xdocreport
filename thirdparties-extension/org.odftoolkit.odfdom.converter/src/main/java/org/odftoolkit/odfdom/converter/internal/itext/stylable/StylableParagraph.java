@@ -191,42 +191,42 @@ public class StylableParagraph
 
             // background color
             Color backgroundColor = paragraphProperties.getBackgroundColor();
-            if ( backgroundColor != null )
+            if ( backgroundColor != null && !Color.WHITE.equals( backgroundColor ) )
             {
                 getWrapperCell().setBackgroundColor( backgroundColor );
             }
 
             // border
             StyleBorder border = paragraphProperties.getBorder();
-            if ( border != null )
+            if ( border != null && !border.isNoBorder() )
             {
                 StyleUtils.applyStyles( border, getWrapperCell() );
             }
 
             // border-left
             StyleBorder borderLeft = paragraphProperties.getBorderLeft();
-            if ( borderLeft != null )
+            if ( borderLeft != null && !borderLeft.isNoBorder() )
             {
                 StyleUtils.applyStyles( borderLeft, getWrapperCell() );
             }
 
             // border-right
             StyleBorder borderRight = paragraphProperties.getBorderRight();
-            if ( borderRight != null )
+            if ( borderRight != null && !borderRight.isNoBorder() )
             {
                 StyleUtils.applyStyles( borderRight, getWrapperCell() );
             }
 
             // border-top
             StyleBorder borderTop = paragraphProperties.getBorderTop();
-            if ( borderTop != null )
+            if ( borderTop != null && !borderTop.isNoBorder() )
             {
                 StyleUtils.applyStyles( borderTop, getWrapperCell() );
             }
 
             // border-bottom
             StyleBorder borderBottom = paragraphProperties.getBorderBottom();
-            if ( borderBottom != null )
+            if ( borderBottom != null && !borderBottom.isNoBorder() )
             {
                 StyleUtils.applyStyles( borderBottom, getWrapperCell() );
             }

@@ -31,6 +31,7 @@ import java.util.List;
 import org.odftoolkit.odfdom.doc.OdfDocument;
 import org.odftoolkit.odfdom.dom.element.style.StyleTableColumnPropertiesElement;
 import org.odftoolkit.odfdom.dom.element.table.TableTableColumnElement;
+import org.odftoolkit.odfdom.dom.element.table.TableTableColumnsElement;
 import org.odftoolkit.odfdom.dom.element.table.TableTableElement;
 import org.odftoolkit.odfdom.dom.style.OdfStyleFamily;
 import org.odftoolkit.odfdom.incubator.doc.style.OdfStyle;
@@ -44,7 +45,6 @@ import fr.opensagres.xdocreport.utils.StringUtils;
  */
 public class ODFUtils
 {
-
     // Unit constants
     private static final String REL_SIZE_UNIT = "*";
 
@@ -70,7 +70,7 @@ public class ODFUtils
         return widths;
     }
 
-    public static List<String> getColumnWidthsAsString( TableTableElement table, OdfDocument odfDocument )
+    public static List<String> getColumnWidthsAsString( Node table, OdfDocument odfDocument )
     {
         List<String> colWidths = new ArrayList<String>();
         Node node = null;
@@ -80,6 +80,7 @@ public class ODFUtils
             node = tableColums.item( i );
             if ( TableTableColumnElement.ELEMENT_NAME.getLocalName().equals( node.getLocalName() ) )
             {
+                // found table:column
                 TableTableColumnElement tableColumn = (TableTableColumnElement) node;
                 Integer numberColumnsRepeated = tableColumn.getTableNumberColumnsRepeatedAttribute();
                 String styleName = tableColumn.getTableStyleNameAttribute();
@@ -116,8 +117,13 @@ public class ODFUtils
                 }
                 catch ( Exception e )
                 {
-                    // Do nothing
+                    throw new RuntimeException( e );
                 }
+            }
+            else if ( TableTableColumnsElement.ELEMENT_NAME.getLocalName().equals( node.getLocalName() ) )
+            {
+                // found table:columns, column info should be nested inside
+                return getColumnWidthsAsString( node, odfDocument );
             }
             else
             {
@@ -145,7 +151,7 @@ public class ODFUtils
     public static Float getDimensionAsPoint( String s )
     {
         // IText works with point unit (1cm = 28.35 pt)
-        // cml unit?
+        // cm unit?
         int index = s.indexOf( CM_UNIT );
         if ( index != -1 )
         {

@@ -33,6 +33,7 @@ import org.xml.sax.XMLReader;
 import org.xml.sax.helpers.XMLReaderFactory;
 
 import fr.opensagres.xdocreport.core.logging.LogUtils;
+import fr.opensagres.xdocreport.core.utils.StringEscapeUtils;
 import fr.opensagres.xdocreport.core.utils.StringUtils;
 import fr.opensagres.xdocreport.document.textstyling.AbstractTextStylingTransformer;
 import fr.opensagres.xdocreport.document.textstyling.IDocumentHandler;
@@ -47,6 +48,11 @@ public class HTMLTextStylingTransformer
 {
 
     public static final ITextStylingTransformer INSTANCE = new HTMLTextStylingTransformer();
+
+    private static final String START_XML = "<?xml version=\"1.0\" ?>"
+        + StringEscapeUtils.Entities.HTML40.generateDocType( "entities" ) + "<root>";
+
+    private static final String END_XML = "</root>";
 
     /**
      * Logger for this class
@@ -68,7 +74,8 @@ public class HTMLTextStylingTransformer
         // remove special characters \n, \r
         String xml = StringUtils.replaceEach( content, searchList, replacementList );
         // add root element if xml doesn't contain xml root element.
-        xml = "<root>" + xml + "</root>";
+        xml = START_XML + xml + END_XML;
+
         if ( LOGGER.isLoggable( Level.FINE ) )
         {
             LOGGER.fine( xml );

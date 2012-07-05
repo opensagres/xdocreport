@@ -38,6 +38,23 @@ public class ODTDocumentHandlerTestCase
 {
 
     @Test
+    public void testSpecialCharacter()
+        throws Exception
+    {
+        IContext context = new MockContext();
+        BufferedElement parent = null;
+
+        ITextStylingTransformer formatter = HTMLTextStylingTransformer.INSTANCE;
+        IDocumentHandler handler = new ODTDocumentHandler( parent, context, "content.xml" );
+        formatter.transform( "&auml; &uuml; &eacute;", handler );
+
+        Assert.assertEquals( "", handler.getTextBefore() );
+        Assert.assertEquals( "<text:span>ä </text:span><text:span>ü </text:span><text:span>é</text:span>",
+                             handler.getTextBody() );
+        Assert.assertEquals( "", handler.getTextEnd() );
+    }
+    
+    @Test
     public void testNbsp()
         throws Exception
     {

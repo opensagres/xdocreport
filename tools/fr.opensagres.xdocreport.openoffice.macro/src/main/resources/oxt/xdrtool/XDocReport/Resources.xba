@@ -224,7 +224,6 @@ Public Function ExecuteRepositoryServiceClient_Upload(ByVal baseAddress as Strin
 	if (serviceType = &quot;JAXWS&quot;) Then 
 		methodName = &quot;upload&quot;
 	End If
-	MsgBox methodName
 	outFilePath = ExecuteRepositoryServiceClient(baseAddress, user, password, serviceType, methodName, resourceId, fileToUploadFilePath, chunk, timeout)
 	If (outFilePath &lt;&gt; &quot;&quot;) Then 
 		ExecuteRepositoryServiceClient_Upload = True

@@ -1,9 +1,8 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>fr.opensagres.xdocreport</groupId>
 	<artifactId>xdocreport</artifactId>
-	<version>0.9.8-SNAPSHOT</version>
+	<version>0.9.8</version>
 	<packaging>pom</packaging>
 	<description>XDocReport means XML Document reporting. It's Java API to merge XML document created with MS Office (docx) or OpenOffice (odt), LibreOffice (odt) with a Java model to generate report and convert it if you need to another format (PDF, XHTML...).</description>
 	<parent>
@@ -240,7 +239,8 @@
 		<connection>scm:git:http://code.google.com/p/xdocreport</connection>
 		<developerConnection>scm:git:https://code.google.com/p/xdocreport</developerConnection>
 		<url>http://code.google.com/p/xdocreport/source/checkout/</url>
-	</scm>
+	  <tag>xdocreport-0.9.8</tag>
+  </scm>
 	<modules>
 		<module>thirdparties-extension</module>
 		<module>core</module>

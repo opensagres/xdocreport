@@ -3,7 +3,7 @@
 	<parent>
 		<artifactId>thirdparties-extension</artifactId>
 		<groupId>fr.opensagres.xdocreport</groupId>
-		<version>0.9.8-SNAPSHOT</version>
+		<version>0.9.9-SNAPSHOT</version>
 	</parent>
 	<artifactId>org.apache.struts2.views.xdocreport</artifactId>
 	<dependencies>

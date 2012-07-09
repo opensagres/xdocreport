@@ -3,7 +3,7 @@
 	<parent>
 		<groupId>fr.opensagres.xdocreport</groupId>
 		<artifactId>document</artifactId>
-		<version>0.9.8-SNAPSHOT</version>
+		<version>0.9.9-SNAPSHOT</version>
 	</parent>
 
 	<artifactId>fr.opensagres.xdocreport.document.tools</artifactId>
@@ -34,45 +34,45 @@
 		<dependency>
 			<groupId>fr.opensagres.xdocreport</groupId>
 			<artifactId>fr.opensagres.xdocreport.document</artifactId>
-			<version>0.9.8-SNAPSHOT</version>
+			<version>0.9.9-SNAPSHOT</version>
 		</dependency>
 		<dependency>
 			<groupId>fr.opensagres.xdocreport</groupId>
 			<artifactId>fr.opensagres.xdocreport.document.docx</artifactId>
-			<version>0.9.8-SNAPSHOT</version>
+			<version>0.9.9-SNAPSHOT</version>
 		</dependency>
 		<dependency>
 			<groupId>fr.opensagres.xdocreport</groupId>
 			<artifactId>fr.opensagres.xdocreport.document.odt</artifactId>
-			<version>0.9.8-SNAPSHOT</version>
+			<version>0.9.9-SNAPSHOT</version>
 		</dependency>
 		<dependency>
 			<groupId>fr.opensagres.xdocreport</groupId>
 			<artifactId>fr.opensagres.xdocreport.template.freemarker</artifactId>
-			<version>0.9.8-SNAPSHOT</version>
+			<version>0.9.9-SNAPSHOT</version>
 		</dependency>
 		<dependency>
 			<groupId>fr.opensagres.xdocreport</groupId>
 			<artifactId>fr.opensagres.xdocreport.template.velocity</artifactId>
-			<version>0.9.8-SNAPSHOT</version>
+			<version>0.9.9-SNAPSHOT</version>
 		</dependency>
 
 		<dependency>
 			<groupId>fr.opensagres.xdocreport</groupId>
 			<artifactId>fr.opensagres.xdocreport.remoting.resources.services.client</artifactId>
-			<version>0.9.8-SNAPSHOT</version>
+			<version>0.9.9-SNAPSHOT</version>
 		</dependency>
 		<dependency>
 			<groupId>fr.opensagres.xdocreport</groupId>
 			<artifactId>fr.opensagres.xdocreport.remoting.resources.services.server</artifactId>
-			<version>0.9.8-SNAPSHOT</version>
+			<version>0.9.9-SNAPSHOT</version>
 			<scope>test</scope>
 		</dependency>
 		<dependency>
 			<groupId>fr.opensagres.xdocreport</groupId>
 			<artifactId>fr.opensagres.xdocreport.openoffice.macro</artifactId>
             <type>oxt</type>
-			<version>0.9.8-SNAPSHOT</version>
+			<version>0.9.9-SNAPSHOT</version>
 		</dependency>
 
 		<!-- Use JAX-WS CXF implementation  -->

@@ -168,4 +168,10 @@ public class HTMLDocumentHandler
         super.write( "/>" );
 
     }
+
+    public void handleLineBreak()
+        throws IOException
+    {
+        super.write( "<br />" );
+    }
 }

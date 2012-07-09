@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2011 The XDocReport Team <xdocreport@googlegroups.com>
+ * Copyright (C) 2011 Angelo Zerr <angelo.zerr@gmail.com> and Pascal Leclercq <pascal.leclercq@gmail.com>
  *
  * All rights reserved.
  *
@@ -365,4 +365,9 @@ public class ODTDocumentHandler
         // TODO: implements
     }
 
+    public void handleLineBreak()
+        throws IOException
+    {
+        super.write( "<text:line-break />" );
+    }
 }

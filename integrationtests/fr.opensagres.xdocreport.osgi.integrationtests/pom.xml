@@ -1,10 +1,9 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 	<parent>
 		<artifactId>integrationtests</artifactId>
 		<groupId>fr.opensagres.xdocreport</groupId>
-		<version>0.9.8-SNAPSHOT</version>
+		<version>0.9.9-SNAPSHOT</version>
 	</parent>
 	<artifactId>fr.opensagres.xdocreport.osgi.integrationtests</artifactId>
 
@@ -103,70 +102,70 @@
 		<dependency>
 			<groupId>fr.opensagres.xdocreport</groupId>
 			<artifactId>fr.opensagres.xdocreport.core</artifactId>
-			<version>0.9.8-SNAPSHOT</version>
+			<version>0.9.9-SNAPSHOT</version>
 		</dependency>
 
 		<dependency>
 			<groupId>fr.opensagres.xdocreport</groupId>
 			<artifactId>fr.opensagres.xdocreport.template</artifactId>
-			<version>0.9.8-SNAPSHOT</version>
+			<version>0.9.9-SNAPSHOT</version>
 		</dependency>
 
 		<dependency>
 			<groupId>fr.opensagres.xdocreport</groupId>
 			<artifactId>fr.opensagres.xdocreport.template.freemarker</artifactId>
-			<version>0.9.8-SNAPSHOT</version>
+			<version>0.9.9-SNAPSHOT</version>
 		</dependency>
 		<dependency>
 			<groupId>fr.opensagres.xdocreport</groupId>
 			<artifactId>fr.opensagres.xdocreport.template.velocity</artifactId>
-			<version>0.9.8-SNAPSHOT</version>
+			<version>0.9.9-SNAPSHOT</version>
 		</dependency>
 		<dependency>
 			<groupId>fr.opensagres.xdocreport</groupId>
 			<artifactId>fr.opensagres.xdocreport.converter</artifactId>
-			<version>0.9.8-SNAPSHOT</version>
+			<version>0.9.9-SNAPSHOT</version>
 		</dependency>
 		<dependency>
 			<groupId>fr.opensagres.xdocreport</groupId>
 			<artifactId>fr.opensagres.xdocreport.converter.odt.odfdom</artifactId>
-			<version>0.9.8-SNAPSHOT</version>
+			<version>0.9.9-SNAPSHOT</version>
 		</dependency>
 		<dependency>
 			<groupId>fr.opensagres.xdocreport</groupId>
 			<artifactId>fr.opensagres.xdocreport.converter.docx.xwpf</artifactId>
-			<version>0.9.8-SNAPSHOT</version>
+			<version>0.9.9-SNAPSHOT</version>
 		</dependency>
 
 		<dependency>
 			<groupId>fr.opensagres.xdocreport</groupId>
 			<artifactId>fr.opensagres.xdocreport.document</artifactId>
-			<version>0.9.8-SNAPSHOT</version>
+			<version>0.9.9-SNAPSHOT</version>
 		</dependency>
 		<dependency>
 			<groupId>fr.opensagres.xdocreport</groupId>
 			<artifactId>fr.opensagres.xdocreport.document.docx</artifactId>
-			<version>0.9.8-SNAPSHOT</version>
+			<version>0.9.9-SNAPSHOT</version>
 		</dependency>
 		<dependency>
 			<groupId>fr.opensagres.xdocreport</groupId>
 			<artifactId>fr.opensagres.xdocreport.document.odt</artifactId>
-			<version>0.9.8-SNAPSHOT</version>
+			<version>0.9.9-SNAPSHOT</version>
 		</dependency>
 		<dependency>
 			<groupId>fr.opensagres.xdocreport</groupId>
 			<artifactId>fr.opensagres.xdocreport.document.odp</artifactId>
-			<version>0.9.8-SNAPSHOT</version>
+			<version>0.9.9-SNAPSHOT</version>
 		</dependency>
 		<dependency>
 			<groupId>fr.opensagres.xdocreport</groupId>
 			<artifactId>fr.opensagres.xdocreport.document.ods</artifactId>
-			<version>0.9.8-SNAPSHOT</version>
+			<version>0.9.9-SNAPSHOT</version>
 		</dependency>
 		<dependency>
 			<groupId>fr.opensagres.xdocreport</groupId>
 			<artifactId>fr.opensagres.xdocreport.document.pptx</artifactId>
-			<version>0.9.8-SNAPSHOT</version>
+			<version>0.9.9-SNAPSHOT</version>
 		</dependency>
 		<dependency>
 			<groupId>org.apache.cxf</groupId>
@@ -202,7 +201,7 @@
 		</dependency>
 		<dependency>
 			<groupId>fr.opensagres.xdocreport</groupId>
-  		  	<version>0.9.8-SNAPSHOT</version>
+  		  	<version>0.9.9-SNAPSHOT</version>
 			<artifactId>fr.opensagres.xdocreport.remoting.resources.services.server</artifactId>
 		</dependency>
 		<dependency>

@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2011 The XDocReport Team <xdocreport@googlegroups.com>
+ * Copyright (C) 2011 Angelo Zerr <angelo.zerr@gmail.com> and Pascal Leclercq <pascal.leclercq@gmail.com>
  *
  * All rights reserved.
  *
@@ -109,8 +109,8 @@ public interface IDocumentHandler
      * Start unordered list.
      * 
      * @param properties
-      */
-    void startUnorderedList (ListProperties properties )
+     */
+    void startUnorderedList( ListProperties properties )
         throws IOException;
 
     /**
@@ -175,6 +175,9 @@ public interface IDocumentHandler
      * @throws IOException
      */
     void handleReference( String ref, String label )
+        throws IOException;
+
+    void handleLineBreak()
         throws IOException;
 
     //

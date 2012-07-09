@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2011 The XDocReport Team <xdocreport@googlegroups.com>
+ * Copyright (C) 2011 Angelo Zerr <angelo.zerr@gmail.com> and Pascal Leclercq <pascal.leclercq@gmail.com>
  *
  * All rights reserved.
  *
@@ -447,5 +447,17 @@ public class DocxDocumentHandler
             context.put( key, hyperlinkRegistry );
         }
         return hyperlinkRegistry;
+    }
+
+    public void handleLineBreak()
+        throws IOException
+    {
+        // <w:br />
+        startParagraphIfNeeded();
+        super.write( "<w:r>" );
+        super.write( "<w:t>" );
+        super.write( "<w:br/>" );
+        super.write( "</w:t>" );
+        super.write( "</w:r>" );
     }
 }

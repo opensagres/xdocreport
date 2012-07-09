@@ -3,14 +3,14 @@
 	<parent>
 		<groupId>fr.opensagres.xdocreport</groupId>
 		<artifactId>document</artifactId>
-		<version>0.9.8-SNAPSHOT</version>
+		<version>0.9.9-SNAPSHOT</version>
 	</parent>
 	<artifactId>fr.opensagres.xdocreport.document.docx</artifactId>
 	<dependencies>
 		<dependency>
 			<groupId>fr.opensagres.xdocreport</groupId>
 			<artifactId>fr.opensagres.xdocreport.document</artifactId>
-			<version>0.9.8-SNAPSHOT</version>
+			<version>0.9.9-SNAPSHOT</version>
 		</dependency>
 	</dependencies>
 </project>

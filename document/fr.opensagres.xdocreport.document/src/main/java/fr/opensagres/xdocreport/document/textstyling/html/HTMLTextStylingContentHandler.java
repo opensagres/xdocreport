@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2011 The XDocReport Team <xdocreport@googlegroups.com>
+ * Copyright (C) 2011 Angelo Zerr <angelo.zerr@gmail.com> and Pascal Leclercq <pascal.leclercq@gmail.com>
  *
  * All rights reserved.
  *
@@ -87,6 +87,8 @@ public class HTMLTextStylingContentHandler
 
     private static final String SRC_ATTR = "src";
 
+    private static final String BR_ELT = "br";
+    
     private final IDocumentHandler documentHandler;
 
     // current a href + content parsing
@@ -300,13 +302,17 @@ public class HTMLTextStylingContentHandler
                 // Header 6
                 documentHandler.endHeading( 6 );
             }
-            if ( A_ELT.equals( name ) )
+            else if ( A_ELT.equals( name ) )
             {
                 // end reference
                 documentHandler.handleReference( aHref, aContent.toString() );
                 this.aHref = null;
                 this.aContent.setLength( 0 );
-
+            }
+            else if ( BR_ELT.equals( name ) )
+            {
+                // <br/>
+                documentHandler.handleLineBreak();
             }
         }
         catch ( IOException e )

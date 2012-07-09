@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2011 The XDocReport Team <xdocreport@googlegroups.com>
+ * Copyright (C) 2011 Angelo Zerr <angelo.zerr@gmail.com> and Pascal Leclercq <pascal.leclercq@gmail.com>
  *
  * All rights reserved.
  *
@@ -53,7 +53,7 @@ public class ODTDocumentHandlerTestCase
                              handler.getTextBody() );
         Assert.assertEquals( "", handler.getTextEnd() );
     }
-    
+
     @Test
     public void testNbsp()
         throws Exception
@@ -493,6 +493,23 @@ public class ODTDocumentHandlerTestCase
         Assert.assertEquals( "", handler.getTextBody() );
         Assert.assertEquals( "<text:p text:style-name=\"XDocReport_ParaBreakAfter\"><text:span>bla bla bla</text:span></text:p>",
                              handler.getTextEnd() );
+    }
+
+    @Test
+    public void testLineBreak()
+        throws Exception
+    {
+        IContext context = new MockContext();
+        BufferedElement parent = null;
+
+        ITextStylingTransformer formatter = HTMLTextStylingTransformer.INSTANCE;
+        IDocumentHandler handler = new ODTDocumentHandler( parent, context, "content.xml" );
+        formatter.transform( "a<br/>b", handler );
+
+        Assert.assertEquals( "", handler.getTextBefore() );
+        Assert.assertEquals( "<text:span>a</text:span><text:line-break /><text:span>b</text:span>",
+                             handler.getTextBody() );
+        Assert.assertEquals( "", handler.getTextEnd() );
     }
 
     @Test

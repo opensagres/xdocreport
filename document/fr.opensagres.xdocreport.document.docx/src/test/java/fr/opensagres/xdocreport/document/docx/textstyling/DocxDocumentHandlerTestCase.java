@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2011 The XDocReport Team <xdocreport@googlegroups.com>
+ * Copyright (C) 2011 Angelo Zerr <angelo.zerr@gmail.com> and Pascal Leclercq <pascal.leclercq@gmail.com>
  *
  * All rights reserved.
  *
@@ -482,6 +482,23 @@ public class DocxDocumentHandlerTestCase
                              handler.getTextEnd() );
     }
 
+    @Test
+    public void testLineBreak()
+        throws Exception
+    {
+        IContext context = new MockContext();
+        BufferedElement parent = null;
+
+        ITextStylingTransformer formatter = HTMLTextStylingTransformer.INSTANCE;
+        IDocumentHandler handler = new DocxDocumentHandler( parent, context, "word/document.xml" );
+        formatter.transform( "a<br/>b", handler );
+
+        Assert.assertEquals( "", handler.getTextBefore() );
+        Assert.assertEquals( "<w:r><w:t xml:space=\"preserve\" >a</w:t></w:r><w:r><w:t><w:br/></w:t></w:r><w:r><w:t xml:space=\"preserve\" >b</w:t></w:r>",
+                             handler.getTextBody() );
+        Assert.assertEquals( "", handler.getTextEnd() );
+    }
+    
     @Test
     public void testAll()
         throws Exception

@@ -25,8 +25,7 @@
 package fr.opensagres.converter.docx;
 
 import java.util.Iterator;
-
-import javax.imageio.spi.ServiceRegistry;
+import java.util.ServiceLoader;
 
 import org.junit.Assert;
 import org.junit.Test;
@@ -39,7 +38,9 @@ public class ServiceRegistryTest
     @Test
     public void test()
     {
-        Iterator<IConverterDiscovery> toto = ServiceRegistry.lookupProviders( IConverterDiscovery.class );
+        
+        Iterator<IConverterDiscovery> toto =
+                ServiceLoader.load( IConverterDiscovery.class ).iterator();
 
         Assert.assertNotNull( toto );
         Assert.assertTrue( toto.hasNext() );

@@ -33,7 +33,7 @@ import javax.xml.bind.annotation.XmlType;
 /**
  * <p>Classe Java pour propertyRepresentation complex type.
  * 
- * <p>Le fragment de schéma suivant indique le contenu attendu figurant dans cette classe.
+ * <p>Le fragment de schema suivant indique le contenu attendu figurant dans cette classe.
  * 
  * <pre>
  * &lt;complexType name="propertyRepresentation">
@@ -61,7 +61,7 @@ public class PropertyRepresentation {
     protected String value;
 
     /**
-     * Obtient la valeur de la propriété name.
+     * Obtient la valeur de la propriete name.
      * 
      * @return
      *     possible object is
@@ -73,7 +73,7 @@ public class PropertyRepresentation {
     }
 
     /**
-     * Définit la valeur de la propriété name.
+     * DÔøΩfinit la valeur de la propriete name.
      * 
      * @param value
      *     allowed object is
@@ -85,7 +85,7 @@ public class PropertyRepresentation {
     }
 
     /**
-     * Obtient la valeur de la propriété value.
+     * Obtient la valeur de la propriete value.
      * 
      * @return
      *     possible object is
@@ -97,7 +97,7 @@ public class PropertyRepresentation {
     }
 
     /**
-     * Définit la valeur de la propriété value.
+     * DÔøΩfinit la valeur de la propriete value.
      * 
      * @param value
      *     allowed object is

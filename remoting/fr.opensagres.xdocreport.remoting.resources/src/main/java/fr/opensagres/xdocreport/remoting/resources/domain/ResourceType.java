@@ -32,7 +32,7 @@ import javax.xml.bind.annotation.XmlType;
 /**
  * <p>Classe Java pour resourceType.
  * 
- * <p>Le fragment de schéma suivant indique le contenu attendu figurant dans cette classe.
+ * <p>Le fragment de schema suivant indique le contenu attendu figurant dans cette classe.
  * <p>
  * <pre>
  * &lt;simpleType name="resourceType">

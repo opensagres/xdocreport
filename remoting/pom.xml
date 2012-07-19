@@ -15,33 +15,12 @@
 		<module>fr.opensagres.xdocreport.remoting.resources.services.server</module>
 	</modules>
 	<dependencies>
-		
 		<dependency>
 			<groupId>org.apache.geronimo.specs</groupId>
 			<artifactId>geronimo-jaxrs_1.1_spec</artifactId>
 			<version>1.0</version>
 			<optional>true</optional>
 		</dependency>
-		<!--For JDK 5 only -->
-		<dependency>
-			<groupId>org.apache.geronimo.specs</groupId>
-			<artifactId>geronimo-ws-metadata_2.0_spec</artifactId>
-			<version>1.1.3</version>
-			<optional>true</optional>
-		</dependency>
-		<dependency>
-			<groupId>org.apache.geronimo.specs</groupId>
-			<artifactId>geronimo-jaxb_2.1_spec</artifactId>
-			<version>1.0</version>
-			<optional>true</optional>
-		</dependency>
-		<dependency>
-			<groupId>org.apache.geronimo.specs</groupId>
-			<artifactId>geronimo-jaxws_2.1_spec</artifactId>
-			<version>1.0</version>
-			<optional>true</optional>
-		</dependency>
-
 	</dependencies>
 
 </project>

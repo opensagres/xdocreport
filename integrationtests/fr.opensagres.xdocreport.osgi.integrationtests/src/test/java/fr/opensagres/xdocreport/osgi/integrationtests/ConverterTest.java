@@ -34,10 +34,13 @@ import java.io.File;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.ops4j.pax.exam.CoreOptions;
 import org.ops4j.pax.exam.Customizer;
 import org.ops4j.pax.exam.Option;
 import org.ops4j.pax.exam.junit.Configuration;
+import org.ops4j.pax.exam.junit.ExamReactorStrategy;
 import org.ops4j.pax.exam.junit.JUnit4TestRunner;
+import org.ops4j.pax.exam.spi.reactors.EagerSingleStagedReactorFactory;
 
 import fr.opensagres.xdocreport.converter.ConverterRegistry;
 import fr.opensagres.xdocreport.converter.ConverterTypeTo;
@@ -47,6 +50,7 @@ import fr.opensagres.xdocreport.converter.Options;
 import fr.opensagres.xdocreport.core.document.DocumentKind;
 
 @RunWith( JUnit4TestRunner.class )
+@ExamReactorStrategy(EagerSingleStagedReactorFactory.class)
 public class ConverterTest
 {
 
@@ -68,7 +72,7 @@ public class ConverterTest
                         // uncomment for "remote debugging"
                         // PaxRunnerOptions.vmOption("-Xrunjdwp:transport=dt_socket,server=y,suspend=y,address=5006"),
                         // equinox(),
-
+        				CoreOptions.junitBundles(),
                         systemProperty( "org.ops4j.pax.logging.DefaultServiceLog.level" ).value( "DEBUG" ),
 
                         mavenBundle( "fr.opensagres.xdocreport", "fr.opensagres.xdocreport.core" ).versionAsInProject(),
@@ -86,9 +90,11 @@ public class ConverterTest
 
                         mavenBundle( "fr.opensagres.xdocreport", "org.apache.poi.xwpf.converter" ).versionAsInProject(),
                         // 3rd parties modules...
-                        wrappedBundle( mavenBundle( "org.apache.poi", "poi", "3.7" ) ),
-                        wrappedBundle( mavenBundle( "org.apache.poi", "poi-ooxml", "3.7" ) ),
-                        wrappedBundle( mavenBundle( "org.apache.xmlbeans", "xmlbeans", "2.3.0" ) ),
+                        
+                        
+                        wrappedBundle( mavenBundle( "org.apache.poi", "poi", "3.8" ) ),
+                        wrappedBundle( mavenBundle( "org.apache.poi", "poi-ooxml", "3.8" ) ),
+                        wrappedBundle( mavenBundle( "org.apache.servicemix.bundles", "org.apache.servicemix.bundles.xmlbeans", "2.4.0_5" ) ),
 
                         wrappedBundle( mavenBundle( "org.apache.poi", "ooxml-schemas", "1.1" ) ),
 

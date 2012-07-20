@@ -44,14 +44,16 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.ops4j.pax.exam.CoreOptions;
 import org.ops4j.pax.exam.Option;
-import org.ops4j.pax.exam.container.def.PaxRunnerOptions;
 import org.ops4j.pax.exam.junit.Configuration;
+import org.ops4j.pax.exam.junit.ExamReactorStrategy;
 import org.ops4j.pax.exam.junit.JUnit4TestRunner;
+import org.ops4j.pax.exam.spi.reactors.EagerSingleStagedReactorFactory;
 import org.osgi.framework.BundleContext;
 
 import fr.opensagres.xdocreport.remoting.resources.services.jaxrs.JAXRSResourcesService;
 
 @RunWith(JUnit4TestRunner.class)
+@ExamReactorStrategy(EagerSingleStagedReactorFactory.class)
 public class RemotingTest {
 
 	@Configuration
@@ -59,21 +61,12 @@ public class RemotingTest {
 		return 
 
 				options(
-						/*PaxRunnerOptions.localRepository(System
-								.getProperty("maven.repo.local")),
-						PaxRunnerOptions
-								.repositories(
-										"http://repo1.maven.org/maven2/",
-										"http://repository.springsource.com/maven/bundles/external",
-										"http://www.eclipse.org/downloads/download.php?r=1&nf=1&file=/rt/eclipselink/maven.repo",
-										"http://repository-opensagres.forge.cloudbees.com/snapshot/",
-										"http://repository.springsource.com/maven/bundles/release"),*/
-						//
+						CoreOptions.junitBundles(),
 						systemProperty("org.osgi.service.http.port").value(
 								Integer.toString(PORT)),
 						systemProperty("org.ops4j.pax.web.session.timeout")
 								.value(Integer.toString(300)),
-						PaxRunnerOptions
+								CoreOptions
 								.cleanCaches(),
 						// Run this test under Felix.
 						CoreOptions.frameworks(CoreOptions.felix()),
@@ -94,12 +87,6 @@ public class RemotingTest {
 				);
 	}
 
-//	public static void main(String[] args) throws TimeoutException, IOException {
-//
-//		PaxExamRuntime.getTestContainerFactory()
-//				.newInstance(new RemotingTest().config()).start();
-//
-//	}
 
 	protected Option[] cfxdosgi() {
 

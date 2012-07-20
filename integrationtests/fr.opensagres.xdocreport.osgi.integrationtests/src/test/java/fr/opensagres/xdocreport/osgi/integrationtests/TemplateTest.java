@@ -36,17 +36,22 @@ import java.util.Collection;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.ops4j.pax.exam.CoreOptions;
 import org.ops4j.pax.exam.Customizer;
-import org.ops4j.pax.exam.Inject;
+import javax.inject.Inject;
+
 import org.ops4j.pax.exam.Option;
 import org.ops4j.pax.exam.junit.Configuration;
+import org.ops4j.pax.exam.junit.ExamReactorStrategy;
 import org.ops4j.pax.exam.junit.JUnit4TestRunner;
+import org.ops4j.pax.exam.spi.reactors.EagerSingleStagedReactorFactory;
 import org.osgi.framework.BundleContext;
 
 import fr.opensagres.xdocreport.template.ITemplateEngine;
 import fr.opensagres.xdocreport.template.registry.TemplateEngineRegistry;
 
 @RunWith( JUnit4TestRunner.class )
+@ExamReactorStrategy(EagerSingleStagedReactorFactory.class)
 public class TemplateTest
 {
 
@@ -58,7 +63,7 @@ public class TemplateTest
     {
 
         return options(
-
+        		CoreOptions.junitBundles(),
                         //
                         // PaxRunnerOptions.vmOption("-Xrunjdwp:transport=dt_socket,server=y,suspend=y,address=5006"),
                         // equinox(),

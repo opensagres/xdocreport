@@ -33,20 +33,24 @@ import static org.ops4j.pax.exam.CoreOptions.systemProperty;
 import java.io.File;
 import java.util.Collection;
 
+import javax.inject.Inject;
+
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.ops4j.pax.exam.CoreOptions;
 import org.ops4j.pax.exam.Customizer;
-import org.ops4j.pax.exam.Inject;
 import org.ops4j.pax.exam.Option;
-import org.ops4j.pax.exam.container.def.PaxRunnerOptions;
 import org.ops4j.pax.exam.junit.Configuration;
+import org.ops4j.pax.exam.junit.ExamReactorStrategy;
 import org.ops4j.pax.exam.junit.JUnit4TestRunner;
+import org.ops4j.pax.exam.spi.reactors.EagerSingleStagedReactorFactory;
 import org.osgi.framework.BundleContext;
 
 import fr.opensagres.xdocreport.document.discovery.IXDocReportFactoryDiscovery;
 import fr.opensagres.xdocreport.document.registry.XDocReportRegistry;
 
 @RunWith( JUnit4TestRunner.class )
+@ExamReactorStrategy(EagerSingleStagedReactorFactory.class)
 public class DocumentTest
 {
 
@@ -57,8 +61,8 @@ public class DocumentTest
     public static Option[] configure()
     {
         return options(
-
-                        PaxRunnerOptions.cleanCaches(),
+        		CoreOptions.junitBundles(),
+        		CoreOptions.cleanCaches(),
                         //
                         // PaxRunnerOptions.vmOption("-Xrunjdwp:transport=dt_socket,server=y,suspend=y,address=5006"),
                         // equinox(),

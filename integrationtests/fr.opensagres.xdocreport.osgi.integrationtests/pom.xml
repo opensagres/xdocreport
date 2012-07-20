@@ -7,6 +7,12 @@
 	</parent>
 	<artifactId>fr.opensagres.xdocreport.osgi.integrationtests</artifactId>
 
+	<properties>
+		<compiler.plugin.version>2.0.2</compiler.plugin.version>
+		<osgi.version>4.2.0</osgi.version>
+		<paxrunnerversion>1.7.5</paxrunnerversion>
+		<paxexamversion>2.4.0</paxexamversion>
+	</properties>
 	<build>
 		<plugins>
 			<plugin>
@@ -67,22 +73,39 @@
 		</pluginManagement>
 	</build>
 	<dependencies>
+		<!-- Pax Exam Dependencies -->
 		<dependency>
 			<groupId>org.ops4j.pax.exam</groupId>
-			<artifactId>pax-exam</artifactId>
-			<version>1.2.0</version>
+			<artifactId>pax-exam-junit4</artifactId>
+			<version>${paxexamversion}</version>
 			<scope>test</scope>
 		</dependency>
+
 		<dependency>
 			<groupId>org.ops4j.pax.exam</groupId>
-			<artifactId>pax-exam-junit</artifactId>
-			<version>1.2.0</version>
+			<artifactId>pax-exam-container-paxrunner</artifactId>
+			<version>${paxexamversion}</version>
 			<scope>test</scope>
 		</dependency>
+
 		<dependency>
 			<groupId>org.ops4j.pax.exam</groupId>
-			<artifactId>pax-exam-container-default</artifactId>
-			<version>1.2.0</version>
+			<artifactId>pax-exam-link-assembly</artifactId>
+			<version>${paxexamversion}</version>
+			<scope>test</scope>
+		</dependency>
+
+		<dependency>
+			<groupId>org.ops4j.pax.exam</groupId>
+			<artifactId>pax-exam-testforge</artifactId>
+			<version>${paxexamversion}</version>
+			<scope>test</scope>
+		</dependency>
+
+		<dependency>
+			<groupId>org.ops4j.pax.runner</groupId>
+			<artifactId>pax-runner-no-jcl</artifactId>
+			<version>${paxrunnerversion}</version>
 			<scope>test</scope>
 		</dependency>
 
@@ -198,6 +221,7 @@
 			<groupId>javax.inject</groupId>
 			<artifactId>javax.inject</artifactId>
 			<version>1</version>
+			<scope>test</scope>
 		</dependency>
 		<dependency>
 			<groupId>fr.opensagres.xdocreport</groupId>

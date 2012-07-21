@@ -47,6 +47,7 @@ import org.ops4j.pax.exam.Option;
 import org.ops4j.pax.exam.junit.Configuration;
 import org.ops4j.pax.exam.junit.ExamReactorStrategy;
 import org.ops4j.pax.exam.junit.JUnit4TestRunner;
+import org.ops4j.pax.exam.spi.PaxExamRuntime;
 import org.ops4j.pax.exam.spi.reactors.EagerSingleStagedReactorFactory;
 import org.osgi.framework.BundleContext;
 
@@ -66,7 +67,7 @@ public class RemotingTest {
 								Integer.toString(PORT)),
 						systemProperty("org.ops4j.pax.web.session.timeout")
 								.value(Integer.toString(300)),
-								CoreOptions
+						CoreOptions
 								.cleanCaches(),
 						// Run this test under Felix.
 						CoreOptions.frameworks(CoreOptions.felix()),
@@ -93,6 +94,8 @@ public class RemotingTest {
 		Option[] options = {
 				
 				
+				
+				//CoreOptions.webProfile(),
                 mavenBundle( "fr.opensagres.xdocreport", "fr.opensagres.xdocreport.remoting.resources" ).versionAsInProject(),
                 // converter API
                 mavenBundle( "fr.opensagres.xdocreport", "fr.opensagres.xdocreport.remoting.resources.services.server" ).versionAsInProject(),
@@ -216,10 +219,10 @@ public class RemotingTest {
 //
 //				// CoreOptions.compendiumProfile(),
 //				// ***************** Gemini dependencies ********************
-//				mavenBundle("org.codehaus.jackson", "jackson-jaxrs", "1.9.0"),
-//				mavenBundle("org.codehaus.jackson", "jackson-core-asl", "1.9.0"),
-//				mavenBundle("org.codehaus.jackson", "jackson-mapper-asl",
-//						"1.9.0"),
+				mavenBundle("org.codehaus.jackson", "jackson-jaxrs", "1.9.0"),
+				mavenBundle("org.codehaus.jackson", "jackson-core-asl", "1.9.0"),
+				mavenBundle("org.codehaus.jackson", "jackson-mapper-asl",
+						"1.9.0"),
 
 		};
 
@@ -314,6 +317,13 @@ public class RemotingTest {
 //		System.out.println(name);
 		tearDown();
 
+	}
+	
+	public static void main(String[] args) throws Exception {
+		RemotingTest jaxrsSMultibundleDistributionUnitTest=new RemotingTest();
+		PaxExamRuntime.createContainer(
+				PaxExamRuntime.createTestSystem(jaxrsSMultibundleDistributionUnitTest.config()
+						)).start();
 	}
 
 	private WebClient createWebClient() {

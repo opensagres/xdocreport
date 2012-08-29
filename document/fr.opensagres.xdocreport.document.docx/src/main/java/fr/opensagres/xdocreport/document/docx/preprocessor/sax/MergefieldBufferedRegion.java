@@ -168,7 +168,7 @@ public abstract class MergefieldBufferedRegion
                         BufferedElement parent = mergefield.findParent( W_P );
                         // Test if $___NoEscape0.TextBefore was already generated for the field.
                         String key = new StringBuilder( fieldName ).append( TEXTSTYLING ).toString();
-                        String directive = (String) parent.get( key );
+                        String directive = parent.get( key );
                         if ( directive != null )
                         {
                             // The $___NoEscape0.TextBefore is already generated

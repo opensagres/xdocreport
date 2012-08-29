@@ -31,6 +31,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.xml.sax.Attributes;
 
@@ -38,7 +39,7 @@ import org.xml.sax.Attributes;
  * Buffered element which stores start Tag element (ex: <a>) and end Tag element (ex: </a>). The start Tag element
  * stores too the {@link BufferedElement} children.
  */
-public class BufferedElement extends HashMap
+public class BufferedElement
     implements IBufferedRegion
 {
 
@@ -61,6 +62,8 @@ public class BufferedElement extends HashMap
     private Collection<BufferedAttribute> dynamicAttributes = null;
 
     private boolean reseted;
+
+    private Map<String, String> data;
 
     public BufferedElement( BufferedElement parent, String uri, String localName, String name, Attributes attributes )
     {
@@ -572,6 +575,24 @@ public class BufferedElement extends HashMap
         startTagElement.regions.addAll( regionsToAdd );
         startTagElement.append( innerText );
 
+    }
+
+    public String get( String key )
+    {
+        if ( data == null )
+        {
+            return null;
+        }
+        return data.get( key );
+    }
+
+    public void put( String key, String value )
+    {
+        if ( data == null )
+        {
+            data = new HashMap<String, String>();
+        }
+        data.put( key, value );
     }
 
 }

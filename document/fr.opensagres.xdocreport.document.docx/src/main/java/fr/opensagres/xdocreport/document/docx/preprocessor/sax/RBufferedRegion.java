@@ -68,10 +68,15 @@ public class RBufferedRegion
     @Override
     public String setInstrText( String instrText, FieldMetadata fieldAsTextStyling )
     {
+        boolean instrTextChanged = instrText != null && !instrText.equals( originalInstrText );
         this.originalInstrText = instrText;
         this.fieldAsTextStyling = fieldAsTextStyling;
-        instrText = super.setInstrText( instrText, fieldAsTextStyling );
-        super.append( instrText );
+        if ( instrTextChanged )
+        {
+            // compute new instr text only if it has changed.
+            instrText = super.setInstrText( instrText, fieldAsTextStyling );
+            super.append( instrText );
+        }
         return instrText;
     }
 

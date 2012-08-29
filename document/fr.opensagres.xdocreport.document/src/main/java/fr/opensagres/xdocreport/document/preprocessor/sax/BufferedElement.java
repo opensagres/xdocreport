@@ -29,6 +29,7 @@ import java.io.StringWriter;
 import java.io.Writer;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.List;
 
 import org.xml.sax.Attributes;
@@ -37,7 +38,7 @@ import org.xml.sax.Attributes;
  * Buffered element which stores start Tag element (ex: <a>) and end Tag element (ex: </a>). The start Tag element
  * stores too the {@link BufferedElement} children.
  */
-public class BufferedElement
+public class BufferedElement extends HashMap
     implements IBufferedRegion
 {
 

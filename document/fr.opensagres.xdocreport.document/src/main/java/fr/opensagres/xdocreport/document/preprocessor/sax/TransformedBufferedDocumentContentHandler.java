@@ -497,7 +497,7 @@ public abstract class TransformedBufferedDocumentContentHandler<Document extends
     {
         Map<String, BufferedElement> elements =
             (Map<String, BufferedElement>) getSharedContext().get( DocumentContextHelper.ELEMENTS_KEY );
-        if ( element == null )
+        if ( elements == null )
         {
             elements = new HashMap<String, BufferedElement>();
         }

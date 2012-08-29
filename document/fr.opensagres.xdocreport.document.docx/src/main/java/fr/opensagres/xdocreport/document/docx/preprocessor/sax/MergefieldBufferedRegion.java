@@ -39,6 +39,8 @@ public abstract class MergefieldBufferedRegion
     extends BufferedElement
 {
 
+    private static final String TEXTSTYLING = "_TEXTSTYLING";
+
     private static final String W_P = "w:p";
 
     private static final String MERGEFORMAT = "\\* MERGEFORMAT";
@@ -162,10 +164,21 @@ public abstract class MergefieldBufferedRegion
 
                     if ( fieldAsTextStyling != null )
                     {
-                        // register parent buffered element
-                        long variableIndex = handler.getVariableIndex();
                         // Find parent paragraph
                         BufferedElement parent = mergefield.findParent( W_P );
+                        // Test if $___NoEscape0.TextBefore was already generated for the field.
+                        String key = new StringBuilder( fieldName ).append( TEXTSTYLING ).toString();
+                        String directive = (String) parent.get( key );
+                        if ( directive != null )
+                        {
+                            // The $___NoEscape0.TextBefore is already generated
+                            // don't add it
+                            return directive;
+                        }
+                     
+                        // register parent buffered element
+                        long variableIndex = handler.getVariableIndex();
+
                         String elementId = handler.registerBufferedElement( variableIndex, parent );
 
                         // Set
@@ -187,7 +200,10 @@ public abstract class MergefieldBufferedRegion
                         parent.setContentAfterEndTagElement( Directive.formatDirective( textEnd,
                                                                                         handler.getStartNoParse(),
                                                                                         handler.getEndNoParse() ) );
-                        return Directive.formatDirective( textBody, handler.getStartNoParse(), handler.getEndNoParse() );
+                        directive =
+                            Directive.formatDirective( textBody, handler.getStartNoParse(), handler.getEndNoParse() );
+                        parent.put( key, directive );
+                        return directive;
 
                     }
                     return Directive.formatDirective( fieldName, handler.getStartNoParse(), handler.getEndNoParse() );

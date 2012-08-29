@@ -56,6 +56,14 @@ public class HTMLTextStylingContentHandler
 
     private static final String I_ELT = "i";
 
+    // HTML elements for Underline style
+    private static final String U_ELT = "u";
+
+    // HTML elements for Strike style
+    private static final String STRIKE_ELT = "strike";
+
+    private static final String S_ELT = "s";
+
     // HTML elements for list
     private static final String OL_ELT = "ol";
 
@@ -88,7 +96,7 @@ public class HTMLTextStylingContentHandler
     private static final String SRC_ATTR = "src";
 
     private static final String BR_ELT = "br";
-    
+
     private final IDocumentHandler documentHandler;
 
     // current a href + content parsing
@@ -152,6 +160,16 @@ public class HTMLTextStylingContentHandler
             {
                 // Italic
                 documentHandler.startItalics();
+            }
+            else if ( U_ELT.equals( name ) )
+            {
+                // Underline
+                documentHandler.startUnderline();
+            }
+            else if ( STRIKE_ELT.equals( name ) || S_ELT.equals( name ) )
+            {
+                // Strike
+                documentHandler.startStrike();
             }
             else if ( UL_ELT.equals( name ) )
             {
@@ -250,6 +268,16 @@ public class HTMLTextStylingContentHandler
             {
                 // Italic
                 documentHandler.endItalics();
+            }
+            else if ( U_ELT.equals( name ) )
+            {
+                // Underline
+                documentHandler.endUnderline();
+            }
+            else if ( STRIKE_ELT.equals( name ) || S_ELT.equals( name ) )
+            {
+                // Strike
+                documentHandler.endStrike();
             }
             else if ( UL_ELT.equals( name ) )
             {

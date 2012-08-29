@@ -80,6 +80,32 @@ public class HTMLDocumentHandler
         super.write( "</i>" );
     }
 
+    public void startUnderline()
+        throws IOException
+    {
+        super.write( "<u>" );
+    }
+
+    public void endUnderline()
+        throws IOException
+    {
+        super.write( "</u>" );
+    }
+
+    @Override
+    public void startStrike()
+        throws IOException
+    {
+        super.write( "<strike>" );
+    }
+
+    public void endStrike()
+        throws IOException
+    {
+        super.write( "</strike>" );
+
+    }
+
     public void startListItem( ListItemProperties properties )
         throws IOException
     {

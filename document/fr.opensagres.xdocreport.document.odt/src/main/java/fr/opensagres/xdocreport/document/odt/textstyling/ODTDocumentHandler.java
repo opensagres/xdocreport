@@ -45,6 +45,10 @@ public class ODTDocumentHandler
 
     private boolean italicsing;
 
+    private boolean underlining;
+
+    private boolean striking;
+
     private Stack<Boolean> paragraphsStack;
 
     private boolean insideHeader = false;
@@ -71,6 +75,8 @@ public class ODTDocumentHandler
     {
         this.bolding = false;
         this.italicsing = false;
+        this.underlining = false;
+        this.striking = false;
         this.paragraphsStack = new Stack<Boolean>();
     }
 
@@ -114,6 +120,30 @@ public class ODTDocumentHandler
         this.italicsing = false;
     }
 
+    public void startUnderline()
+        throws IOException
+    {
+        this.underlining = true;
+    }
+
+    public void endUnderline()
+        throws IOException
+    {
+        this.underlining = false;
+    }
+
+    public void startStrike()
+        throws IOException
+    {
+        this.striking = true;
+    }
+
+    public void endStrike()
+        throws IOException
+    {
+        this.striking = false;
+    }
+
     @Override
     public void handleString( String content )
         throws IOException
@@ -126,7 +156,7 @@ public class ODTDocumentHandler
         {
             startParagraphIfNeeded();
             super.write( "<text:span" );
-            if ( bolding || italicsing )
+            if ( bolding || italicsing || underlining || striking )
             {
                 super.write( " text:style-name=\"" );
                 if ( bolding && italicsing )
@@ -140,6 +170,14 @@ public class ODTDocumentHandler
                 else if ( bolding )
                 {
                     super.write( styleGen.getBoldStyleName() );
+                }
+                else if ( underlining )
+                {
+                    super.write( styleGen.getUnderlineStyleName() );
+                }
+                else if ( striking )
+                {
+                    super.write( styleGen.getStrikeStyleName() );
                 }
                 super.write( "\" " );
             }

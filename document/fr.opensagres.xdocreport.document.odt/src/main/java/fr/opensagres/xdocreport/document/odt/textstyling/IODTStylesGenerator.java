@@ -90,6 +90,16 @@ public interface IODTStylesGenerator
     String getItalicStyleName();
 
     /**
+     * @return the name of the style used for Underline
+     */
+    String getUnderlineStyleName();
+
+    /**
+     * @return the name of the style used for Strike
+     */
+    String getStrikeStyleName();
+
+    /**
      * @return the name of the style used for italic + bold
      */
     String getBoldItalicStyleName();
@@ -104,4 +114,5 @@ public interface IODTStylesGenerator
      * @return
      */
     String generateParagraphStyles();
+
 }

@@ -92,6 +92,30 @@ public interface IDocumentHandler
         throws IOException;
 
     /**
+     * Start underline style.
+     */
+    void startUnderline()
+        throws IOException;
+
+    /**
+     * End underline style.
+     */
+    void endUnderline()
+        throws IOException;
+
+    /**
+     * Start Strike style.
+     */
+    void startStrike()
+        throws IOException;
+
+    /**
+     * End Strike style.
+     */
+    void endStrike()
+        throws IOException;
+
+    /**
      * Start ordered list.
      * 
      * @param properties

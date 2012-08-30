@@ -52,6 +52,10 @@ public class DocxDocumentHandler
 
     private boolean italicsing;
 
+    private boolean underlining;
+
+    private boolean striking;
+
     private Stack<ParagraphProperties> paragraphsStack;
 
     private HyperlinkRegistry hyperlinkRegistry;
@@ -82,6 +86,8 @@ public class DocxDocumentHandler
     {
         this.bolding = false;
         this.italicsing = false;
+        this.underlining = false;
+        this.striking = false;
         this.paragraphsStack = new Stack<ParagraphProperties>();
     }
 
@@ -134,6 +140,30 @@ public class DocxDocumentHandler
         this.italicsing = false;
     }
 
+    public void startUnderline()
+        throws IOException
+    {
+        this.underlining = true;
+    }
+
+    public void endUnderline()
+        throws IOException
+    {
+        this.underlining = false;
+    }
+
+    public void startStrike()
+        throws IOException
+    {
+        this.striking = true;
+    }
+
+    public void endStrike()
+        throws IOException
+    {
+        this.striking = false;
+    }
+
     @Override
     public void handleString( String content )
         throws IOException
@@ -147,7 +177,7 @@ public class DocxDocumentHandler
         {
             startParagraphIfNeeded();
             super.write( "<w:r>" );
-            if ( bolding || italicsing )
+            if ( bolding || italicsing || underlining || striking )
             {
                 super.write( "<w:rPr>" );
                 if ( bolding )
@@ -157,6 +187,14 @@ public class DocxDocumentHandler
                 if ( italicsing )
                 {
                     super.write( "<w:i />" );
+                }
+                if ( underlining )
+                {
+                    super.write( "<w:u w:val=\"single\" />" );
+                }
+                if ( striking )
+                {
+                    super.write( "<w:strike />" );
                 }
                 super.write( "</w:rPr>" );
             }
@@ -301,7 +339,7 @@ public class DocxDocumentHandler
     }
 
     @Override
-    protected void doStartOrderedList(ListProperties properties)
+    protected void doStartOrderedList( ListProperties properties )
         throws IOException
     {
         // if ( numbersStack.isEmpty() )
@@ -317,7 +355,7 @@ public class DocxDocumentHandler
     }
 
     @Override
-    protected void doStartUnorderedList(ListProperties properties)
+    protected void doStartUnorderedList( ListProperties properties )
         throws IOException
     {
         // if ( numbersStack.isEmpty() )

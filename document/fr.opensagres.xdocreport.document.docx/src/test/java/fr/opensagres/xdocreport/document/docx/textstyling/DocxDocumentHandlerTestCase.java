@@ -144,6 +144,57 @@ public class DocxDocumentHandlerTestCase
     }
 
     @Test
+    public void testUnderline()
+        throws Exception
+    {
+        IContext context = new MockContext();
+        BufferedElement parent = null;
+
+        ITextStylingTransformer formatter = HTMLTextStylingTransformer.INSTANCE;
+        IDocumentHandler handler = new DocxDocumentHandler( parent, context, "word/document.xml" );
+        formatter.transform( "<u>text</u>", handler );
+
+        Assert.assertEquals( "", handler.getTextBefore() );
+        Assert.assertEquals( "<w:r><w:rPr><w:u w:val=\"single\" /></w:rPr><w:t xml:space=\"preserve\" >text</w:t></w:r>",
+                             handler.getTextBody() );
+        Assert.assertEquals( "", handler.getTextEnd() );
+    }
+
+    @Test
+    public void testStrikeWithS()
+        throws Exception
+    {
+        IContext context = new MockContext();
+        BufferedElement parent = null;
+
+        ITextStylingTransformer formatter = HTMLTextStylingTransformer.INSTANCE;
+        IDocumentHandler handler = new DocxDocumentHandler( parent, context, "word/document.xml" );
+        formatter.transform( "<s>text</s>", handler );
+
+        Assert.assertEquals( "", handler.getTextBefore() );
+        Assert.assertEquals( "<w:r><w:rPr><w:strike /></w:rPr><w:t xml:space=\"preserve\" >text</w:t></w:r>",
+                             handler.getTextBody() );
+        Assert.assertEquals( "", handler.getTextEnd() );
+    }
+
+    @Test
+    public void testStrikeWithStrike()
+        throws Exception
+    {
+        IContext context = new MockContext();
+        BufferedElement parent = null;
+
+        ITextStylingTransformer formatter = HTMLTextStylingTransformer.INSTANCE;
+        IDocumentHandler handler = new DocxDocumentHandler( parent, context, "word/document.xml" );
+        formatter.transform( "<strike>text</strike>", handler );
+
+        Assert.assertEquals( "", handler.getTextBefore() );
+        Assert.assertEquals( "<w:r><w:rPr><w:strike /></w:rPr><w:t xml:space=\"preserve\" >text</w:t></w:r>",
+                             handler.getTextBody() );
+        Assert.assertEquals( "", handler.getTextEnd() );
+    }
+
+    @Test
     public void testHyperlinkByUsingXDocReport_HyperlinkStyle()
         throws Exception
     {
@@ -498,7 +549,7 @@ public class DocxDocumentHandlerTestCase
                              handler.getTextBody() );
         Assert.assertEquals( "", handler.getTextEnd() );
     }
-    
+
     @Test
     public void testAll()
         throws Exception

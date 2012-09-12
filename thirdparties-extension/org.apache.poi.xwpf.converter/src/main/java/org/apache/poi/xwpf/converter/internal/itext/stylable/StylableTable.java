@@ -55,6 +55,9 @@ public class StylableTable
     public StylableTable( StylableDocument ownerDocument, IStylableContainer parent, int numColumns )
     {
         super( numColumns );
+        // cancel ExtendedPdfPTable settings
+        // we raise text in StylableParagraph so extra spacing here is unnecessary
+        super.setSpacingBefore( 0.0f );
         this.ownerDocument = ownerDocument;
         this.parent = parent;
     }

@@ -31,6 +31,8 @@ import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTRPrDefault;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTStyle;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.STHexColor;
 
+import fr.opensagres.xdocreport.itext.extension.PageOrientation;
+
 public class XWPFUtils
 {
 
@@ -82,6 +84,22 @@ public class XWPFUtils
             if ( !"auto".equals( color.getStringValue() ) )
             {
                 return color.getStringValue();
+            }
+        }
+        return null;
+    }
+
+    public static PageOrientation getPageOrientation( org.openxmlformats.schemas.wordprocessingml.x2006.main.STPageOrientation.Enum orientation )
+    {
+        if ( orientation != null )
+        {
+            if ( org.openxmlformats.schemas.wordprocessingml.x2006.main.STPageOrientation.LANDSCAPE.equals( orientation ) )
+            {
+                return PageOrientation.Landscape;
+            }
+            else
+            {
+                return PageOrientation.Portrait;
             }
         }
         return null;

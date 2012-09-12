@@ -24,17 +24,12 @@
  */
 package org.apache.poi.xwpf.converter.internal;
 
-import java.io.IOException;
 import java.io.OutputStream;
-import java.util.Collection;
 import java.util.List;
 import java.util.logging.Logger;
 
-import org.apache.poi.openxml4j.opc.PackagePart;
 import org.apache.poi.xwpf.usermodel.IBodyElement;
 import org.apache.poi.xwpf.usermodel.XWPFDocument;
-import org.apache.poi.xwpf.usermodel.XWPFFooter;
-import org.apache.poi.xwpf.usermodel.XWPFHeader;
 import org.apache.poi.xwpf.usermodel.XWPFParagraph;
 import org.apache.poi.xwpf.usermodel.XWPFPicture;
 import org.apache.poi.xwpf.usermodel.XWPFRun;
@@ -42,13 +37,9 @@ import org.apache.poi.xwpf.usermodel.XWPFStyle;
 import org.apache.poi.xwpf.usermodel.XWPFTable;
 import org.apache.poi.xwpf.usermodel.XWPFTableCell;
 import org.apache.poi.xwpf.usermodel.XWPFTableRow;
-import org.apache.xmlbeans.XmlException;
+import org.openxmlformats.schemas.drawingml.x2006.wordprocessingDrawing.CTInline;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTDocDefaults;
-import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTHdrFtr;
-import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTHdrFtrRef;
-import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTSectPr;
-import org.openxmlformats.schemas.wordprocessingml.x2006.main.FtrDocument;
-import org.openxmlformats.schemas.wordprocessingml.x2006.main.HdrDocument;
+import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTDrawing;
 
 public abstract class XWPFElementVisitor<T>
 {
@@ -67,14 +58,11 @@ public abstract class XWPFElementVisitor<T>
         this.document = document;
         try
         {
-            this.defaults = document.getStyle().getDocDefaults();
+            this.defaults = document.getStyle().getDocDefaults();            
         }
-        catch ( XmlException e )
+        catch ( Exception e )
         {
-            LOGGER.severe( e.getMessage() );
-        }
-        catch ( IOException e )
-        {
+            // this.sectPrStack = new Stack<XWPFParagraph>();
             LOGGER.severe( e.getMessage() );
         }
     }
@@ -83,7 +71,7 @@ public abstract class XWPFElementVisitor<T>
 
     /**
      * Main entry for visit XWPFDocument.
-     *
+     * 
      * @param out
      * @throws Exception
      */
@@ -93,8 +81,8 @@ public abstract class XWPFElementVisitor<T>
         T container = startVisitDocument( out );
 
         // Create Header/Footer
-        CTSectPr sectPr = document.getDocument().getBody().getSectPr();
-        visitHeadersFooters( sectPr, container );
+        // CTSectPr sectPr = document.getDocument().getBody().getSectPr();
+        // visitHeadersFooters( sectPr, container );
 
         // Create IText element for each XWPF elements from the w:body
         List<IBodyElement> bodyElements = document.getBodyElements();
@@ -112,55 +100,6 @@ public abstract class XWPFElementVisitor<T>
         throws Exception;
 
     protected abstract void endVisitDocument()
-        throws Exception;
-
-    // ------------------------------ Header/Footer visitor -----------
-
-    protected void visitHeadersFooters( CTSectPr sectPr, T container )
-        throws Exception
-    {
-        Collection<CTHdrFtrRef> headersRef = sectPr.getHeaderReferenceList();
-        Collection<CTHdrFtrRef> footersRef = sectPr.getFooterReferenceList();
-
-        for ( CTHdrFtrRef headerRef : headersRef )
-        {
-            visitHeader( headerRef );
-        }
-
-        for ( CTHdrFtrRef footerRef : footersRef )
-        {
-            visitFooter( footerRef );
-        }
-    }
-
-    protected XWPFHeader getXWPFHeader( CTHdrFtrRef headerRef )
-        throws XmlException, IOException
-    {
-        PackagePart hdrPart = document.getPartById( headerRef.getId() );
-        HdrDocument hdrDoc = HdrDocument.Factory.parse( hdrPart.getInputStream() );
-        CTHdrFtr hdrFtr = hdrDoc.getHdr();
-
-        XWPFHeader hdr = new XWPFHeader( document, hdrFtr);
-
-        return hdr;
-    }
-
-    protected XWPFFooter getXWPFFooter( CTHdrFtrRef footerRef )
-        throws XmlException, IOException
-    {
-        PackagePart hdrPart = document.getPartById( footerRef.getId() );
-        FtrDocument hdrDoc = FtrDocument.Factory.parse( hdrPart.getInputStream() );
-        CTHdrFtr hdrFtr = hdrDoc.getFtr();
-
-        XWPFFooter ftr = new XWPFFooter(document, hdrFtr);
-
-        return ftr;
-    }
-
-    protected abstract void visitHeader( CTHdrFtrRef headerRef )
-        throws Exception;
-
-    protected abstract void visitFooter( CTHdrFtrRef footerRef )
         throws Exception;
 
     // ------------------------------ XWPF Elements visitor -----------
@@ -191,7 +130,6 @@ public abstract class XWPFElementVisitor<T>
     protected void visitParagraph( XWPFParagraph paragraph, T container )
         throws Exception
     {
-
         T paragraphContainer = startVisitPargraph( paragraph, container );
         visitParagraphBody( paragraph, paragraphContainer );
         endVisitPargraph( paragraph, container, paragraphContainer );
@@ -284,6 +222,16 @@ public abstract class XWPFElementVisitor<T>
     protected void visitPictures( XWPFRun run, T parentContainer )
         throws Exception
     {
+        List<CTDrawing> drawings = run.getCTR().getDrawingList();
+        for ( CTDrawing drawing : drawings )
+        {
+            List<CTInline> inlines = drawing.getInlineList();
+            for ( CTInline ctInline : inlines )
+            {
+                ctInline.getEffectExtent();
+            }
+
+        }
         List<XWPFPicture> embeddedPictures = run.getEmbeddedPictures();
         for ( XWPFPicture picture : embeddedPictures )
         {
@@ -301,5 +249,38 @@ public abstract class XWPFElementVisitor<T>
         else
             return document.getStyles().getStyle( styleID );
     }
+
+//    protected void visitSectPr( CTSectPr sectPr )
+//    {
+//        if ( sectPr == null )
+//        {
+//            return;
+//        }
+//        // Set page size
+//        CTPageSz pageSize = sectPr.getPgSz();
+//        
+//        Style style = new Style( "" );
+//        StylePageLayoutProperties pageLayoutProperties = new StylePageLayoutProperties();
+//        style.setPageLayoutProperties( pageLayoutProperties );
+//        // Height/Width
+//        pageLayoutProperties.setHeight( (float) dxa2points( pageSize.getH() ) );
+//        pageLayoutProperties.setWidth( (float) dxa2points( pageSize.getW() ) );
+//        // Orientation
+//        pageLayoutProperties.setOrientation( getPageOrientation( pageSize.getOrient() ) );
+//        // Margins
+//        CTPageMar pageMar = sectPr.getPgMar();
+//        if ( pageMar != null )
+//        {
+//            pageLayoutProperties.setMarginLeft( (float) dxa2points( pageMar.getLeft() ) );
+//            pageLayoutProperties.setMarginRight( (float) dxa2points( pageMar.getRight() ) );
+//            pageLayoutProperties.setMarginTop( (float) dxa2points( pageMar.getTop() ) );
+//            pageLayoutProperties.setMarginBottom( (float) dxa2points( pageMar.getBottom() ) );
+//        }
+//        applyStyleSection( style );
+//    }
+
+    //protected abstract void applyStyleSection( Style style );
+
+    
 
 }

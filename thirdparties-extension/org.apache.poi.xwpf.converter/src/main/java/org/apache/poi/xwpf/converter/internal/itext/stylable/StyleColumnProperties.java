@@ -22,46 +22,50 @@
  * OF CONTRACT, TORT OR OTHERWISE,  ARISING FROM, OUT OF OR IN CONNECTION
  * WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
-package fr.opensagres.xdocreport.itext.extension;
+package org.apache.poi.xwpf.converter.internal.itext.stylable;
 
-public class MasterPage
-    implements IMasterPage
+/**
+ * fixes for pdf conversion by Leszek Piotrowicz <leszekp@safe-mail.net>
+ */
+public class StyleColumnProperties
 {
+    private Integer relWidth;
 
-    private final String name;
+    private Float startIndent;
 
-    private IMasterPageHeaderFooter header;
+    private Float endIndent;
 
-    private IMasterPageHeaderFooter footer;
-
-    public MasterPage( String name )
+    public StyleColumnProperties()
     {
-        this.name = name;
     }
 
-    public IMasterPageHeaderFooter getHeader()
+    public Integer getRelWidth()
     {
-        return header;
+        return relWidth;
     }
 
-    public void setHeader( IMasterPageHeaderFooter header )
+    public void setRelWidth( Integer relWidth )
     {
-        this.header = header;
+        this.relWidth = relWidth;
     }
 
-    public IMasterPageHeaderFooter getFooter()
+    public Float getStartIndent()
     {
-        return footer;
+        return startIndent;
     }
 
-    public void setFooter( IMasterPageHeaderFooter footer )
+    public void setStartIndent( Float startIndent )
     {
-        this.footer = footer;
+        this.startIndent = startIndent;
     }
 
-    public String getName()
+    public Float getEndIndent()
     {
-        return name;
+        return endIndent;
     }
 
+    public void setEndIndent( Float endIndent )
+    {
+        this.endIndent = endIndent;
+    }
 }

@@ -24,24 +24,26 @@
  */
 package org.apache.poi.xwpf.converter.internal.itext.styles;
 
+import fr.opensagres.xdocreport.itext.extension.PageOrientation;
+
+@Deprecated
 public class StylePageLayoutProperties
 {
-
-    private Float width;
-
     private Float height;
 
-    private StyleMargin margin;
+    private Float margin;
 
-    public Float getWidth()
-    {
-        return width;
-    }
+    private Float marginBottom;
 
-    public void setWidth( Float width )
-    {
-        this.width = width;
-    }
+    private Float marginLeft;
+
+    private Float marginRight;
+
+    private Float marginTop;
+
+    private PageOrientation orientation;
+
+    private Float width;
 
     public Float getHeight()
     {
@@ -53,14 +55,73 @@ public class StylePageLayoutProperties
         this.height = height;
     }
 
-    public StyleMargin getMargin()
+    public Float getMargin()
     {
         return margin;
     }
 
-    public void setMargin( StyleMargin margin )
+    public void setMargin( Float margin )
     {
         this.margin = margin;
     }
 
+    public Float getMarginBottom()
+    {
+        return marginBottom;
+    }
+
+    public void setMarginBottom( Float marginBottom )
+    {
+        this.marginBottom = marginBottom;
+    }
+
+    public Float getMarginLeft()
+    {
+        return marginLeft;
+    }
+
+    public void setMarginLeft( Float marginLeft )
+    {
+        this.marginLeft = marginLeft;
+    }
+
+    public Float getMarginRight()
+    {
+        return marginRight;
+    }
+
+    public void setMarginRight( Float marginRight )
+    {
+        this.marginRight = marginRight;
+    }
+
+    public Float getMarginTop()
+    {
+        return marginTop;
+    }
+
+    public void setMarginTop( Float marginTop )
+    {
+        this.marginTop = marginTop;
+    }
+
+    public PageOrientation getOrientation()
+    {
+        return orientation;
+    }
+
+    public void setOrientation( PageOrientation orientation )
+    {
+        this.orientation = orientation;
+    }
+
+    public Float getWidth()
+    {
+        return width;
+    }
+
+    public void setWidth( Float width )
+    {
+        this.width = width;
+    }
 }

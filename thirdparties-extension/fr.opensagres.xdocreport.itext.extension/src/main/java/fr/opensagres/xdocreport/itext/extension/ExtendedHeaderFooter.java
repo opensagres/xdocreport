@@ -36,7 +36,7 @@ public class ExtendedHeaderFooter
 {
     private final ExtendedDocument document;
 
-    private MasterPage masterPage;
+    private IMasterPage masterPage;
 
     public ExtendedHeaderFooter( ExtendedDocument document )
     {
@@ -85,7 +85,7 @@ public class ExtendedHeaderFooter
         }
     }
 
-    public void setMasterPage( MasterPage masterPage )
+    public void setMasterPage( IMasterPage masterPage )
     {
         IMasterPageHeaderFooter header = masterPage.getHeader();
         IMasterPageHeaderFooter footer = masterPage.getFooter();

@@ -36,19 +36,19 @@ import static org.apache.poi.xwpf.converter.internal.itext.XWPFTableUtil.setBord
 import java.awt.Color;
 import java.io.OutputStream;
 import java.util.List;
-import java.util.Stack;
 import java.util.logging.Logger;
 
-import org.apache.poi.xwpf.converter.internal.XWPFElementVisitor;
+import org.apache.poi.xwpf.converter.internal.XWPFDocumentVisitor;
 import org.apache.poi.xwpf.converter.internal.itext.stylable.IStylableContainer;
 import org.apache.poi.xwpf.converter.internal.itext.stylable.IStylableElement;
+import org.apache.poi.xwpf.converter.internal.itext.stylable.StylableMasterPage;
 import org.apache.poi.xwpf.converter.internal.itext.stylable.StylableDocument;
+import org.apache.poi.xwpf.converter.internal.itext.stylable.StylableHeaderFooter;
 import org.apache.poi.xwpf.converter.internal.itext.stylable.StylableParagraph;
 import org.apache.poi.xwpf.converter.internal.itext.stylable.StylableTable;
 import org.apache.poi.xwpf.converter.internal.itext.styles.Style;
 import org.apache.poi.xwpf.converter.internal.itext.styles.StyleBorder;
 import org.apache.poi.xwpf.converter.itext.PDFViaITextOptions;
-import org.apache.poi.xwpf.usermodel.BodyElementType;
 import org.apache.poi.xwpf.usermodel.IBodyElement;
 import org.apache.poi.xwpf.usermodel.UnderlinePatterns;
 import org.apache.poi.xwpf.usermodel.XWPFDocument;
@@ -71,8 +71,6 @@ import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTEmpty;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTHdrFtrRef;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTOnOff;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTPPr;
-import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTPageMar;
-import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTPageSz;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTR;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTRPr;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTSectPr;
@@ -81,7 +79,6 @@ import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTString;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTTcBorders;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTTcPr;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTText;
-import org.openxmlformats.schemas.wordprocessingml.x2006.main.STHdrFtr;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.STHexColor;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.STOnOff;
 
@@ -91,36 +88,33 @@ import com.lowagie.text.Font;
 import com.lowagie.text.Image;
 import com.lowagie.text.Rectangle;
 import com.lowagie.text.pdf.PdfPCell;
+import com.lowagie.text.pdf.draw.VerticalPositionMark;
 
 import fr.opensagres.xdocreport.itext.extension.ExtendedParagraph;
 import fr.opensagres.xdocreport.itext.extension.ExtendedPdfPCell;
 import fr.opensagres.xdocreport.itext.extension.ExtendedPdfPTable;
 import fr.opensagres.xdocreport.itext.extension.IITextContainer;
-import fr.opensagres.xdocreport.itext.extension.MasterPage;
-import fr.opensagres.xdocreport.itext.extension.MasterPageHeaderFooter;
-import fr.opensagres.xdocreport.itext.extension.PageOrientation;
 import fr.opensagres.xdocreport.utils.BorderType;
 import fr.opensagres.xdocreport.utils.StringUtils;
 
 public class PDFMapper
-    extends XWPFElementVisitor<IITextContainer>
+    extends XWPFDocumentVisitor<IITextContainer, StylableMasterPage>
 {
 
     /**
      * Logger for this class
      */
-    private static final Logger LOGGER = Logger.getLogger( XWPFElementVisitor.class.getName() );
+    private static final Logger LOGGER = Logger.getLogger( PDFMapper.class.getName() );
 
     // Create instance of PDF document
     private StylableDocument pdfDocument;
-
-    private Stack<CTSectPr> sectPrStack = null;
 
     private StyleEngineForIText styleEngine;
 
     private final PDFViaITextOptions options;
 
     public PDFMapper( XWPFDocument document, PDFViaITextOptions options )
+        throws Exception
     {
         super( document );
         this.options = options != null ? options : PDFViaITextOptions.create();
@@ -132,46 +126,8 @@ public class PDFMapper
     {
         // Create instance of PDF document
         styleEngine = new StyleEngineForIText( document, options );
-        pdfDocument = new StylableDocument( out, styleEngine );
-        CTSectPr sectPr = document.getDocument().getBody().getSectPr();
-        applySectPr( sectPr );
-
+        this.pdfDocument = new StylableDocument( out, styleEngine );
         return pdfDocument;
-    }
-
-    private void applySectPr( CTSectPr sectPr )
-    {
-        if ( sectPr == null )
-        {
-            return;
-        }
-        // Set page size
-        CTPageSz pageSize = sectPr.getPgSz();
-        Rectangle pdfPageSize = new Rectangle( dxa2points( pageSize.getW() ), dxa2points( pageSize.getH() ) );
-        pdfDocument.setPageSize( pdfPageSize );
-
-        // Orientation
-        org.openxmlformats.schemas.wordprocessingml.x2006.main.STPageOrientation.Enum orientation =
-            pageSize.getOrient();
-        if ( orientation != null )
-        {
-            if ( org.openxmlformats.schemas.wordprocessingml.x2006.main.STPageOrientation.LANDSCAPE.equals( orientation ) )
-            {
-                pdfDocument.setOrientation( PageOrientation.Landscape );
-            }
-            else
-            {
-                pdfDocument.setOrientation( PageOrientation.Portrait );
-            }
-        }
-
-        // Set page margin
-        CTPageMar pageMar = sectPr.getPgMar();
-        if ( pageMar != null )
-        {
-            pdfDocument.setOriginalMargins( dxa2points( pageMar.getLeft() ), dxa2points( pageMar.getRight() ),
-                                            dxa2points( pageMar.getTop() ), dxa2points( pageMar.getBottom() ) );
-        }
     }
 
     @Override
@@ -182,71 +138,57 @@ public class PDFMapper
     }
 
     @Override
-    protected void visitHeader( CTHdrFtrRef headerRef )
+    protected void visitBodyElements( List<IBodyElement> bodyElements, IITextContainer container )
         throws Exception
     {
-        STHdrFtr.Enum type = headerRef.getType();
-        MasterPage masterPage = getOrCreateMasterPage( type );
-
-        MasterPageHeaderFooter pdfHeader = new MasterPageHeaderFooter();
-        XWPFHeader hdr = getXWPFHeader( headerRef );
-        visitBodyElements( hdr.getBodyElements(), (ExtendedPdfPCell) pdfHeader.getTableCell() );
-        pdfHeader.flush();
-        masterPage.setHeader( pdfHeader );
-
+        if ( pdfDocument.getActiveMasterPage() == null )
+        {
+            // getOrCreateMasterPage( "default" );
+        }
+        super.visitBodyElements( bodyElements, container );
     }
 
     @Override
-    protected void visitFooter( CTHdrFtrRef footerRef )
+    protected void visitHeader( XWPFHeader header, CTHdrFtrRef headerRef, CTSectPr sectPr, StylableMasterPage masterPage )
         throws Exception
     {
-        STHdrFtr.Enum type = footerRef.getType();
-        MasterPage masterPage = getOrCreateMasterPage( type );
 
-        MasterPageHeaderFooter pdfFooter = new MasterPageHeaderFooter();
-        XWPFFooter hdr = getXWPFFooter( footerRef );
-        visitBodyElements( hdr.getBodyElements(), (ExtendedPdfPCell) pdfFooter.getTableCell() );
-        pdfFooter.flush();
+        StylableHeaderFooter pdfHeader = new StylableHeaderFooter( pdfDocument, true );
+        masterPage.setHeader( pdfHeader );
+
+        visitBodyElements( header.getBodyElements(), pdfHeader.getTableCell() );
+        pdfHeader.flush();
+    }
+
+    @Override
+    protected void visitFooter( XWPFFooter footer, CTHdrFtrRef footerRef, CTSectPr sectPr, StylableMasterPage masterPage )
+        throws Exception
+    {
+
+        StylableHeaderFooter pdfFooter = new StylableHeaderFooter( pdfDocument, false );
         masterPage.setFooter( pdfFooter );
 
+        visitBodyElements( footer.getBodyElements(), pdfFooter.getTableCell() );
+        pdfFooter.flush();
     }
 
-    private MasterPage getOrCreateMasterPage( STHdrFtr.Enum type )
-    {
-        String masterPageName = type.toString();
-        MasterPage masterPage = pdfDocument.getMasterPage( masterPageName );
-        if ( masterPage == null )
-        {
-            masterPage = new MasterPage( masterPageName );
-            pdfDocument.addMasterPage( masterPage );
-        }
-        return masterPage;
-    }
-
-    private Stack<CTSectPr> getSectPrStack()
-    {
-        if ( sectPrStack != null )
-        {
-            return sectPrStack;
-        }
-        sectPrStack = new Stack<CTSectPr>();
-        for ( IBodyElement bodyElement : document.getBodyElements() )
-        {
-            if ( bodyElement.getElementType() == BodyElementType.PARAGRAPH )
-            {
-                CTPPr ppr = ( (XWPFParagraph) bodyElement ).getCTP().getPPr();
-                if ( ppr != null )
-                {
-                    CTSectPr sectPr = ppr.getSectPr();
-                    if ( sectPr != null )
-                    {
-                        sectPrStack.push( sectPr );
-                    }
-                }
-            }
-        }
-        return sectPrStack;
-    }
+    // private MasterPage getOrCreateMasterPage( STHdrFtr.Enum type )
+    // {
+    // String masterPageName = type.toString();
+    // return getOrCreateMasterPage( masterPageName );
+    // }
+    //
+    // private MasterPage getOrCreateMasterPage( String masterPageName )
+    // {
+    // MasterPage masterPage = pdfDocument.getMasterPage( masterPageName );
+    // if ( masterPage == null )
+    // {
+    // masterPage = new StylableMasterPage( masterPageName, null );
+    // pdfDocument.addMasterPage( masterPage );
+    // }
+    // // pdfDocument.setActiveMasterPage( masterPage );
+    // return masterPage;
+    // }
 
     @Override
     protected IITextContainer startVisitPargraph( XWPFParagraph docxParagraph, IITextContainer parentContainer )
@@ -288,7 +230,7 @@ public class PDFMapper
             if ( pageBreak != null
                 && ( pageBreak.getVal() == null || pageBreak.getVal().intValue() == STOnOff.INT_TRUE ) )
             {
-                pdfDocument.newPage();
+                pdfDocument.pageBreak();
             }
         }
 
@@ -309,7 +251,9 @@ public class PDFMapper
     protected void visitRun( XWPFRun run, IITextContainer pdfContainer )
         throws Exception
     {
+
         CTR ctr = run.getCTR();
+
         // Get family name
         // Get CTRPr from style+defaults
         CTString rStyle = getRStyle( run );
@@ -369,6 +313,16 @@ public class PDFMapper
             pdfContainer.addElement( Chunk.NEWLINE );
         }
 
+        List<CTEmpty> tabs = ctr.getTabList();
+        if ( tabs != null && tabs.size() > 0 )
+        {
+            for ( CTEmpty ctEmpty : tabs )
+            {
+                Chunk tab = new Chunk( new VerticalPositionMark() );
+                pdfContainer.addElement( tab );
+            }
+        }
+
         List<CTText> texts = run.getCTR().getTList();
         for ( CTText ctText : texts )
         {
@@ -392,15 +346,15 @@ public class PDFMapper
             // The CTSectPr <w:pPr><w:sectPr w:rsidR="00AA33F7"
             // w:rsidSect="00607077"><w:pgSz w:w="16838" w:h="11906"
             // w:orient="landscape" />...
-            Stack<CTSectPr> sectPrStack = getSectPrStack();
-            if ( sectPrStack != null && !sectPrStack.isEmpty() )
-            {
-                CTSectPr sectPr = sectPrStack.pop();
-                applySectPr( sectPr );
-            }
+            // Stack<CTSectPr> sectPrStack = getSectPrStack();
+            // if ( sectPrStack != null && !sectPrStack.isEmpty() )
+            // {
+            // CTSectPr sectPr = sectPrStack.pop();
+            // applySectPr( sectPr );
+            // }
             for ( CTEmpty lastRenderedPageBreak : lastRenderedPageBreakList )
             {
-                pdfDocument.newPage();
+                pdfDocument.pageBreak();
             }
         }
     }
@@ -572,7 +526,7 @@ public class PDFMapper
         CTPicture ctPic = picture.getCTPicture();
         String blipId = ctPic.getBlipFill().getBlip().getEmbed();
 
-        XWPFPictureData pictureData = XWPFPictureUtil.getPictureData( document, blipId );
+        XWPFPictureData pictureData = getPictureDataByID( blipId );
 
         if ( pictureData != null )
         {
@@ -584,7 +538,11 @@ public class PDFMapper
                 IITextContainer parentOfParentContainer = parentContainer.getITextContainer();
                 if ( parentOfParentContainer != null && parentOfParentContainer instanceof PdfPCell )
                 {
-                    ( (PdfPCell) parentOfParentContainer ).setImage( img );
+                    // Phrase ph = new Phrase(new Chunk(img, 0, 0));
+                    // ph.add(new Chunk("SomeText"));
+                    parentOfParentContainer.addElement( img );
+                    // ( (PdfPCell) parentOfParentContainer ).setImage( img );
+
                 }
                 else
                 {
@@ -635,4 +593,27 @@ public class PDFMapper
         }
         return getXWPFStyle( paragraph.getStyleID() );
     }
+
+    // @Override
+    // protected void sectionChanged( CTSectPr sectPr )
+    // {
+    // applySectPr( sectPr );
+    // }
+
+    protected void setActiveMasterPage( StylableMasterPage masterPage )
+    {
+        pdfDocument.setActiveMasterPage( masterPage );
+    }
+
+    @Override
+    protected StylableMasterPage createMasterPage( CTSectPr sectPr )
+    {
+        return new StylableMasterPage( sectPr );
+    };
+
+    // @Override
+    // protected void sectionAdded( CTSectPr sectPr )
+    // {
+    //
+    // }
 }

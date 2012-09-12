@@ -24,7 +24,7 @@
  */
 package fr.opensagres.xdocreport.itext.extension;
 
-import com.lowagie.text.Rectangle;
+import com.lowagie.text.Table;
 import com.lowagie.text.pdf.PdfPCell;
 
 public class MasterPageHeaderFooter
@@ -40,7 +40,9 @@ public class MasterPageHeaderFooter
         super.setTotalWidth( 1000 );
         super.setWidthPercentage( 100f );
         tableCell = new ExtendedPdfPCell();
-        tableCell.disableBorderSide( Rectangle.BOX );
+        tableCell.setBorder( Table.NO_BORDER );
+        // set padding to zero for proper alignment
+        tableCell.setPadding( 0.0f );
     }
 
     public PdfPCell getTableCell()

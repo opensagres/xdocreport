@@ -38,9 +38,9 @@ public class ExtendedDocument
     extends Document
     implements IITextContainer
 {
-    private Map<String, MasterPage> masterPagesCache = new HashMap<String, MasterPage>();
+    private Map<String, IMasterPage> masterPagesCache = new HashMap<String, IMasterPage>();
 
-    private MasterPage defaultMasterPage;
+    private IMasterPage defaultMasterPage;
 
     private final ExtendedHeaderFooter headerFooter;
 
@@ -61,7 +61,7 @@ public class ExtendedDocument
     {
         super( rectangle );
         this.writer = ExtendedPdfWriter.getInstance( this, out );
-        headerFooter = new ExtendedHeaderFooter( this );
+        headerFooter = createExtendedHeaderFooter();
 
         writer.setPageEvent( headerFooter );
         this.originMarginTop = marginTop;
@@ -76,7 +76,7 @@ public class ExtendedDocument
     {
         super( rectangle, marginLeft, marginRight, marginTop, marginBottom );
         this.writer = ExtendedPdfWriter.getInstance( this, out );
-        headerFooter = new ExtendedHeaderFooter( this );
+        headerFooter = createExtendedHeaderFooter();
         writer.setPageEvent( headerFooter );
         this.originMarginTop = marginTop;
         this.originMarginBottom = marginBottom;
@@ -84,11 +84,16 @@ public class ExtendedDocument
         this.originMarginLeft = marginLeft;
     }
 
+    protected ExtendedHeaderFooter createExtendedHeaderFooter()
+    {
+        return new ExtendedHeaderFooter( this );
+    }
+
     public ExtendedDocument( OutputStream out )
         throws DocumentException
     {
         this.writer = ExtendedPdfWriter.getInstance( this, out );
-        headerFooter = new ExtendedHeaderFooter( this );
+        headerFooter = createExtendedHeaderFooter();
         writer.setPageEvent( headerFooter );
         this.originMarginTop = marginTop;
         this.originMarginBottom = marginBottom;
@@ -128,7 +133,7 @@ public class ExtendedDocument
         return super.add( element );
     }
 
-    public MasterPage getDefaultMasterPage()
+    public IMasterPage getDefaultMasterPage()
     {
         return defaultMasterPage;
     }
@@ -153,12 +158,12 @@ public class ExtendedDocument
         return originMarginTop;
     }
 
-    public void setActiveMasterPage( MasterPage masterPage )
+    public void setActiveMasterPage( IMasterPage masterPage )
     {
         headerFooter.setMasterPage( masterPage );
     }
 
-    public void addMasterPage( MasterPage currentMasterPage )
+    public void addMasterPage( IMasterPage currentMasterPage )
     {
         if ( defaultMasterPage == null )
         {
@@ -169,14 +174,14 @@ public class ExtendedDocument
 
     public void setActiveMasterPage( String masterPageName )
     {
-        MasterPage masterPage = getMasterPage( masterPageName );
+        IMasterPage masterPage = getMasterPage( masterPageName );
         if ( masterPage != null )
         {
             setActiveMasterPage( masterPage );
         }
     }
 
-    public MasterPage getMasterPage( String masterPageName )
+    public IMasterPage getMasterPage( String masterPageName )
     {
         if ( masterPageName == null )
         {

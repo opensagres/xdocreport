@@ -42,6 +42,7 @@ import com.lowagie.text.pdf.PdfPCell;
 import com.lowagie.text.pdf.PdfPTable;
 
 import fr.opensagres.xdocreport.itext.extension.ExtendedDocument;
+import fr.opensagres.xdocreport.itext.extension.IMasterPage;
 import fr.opensagres.xdocreport.itext.extension.IParagraphFactory;
 import fr.opensagres.xdocreport.itext.extension.MasterPage;
 import fr.opensagres.xdocreport.itext.extension.PageOrientation;
@@ -165,7 +166,7 @@ public class StylableDocument
     //
 
     @Override
-    public void setActiveMasterPage( MasterPage masterPage )
+    public void setActiveMasterPage( IMasterPage masterPage )
     {
         // flush pending content
         flushTable();

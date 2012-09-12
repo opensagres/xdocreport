@@ -24,6 +24,12 @@
  */
 package org.apache.poi.xwpf.converter.internal.itext.styles;
 
+import java.util.List;
+
+import org.apache.poi.xwpf.converter.internal.itext.stylable.StyleColumnProperties;
+import org.apache.poi.xwpf.converter.internal.itext.stylable.StyleColumnsProperties;
+import org.apache.poi.xwpf.converter.internal.itext.stylable.StyleSectionProperties;
+
 public class Style
 {
 
@@ -44,6 +50,14 @@ public class Style
     private StyleTableRowProperties tableRowProperties;
 
     private StyleTableCellProperties tableCellProperties;
+
+    private StyleSectionProperties sectionProperties;
+
+    private StyleColumnProperties columnProperties;
+
+    private StyleColumnsProperties columnsProperties;
+
+    private List<StyleColumnProperties> columnPropertiesList;
 
     public Style( String styleName )
     {
@@ -208,4 +222,43 @@ public class Style
         return null;
     }
 
+    public StyleSectionProperties getSectionProperties()
+    {
+        return sectionProperties;
+    }
+
+    public void setSectionProperties( StyleSectionProperties styleSectionProperties )
+    {
+        this.sectionProperties = styleSectionProperties;
+    }
+
+    public StyleColumnProperties getColumnProperties()
+    {
+        return columnProperties;
+    }
+
+    public void setColumnProperties( StyleColumnProperties columnProperties )
+    {
+        this.columnProperties = columnProperties;
+    }
+
+    public StyleColumnsProperties getColumnsProperties()
+    {
+        return columnsProperties;
+    }
+
+    public void setColumnsProperties( StyleColumnsProperties columnsProperties )
+    {
+        this.columnsProperties = columnsProperties;
+    }
+
+    public List<StyleColumnProperties> getColumnPropertiesList()
+    {
+        return columnPropertiesList;
+    }
+
+    public void setColumnPropertiesList( List<StyleColumnProperties> columnPropertiesList )
+    {
+        this.columnPropertiesList = columnPropertiesList;
+    }
 }

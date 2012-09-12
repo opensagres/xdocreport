@@ -61,9 +61,10 @@ public class XWPF2XHTMLConverter
                 resolver = options.getURIResolver();
             }
         }
-        XHTMLMapper mapper = new XHTMLMapper( document, indent, resolver );
+
         try
         {
+            XHTMLMapper mapper = new XHTMLMapper( document, indent, resolver );
             mapper.visit( out );
         }
         catch ( Exception e )

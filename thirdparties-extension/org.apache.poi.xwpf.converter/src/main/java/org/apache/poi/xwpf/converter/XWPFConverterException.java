@@ -28,13 +28,16 @@ public class XWPFConverterException
     extends RuntimeException
 {
 
-    /**
-	 * 
-	 */
     private static final long serialVersionUID = -6125316393288240840L;
+
+    public XWPFConverterException( String msg )
+    {
+        super( msg );
+    }
 
     public XWPFConverterException( Throwable t )
     {
         super( t );
     }
+
 }

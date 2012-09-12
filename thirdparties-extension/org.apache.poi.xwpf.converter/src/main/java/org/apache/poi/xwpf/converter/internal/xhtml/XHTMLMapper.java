@@ -32,10 +32,12 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import org.apache.poi.xwpf.converter.IURIResolver;
-import org.apache.poi.xwpf.converter.internal.XWPFElementVisitor;
+import org.apache.poi.xwpf.converter.internal.XWPFDocumentVisitor;
 import org.apache.poi.xwpf.converter.internal.itext.StyleEngineForIText;
 import org.apache.poi.xwpf.converter.internal.itext.XWPFPictureUtil;
 import org.apache.poi.xwpf.usermodel.XWPFDocument;
+import org.apache.poi.xwpf.usermodel.XWPFFooter;
+import org.apache.poi.xwpf.usermodel.XWPFHeader;
 import org.apache.poi.xwpf.usermodel.XWPFParagraph;
 import org.apache.poi.xwpf.usermodel.XWPFPicture;
 import org.apache.poi.xwpf.usermodel.XWPFPictureData;
@@ -48,6 +50,7 @@ import org.openxmlformats.schemas.drawingml.x2006.picture.CTPicture;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTBr;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTDecimalNumber;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTHdrFtrRef;
+import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTSectPr;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTString;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTTcPr;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTText;
@@ -59,7 +62,7 @@ import fr.opensagres.xdocreport.xhtml.extension.XHTMLConstants;
 import fr.opensagres.xdocreport.xhtml.extension.XHTMLPageContentBuffer;
 
 public class XHTMLMapper
-    extends XWPFElementVisitor<XHTMLPageContentBuffer>
+    extends XWPFDocumentVisitor<XHTMLPageContentBuffer, XHTMLMasterPage>
     implements XHTMLConstants, CSSStylePropertyConstants
 {
 
@@ -81,6 +84,7 @@ public class XHTMLMapper
     protected OutputStream out;
 
     public XHTMLMapper( XWPFDocument document, int indent, IURIResolver resolver )
+        throws Exception
     {
         super( document );
         this.resolver = resolver;
@@ -295,16 +299,32 @@ public class XHTMLMapper
     }
 
     @Override
-    protected void visitHeader( CTHdrFtrRef headerRef )
+    protected void visitHeader( XWPFHeader header, CTHdrFtrRef headerRef, CTSectPr sectPr, XHTMLMasterPage masterPage )
         throws Exception
     {
         // TODO Auto-generated method stub
+
     }
 
     @Override
-    protected void visitFooter( CTHdrFtrRef footerRef )
+    protected void visitFooter( XWPFFooter footer, CTHdrFtrRef footerRef, CTSectPr sectPr, XHTMLMasterPage masterPage )
         throws Exception
     {
         // TODO Auto-generated method stub
+
     }
+
+    @Override
+    protected void setActiveMasterPage( XHTMLMasterPage masterPage )
+    {
+        // TODO Auto-generated method stub
+
+    }
+
+    @Override
+    protected XHTMLMasterPage createMasterPage( CTSectPr sectPr )
+    {
+        return new XHTMLMasterPage( sectPr );
+    }
+
 }

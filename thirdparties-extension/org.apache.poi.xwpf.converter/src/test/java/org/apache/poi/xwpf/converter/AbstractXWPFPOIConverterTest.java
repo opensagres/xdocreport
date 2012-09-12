@@ -67,6 +67,19 @@ public abstract class AbstractXWPFPOIConverterTest
     }
 
     @Test
+    public void testTemplateGeneral()
+        throws IOException
+    {
+        doGenerate( "TemplateGeneral.docx" );
+    }
+    @Test
+    public void testTemplateIndividuel()
+        throws IOException
+    {
+        doGenerate( "TemplateIndividuel.docx" );
+    }
+    
+    @Test
     public void testChineseCharacters()
         throws IOException
     {

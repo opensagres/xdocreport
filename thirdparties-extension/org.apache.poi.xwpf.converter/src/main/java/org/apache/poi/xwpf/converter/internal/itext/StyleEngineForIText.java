@@ -52,7 +52,6 @@ import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTBorder;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTColor;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTDocDefaults;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTFonts;
-import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTHdrFtrRef;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTHpsMeasure;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTInd;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTPBdr;
@@ -475,7 +474,7 @@ public class StyleEngineForIText
     protected void endVisitTableCell( XWPFTableCell cell, IITextContainer tableContainer,
                                       IITextContainer tableCellContainer )
     {
-        //System.out.println( cell );
+        // System.out.println( cell );
 
     }
 
@@ -492,20 +491,6 @@ public class StyleEngineForIText
     {
         // TODO Auto-generated method stub
 
-    }
-
-    @Override
-    protected void visitHeader( CTHdrFtrRef headerRef )
-        throws Exception
-    {
-        // TODO Auto-generated method stub
-    }
-
-    @Override
-    protected void visitFooter( CTHdrFtrRef footerRef )
-        throws Exception
-    {
-        // TODO Auto-generated method stub
     }
 
     protected void visitParagraph( XWPFParagraph ele )
@@ -529,4 +514,5 @@ public class StyleEngineForIText
         // else
         return stylesMap.get( styleID );
     }
+
 }

@@ -22,46 +22,64 @@
  * OF CONTRACT, TORT OR OTHERWISE,  ARISING FROM, OUT OF OR IN CONNECTION
  * WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
-package fr.opensagres.xdocreport.itext.extension;
+package org.apache.poi.xwpf.converter.internal.itext.stylable;
 
-public class MasterPage
-    implements IMasterPage
+import java.awt.Color;
+
+/**
+ * fixes for pdf conversion by Leszek Piotrowicz <leszekp@safe-mail.net>
+ */
+public class StyleSectionProperties
 {
+    private Color backgroundColor;
 
-    private final String name;
+    private Boolean dontBalanceTextColumns;
 
-    private IMasterPageHeaderFooter header;
+    private Float marginLeft;
 
-    private IMasterPageHeaderFooter footer;
+    private Float marginRight;
 
-    public MasterPage( String name )
+    public StyleSectionProperties()
     {
-        this.name = name;
     }
 
-    public IMasterPageHeaderFooter getHeader()
+    public Color getBackgroundColor()
     {
-        return header;
+        return backgroundColor;
     }
 
-    public void setHeader( IMasterPageHeaderFooter header )
+    public void setBackgroundColor( Color backgroundColor )
     {
-        this.header = header;
+        this.backgroundColor = backgroundColor;
     }
 
-    public IMasterPageHeaderFooter getFooter()
+    public Boolean getDontBalanceTextColumns()
     {
-        return footer;
+        return dontBalanceTextColumns;
     }
 
-    public void setFooter( IMasterPageHeaderFooter footer )
+    public void setDontBalanceTextColumns( Boolean dontBalanceTextColumns )
     {
-        this.footer = footer;
+        this.dontBalanceTextColumns = dontBalanceTextColumns;
     }
 
-    public String getName()
+    public Float getMarginLeft()
     {
-        return name;
+        return marginLeft;
     }
 
+    public void setMarginLeft( Float marginLeft )
+    {
+        this.marginLeft = marginLeft;
+    }
+
+    public Float getMarginRight()
+    {
+        return marginRight;
+    }
+
+    public void setMarginRight( Float marginRight )
+    {
+        this.marginRight = marginRight;
+    }
 }

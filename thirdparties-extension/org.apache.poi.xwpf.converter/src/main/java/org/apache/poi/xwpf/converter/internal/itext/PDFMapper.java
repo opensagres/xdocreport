@@ -41,9 +41,9 @@ import java.util.logging.Logger;
 import org.apache.poi.xwpf.converter.internal.XWPFDocumentVisitor;
 import org.apache.poi.xwpf.converter.internal.itext.stylable.IStylableContainer;
 import org.apache.poi.xwpf.converter.internal.itext.stylable.IStylableElement;
-import org.apache.poi.xwpf.converter.internal.itext.stylable.StylableMasterPage;
 import org.apache.poi.xwpf.converter.internal.itext.stylable.StylableDocument;
 import org.apache.poi.xwpf.converter.internal.itext.stylable.StylableHeaderFooter;
+import org.apache.poi.xwpf.converter.internal.itext.stylable.StylableMasterPage;
 import org.apache.poi.xwpf.converter.internal.itext.stylable.StylableParagraph;
 import org.apache.poi.xwpf.converter.internal.itext.stylable.StylableTable;
 import org.apache.poi.xwpf.converter.internal.itext.styles.Style;
@@ -86,6 +86,7 @@ import com.lowagie.text.Chunk;
 import com.lowagie.text.Element;
 import com.lowagie.text.Font;
 import com.lowagie.text.Image;
+import com.lowagie.text.Phrase;
 import com.lowagie.text.Rectangle;
 import com.lowagie.text.pdf.PdfPCell;
 import com.lowagie.text.pdf.draw.VerticalPositionMark;
@@ -546,7 +547,7 @@ public class PDFMapper
                 }
                 else
                 {
-                    parentContainer.addElement( img );
+                    parentContainer.addElement( new Chunk(img, 0, 0, false) );
                 }
 
             }

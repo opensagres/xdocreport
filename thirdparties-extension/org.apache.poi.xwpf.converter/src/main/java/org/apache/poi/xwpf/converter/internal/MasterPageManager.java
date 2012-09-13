@@ -4,7 +4,6 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.Map;
-import java.util.Stack;
 
 import org.apache.poi.xwpf.usermodel.BodyElementType;
 import org.apache.poi.xwpf.usermodel.IBodyElement;
@@ -13,7 +12,12 @@ import org.apache.poi.xwpf.usermodel.XWPFParagraph;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTHdrFtrRef;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTPPr;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTSectPr;
+import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTSectType;
+import org.openxmlformats.schemas.wordprocessingml.x2006.main.STSectionMark;
 
+/**
+ * See http://officeopenxml.com/WPsection.php
+ */
 public class MasterPageManager
     extends LinkedList<CTSectPr>
 {
@@ -132,7 +136,6 @@ public class MasterPageManager
         visitHeadersFooters( masterPage, sectPr );
         masterPages.put( sectPr, masterPage );
 
-        visitor.sectionAdded( sectPr );
     }
 
     // ------------------------------ Header/Footer visitor -----------

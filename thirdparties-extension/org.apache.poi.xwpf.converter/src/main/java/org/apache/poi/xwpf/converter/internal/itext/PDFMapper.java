@@ -86,7 +86,6 @@ import com.lowagie.text.Chunk;
 import com.lowagie.text.Element;
 import com.lowagie.text.Font;
 import com.lowagie.text.Image;
-import com.lowagie.text.Phrase;
 import com.lowagie.text.Rectangle;
 import com.lowagie.text.pdf.PdfPCell;
 import com.lowagie.text.pdf.draw.VerticalPositionMark;
@@ -520,6 +519,7 @@ public class PDFMapper
     protected void visitPicture( XWPFPicture picture, IITextContainer parentContainer )
         throws Exception
     {
+
         CTPositiveSize2D ext = picture.getCTPicture().getSpPr().getXfrm().getExt();
         long x = ext.getCx();
         long y = ext.getCy();
@@ -527,8 +527,7 @@ public class PDFMapper
         CTPicture ctPic = picture.getCTPicture();
         String blipId = ctPic.getBlipFill().getBlip().getEmbed();
 
-        XWPFPictureData pictureData = getPictureDataByID( blipId );
-
+        XWPFPictureData pictureData = super.getPictureDataByID( blipId );
         if ( pictureData != null )
         {
             try
@@ -547,7 +546,7 @@ public class PDFMapper
                 }
                 else
                 {
-                    parentContainer.addElement( new Chunk(img, 0, 0, false) );
+                    parentContainer.addElement( new Chunk( img, 0, 0, false ) );
                 }
 
             }
@@ -595,12 +594,6 @@ public class PDFMapper
         return getXWPFStyle( paragraph.getStyleID() );
     }
 
-    // @Override
-    // protected void sectionChanged( CTSectPr sectPr )
-    // {
-    // applySectPr( sectPr );
-    // }
-
     protected void setActiveMasterPage( StylableMasterPage masterPage )
     {
         pdfDocument.setActiveMasterPage( masterPage );
@@ -610,11 +603,5 @@ public class PDFMapper
     protected StylableMasterPage createMasterPage( CTSectPr sectPr )
     {
         return new StylableMasterPage( sectPr );
-    };
-
-    // @Override
-    // protected void sectionAdded( CTSectPr sectPr )
-    // {
-    //
-    // }
+    }
 }

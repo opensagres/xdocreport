@@ -141,12 +141,18 @@ public abstract class XWPFDocumentVisitor<T, E extends IXWPFMasterPage>
         return document.getPictureDataByID( blipId );
     }
 
+    /**
+     * Set active master page.
+     * 
+     * @param masterPage
+     */
     protected abstract void setActiveMasterPage( E masterPage );
 
-    protected void sectionAdded( CTSectPr sectPr )
-    {
-
-    }
-
+    /**
+     * Create an instance of master page.
+     * 
+     * @param sectPr
+     * @return
+     */
     protected abstract IXWPFMasterPage createMasterPage( CTSectPr sectPr );
 }

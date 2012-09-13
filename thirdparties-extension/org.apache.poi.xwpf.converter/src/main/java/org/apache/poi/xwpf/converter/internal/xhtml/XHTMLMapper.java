@@ -34,7 +34,6 @@ import java.util.logging.Logger;
 import org.apache.poi.xwpf.converter.IURIResolver;
 import org.apache.poi.xwpf.converter.internal.XWPFDocumentVisitor;
 import org.apache.poi.xwpf.converter.internal.itext.StyleEngineForIText;
-import org.apache.poi.xwpf.converter.internal.itext.XWPFPictureUtil;
 import org.apache.poi.xwpf.usermodel.XWPFDocument;
 import org.apache.poi.xwpf.usermodel.XWPFFooter;
 import org.apache.poi.xwpf.usermodel.XWPFHeader;
@@ -272,7 +271,7 @@ public class XHTMLMapper
         CTPicture ctPic = picture.getCTPicture();
         String blipId = ctPic.getBlipFill().getBlip().getEmbed();
         // Src attribute
-        XWPFPictureData pictureData = XWPFPictureUtil.getPictureData( document, blipId );
+        XWPFPictureData pictureData = super.getPictureDataByID(  blipId );
         if ( pictureData != null )
         {
             String src = pictureData.getFileName();

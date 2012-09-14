@@ -31,18 +31,12 @@ import java.util.logging.Logger;
 import org.apache.poi.xwpf.usermodel.IBodyElement;
 import org.apache.poi.xwpf.usermodel.XWPFDocument;
 import org.apache.poi.xwpf.usermodel.XWPFParagraph;
-import org.apache.poi.xwpf.usermodel.XWPFPicture;
 import org.apache.poi.xwpf.usermodel.XWPFRun;
 import org.apache.poi.xwpf.usermodel.XWPFStyle;
 import org.apache.poi.xwpf.usermodel.XWPFTable;
 import org.apache.poi.xwpf.usermodel.XWPFTableCell;
 import org.apache.poi.xwpf.usermodel.XWPFTableRow;
-import org.apache.xmlbeans.XmlCursor;
-import org.apache.xmlbeans.XmlObject;
-import org.openxmlformats.schemas.drawingml.x2006.wordprocessingDrawing.CTInline;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTDocDefaults;
-import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTDrawing;
-import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTPPr;
 
 public abstract class XWPFElementVisitor<T>
 {
@@ -150,6 +144,29 @@ public abstract class XWPFElementVisitor<T>
         List<XWPFRun> runs = paragraph.getRuns();
         if ( runs.isEmpty() )
         {
+            // sometimes, POI tells that run is empty
+            // but it can be have w:r in the w:pPr
+            // <w:p><w:pPr .. <w:r> => See the header1.xml of DocxBig.docx ,
+            // => test if it exist w:r
+//            CTP p = paragraph.getCTP();
+//            CTPPr pPr = p.getPPr();
+//            if (pPr != null) {
+//                XmlObject[] wRuns = pPr.selectPath("declare namespace w='http://schemas.openxmlformats.org/wordprocessingml/2006/main' .//w:r");
+//                if (wRuns != null) {
+//                    for ( int i = 0; i < wRuns.length; i++ )
+//                    {
+//                        XmlObject o = wRuns[i];
+//                        o.getDomNode().getParentNode()
+//                        if (o instanceof CTR) {
+//                            System.err.println(wRuns[i]);
+//                        }
+//                        
+//                    }
+//                }
+//            }
+//            //XmlObject[] t = o.selectPath("declare namespace w='http://schemas.openxmlformats.org/wordprocessingml/2006/main' .//w:t");
+//            //paragraph.getCTP().get
+            
             visitEmptyRun( paragraphContainer );
         }
         else
@@ -222,29 +239,6 @@ public abstract class XWPFElementVisitor<T>
 
     protected abstract void endVisitTableCell( XWPFTableCell cell, T tableContainer, T tableCellContainer );
 
-//    protected void visitPictures( XWPFRun run, T parentContainer )
-//        throws Exception
-//    {
-//        List<CTDrawing> drawings = run.getCTR().getDrawingList();
-//        for ( CTDrawing drawing : drawings )
-//        {
-//            List<CTInline> inlines = drawing.getInlineList();
-//            for ( CTInline ctInline : inlines )
-//            {
-//                ctInline.getEffectExtent();
-//            }
-//
-//        }
-//        List<XWPFPicture> embeddedPictures = run.getEmbeddedPictures();
-//        for ( XWPFPicture picture : embeddedPictures )
-//        {
-//            visitPicture( picture, parentContainer );
-//        }
-//    }
-//
-//    protected abstract void visitPicture( XWPFPicture picture, T parentContainer )
-//        throws Exception;
-
     protected XWPFStyle getXWPFStyle( String styleID )
     {
         if ( styleID == null )
@@ -252,36 +246,5 @@ public abstract class XWPFElementVisitor<T>
         else
             return document.getStyles().getStyle( styleID );
     }
-
-    // protected void visitSectPr( CTSectPr sectPr )
-    // {
-    // if ( sectPr == null )
-    // {
-    // return;
-    // }
-    // // Set page size
-    // CTPageSz pageSize = sectPr.getPgSz();
-    //
-    // Style style = new Style( "" );
-    // StylePageLayoutProperties pageLayoutProperties = new StylePageLayoutProperties();
-    // style.setPageLayoutProperties( pageLayoutProperties );
-    // // Height/Width
-    // pageLayoutProperties.setHeight( (float) dxa2points( pageSize.getH() ) );
-    // pageLayoutProperties.setWidth( (float) dxa2points( pageSize.getW() ) );
-    // // Orientation
-    // pageLayoutProperties.setOrientation( getPageOrientation( pageSize.getOrient() ) );
-    // // Margins
-    // CTPageMar pageMar = sectPr.getPgMar();
-    // if ( pageMar != null )
-    // {
-    // pageLayoutProperties.setMarginLeft( (float) dxa2points( pageMar.getLeft() ) );
-    // pageLayoutProperties.setMarginRight( (float) dxa2points( pageMar.getRight() ) );
-    // pageLayoutProperties.setMarginTop( (float) dxa2points( pageMar.getTop() ) );
-    // pageLayoutProperties.setMarginBottom( (float) dxa2points( pageMar.getBottom() ) );
-    // }
-    // applyStyleSection( style );
-    // }
-
-    // protected abstract void applyStyleSection( Style style );
 
 }

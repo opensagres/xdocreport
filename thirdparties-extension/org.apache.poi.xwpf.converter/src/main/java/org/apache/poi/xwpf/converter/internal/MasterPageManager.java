@@ -12,8 +12,6 @@ import org.apache.poi.xwpf.usermodel.XWPFParagraph;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTHdrFtrRef;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTPPr;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTSectPr;
-import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTSectType;
-import org.openxmlformats.schemas.wordprocessingml.x2006.main.STSectionMark;
 
 /**
  * See http://officeopenxml.com/WPsection.php

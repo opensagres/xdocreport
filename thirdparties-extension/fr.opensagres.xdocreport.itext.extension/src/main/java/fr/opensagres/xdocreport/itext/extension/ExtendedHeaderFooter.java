@@ -106,4 +106,5 @@ public class ExtendedHeaderFooter
 
         this.masterPage = masterPage;
     }
+    
 }

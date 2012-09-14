@@ -36,7 +36,6 @@ import org.apache.poi.xwpf.converter.IURIResolver;
 import org.apache.poi.xwpf.converter.internal.AbstractStyleEngine;
 import org.apache.poi.xwpf.usermodel.XWPFDocument;
 import org.apache.poi.xwpf.usermodel.XWPFParagraph;
-import org.apache.poi.xwpf.usermodel.XWPFPicture;
 import org.apache.poi.xwpf.usermodel.XWPFRun;
 import org.apache.poi.xwpf.usermodel.XWPFStyle;
 import org.apache.poi.xwpf.usermodel.XWPFTable;
@@ -471,13 +470,6 @@ public class StyleEngineForXHTML
                                       IITextContainer tableCellContainer )
     {
         // System.out.println( cell );
-
-    }
-
-    @Override
-    protected void visitPicture( XWPFPicture picture, IITextContainer parentContainer )
-        throws Exception
-    {
 
     }
 

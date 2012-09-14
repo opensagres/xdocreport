@@ -2,8 +2,8 @@ package org.apache.poi.xwpf.converter.internal;
 
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.Map;
-import java.util.Stack;
 
 import org.apache.poi.xwpf.usermodel.BodyElementType;
 import org.apache.poi.xwpf.usermodel.IBodyElement;
@@ -13,8 +13,11 @@ import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTHdrFtrRef;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTPPr;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTSectPr;
 
+/**
+ * See http://officeopenxml.com/WPsection.php
+ */
 public class MasterPageManager
-    extends Stack<CTSectPr>
+    extends LinkedList<CTSectPr>
 {
 
     private final XWPFDocument document;
@@ -29,6 +32,8 @@ public class MasterPageManager
 
     private boolean initialized;
 
+    private boolean changeSection;
+
     public MasterPageManager( XWPFDocument document, XWPFDocumentVisitor visitor )
         throws Exception
     {
@@ -37,19 +42,25 @@ public class MasterPageManager
         this.bodySectPr = document.getDocument().getBody().getSectPr();
         this.masterPages = new HashMap<CTSectPr, IXWPFMasterPage>();
         this.initialized = false;
+        this.changeSection = false;
     }
 
     public void initialize()
         throws Exception
     {
         this.initialized = true;
-        compute( document );        
+        compute( document );
         if ( isEmpty() )
         {
             currentSectPr = bodySectPr;
             addSection( currentSectPr, false );
             fireSectionChanged( currentSectPr );
-        }        
+        }
+        else
+        {
+            currentSectPr = super.poll();
+            fireSectionChanged( currentSectPr );
+        }
     }
 
     private void compute( XWPFDocument document )
@@ -78,24 +89,28 @@ public class MasterPageManager
 
     public void update( XWPFParagraph paragraph )
     {
-        if ( !isEmpty() )
+        if ( changeSection )
         {
-            if ( currentSectPr == null )
+            changeSection = false;
+            if ( !isEmpty() )
             {
-                currentSectPr = super.pop();
+                currentSectPr = super.poll();
                 fireSectionChanged( currentSectPr );
+
             }
             else
             {
-                CTSectPr sectPr = getSectPr( paragraph );
-                if ( sectPr != null )
-                {
-                    if ( !currentSectPr.equals( sectPr ) )
-                    {
-                        currentSectPr = sectPr;
-                        fireSectionChanged( currentSectPr );
-                    }
-                }
+                currentSectPr = bodySectPr;
+                fireSectionChanged( currentSectPr );
+            }
+        }
+        else
+        {
+            CTSectPr sectPr = getSectPr( paragraph );
+            if ( sectPr != null )
+            {
+                currentSectPr = sectPr;
+                changeSection = true;
             }
         }
     }
@@ -110,7 +125,7 @@ public class MasterPageManager
     {
         if ( pushIt )
         {
-            super.push( sectPr );
+            super.add( sectPr );
         }
 
         // For each <w:sectPr of the word/document.xml, create a master page.
@@ -119,7 +134,6 @@ public class MasterPageManager
         visitHeadersFooters( masterPage, sectPr );
         masterPages.put( sectPr, masterPage );
 
-        visitor.sectionAdded( sectPr );
     }
 
     // ------------------------------ Header/Footer visitor -----------

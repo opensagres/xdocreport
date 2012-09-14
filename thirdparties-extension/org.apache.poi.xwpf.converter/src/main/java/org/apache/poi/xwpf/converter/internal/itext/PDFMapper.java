@@ -41,36 +41,40 @@ import java.util.logging.Logger;
 import org.apache.poi.xwpf.converter.internal.XWPFDocumentVisitor;
 import org.apache.poi.xwpf.converter.internal.itext.stylable.IStylableContainer;
 import org.apache.poi.xwpf.converter.internal.itext.stylable.IStylableElement;
-import org.apache.poi.xwpf.converter.internal.itext.stylable.StylableMasterPage;
 import org.apache.poi.xwpf.converter.internal.itext.stylable.StylableDocument;
 import org.apache.poi.xwpf.converter.internal.itext.stylable.StylableHeaderFooter;
+import org.apache.poi.xwpf.converter.internal.itext.stylable.StylableMasterPage;
 import org.apache.poi.xwpf.converter.internal.itext.stylable.StylableParagraph;
 import org.apache.poi.xwpf.converter.internal.itext.stylable.StylableTable;
 import org.apache.poi.xwpf.converter.internal.itext.styles.Style;
 import org.apache.poi.xwpf.converter.internal.itext.styles.StyleBorder;
 import org.apache.poi.xwpf.converter.itext.PDFViaITextOptions;
+import org.apache.poi.xwpf.usermodel.Borders;
 import org.apache.poi.xwpf.usermodel.IBodyElement;
 import org.apache.poi.xwpf.usermodel.UnderlinePatterns;
 import org.apache.poi.xwpf.usermodel.XWPFDocument;
 import org.apache.poi.xwpf.usermodel.XWPFFooter;
 import org.apache.poi.xwpf.usermodel.XWPFHeader;
 import org.apache.poi.xwpf.usermodel.XWPFParagraph;
-import org.apache.poi.xwpf.usermodel.XWPFPicture;
 import org.apache.poi.xwpf.usermodel.XWPFPictureData;
 import org.apache.poi.xwpf.usermodel.XWPFRun;
 import org.apache.poi.xwpf.usermodel.XWPFStyle;
 import org.apache.poi.xwpf.usermodel.XWPFTable;
 import org.apache.poi.xwpf.usermodel.XWPFTableCell;
 import org.apache.poi.xwpf.usermodel.XWPFTableRow;
+import org.apache.xmlbeans.XmlCursor;
+import org.apache.xmlbeans.XmlObject;
 import org.openxmlformats.schemas.drawingml.x2006.main.CTPositiveSize2D;
 import org.openxmlformats.schemas.drawingml.x2006.picture.CTPicture;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTBorder;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTBr;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTDecimalNumber;
+import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTDrawing;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTEmpty;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTHdrFtrRef;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTOnOff;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTPPr;
+import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTPTab;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTR;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTRPr;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTSectPr;
@@ -202,16 +206,54 @@ public class PDFMapper
         styleEngine.startVisitPargraph( docxParagraph, pdfParagraph );
         pdfParagraph.setITextContainer( parentContainer );
 
-        // TODO
-
+        // Paragraph Background color
         String backgroundColor = XWPFParagraphUtils.getBackgroundColor( docxParagraph );
         if ( StringUtils.isNotEmpty( backgroundColor ) )
         {
-            pdfParagraph.getPdfPCell().setBackgroundColor( ColorRegistry.getInstance().getColor( "0x" + backgroundColor ) );
+            pdfParagraph.setBackgroundColor( ColorRegistry.getInstance().getColor( "0x" + backgroundColor ) );
         }
+
+        // Paragraph border
+        int border = 0;
+        Borders borderTop = docxParagraph.getBorderTop();
+        if ( hasBorder( borderTop ) )
+        {
+            border = border | Rectangle.TOP;
+        }
+        Borders borderBottom = docxParagraph.getBorderBottom();
+        if ( hasBorder( borderBottom ) )
+        {
+            border = border | Rectangle.BOTTOM;
+        }
+        Borders borderLeft = docxParagraph.getBorderLeft();
+        if ( hasBorder( borderLeft ) )
+        {
+            border = border | Rectangle.LEFT;
+        }
+        Borders borderRight = docxParagraph.getBorderRight();
+        if ( hasBorder( borderRight ) )
+        {
+            border = border | Rectangle.RIGHT;
+        }
+        if ( border > 0 )
+        {
+            pdfParagraph.getPdfPCell().setBorder( border );
+            // pdfParagraph.getPdfPCell().setCellEvent( new CustomPdfPCellEvent() );
+        }
+
         // finally apply the style to the iText paragraph....
         applyStyles( docxParagraph, pdfParagraph );
+
         return pdfParagraph;
+    }
+
+    private boolean hasBorder( Borders borders )
+    {
+        if ( borders == null )
+        {
+            return false;
+        }
+        return ( borders.getValue() != Borders.NONE.getValue() && borders.getValue() != Borders.NIL.getValue() );
     }
 
     @Override
@@ -306,35 +348,66 @@ public class PDFMapper
                 break;
         }
 
-        List<CTBr> brs = ctr.getBrList();
-        for ( @SuppressWarnings( "unused" )
-        CTBr br : brs )
+        // Loop for each element of <w:run text, tab, image etc
+        // to keep the oder of thoses elements.
+        XmlCursor c = ctr.newCursor();
+        c.selectPath( "./*" );
+        while ( c.toNextSelection() )
         {
-            pdfContainer.addElement( Chunk.NEWLINE );
-        }
+            XmlObject o = c.getObject();
 
-        List<CTEmpty> tabs = ctr.getTabList();
-        if ( tabs != null && tabs.size() > 0 )
-        {
-            for ( CTEmpty ctEmpty : tabs )
+            if ( o instanceof CTText )
             {
-                Chunk tab = new Chunk( new VerticalPositionMark() );
-                pdfContainer.addElement( tab );
+                CTText ctText = (CTText) o;
+                String tagName = o.getDomNode().getNodeName();
+                // Field Codes (w:instrText, defined in spec sec. 17.16.23)
+                // come up as instances of CTText, but we don't want them
+                // in the normal text output
+                if ( !"w:instrText".equals( tagName ) )
+                {
+                    Chunk aChunk = new Chunk( ctText.getStringValue(), font );
+                    if ( singleUnderlined )
+                        aChunk.setUnderline( 1, -2 );
+
+                    pdfContainer.addElement( aChunk );
+
+                }
+            }
+            else if ( o instanceof CTPTab )
+            {
+                visitTab( pdfContainer, (CTPTab) o );
+            }
+            else if ( o instanceof CTBr )
+            {
+                visitBR( pdfContainer, (CTBr) o );
+            }
+            else if ( o instanceof CTEmpty )
+            {
+                // Some inline text elements get returned not as
+                // themselves, but as CTEmpty, owing to some odd
+                // definitions around line 5642 of the XSDs
+                // This bit works around it, and replicates the above
+                // rules for that case
+                String tagName = o.getDomNode().getNodeName();
+                if ( "w:tab".equals( tagName ) )
+                {
+                    visitTab( pdfContainer, null );
+                }
+                if ( "w:br".equals( tagName ) )
+                {
+                    visitBR( pdfContainer, null );
+                }
+                if ( "w:cr".equals( tagName ) )
+                {
+                    visitBR( pdfContainer, null );
+                }
+            }
+            else if ( o instanceof CTDrawing )
+            {
+                visitDrawing( (CTDrawing) o, pdfContainer );
             }
         }
-
-        List<CTText> texts = run.getCTR().getTList();
-        for ( CTText ctText : texts )
-        {
-
-            Chunk aChunk = new Chunk( ctText.getStringValue(), font );
-            if ( singleUnderlined )
-                aChunk.setUnderline( 1, -2 );
-
-            pdfContainer.addElement( aChunk );
-        }
-
-        super.visitPictures( run, pdfContainer );
+        c.dispose();
 
         // <w:lastRenderedPageBreak />
         List<CTEmpty> lastRenderedPageBreakList = ctr.getLastRenderedPageBreakList();
@@ -357,6 +430,18 @@ public class PDFMapper
                 pdfDocument.pageBreak();
             }
         }
+    }
+
+    private void visitTab( IITextContainer pdfContainer, CTPTab tab )
+    {
+        // Chunk pdfTab = new Chunk( new DottedLineSeparator() )
+        Chunk pdfTab = new Chunk( new VerticalPositionMark() );
+        pdfContainer.addElement( pdfTab );
+    }
+
+    private void visitBR( IITextContainer pdfContainer, CTBr br )
+    {
+        pdfContainer.addElement( Chunk.NEWLINE );
     }
 
     // Visit table
@@ -516,18 +601,15 @@ public class PDFMapper
     }
 
     @Override
-    protected void visitPicture( XWPFPicture picture, IITextContainer parentContainer )
-        throws Exception
+    protected void visitPicture( CTPicture picture, IITextContainer parentContainer )
     {
-        CTPositiveSize2D ext = picture.getCTPicture().getSpPr().getXfrm().getExt();
+        CTPositiveSize2D ext = picture.getSpPr().getXfrm().getExt();
         long x = ext.getCx();
         long y = ext.getCy();
 
-        CTPicture ctPic = picture.getCTPicture();
-        String blipId = ctPic.getBlipFill().getBlip().getEmbed();
+        String blipId = picture.getBlipFill().getBlip().getEmbed();
 
-        XWPFPictureData pictureData = getPictureDataByID( blipId );
-
+        XWPFPictureData pictureData = super.getPictureDataByID( blipId );
         if ( pictureData != null )
         {
             try
@@ -538,15 +620,11 @@ public class PDFMapper
                 IITextContainer parentOfParentContainer = parentContainer.getITextContainer();
                 if ( parentOfParentContainer != null && parentOfParentContainer instanceof PdfPCell )
                 {
-                    // Phrase ph = new Phrase(new Chunk(img, 0, 0));
-                    // ph.add(new Chunk("SomeText"));
                     parentOfParentContainer.addElement( img );
-                    // ( (PdfPCell) parentOfParentContainer ).setImage( img );
-
                 }
                 else
                 {
-                    parentContainer.addElement( img );
+                    parentContainer.addElement( new Chunk( img, 0, 0, false ) );
                 }
 
             }
@@ -556,7 +634,6 @@ public class PDFMapper
             }
 
         }
-
     }
 
     private void applyStyles( XWPFParagraph ele, IStylableElement<XWPFParagraph> element )
@@ -594,12 +671,6 @@ public class PDFMapper
         return getXWPFStyle( paragraph.getStyleID() );
     }
 
-    // @Override
-    // protected void sectionChanged( CTSectPr sectPr )
-    // {
-    // applySectPr( sectPr );
-    // }
-
     protected void setActiveMasterPage( StylableMasterPage masterPage )
     {
         pdfDocument.setActiveMasterPage( masterPage );
@@ -609,11 +680,5 @@ public class PDFMapper
     protected StylableMasterPage createMasterPage( CTSectPr sectPr )
     {
         return new StylableMasterPage( sectPr );
-    };
-
-    // @Override
-    // protected void sectionAdded( CTSectPr sectPr )
-    // {
-    //
-    // }
+    }
 }

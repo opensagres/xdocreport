@@ -26,6 +26,8 @@ package org.apache.poi.xwpf.converter.internal.itext.stylable;
 
 import static org.apache.poi.xwpf.converter.internal.DxaUtil.dxa2points;
 
+import java.awt.Color;
+
 import org.apache.poi.xwpf.converter.internal.itext.XWPFFontRegistry;
 import org.apache.poi.xwpf.converter.internal.itext.styles.FontInfos;
 import org.apache.poi.xwpf.converter.internal.itext.styles.Style;
@@ -261,5 +263,10 @@ public class StylableParagraph
     public Element getElement()
     {
         return this;// super.getContainer();
+    }
+
+    public void setBackgroundColor( Color backgroundColor )
+    {
+        getPdfPCell().setBackgroundColor( backgroundColor );
     }
 }

@@ -42,7 +42,6 @@ import org.apache.poi.xwpf.converter.internal.itext.styles.StyleTableProperties;
 import org.apache.poi.xwpf.converter.itext.PDFViaITextOptions;
 import org.apache.poi.xwpf.usermodel.XWPFDocument;
 import org.apache.poi.xwpf.usermodel.XWPFParagraph;
-import org.apache.poi.xwpf.usermodel.XWPFPicture;
 import org.apache.poi.xwpf.usermodel.XWPFRun;
 import org.apache.poi.xwpf.usermodel.XWPFStyle;
 import org.apache.poi.xwpf.usermodel.XWPFTable;
@@ -475,13 +474,6 @@ public class StyleEngineForIText
                                       IITextContainer tableCellContainer )
     {
         // System.out.println( cell );
-
-    }
-
-    @Override
-    protected void visitPicture( XWPFPicture picture, IITextContainer parentContainer )
-        throws Exception
-    {
 
     }
 

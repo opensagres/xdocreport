@@ -11,7 +11,14 @@ import org.apache.poi.xwpf.usermodel.XWPFFooter;
 import org.apache.poi.xwpf.usermodel.XWPFHeader;
 import org.apache.poi.xwpf.usermodel.XWPFParagraph;
 import org.apache.poi.xwpf.usermodel.XWPFPictureData;
+import org.apache.xmlbeans.XmlCursor;
 import org.apache.xmlbeans.XmlException;
+import org.apache.xmlbeans.XmlObject;
+import org.openxmlformats.schemas.drawingml.x2006.main.CTGraphicalObject;
+import org.openxmlformats.schemas.drawingml.x2006.main.CTGraphicalObjectData;
+import org.openxmlformats.schemas.drawingml.x2006.picture.CTPicture;
+import org.openxmlformats.schemas.drawingml.x2006.wordprocessingDrawing.CTInline;
+import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTDrawing;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTHdrFtr;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTHdrFtrRef;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTSectPr;
@@ -128,6 +135,43 @@ public abstract class XWPFDocumentVisitor<T, E extends IXWPFMasterPage>
         return ftr;
     }
 
+    protected void visitDrawing( CTDrawing drawing, T parentContainer )
+        throws Exception
+    {
+        List<CTInline> inlines = drawing.getInlineList();
+        for ( CTInline inline : inlines )
+        {
+            visitInline( inline, parentContainer );
+        }
+    }
+
+    protected void visitInline( CTInline inline, T parentContainer )
+        throws Exception
+    {
+        CTGraphicalObject graphic = inline.getGraphic();
+        if ( graphic != null )
+        {
+            CTGraphicalObjectData graphicData = graphic.getGraphicData();
+            if ( graphicData != null )
+            {
+                XmlCursor c = graphicData.newCursor();
+                c.selectPath( "./*" );
+                while ( c.toNextSelection() )
+                {
+                    XmlObject o = c.getObject();
+                    if ( o instanceof CTPicture )
+                    {
+                        visitPicture( (CTPicture) o, parentContainer );
+                    }
+                }
+                c.dispose();
+            }
+        }
+    }
+
+    protected abstract void visitPicture( CTPicture picture, T parentContainer )
+        throws Exception;
+
     protected XWPFPictureData getPictureDataByID( String blipId )
     {
         if ( currentHeader != null )
@@ -141,12 +185,18 @@ public abstract class XWPFDocumentVisitor<T, E extends IXWPFMasterPage>
         return document.getPictureDataByID( blipId );
     }
 
+    /**
+     * Set active master page.
+     * 
+     * @param masterPage
+     */
     protected abstract void setActiveMasterPage( E masterPage );
 
-    protected void sectionAdded( CTSectPr sectPr )
-    {
-
-    }
-
+    /**
+     * Create an instance of master page.
+     * 
+     * @param sectPr
+     * @return
+     */
     protected abstract IXWPFMasterPage createMasterPage( CTSectPr sectPr );
 }

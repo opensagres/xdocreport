@@ -24,12 +24,18 @@
  */
 package org.apache.poi.xwpf.converter.internal.itext.stylable;
 
+import static org.apache.poi.xwpf.converter.internal.DxaUtil.dxa2points;
+
 import java.io.OutputStream;
 
 import org.apache.poi.xwpf.converter.XWPFConverterException;
+import org.apache.poi.xwpf.converter.internal.XWPFUtils;
 import org.apache.poi.xwpf.converter.internal.itext.StyleEngineForIText;
 import org.apache.poi.xwpf.converter.internal.itext.styles.Style;
 import org.apache.poi.xwpf.converter.internal.itext.styles.StylePageLayoutProperties;
+import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTPageMar;
+import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTPageSz;
+import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTSectPr;
 
 import com.lowagie.text.Document;
 import com.lowagie.text.DocumentException;
@@ -60,7 +66,7 @@ public class StylableDocument
 
     private StylableChapter currentChapter;
 
-    private IMasterPage activeMasterPage;
+    private StylableMasterPage activeMasterPage;
 
     private boolean masterPageJustChanged;
 
@@ -137,22 +143,22 @@ public class StylableDocument
             // flush pending content
             flushTable();
             // check if master page change necessary
-            Style nextStyle = setNextActiveMasterPageIfNecessary();
+            // Style nextStyle = setNextActiveMasterPageIfNecessary();
             // document new page
             super.newPage();
             // initialize column layout for new page
-            if ( nextStyle == null )
-            {
-                // ordinary page break
-                layoutTable = StylableDocumentSection.cloneAndClearTable( layoutTable, false );
-            }
-            else
-            {
-                // page break with new master page activation
-                // style changed so recreate table
-                layoutTable =
-                    StylableDocumentSection.createLayoutTable( getPageWidth(), getAdjustedPageHeight(), nextStyle );
-            }
+            // if ( nextStyle == null )
+            // {
+            // ordinary page break
+            layoutTable = StylableDocumentSection.cloneAndClearTable( layoutTable, false );
+            // }
+            // else
+            // {
+            // // page break with new master page activation
+            // // style changed so recreate table
+            // layoutTable =
+            // StylableDocumentSection.createLayoutTable( getPageWidth(), getAdjustedPageHeight(), nextStyle );
+            // }
             setColIdx( 0 );
             simulateText();
         }
@@ -289,22 +295,30 @@ public class StylableDocument
     }
 
     @Override
-    public void setActiveMasterPage( IMasterPage masterPage )
+    public void setActiveMasterPage( IMasterPage m )
     {
-        if ( activeMasterPage != null && activeMasterPage.equals( masterPage ) )
+        StylableMasterPage masterPage = (StylableMasterPage) m;
+        if ( activeMasterPage != null && XWPFUtils.isContinuousSection( masterPage.getSectPr() ) )
         {
+            // ignore section with "continous" section <w:sectPr><w:type w:val="continuous" />
+            // because continous section applies changes (ex: modify width/height)
+            // for the paragraph and iText cannot support that (a new page must be added to
+            // change the width/height of the page).
+
+            // see explanation about "continous" at http://officeopenxml.com/WPsection.php
             return;
         }
 
         // flush pending content
         flushTable();
         // activate master page in three steps
-        Style style = getStyleMasterPage( masterPage );
-        if ( style != null )
-        {
-            // step 1 - apply styles like page dimensions and orientation
-            this.applyStyles( style );
-        }
+
+        // Style style = getStyleMasterPage( masterPage );
+        // if ( style != null )
+        // {
+        // step 1 - apply styles like page dimensions and orientation
+        this.applySectPr( masterPage.getSectPr() );
+        // }
         // step 2 - set header/footer if any, it needs page dimensions from step 1
         super.setActiveMasterPage( masterPage );
         if ( activeMasterPage != null )
@@ -312,42 +326,66 @@ public class StylableDocument
             // set a flag used by addElement/pageBreak
             masterPageJustChanged = true;
         }
-        activeMasterPage = (IMasterPage) masterPage;
+        activeMasterPage = masterPage;
         // step 3 - initialize column layout, it needs page dimensions which may be lowered by header/footer in step 2
-        layoutTable = StylableDocumentSection.createLayoutTable( getPageWidth(), getAdjustedPageHeight(), style );
+        layoutTable = StylableDocumentSection.createLayoutTable( getPageWidth(), getAdjustedPageHeight(), (Style) null );
         text = StylableDocumentSection.createColumnText();
         setColIdx( 0 );
     }
 
-    private Style setNextActiveMasterPageIfNecessary()
+    private void applySectPr( CTSectPr sectPr )
     {
-        // called on page break
-        // return new page style if changed
-        if ( activeMasterPage != null )
+        // Set page size
+        CTPageSz pageSize = sectPr.getPgSz();
+        Rectangle pdfPageSize = new Rectangle( dxa2points( pageSize.getW() ), dxa2points( pageSize.getH() ) );
+        super.setPageSize( pdfPageSize );
+
+        // Orientation
+        PageOrientation orientation = XWPFUtils.getPageOrientation( pageSize.getOrient() );
+        if ( orientation != null )
         {
-            String nextMasterPageStyleName = null;// activeMasterPage.getNextStyleName();
-            if ( nextMasterPageStyleName != null && nextMasterPageStyleName.length() > 0 )
-            {
-                IMasterPage nextMasterPage = getMasterPage( nextMasterPageStyleName );
-                if ( nextMasterPage != null )
-                {
-                    // activate next master page
-                    Style style = getStyleMasterPage( nextMasterPage );
-                    if ( style != null )
-                    {
-                        // step 1 - apply styles like page dimensions and orientation
-                        this.applyStyles( style );
-                    }
-                    // step 2 - set header/footer if any, it needs page dimensions from step 1
-                    super.setActiveMasterPage( nextMasterPage );
-                    //
-                    activeMasterPage = nextMasterPage;
-                    return style;
-                }
-            }
+            super.setOrientation( orientation );
         }
-        return null;
+
+        // Set page margin
+        CTPageMar pageMar = sectPr.getPgMar();
+        if ( pageMar != null )
+        {
+            super.setOriginalMargins( dxa2points( pageMar.getLeft() ), dxa2points( pageMar.getRight() ),
+                                      dxa2points( pageMar.getTop() ), dxa2points( pageMar.getBottom() ) );
+        }
+
     }
+
+    // private Style setNextActiveMasterPageIfNecessary()
+    // {
+    // // called on page break
+    // // return new page style if changed
+    // if ( activeMasterPage != null )
+    // {
+    // String nextMasterPageStyleName = null;// activeMasterPage.getNextStyleName();
+    // if ( nextMasterPageStyleName != null && nextMasterPageStyleName.length() > 0 )
+    // {
+    // IMasterPage nextMasterPage = getMasterPage( nextMasterPageStyleName );
+    // if ( nextMasterPage != null )
+    // {
+    // // activate next master page
+    // Style style = getStyleMasterPage( nextMasterPage );
+    // if ( style != null )
+    // {
+    // // step 1 - apply styles like page dimensions and orientation
+    // this.applyStyles( style );
+    // }
+    // // step 2 - set header/footer if any, it needs page dimensions from step 1
+    // super.setActiveMasterPage( nextMasterPage );
+    // //
+    // activeMasterPage = nextMasterPage;
+    // return style;
+    // }
+    // }
+    // }
+    // return null;
+    // }
 
     public IMasterPage getActiveMasterPage()
     {

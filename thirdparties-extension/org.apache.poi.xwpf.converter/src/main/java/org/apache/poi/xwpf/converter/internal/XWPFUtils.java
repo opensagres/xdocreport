@@ -28,8 +28,11 @@ import org.apache.poi.xwpf.usermodel.XWPFStyle;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTDocDefaults;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTRPr;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTRPrDefault;
+import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTSectPr;
+import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTSectType;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTStyle;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.STHexColor;
+import org.openxmlformats.schemas.wordprocessingml.x2006.main.STSectionMark;
 
 import fr.opensagres.xdocreport.itext.extension.PageOrientation;
 
@@ -105,4 +108,18 @@ public class XWPFUtils
         return null;
     }
 
+    public static boolean isContinuousSection( CTSectPr sectPr )
+    {
+        if ( sectPr == null )
+        {
+            return false;
+        }
+        CTSectType sectType = sectPr.getType();
+        if ( sectType == null )
+        {
+            return false;
+        }
+
+        return sectType.getVal() == STSectionMark.CONTINUOUS;
+    }
 }

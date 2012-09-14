@@ -27,7 +27,6 @@ package org.apache.poi.xwpf.converter.internal.xhtml;
 import static org.apache.poi.xwpf.converter.internal.XWPFRunUtils.getRStyle;
 
 import java.io.OutputStream;
-import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -38,17 +37,22 @@ import org.apache.poi.xwpf.usermodel.XWPFDocument;
 import org.apache.poi.xwpf.usermodel.XWPFFooter;
 import org.apache.poi.xwpf.usermodel.XWPFHeader;
 import org.apache.poi.xwpf.usermodel.XWPFParagraph;
-import org.apache.poi.xwpf.usermodel.XWPFPicture;
 import org.apache.poi.xwpf.usermodel.XWPFPictureData;
 import org.apache.poi.xwpf.usermodel.XWPFRun;
 import org.apache.poi.xwpf.usermodel.XWPFStyle;
 import org.apache.poi.xwpf.usermodel.XWPFTable;
 import org.apache.poi.xwpf.usermodel.XWPFTableCell;
 import org.apache.poi.xwpf.usermodel.XWPFTableRow;
+import org.apache.xmlbeans.XmlCursor;
+import org.apache.xmlbeans.XmlObject;
 import org.openxmlformats.schemas.drawingml.x2006.picture.CTPicture;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTBr;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTDecimalNumber;
+import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTDrawing;
+import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTEmpty;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTHdrFtrRef;
+import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTPTab;
+import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTR;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTSectPr;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTString;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTTcPr;
@@ -165,6 +169,7 @@ public class XHTMLMapper
     protected void visitRun( XWPFRun run, XHTMLPageContentBuffer paragraphContainer )
         throws Exception
     {
+        CTR ctr = run.getCTR();
 
         // HTML style
 
@@ -173,25 +178,81 @@ public class XHTMLMapper
 
         StringBuilder htmlStyle =
             XHTMLStyleUtil.getStyle( run, runStyle, super.getXWPFStyle( run.getParagraph().getStyle() ), defaults );
-        List<CTBr> brs = run.getCTR().getBrList();
-        for ( @SuppressWarnings( "unused" )
-        CTBr br : brs )
-        {
-            paragraphContainer.startEndElement( BR_ELEMENT );
-        }
 
-        List<CTText> texts = run.getCTR().getTList();
-        for ( CTText ctText : texts )
+        // Grab the text and tabs of the text run
+        // Do so in a way that preserves the ordering
+        XmlCursor c = ctr.newCursor();
+        c.selectPath( "./*" );
+        while ( c.toNextSelection() )
         {
-            paragraphContainer.startElementNotEnclosed( SPAN_ELEMENT );
-            setAttributStyleIfNeeded( paragraphContainer, htmlStyle );
-            paragraphContainer.endElementNotEnclosed();
-            // Set the text by escaping it with HTML.
-            paragraphContainer.setText( StringEscapeUtils.escapeHtml( ctText.getStringValue() ) );
-            paragraphContainer.endElement( SPAN_ELEMENT );
-        }
+            XmlObject o = c.getObject();
 
-        super.visitPictures( run, paragraphContainer );
+            if ( o instanceof CTText )
+            {
+                CTText ctText = (CTText) o;
+                String tagName = o.getDomNode().getNodeName();
+                // Field Codes (w:instrText, defined in spec sec. 17.16.23)
+                // come up as instances of CTText, but we don't want them
+                // in the normal text output
+                if ( !"w:instrText".equals( tagName ) )
+                {
+                    paragraphContainer.startElementNotEnclosed( SPAN_ELEMENT );
+                    setAttributStyleIfNeeded( paragraphContainer, htmlStyle );
+                    paragraphContainer.endElementNotEnclosed();
+                    // Set the text by escaping it with HTML.
+                    paragraphContainer.setText( StringEscapeUtils.escapeHtml( ctText.getStringValue() ) );
+                    paragraphContainer.endElement( SPAN_ELEMENT );
+
+                }
+            }
+            else if ( o instanceof CTPTab )
+            {
+                visitTab( paragraphContainer, (CTPTab) o );
+            }
+            else if ( o instanceof CTBr )
+            {
+                visitBR( paragraphContainer, (CTBr) o );
+            }
+            else if ( o instanceof CTEmpty )
+            {
+                // Some inline text elements get returned not as
+                // themselves, but as CTEmpty, owing to some odd
+                // definitions around line 5642 of the XSDs
+                // This bit works around it, and replicates the above
+                // rules for that case
+                String tagName = o.getDomNode().getNodeName();
+                if ( "w:tab".equals( tagName ) )
+                {
+                    visitTab( paragraphContainer, null );
+                }
+                if ( "w:br".equals( tagName ) )
+                {
+                    visitBR( paragraphContainer, null );
+                }
+                if ( "w:cr".equals( tagName ) )
+                {
+                    visitBR( paragraphContainer, null );
+                }
+            }
+            else if ( o instanceof CTDrawing )
+            {
+                visitDrawing( (CTDrawing) o, paragraphContainer );
+            }
+        }
+        c.dispose();
+
+        // super.visitPictures( run, paragraphContainer );
+    }
+
+    private void visitTab( XHTMLPageContentBuffer paragraphContainer, CTPTab o )
+    {
+        // TODO Auto-generated method stub
+
+    }
+
+    private void visitBR( XHTMLPageContentBuffer paragraphContainer, CTBr br )
+    {
+        paragraphContainer.startEndElement( BR_ELEMENT );
     }
 
     @Override
@@ -263,15 +324,14 @@ public class XHTMLMapper
     }
 
     @Override
-    protected void visitPicture( XWPFPicture picture, XHTMLPageContentBuffer parentContainer )
+    protected void visitPicture( CTPicture picture, XHTMLPageContentBuffer parentContainer )
         throws Exception
     {
         parentContainer.startElementNotEnclosed( IMG_ELEMENT );
 
-        CTPicture ctPic = picture.getCTPicture();
-        String blipId = ctPic.getBlipFill().getBlip().getEmbed();
+        String blipId = picture.getBlipFill().getBlip().getEmbed();
         // Src attribute
-        XWPFPictureData pictureData = super.getPictureDataByID(  blipId );
+        XWPFPictureData pictureData = super.getPictureDataByID( blipId );
         if ( pictureData != null )
         {
             String src = pictureData.getFileName();

@@ -62,15 +62,22 @@ import org.apache.poi.xwpf.usermodel.XWPFStyle;
 import org.apache.poi.xwpf.usermodel.XWPFTable;
 import org.apache.poi.xwpf.usermodel.XWPFTableCell;
 import org.apache.poi.xwpf.usermodel.XWPFTableRow;
+import org.apache.xmlbeans.XmlCursor;
+import org.apache.xmlbeans.XmlObject;
+import org.openxmlformats.schemas.drawingml.x2006.main.CTGraphicalObject;
+import org.openxmlformats.schemas.drawingml.x2006.main.CTGraphicalObjectData;
 import org.openxmlformats.schemas.drawingml.x2006.main.CTPositiveSize2D;
 import org.openxmlformats.schemas.drawingml.x2006.picture.CTPicture;
+import org.openxmlformats.schemas.drawingml.x2006.wordprocessingDrawing.CTInline;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTBorder;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTBr;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTDecimalNumber;
+import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTDrawing;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTEmpty;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTHdrFtrRef;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTOnOff;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTPPr;
+import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTPTab;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTR;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTRPr;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTSectPr;
@@ -81,6 +88,7 @@ import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTTcPr;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTText;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.STHexColor;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.STOnOff;
+import org.w3c.dom.Node;
 
 import com.lowagie.text.Chunk;
 import com.lowagie.text.Element;
@@ -88,6 +96,7 @@ import com.lowagie.text.Font;
 import com.lowagie.text.Image;
 import com.lowagie.text.Rectangle;
 import com.lowagie.text.pdf.PdfPCell;
+import com.lowagie.text.pdf.draw.DottedLineSeparator;
 import com.lowagie.text.pdf.draw.VerticalPositionMark;
 
 import fr.opensagres.xdocreport.itext.extension.ExtendedParagraph;
@@ -306,35 +315,66 @@ public class PDFMapper
                 break;
         }
 
-        List<CTBr> brs = ctr.getBrList();
-        for ( @SuppressWarnings( "unused" )
-        CTBr br : brs )
+        // Grab the text and tabs of the text run
+        // Do so in a way that preserves the ordering
+        XmlCursor c = ctr.newCursor();
+        c.selectPath( "./*" );
+        while ( c.toNextSelection() )
         {
-            pdfContainer.addElement( Chunk.NEWLINE );
-        }
+            XmlObject o = c.getObject();
 
-        List<CTEmpty> tabs = ctr.getTabList();
-        if ( tabs != null && tabs.size() > 0 )
-        {
-            for ( CTEmpty ctEmpty : tabs )
+            if ( o instanceof CTText )
             {
-                Chunk tab = new Chunk( new VerticalPositionMark() );
-                pdfContainer.addElement( tab );
+                CTText ctText = (CTText) o;
+                String tagName = o.getDomNode().getNodeName();
+                // Field Codes (w:instrText, defined in spec sec. 17.16.23)
+                // come up as instances of CTText, but we don't want them
+                // in the normal text output
+                if ( !"w:instrText".equals( tagName ) )
+                {
+                    Chunk aChunk = new Chunk( ctText.getStringValue(), font );
+                    if ( singleUnderlined )
+                        aChunk.setUnderline( 1, -2 );
+
+                    pdfContainer.addElement( aChunk );
+
+                }
+            }
+            else if ( o instanceof CTPTab )
+            {
+                visitTab( pdfContainer, (CTPTab) o );
+            }
+            else if ( o instanceof CTBr )
+            {
+                visitBR( pdfContainer, (CTBr) o );
+            }
+            else if ( o instanceof CTEmpty )
+            {
+                // Some inline text elements get returned not as
+                // themselves, but as CTEmpty, owing to some odd
+                // definitions around line 5642 of the XSDs
+                // This bit works around it, and replicates the above
+                // rules for that case
+                String tagName = o.getDomNode().getNodeName();
+                if ( "w:tab".equals( tagName ) )
+                {
+                    visitTab( pdfContainer, null );
+                }
+                if ( "w:br".equals( tagName ) )
+                {
+                    visitBR( pdfContainer, null );
+                }
+                if ( "w:cr".equals( tagName ) )
+                {
+                    visitBR( pdfContainer, null );
+                }
+            }
+            else if ( o instanceof CTDrawing )
+            {
+                visitDrawing( (CTDrawing) o, pdfContainer );
             }
         }
-
-        List<CTText> texts = run.getCTR().getTList();
-        for ( CTText ctText : texts )
-        {
-
-            Chunk aChunk = new Chunk( ctText.getStringValue(), font );
-            if ( singleUnderlined )
-                aChunk.setUnderline( 1, -2 );
-
-            pdfContainer.addElement( aChunk );
-        }
-
-        super.visitPictures( run, pdfContainer );
+        c.dispose();
 
         // <w:lastRenderedPageBreak />
         List<CTEmpty> lastRenderedPageBreakList = ctr.getLastRenderedPageBreakList();
@@ -357,6 +397,18 @@ public class PDFMapper
                 pdfDocument.pageBreak();
             }
         }
+    }
+
+    private void visitTab( IITextContainer pdfContainer, CTPTab tab )
+    {
+        // Chunk pdfTab = new Chunk( new DottedLineSeparator() )
+        Chunk pdfTab = new Chunk( new VerticalPositionMark() );
+        pdfContainer.addElement( pdfTab );
+    }
+
+    private void visitBR( IITextContainer pdfContainer, CTBr br )
+    {
+        pdfContainer.addElement( Chunk.NEWLINE );
     }
 
     // Visit table
@@ -516,16 +568,13 @@ public class PDFMapper
     }
 
     @Override
-    protected void visitPicture( XWPFPicture picture, IITextContainer parentContainer )
-        throws Exception
+    protected void visitPicture( CTPicture picture, IITextContainer parentContainer )
     {
-
-        CTPositiveSize2D ext = picture.getCTPicture().getSpPr().getXfrm().getExt();
+        CTPositiveSize2D ext = picture.getSpPr().getXfrm().getExt();
         long x = ext.getCx();
         long y = ext.getCy();
 
-        CTPicture ctPic = picture.getCTPicture();
-        String blipId = ctPic.getBlipFill().getBlip().getEmbed();
+        String blipId = picture.getBlipFill().getBlip().getEmbed();
 
         XWPFPictureData pictureData = super.getPictureDataByID( blipId );
         if ( pictureData != null )
@@ -556,7 +605,6 @@ public class PDFMapper
             }
 
         }
-
     }
 
     private void applyStyles( XWPFParagraph ele, IStylableElement<XWPFParagraph> element )

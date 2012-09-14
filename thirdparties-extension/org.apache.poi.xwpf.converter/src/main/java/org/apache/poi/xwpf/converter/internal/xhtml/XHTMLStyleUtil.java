@@ -41,11 +41,11 @@ import org.apache.poi.xwpf.usermodel.ParagraphAlignment;
 import org.apache.poi.xwpf.usermodel.UnderlinePatterns;
 import org.apache.poi.xwpf.usermodel.XWPFDocument;
 import org.apache.poi.xwpf.usermodel.XWPFParagraph;
-import org.apache.poi.xwpf.usermodel.XWPFPicture;
 import org.apache.poi.xwpf.usermodel.XWPFRun;
 import org.apache.poi.xwpf.usermodel.XWPFStyle;
 import org.apache.poi.xwpf.usermodel.XWPFTableCell;
 import org.openxmlformats.schemas.drawingml.x2006.main.CTPositiveSize2D;
+import org.openxmlformats.schemas.drawingml.x2006.picture.CTPicture;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTBorder;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTDocDefaults;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTPPr;
@@ -474,12 +474,12 @@ public class XHTMLStyleUtil
         return ctStyle.getPPr();
     }
 
-    public static StringBuilder getStyle( XWPFPicture picture )
+    public static StringBuilder getStyle( CTPicture picture )
     {
         StringBuilder htmlStyle = new StringBuilder();
 
         // Position
-        CTPositiveSize2D ext = picture.getCTPicture().getSpPr().getXfrm().getExt();
+        CTPositiveSize2D ext = picture.getSpPr().getXfrm().getExt();
         long x = ext.getCx();
         long y = ext.getCy();
         float width = dxa2points( x ) / 635;

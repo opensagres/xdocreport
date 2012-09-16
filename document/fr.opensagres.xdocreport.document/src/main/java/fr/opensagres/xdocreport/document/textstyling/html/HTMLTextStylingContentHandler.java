@@ -31,6 +31,7 @@ import org.xml.sax.SAXException;
 import org.xml.sax.helpers.DefaultHandler;
 
 import fr.opensagres.xdocreport.document.textstyling.IDocumentHandler;
+import fr.opensagres.xdocreport.document.textstyling.properties.ContainerProperties;
 import fr.opensagres.xdocreport.document.textstyling.properties.HeaderProperties;
 import fr.opensagres.xdocreport.document.textstyling.properties.ListItemProperties;
 import fr.opensagres.xdocreport.document.textstyling.properties.ListProperties;
@@ -96,6 +97,15 @@ public class HTMLTextStylingContentHandler
     private static final String SRC_ATTR = "src";
 
     private static final String BR_ELT = "br";
+
+    // HTML elements for subscript
+    private static final String SUB_ELT = "sub";
+
+    // HTML elements for superscript
+    private static final String SUP_ELT = "sup";
+
+    // HTML elements for span
+    private static final String SPAN_ELT = "span";
 
     private final IDocumentHandler documentHandler;
 
@@ -171,6 +181,16 @@ public class HTMLTextStylingContentHandler
                 // Strike
                 documentHandler.startStrike();
             }
+            else if ( SUB_ELT.equals( name ) )
+            {
+                // Subscript
+                documentHandler.startSubscript();
+            }
+            else if ( SUP_ELT.equals( name ) )
+            {
+                // Superscript
+                documentHandler.startSuperscript();
+            }
             else if ( UL_ELT.equals( name ) )
             {
                 // Unordered List
@@ -244,6 +264,11 @@ public class HTMLTextStylingContentHandler
                 String src = attributes.getValue( SRC_ATTR );
                 documentHandler.handleImage( src, "" );
             }
+            else if ( SPAN_ELT.equals( name ) )
+            {
+            	ContainerProperties properties = StylesHelper.createSpanProperties( attributes.getValue( STYLE_ATTR ) );
+            	documentHandler.startSpan( properties );
+            }
         }
         catch ( IOException e )
         {
@@ -278,6 +303,16 @@ public class HTMLTextStylingContentHandler
             {
                 // Strike
                 documentHandler.endStrike();
+            }
+            else if ( SUB_ELT.equals( name ) )
+            {
+                // Subscript
+                documentHandler.endSubscript();
+            }
+            else if ( SUP_ELT.equals( name ) )
+            {
+                // Superscript
+                documentHandler.endSuperscript();
             }
             else if ( UL_ELT.equals( name ) )
             {
@@ -341,6 +376,11 @@ public class HTMLTextStylingContentHandler
             {
                 // <br/>
                 documentHandler.handleLineBreak();
+            }
+            else if ( SPAN_ELT.equals( name ) )
+            {
+            	// </span>
+            	documentHandler.endSpan();
             }
         }
         catch ( IOException e )

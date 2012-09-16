@@ -338,8 +338,7 @@ public class ODTBufferedDocumentContentHandler
                     String textEnd =
                         getFormatter().formatAsTextStylingField( variableIndex, ITransformResult.TEXT_END_PROPERTY );
 
-                    textPElement.setContentBeforeStartTagElement( formatDirective( setVariableDirective + " "
-                        + textBefore ) );
+                    textPElement.setContentBeforeStartTagElement( formatDirective( setVariableDirective + textBefore ) );
                     textPElement.setContentAfterEndTagElement( formatDirective( textEnd ) );
                     super.flushCharacters( formatDirective( textBody ) );
                     return;

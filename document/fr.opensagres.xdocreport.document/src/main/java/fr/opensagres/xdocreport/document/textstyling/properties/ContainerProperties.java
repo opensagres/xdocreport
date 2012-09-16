@@ -34,6 +34,18 @@ public class ContainerProperties
 
     private boolean pageBreakAfter;
 
+    private boolean bold;
+
+	private boolean italic;
+
+    private boolean underline;
+
+    private boolean	strike;
+
+    private boolean subscript;
+
+    private boolean superscript;
+
     public boolean isPageBreakBefore()
     {
         return pageBreakBefore;
@@ -54,4 +66,51 @@ public class ContainerProperties
         this.pageBreakAfter = pageBreakAfter;
     }
 
+    public boolean isBold() {
+		return bold;
+	}
+
+	public void setBold(boolean bold) {
+		this.bold = bold;
+	}
+
+	public boolean isItalic() {
+		return italic;
+	}
+
+	public void setItalic(boolean italic) {
+		this.italic = italic;
+	}
+
+	public boolean isUnderline() {
+		return underline;
+	}
+
+	public void setUnderline(boolean underline) {
+		this.underline = underline;
+	}
+
+	public boolean isStrike() {
+		return strike;
+	}
+
+	public void setStrike(boolean strike) {
+		this.strike = strike;
+	}
+
+	public boolean isSubscript() {
+		return subscript;
+	}
+
+	public void setSubscript(boolean subscript) {
+		this.subscript = subscript;
+	}
+
+	public boolean isSuperscript() {
+		return superscript;
+	}
+
+	public void setSuperscript(boolean superscript) {
+		this.superscript = superscript;
+	}
 }

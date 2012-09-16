@@ -55,7 +55,7 @@ import fr.opensagres.xdocreport.template.IContext;
 
 /**
  * Check ODT Styling generation by comparing generated result against the expected XML
- * 
+ *
  * @author <a href="mailto:tdelprat@nuxeo.com">Tiry</a>
  */
 public class TestODTStyling

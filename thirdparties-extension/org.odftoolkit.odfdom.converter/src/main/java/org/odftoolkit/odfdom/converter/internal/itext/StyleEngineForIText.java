@@ -806,6 +806,20 @@ public class StyleEngineForIText
             }
         }
 
+        String textPositionStyle = ele.getStyleTextPositionAttribute();
+
+        if( StringUtils.isNotEmpty( textPositionStyle ) )
+        {
+        	if( textPositionStyle.contains("super") )
+        	{
+        		textProperties.setTextPosition(5.0f);
+        	}
+        	else if( textPositionStyle.contains("sub") )
+        	{
+        		textProperties.setTextPosition(-2.0f);
+        	}
+        }
+
         super.visit( ele );
     }
 

@@ -103,6 +103,70 @@ public class ODTDocumentHandlerTestCase
     }
 
     @Test
+    public void testBoldWithSpanFontWeightBold()
+        throws Exception
+    {
+        IContext context = new MockContext();
+        BufferedElement parent = null;
+
+        ITextStylingTransformer formatter = HTMLTextStylingTransformer.INSTANCE;
+        IDocumentHandler handler = new ODTDocumentHandler( parent, context, "content.xml" );
+        formatter.transform( "<span style=\"font-weight: bold\">text</span>", handler );
+
+        Assert.assertEquals( "", handler.getTextBefore() );
+        Assert.assertEquals( "<text:span text:style-name=\"XDocReport_Bold\" >text</text:span>", handler.getTextBody() );
+        Assert.assertEquals( "", handler.getTextEnd() );
+    }
+
+    @Test
+    public void testBoldWithSpanFontWeight700()
+        throws Exception
+    {
+        IContext context = new MockContext();
+        BufferedElement parent = null;
+
+        ITextStylingTransformer formatter = HTMLTextStylingTransformer.INSTANCE;
+        IDocumentHandler handler = new ODTDocumentHandler( parent, context, "content.xml" );
+        formatter.transform( "<span style=\"font-weight: 700\">text</span>", handler );
+
+        Assert.assertEquals( "", handler.getTextBefore() );
+        Assert.assertEquals( "<text:span text:style-name=\"XDocReport_Bold\" >text</text:span>", handler.getTextBody() );
+        Assert.assertEquals( "", handler.getTextEnd() );
+    }
+
+    @Test
+    public void testBoldWithPFontWeightBold()
+        throws Exception
+    {
+        IContext context = new MockContext();
+        BufferedElement parent = null;
+
+        ITextStylingTransformer formatter = HTMLTextStylingTransformer.INSTANCE;
+        IDocumentHandler handler = new ODTDocumentHandler( parent, context, "content.xml" );
+        formatter.transform( "<p style=\"font-weight: bold\">text</p>", handler );
+
+        Assert.assertEquals( "", handler.getTextBefore() );
+        Assert.assertEquals( "", handler.getTextBody() );
+        Assert.assertEquals( "<text:p><text:span text:style-name=\"XDocReport_Bold\" >text</text:span></text:p>", handler.getTextEnd() );
+    }
+
+    @Test
+    public void testBoldWithPFontWeight700()
+        throws Exception
+    {
+        IContext context = new MockContext();
+        BufferedElement parent = null;
+
+        ITextStylingTransformer formatter = HTMLTextStylingTransformer.INSTANCE;
+        IDocumentHandler handler = new ODTDocumentHandler( parent, context, "content.xml" );
+        formatter.transform( "<p style=\"font-weight: 700\">text</p>", handler );
+
+        Assert.assertEquals( "", handler.getTextBefore() );
+        Assert.assertEquals( "", handler.getTextBody() );
+        Assert.assertEquals( "<text:p><text:span text:style-name=\"XDocReport_Bold\" >text</text:span></text:p>", handler.getTextEnd() );
+    }
+
+    @Test
     public void testItalicWithI()
         throws Exception
     {
@@ -137,6 +201,38 @@ public class ODTDocumentHandlerTestCase
     }
 
     @Test
+    public void testItalicWithSpanFontStyleItalic()
+        throws Exception
+    {
+        IContext context = new MockContext();
+        BufferedElement parent = null;
+
+        ITextStylingTransformer formatter = HTMLTextStylingTransformer.INSTANCE;
+        IDocumentHandler handler = new ODTDocumentHandler( parent, context, "content.xml" );
+        formatter.transform( "<span style=\"font-style: italic\">text</span>", handler );
+
+        Assert.assertEquals( "", handler.getTextBefore() );
+        Assert.assertEquals( "<text:span text:style-name=\"XDocReport_Italic\" >text</text:span>", handler.getTextBody() );
+        Assert.assertEquals( "", handler.getTextEnd() );
+    }
+
+    @Test
+    public void testItalicWithPFontStyleItalic()
+        throws Exception
+    {
+        IContext context = new MockContext();
+        BufferedElement parent = null;
+
+        ITextStylingTransformer formatter = HTMLTextStylingTransformer.INSTANCE;
+        IDocumentHandler handler = new ODTDocumentHandler( parent, context, "content.xml" );
+        formatter.transform( "<p style=\"font-style: italic\">text</p>", handler );
+
+        Assert.assertEquals( "", handler.getTextBefore() );
+        Assert.assertEquals( "", handler.getTextBody() );
+        Assert.assertEquals( "<text:p><text:span text:style-name=\"XDocReport_Italic\" >text</text:span></text:p>", handler.getTextEnd() );
+    }
+
+    @Test
     public void testUnderline()
         throws Exception
     {
@@ -151,6 +247,38 @@ public class ODTDocumentHandlerTestCase
         Assert.assertEquals( "<text:span text:style-name=\"XDocReport_Underline\" >text</text:span>",
                              handler.getTextBody() );
         Assert.assertEquals( "", handler.getTextEnd() );
+    }
+
+    @Test
+    public void testUnderLineWithSpanTextDecorationUnderline()
+        throws Exception
+    {
+        IContext context = new MockContext();
+        BufferedElement parent = null;
+
+        ITextStylingTransformer formatter = HTMLTextStylingTransformer.INSTANCE;
+        IDocumentHandler handler = new ODTDocumentHandler( parent, context, "content.xml" );
+        formatter.transform( "<span style=\"text-decoration: underline\">text</span>", handler );
+
+        Assert.assertEquals( "", handler.getTextBefore() );
+        Assert.assertEquals( "<text:span text:style-name=\"XDocReport_Underline\" >text</text:span>", handler.getTextBody() );
+        Assert.assertEquals( "", handler.getTextEnd() );
+    }
+
+    @Test
+    public void testUnderLineWithPTextDecorationUnderline()
+        throws Exception
+    {
+        IContext context = new MockContext();
+        BufferedElement parent = null;
+
+        ITextStylingTransformer formatter = HTMLTextStylingTransformer.INSTANCE;
+        IDocumentHandler handler = new ODTDocumentHandler( parent, context, "content.xml" );
+        formatter.transform( "<p style=\"text-decoration: underline\">text</p>", handler );
+
+        Assert.assertEquals( "", handler.getTextBefore() );
+        Assert.assertEquals( "", handler.getTextBody() );
+        Assert.assertEquals( "<text:p><text:span text:style-name=\"XDocReport_Underline\" >text</text:span></text:p>", handler.getTextEnd() );
     }
 
     @Test
@@ -185,6 +313,168 @@ public class ODTDocumentHandlerTestCase
         Assert.assertEquals( "<text:span text:style-name=\"XDocReport_Strike\" >text</text:span>",
                              handler.getTextBody() );
         Assert.assertEquals( "", handler.getTextEnd() );
+    }
+
+    @Test
+    public void testStrikeWithSpanTextDecorationLineThrough()
+        throws Exception
+    {
+        IContext context = new MockContext();
+        BufferedElement parent = null;
+
+        ITextStylingTransformer formatter = HTMLTextStylingTransformer.INSTANCE;
+        IDocumentHandler handler = new ODTDocumentHandler( parent, context, "content.xml" );
+        formatter.transform( "<span style=\"text-decoration: line-through\">text</span>", handler );
+
+        Assert.assertEquals( "", handler.getTextBefore() );
+        Assert.assertEquals( "<text:span text:style-name=\"XDocReport_Strike\" >text</text:span>", handler.getTextBody() );
+        Assert.assertEquals( "", handler.getTextEnd() );
+    }
+
+    @Test
+    public void testStrikeWithPTextDecorationLineThrough()
+        throws Exception
+    {
+        IContext context = new MockContext();
+        BufferedElement parent = null;
+
+        ITextStylingTransformer formatter = HTMLTextStylingTransformer.INSTANCE;
+        IDocumentHandler handler = new ODTDocumentHandler( parent, context, "content.xml" );
+        formatter.transform( "<p style=\"text-decoration: line-through\">text</p>", handler );
+
+        Assert.assertEquals( "", handler.getTextBefore() );
+        Assert.assertEquals( "", handler.getTextBody() );
+        Assert.assertEquals( "<text:p><text:span text:style-name=\"XDocReport_Strike\" >text</text:span></text:p>", handler.getTextEnd() );
+    }
+
+    @Test
+    public void testUnderlineStrikeWithSpanTextDecorationUnderlineLineThrough()
+        throws Exception
+    {
+        IContext context = new MockContext();
+        BufferedElement parent = null;
+
+        ITextStylingTransformer formatter = HTMLTextStylingTransformer.INSTANCE;
+        IDocumentHandler handler = new ODTDocumentHandler( parent, context, "content.xml" );
+        formatter.transform( "<span style=\"text-decoration: underline line-through\">text</span>", handler );
+
+        Assert.assertEquals( "", handler.getTextBefore() );
+        Assert.assertEquals( "<text:span text:style-name=\"XDocReport_Underline\" ><text:span text:style-name=\"XDocReport_Strike\" >text</text:span></text:span>", handler.getTextBody() );
+        Assert.assertEquals( "", handler.getTextEnd() );
+    }
+
+    @Test
+    public void testUnderlineStrikeWithPTextDecorationUnderlineLineThrough()
+        throws Exception
+    {
+        IContext context = new MockContext();
+        BufferedElement parent = null;
+
+        ITextStylingTransformer formatter = HTMLTextStylingTransformer.INSTANCE;
+        IDocumentHandler handler = new ODTDocumentHandler( parent, context, "content.xml" );
+        formatter.transform( "<p style=\"text-decoration: underline line-through\">text</p>", handler );
+
+        Assert.assertEquals( "", handler.getTextBefore() );
+        Assert.assertEquals( "", handler.getTextBody() );
+        Assert.assertEquals( "<text:p><text:span text:style-name=\"XDocReport_Underline\" ><text:span text:style-name=\"XDocReport_Strike\" >text</text:span></text:span></text:p>", handler.getTextEnd() );
+    }
+
+    @Test
+    public void testSubscriptWithSub()
+        throws Exception
+    {
+        IContext context = new MockContext();
+        BufferedElement parent = null;
+
+        ITextStylingTransformer formatter = HTMLTextStylingTransformer.INSTANCE;
+        IDocumentHandler handler = new ODTDocumentHandler( parent, context, "content.xml" );
+        formatter.transform( "<sub>text</sub>", handler );
+
+        Assert.assertEquals( "", handler.getTextBefore() );
+        Assert.assertEquals( "<text:span text:style-name=\"XDocReport_Subscript\" >text</text:span>",
+                             handler.getTextBody() );
+        Assert.assertEquals( "", handler.getTextEnd() );
+    }
+
+    @Test
+    public void testSubscriptWithSpanVerticalAlignSub()
+        throws Exception
+    {
+        IContext context = new MockContext();
+        BufferedElement parent = null;
+
+        ITextStylingTransformer formatter = HTMLTextStylingTransformer.INSTANCE;
+        IDocumentHandler handler = new ODTDocumentHandler( parent, context, "content.xml" );
+        formatter.transform( "<span style=\"vertical-align: sub\">text</span>", handler );
+
+        Assert.assertEquals( "", handler.getTextBefore() );
+        Assert.assertEquals( "<text:span text:style-name=\"XDocReport_Subscript\" >text</text:span>", handler.getTextBody() );
+        Assert.assertEquals( "", handler.getTextEnd() );
+    }
+
+    @Test
+    public void testSubscriptWithPVerticalAlignSub()
+        throws Exception
+    {
+        IContext context = new MockContext();
+        BufferedElement parent = null;
+
+        ITextStylingTransformer formatter = HTMLTextStylingTransformer.INSTANCE;
+        IDocumentHandler handler = new ODTDocumentHandler( parent, context, "content.xml" );
+        formatter.transform( "<p style=\"vertical-align: sub\">text</p>", handler );
+
+        Assert.assertEquals( "", handler.getTextBefore() );
+        Assert.assertEquals( "", handler.getTextBody() );
+        Assert.assertEquals( "<text:p><text:span text:style-name=\"XDocReport_Subscript\" >text</text:span></text:p>", handler.getTextEnd() );
+    }
+
+    @Test
+    public void testSuperscriptWithSup()
+        throws Exception
+    {
+        IContext context = new MockContext();
+        BufferedElement parent = null;
+
+        ITextStylingTransformer formatter = HTMLTextStylingTransformer.INSTANCE;
+        IDocumentHandler handler = new ODTDocumentHandler( parent, context, "content.xml" );
+        formatter.transform( "<sup>text</sup>", handler );
+
+        Assert.assertEquals( "", handler.getTextBefore() );
+        Assert.assertEquals( "<text:span text:style-name=\"XDocReport_Superscript\" >text</text:span>",
+                             handler.getTextBody() );
+        Assert.assertEquals( "", handler.getTextEnd() );
+    }
+
+    @Test
+    public void testSuperscriptWithSpanVerticalAlignSuper()
+        throws Exception
+    {
+        IContext context = new MockContext();
+        BufferedElement parent = null;
+
+        ITextStylingTransformer formatter = HTMLTextStylingTransformer.INSTANCE;
+        IDocumentHandler handler = new ODTDocumentHandler( parent, context, "content.xml" );
+        formatter.transform( "<span style=\"vertical-align: super\">text</span>", handler );
+
+        Assert.assertEquals( "", handler.getTextBefore() );
+        Assert.assertEquals( "<text:span text:style-name=\"XDocReport_Superscript\" >text</text:span>", handler.getTextBody() );
+        Assert.assertEquals( "", handler.getTextEnd() );
+    }
+
+    @Test
+    public void testSuperscriptWithPVerticalAlignSuper()
+        throws Exception
+    {
+        IContext context = new MockContext();
+        BufferedElement parent = null;
+
+        ITextStylingTransformer formatter = HTMLTextStylingTransformer.INSTANCE;
+        IDocumentHandler handler = new ODTDocumentHandler( parent, context, "content.xml" );
+        formatter.transform( "<p style=\"vertical-align: super\">text</p>", handler );
+
+        Assert.assertEquals( "", handler.getTextBefore() );
+        Assert.assertEquals( "", handler.getTextBody() );
+        Assert.assertEquals( "<text:p><text:span text:style-name=\"XDocReport_Superscript\" >text</text:span></text:p>", handler.getTextEnd() );
     }
 
     @Test
@@ -508,7 +798,7 @@ public class ODTDocumentHandlerTestCase
 
         Assert.assertEquals( "", handler.getTextBefore() );
         Assert.assertEquals( "", handler.getTextBody() );
-        Assert.assertEquals( "<text:list text:style-name=\"XDocReport_UL\"><text:list-item text:style-name=\"XDocReport_UL\"><text:p text:style-name=\"XDocReport_UL_P\"><text:span text:style-name=\"XDocReport_Bold\" >Bold</text:span><text:span> style.</text:span></text:p><text:list text:style-name=\"XDocReport_UL\"><text:list-item text:style-name=\"XDocReport_UL\"><text:p text:style-name=\"XDocReport_UL_P\"><text:span>zaza</text:span></text:p></text:list-item><text:list-item text:style-name=\"XDocReport_UL\"><text:p text:style-name=\"XDocReport_UL_P\"><text:span>zaza</text:span></text:p></text:list-item><text:list-item text:style-name=\"XDocReport_UL\"><text:p text:style-name=\"XDocReport_UL_P\"><text:span>zaza</text:span></text:p></text:list-item></text:list></text:list-item><text:list-item text:style-name=\"XDocReport_UL\"><text:p text:style-name=\"XDocReport_UL_P\"><text:span text:style-name=\"XDocReport_Italic\" >Italic</text:span><text:span> style.</text:span></text:p><text:list text:style-name=\"XDocReport_UL\"><text:list-item text:style-name=\"XDocReport_UL\"><text:p text:style-name=\"XDocReport_UL_P\"><text:span>zazaaa</text:span></text:p></text:list-item><text:list-item text:style-name=\"XDocReport_UL\"><text:p text:style-name=\"XDocReport_UL_P\"><text:span>zzzzzzzzzzzz</text:span></text:p><text:list text:style-name=\"XDocReport_UL\"><text:list-item text:style-name=\"XDocReport_UL\"><text:p text:style-name=\"XDocReport_UL_P\"><text:span>ddddddddddddddddddd</text:span></text:p></text:list-item></text:list></text:list-item></text:list></text:list-item><text:list-item text:style-name=\"XDocReport_UL\"><text:p text:style-name=\"XDocReport_UL_P\"><text:span text:style-name=\"XDocReport_BoldItalic\" >BoldAndItalic</text:span><text:span> style.</text:span></text:p></text:list-item></text:list>",
+        Assert.assertEquals( "<text:list text:style-name=\"XDocReport_UL\"><text:list-item text:style-name=\"XDocReport_UL\"><text:p text:style-name=\"XDocReport_UL_P\"><text:span text:style-name=\"XDocReport_Bold\" >Bold</text:span><text:span> style.</text:span></text:p><text:list text:style-name=\"XDocReport_UL\"><text:list-item text:style-name=\"XDocReport_UL\"><text:p text:style-name=\"XDocReport_UL_P\"><text:span>zaza</text:span></text:p></text:list-item><text:list-item text:style-name=\"XDocReport_UL\"><text:p text:style-name=\"XDocReport_UL_P\"><text:span>zaza</text:span></text:p></text:list-item><text:list-item text:style-name=\"XDocReport_UL\"><text:p text:style-name=\"XDocReport_UL_P\"><text:span>zaza</text:span></text:p></text:list-item></text:list></text:list-item><text:list-item text:style-name=\"XDocReport_UL\"><text:p text:style-name=\"XDocReport_UL_P\"><text:span text:style-name=\"XDocReport_Italic\" >Italic</text:span><text:span> style.</text:span></text:p><text:list text:style-name=\"XDocReport_UL\"><text:list-item text:style-name=\"XDocReport_UL\"><text:p text:style-name=\"XDocReport_UL_P\"><text:span>zazaaa</text:span></text:p></text:list-item><text:list-item text:style-name=\"XDocReport_UL\"><text:p text:style-name=\"XDocReport_UL_P\"><text:span>zzzzzzzzzzzz</text:span></text:p><text:list text:style-name=\"XDocReport_UL\"><text:list-item text:style-name=\"XDocReport_UL\"><text:p text:style-name=\"XDocReport_UL_P\"><text:span>ddddddddddddddddddd</text:span></text:p></text:list-item></text:list></text:list-item></text:list></text:list-item><text:list-item text:style-name=\"XDocReport_UL\"><text:p text:style-name=\"XDocReport_UL_P\"><text:span text:style-name=\"XDocReport_Bold\" ><text:span text:style-name=\"XDocReport_Italic\" >BoldAndItalic</text:span></text:span><text:span> style.</text:span></text:p></text:list-item></text:list>",
                              handler.getTextEnd() );
     }
 
@@ -579,4 +869,23 @@ public class ODTDocumentHandlerTestCase
         // System.err.println(handler.getTextEnd());
 
     }
+
+    @Test
+    public void testMultipleSpans()
+        throws Exception
+    {
+        IContext context = new MockContext();
+        BufferedElement parent = null;
+
+        ITextStylingTransformer formatter = HTMLTextStylingTransformer.INSTANCE;
+        IDocumentHandler handler = new ODTDocumentHandler( parent, context, "content.xml" );
+        formatter.transform( "<p>Before <span style=\"text-decoration: underline;\">Underline <span style=\"font-weight: bold;\">and bold <span style=\"font-style: italic;\">and italic</span>" +
+        		" No italics</span> No bold</span> No Underline</p>", handler );
+
+
+        Assert.assertEquals( "", handler.getTextBefore() );
+        Assert.assertEquals( "", handler.getTextBody() );
+        Assert.assertEquals( "<text:p><text:span>Before </text:span><text:span text:style-name=\"XDocReport_Underline\" >Underline <text:span text:style-name=\"XDocReport_Bold\" >and bold <text:span text:style-name=\"XDocReport_Italic\" >and italic</text:span> No italics</text:span> No bold</text:span><text:span> No Underline</text:span></text:p>", handler.getTextEnd() );
+    }
+
 }

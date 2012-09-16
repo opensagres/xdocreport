@@ -29,8 +29,10 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Stack;
 
+import fr.opensagres.xdocreport.core.utils.StringUtils;
 import fr.opensagres.xdocreport.document.preprocessor.sax.BufferedElement;
 import fr.opensagres.xdocreport.document.textstyling.AbstractDocumentHandler;
+import fr.opensagres.xdocreport.document.textstyling.properties.ContainerProperties;
 import fr.opensagres.xdocreport.document.textstyling.properties.HeaderProperties;
 import fr.opensagres.xdocreport.document.textstyling.properties.ListItemProperties;
 import fr.opensagres.xdocreport.document.textstyling.properties.ListProperties;
@@ -40,18 +42,11 @@ import fr.opensagres.xdocreport.template.IContext;
 public class ODTDocumentHandler
     extends AbstractDocumentHandler
 {
-
-    private boolean bolding;
-
-    private boolean italicsing;
-
-    private boolean underlining;
-
-    private boolean striking;
-
     private Stack<Boolean> paragraphsStack;
 
     private boolean insideHeader = false;
+
+    private Stack<Integer> spanStack;
 
     private int listDepth = 0;
 
@@ -73,11 +68,8 @@ public class ODTDocumentHandler
 
     public void startDocument()
     {
-        this.bolding = false;
-        this.italicsing = false;
-        this.underlining = false;
-        this.striking = false;
         this.paragraphsStack = new Stack<Boolean>();
+        this.spanStack = new Stack<Integer>();
     }
 
     public void endDocument()
@@ -101,90 +93,158 @@ public class ODTDocumentHandler
     }
 
     public void startBold()
+        throws IOException
     {
-        this.bolding = true;
+    	internalStartSpan( styleGen.getBoldStyleName(), true );
     }
 
     public void endBold()
+    	throws IOException
     {
-        this.bolding = false;
+    	internalEndSpan();
     }
 
     public void startItalics()
+    	throws IOException
     {
-        this.italicsing = true;
+    	internalStartSpan( styleGen.getItalicStyleName(), true );
     }
 
     public void endItalics()
+    	throws IOException
     {
-        this.italicsing = false;
+    	internalEndSpan();
     }
 
     public void startUnderline()
         throws IOException
     {
-        this.underlining = true;
+    	internalStartSpan( styleGen.getUnderlineStyleName(), true );
     }
 
     public void endUnderline()
         throws IOException
     {
-        this.underlining = false;
+    	internalEndSpan();
     }
 
     public void startStrike()
         throws IOException
     {
-        this.striking = true;
+    	internalStartSpan( styleGen.getStrikeStyleName(), true );
     }
 
     public void endStrike()
         throws IOException
     {
-        this.striking = false;
+    	internalEndSpan();
+    }
+
+    public void startSubscript()
+        throws IOException
+    {
+    	internalStartSpan( styleGen.getSubscriptStyleName(), true );
+    }
+
+    public void endSubscript()
+        throws IOException
+    {
+    	internalEndSpan();
+    }
+
+    public void startSuperscript()
+        throws IOException
+    {
+    	internalStartSpan( styleGen.getSuperscriptStyleName(), true );
+
+    }
+
+    public void endSuperscript()
+        throws IOException
+    {
+    	internalEndSpan();
     }
 
     @Override
     public void handleString( String content )
         throws IOException
     {
-        if ( insideHeader )
-        {
-            super.write( content );
-        }
-        else
-        {
-            startParagraphIfNeeded();
-            super.write( "<text:span" );
-            if ( bolding || italicsing || underlining || striking )
-            {
-                super.write( " text:style-name=\"" );
-                if ( bolding && italicsing )
-                {
-                    super.write( styleGen.getBoldItalicStyleName() );
-                }
-                else if ( italicsing )
-                {
-                    super.write( styleGen.getItalicStyleName() );
-                }
-                else if ( bolding )
-                {
-                    super.write( styleGen.getBoldStyleName() );
-                }
-                else if ( underlining )
-                {
-                    super.write( styleGen.getUnderlineStyleName() );
-                }
-                else if ( striking )
-                {
-                    super.write( styleGen.getStrikeStyleName() );
-                }
-                super.write( "\" " );
-            }
-            super.write( ">" );
-            super.write( content );
-            super.write( "</text:span>" );
-        }
+    	// Re-escape ODT special characters, xml parsing removes them.
+    	content = StringUtils.xmlEscape( content );
+
+    	if ( insideHeader )
+    	{
+    		super.write( content );
+    	}
+    	else
+    	{
+    		startSpanIfNeeded();
+
+    		super.write( content );
+
+    		internalEndSpan();
+    	}
+    }
+
+    private void startSpanIfNeeded()
+    	throws IOException
+    {
+    	boolean	spanNeeded = true;
+
+    	for( Integer depth : spanStack )
+    	{
+    		if( depth != 0 )
+    		{
+    			spanNeeded = false;
+    			break;
+    		}
+    	}
+
+    	if( spanNeeded )
+    	{
+    		internalStartSpan( null, true );
+    	}
+    	else
+    	{
+    		// Push 0 so nothing is closed
+    		spanStack.push( 0 );
+    	}
+    }
+
+    private void internalStartSpan( String styleName, boolean push )
+        throws IOException
+   {
+        startParagraphIfNeeded();
+
+    	super.write( "<text:span" );
+
+    	if( StringUtils.isNotEmpty( styleName ) )
+    	{
+    		super.write( " text:style-name=\"" );
+        	super.write( styleName );
+        	super.write( "\" " );
+    	}
+
+    	super.write( ">" );
+
+    	if( push )
+    	{
+    		spanStack.push( 1 );
+    	}
+    }
+
+    private void internalEndSpan()
+    	throws IOException
+    {
+    	Integer depth;
+
+    	depth = spanStack.pop();
+
+    	while( depth > 0 )
+    	{
+    		super.write( "</text:span>" );
+    		depth--;
+    	}
     }
 
     private void startParagraphIfNeeded()
@@ -233,6 +293,15 @@ public class ODTDocumentHandler
             }
         }
         internalStartParagraph( containerIsList, styleName );
+
+        if ( properties != null )
+        {
+        	// Remove "span" added by internalStartParagraph
+        	spanStack.pop();
+
+        	// Process properties
+        	startSpan( properties );
+        }
     }
 
     private void internalStartParagraph( boolean containerIsList, String styleName )
@@ -252,6 +321,9 @@ public class ODTDocumentHandler
         }
         paragraphWasInserted = true;
         paragraphsStack.push( containerIsList );
+
+		// Put a 0 in the stack, endSpan is called when a paragraph is ended
+        spanStack.push( 0 );
     }
 
     private void internalEndParagraph()
@@ -259,6 +331,9 @@ public class ODTDocumentHandler
     {
         if ( !paragraphsStack.isEmpty() )
         {
+            // Close any spans from paragraph style
+            internalEndSpan();
+
             super.write( "</text:p>" );
             paragraphsStack.pop();
         }
@@ -382,6 +457,51 @@ public class ODTDocumentHandler
         }
         endParagraphIfNeeded();
         super.write( "</text:list-item>" );
+    }
+
+    public void startSpan( ContainerProperties properties )
+        throws IOException
+    {
+        Integer depth = 0;
+
+        if( properties.isBold() )
+        {
+       		internalStartSpan( styleGen.getBoldStyleName(), false );
+        	depth++;
+        }
+    	if ( properties.isItalic() )
+    	{
+    		internalStartSpan( styleGen.getItalicStyleName(), false );
+        	depth++;
+        }
+    	if ( properties.isUnderline() )
+    	{
+    		internalStartSpan( styleGen.getUnderlineStyleName(), false );
+        	depth++;
+        }
+    	if ( properties.isStrike() )
+    	{
+    		internalStartSpan( styleGen.getStrikeStyleName(), false );
+        	depth++;
+        }
+    	if ( properties.isSubscript() )
+    	{
+    		internalStartSpan( styleGen.getSubscriptStyleName(), false );
+        	depth++;
+        }
+    	if ( properties.isSuperscript() )
+    	{
+    		internalStartSpan( styleGen.getSuperscriptStyleName(), false );
+        	depth++;
+        }
+
+        spanStack.push( depth );
+    }
+
+    public void endSpan()
+        throws IOException
+    {
+        internalEndSpan();
     }
 
     public void handleReference( String ref, String label )

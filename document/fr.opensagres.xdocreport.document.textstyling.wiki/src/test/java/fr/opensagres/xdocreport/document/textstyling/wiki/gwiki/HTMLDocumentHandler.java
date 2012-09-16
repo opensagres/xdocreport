@@ -27,6 +27,7 @@ package fr.opensagres.xdocreport.document.textstyling.wiki.gwiki;
 import java.io.IOException;
 
 import fr.opensagres.xdocreport.document.textstyling.AbstractDocumentHandler;
+import fr.opensagres.xdocreport.document.textstyling.properties.ContainerProperties;
 import fr.opensagres.xdocreport.document.textstyling.properties.HeaderProperties;
 import fr.opensagres.xdocreport.document.textstyling.properties.ListItemProperties;
 import fr.opensagres.xdocreport.document.textstyling.properties.ListProperties;
@@ -106,6 +107,32 @@ public class HTMLDocumentHandler
 
     }
 
+    @Override
+    public void startSubscript()
+        throws IOException
+    {
+        super.write( "<sub>" );
+    }
+
+    public void endSubscript()
+        throws IOException
+    {
+        super.write( "</sub>" );
+    }
+
+    @Override
+    public void startSuperscript()
+        throws IOException
+    {
+        super.write( "<sup>" );
+    }
+
+    public void endSuperscript()
+        throws IOException
+    {
+        super.write( "</sup>" );
+    }
+
     public void startListItem( ListItemProperties properties )
         throws IOException
     {
@@ -156,6 +183,18 @@ public class HTMLDocumentHandler
         throws IOException
     {
         super.write( "</p>" );
+    }
+
+    public void startSpan( ContainerProperties properties )
+        throws IOException
+    {
+        super.write( "<span>" );
+    }
+
+    public void endSpan()
+        throws IOException
+    {
+        super.write( "</span>" );
     }
 
     public void startHeading( int level, HeaderProperties properties )

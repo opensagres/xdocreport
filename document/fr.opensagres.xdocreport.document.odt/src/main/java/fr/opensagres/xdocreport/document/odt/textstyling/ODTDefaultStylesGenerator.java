@@ -51,11 +51,13 @@ public class ODTDefaultStylesGenerator
 
     protected static final String ITALIC_STYLE_NAME = "XDocReport_Italic";
 
-    protected static final String BOLD_ITALIC_STYLE_NAME = "XDocReport_BoldItalic";
-
     protected static final String UNDERLINE_STYLE_NAME = "XDocReport_Underline";
 
     protected static final String STRIKE_STYLE_NAME = "XDocReport_Strike";
+
+    protected static final String SUBSCRIPT_STYLE_NAME = "XDocReport_Subscript";
+
+    protected static final String SUPERSCRIPT_STYLE_NAME = "XDocReport_Superscript";
 
     protected static final String PAGE_BREAK_BEFORE_PARAGRAPH_STYLE_NAME = "XDocReport_ParaBreakBefore";
 
@@ -116,11 +118,12 @@ public class ODTDefaultStylesGenerator
     public String generateTextStyles()
     {
         StringBuilder region = new StringBuilder();
-        region.append( generateStyle( BOLD_STYLE_NAME, true, false, false, false ) );
-        region.append( generateStyle( ITALIC_STYLE_NAME, false, true, false, false ) );
-        region.append( generateStyle( BOLD_ITALIC_STYLE_NAME, true, true, false, false ) );
-        region.append( generateStyle( UNDERLINE_STYLE_NAME, false, false, true, false ) );
-        region.append( generateStyle( STRIKE_STYLE_NAME, false, false, false, true ) );
+        region.append( generateStyle( BOLD_STYLE_NAME, "fo:font-weight=\"bold\"" ) );
+        region.append( generateStyle( ITALIC_STYLE_NAME, "fo:font-style=\"italic\"" ) );
+        region.append( generateStyle( UNDERLINE_STYLE_NAME, "style:text-underline-style=\"solid\" style:text-underline-width=\"auto\" style:text-underline-color=\"font-color\"" ) );
+        region.append( generateStyle( STRIKE_STYLE_NAME, "style:text-line-through-style=\"solid\" style:text-underline-style=\"none\"" ) );
+        region.append( generateStyle( SUBSCRIPT_STYLE_NAME, "style:text-position=\"sub\"" ) );
+        region.append( generateStyle( SUPERSCRIPT_STYLE_NAME, "style:text-position=\"super\"" ) );
         return region.toString();
     }
 
@@ -132,29 +135,14 @@ public class ODTDefaultStylesGenerator
         return region.toString();
     }
 
-    private String generateStyle( String styleName, boolean bold, boolean italic, boolean underline, boolean strike )
+    private String generateStyle( String styleName, String style )
     {
         StringBuilder region = new StringBuilder();
         region.append( "<style:style style:name=\"" );
         region.append( styleName );
         region.append( "\" style:family=\"text\">" );
-        region.append( "<style:text-properties" );
-        if ( bold )
-        {
-            region.append( " fo:font-weight=\"bold\"" );
-        }
-        if ( italic )
-        {
-            region.append( " fo:font-style=\"italic\"" );
-        }
-        if ( underline )
-        {
-            region.append( " style:text-underline-style=\"solid\" style:text-underline-width=\"auto\" style:text-underline-color=\"font-color\" " );
-        }
-        if ( strike )
-        {
-            region.append( " style:text-line-through-style=\"solid\" style:text-underline-style=\"none\"" );
-        }
+        region.append( "<style:text-properties " );
+        region.append( style );
         region.append( "/></style:style>" );
         return region.toString();
     }
@@ -298,12 +286,6 @@ public class ODTDefaultStylesGenerator
     {
         return ITALIC_STYLE_NAME;
     }
-
-    public String getBoldItalicStyleName()
-    {
-        return BOLD_ITALIC_STYLE_NAME;
-    }
-
     @Override
     public String getUnderlineStyleName()
     {
@@ -314,6 +296,18 @@ public class ODTDefaultStylesGenerator
     public String getStrikeStyleName()
     {
         return STRIKE_STYLE_NAME;
+    }
+
+    @Override
+    public String getSubscriptStyleName()
+    {
+        return SUBSCRIPT_STYLE_NAME;
+    }
+
+    @Override
+    public String getSuperscriptStyleName()
+    {
+        return SUPERSCRIPT_STYLE_NAME;
     }
 
     public String getParaBreakBeforeStyleName()

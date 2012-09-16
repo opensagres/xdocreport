@@ -67,6 +67,13 @@ public class StylableChunk
             {
                 super.setBackground( backgroundColor );
             }
+
+            // sub/super script
+            Float textRise = textProperties.getTextPosition();
+            if( textRise != null )
+            {
+            	super.setTextRise( textRise );
+            }
         }
     }
 

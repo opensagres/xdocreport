@@ -164,6 +164,31 @@ public class DocxDocumentHandler
         this.striking = false;
     }
 
+    public void startSubscript()
+        throws IOException
+    {
+        // TODO
+    }
+
+    public void endSubscript()
+        throws IOException
+    {
+        // TODO
+    }
+
+
+    public void startSuperscript()
+        throws IOException
+    {
+        // TODO
+    }
+
+    public void endSuperscript()
+        throws IOException
+    {
+        // TODO
+    }
+
     @Override
     public void handleString( String content )
         throws IOException
@@ -336,6 +361,18 @@ public class DocxDocumentHandler
         super.write( "</w:t></w:r>" );
         endParagraph();
         insideHeader = false;
+    }
+
+    public void startSpan( ContainerProperties properties )
+        throws IOException
+    {
+        // TODO
+    }
+
+    public void endSpan()
+        throws IOException
+    {
+        // TODO
     }
 
     @Override

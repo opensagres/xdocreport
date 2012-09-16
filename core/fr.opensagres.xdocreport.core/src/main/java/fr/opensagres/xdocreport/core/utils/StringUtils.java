@@ -49,7 +49,7 @@ public class StringUtils
 
     /**
      * Replace the oldString by the newString in the line and returns the result.
-     * 
+     *
      * @param line the line to replace.
      * @param oldString old token to replace.
      * @param newString new token to replace.
@@ -86,13 +86,13 @@ public class StringUtils
      * <p>
      * Checks if a String is empty ("") or null.
      * </p>
-     * 
+     *
      * <pre>
      * StringUtils.isEmpty(null) = true StringUtils.isEmpty(&quot;&quot;) = true
      * StringUtils.isEmpty(&quot; &quot;) = false StringUtils.isEmpty(&quot;bob&quot;) = false
      * StringUtils.isEmpty(&quot; bob &quot;) = false
      * </pre>
-     * 
+     *
      * @param str the String to check, may be null
      * @return <code>true</code> if the String is empty or null
      */
@@ -105,7 +105,7 @@ public class StringUtils
      * <p>
      * Checks if a String is not empty ("") and not null.
      * </p>
-     * 
+     *
      * <pre>
      * StringUtils.isNotEmpty(null) = false
      * StringUtils.isNotEmpty(&quot;&quot;) = false
@@ -113,7 +113,7 @@ public class StringUtils
      * StringUtils.isNotEmpty(&quot;bob&quot;) = true
      * StringUtils.isNotEmpty(&quot; bob &quot;) = true
      * </pre>
-     * 
+     *
      * @param str the String to check, may be null
      * @return <code>true</code> if the String is not empty and not null
      */
@@ -154,7 +154,7 @@ public class StringUtils
 
     /**
      * Returns the given value String as Integer.
-     * 
+     *
      * @param value
      * @return
      */
@@ -165,7 +165,7 @@ public class StringUtils
 
     /**
      * Returns the given value String as Integer.
-     * 
+     *
      * @param value
      * @param defaultValue
      * @return
@@ -184,7 +184,7 @@ public class StringUtils
 
     /**
      * Returns the given value String as Long.
-     * 
+     *
      * @param value
      * @return
      */
@@ -195,7 +195,7 @@ public class StringUtils
 
     /**
      * Returns the given value String as Long.
-     * 
+     *
      * @param value
      * @param defaultValue
      * @return
@@ -220,7 +220,7 @@ public class StringUtils
      * A <code>null</code> reference passed to this method is a no-op, or if any "search string" or "string to replace"
      * is null, that replace will be ignored. This will not repeat. For repeating replaces, call the overloaded method.
      * </p>
-     * 
+     *
      * <pre>
      *  StringUtils.replaceEach(null, *, *)        = null
      *  StringUtils.replaceEach("", *, *)          = ""
@@ -234,7 +234,7 @@ public class StringUtils
      *  (example of how it does not repeat)
      *  StringUtils.replaceEach("abcde", new String[]{"ab", "d"}, new String[]{"d", "t"})  = "dcte"
      * </pre>
-     * 
+     *
      * @param text text to search and replace in, no-op if null
      * @param searchList the Strings to search for, no-op if null
      * @param replacementList the Strings to replace them with, no-op if null
@@ -255,7 +255,7 @@ public class StringUtils
      * A <code>null</code> reference passed to this method is a no-op, or if any "search string" or "string to replace"
      * is null, that replace will be ignored.
      * </p>
-     * 
+     *
      * <pre>
      *  StringUtils.replaceEach(null, *, *, *) = null
      *  StringUtils.replaceEach("", *, *, *) = ""
@@ -271,7 +271,7 @@ public class StringUtils
      *  StringUtils.replaceEach("abcde", new String[]{"ab", "d"}, new String[]{"d", "t"}, true) = "tcte"
      *  StringUtils.replaceEach("abcde", new String[]{"ab", "d"}, new String[]{"d", "ab"}, *) = IllegalArgumentException
      * </pre>
-     * 
+     *
      * @param text text to search and replace in, no-op if null
      * @param searchList the Strings to search for, no-op if null
      * @param replacementList the Strings to replace them with, no-op if null
@@ -434,7 +434,7 @@ public class StringUtils
 
     /**
      * Decode the given String to UTF-8.
-     * 
+     *
      * @param content
      * @return
      */
@@ -466,4 +466,23 @@ public class StringUtils
         return s;
     }
 
+    /**
+     * Re-escape xml special characters
+     *
+     * @param s
+     * @return
+     */
+    public static String xmlEscape( String s )
+    {
+        if ( s == null )
+        {
+            return null;
+        }
+        s = s.replaceAll( "&", EncodingConstants.AMP );
+        s = s.replaceAll( "<", EncodingConstants.LT );
+        s = s.replaceAll( ">", EncodingConstants.GT );
+        s = s.replaceAll( "\"", EncodingConstants.QUOT );
+        s = s.replaceAll( "'", EncodingConstants.APOS );
+        return s;
+    }
 }

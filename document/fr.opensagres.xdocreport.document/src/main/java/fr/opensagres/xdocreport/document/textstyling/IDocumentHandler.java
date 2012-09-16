@@ -26,6 +26,7 @@ package fr.opensagres.xdocreport.document.textstyling;
 
 import java.io.IOException;
 
+import fr.opensagres.xdocreport.document.textstyling.properties.ContainerProperties;
 import fr.opensagres.xdocreport.document.textstyling.properties.HeaderProperties;
 import fr.opensagres.xdocreport.document.textstyling.properties.ListItemProperties;
 import fr.opensagres.xdocreport.document.textstyling.properties.ListProperties;
@@ -116,8 +117,32 @@ public interface IDocumentHandler
         throws IOException;
 
     /**
+     * Start Subscript style.
+     */
+    void startSubscript()
+        throws IOException;
+
+    /**
+     * End Subscript style.
+     */
+    void endSubscript()
+        throws IOException;
+
+    /**
+     * Start Superscript style.
+     */
+    void startSuperscript()
+        throws IOException;
+
+    /**
+     * End Superscript style.
+     */
+    void endSuperscript()
+        throws IOException;
+
+    /**
      * Start ordered list.
-     * 
+     *
      * @param properties
      */
     void startOrderedList( ListProperties properties )
@@ -131,7 +156,7 @@ public interface IDocumentHandler
 
     /**
      * Start unordered list.
-     * 
+     *
      * @param properties
      */
     void startUnorderedList( ListProperties properties )
@@ -156,8 +181,20 @@ public interface IDocumentHandler
         throws IOException;
 
     /**
+     * Start span item.
+     */
+    void startSpan( ContainerProperties properties )
+        throws IOException;
+
+    /**
+     * End span item.
+     */
+    void endSpan()
+        throws IOException;
+
+    /**
      * Text content.
-     * 
+     *
      * @param s
      */
     void handleString( String s )
@@ -165,7 +202,7 @@ public interface IDocumentHandler
 
     /**
      * Start heading.
-     * 
+     *
      * @param level
      * @throws IOException
      */
@@ -174,7 +211,7 @@ public interface IDocumentHandler
 
     /**
      * End heading.
-     * 
+     *
      * @param level
      * @throws IOException
      */
@@ -183,7 +220,7 @@ public interface IDocumentHandler
 
     /**
      * Handle image.
-     * 
+     *
      * @param ref
      * @param label
      * @throws IOException
@@ -193,7 +230,7 @@ public interface IDocumentHandler
 
     /**
      * Handle reference.
-     * 
+     *
      * @param ref
      * @param label
      * @throws IOException

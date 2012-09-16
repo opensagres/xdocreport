@@ -68,7 +68,7 @@ public class StylesHelper
 
     /**
      * Create {@link ParagraphProperties} from inline style.
-     * 
+     *
      * @param style
      * @return
      */
@@ -86,7 +86,7 @@ public class StylesHelper
 
     /**
      * Create {@link HeaderProperties} from inline style.
-     * 
+     *
      * @param style
      * @return
      */
@@ -104,7 +104,7 @@ public class StylesHelper
 
     /**
      * Create {@link ListItemProperties} from inline style.
-     * 
+     *
      * @param style
      * @return
      */
@@ -122,7 +122,7 @@ public class StylesHelper
 
     /**
      * Create {@link ListProperties} from inline style.
-     * 
+     *
      * @param style
      * @return
      */
@@ -137,7 +137,25 @@ public class StylesHelper
         }
         return null;
     }
-    
+
+    /**
+     * Create {@link SpanProperties} from inline style.
+     *
+     * @param style
+     * @return
+     */
+    public static ContainerProperties createSpanProperties( String style )
+    {
+        Map<String, String> stylesMap = StylesHelper.parse( style );
+        if ( !stylesMap.isEmpty() )
+        {
+        	ContainerProperties properties = new ContainerProperties();
+            processContainerproperties( properties, stylesMap );
+            return properties;
+        }
+        return null;
+    }
+
     private static void processContainerproperties( ContainerProperties properties, Map<String, String> stylesMap )
     {
         properties.setPageBreakBefore( false );
@@ -150,6 +168,54 @@ public class StylesHelper
         {
             properties.setPageBreakAfter( true );
         }
-    }
 
+		properties.setBold( false );
+    	if( stylesMap.get( "font-weight" ) != null )
+    	{
+    		if( "bold".equals( stylesMap.get( "font-weight" ) )
+    		 || "700".equals( stylesMap.get( "font-weight" ) )
+    	    )
+    		{
+    			properties.setBold( true );
+    		}
+    	}
+
+		properties.setItalic( false );
+    	if( stylesMap.get( "font-style" ) != null )
+    	{
+    		if( "italic".equals( stylesMap.get( "font-style" ) ) )
+    		{
+    			properties.setItalic( true );
+    		}
+    	}
+
+		properties.setStrike( false );
+		properties.setUnderline( false );
+    	if( stylesMap.get( "text-decoration" ) != null )
+    	{
+    		if( stylesMap.get( "text-decoration" ).contains( "underline" ) )
+    		{
+    			properties.setUnderline( true );
+    		}
+
+    		if( stylesMap.get( "text-decoration" ).contains( "line-through" ) )
+    		{
+    			properties.setStrike( true );
+    		}
+    	}
+
+		properties.setSuperscript( false );
+		properties.setSubscript( false );
+    	if( stylesMap.get( "vertical-align" ) != null )
+    	{
+    		if( "sub".equals( stylesMap.get( "vertical-align" ) ) )
+    		{
+    			properties.setSubscript( true );
+    		}
+    		else if( "super".equals( stylesMap.get( "vertical-align" ) ) )
+    		{
+    			properties.setSuperscript( true );
+    		}
+    	}
+    }
 }

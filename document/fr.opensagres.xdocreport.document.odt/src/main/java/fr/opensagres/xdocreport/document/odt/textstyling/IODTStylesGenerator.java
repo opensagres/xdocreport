@@ -100,9 +100,14 @@ public interface IODTStylesGenerator
     String getStrikeStyleName();
 
     /**
-     * @return the name of the style used for italic + bold
+     * @return the name of the style used for Subscript
      */
-    String getBoldItalicStyleName();
+    String getSubscriptStyleName();
+
+    /**
+     * @return the name of the style used for Superscript
+     */
+    String getSuperscriptStyleName();
 
     String getParaBreakBeforeStyleName();
 

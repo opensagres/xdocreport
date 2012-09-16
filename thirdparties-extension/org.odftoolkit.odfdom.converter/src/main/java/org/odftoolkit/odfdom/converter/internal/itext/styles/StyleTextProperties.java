@@ -49,6 +49,8 @@ public class StyleTextProperties
 
     private Boolean fontUnderline;
 
+    private Float textPosition;
+
     public StyleTextProperties()
     {
     }
@@ -111,6 +113,10 @@ public class StyleTextProperties
         {
             fontUnderline = textProperties.getFontUnderline();
         }
+        if ( textProperties.getTextPosition() != null )
+        {
+        	textPosition = textProperties.getTextPosition();
+        }
     }
 
     public int getStyleFlag()
@@ -143,9 +149,19 @@ public class StyleTextProperties
 
     public Font getFont()
     {
+    	Float adjustedFontSize;
+
         if ( hasFontProperties() )
         {
-            return ODFFontRegistry.getRegistry().getFont( fontName, fontEncoding, fontSize, getStyleFlag(), fontColor );
+        	adjustedFontSize = fontSize;
+
+        	// Shrink font size if sub or super scripted
+        	if( textPosition != null )
+        	{
+        		adjustedFontSize *= 0.63f;
+        	}
+
+            return ODFFontRegistry.getRegistry().getFont( fontName, fontEncoding, adjustedFontSize, getStyleFlag(), fontColor );
         }
         else
         {
@@ -241,5 +257,15 @@ public class StyleTextProperties
     public void setFontUnderline( Boolean fontUnderline )
     {
         this.fontUnderline = fontUnderline;
+    }
+
+    public Float getTextPosition()
+    {
+        return textPosition;
+    }
+
+    public void setTextPosition( Float textPosition )
+    {
+        this.textPosition = textPosition;
     }
 }

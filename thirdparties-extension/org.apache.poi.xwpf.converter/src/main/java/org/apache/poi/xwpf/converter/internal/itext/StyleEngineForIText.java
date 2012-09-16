@@ -463,7 +463,9 @@ public class StyleEngineForIText
     }
 
     @Override
-    protected IITextContainer startVisitTableCell( XWPFTableCell cell, IITextContainer tableContainer )
+    protected IITextContainer startVisitTableCell( XWPFTableCell cell, IITextContainer tableContainer,
+                                                   boolean firstRow, boolean lastRow, boolean firstCell,
+                                                   boolean lastCell )
     {
 
         return null;

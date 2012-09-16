@@ -24,6 +24,9 @@
  */
 package org.apache.poi.xwpf.converter.internal;
 
+import java.awt.Color;
+
+import org.apache.poi.xwpf.converter.internal.itext.ColorRegistry;
 import org.apache.poi.xwpf.usermodel.XWPFStyle;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTDocDefaults;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTRPr;
@@ -121,5 +124,14 @@ public class XWPFUtils
         }
 
         return sectType.getVal() == STSectionMark.CONTINUOUS;
+    }
+
+    public static Color getColor( String hexColor )
+    {
+        if ( hexColor != null && !"auto".equals( hexColor ) )
+        {
+            return ColorRegistry.getInstance().getColor( "0x" + hexColor );
+        }
+        return null;
     }
 }

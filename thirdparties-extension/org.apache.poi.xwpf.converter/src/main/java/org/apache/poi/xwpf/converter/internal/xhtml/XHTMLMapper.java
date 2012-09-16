@@ -271,19 +271,22 @@ public class XHTMLMapper
     }
 
     @Override
-    protected void visitTableRow( XWPFTableRow row, XHTMLPageContentBuffer tableContainer )
+    protected void visitTableRow( XWPFTableRow row, XHTMLPageContentBuffer tableContainer, boolean firstRow,
+                                  boolean lastRow )
         throws Exception
     {
         tableContainer.startElementNotEnclosed( TR_ELEMENT );
         tableContainer.endElementNotEnclosed();
 
-        super.visitTableRow( row, tableContainer );
+        super.visitTableRow( row, tableContainer, firstRow, lastRow );
 
         tableContainer.endElement( TR_ELEMENT );
     }
 
     @Override
-    protected XHTMLPageContentBuffer startVisitTableCell( XWPFTableCell tableCell, XHTMLPageContentBuffer tableContainer )
+    protected XHTMLPageContentBuffer startVisitTableCell( XWPFTableCell tableCell,
+                                                          XHTMLPageContentBuffer tableContainer, boolean firstRow,
+                                                          boolean lastRow, boolean firstCell, boolean lastCell )
     {
         tableContainer.startElementNotEnclosed( TD_ELEMENT );
 

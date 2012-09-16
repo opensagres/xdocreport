@@ -148,25 +148,27 @@ public abstract class XWPFElementVisitor<T>
             // but it can be have w:r in the w:pPr
             // <w:p><w:pPr .. <w:r> => See the header1.xml of DocxBig.docx ,
             // => test if it exist w:r
-//            CTP p = paragraph.getCTP();
-//            CTPPr pPr = p.getPPr();
-//            if (pPr != null) {
-//                XmlObject[] wRuns = pPr.selectPath("declare namespace w='http://schemas.openxmlformats.org/wordprocessingml/2006/main' .//w:r");
-//                if (wRuns != null) {
-//                    for ( int i = 0; i < wRuns.length; i++ )
-//                    {
-//                        XmlObject o = wRuns[i];
-//                        o.getDomNode().getParentNode()
-//                        if (o instanceof CTR) {
-//                            System.err.println(wRuns[i]);
-//                        }
-//                        
-//                    }
-//                }
-//            }
-//            //XmlObject[] t = o.selectPath("declare namespace w='http://schemas.openxmlformats.org/wordprocessingml/2006/main' .//w:t");
-//            //paragraph.getCTP().get
-            
+            // CTP p = paragraph.getCTP();
+            // CTPPr pPr = p.getPPr();
+            // if (pPr != null) {
+            // XmlObject[] wRuns =
+            // pPr.selectPath("declare namespace w='http://schemas.openxmlformats.org/wordprocessingml/2006/main' .//w:r");
+            // if (wRuns != null) {
+            // for ( int i = 0; i < wRuns.length; i++ )
+            // {
+            // XmlObject o = wRuns[i];
+            // o.getDomNode().getParentNode()
+            // if (o instanceof CTR) {
+            // System.err.println(wRuns[i]);
+            // }
+            //
+            // }
+            // }
+            // }
+            // //XmlObject[] t =
+            // o.selectPath("declare namespace w='http://schemas.openxmlformats.org/wordprocessingml/2006/main' .//w:t");
+            // //paragraph.getCTP().get
+
             visitEmptyRun( paragraphContainer );
         }
         else
@@ -196,10 +198,15 @@ public abstract class XWPFElementVisitor<T>
         throws Exception
     {
         // Proces Row
+        boolean firstRow = false;
+        boolean lastRow = false;
         List<XWPFTableRow> rows = table.getRows();
-        for ( XWPFTableRow row : rows )
+        for ( int i = 0; i < rows.size(); i++ )
         {
-            visitTableRow( row, tableContainer );
+            firstRow = ( i == 0 );
+            lastRow = ( i == rows.size() - 1 );
+            XWPFTableRow row = rows.get( i );
+            visitTableRow( row, tableContainer, firstRow, lastRow );
         }
     }
 
@@ -209,21 +216,27 @@ public abstract class XWPFElementVisitor<T>
     protected abstract void endVisitTable( XWPFTable table, T parentContainer, T tableContainer )
         throws Exception;
 
-    protected void visitTableRow( XWPFTableRow row, T tableContainer )
+    protected void visitTableRow( XWPFTableRow row, T tableContainer, boolean firstRow, boolean lastRow )
         throws Exception
     {
         // Process cell
+        boolean firstCell = false;
+        boolean lastCell = false;
         List<XWPFTableCell> cells = row.getTableCells();
-        for ( XWPFTableCell cell : cells )
+        for ( int i = 0; i < cells.size(); i++ )
         {
-            visitCell( cell, tableContainer );
+            firstCell = ( i == 0 );
+            lastCell = ( i == cells.size() - 1 );
+            XWPFTableCell cell = cells.get( i );
+            visitCell( cell, tableContainer, firstRow, lastRow, firstCell, lastCell );
         }
     }
 
-    protected void visitCell( XWPFTableCell cell, T tableContainer )
+    protected void visitCell( XWPFTableCell cell, T tableContainer, boolean firstRow, boolean lastRow,
+                              boolean firstCell, boolean lastCell )
         throws Exception
     {
-        T tableCellContainer = startVisitTableCell( cell, tableContainer );
+        T tableCellContainer = startVisitTableCell( cell, tableContainer, firstRow, lastRow, firstCell, lastCell );
         visitTableCellBody( cell, tableCellContainer );
         endVisitTableCell( cell, tableContainer, tableCellContainer );
     }
@@ -235,7 +248,8 @@ public abstract class XWPFElementVisitor<T>
         visitBodyElements( bodyElements, tableCellContainer );
     }
 
-    protected abstract T startVisitTableCell( XWPFTableCell cell, T tableContainer );
+    protected abstract T startVisitTableCell( XWPFTableCell cell, T tableContainer, boolean firstRow, boolean lastRow,
+                                              boolean firstCell, boolean lastCell );
 
     protected abstract void endVisitTableCell( XWPFTableCell cell, T tableContainer, T tableCellContainer );
 

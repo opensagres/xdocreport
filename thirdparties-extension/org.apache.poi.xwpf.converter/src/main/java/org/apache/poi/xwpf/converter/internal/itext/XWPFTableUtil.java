@@ -32,16 +32,19 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
-import org.apache.poi.xwpf.converter.internal.itext.styles.StyleBorder;
+import org.apache.poi.xwpf.converter.internal.XWPFUtils;
 import org.apache.poi.xwpf.usermodel.XWPFTable;
 import org.apache.poi.xwpf.usermodel.XWPFTableCell;
 import org.apache.poi.xwpf.usermodel.XWPFTableRow;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTBorder;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTDecimalNumber;
+import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTTbl;
+import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTTblBorders;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTTblGrid;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTTblGridCol;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTTblPr;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTTblWidth;
+import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTTcBorders;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTTcPr;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.STBorder;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.STTblWidth;
@@ -240,13 +243,111 @@ public class XWPFTableUtil
         return new TableWidth( width, percentUnit );
     }
 
+    public static CTTblPr getTblPr( XWPFTable table )
+    {
+        CTTbl tbl = table.getCTTbl();
+        if ( tbl != null )
+        {
+            return tbl.getTblPr();
+        }
+        return null;
+    }
+
+    public static CTTblBorders getTblBorders( XWPFTable table )
+    {
+        CTTblPr tblPr = getTblPr( table );
+        if ( tblPr != null )
+        {
+            return tblPr.getTblBorders();
+        }
+        return null;
+    }
+
+    public static void setBorder( CTTcBorders cellBorders, CTTblBorders tableBorders, boolean firstRow,
+                                  boolean lastRow, boolean firstCell, boolean lastCell, PdfPCell pdfPCell,
+                                  int borderSide )
+    {
+        if ( cellBorders == null && tableBorders == null )
+        {
+            return;
+        }
+        CTBorder cellBorder = getBorder( cellBorders, borderSide );
+        if ( cellBorder == null )
+        {
+            cellBorder = getBorder( tableBorders, firstRow, lastRow, firstCell, lastCell, borderSide );
+        }
+        if ( cellBorder == null )
+        {
+            return;
+        }
+        setBorder( cellBorder, pdfPCell, borderSide );
+    }
+
+    public static CTBorder getBorder( CTTcBorders cellBorders, int borderSide )
+    {
+        if ( cellBorders == null )
+        {
+            return null;
+        }
+        switch ( borderSide )
+        {
+            case Rectangle.TOP:
+
+                return cellBorders.getTop();
+            case Rectangle.BOTTOM:
+                return cellBorders.getBottom();
+            case Rectangle.LEFT:
+                return cellBorders.getLeft();
+            case Rectangle.RIGHT:
+                return cellBorders.getRight();
+        }
+        return null;
+    }
+
+    public static CTBorder getBorder( CTTblBorders tableBorders, boolean firstRow, boolean lastRow, boolean firstCell,
+                                      boolean lastCell, int borderSide )
+    {
+        if ( tableBorders == null )
+        {
+            return null;
+        }
+        switch ( borderSide )
+        {
+            case Rectangle.TOP:
+                if ( firstRow )
+                {
+                    return tableBorders.getTop();
+                }
+                return tableBorders.getInsideH();
+            case Rectangle.BOTTOM:
+                if ( lastRow )
+                {
+                    return tableBorders.getBottom();
+                }
+                return tableBorders.getInsideH();
+            case Rectangle.LEFT:
+                if ( firstCell )
+                {
+                    return tableBorders.getLeft();
+                }
+                return tableBorders.getInsideV();
+            case Rectangle.RIGHT:
+                if ( lastCell )
+                {
+                    return tableBorders.getRight();
+                }
+                return tableBorders.getInsideV();
+        }
+        return null;
+    }
+
     public static void setBorder( CTBorder border, PdfPCell pdfPCell, int borderSide )
     {
         if ( border == null )
         {
             return;
         }
-        boolean noBorder = ( STBorder.NONE == border.getVal() );
+        boolean noBorder = ( STBorder.NONE == border.getVal() || STBorder.NIL == border.getVal() );
 
         // No border
         if ( noBorder )
@@ -259,14 +360,16 @@ public class XWPFTableUtil
             BigInteger borderSize = border.getSz();
             if ( borderSize != null )
             {
-                size = dxa2points( borderSize );
+                // http://officeopenxml.com/WPtableBorders.php
+                // if w:sz="4" => 1/4 points
+                size = borderSize.floatValue() / 8f;
             }
 
             Color borderColor = null;
             String hexColor = getBorderColor( border );
             if ( hexColor != null )
             {
-                borderColor = ColorRegistry.getInstance().getColor( "0x" + hexColor );
+                borderColor = XWPFUtils.getColor( hexColor );
             }
 
             switch ( borderSide )
@@ -314,72 +417,6 @@ public class XWPFTableUtil
                     break;
             }
         }
-    }
-
-    public static void setBorder( StyleBorder border, PdfPCell pdfPCell, int borderSide )
-    {
-        if ( border == null )
-        {
-            return;
-        }
-        // boolean noBorder = (STBorder.NONE == border.getVal());
-
-        // No border
-
-        float size = -1;
-        BigInteger borderSize = border.getWidth();
-        if ( borderSize != null )
-        {
-            size = dxa2points( borderSize );
-        }
-
-        Color borderColor = border.getColor();
-
-        switch ( borderSide )
-        {
-            case Rectangle.TOP:
-                if ( size != -1 )
-                {
-                    pdfPCell.setBorderWidthTop( size );
-                }
-                if ( borderColor != null )
-                {
-
-                    pdfPCell.setBorderColorTop( borderColor );
-                }
-                break;
-            case Rectangle.BOTTOM:
-                if ( size != -1 )
-                {
-                    pdfPCell.setBorderWidthBottom( size );
-                }
-                if ( borderColor != null )
-                {
-                    pdfPCell.setBorderColorBottom( borderColor );
-                }
-                break;
-            case Rectangle.LEFT:
-                if ( size != -1 )
-                {
-                    pdfPCell.setBorderWidthLeft( size );
-                }
-                if ( borderColor != null )
-                {
-                    pdfPCell.setBorderColorLeft( borderColor );
-                }
-                break;
-            case Rectangle.RIGHT:
-                if ( size != -1 )
-                {
-                    pdfPCell.setBorderWidthRight( size );
-                }
-                if ( borderColor != null )
-                {
-                    pdfPCell.setBorderColorRight( borderColor );
-                }
-                break;
-        }
-
     }
 
     public static String getBorderColor( CTBorder border )

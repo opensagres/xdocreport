@@ -35,13 +35,13 @@ import org.apache.poi.xwpf.converter.internal.itext.styles.StyleTableRowProperti
 import com.lowagie.text.Element;
 import com.lowagie.text.pdf.PdfPCell;
 
+import fr.opensagres.xdocreport.itext.extension.ExtendedPdfPCell;
 import fr.opensagres.xdocreport.itext.extension.IITextContainer;
 
 public class StylableTableCell
-    extends PdfPCell
+    extends ExtendedPdfPCell
     implements IStylableContainer
 {
-
 
     private final IStylableFactory ownerDocument;
 
@@ -165,13 +165,4 @@ public class StylableTableCell
         return this;
     }
 
-    public IITextContainer getITextContainer()
-    {
-        return parent;
-    }
-
-    public void setITextContainer( IITextContainer container )
-    {
-
-    }
 }

@@ -67,25 +67,33 @@ public abstract class AbstractXWPFPOIConverterTest
     }
 
     @Test
+    public void issue52()
+        throws IOException
+    {
+        doGenerate( "Issue52.docx" );
+    }
+    
+    @Test
     public void testTemplateGeneral()
         throws IOException
     {
         doGenerate( "TemplateGeneral.docx" );
     }
+
     @Test
     public void testTemplateIndividuel()
         throws IOException
     {
         doGenerate( "TemplateIndividuel.docx" );
     }
-    
+
     @Test
     public void testChineseCharacters()
         throws IOException
     {
         doGenerate( "TestChineseCharacters.docx" );
     }
-    
+
     @Test
     public void testColor()
         throws IOException
@@ -128,6 +136,20 @@ public abstract class AbstractXWPFPOIConverterTest
         doGenerate( "TestTable.docx" );
     }
 
+    @Test
+    public void testTableBorder()
+        throws IOException
+    {
+        doGenerate( "TestTableBorder.docx" );
+    }
+
+    @Test
+    public void testTestTableCellTextOrientation()
+        throws IOException
+    {
+        doGenerate( "TestTableCellTextOrientation.docx" );
+    }
+    
     @Test
     public void testTitle()
         throws IOException

@@ -31,7 +31,6 @@ import static org.apache.poi.xwpf.converter.internal.XWPFRunUtils.getRStyle;
 import static org.apache.poi.xwpf.converter.internal.XWPFRunUtils.isBold;
 import static org.apache.poi.xwpf.converter.internal.XWPFRunUtils.isItalic;
 import static org.apache.poi.xwpf.converter.internal.XWPFUtils.getRPr;
-import static org.apache.poi.xwpf.converter.internal.itext.XWPFTableUtil.setBorder;
 
 import java.awt.Color;
 import java.io.OutputStream;
@@ -39,6 +38,7 @@ import java.util.List;
 import java.util.logging.Logger;
 
 import org.apache.poi.xwpf.converter.internal.XWPFDocumentVisitor;
+import org.apache.poi.xwpf.converter.internal.XWPFUtils;
 import org.apache.poi.xwpf.converter.internal.itext.stylable.IStylableContainer;
 import org.apache.poi.xwpf.converter.internal.itext.stylable.IStylableElement;
 import org.apache.poi.xwpf.converter.internal.itext.stylable.StylableDocument;
@@ -64,6 +64,7 @@ import org.apache.poi.xwpf.usermodel.XWPFTableCell;
 import org.apache.poi.xwpf.usermodel.XWPFTableRow;
 import org.apache.xmlbeans.XmlCursor;
 import org.apache.xmlbeans.XmlObject;
+import org.openxmlformats.schemas.drawingml.x2006.diagram.STTextDirection;
 import org.openxmlformats.schemas.drawingml.x2006.main.CTPositiveSize2D;
 import org.openxmlformats.schemas.drawingml.x2006.picture.CTPicture;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTBorder;
@@ -80,9 +81,11 @@ import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTRPr;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTSectPr;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTShd;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTString;
+import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTTblBorders;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTTcBorders;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTTcPr;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTText;
+import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTTextDirection;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.STHexColor;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.STOnOff;
 
@@ -92,6 +95,7 @@ import com.lowagie.text.Font;
 import com.lowagie.text.Image;
 import com.lowagie.text.Rectangle;
 import com.lowagie.text.pdf.PdfPCell;
+import com.lowagie.text.pdf.PdfWriter;
 import com.lowagie.text.pdf.draw.VerticalPositionMark;
 
 import fr.opensagres.xdocreport.itext.extension.ExtendedParagraph;
@@ -210,7 +214,11 @@ public class PDFMapper
         String backgroundColor = XWPFParagraphUtils.getBackgroundColor( docxParagraph );
         if ( StringUtils.isNotEmpty( backgroundColor ) )
         {
-            pdfParagraph.setBackgroundColor( ColorRegistry.getInstance().getColor( "0x" + backgroundColor ) );
+            Color color = XWPFUtils.getColor( backgroundColor );
+            if ( color != null )
+            {
+                pdfParagraph.setBackgroundColor( color );
+            }
         }
 
         // Paragraph border
@@ -321,15 +329,8 @@ public class PDFMapper
         }
 
         // Process color
-        Color fontColor = null;
         String hexColor = getFontColor( run, runRprStyle, rprStyle, rprDefault );
-        if ( StringUtils.isNotEmpty( hexColor ) )
-        {
-            if ( hexColor != null && !"auto".equals( hexColor ) )
-            {
-                fontColor = ColorRegistry.getInstance().getColor( "0x" + hexColor );
-            }
-        }
+        Color fontColor = XWPFUtils.getColor( hexColor );
         // Get font
         Font font =
             XWPFFontRegistry.getRegistry().getFont( fontFamily, options.getFontEncoding(), fontSize, fontStyle,
@@ -475,33 +476,6 @@ public class PDFMapper
             }
         }
 
-        if ( table.getCTTbl() != null )
-        {
-            if ( table.getCTTbl().getTblPr().getTblBorders() != null )
-            {
-                CTBorder bottom = table.getCTTbl().getTblPr().getTblBorders().getBottom();
-                if ( bottom != null )
-                {
-                    pdfPTable.setBorderBottom( createBorder( bottom, BorderType.BOTTOM ) );
-                }
-                CTBorder left = table.getCTTbl().getTblPr().getTblBorders().getLeft();
-                if ( left != null )
-                {
-                    pdfPTable.setBorderLeft( createBorder( left, BorderType.LEFT ) );
-                }
-                CTBorder top = table.getCTTbl().getTblPr().getTblBorders().getTop();
-                if ( top != null )
-                {
-                    pdfPTable.setBorderTop( createBorder( top, BorderType.TOP ) );
-                }
-                CTBorder right = table.getCTTbl().getTblPr().getTblBorders().getRight();
-                if ( right != null )
-                {
-                    pdfPTable.setBorderRight( createBorder( right, BorderType.RIGHT ) );
-                }
-            }
-        }
-
         pdfPTable.setLockedWidth( true );
         // finally apply the style to the iText paragraph....
         applyStyles( table, pdfPTable );
@@ -518,7 +492,7 @@ public class PDFMapper
         // XXX semi point ?
         styleBorder.setWidth( docxBorder.getSz() );
         STHexColor hexColor = docxBorder.xgetColor();
-        Color bc = ColorRegistry.getInstance().getColor( "0x" + hexColor.getStringValue() );
+        Color bc = XWPFUtils.getColor( hexColor.getStringValue() );
         styleBorder.setColor( bc );
         return styleBorder;
     }
@@ -531,12 +505,14 @@ public class PDFMapper
     }
 
     @Override
-    protected IITextContainer startVisitTableCell( XWPFTableCell cell, IITextContainer tableContainer )
+    protected IITextContainer startVisitTableCell( XWPFTableCell cell, IITextContainer tableContainer,
+                                                   boolean firstRow, boolean lastRow, boolean firstCell,
+                                                   boolean lastCell )
     {
         StylableTable pdfPTable = (StylableTable) tableContainer;
 
         XWPFTableRow row = cell.getTableRow();
-        ExtendedPdfPCell pdfPCell = new ExtendedPdfPCell();
+        ExtendedPdfPCell pdfPCell = pdfDocument.createTableCell( pdfPTable );
         pdfPCell.setITextContainer( pdfPTable );
 
         CTTcPr tcPr = cell.getCTTc().getTcPr();
@@ -563,30 +539,52 @@ public class PDFMapper
             {
                 hexColor = shd.xgetFill().getStringValue();
             }
-            if ( hexColor != null && !"auto".equals( hexColor ) )
+            Color color = XWPFUtils.getColor( hexColor );
+            if ( color != null )
             {
-                pdfPCell.setBackgroundColor( ColorRegistry.getInstance().getColor( "0x" + hexColor ) );
+                pdfPCell.setBackgroundColor( color );
             }
 
             // Borders
             // Table Properties on cells
 
             // overridden locally
-            CTTcBorders borders = tcPr.getTcBorders();
-            if ( borders != null )
+            CTTblBorders tableBorders = XWPFTableUtil.getTblBorders( cell.getTableRow().getTable() );
+            CTTcBorders cellBorders = tcPr.getTcBorders();
+            // border-left
+            XWPFTableUtil.setBorder( cellBorders, tableBorders, firstRow, lastRow, firstCell, lastCell, pdfPCell,
+                                     Rectangle.LEFT );
+            // border-right
+            XWPFTableUtil.setBorder( cellBorders, tableBorders, firstRow, lastRow, firstCell, lastCell, pdfPCell,
+                                     Rectangle.RIGHT );
+            // border-top
+            XWPFTableUtil.setBorder( cellBorders, tableBorders, firstRow, lastRow, firstCell, lastCell, pdfPCell,
+                                     Rectangle.TOP );
+            // border-bottom
+            XWPFTableUtil.setBorder( cellBorders, tableBorders, firstRow, lastRow, firstCell, lastCell, pdfPCell,
+                                     Rectangle.BOTTOM );
+
+            // Text direction
+            CTTextDirection direction = tcPr.getTextDirection();
+            if ( direction != null )
             {
-                // border-left
-                setBorder( borders.getLeft(), pdfPCell, Rectangle.LEFT );
-                // border-right
-                setBorder( borders.getRight(), pdfPCell, Rectangle.RIGHT );
-                // border-top
-                setBorder( borders.getTop(), pdfPCell, Rectangle.TOP );
-                // border-bottom
-                setBorder( borders.getBottom(), pdfPCell, Rectangle.BOTTOM );
+                // if (direction.getVal().equals(STTextDirection.FROM_T )) {
+                if ( "btLr".equals( direction.getVal().toString() ) )
+                {
+                    pdfPCell.setRotation( 90 );
+                }
+                else if ( "tbRl".equals( direction.getVal().toString() ) )
+                {
+                    pdfPCell.setRotation( 270 );
+                    //pdfPCell.setRunDirection( PdfWriter.RUN_DIRECTION_RTL );
+                }
             }
         }
         int height = row.getHeight();
         pdfPCell.setMinimumHeight( dxa2points( height ) );
+        // pdfPCell.setRunDirection( PdfWriter.RUN_DIRECTION_NO_BIDI );
+        // pdfPCell.setRotation( 90 );
+        // pdfPCell.setVerticalAlignment( pdfPCell.ALIGN_TOP );
 
         return pdfPCell;
     }

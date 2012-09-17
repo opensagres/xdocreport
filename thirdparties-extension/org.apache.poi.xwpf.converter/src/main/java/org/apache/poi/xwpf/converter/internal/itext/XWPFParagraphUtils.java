@@ -206,6 +206,11 @@ public class XWPFParagraphUtils
         return ctStyle.getPPr();
     }
 
+    public static CTPPr getPPr( XWPFParagraph paragraph )
+    {
+        return paragraph.getCTP().getPPr();
+    }
+
     public static Color getBackgroundColor( XWPFParagraph paragraph )
     {
         CTPPr pPr = getPPr( paragraph );
@@ -214,11 +219,6 @@ public class XWPFParagraphUtils
             return null;
         }
         return XWPFUtils.getFillColor( pPr.getShd() );
-    }
-
-    public static CTPPr getPPr( XWPFParagraph paragraph )
-    {
-        return paragraph.getCTP().getPPr();
     }
 
     public static Color getBackgroundColor( XWPFRun run )
@@ -234,6 +234,16 @@ public class XWPFParagraphUtils
             return null;
         }
         return XWPFUtils.getFillColor( ctrPr.getShd() );
+    }
+
+    public static Color getForegroundColor( XWPFParagraph paragraph )
+    {
+        CTPPr pPr = getPPr( paragraph );
+        if ( pPr == null )
+        {
+            return null;
+        }
+        return XWPFUtils.getColor( pPr.getShd() );
     }
 
 }

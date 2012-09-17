@@ -26,6 +26,7 @@ package org.apache.poi.xwpf.converter.internal;
 
 import java.awt.Color;
 
+import org.apache.poi.xwpf.converter.internal.itext.XWPFParagraphUtils;
 import org.apache.poi.xwpf.usermodel.XWPFRun;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTColor;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTFonts;
@@ -92,6 +93,10 @@ public class XWPFRunUtils
                 {
                     fontColor = getColor( rprDefault );
                 }
+                if ( fontColor == null )
+                {
+                    fontColor = XWPFParagraphUtils.getForegroundColor( run.getParagraph() );
+                }
             }
         }
         return fontColor;
@@ -107,6 +112,10 @@ public class XWPFRunUtils
                 STHexColor color = ctColor.xgetVal();
                 Object val = ctColor.getVal();
                 return XWPFUtils.getColor( color, val, false );
+            }
+            else
+            {
+                return XWPFUtils.getColor( rPr.getShd() );
             }
         }
         return null;

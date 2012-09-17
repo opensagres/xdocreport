@@ -127,6 +127,17 @@ public class XWPFUtils
         return getColor( hexColor, val, true );
     }
 
+    public static Color getColor( CTShd shd )
+    {
+        if ( shd == null )
+        {
+            return null;
+        }
+        STHexColor hexColor = shd.xgetColor();
+        Object val = shd.xgetVal();
+        return getColor( hexColor, val, false );
+    }
+
     public static Color getColor( STHexColor hexColor, Object val, boolean background )
     {
         if ( hexColor == null )

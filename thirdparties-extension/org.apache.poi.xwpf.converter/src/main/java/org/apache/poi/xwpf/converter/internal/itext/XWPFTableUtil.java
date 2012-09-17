@@ -40,6 +40,7 @@ import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTBorder;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTDecimalNumber;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTTbl;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTTblBorders;
+import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTTblCellMar;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTTblGrid;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTTblGridCol;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTTblPr;
@@ -259,6 +260,16 @@ public class XWPFTableUtil
         if ( tblPr != null )
         {
             return tblPr.getTblBorders();
+        }
+        return null;
+    }
+
+    public static CTTblCellMar getTblCellMar( XWPFTable table )
+    {
+        CTTblPr tblPr = getTblPr( table );
+        if ( tblPr != null )
+        {
+            return tblPr.getTblCellMar();
         }
         return null;
     }

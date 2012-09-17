@@ -49,6 +49,8 @@ public class StylableParagraph
 
     private static final long serialVersionUID = 664309269352903329L;
 
+    private static final float DEFAULT_LINE_HEIGHT = 1.0f;
+
     private final StylableDocument ownerDocument;
 
     private IStylableContainer<XWPFParagraph> parent;
@@ -60,6 +62,7 @@ public class StylableParagraph
         super();
         this.ownerDocument = ownerDocument;
         this.parent = parent;
+        super.setMultipliedLeading( DEFAULT_LINE_HEIGHT );
     }
 
     public StylableParagraph( StylableDocument ownerDocument, Paragraph title, IStylableContainer<XWPFParagraph> parent )

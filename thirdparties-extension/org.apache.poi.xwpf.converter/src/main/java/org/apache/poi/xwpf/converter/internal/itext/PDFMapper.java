@@ -189,10 +189,7 @@ public class PDFMapper
         Color backgroundColor = XWPFParagraphUtils.getBackgroundColor( docxParagraph );
         if ( backgroundColor != null )
         {
-            if ( backgroundColor != null )
-            {
-                pdfParagraph.setBackgroundColor( backgroundColor );
-            }
+            pdfParagraph.setBackgroundColor( backgroundColor );
         }
 
         // Paragraph border
@@ -267,8 +264,8 @@ public class PDFMapper
     protected void visitEmptyRun( IITextContainer paragraphContainer )
         throws Exception
     {
-        ExtendedParagraph pdfParagraph = (ExtendedParagraph) paragraphContainer;
-        pdfParagraph.add( Chunk.NEWLINE );
+        //ExtendedParagraph pdfParagraph = (ExtendedParagraph) paragraphContainer;
+        //pdfParagraph.add( Chunk.NEWLINE );
     }
 
     @Override
@@ -495,6 +492,8 @@ public class PDFMapper
         XWPFTableRow row = cell.getTableRow();
         ExtendedPdfPCell pdfPCell = pdfDocument.createTableCell( pdfPTable );
         pdfPCell.setITextContainer( pdfPTable );
+//        pdfPCell.setUseAscender( true );
+//        pdfPCell.setUseDescender( true );
 
         CTTcPr tcPr = cell.getCTTc().getTcPr();
         if ( tcPr != null )

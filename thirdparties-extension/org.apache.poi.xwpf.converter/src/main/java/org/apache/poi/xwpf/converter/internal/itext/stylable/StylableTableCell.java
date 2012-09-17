@@ -33,26 +33,28 @@ import org.apache.poi.xwpf.converter.internal.itext.styles.StyleTableCellPropert
 import org.apache.poi.xwpf.converter.internal.itext.styles.StyleTableRowProperties;
 
 import com.lowagie.text.Element;
-import com.lowagie.text.pdf.PdfPCell;
 
 import fr.opensagres.xdocreport.itext.extension.ExtendedPdfPCell;
-import fr.opensagres.xdocreport.itext.extension.IITextContainer;
 
 public class StylableTableCell
     extends ExtendedPdfPCell
     implements IStylableContainer
 {
 
-    private final IStylableFactory ownerDocument;
+    private final StylableDocument ownerDocument;
 
     private final IStylableContainer parent;
 
     private Style lastStyleApplied = null;
 
-    public StylableTableCell( IStylableFactory ownerDocument, IStylableContainer parent )
+    public StylableTableCell( StylableDocument ownerDocument, IStylableContainer parent )
     {
         this.ownerDocument = ownerDocument;
         this.parent = parent;
+        // make iText first line alignment compatible with open office
+        getColumn().setAdjustFirstLine( false );
+        // make a room for borders
+        setUseBorderPadding( true );
     }
 
     public void addElement( Element element )
@@ -165,4 +167,30 @@ public class StylableTableCell
         return this;
     }
 
+//    @Override
+//    public float getWidthLimit()
+//    {
+//        float width = 0.0f;
+//        if ( parent != null && parent instanceof StylableTable )
+//        {
+//            StylableTable table = (StylableTable) parent;
+//            // we have to determine this cell index in parent table
+//            // we assume that this cell is not added yet
+//            // and it will be added at parent table current column index
+//            int colIdx = table.getColIdx();
+//            float[] widths = table.getAbsoluteWidths();
+//            for ( int i = 0; i < getColspan(); i++ )
+//            {
+//                width += widths[colIdx + i];
+//            }
+//        }
+//        return width > 0.0f ? width : ownerDocument.getPageWidth();
+//    }
+//
+//    @Override
+//    public float getHeightLimit()
+//    {
+//        // no height limit
+//        return -1.0f;
+//    }
 }

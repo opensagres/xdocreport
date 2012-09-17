@@ -139,4 +139,9 @@ public class StylableTable
     {
         this.borderRight = borderRight;
     }
+
+    public int getColIdx()
+    {
+        return currentRowIdx;
+    }
 }

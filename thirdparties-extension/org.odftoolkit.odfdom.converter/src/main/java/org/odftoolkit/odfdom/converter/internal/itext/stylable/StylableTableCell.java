@@ -173,6 +173,7 @@ public class StylableTableCell
         return this;
     }
 
+    @Override
     public float getWidthLimit()
     {
         float width = 0.0f;
@@ -192,6 +193,7 @@ public class StylableTableCell
         return width > 0.0f ? width : ownerDocument.getPageWidth();
     }
 
+    @Override
     public float getHeightLimit()
     {
         // no height limit

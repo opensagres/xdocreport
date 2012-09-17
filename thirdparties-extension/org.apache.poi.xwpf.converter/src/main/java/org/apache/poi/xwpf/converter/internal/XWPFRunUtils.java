@@ -24,6 +24,8 @@
  */
 package org.apache.poi.xwpf.converter.internal;
 
+import java.awt.Color;
+
 import org.apache.poi.xwpf.usermodel.XWPFRun;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTColor;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTFonts;
@@ -76,10 +78,10 @@ public class XWPFRunUtils
         return fontFamily;
     }
 
-    public static String getFontColor( XWPFRun run, CTRPr runRprStyle, CTRPr rprStyle, CTRPr rprDefault )
+    public static Color getFontColor( XWPFRun run, CTRPr runRprStyle, CTRPr rprStyle, CTRPr rprDefault )
     {
         CTRPr rPr = run.getCTR().getRPr();
-        String fontColor = getColor( rPr );
+        Color fontColor = getColor( rPr );
         if ( fontColor == null )
         {
             fontColor = getColor( runRprStyle );
@@ -95,7 +97,7 @@ public class XWPFRunUtils
         return fontColor;
     }
 
-    public static String getColor( CTRPr rPr )
+    public static Color getColor( CTRPr rPr )
     {
         if ( rPr != null )
         {
@@ -103,7 +105,8 @@ public class XWPFRunUtils
             if ( ctColor != null )
             {
                 STHexColor color = ctColor.xgetVal();
-                return XWPFUtils.getColor( color );
+                Object val = ctColor.getVal();
+                return XWPFUtils.getColor( color, val, false );
             }
         }
         return null;

@@ -26,9 +26,11 @@ package org.apache.poi.xwpf.converter.internal.itext;
 
 import static org.apache.poi.xwpf.converter.internal.DxaUtil.dxa2points;
 
+import java.awt.Color;
 import java.math.BigInteger;
 import java.util.List;
 
+import org.apache.poi.xwpf.converter.internal.XWPFUtils;
 import org.apache.poi.xwpf.usermodel.ParagraphAlignment;
 import org.apache.poi.xwpf.usermodel.XWPFParagraph;
 import org.apache.poi.xwpf.usermodel.XWPFRun;
@@ -204,17 +206,22 @@ public class XWPFParagraphUtils
         return ctStyle.getPPr();
     }
 
-    public static String getBackgroundColor( XWPFParagraph paragraph )
+    public static Color getBackgroundColor( XWPFParagraph paragraph )
     {
-        List<XWPFRun> runs = paragraph.getRuns();
-        if ( runs.isEmpty() )
+        CTPPr pPr = getPPr( paragraph );
+        if ( pPr == null )
         {
             return null;
         }
-        return getBackgroundColor( runs.get( 0 ) );
+        return XWPFUtils.getFillColor( pPr.getShd() );
     }
 
-    public static String getBackgroundColor( XWPFRun run )
+    public static CTPPr getPPr( XWPFParagraph paragraph )
+    {
+        return paragraph.getCTP().getPPr();
+    }
+
+    public static Color getBackgroundColor( XWPFRun run )
     {
         CTR ctr = run.getCTR();
         if ( ctr == null )
@@ -226,20 +233,7 @@ public class XWPFParagraphUtils
         {
             return null;
         }
-        CTShd ctShd = ctrPr.getShd();
-        if ( ctShd == null )
-        {
-            return null;
-        }
-
-        Attr attr =
-            (Attr) ctShd.getDomNode().getAttributes().getNamedItemNS( "http://schemas.openxmlformats.org/wordprocessingml/2006/main",
-                                                                      "fill" );
-        if ( attr != null )
-        {
-            return attr.getValue();
-        }
-        return null;
+        return XWPFUtils.getFillColor( ctrPr.getShd() );
     }
 
 }

@@ -31,6 +31,7 @@ import static org.apache.poi.xwpf.converter.internal.XWPFRunUtils.isBold;
 import static org.apache.poi.xwpf.converter.internal.XWPFRunUtils.isItalic;
 import static org.apache.poi.xwpf.converter.internal.XWPFUtils.getRPr;
 
+import java.awt.Color;
 import java.math.BigInteger;
 
 import org.apache.poi.xwpf.converter.internal.XWPFUtils;
@@ -261,10 +262,10 @@ public class XHTMLStyleUtil
         }
 
         // Background-color
-        String backgroundColor = XWPFParagraphUtils.getBackgroundColor( paragraph );
-        if ( StringUtils.isNotEmpty( backgroundColor ) )
+        Color backgroundColor = XWPFParagraphUtils.getBackgroundColor( paragraph );
+        if ( backgroundColor != null )
         {
-            XHTMLUtil.addHTMLStyle( htmlStyle, BACKGROUND_COLOR, "#" + backgroundColor );
+            XHTMLUtil.addHTMLStyle( htmlStyle, BACKGROUND_COLOR, XWPFUtils.toHexString( backgroundColor ) );
 
         }
         return htmlStyle;
@@ -305,10 +306,10 @@ public class XHTMLStyleUtil
         }
 
         // Font color
-        String fontColor = getFontColor( run, runRprStyle, rprStyle, rprDefault );
-        if ( StringUtils.isNotEmpty( fontColor ) )
+        Color fontColor = getFontColor( run, runRprStyle, rprStyle, rprDefault );
+        if ( fontColor != null )
         {
-            XHTMLUtil.addHTMLStyle( htmlStyle, COLOR, "#" + fontColor );
+            XHTMLUtil.addHTMLStyle( htmlStyle, COLOR, XWPFUtils.toHexString( fontColor ) );
         }
 
         UnderlinePatterns underlinePatterns = run.getUnderline();
@@ -322,6 +323,13 @@ public class XHTMLStyleUtil
                 break;
         }
 
+        // Background-color
+        Color backgroundColor = XWPFParagraphUtils.getBackgroundColor( run );
+        if ( backgroundColor != null )
+        {
+            XHTMLUtil.addHTMLStyle( htmlStyle, BACKGROUND_COLOR, XWPFUtils.toHexString( backgroundColor ) );
+
+        }
         return htmlStyle;
     }
 
@@ -359,7 +367,7 @@ public class XHTMLStyleUtil
     {
         boolean noBorder = false;
         float borderSize = -1;
-        String borderColor = null;
+        Color borderColor = null;
         if ( localBorder != null )
         {
             noBorder = ( STBorder.NONE == localBorder.getVal() );
@@ -417,7 +425,7 @@ public class XHTMLStyleUtil
             switch ( borderType )
             {
                 case TOP:
-                    XHTMLUtil.addHTMLStyle( htmlStyle, "border-top-color", "#" + borderColor );
+                    XHTMLUtil.addHTMLStyle( htmlStyle, "border-top-color", "#" + XWPFUtils.toHexString( borderColor ) );
                     break;
             }
         }
@@ -447,13 +455,10 @@ public class XHTMLStyleUtil
 
         // Background Color
         CTShd shd = tcPr.getShd();
-        if ( shd != null )
+        Color backgroundColor = XWPFUtils.getFillColor( shd );
+        if ( backgroundColor != null )
         {
-            String backgroundColor = XWPFUtils.getColor( shd.xgetFill() );
-            if ( StringUtils.isNotEmpty( backgroundColor ) )
-            {
-                XHTMLUtil.addHTMLStyle( htmlStyle, BACKGROUND_COLOR, "#" + backgroundColor );
-            }
+            XHTMLUtil.addHTMLStyle( htmlStyle, BACKGROUND_COLOR, "#" + backgroundColor );
         }
 
         return htmlStyle;

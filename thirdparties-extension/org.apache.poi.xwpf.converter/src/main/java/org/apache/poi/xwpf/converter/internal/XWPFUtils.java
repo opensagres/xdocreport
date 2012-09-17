@@ -33,9 +33,11 @@ import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTRPr;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTRPrDefault;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTSectPr;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTSectType;
+import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTShd;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTStyle;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.STHexColor;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.STSectionMark;
+import org.openxmlformats.schemas.wordprocessingml.x2006.main.STShd;
 
 import fr.opensagres.xdocreport.itext.extension.PageOrientation;
 
@@ -83,18 +85,6 @@ public class XWPFUtils
         return ctStyle.getRPr();
     }
 
-    public static String getColor( STHexColor color )
-    {
-        if ( color != null )
-        {
-            if ( !"auto".equals( color.getStringValue() ) )
-            {
-                return color.getStringValue();
-            }
-        }
-        return null;
-    }
-
     public static PageOrientation getPageOrientation( org.openxmlformats.schemas.wordprocessingml.x2006.main.STPageOrientation.Enum orientation )
     {
         if ( orientation != null )
@@ -126,12 +116,91 @@ public class XWPFUtils
         return sectType.getVal() == STSectionMark.CONTINUOUS;
     }
 
-    public static Color getColor( String hexColor )
+    public static Color getFillColor( CTShd shd )
     {
-        if ( hexColor != null && !"auto".equals( hexColor ) )
+        if ( shd == null )
         {
+            return null;
+        }
+        STHexColor hexColor = shd.xgetFill();
+        Object val = shd.xgetVal();
+        return getColor( hexColor, val, true );
+    }
+
+    public static Color getColor( STHexColor hexColor, Object val, boolean background )
+    {
+        if ( hexColor == null )
+        {
+            return null;
+        }
+        return getColor( hexColor.getStringValue(), val, background );
+    }
+
+    public static Color getColor( String hexColor, Object val, boolean background )
+    {
+        if ( hexColor != null )
+        {
+            if ( "auto".equals( hexColor ) )
+            {
+                Color autoColor = background ? Color.WHITE : Color.BLACK;
+                if ( val != null )
+                {
+                    String s = getStringVal( val );
+                    if ( s.startsWith( "pct" ) )
+                    {
+                        s = s.substring( "pct".length(), s.length() );
+                        try
+                        {
+                            float percent = Float.parseFloat( s ) / 100;
+                            if ( background )
+                            {
+                                return darken( autoColor.getRed(), autoColor.getGreen(), autoColor.getBlue(), percent );
+                            }
+                            return lighten( autoColor.getRed(), autoColor.getGreen(), autoColor.getBlue(), percent );
+                        }
+                        catch ( Throwable e )
+                        {
+                            e.printStackTrace();
+                        }
+                    }
+                }
+                return autoColor;
+            }
             return ColorRegistry.getInstance().getColor( "0x" + hexColor );
         }
         return null;
+    }
+
+    private static String getStringVal( Object val )
+    {
+        if ( val instanceof STShd )
+        {
+            STShd shd = (STShd) val;
+            return shd.getStringValue();
+        }
+        return val.toString();
+    }
+
+    public static String toHexString( Color color )
+    {
+        String hexaWith8Digits = Integer.toHexString( color.getRGB() );
+        return new StringBuilder( "#" ).append( hexaWith8Digits.substring( 2, hexaWith8Digits.length() ) ).toString();
+    }
+
+    public static Color darken( int r, int g, int b, double percent )
+        throws IllegalArgumentException
+    {
+        return new Color( Math.max( (int) ( r * ( 1 - percent ) ), 0 ), Math.max( (int) ( g * ( 1 - percent ) ), 0 ),
+                          Math.max( (int) ( b * ( 1 - percent ) ), 0 ) );
+    }
+
+    public static Color lighten( int r, int g, int b, double percent )
+        throws IllegalArgumentException
+    {
+        int r2, g2, b2;
+        r2 = r + (int) ( ( 255 - r ) * percent );
+        g2 = g + (int) ( ( 255 - g ) * percent );
+        b2 = b + (int) ( ( 255 - b ) * percent );
+        return new Color( r2, g2, b2 );
     }
 }

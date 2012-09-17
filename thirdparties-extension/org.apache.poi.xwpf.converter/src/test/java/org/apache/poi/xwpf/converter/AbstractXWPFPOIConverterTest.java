@@ -72,7 +72,7 @@ public abstract class AbstractXWPFPOIConverterTest
     {
         doGenerate( "Issue52.docx" );
     }
-    
+
     @Test
     public void testTemplateGeneral()
         throws IOException
@@ -99,6 +99,13 @@ public abstract class AbstractXWPFPOIConverterTest
         throws IOException
     {
         doGenerate( "TestColor.docx" );
+    }
+
+    @Test
+    public void testColorAuto()
+        throws IOException
+    {
+        doGenerate( "TestColorAuto.docx" );
     }
 
     @Test
@@ -149,7 +156,7 @@ public abstract class AbstractXWPFPOIConverterTest
     {
         doGenerate( "TestTableCellTextOrientation.docx" );
     }
-    
+
     @Test
     public void testTitle()
         throws IOException

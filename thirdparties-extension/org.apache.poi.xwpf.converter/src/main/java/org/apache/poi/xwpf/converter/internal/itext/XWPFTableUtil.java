@@ -33,7 +33,6 @@ import java.util.Collection;
 import java.util.List;
 
 import org.apache.poi.xwpf.converter.internal.XWPFUtils;
-import org.apache.poi.xwpf.usermodel.XWPFStyle;
 import org.apache.poi.xwpf.usermodel.XWPFTable;
 import org.apache.poi.xwpf.usermodel.XWPFTableCell;
 import org.apache.poi.xwpf.usermodel.XWPFTableRow;
@@ -376,12 +375,7 @@ public class XWPFTableUtil
                 size = borderSize.floatValue() / 8f;
             }
 
-            Color borderColor = null;
-            String hexColor = getBorderColor( border );
-            if ( hexColor != null )
-            {
-                borderColor = XWPFUtils.getColor( hexColor );
-            }
+            Color borderColor = getBorderColor( border );
 
             switch ( borderSide )
             {
@@ -430,7 +424,7 @@ public class XWPFTableUtil
         }
     }
 
-    public static String getBorderColor( CTBorder border )
+    public static Color getBorderColor( CTBorder border )
     {
         if ( border == null )
         {
@@ -443,7 +437,8 @@ public class XWPFTableUtil
                                                                 "color" );
         if ( colorAttr != null )
         {
-            return ( (Attr) colorAttr ).getValue();
+            Object val = border.getVal();
+            return XWPFUtils.getColor( ( (Attr) colorAttr ).getValue(), val, false );
         }
         return null;
     }

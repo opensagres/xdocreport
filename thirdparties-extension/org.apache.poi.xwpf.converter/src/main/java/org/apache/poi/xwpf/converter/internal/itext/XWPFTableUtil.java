@@ -33,6 +33,7 @@ import java.util.Collection;
 import java.util.List;
 
 import org.apache.poi.xwpf.converter.internal.XWPFUtils;
+import org.apache.poi.xwpf.usermodel.XWPFStyle;
 import org.apache.poi.xwpf.usermodel.XWPFTable;
 import org.apache.poi.xwpf.usermodel.XWPFTableCell;
 import org.apache.poi.xwpf.usermodel.XWPFTableRow;
@@ -263,21 +264,30 @@ public class XWPFTableUtil
         return null;
     }
 
-    public static void setBorder( CTTcBorders cellBorders, CTTblBorders tableBorders, boolean firstRow,
-                                  boolean lastRow, boolean firstCell, boolean lastCell, PdfPCell pdfPCell,
-                                  int borderSide )
+    public static void setBorder( CTTcBorders cellBorders, CTTblBorders tableBorders, CTTblBorders tableStyleBorders,
+                                  boolean firstRow, boolean lastRow, boolean firstCell, boolean lastCell,
+                                  PdfPCell pdfPCell, int borderSide )
     {
-        if ( cellBorders == null && tableBorders == null )
+        if ( cellBorders == null && tableBorders == null && tableStyleBorders == null )
         {
+            pdfPCell.disableBorderSide( borderSide );
             return;
         }
+        // border from cell
         CTBorder cellBorder = getBorder( cellBorders, borderSide );
         if ( cellBorder == null )
         {
+            // border from table
             cellBorder = getBorder( tableBorders, firstRow, lastRow, firstCell, lastCell, borderSide );
         }
         if ( cellBorder == null )
         {
+            // border from table style
+            cellBorder = getBorder( tableStyleBorders, firstRow, lastRow, firstCell, lastCell, borderSide );
+        }
+        if ( cellBorder == null )
+        {
+            pdfPCell.disableBorderSide( borderSide );
             return;
         }
         setBorder( cellBorder, pdfPCell, borderSide );
@@ -345,6 +355,7 @@ public class XWPFTableUtil
     {
         if ( border == null )
         {
+            pdfPCell.disableBorderSide( borderSide );
             return;
         }
         boolean noBorder = ( STBorder.NONE == border.getVal() || STBorder.NIL == border.getVal() );
@@ -436,4 +447,5 @@ public class XWPFTableUtil
         }
         return null;
     }
+
 }

@@ -510,13 +510,12 @@ public class PDFMapper
                                                    boolean lastCell )
     {
         StylableTable pdfPTable = (StylableTable) tableContainer;
-
+        // cell.getTableRow().getTable().getCTTbl().getTblPr().gett
         XWPFTableRow row = cell.getTableRow();
         ExtendedPdfPCell pdfPCell = pdfDocument.createTableCell( pdfPTable );
         pdfPCell.setITextContainer( pdfPTable );
 
         CTTcPr tcPr = cell.getCTTc().getTcPr();
-
         if ( tcPr != null )
         {
 
@@ -549,22 +548,29 @@ public class PDFMapper
             // Table Properties on cells
 
             // overridden locally
+            CTTblBorders tableStyleBorders = null;
+            XWPFStyle tableStyle = super.getXWPFStyle( cell.getTableRow().getTable().getStyleID() );
+            if ( tableStyle != null )
+            {
+                tableStyleBorders = tableStyle.getCTStyle().getTblPr().getTblBorders();
+            }
+
             CTTblBorders tableBorders = XWPFTableUtil.getTblBorders( cell.getTableRow().getTable() );
             CTTcBorders cellBorders = tcPr.getTcBorders();
             // border-left
-            XWPFTableUtil.setBorder( cellBorders, tableBorders, firstRow, lastRow, firstCell, lastCell, pdfPCell,
-                                     Rectangle.LEFT );
+            XWPFTableUtil.setBorder( cellBorders, tableBorders, tableStyleBorders, firstRow, lastRow, firstCell,
+                                     lastCell, pdfPCell, Rectangle.LEFT );
             // border-right
-            XWPFTableUtil.setBorder( cellBorders, tableBorders, firstRow, lastRow, firstCell, lastCell, pdfPCell,
-                                     Rectangle.RIGHT );
+            XWPFTableUtil.setBorder( cellBorders, tableBorders, tableStyleBorders, firstRow, lastRow, firstCell,
+                                     lastCell, pdfPCell, Rectangle.RIGHT );
             // border-top
-            XWPFTableUtil.setBorder( cellBorders, tableBorders, firstRow, lastRow, firstCell, lastCell, pdfPCell,
-                                     Rectangle.TOP );
+            XWPFTableUtil.setBorder( cellBorders, tableBorders, tableStyleBorders, firstRow, lastRow, firstCell,
+                                     lastCell, pdfPCell, Rectangle.TOP );
             // border-bottom
-            XWPFTableUtil.setBorder( cellBorders, tableBorders, firstRow, lastRow, firstCell, lastCell, pdfPCell,
-                                     Rectangle.BOTTOM );
+            XWPFTableUtil.setBorder( cellBorders, tableBorders, tableStyleBorders, firstRow, lastRow, firstCell,
+                                     lastCell, pdfPCell, Rectangle.BOTTOM );
 
-            // Text direction
+            // Text direction <w:textDirection
             CTTextDirection direction = tcPr.getTextDirection();
             if ( direction != null )
             {
@@ -576,7 +582,7 @@ public class PDFMapper
                 else if ( "tbRl".equals( direction.getVal().toString() ) )
                 {
                     pdfPCell.setRotation( 270 );
-                    //pdfPCell.setRunDirection( PdfWriter.RUN_DIRECTION_RTL );
+                    // pdfPCell.setRunDirection( PdfWriter.RUN_DIRECTION_RTL );
                 }
             }
         }

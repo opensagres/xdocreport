@@ -27,6 +27,7 @@ package fr.opensagres.xdocreport.template;
 import java.io.IOException;
 import java.io.Reader;
 import java.io.Writer;
+import java.util.Map;
 
 import fr.opensagres.xdocreport.core.XDocReportException;
 import fr.opensagres.xdocreport.core.io.IEntryReaderProvider;
@@ -69,6 +70,14 @@ public interface ITemplateEngine
      * @return
      */
     IContext createContext();
+
+    /**
+     * Create a new context to register Java model from the given Map.
+     * 
+     * @param contextMap
+     * @return
+     */
+    IContext createContext( Map<String, Object> contextMap );
 
     /**
      * Merge Java model coming from the given context with the XML file entryName of the given document archive and

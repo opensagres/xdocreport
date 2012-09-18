@@ -10,7 +10,6 @@ import fr.opensagres.xdocreport.core.XDocReportException;
 import fr.opensagres.xdocreport.document.dispatcher.IXDocReportController;
 import fr.opensagres.xdocreport.document.dispatcher.IXDocReportLoader;
 import fr.opensagres.xdocreport.document.registry.XDocReportRegistry;
-import fr.opensagres.xdocreport.template.IContext;
 import fr.opensagres.xdocreport.template.formatter.FieldsMetadata;
 
 public class XDocReport
@@ -53,9 +52,7 @@ public class XDocReport
         throws IOException, XDocReportException
     {
         IXDocReport report = getReport( reportId, controller, registry );
-        IContext context = report.createContext();
-        context.putMap( contextMap );
-        report.process( context, out );
+        report.process( contextMap, out );
         return report;
     }
 
@@ -84,9 +81,7 @@ public class XDocReport
         throws IOException, XDocReportException
     {
         IXDocReport report = getReport( reportId, controller, registry );
-        IContext context = report.createContext();
-        context.putMap( contextMap );
-        report.convert( context, options, out );
+        report.convert( contextMap, options, out );
         return report;
     }
 
@@ -141,9 +136,7 @@ public class XDocReport
         throws IOException, XDocReportException
     {
         IXDocReport report = getReport( reportId, reportLoader, registry );
-        IContext context = report.createContext();
-        context.putMap( contextMap );
-        report.process( context, out );
+        report.process( contextMap, out );
         return report;
     }
 
@@ -161,9 +154,7 @@ public class XDocReport
         throws IOException, XDocReportException
     {
         IXDocReport report = getReport( reportId, reportLoader, registry );
-        IContext context = report.createContext();
-        context.putMap( contextMap );
-        report.convert( context, options, out );
+        report.convert( contextMap, options, out );
         return report;
     }
 

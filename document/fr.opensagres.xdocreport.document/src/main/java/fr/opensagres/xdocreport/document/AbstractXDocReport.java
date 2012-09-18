@@ -459,6 +459,25 @@ public abstract class AbstractXDocReport
         return internalGetTemplateEngine().createContext();
     }
 
+    @Override
+    public IContext createContext( Map<String, Object> contextMap )
+        throws XDocReportException
+    {
+        return internalGetTemplateEngine().createContext( contextMap );
+    }
+
+    public void process( Map<String, Object> contextMap, OutputStream out )
+        throws XDocReportException, IOException
+    {
+        process( contextMap, null, out );
+    }
+
+    public void process( Map<String, Object> contextMap, String entryName, OutputStream out )
+        throws XDocReportException, IOException
+    {
+        process( createContext( contextMap ), entryName, out );
+    }
+
     public void process( IContext context, OutputStream out )
         throws XDocReportException, IOException
     {
@@ -645,6 +664,12 @@ public abstract class AbstractXDocReport
         return ConverterRegistry.getRegistry().findConverter( getKind(), options.getTo(), options.getVia() );
     }
 
+    public void convert( Map<String, Object> contextMap, Options options, OutputStream out )
+        throws XDocReportException, XDocConverterException, IOException
+    {
+        convert( createContext( contextMap ), options, out );
+    }
+
     public void convert( final IContext context, Options options, OutputStream out )
         throws XDocReportException, XDocConverterException, IOException
     {
@@ -783,11 +808,12 @@ public abstract class AbstractXDocReport
             if ( imageRegistry != null )
             {
                 DocumentContextHelper.putImageRegistry( context, imageRegistry );
-                
+
                 // Register default image handler if needed.
-                if (DocumentContextHelper.getImageHandler( context ) == null) {
+                if ( DocumentContextHelper.getImageHandler( context ) == null )
+                {
                     DocumentContextHelper.putImageHandler( context, DefaultImageHandler.getInstance() );
-                }                
+                }
                 imageRegistry.preProcess();
             }
         }

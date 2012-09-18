@@ -28,6 +28,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.Serializable;
+import java.util.Map;
 
 import fr.opensagres.xdocreport.converter.IConverter;
 import fr.opensagres.xdocreport.converter.MimeMapping;
@@ -198,6 +199,15 @@ public interface IXDocReport
         throws XDocReportException;
 
     /**
+     * Create a new instance of {@link IContext} to put the Java model.
+     * 
+     * @return
+     * @throws XDocReportException
+     */
+    IContext createContext( Map<String, Object> contextMap )
+        throws XDocReportException;
+
+    /**
      * Merge the docx, odt document with Java model from the context and register the result to the output stream.
      * 
      * @param context of the Java model.
@@ -206,6 +216,17 @@ public interface IXDocReport
      * @throws IOException
      */
     void process( IContext context, OutputStream out )
+        throws XDocReportException, IOException;
+
+    /**
+     * Merge the docx, odt document with Java model from the context Map and register the result to the output stream.
+     * 
+     * @param context of the Java model.
+     * @param out output stream where merge must be saved.
+     * @throws XDocReportException
+     * @throws IOException
+     */
+    void process( Map<String, Object> contextMap, OutputStream out )
         throws XDocReportException, IOException;
 
     /**
@@ -222,6 +243,19 @@ public interface IXDocReport
         throws XDocReportException, IOException;
 
     /**
+     * Merge the docx, odt document with Java model from the context Map and register the entryName transformed to the
+     * output stream.
+     * 
+     * @param context of the Java model.
+     * @param entryName entry name
+     * @param out output stream where merge must be saved.
+     * @throws XDocReportException
+     * @throws IOException
+     */
+    void process( Map<String, Object> contextMap, String entryName, OutputStream outputStream )
+        throws XDocReportException, IOException;
+
+    /**
      * Returns converter for the report and options.
      * 
      * @param options
@@ -231,7 +265,7 @@ public interface IXDocReport
         throws XDocConverterException;
 
     /**
-     * Convert report.
+     * Generate report and Convert it to another format (PDF, XHTML, etc).
      * 
      * @param context
      * @param options
@@ -241,6 +275,19 @@ public interface IXDocReport
      * @throws IOException
      */
     void convert( IContext context, Options options, OutputStream out )
+        throws XDocReportException, XDocConverterException, IOException;
+
+    /**
+     * Generate report and Convert it to another format (PDF, XHTML, etc).
+     * 
+     * @param contextMap
+     * @param options
+     * @param out
+     * @throws XDocReportException
+     * @throws XDocConverterException
+     * @throws IOException
+     */
+    void convert( Map<String, Object> contextMap, Options options, OutputStream out )
         throws XDocReportException, XDocConverterException, IOException;
 
     /**

@@ -27,6 +27,7 @@ package fr.opensagres.xdocreport.template.velocity.internal;
 import java.io.IOException;
 import java.io.Reader;
 import java.io.Writer;
+import java.util.Map;
 import java.util.Properties;
 
 import org.apache.velocity.Template;
@@ -61,10 +62,11 @@ public class VelocityTemplateEngine
 
     private final Properties velocityEngineProperties;
 
-    public VelocityTemplateEngine(Properties velocityEngineProperties)  {
-		this.velocityEngineProperties=velocityEngineProperties;	
-	}
-    
+    public VelocityTemplateEngine( Properties velocityEngineProperties )
+    {
+        this.velocityEngineProperties = velocityEngineProperties;
+    }
+
     public String getKind()
     {
         return TemplateEngineKind.Velocity.name();
@@ -78,6 +80,12 @@ public class VelocityTemplateEngine
     public IContext createContext()
     {
         return new XDocVelocityContext();
+    }
+
+    @Override
+    public IContext createContext( Map<String, Object> contextMap )
+    {
+        return new XDocVelocityContext( contextMap );
     }
 
     @Override
@@ -106,41 +114,41 @@ public class VelocityTemplateEngine
         if ( velocityEngine == null )
         {
             velocityEngine = new VelocityEngine();
-            initializeVelocityEngine(velocityEngineProperties);
+            initializeVelocityEngine( velocityEngineProperties );
         }
         return velocityEngine;
     }
 
-	public void initializeVelocityEngine(Properties velocityEngineProperties)
-			throws XDocReportException {
-		ClassLoader backupCL = Thread.currentThread().getContextClassLoader();
-		Thread.currentThread().setContextClassLoader( VelocityTemplateEngine.class.getClassLoader() );
-		try
-		{
-		    velocityEngine.setProperty( VELOCITY_TEMPLATE_ENGINE_KEY, this );
-		    velocityEngine.init( velocityEngineProperties );
-		    
-		}
-		catch ( Exception e )
-		{
-		    throw new XDocReportException( e );
-		}
-		Thread.currentThread().setContextClassLoader( backupCL );
-	}
+    public void initializeVelocityEngine( Properties velocityEngineProperties )
+        throws XDocReportException
+    {
+        ClassLoader backupCL = Thread.currentThread().getContextClassLoader();
+        Thread.currentThread().setContextClassLoader( VelocityTemplateEngine.class.getClassLoader() );
+        try
+        {
+            velocityEngine.setProperty( VELOCITY_TEMPLATE_ENGINE_KEY, this );
+            velocityEngine.init( velocityEngineProperties );
+
+        }
+        catch ( Exception e )
+        {
+            throw new XDocReportException( e );
+        }
+        Thread.currentThread().setContextClassLoader( backupCL );
+    }
 
     @Override
-    public void setConfiguration(ITemplateEngineConfiguration configuration) {
-    	super.setConfiguration(configuration);
-    	if ( configuration != null && configuration.escapeXML() )
+    public void setConfiguration( ITemplateEngineConfiguration configuration )
+    {
+        super.setConfiguration( configuration );
+        if ( configuration != null && configuration.escapeXML() )
         {
             velocityEngineProperties.setProperty( "eventhandler.referenceinsertion.class",
                                                   XDocReportEscapeReference.class.getName() );
         }
-    	
-    }
-    
 
-    
+    }
+
     public IDocumentFormatter getDocumentFormatter()
     {
         return formatter;

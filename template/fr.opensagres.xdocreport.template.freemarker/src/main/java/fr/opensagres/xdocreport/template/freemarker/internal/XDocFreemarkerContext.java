@@ -39,7 +39,17 @@ public class XDocFreemarkerContext
 
     public static final long serialVersionUID = 1L;
 
-    private final Map<String, Object> map = new HashMap<String, Object>();
+    private final Map<String, Object> map;
+
+    public XDocFreemarkerContext()
+    {
+        this( new HashMap<String, Object>() );
+    }
+
+    public XDocFreemarkerContext( Map<String, Object> contextMap )
+    {
+        map = contextMap;
+    }
 
     public Object put( String key, Object value )
     {
@@ -54,6 +64,12 @@ public class XDocFreemarkerContext
     public Object get( String key )
     {
         return map.get( key );
+    }
+
+    @Override
+    public void putMap( Map<String, Object> contextMap )
+    {
+        map.putAll( contextMap );
     }
 
 }

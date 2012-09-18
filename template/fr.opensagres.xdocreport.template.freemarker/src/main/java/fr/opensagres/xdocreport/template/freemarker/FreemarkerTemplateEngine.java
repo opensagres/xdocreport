@@ -29,6 +29,7 @@ import java.io.Reader;
 import java.io.StringReader;
 import java.io.Writer;
 import java.util.Enumeration;
+import java.util.Map;
 
 import fr.opensagres.xdocreport.core.EncodingConstants;
 import fr.opensagres.xdocreport.core.XDocReportException;
@@ -80,6 +81,12 @@ public class FreemarkerTemplateEngine
     public IContext createContext()
     {
         return new XDocFreemarkerContext();
+    }
+
+    @Override
+    public IContext createContext( Map<String, Object> contextMap )
+    {
+        return new XDocFreemarkerContext( contextMap );
     }
 
     @Override

@@ -24,6 +24,10 @@
  */
 package fr.opensagres.xdocreport.template.velocity.internal;
 
+import java.util.Map;
+import java.util.Map.Entry;
+import java.util.Set;
+
 import org.apache.velocity.VelocityContext;
 
 import fr.opensagres.xdocreport.template.IContext;
@@ -36,6 +40,16 @@ public class XDocVelocityContext
     extends VelocityContext
     implements IContext
 {
+
+    public XDocVelocityContext()
+    {
+        super();
+    }
+
+    public XDocVelocityContext( Map<String, Object> contextMap )
+    {
+        super( contextMap );
+    }
 
     /**
      * Overridden so that the <code>null</code> values are accepted.
@@ -54,6 +68,16 @@ public class XDocVelocityContext
             return super.internalPut( key, value );
         }
         return result;
+    }
+
+    @Override
+    public void putMap( Map<String, Object> contextMap )
+    {
+        Set<Entry<String, Object>> entries = contextMap.entrySet();
+        for ( Entry<String, Object> entry : entries )
+        {
+            put( entry.getKey(), entry.getValue() );
+        }
     }
 
 }

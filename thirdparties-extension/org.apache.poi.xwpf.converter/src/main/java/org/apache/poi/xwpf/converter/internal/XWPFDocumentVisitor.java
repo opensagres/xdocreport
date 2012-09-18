@@ -17,6 +17,7 @@ import org.apache.xmlbeans.XmlObject;
 import org.openxmlformats.schemas.drawingml.x2006.main.CTGraphicalObject;
 import org.openxmlformats.schemas.drawingml.x2006.main.CTGraphicalObjectData;
 import org.openxmlformats.schemas.drawingml.x2006.picture.CTPicture;
+import org.openxmlformats.schemas.drawingml.x2006.wordprocessingDrawing.CTAnchor;
 import org.openxmlformats.schemas.drawingml.x2006.wordprocessingDrawing.CTInline;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTDrawing;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTHdrFtr;
@@ -142,6 +143,35 @@ public abstract class XWPFDocumentVisitor<T, E extends IXWPFMasterPage>
         for ( CTInline inline : inlines )
         {
             visitInline( inline, parentContainer );
+        }
+        List<CTAnchor> anchors = drawing.getAnchorList();
+        for ( CTAnchor anchor : anchors )
+        {
+            visitAnchor( anchor, parentContainer );
+        }
+    }
+
+    protected void visitAnchor( CTAnchor anchor, T parentContainer )
+        throws Exception
+    {
+        CTGraphicalObject graphic = anchor.getGraphic();
+        if ( graphic != null )
+        {
+            CTGraphicalObjectData graphicData = graphic.getGraphicData();
+            if ( graphicData != null )
+            {
+                XmlCursor c = graphicData.newCursor();
+                c.selectPath( "./*" );
+                while ( c.toNextSelection() )
+                {
+                    XmlObject o = c.getObject();
+                    if ( o instanceof CTPicture )
+                    {
+                        visitPicture( (CTPicture) o, parentContainer );
+                    }
+                }
+                c.dispose();
+            }
         }
     }
 

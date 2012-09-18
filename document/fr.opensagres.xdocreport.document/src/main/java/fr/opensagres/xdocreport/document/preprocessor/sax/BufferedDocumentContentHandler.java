@@ -31,7 +31,9 @@ import static fr.opensagres.xdocreport.core.EncodingConstants.LT;
 import static fr.opensagres.xdocreport.core.EncodingConstants.QUOT;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
@@ -60,8 +62,8 @@ public class BufferedDocumentContentHandler<Document extends BufferedDocument>
 
     private boolean startingElement = false;
 
-    private int elementIndex =0;
-    
+    private int elementIndex = 0;
+
     public BufferedDocumentContentHandler()
     {
         this.bufferedDocument = createDocument();
@@ -97,7 +99,7 @@ public class BufferedDocumentContentHandler<Document extends BufferedDocument>
     @Override
     public final void startElement( String uri, String localName, String name, Attributes attributes )
         throws SAXException
-    {        
+    {
         if ( startingElement )
         {
             getCurrentElement().append( ">" );
@@ -157,6 +159,17 @@ public class BufferedDocumentContentHandler<Document extends BufferedDocument>
         // prefix mapping
         if ( prefixs.size() > 0 )
         {
+            // generate prefixs mapping. Switch SAXParser implementation, prefix mapping are stored like this :
+            // - for Xerces "com.sun.org.apache.xerces.internal.parsers.SAXParser", prefix mapping is stored just in
+            // prefixs list.
+            // - for Oracle "oracle.xml.parser.v2.SAXParser", prefix mapping are stored in the prefixs list and in the
+            // to avoid having twice teh prefix mappings, addedPrefixs Map is populated with prefixs
+            // see http://code.google.com/p/xdocreport/issues/detail?id=150
+            int length = attributes.getLength();
+            Map<String, PrefixMapping> addedPrefixs = length > 0 ? new HashMap<String, PrefixMapping>() : null;
+
+            // 1) generate prefixs
+            // ex: <w:document xmlns:wpc="http://schemas.microsoft.com/office/word/2010/wordprocessingCanvas"
             for ( PrefixMapping prefix : prefixs )
             {
                 attrName = prefix.getPrefix();
@@ -166,22 +179,61 @@ public class BufferedDocumentContentHandler<Document extends BufferedDocument>
                 currentRegion.append( "=\"" );
                 currentRegion.append( attrValue );
                 currentRegion.append( "\"" );
+
+                if ( addedPrefixs != null )
+                {
+                    addedPrefixs.put( prefix.getPrefix(), prefix );
+                }
+            }
+
+            // 2) generate static attributes
+            if ( length > 0 )
+            {
+                PrefixMapping prefix = null;
+                for ( int i = 0; i < length; i++ )
+                {
+                    attrName = attributes.getQName( i );
+
+                    // test if attribute name is not a prefix (comes from when Oracle SAXParsre is used).
+                    if ( addedPrefixs != null )
+                    {
+                        prefix = addedPrefixs.get( attrName );
+                    }
+                    if ( prefix == null )
+                    {
+                        // teh attribute is not a prefix, add it.
+                        currentRegion.append( ' ' );
+                        attrValue = attributes.getValue( i );
+                        currentRegion.append( attrName );
+                        currentRegion.append( "=\"" );
+                        printEscaped( attrValue, currentRegion );
+                        currentRegion.append( "\"" );
+                    }
+                }
+            }
+            if ( addedPrefixs != null )
+            {
+                addedPrefixs.clear();
+                addedPrefixs = null;
             }
             prefixs.clear();
         }
-        // static attributes
-        int length = attributes.getLength();
-        if ( length > 0 )
+        else
         {
-            for ( int i = 0; i < length; i++ )
+            // static attributes
+            int length = attributes.getLength();
+            if ( length > 0 )
             {
-                currentRegion.append( ' ' );
-                attrName = attributes.getQName( i );
-                attrValue = attributes.getValue( i );
-                currentRegion.append( attrName );
-                currentRegion.append( "=\"" );
-                printEscaped( attrValue, currentRegion );
-                currentRegion.append( "\"" );
+                for ( int i = 0; i < length; i++ )
+                {
+                    currentRegion.append( ' ' );
+                    attrName = attributes.getQName( i );
+                    attrValue = attributes.getValue( i );
+                    currentRegion.append( attrName );
+                    currentRegion.append( "=\"" );
+                    printEscaped( attrValue, currentRegion );
+                    currentRegion.append( "\"" );
+                }
             }
         }
         // register dynamic attributes region if needed.
@@ -370,7 +422,7 @@ public class BufferedDocumentContentHandler<Document extends BufferedDocument>
         region.append( Integer.toHexString( ch ) );
         region.append( ';' );
     }
-    
+
     public int getElementIndex()
     {
         return elementIndex;

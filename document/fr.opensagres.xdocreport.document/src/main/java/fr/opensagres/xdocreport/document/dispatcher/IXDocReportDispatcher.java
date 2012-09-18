@@ -24,19 +24,11 @@
  */
 package fr.opensagres.xdocreport.document.dispatcher;
 
-import java.io.IOException;
-import java.io.InputStream;
-
-import fr.opensagres.xdocreport.template.formatter.FieldsMetadata;
 
 public interface IXDocReportDispatcher<T extends IXDocReportController>
+    extends IXDocReportLoader
 {
 
     public T getReportController( String reportId );
 
-    InputStream getSourceStream( String reportId ) throws IOException;
-
-    String getTemplateEngineKind( String reportId );
-
-    FieldsMetadata getFieldsMetadata( String reportId );
 }

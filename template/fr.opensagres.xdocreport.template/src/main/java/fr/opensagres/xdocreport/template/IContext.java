@@ -24,6 +24,8 @@
  */
 package fr.opensagres.xdocreport.template;
 
+import java.util.Map;
+
 /**
  * Context used to register a Java model with given key. This context is used for merging XML document archive with the
  * Java model and generate report.
@@ -47,5 +49,11 @@ public interface IContext
      * @return
      */
     Object get( String key );
+
+    /**
+     * 
+     * @param contextMap
+     */
+    void putMap( Map<String, Object> contextMap );
 
 }

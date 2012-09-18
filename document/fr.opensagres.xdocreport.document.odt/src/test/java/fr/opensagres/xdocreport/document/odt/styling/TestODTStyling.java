@@ -45,17 +45,17 @@ import com.sun.org.apache.xml.internal.serialize.XMLSerializer;
 
 import fr.opensagres.xdocreport.document.odt.preprocessor.ODTBufferedDocumentContentHandler;
 import fr.opensagres.xdocreport.document.odt.preprocessor.ODTStyleContentHandler;
+import fr.opensagres.xdocreport.document.odt.textstyling.MockContext;
 import fr.opensagres.xdocreport.document.odt.textstyling.ODTDocumentHandler;
 import fr.opensagres.xdocreport.document.preprocessor.sax.BufferedDocument;
 import fr.opensagres.xdocreport.document.preprocessor.sax.BufferedDocumentContentHandler;
 import fr.opensagres.xdocreport.document.textstyling.IDocumentHandler;
 import fr.opensagres.xdocreport.document.textstyling.ITextStylingTransformer;
 import fr.opensagres.xdocreport.document.textstyling.html.HTMLTextStylingTransformer;
-import fr.opensagres.xdocreport.template.IContext;
 
 /**
  * Check ODT Styling generation by comparing generated result against the expected XML
- *
+ * 
  * @author <a href="mailto:tdelprat@nuxeo.com">Tiry</a>
  */
 public class TestODTStyling
@@ -119,18 +119,7 @@ public class TestODTStyling
 
         BufferedDocument parent = new BufferedDocument();
 
-        IDocumentHandler handler = new ODTDocumentHandler( parent, new IContext()
-        {
-            public Object put( String key, Object value )
-            {
-                return null;
-            }
-
-            public Object get( String key )
-            {
-                return null;
-            }
-        }, "content.xml" );
+        IDocumentHandler handler = new ODTDocumentHandler( parent, new MockContext(), "content.xml" );
         InputStream htmlStream = this.getClass().getClassLoader().getResourceAsStream( "HtmlSource.html" );
         formatter.transform( read( htmlStream ), handler );
 

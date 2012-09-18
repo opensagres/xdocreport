@@ -25,6 +25,7 @@
 package fr.opensagres.xdocreport.document.odt.textstyling;
 
 import java.util.HashMap;
+import java.util.Map;
 
 import fr.opensagres.xdocreport.template.IContext;
 
@@ -36,6 +37,13 @@ public class MockContext
     public Object get( String key )
     {
         return super.get( key );
+    }
+
+    @Override
+    public void putMap( Map<String, Object> contextMap )
+    {
+        super.putAll( contextMap );
+
     }
 
 }

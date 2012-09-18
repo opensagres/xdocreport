@@ -25,6 +25,7 @@
 package fr.opensagres.xdocreport.template;
 
 import java.util.HashMap;
+import java.util.Map;
 
 public class MockContext
     extends HashMap<String, Object>
@@ -34,6 +35,13 @@ public class MockContext
     public Object get( String key )
     {
         return super.get( key );
+    }
+
+    @Override
+    public void putMap( Map<String, Object> contextMap )
+    {
+        super.putAll( contextMap );
+
     }
 
 }

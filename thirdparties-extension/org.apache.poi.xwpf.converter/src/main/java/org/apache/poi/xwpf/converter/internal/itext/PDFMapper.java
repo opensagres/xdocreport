@@ -128,6 +128,7 @@ public class PDFMapper
         // Create instance of PDF document
         styleEngine = new StyleEngineForIText( document, options );
         this.pdfDocument = new StylableDocument( out, styleEngine );
+        this.pdfDocument.setMasterPageManager( getMasterPageManager() );
         return pdfDocument;
     }
 
@@ -264,8 +265,8 @@ public class PDFMapper
     protected void visitEmptyRun( IITextContainer paragraphContainer )
         throws Exception
     {
-        //ExtendedParagraph pdfParagraph = (ExtendedParagraph) paragraphContainer;
-        //pdfParagraph.add( Chunk.NEWLINE );
+        // ExtendedParagraph pdfParagraph = (ExtendedParagraph) paragraphContainer;
+        // pdfParagraph.add( Chunk.NEWLINE );
     }
 
     @Override
@@ -274,6 +275,16 @@ public class PDFMapper
     {
 
         CTR ctr = run.getCTR();
+
+        // <w:lastRenderedPageBreak />
+        List<CTEmpty> lastRenderedPageBreakList = ctr.getLastRenderedPageBreakList();
+        if ( lastRenderedPageBreakList != null && lastRenderedPageBreakList.size() > 0 )
+        {
+            for ( CTEmpty lastRenderedPageBreak : lastRenderedPageBreakList )
+            {
+                pdfDocument.pageBreak();
+            }
+        }
 
         // Get family name
         // Get CTRPr from style+defaults
@@ -387,28 +398,6 @@ public class PDFMapper
             }
         }
         c.dispose();
-
-        // <w:lastRenderedPageBreak />
-        List<CTEmpty> lastRenderedPageBreakList = ctr.getLastRenderedPageBreakList();
-        if ( lastRenderedPageBreakList != null && lastRenderedPageBreakList.size() > 0 )
-        {
-            // IText Document#newPage must be called to generate page break.
-            // But before that, CTSectPr must be getted to compute pageSize,
-            // margins...
-            // The CTSectPr <w:pPr><w:sectPr w:rsidR="00AA33F7"
-            // w:rsidSect="00607077"><w:pgSz w:w="16838" w:h="11906"
-            // w:orient="landscape" />...
-            // Stack<CTSectPr> sectPrStack = getSectPrStack();
-            // if ( sectPrStack != null && !sectPrStack.isEmpty() )
-            // {
-            // CTSectPr sectPr = sectPrStack.pop();
-            // applySectPr( sectPr );
-            // }
-            for ( CTEmpty lastRenderedPageBreak : lastRenderedPageBreakList )
-            {
-                pdfDocument.pageBreak();
-            }
-        }
     }
 
     private void visitTab( IITextContainer pdfContainer, CTPTab tab )
@@ -492,8 +481,8 @@ public class PDFMapper
         XWPFTableRow row = cell.getTableRow();
         ExtendedPdfPCell pdfPCell = pdfDocument.createTableCell( pdfPTable );
         pdfPCell.setITextContainer( pdfPTable );
-//        pdfPCell.setUseAscender( true );
-//        pdfPCell.setUseDescender( true );
+        // pdfPCell.setUseAscender( true );
+        // pdfPCell.setUseDescender( true );
 
         CTTcPr tcPr = cell.getCTTc().getTcPr();
         if ( tcPr != null )

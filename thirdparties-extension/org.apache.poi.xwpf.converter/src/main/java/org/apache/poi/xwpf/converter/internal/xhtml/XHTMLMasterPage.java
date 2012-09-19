@@ -13,6 +13,8 @@ public class XHTMLMasterPage
 
     private String footer;
 
+    private int type;
+
     public XHTMLMasterPage( CTSectPr sectPr )
     {
         this.sectPr = sectPr;
@@ -43,4 +45,15 @@ public class XHTMLMasterPage
         return sectPr;
     }
 
+    public int getType()
+    {
+        return type;
+    }
+
+    @Override
+    public boolean setType( int type )
+    {
+        this.type = type;
+        return true;
+    }
 }

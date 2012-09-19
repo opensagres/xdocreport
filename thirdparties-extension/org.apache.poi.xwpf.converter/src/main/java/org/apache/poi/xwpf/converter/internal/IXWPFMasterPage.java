@@ -14,4 +14,8 @@ public interface IXWPFMasterPage<T>
     public void setFooter( T footer );
 
     public CTSectPr getSectPr();
+
+    public boolean setType( int type );
+
+    public int getType();
 }

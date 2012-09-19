@@ -53,6 +53,11 @@ public abstract class XWPFDocumentVisitor<T, E extends IXWPFMasterPage>
         this.masterPageManager = new MasterPageManager( document, this );
     }
 
+    public MasterPageManager getMasterPageManager()
+    {
+        return masterPageManager;
+    }
+    
     protected void visitBodyElements( List<IBodyElement> bodyElements, T container )
         throws Exception
     {

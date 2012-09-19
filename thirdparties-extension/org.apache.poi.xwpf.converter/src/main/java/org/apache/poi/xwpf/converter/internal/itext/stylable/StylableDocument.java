@@ -29,7 +29,9 @@ import static org.apache.poi.xwpf.converter.internal.DxaUtil.dxa2points;
 import java.io.OutputStream;
 
 import org.apache.poi.xwpf.converter.XWPFConverterException;
+import org.apache.poi.xwpf.converter.internal.MasterPageManager;
 import org.apache.poi.xwpf.converter.internal.XWPFUtils;
+import org.apache.poi.xwpf.converter.internal.itext.PDFMapper;
 import org.apache.poi.xwpf.converter.internal.itext.StyleEngineForIText;
 import org.apache.poi.xwpf.converter.internal.itext.styles.Style;
 import org.apache.poi.xwpf.converter.internal.itext.styles.StylePageLayoutProperties;
@@ -78,14 +80,13 @@ public class StylableDocument
 
     private int colIdx;
 
-    private int nbPages;
-
+    private MasterPageManager masterPageManager;
+    
     public StylableDocument( OutputStream out, StyleEngineForIText styleEngine )
         throws DocumentException
     {
         super( out );
-        this.styleEngine = styleEngine;
-        this.nbPages = 0;
+        this.styleEngine = styleEngine;        
     }
 
     //
@@ -551,8 +552,18 @@ public class StylableDocument
             public void onStartPage( PdfWriter writer, Document doc )
             {
                 super.onStartPage( writer, doc );
+                StylableDocument.this.onStartPage();
             }
         };
     }
 
+    protected void onStartPage()
+    {
+        masterPageManager.onNewPage();
+    }
+
+    public void setMasterPageManager( MasterPageManager masterPageManager )
+    {
+        this.masterPageManager = masterPageManager;
+    }
 }

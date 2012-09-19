@@ -12,6 +12,7 @@ import org.apache.poi.xwpf.usermodel.XWPFParagraph;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTHdrFtrRef;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTPPr;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTSectPr;
+import org.openxmlformats.schemas.wordprocessingml.x2006.main.STHdrFtr;
 
 /**
  * See http://officeopenxml.com/WPsection.php
@@ -34,6 +35,10 @@ public class MasterPageManager
 
     private boolean changeSection;
 
+    private int nbPages;
+
+    private IXWPFMasterPage currentMasterPage;
+
     public MasterPageManager( XWPFDocument document, XWPFDocumentVisitor visitor )
         throws Exception
     {
@@ -43,6 +48,7 @@ public class MasterPageManager
         this.masterPages = new HashMap<CTSectPr, IXWPFMasterPage>();
         this.initialized = false;
         this.changeSection = false;
+        this.nbPages = 0;
     }
 
     public void initialize()
@@ -117,7 +123,8 @@ public class MasterPageManager
 
     private void fireSectionChanged( CTSectPr sectPr )
     {
-        visitor.setActiveMasterPage( getMasterPage( sectPr ) );
+        currentMasterPage = getMasterPage( sectPr );
+        visitor.setActiveMasterPage( currentMasterPage );
     }
 
     private void addSection( CTSectPr sectPr, boolean pushIt )
@@ -146,13 +153,19 @@ public class MasterPageManager
 
         for ( CTHdrFtrRef headerRef : headersRef )
         {
+            STHdrFtr type = headerRef.xgetType();
+            masterPage.setType( type.enumValue().intValue() );
             visitor.visitHeaderRef( headerRef, sectPr, masterPage );
         }
 
         for ( CTHdrFtrRef footerRef : footersRef )
         {
+            STHdrFtr type = footerRef.xgetType();
+            masterPage.setType( type.enumValue().intValue() );
             visitor.visitFooterRef( footerRef, sectPr, masterPage );
         }
+        masterPage.setType( STHdrFtr.INT_FIRST );
+
     }
 
     private CTSectPr getSectPr( XWPFParagraph paragraph )
@@ -175,4 +188,27 @@ public class MasterPageManager
         return initialized;
     }
 
+    public void onNewPage()
+    {
+        
+            if ( currentMasterPage != null )
+            {
+                int oldType = currentMasterPage.getType();
+                int newType = STHdrFtr.INT_DEFAULT;
+                if ( nbPages % 2 == 0 )
+                {
+                    newType = STHdrFtr.INT_EVEN;
+                }
+                if ( oldType != newType )
+                {
+                    boolean changed = currentMasterPage.setType( newType );
+                    if ( changed )
+                    {
+                        //fireSectionChanged( currentMasterPage.getSectPr() );
+                    }
+                }
+            }
+        }
+      //nbPages++;
+   //
 }

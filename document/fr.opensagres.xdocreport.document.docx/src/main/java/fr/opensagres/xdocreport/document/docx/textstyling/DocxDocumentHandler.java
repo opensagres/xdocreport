@@ -27,6 +27,7 @@ package fr.opensagres.xdocreport.document.docx.textstyling;
 import java.io.IOException;
 import java.util.Stack;
 
+import fr.opensagres.xdocreport.core.utils.StringUtils;
 import fr.opensagres.xdocreport.document.docx.preprocessor.DefaultStyle;
 import fr.opensagres.xdocreport.document.docx.preprocessor.sax.hyperlinks.HyperlinkRegistry;
 import fr.opensagres.xdocreport.document.docx.preprocessor.sax.hyperlinks.HyperlinkUtils;
@@ -446,11 +447,16 @@ public class DocxDocumentHandler
     {
         if ( ref != null )
         {
-            // 1) Update the hyperlink registry to modifiy the Hyperlink Relationship in the _rels/document.xml.rels
+            // 1) replace & with &amp;
+            // fix issue http://code.google.com/p/xdocreport/issues/detail?id=147
+            ref = StringUtils.xmlUnescape( ref );
+            ref = StringUtils.xmlEscape( ref );
+
+            // 2) Update the hyperlink registry to modifiy the Hyperlink Relationship in the _rels/document.xml.rels
             HyperlinkRegistry registry = getHyperlinkRegistry();
             String rId = registry.registerHyperlink( ref );
 
-            // 2) Generate w:hyperlink
+            // 3) Generate w:hyperlink
             String hyperlinkStyleName = styleGen.getHyperLinkStyleId( defaultStyle );
             super.write( "<w:hyperlink r:id=\"" );
             super.write( rId );

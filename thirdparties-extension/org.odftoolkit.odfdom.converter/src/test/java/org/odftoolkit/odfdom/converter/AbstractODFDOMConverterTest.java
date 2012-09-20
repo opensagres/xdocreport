@@ -107,6 +107,20 @@ public abstract class AbstractODFDOMConverterTest
     }
 
     @Test
+    public void testParagraphWithBackground()
+        throws Exception
+    {
+        doGenerate( "TestParagraphWithBackground.odt" );
+    }
+
+    @Test
+    public void testParagraphWithBorder()
+        throws Exception
+    {
+        doGenerate( "TestParagraphWithBorder.odt" );
+    }
+
+    @Test
     public void testSpacingBefore()
         throws Exception
     {
@@ -119,7 +133,21 @@ public abstract class AbstractODFDOMConverterTest
     {
         doGenerate( "TestTable.odt" );
     }
-    
+
+    @Test
+    public void testTableWithBorder()
+        throws Exception
+    {
+        doGenerate( "TestTableWithBorder.odt" );
+    }
+
+    @Test
+    public void testTableWithSpace()
+        throws Exception
+    {
+        doGenerate( "TestTableWithSpace.odt" );
+    }
+
     @Test
     public void testTextSectionsAndBreaks()
         throws Exception

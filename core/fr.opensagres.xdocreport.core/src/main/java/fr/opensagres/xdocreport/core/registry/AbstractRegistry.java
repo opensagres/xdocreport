@@ -25,12 +25,11 @@
 package fr.opensagres.xdocreport.core.registry;
 
 import java.util.Iterator;
-import java.util.ServiceLoader;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-
 import fr.opensagres.xdocreport.core.discovery.IBaseDiscovery;
+import fr.opensagres.xdocreport.core.internal.JDKServiceLoader;
 import fr.opensagres.xdocreport.core.logging.LogUtils;
 
 public abstract class AbstractRegistry<Discovery extends IBaseDiscovery>
@@ -61,8 +60,8 @@ public abstract class AbstractRegistry<Discovery extends IBaseDiscovery>
         {
             onStartInitialization();
             // getClass().getClassLoader() to work under OSGi context
-            Iterator<Discovery> discoveries =
-                ServiceLoader.load( registryType, getClass().getClassLoader() ).iterator();
+
+            Iterator<Discovery> discoveries = JDKServiceLoader.lookupProviders( registryType, getClass().getClassLoader() );
             if ( LOGGER.isLoggable( Level.FINE ) )
             {
                 LOGGER.fine( "discoveries found ? " + discoveries.hasNext() );

@@ -130,6 +130,13 @@ public abstract class AbstractXWPFPOIConverterTest
     }
 
     @Test
+    public void testHeaderFooterPageFirstEvenDefault()
+        throws IOException
+    {
+        doGenerate( "TestHeaderFooterPageFirstEvenDefault.docx" );
+    }
+
+    @Test
     public void testLandscapeFormat()
         throws IOException
     {

@@ -28,23 +28,32 @@ import com.lowagie.text.Element;
 import com.lowagie.text.List;
 import com.lowagie.text.ListItem;
 import com.lowagie.text.pdf.PdfPCell;
+import com.lowagie.text.pdf.PdfPTable;
 
 public class ExtendedPdfPCell
     extends PdfPCell
     implements IITextContainer
 {
 
+    private boolean empty;
+
     private IITextContainer container;
 
     public ExtendedPdfPCell()
     {
+        this.empty = true;
+    }
 
-        // disableBorderSide(BOTTOM|TOP|LEFT|RIGHT);
+    public ExtendedPdfPCell( PdfPTable table )
+    {
+        super( table );
+        this.empty = true;
     }
 
     @Override
     public void addElement( Element element )
     {
+        this.empty = false;
         if ( element instanceof ListItem )
         {
             List aList = new List();
@@ -66,5 +75,21 @@ public class ExtendedPdfPCell
     public void setITextContainer( IITextContainer container )
     {
         this.container = container;
+    }
+
+    public boolean isEmpty()
+    {
+        ExtendedPdfPTable table = getTable();
+        if ( table != null )
+        {
+            return table.isEmpty();
+        }
+        return empty;
+    }
+
+    @Override
+    public ExtendedPdfPTable getTable()
+    {
+        return (ExtendedPdfPTable) super.getTable();
     }
 }

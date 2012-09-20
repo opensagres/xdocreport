@@ -30,6 +30,7 @@ import org.apache.poi.xwpf.converter.internal.itext.styles.StyleHeaderFooterProp
 import com.lowagie.text.Table;
 import com.lowagie.text.pdf.PdfContentByte;
 
+import fr.opensagres.xdocreport.itext.extension.ExtendedPdfPTable;
 import fr.opensagres.xdocreport.itext.extension.IMasterPageHeaderFooter;
 
 /**
@@ -44,22 +45,16 @@ public class StylableHeaderFooter
 
     private final boolean header;
 
-    private final StylableTableCell tableCell;
+    private StylableTableCell tableCell;
+
+    private boolean flushed;
 
     public StylableHeaderFooter( StylableDocument ownerDocument, boolean header )
     {
         super( ownerDocument, null, 1 );
         this.ownerDocument = ownerDocument;
         this.header = header;
-        tableCell = ownerDocument.createTableCell( this );
-        tableCell.setBorder( Table.NO_BORDER );
-        // set padding to zero for proper alignment
-        tableCell.setPadding( 0.0f );        
-    }
-
-    public StylableTableCell getTableCell()
-    {
-        return tableCell;
+        this.flushed = false;
     }
 
     public void applyStyles( Style style )
@@ -120,7 +115,15 @@ public class StylableHeaderFooter
 
     public void flush()
     {
-        super.addCell( tableCell );
+        if ( flushed )
+        {
+            return;
+        }
+        flushed = true;
+        if ( !tableCell.isEmpty() )
+        {
+            super.addCell( tableCell );
+        }
     }
 
     @Override
@@ -128,5 +131,24 @@ public class StylableHeaderFooter
     {
         setWidthIfNecessary();
         return super.writeSelectedRows( rowStart, rowEnd, xPos, yPos, canvas );
+    }
+
+    public StylableTableCell getTableCell()
+    {
+        return getTableCell( null );
+    }
+
+    public StylableTableCell getTableCell( ExtendedPdfPTable pdfTable )
+    {
+        if ( tableCell == null )
+        {
+            tableCell =
+                pdfTable == null ? ownerDocument.createTableCell( this ) : ownerDocument.createTableCell( this,
+                                                                                                          pdfTable );
+            tableCell.setBorder( Table.NO_BORDER );
+            // set padding to zero for proper alignment
+            tableCell.setPadding( 0.0f );
+        }
+        return tableCell;
     }
 }

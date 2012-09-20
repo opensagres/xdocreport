@@ -57,12 +57,16 @@ public abstract class XWPFDocumentVisitor<T, E extends IXWPFMasterPage>
     {
         return masterPageManager;
     }
-    
+
     protected void visitBodyElements( List<IBodyElement> bodyElements, T container )
         throws Exception
     {
         if ( !masterPageManager.isInitialized() )
         {
+            // master page manager which hosts each <:w;sectPr declared in the word/document.xml
+            // must be initialized. The initialisation loop for each
+            // <w:p paragraph to compute a list of <w:sectPr which contains information
+            // about header/footer declared in the <w:headerReference/<w:footerReference
             masterPageManager.initialize();
         }
         super.visitBodyElements( bodyElements, container );
@@ -73,8 +77,10 @@ public abstract class XWPFDocumentVisitor<T, E extends IXWPFMasterPage>
     {
         if ( currentHeader == null && currentFooter == null )
         {
-            // word/document.xml is parsing
-            // test if the paragraph define a <w:sectPr
+            // header/footer is not parsing.
+            // It's the word/document.xml which is parsing
+            // test if the current paragraph define a <w:sectPr
+            // to update the header/footer declared in the <w:headerReference/<w:footerReference
             masterPageManager.update( paragraph );
         }
         super.visitParagraph( paragraph, container );

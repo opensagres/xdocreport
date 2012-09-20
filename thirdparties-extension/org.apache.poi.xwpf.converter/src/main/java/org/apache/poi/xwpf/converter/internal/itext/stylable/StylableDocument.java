@@ -31,7 +31,6 @@ import java.io.OutputStream;
 import org.apache.poi.xwpf.converter.XWPFConverterException;
 import org.apache.poi.xwpf.converter.internal.MasterPageManager;
 import org.apache.poi.xwpf.converter.internal.XWPFUtils;
-import org.apache.poi.xwpf.converter.internal.itext.PDFMapper;
 import org.apache.poi.xwpf.converter.internal.itext.StyleEngineForIText;
 import org.apache.poi.xwpf.converter.internal.itext.styles.Style;
 import org.apache.poi.xwpf.converter.internal.itext.styles.StylePageLayoutProperties;
@@ -51,6 +50,7 @@ import com.lowagie.text.pdf.PdfWriter;
 
 import fr.opensagres.xdocreport.itext.extension.ExtendedDocument;
 import fr.opensagres.xdocreport.itext.extension.ExtendedHeaderFooter;
+import fr.opensagres.xdocreport.itext.extension.ExtendedPdfPTable;
 import fr.opensagres.xdocreport.itext.extension.IMasterPage;
 import fr.opensagres.xdocreport.itext.extension.IParagraphFactory;
 import fr.opensagres.xdocreport.itext.extension.PageOrientation;
@@ -81,12 +81,12 @@ public class StylableDocument
     private int colIdx;
 
     private MasterPageManager masterPageManager;
-    
+
     public StylableDocument( OutputStream out, StyleEngineForIText styleEngine )
         throws DocumentException
     {
         super( out );
-        this.styleEngine = styleEngine;        
+        this.styleEngine = styleEngine;
     }
 
     //
@@ -272,6 +272,11 @@ public class StylableDocument
     public StylableTableCell createTableCell( IStylableContainer parent )
     {
         return new StylableTableCell( this, parent );
+    }
+
+    public StylableTableCell createTableCell( IStylableContainer parent, ExtendedPdfPTable table )
+    {
+        return new StylableTableCell( this, parent, table );
     }
 
     public StylableChapter createChapter( IStylableContainer parent, StylableParagraph title )

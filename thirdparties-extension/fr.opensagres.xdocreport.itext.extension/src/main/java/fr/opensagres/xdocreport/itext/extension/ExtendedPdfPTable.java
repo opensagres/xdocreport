@@ -25,6 +25,8 @@
 package fr.opensagres.xdocreport.itext.extension;
 
 import com.lowagie.text.Element;
+import com.lowagie.text.Image;
+import com.lowagie.text.Phrase;
 import com.lowagie.text.pdf.PdfPCell;
 import com.lowagie.text.pdf.PdfPRow;
 import com.lowagie.text.pdf.PdfPTable;
@@ -36,6 +38,8 @@ public class ExtendedPdfPTable
 
     private IITextContainer container;
 
+    private boolean empty;
+
     public ExtendedPdfPTable( int numColumns )
     {
         super( numColumns );
@@ -44,13 +48,14 @@ public class ExtendedPdfPTable
         // too little and paragraph content cut the table.
         // Add spacing before to resolve that.
         super.setSpacingBefore( 5f );
+        this.empty = true;
     }
 
     public void addElement( Element element )
     {
         if ( element instanceof PdfPCell )
         {
-            super.addCell( (PdfPCell) element );
+            addCell( (PdfPCell) element );
         }
     }
 
@@ -167,4 +172,43 @@ public class ExtendedPdfPTable
         return aboveCell != null && aboveCell.getRowspan() > distance;
     }
 
+    @Override
+    public void addCell( Image image )
+    {
+        this.empty = false;
+        super.addCell( image );
+    }
+
+    @Override
+    public void addCell( PdfPCell cell )
+    {
+        this.empty = false;
+        super.addCell( cell );
+    }
+
+    @Override
+    public void addCell( PdfPTable table )
+    {
+        this.empty = false;
+        super.addCell( table );
+    }
+
+    @Override
+    public void addCell( Phrase phrase )
+    {
+        this.empty = false;
+        super.addCell( phrase );
+    }
+
+    @Override
+    public void addCell( String text )
+    {
+        this.empty = false;
+        super.addCell( text );
+    }
+
+    public boolean isEmpty()
+    {
+        return empty;
+    }
 }

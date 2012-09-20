@@ -90,13 +90,21 @@ public class StylableMasterPage
     @Override
     public void setHeader( IMasterPageHeaderFooter header )
     {
-        headers.put( type, header );
+        header.flush();
+        if ( !header.isEmpty() )
+        {
+            headers.put( type, header );
+        }
     }
 
     @Override
     public void setFooter( IMasterPageHeaderFooter footer )
     {
-        footers.put( type, footer );
+        footer.flush();
+        if ( !footer.isEmpty() )
+        {
+            footers.put( type, footer );
+        }
     }
 
     @Override

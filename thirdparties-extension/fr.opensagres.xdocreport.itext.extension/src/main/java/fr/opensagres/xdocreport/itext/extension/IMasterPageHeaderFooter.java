@@ -37,5 +37,7 @@ public interface IMasterPageHeaderFooter
     PdfPCell getTableCell();
 
     void flush();
+    
+    boolean isEmpty();
 
 }

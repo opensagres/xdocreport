@@ -46,8 +46,10 @@ import org.apache.poi.xwpf.converter.internal.itext.stylable.StylableHeaderFoote
 import org.apache.poi.xwpf.converter.internal.itext.stylable.StylableMasterPage;
 import org.apache.poi.xwpf.converter.internal.itext.stylable.StylableParagraph;
 import org.apache.poi.xwpf.converter.internal.itext.stylable.StylableTable;
+import org.apache.poi.xwpf.converter.internal.itext.stylable.StylableTableCell;
 import org.apache.poi.xwpf.converter.internal.itext.styles.Style;
 import org.apache.poi.xwpf.converter.itext.PDFViaITextOptions;
+import org.apache.poi.xwpf.usermodel.BodyElementType;
 import org.apache.poi.xwpf.usermodel.Borders;
 import org.apache.poi.xwpf.usermodel.IBodyElement;
 import org.apache.poi.xwpf.usermodel.UnderlinePatterns;
@@ -65,6 +67,7 @@ import org.apache.xmlbeans.XmlCursor;
 import org.apache.xmlbeans.XmlObject;
 import org.openxmlformats.schemas.drawingml.x2006.main.CTPositiveSize2D;
 import org.openxmlformats.schemas.drawingml.x2006.picture.CTPicture;
+import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTRow;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTBr;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTDecimalNumber;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTDrawing;
@@ -75,10 +78,12 @@ import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTPPr;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTPTab;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTR;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTRPr;
+import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTSdtCell;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTSectPr;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTShd;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTString;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTTblBorders;
+import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTTc;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTTcBorders;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTTcPr;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTText;
@@ -86,6 +91,7 @@ import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTTextDirection;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.STOnOff;
 
 import com.lowagie.text.Chunk;
+import com.lowagie.text.DocumentException;
 import com.lowagie.text.Element;
 import com.lowagie.text.Font;
 import com.lowagie.text.Image;
@@ -140,38 +146,52 @@ public class PDFMapper
     }
 
     @Override
-    protected void visitBodyElements( List<IBodyElement> bodyElements, IITextContainer container )
-        throws Exception
-    {
-        if ( pdfDocument.getActiveMasterPage() == null )
-        {
-            // getOrCreateMasterPage( "default" );
-        }
-        super.visitBodyElements( bodyElements, container );
-    }
-
-    @Override
     protected void visitHeader( XWPFHeader header, CTHdrFtrRef headerRef, CTSectPr sectPr, StylableMasterPage masterPage )
         throws Exception
     {
-
         StylableHeaderFooter pdfHeader = new StylableHeaderFooter( pdfDocument, true );
+        List<IBodyElement> bodyElements = header.getBodyElements();
+        StylableTableCell tableCell = getHeaderFooterTableCell( pdfHeader, bodyElements );
+        visitBodyElements( bodyElements, tableCell );
         masterPage.setHeader( pdfHeader );
-
-        visitBodyElements( header.getBodyElements(), pdfHeader.getTableCell() );
-        pdfHeader.flush();
     }
 
     @Override
     protected void visitFooter( XWPFFooter footer, CTHdrFtrRef footerRef, CTSectPr sectPr, StylableMasterPage masterPage )
         throws Exception
     {
-
         StylableHeaderFooter pdfFooter = new StylableHeaderFooter( pdfDocument, false );
+        List<IBodyElement> bodyElements = footer.getBodyElements();
+        StylableTableCell tableCell = getHeaderFooterTableCell( pdfFooter, bodyElements );
+        visitBodyElements( footer.getBodyElements(), tableCell );
         masterPage.setFooter( pdfFooter );
+    }
 
-        visitBodyElements( footer.getBodyElements(), pdfFooter.getTableCell() );
-        pdfFooter.flush();
+    private StylableTableCell getHeaderFooterTableCell( StylableHeaderFooter pdfHeaderFooter,
+                                                        List<IBodyElement> bodyElements )
+        throws DocumentException
+    {
+        // XWPFTable table = getFirstTable( bodyElements );
+        // if ( table != null )
+        // {
+        // StylableTable pdfTable = createPDFTable( table );
+        // return pdfHeaderFooter.getTableCell( pdfTable );
+        // }
+        return pdfHeaderFooter.getTableCell();
+    }
+
+    private XWPFTable getFirstTable( List<IBodyElement> bodyElements )
+    {
+        if ( bodyElements.isEmpty() )
+        {
+            return null;
+        }
+        IBodyElement firstElement = bodyElements.get( 0 );
+        if ( firstElement.getElementType() == BodyElementType.TABLE )
+        {
+            return (XWPFTable) firstElement;
+        }
+        return null;
     }
 
     @Override
@@ -418,18 +438,26 @@ public class PDFMapper
     {
         styleEngine.startVisitTable( table, pdfContainer );
 
+        StylableTable pdfPTable = createPDFTable( table );
+        // 3) Create PDF Table.
+        pdfPTable.setITextContainer( pdfContainer );
+
+        pdfPTable.setLockedWidth( true );
+
+        // finally apply the style to the iText paragraph....
+        applyStyles( table, pdfPTable );
+        return pdfPTable;
+    }
+
+    private StylableTable createPDFTable( XWPFTable table )
+        throws DocumentException
+    {
         // 1) Compute colWidth
         float[] colWidths = XWPFTableUtil.computeColWidths( table );
 
         // 2) Compute tableWith
         TableWidth tableWidth = XWPFTableUtil.getTableWidth( table );
-
         StylableTable pdfPTable = pdfDocument.createTable( (IStylableContainer) null, colWidths.length );
-        // 3) Create PDF Table.
-        // ExtendedPdfPTable pdfPTable = new
-        // ExtendedPdfPTable(colWidths.length);
-        pdfPTable.setITextContainer( pdfContainer );
-
         pdfPTable.setTotalWidth( colWidths );
         if ( tableWidth.width > 0 )
         {
@@ -442,10 +470,6 @@ public class PDFMapper
                 pdfPTable.setTotalWidth( tableWidth.width );
             }
         }
-        pdfPTable.setLockedWidth( true );
-
-        // finally apply the style to the iText paragraph....
-        applyStyles( table, pdfPTable );
         return pdfPTable;
     }
 
@@ -469,6 +493,70 @@ public class PDFMapper
         throws Exception
     {
         parentContainer.addElement( (Element) tableContainer );
+    }
+
+    @Override
+    protected void visitTableRow( XWPFTableRow row, IITextContainer tableContainer, boolean firstRow, boolean lastRow )
+        throws Exception
+    {
+
+        StylableTable pdfTable = (StylableTable) tableContainer;
+        int nbColumns = pdfTable.getNumberOfColumns();
+        // Process cell
+        boolean firstCell = false;
+        boolean lastCell = false;
+        List<XWPFTableCell> cells = row.getTableCells();
+        if ( nbColumns > cells.size() )
+        {
+            // Columns number is not equal to cells number.
+            // POI have a bug with
+            // <w:tr w:rsidR="00C55C20">
+            // <w:tc>
+            // <w:tc>...
+            // <w:sdt>
+            // <w:sdtContent>
+            // <w:tc> <= this tc which is a XWPFTableCell is not included in the row.getTableCells();
+
+            firstCell = true;
+            CTRow ctRow = row.getCtRow();
+            XmlCursor c = ctRow.newCursor();
+            c.selectPath( "./*" );
+            while ( c.toNextSelection() )
+            {
+                XmlObject o = c.getObject();
+                if ( o instanceof CTTc )
+                {
+                    CTTc tc = (CTTc) o;
+                    XWPFTableCell cell = row.getTableCell( tc );
+                    visitCell( cell, tableContainer, firstRow, lastRow, firstCell, lastCell );
+                    firstCell = false;
+                }
+                else if ( o instanceof CTSdtCell )
+                {
+                    // Fix bug of POI
+                    CTSdtCell sdtCell = (CTSdtCell) o;
+                    List<CTTc> tcList = sdtCell.getSdtContent().getTcList();
+                    for ( CTTc ctTc : tcList )
+                    {
+                        XWPFTableCell cell = new XWPFTableCell( ctTc, row, row.getTable().getBody() );
+                        visitCell( cell, tableContainer, firstRow, lastRow, firstCell, lastCell );
+                        firstCell = false;
+                    }
+                }
+            }
+            c.dispose();
+        }
+        else
+        {
+            // Column number is equal to cells number.
+            for ( int i = 0; i < cells.size(); i++ )
+            {
+                firstCell = ( i == 0 );
+                lastCell = ( i == cells.size() - 1 );
+                XWPFTableCell cell = cells.get( i );
+                visitCell( cell, tableContainer, firstRow, lastRow, firstCell, lastCell );
+            }
+        }
     }
 
     @Override

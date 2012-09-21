@@ -261,10 +261,38 @@ public class DocxDocumentHandlerTestCase
 
         ITextStylingTransformer formatter = HTMLTextStylingTransformer.INSTANCE;
         IDocumentHandler handler = new DocxDocumentHandler( parent, context, "word/document.xml" );
-        formatter.transform( "<a href=\"https://www.google.com/search?q=xdocreport&amp;start=10\" >XDocReport</a>", handler );
+        formatter.transform( "<a href=\"https://www.google.com/search?q=xdocreport&amp;start=10\" >XDocReport</a>",
+                             handler );
 
         Assert.assertEquals( "", handler.getTextBefore() );
         Assert.assertEquals( "<w:hyperlink r:id=\"___rId0\" w:history=\"1\"> <w:proofErr w:type=\"spellStart\" /><w:r w:rsidRPr=\"001D30B5\"><w:rPr><w:rStyle w:val=\"XDocReport_Hyperlink\" /></w:rPr><w:t>XDocReport</w:t></w:r><w:proofErr w:type=\"spellEnd\" /></w:hyperlink>",
+                             handler.getTextBody() );
+        Assert.assertEquals( "", handler.getTextEnd() );
+
+        HyperlinkRegistry registry = DocxContextHelper.getHyperlinkRegistry( context, "word/document.xml" );
+        Assert.assertNotNull( registry );
+        Assert.assertEquals( 1, registry.getHyperlinks().size() );
+
+        HyperlinkInfo hyperlinkInfo = registry.getHyperlinks().get( 0 );
+        Assert.assertEquals( "___rId0", hyperlinkInfo.getId() );
+        Assert.assertEquals( "https://www.google.com/search?q=xdocreport&amp;start=10", hyperlinkInfo.getTarget() );
+        Assert.assertEquals( "External", hyperlinkInfo.getTargetMode() );
+    }
+
+    @Test
+    public void testHyperlinkWithURLParametersAmp()
+        throws Exception
+    {
+        IContext context = new MockContext();
+        BufferedElement parent = null;
+
+        ITextStylingTransformer formatter = HTMLTextStylingTransformer.INSTANCE;
+        IDocumentHandler handler = new DocxDocumentHandler( parent, context, "word/document.xml" );
+        formatter.transform( "<a href=\"https://www.google.com/search?q=xdocreport&amp;start=10\" >XDocReport&amp;others</a>",
+                             handler );
+
+        Assert.assertEquals( "", handler.getTextBefore() );
+        Assert.assertEquals( "<w:hyperlink r:id=\"___rId0\" w:history=\"1\"> <w:proofErr w:type=\"spellStart\" /><w:r w:rsidRPr=\"001D30B5\"><w:rPr><w:rStyle w:val=\"XDocReport_Hyperlink\" /></w:rPr><w:t>XDocReport&amp;others</w:t></w:r><w:proofErr w:type=\"spellEnd\" /></w:hyperlink>",
                              handler.getTextBody() );
         Assert.assertEquals( "", handler.getTextEnd() );
 

@@ -451,7 +451,10 @@ public class DocxDocumentHandler
             // fix issue http://code.google.com/p/xdocreport/issues/detail?id=147
             ref = StringUtils.xmlUnescape( ref );
             ref = StringUtils.xmlEscape( ref );
-
+            // fix issue http://code.google.com/p/xdocreport/issues/detail?id=154
+            label = StringUtils.xmlUnescape( label );
+            label = StringUtils.xmlEscape( label );
+            
             // 2) Update the hyperlink registry to modifiy the Hyperlink Relationship in the _rels/document.xml.rels
             HyperlinkRegistry registry = getHyperlinkRegistry();
             String rId = registry.registerHyperlink( ref );

@@ -1,23 +1,27 @@
-package org.apache.poi.xwpf.converter.internal.values;
+package org.apache.poi.xwpf.converter.styles;
 
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.poi.xwpf.converter.styles.pargraph.PargraphSpacingAfterValueProvider;
+import org.apache.poi.xwpf.converter.styles.pargraph.PargraphSpacingBeforeValueProvider;
 import org.apache.poi.xwpf.usermodel.XWPFDocument;
+import org.apache.poi.xwpf.usermodel.XWPFParagraph;
 import org.apache.xmlbeans.XmlException;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTStyle;
 
-public class StyleManager
-    implements IStyleManager
+public class XWPFStylesDocument
 {
 
     private final XWPFDocument document;
 
     private final Map<String, CTStyle> stylesByStyleId;
 
-    public StyleManager( XWPFDocument document )
+    private CTStyle defaultParagraphStyle;
+
+    public XWPFStylesDocument( XWPFDocument document )
     {
         this.document = document;
         this.stylesByStyleId = new HashMap<String, CTStyle>();
@@ -44,20 +48,37 @@ public class StyleManager
         for ( CTStyle style : styles )
         {
             org.openxmlformats.schemas.wordprocessingml.x2006.main.STOnOff.Enum isDefault = style.getDefault();
-            org.openxmlformats.schemas.wordprocessingml.x2006.main.STStyleType.Enum stype = style.getType();
+            org.openxmlformats.schemas.wordprocessingml.x2006.main.STStyleType.Enum type = style.getType();
 
+            if ( isDefault != null
+                && isDefault.intValue() == org.openxmlformats.schemas.wordprocessingml.x2006.main.STOnOff.INT_X_1 )
+            {
+                // default
+                if ( type != null )
+                {
+                    switch ( type.intValue() )
+                    {
+                        case org.openxmlformats.schemas.wordprocessingml.x2006.main.STStyleType.INT_PARAGRAPH:
+                            defaultParagraphStyle = style;
+                    }
+                }
+
+            }
             stylesByStyleId.put( style.getStyleId(), style );
         }
 
     }
 
-    @Override
+    public CTStyle getDefaultParagraphStyle()
+    {
+        return defaultParagraphStyle;
+    }
+
     public CTStyle getStyle( String styleId )
     {
         return stylesByStyleId.get( styleId );
     }
 
-    @Override
     public Object getValue( IValueProvider provider, String styleId )
     {
         if ( styleId != null && styleId.length() > 0 )
@@ -65,6 +86,16 @@ public class StyleManager
             return null;
         }
         return null;
+    }
+
+    public Integer getSpacingBefore( XWPFParagraph docxParagraph )
+    {
+        return PargraphSpacingBeforeValueProvider.INSTANCE.getValue( docxParagraph, this );
+    }
+
+    public Integer getSpacingAfter( XWPFParagraph docxParagraph )
+    {
+        return PargraphSpacingAfterValueProvider.INSTANCE.getValue( docxParagraph, this );
     }
 
 }

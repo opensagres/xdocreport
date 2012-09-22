@@ -49,9 +49,9 @@ import org.apache.poi.xwpf.converter.internal.itext.stylable.StylableParagraph;
 import org.apache.poi.xwpf.converter.internal.itext.stylable.StylableTable;
 import org.apache.poi.xwpf.converter.internal.itext.stylable.StylableTableCell;
 import org.apache.poi.xwpf.converter.internal.itext.styles.Style;
-import org.apache.poi.xwpf.converter.internal.values.pargraph.PargraphSpacingAfterValueProvider;
-import org.apache.poi.xwpf.converter.internal.values.pargraph.PargraphSpacingBeforeValueProvider;
 import org.apache.poi.xwpf.converter.itext.PDFViaITextOptions;
+import org.apache.poi.xwpf.converter.styles.pargraph.PargraphSpacingAfterValueProvider;
+import org.apache.poi.xwpf.converter.styles.pargraph.PargraphSpacingBeforeValueProvider;
 import org.apache.poi.xwpf.usermodel.BodyElementType;
 import org.apache.poi.xwpf.usermodel.Borders;
 import org.apache.poi.xwpf.usermodel.IBodyElement;
@@ -273,14 +273,14 @@ public class PDFMapper
         // TextAlignment textAlignment = p.getVerticalAlignment();
 
         // spacing before
-        Integer spacingBefore = PargraphSpacingBeforeValueProvider.INSTANCE.getValue( docxParagraph, styleManager );
+        Integer spacingBefore = styleDocument.getSpacingBefore(docxParagraph);
         if ( spacingBefore != null )
         {
             pdfParagraph.setSpacingBefore( spacingBefore );
         }
 
         // spacing after
-        Integer spacingAfter = PargraphSpacingAfterValueProvider.INSTANCE.getValue( docxParagraph, styleManager );
+        Integer spacingAfter = styleDocument.getSpacingAfter(docxParagraph);
         if ( spacingAfter != null )
         {
             pdfParagraph.setSpacingAfter( spacingAfter.intValue() );

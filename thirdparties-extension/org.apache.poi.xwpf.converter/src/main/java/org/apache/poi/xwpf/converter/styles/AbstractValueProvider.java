@@ -1,4 +1,4 @@
-package org.apache.poi.xwpf.converter.internal.values;
+package org.apache.poi.xwpf.converter.styles;
 
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTStyle;
 
@@ -6,7 +6,7 @@ public abstract class AbstractValueProvider<Value, XWPFElement>
     implements IValueProvider<Value, XWPFElement>
 {
 
-    public final Value getValue( XWPFElement element, IStyleManager styleManager )
+    public final Value getValue( XWPFElement element, XWPFStylesDocument styleManager )
     {
         // Returns value retrieved from the XWPF element (XWPFParagraph, XWPFTable etc)
         Value value = getValueFromElement( element );
@@ -24,7 +24,7 @@ public abstract class AbstractValueProvider<Value, XWPFElement>
 
     public abstract Value getValueFromElement( XWPFElement element );
 
-    public Value getValueFromStyles( XWPFElement element, IStyleManager styleManager )
+    public Value getValueFromStyles( XWPFElement element, XWPFStylesDocument styleManager )
     {
         Value value = getValueFromStyleId( element, styleManager );
         if ( value != null )
@@ -34,7 +34,7 @@ public abstract class AbstractValueProvider<Value, XWPFElement>
         return getValueFromDefaultStyle( element, styleManager );
     }
 
-    private Value getValueFromStyleId( XWPFElement element, IStyleManager styleManager )
+    private Value getValueFromStyleId( XWPFElement element, XWPFStylesDocument styleManager )
     {
         String styleId = getStyleID( element );
 
@@ -66,15 +66,26 @@ public abstract class AbstractValueProvider<Value, XWPFElement>
             return null;
     }
 
-    private Value getValueFromStyle( CTStyle style, IStyleManager styleManager )
+    private Value getValueFromStyle( CTStyle style, XWPFStylesDocument styleManager )
     {
         return getValueFromStyle( style );
     }
 
     protected abstract String getStyleID( XWPFElement element );
 
-    protected abstract Value getValueFromStyle( CTStyle style);
-    
-    protected abstract Value getValueFromDefaultStyle( XWPFElement element, IStyleManager styleManager );
+    protected abstract Value getValueFromStyle( CTStyle style );
+
+    protected Value getValueFromDefaultStyle( XWPFElement element, XWPFStylesDocument styleManager )
+    {
+        Value value = null;
+        CTStyle style = getDefaultStype( element, styleManager );
+        if ( style != null )
+        {
+            value = getValueFromStyle( style );
+        }
+        return value;
+    }
+
+    protected abstract CTStyle getDefaultStype( XWPFElement element, XWPFStylesDocument styleManager );
 
 }

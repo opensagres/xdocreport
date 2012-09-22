@@ -5,8 +5,7 @@ import java.util.List;
 import java.util.logging.Logger;
 
 import org.apache.poi.openxml4j.opc.PackagePart;
-import org.apache.poi.xwpf.converter.internal.values.IStyleManager;
-import org.apache.poi.xwpf.converter.internal.values.StyleManager;
+import org.apache.poi.xwpf.converter.styles.XWPFStylesDocument;
 import org.apache.poi.xwpf.usermodel.IBodyElement;
 import org.apache.poi.xwpf.usermodel.XWPFDocument;
 import org.apache.poi.xwpf.usermodel.XWPFFooter;
@@ -48,7 +47,7 @@ public abstract class XWPFDocumentVisitor<T, E extends IXWPFMasterPage>
 
     private XWPFFooter currentFooter;
 
-    protected final IStyleManager styleManager;
+    protected final XWPFStylesDocument styleDocument;
 
     public XWPFDocumentVisitor( XWPFDocument document )
         throws Exception
@@ -56,7 +55,7 @@ public abstract class XWPFDocumentVisitor<T, E extends IXWPFMasterPage>
         super( document );
         this.masterPageManager = new MasterPageManager( document, this );
 
-        this.styleManager = new StyleManager( document );
+        this.styleDocument = new XWPFStylesDocument( document );
     }
 
     public MasterPageManager getMasterPageManager()

@@ -1,6 +1,6 @@
-package org.apache.poi.xwpf.converter.internal.values.pargraph;
+package org.apache.poi.xwpf.converter.styles.pargraph;
 
-import org.apache.poi.xwpf.converter.internal.values.IStyleManager;
+import org.apache.poi.xwpf.converter.styles.XWPFStylesDocument;
 import org.apache.poi.xwpf.usermodel.XWPFParagraph;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTPPr;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTSpacing;
@@ -53,11 +53,5 @@ public abstract class AbstractSpacingParagraphValueProvider<Value>
 
     protected abstract Value getValue( CTSpacing spacing );
 
-    @Override
-    protected Value getValueFromDefaultStyle( XWPFParagraph element, IStyleManager styleManager )
-    {
-        // TODO Auto-generated method stub
-        return null;
-    }
 
 }

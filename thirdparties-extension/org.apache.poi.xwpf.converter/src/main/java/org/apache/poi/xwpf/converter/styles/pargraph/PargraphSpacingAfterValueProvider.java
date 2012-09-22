@@ -1,10 +1,8 @@
-package org.apache.poi.xwpf.converter.internal.values.pargraph;
+package org.apache.poi.xwpf.converter.styles.pargraph;
 
 import java.math.BigInteger;
 
 import org.apache.poi.xwpf.converter.internal.DxaUtil;
-import org.apache.poi.xwpf.converter.internal.values.IStyleManager;
-import org.apache.poi.xwpf.usermodel.XWPFParagraph;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTSpacing;
 
 public class PargraphSpacingAfterValueProvider

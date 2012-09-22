@@ -24,11 +24,14 @@
  */
 package org.apache.poi.xwpf.converter.internal.itext;
 
+import static org.apache.poi.xwpf.converter.internal.DxaUtil.dxa2points;
+
 import java.awt.Color;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.math.BigInteger;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.logging.Logger;
 
@@ -44,6 +47,7 @@ import org.apache.poi.xwpf.usermodel.XWPFDocument;
 import org.apache.poi.xwpf.usermodel.XWPFParagraph;
 import org.apache.poi.xwpf.usermodel.XWPFRun;
 import org.apache.poi.xwpf.usermodel.XWPFStyle;
+import org.apache.poi.xwpf.usermodel.XWPFStyles;
 import org.apache.poi.xwpf.usermodel.XWPFTable;
 import org.apache.poi.xwpf.usermodel.XWPFTableCell;
 import org.apache.xmlbeans.XmlException;
@@ -58,6 +62,7 @@ import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTPPr;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTRPr;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTSpacing;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTString;
+import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTStyle;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTStyles;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTTblBorders;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTTblPrBase;
@@ -90,6 +95,8 @@ public class StyleEngineForIText
 
     private final Map<String, Style> stylesMap = new HashMap<String, Style>();
 
+    private String styleIdParagraph;
+
     /**
      * Logger for this class
      */
@@ -106,6 +113,7 @@ public class StyleEngineForIText
     {
         try
         {
+
             CTDocDefaults defaults = document.getStyle().getDocDefaults();
             Style aStyle = new Style( DEFAULT_STYLE );
             if ( defaults != null )
@@ -120,6 +128,9 @@ public class StyleEngineForIText
                 }
             }
             stylesMap.put( DEFAULT_STYLE, aStyle );
+            
+            
+            computeDefaultStylId();
         }
         catch ( XmlException e )
         {
@@ -154,19 +165,16 @@ public class StyleEngineForIText
 
             if ( spacingBefore != null )
             {
-                paragraphProperties.setSpacingBefore( spacingBefore.intValue() );
+                paragraphProperties.setSpacingBefore( dxa2points( spacingBefore.floatValue() ) );
             }
             BigInteger spacingAfter = spacing.getAfter();
             if ( spacingAfter != null )
             {
-                paragraphProperties.setSpacingAfter( spacingAfter.intValue() );
+                paragraphProperties.setSpacingAfter( dxa2points( spacingAfter.floatValue() ) );
             }
         }
 
-        // TODO : text Alignement...
-
         CTTextAlignment alignment = xwpfParagraphProperties.getTextAlignment();
-
         if ( alignment != null )
         {
             STTextAlignment textAlignment = alignment.xgetVal();
@@ -509,4 +517,27 @@ public class StyleEngineForIText
         return stylesMap.get( styleID );
     }
 
+    private void computeDefaultStylId() throws XmlException, IOException {
+        List<CTStyle> styles = document.getStyle().getStyleList();
+        for ( CTStyle style : styles )
+        {
+            org.openxmlformats.schemas.wordprocessingml.x2006.main.STOnOff.Enum isDefault = style.getDefault();
+            org.openxmlformats.schemas.wordprocessingml.x2006.main.STStyleType.Enum stype = style.getType();
+
+            switch(stype.intValue()) {
+                
+            }
+            //org.openxmlformats.schemas.wordprocessingml.x2006.main.STStyleType.CHARACTER;
+            //stype.intValue();
+            System.err.println(style);
+
+        }
+      
+    }
+    
+    // <w:style w:type="paragraph" w:default="1" w:styleId="Normal">
+    public String getStyleIdParagraph() {
+        return styleIdParagraph;
+    }
+    
 }

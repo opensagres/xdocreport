@@ -59,9 +59,9 @@ public class StyleParagraphProperties
 
     private int indentationRight;
 
-    private int spacingAfter;
+    private Float spacingAfter;
 
-    private int spacingBefore;
+    private Float spacingBefore;
 
     public StyleParagraphProperties()
     {
@@ -79,24 +79,24 @@ public class StyleParagraphProperties
         // indentation = paragraphProperties.indentation;
     }
 
-    public int getSpacingAfter()
+    public Float getSpacingAfter()
     {
         return spacingAfter;
     }
 
-    public void setSpacingAfter( int spacingAfter )
+    public void setSpacingAfter( Float spacingAfter )
     {
-        this.spacingAfter = dxa2points( spacingAfter );
+        this.spacingAfter = spacingAfter;
     }
 
-    public float getSpacingBefore()
+    public Float getSpacingBefore()
     {
         return spacingBefore;
     }
 
-    public void setSpacingBefore( int spacingBefore )
+    public void setSpacingBefore( Float spacingBefore )
     {
-        this.spacingBefore = dxa2points( spacingBefore );
+        this.spacingBefore = spacingBefore;
     }
 
     public int getAlignment()

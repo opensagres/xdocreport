@@ -27,11 +27,11 @@ package org.apache.poi.xwpf.converter.internal.itext.stylable;
 import static org.apache.poi.xwpf.converter.internal.DxaUtil.dxa2points;
 
 import java.awt.Color;
-
 import org.apache.poi.xwpf.converter.internal.itext.XWPFFontRegistry;
 import org.apache.poi.xwpf.converter.internal.itext.styles.FontInfos;
 import org.apache.poi.xwpf.converter.internal.itext.styles.Style;
 import org.apache.poi.xwpf.converter.internal.itext.styles.StyleParagraphProperties;
+import org.apache.poi.xwpf.usermodel.BodyType;
 import org.apache.poi.xwpf.usermodel.ParagraphAlignment;
 import org.apache.poi.xwpf.usermodel.XWPFParagraph;
 
@@ -115,135 +115,30 @@ public class StylableParagraph
                 setIndentationRight( paragraphProperties.getIndentationRight() );
                 setIndentationLeft( paragraphProperties.getIndentationLeft() );
                 setFirstLineIndent( paragraphProperties.getIndentationFirstLine() );
-                // StyleBorder borderBottom= paragraphProperties.getBorderBottom();
 
-            }
-
-        }
-
-        ParagraphAlignment paragraphAlignment = p.getAlignment();
-
-        // text-align
-
-        if ( paragraphAlignment != null )
-        {
-            int alignment = Element.ALIGN_UNDEFINED;
-            switch ( paragraphAlignment )
-            {
-                case LEFT:
-                    alignment = Element.ALIGN_LEFT;
-                    break;
-                case RIGHT:
-                    alignment = Element.ALIGN_RIGHT;
-                    break;
-                case CENTER:
-                    alignment = Element.ALIGN_CENTER;
-                    break;
-                case BOTH:
-                    alignment = Element.ALIGN_JUSTIFIED;
-                    break;
-                default:
-                    break;
-            }
-
-            setAlignment( alignment );
-        }
-
-        int indentationLeft = p.getIndentationLeft();
-        if ( indentationLeft > 0 )
-        {
-            setIndentationLeft( indentationLeft );
-        }
-
-        // text-indent
-        int indentationFirstLine = p.getIndentationFirstLine();
-        if ( indentationFirstLine > 0 )
-        {
-            setFirstLineIndent( indentationFirstLine );
-        }
-
-        int indentationRight = p.getIndentationRight();
-
-        if ( indentationRight > 0 )
-        {
-            setIndentationRight( indentationRight );
-        }
-        // verticalAlignment DOES not exists in StyleParagraphProperties iText
-        // TextAlignment textAlignment = p.getVerticalAlignment();
-
-        int left = p.getIndentationLeft();
-        int right = p.getIndentationRight();
-
-        if ( right > 0 )
-        {
-            setIndentationRight( dxa2points( right ) );
-        }
-
-        if ( left > 0 )
-        {
-            setIndentationLeft( dxa2points( left ) );
-        }
-
-        int firstLineIndent = p.getIndentationFirstLine();
-        if ( firstLineIndent > 0 )
-        {
-            setFirstLineIndent( dxa2points( firstLineIndent ) );
-        }
-
-        int spacingBefore = p.getSpacingBefore();
-        if ( spacingBefore > 0 )
-        {
-            setSpacingBefore( dxa2points( spacingBefore ) );
-        }
-        if ( p.getSpacingAfter() >= 0 )
-        {
-            setSpacingAfter( dxa2points( p.getSpacingAfter() ) );
-
-        }
-        else
-        {
-            // XXX Seems to be a default :
-            setSpacingAfter( 10f );
-        }
-
-        if ( p.getCTP().getPPr() != null )
-        {
-            if ( p.getCTP().getPPr().getSpacing() != null )
-            {
-
-                if ( p.getCTP().getPPr().getSpacing().getLine() != null )
+                if ( p.getPartType() == BodyType.TABLECELL )
                 {
 
-                    // XXX PLQ : why 240 ???
-                    float leading = ( p.getCTP().getPPr().getSpacing().getLine().floatValue() / 240 );
-                    setMultipliedLeading( leading );
                 }
+                else
+                {
+                    // default space before
+                    Float spacingBefore = paragraphProperties.getSpacingBefore();
+                    if ( spacingBefore != null )
+                    {
+                        setSpacingBefore( spacingBefore );
+                    }
 
+                    // default space after
+                    Float spacingAfter = paragraphProperties.getSpacingAfter();
+                    if ( spacingAfter != null )
+                    {
+                        setSpacingAfter( spacingAfter );
+                    }
+                }
             }
+
         }
-
-        ParagraphAlignment alignment = p.getAlignment();
-        switch ( alignment )
-        {
-            case LEFT:
-                setAlignment( Element.ALIGN_LEFT );
-                break;
-            case RIGHT:
-                setAlignment( Element.ALIGN_RIGHT );
-                break;
-
-            case CENTER:
-                setAlignment( Element.ALIGN_CENTER );
-                break;
-
-            case BOTH:
-                setAlignment( Element.ALIGN_JUSTIFIED );
-                break;
-
-            default:
-                break;
-        }
-
     }
 
     // FIXME check with Angelo the purpose of this method....

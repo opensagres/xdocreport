@@ -60,10 +60,38 @@ public abstract class AbstractXWPFPOIConverterTest
     }
 
     @Test
-    public void testDocxStructures()
+    public void Exercise1()
         throws IOException
     {
-        doGenerate( "DocxStructures.docx" );
+        doGenerate( "Exercise1.docx" );
+    }
+
+    @Test
+    public void Exercise2()
+        throws IOException
+    {
+        doGenerate( "Exercise2.docx" );
+    }
+
+    @Test
+    public void Oriel()
+        throws IOException
+    {
+        doGenerate( "Oriel.docx" );
+    }
+
+    @Test
+    public void ooxml()
+        throws IOException
+    {
+        doGenerate( "ooxml.docx" );
+    }
+
+    @Test
+    public void SittingPretty()
+        throws IOException
+    {
+        doGenerate( "SittingPretty.docx" );
     }
 
     @Test
@@ -144,6 +172,13 @@ public abstract class AbstractXWPFPOIConverterTest
     }
 
     @Test
+    public void testParagraphAlignment()
+        throws IOException
+    {
+        doGenerate( "TestParagraphAlignment.docx" );
+    }
+
+    @Test
     public void testTable()
         throws IOException
     {
@@ -155,6 +190,13 @@ public abstract class AbstractXWPFPOIConverterTest
         throws IOException
     {
         doGenerate( "TestTableBorder.docx" );
+    }
+
+    @Test
+    public void testTestTableCellAlignment()
+        throws IOException
+    {
+        doGenerate( "TestTableCellAlignment.docx" );
     }
 
     @Test

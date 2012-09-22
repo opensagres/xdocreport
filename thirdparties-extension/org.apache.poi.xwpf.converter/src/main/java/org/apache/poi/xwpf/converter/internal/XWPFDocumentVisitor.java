@@ -5,6 +5,8 @@ import java.util.List;
 import java.util.logging.Logger;
 
 import org.apache.poi.openxml4j.opc.PackagePart;
+import org.apache.poi.xwpf.converter.internal.values.IStyleManager;
+import org.apache.poi.xwpf.converter.internal.values.StyleManager;
 import org.apache.poi.xwpf.usermodel.IBodyElement;
 import org.apache.poi.xwpf.usermodel.XWPFDocument;
 import org.apache.poi.xwpf.usermodel.XWPFFooter;
@@ -46,11 +48,15 @@ public abstract class XWPFDocumentVisitor<T, E extends IXWPFMasterPage>
 
     private XWPFFooter currentFooter;
 
+    protected final IStyleManager styleManager;
+
     public XWPFDocumentVisitor( XWPFDocument document )
         throws Exception
     {
         super( document );
         this.masterPageManager = new MasterPageManager( document, this );
+
+        this.styleManager = new StyleManager( document );
     }
 
     public MasterPageManager getMasterPageManager()
@@ -75,7 +81,7 @@ public abstract class XWPFDocumentVisitor<T, E extends IXWPFMasterPage>
     protected void visitParagraph( XWPFParagraph paragraph, T container )
         throws Exception
     {
-        if ( currentHeader == null && currentFooter == null )
+        if ( isWordDocumentPartParsing() )
         {
             // header/footer is not parsing.
             // It's the word/document.xml which is parsing
@@ -84,6 +90,16 @@ public abstract class XWPFDocumentVisitor<T, E extends IXWPFMasterPage>
             masterPageManager.update( paragraph );
         }
         super.visitParagraph( paragraph, container );
+    }
+
+    /**
+     * Return true if word/document.xml is parsing and false otherwise.
+     * 
+     * @return
+     */
+    protected boolean isWordDocumentPartParsing()
+    {
+        return currentHeader == null && currentFooter == null;
     }
 
     // ------------------------------ Header/Footer visitor -----------

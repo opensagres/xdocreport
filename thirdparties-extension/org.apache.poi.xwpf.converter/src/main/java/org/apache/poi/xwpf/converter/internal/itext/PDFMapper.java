@@ -34,6 +34,7 @@ import static org.apache.poi.xwpf.converter.internal.XWPFUtils.getRPr;
 
 import java.awt.Color;
 import java.io.OutputStream;
+import java.math.BigInteger;
 import java.util.List;
 import java.util.logging.Logger;
 
@@ -48,10 +49,14 @@ import org.apache.poi.xwpf.converter.internal.itext.stylable.StylableParagraph;
 import org.apache.poi.xwpf.converter.internal.itext.stylable.StylableTable;
 import org.apache.poi.xwpf.converter.internal.itext.stylable.StylableTableCell;
 import org.apache.poi.xwpf.converter.internal.itext.styles.Style;
+import org.apache.poi.xwpf.converter.internal.values.pargraph.PargraphSpacingAfterValueProvider;
+import org.apache.poi.xwpf.converter.internal.values.pargraph.PargraphSpacingBeforeValueProvider;
 import org.apache.poi.xwpf.converter.itext.PDFViaITextOptions;
 import org.apache.poi.xwpf.usermodel.BodyElementType;
 import org.apache.poi.xwpf.usermodel.Borders;
 import org.apache.poi.xwpf.usermodel.IBodyElement;
+import org.apache.poi.xwpf.usermodel.LineSpacingRule;
+import org.apache.poi.xwpf.usermodel.ParagraphAlignment;
 import org.apache.poi.xwpf.usermodel.UnderlinePatterns;
 import org.apache.poi.xwpf.usermodel.XWPFDocument;
 import org.apache.poi.xwpf.usermodel.XWPFFooter;
@@ -67,7 +72,6 @@ import org.apache.xmlbeans.XmlCursor;
 import org.apache.xmlbeans.XmlObject;
 import org.openxmlformats.schemas.drawingml.x2006.main.CTPositiveSize2D;
 import org.openxmlformats.schemas.drawingml.x2006.picture.CTPicture;
-import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTRow;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTBr;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTDecimalNumber;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTDrawing;
@@ -78,9 +82,11 @@ import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTPPr;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTPTab;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTR;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTRPr;
+import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTRow;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTSdtCell;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTSectPr;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTShd;
+import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTSpacing;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTString;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTTblBorders;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTTc;
@@ -88,7 +94,10 @@ import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTTcBorders;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTTcPr;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTText;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTTextDirection;
+import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTVerticalJc;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.STOnOff;
+import org.openxmlformats.schemas.wordprocessingml.x2006.main.STVerticalJc;
+import org.openxmlformats.schemas.wordprocessingml.x2006.main.STVerticalJc.Enum;
 
 import com.lowagie.text.Chunk;
 import com.lowagie.text.DocumentException;
@@ -201,9 +210,11 @@ public class PDFMapper
 
         // 1) Instanciate a pdfParagraph
         StylableParagraph pdfParagraph = pdfDocument.createParagraph( (IStylableContainer) null );
-        // apply style for the title font, color, bold style...
-        // 2) Create style instance of the paragraph if needed
         styleEngine.startVisitPargraph( docxParagraph, pdfParagraph );
+        // apply style for the title font, color, bold style...
+        applyStyles( docxParagraph, pdfParagraph );
+
+        // styleEngine.startVisitPargraph( docxParagraph, pdfParagraph );
         pdfParagraph.setITextContainer( parentContainer );
 
         // Paragraph Background color
@@ -241,9 +252,91 @@ public class PDFMapper
             // pdfParagraph.getPdfPCell().setCellEvent( new CustomPdfPCellEvent() );
         }
 
-        // finally apply the style to the iText paragraph....
-        applyStyles( docxParagraph, pdfParagraph );
+        // text-indent
+        int indentationLeft = docxParagraph.getIndentationLeft();
+        if ( indentationLeft > 0 )
+        {
+            pdfParagraph.setIndentationLeft( dxa2points( indentationLeft ) );
+        }
+        int indentationRight = docxParagraph.getIndentationRight();
+        if ( indentationRight > 0 )
+        {
+            pdfParagraph.setIndentationRight( dxa2points( indentationRight ) );
+        }
+        int indentationFirstLine = docxParagraph.getIndentationFirstLine();
+        if ( indentationFirstLine > 0 )
+        {
+            pdfParagraph.setFirstLineIndent( dxa2points( indentationFirstLine ) );
+        }
 
+        // verticalAlignment DOES not exists in StyleParagraphProperties iText
+        // TextAlignment textAlignment = p.getVerticalAlignment();
+
+        // spacing before
+        Integer spacingBefore = PargraphSpacingBeforeValueProvider.INSTANCE.getValue( docxParagraph, styleManager );
+        if ( spacingBefore != null )
+        {
+            pdfParagraph.setSpacingBefore( spacingBefore );
+        }
+
+        // spacing after
+        Integer spacingAfter = PargraphSpacingAfterValueProvider.INSTANCE.getValue( docxParagraph, styleManager );
+        if ( spacingAfter != null )
+        {
+            pdfParagraph.setSpacingAfter( spacingAfter.intValue() );
+        }
+
+        CTPPr ppr = docxParagraph.getCTP().getPPr();
+        if ( ppr != null )
+        {
+            CTSpacing spacing = ppr.getSpacing();
+            if ( spacing != null )
+            {
+                BigInteger line = spacing.getLine();
+                if ( line != null )
+                {
+                    float leading = -1;
+                    // see http://officeopenxml.com/WPspacing.php
+                    // Note: If the value of the lineRule attribute is atLeast or exactly, then the value of the line
+                    // attribute is interpreted as 240th of a point. If the value of lineRule is auto, then the value of
+                    // line is interpreted as 240th of a line.
+                    LineSpacingRule lineSpacingRule = docxParagraph.getSpacingLineRule();
+                    switch ( lineSpacingRule )
+                    {
+                        case AT_LEAST:
+                        case EXACT:
+                            // FIXME : is that?
+                            leading = line.floatValue() / 240;
+                            break;
+                        case AUTO:
+                            leading = line.floatValue() / 240;
+                            break;
+                    }
+                    pdfParagraph.setMultipliedLeading( leading );
+                }
+            }
+        }
+
+        // text-align
+        ParagraphAlignment alignment = docxParagraph.getAlignment();
+        switch ( alignment )
+        {
+            case LEFT:
+                pdfParagraph.setAlignment( Element.ALIGN_LEFT );
+                break;
+            case RIGHT:
+                pdfParagraph.setAlignment( Element.ALIGN_RIGHT );
+                break;
+            case CENTER:
+                pdfParagraph.setAlignment( Element.ALIGN_CENTER );
+                break;
+            case BOTH:
+                pdfParagraph.setAlignment( Element.ALIGN_JUSTIFIED );
+                break;
+
+            default:
+                break;
+        }
         return pdfParagraph;
     }
 
@@ -565,7 +658,6 @@ public class PDFMapper
                                                    boolean lastCell )
     {
         StylableTable pdfPTable = (StylableTable) tableContainer;
-        // cell.getTableRow().getTable().getCTTbl().getTblPr().gett
         XWPFTableRow row = cell.getTableRow();
         ExtendedPdfPCell pdfPCell = pdfDocument.createTableCell( pdfPTable );
         pdfPCell.setITextContainer( pdfPTable );
@@ -634,12 +726,37 @@ public class PDFMapper
                 else if ( "tbRl".equals( direction.getVal().toString() ) )
                 {
                     pdfPCell.setRotation( 270 );
-                    // pdfPCell.setRunDirection( PdfWriter.RUN_DIRECTION_RTL );
                 }
+            }
+
+            // // Vertical aligment
+            CTVerticalJc vAlign = tcPr.getVAlign();
+            if ( vAlign != null )
+            {
+                Enum jc = vAlign.getVal();
+                if ( jc != null )
+                {
+                    switch ( jc.intValue() )
+                    {
+                        case STVerticalJc.INT_BOTTOM:
+                            pdfPCell.setVerticalAlignment( Element.ALIGN_BOTTOM );
+                            break;
+                        case STVerticalJc.INT_CENTER:
+                            pdfPCell.setVerticalAlignment( Element.ALIGN_MIDDLE );
+                            break;
+                        case STVerticalJc.INT_TOP:
+                            pdfPCell.setVerticalAlignment( Element.ALIGN_TOP );
+                            break;
+                    }
+                }
+
             }
         }
         int height = row.getHeight();
-        pdfPCell.setMinimumHeight( dxa2points( height ) );
+        if ( height > 0 )
+        {
+            pdfPCell.setMinimumHeight( dxa2points( height ) );
+        }
         // pdfPCell.setRunDirection( PdfWriter.RUN_DIRECTION_NO_BIDI );
         // pdfPCell.setRotation( 90 );
         // pdfPCell.setVerticalAlignment( pdfPCell.ALIGN_TOP );

@@ -5,6 +5,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.poi.xwpf.converter.styles.pargraph.PargraphIndentationFirstLineValueProvider;
+import org.apache.poi.xwpf.converter.styles.pargraph.PargraphIndentationLeftValueProvider;
+import org.apache.poi.xwpf.converter.styles.pargraph.PargraphIndentationRightValueProvider;
 import org.apache.poi.xwpf.converter.styles.pargraph.PargraphSpacingAfterValueProvider;
 import org.apache.poi.xwpf.converter.styles.pargraph.PargraphSpacingBeforeValueProvider;
 import org.apache.poi.xwpf.usermodel.XWPFDocument;
@@ -112,6 +115,21 @@ public class XWPFStylesDocument
     public Integer getSpacingAfter( XWPFParagraph docxParagraph )
     {
         return PargraphSpacingAfterValueProvider.INSTANCE.getValue( docxParagraph, this );
+    }
+
+    public Float getIndentationLeft( XWPFParagraph paragraph )
+    {
+        return PargraphIndentationLeftValueProvider.INSTANCE.getValue( paragraph, this );
+    }
+
+    public Float getIndentationRight( XWPFParagraph paragraph )
+    {
+        return PargraphIndentationRightValueProvider.INSTANCE.getValue( paragraph, this );
+    }
+
+    public Float getIndentationFirstLine( XWPFParagraph paragraph )
+    {
+        return PargraphIndentationFirstLineValueProvider.INSTANCE.getValue( paragraph, this );
     }
 
     public <T> T getValue( String key )

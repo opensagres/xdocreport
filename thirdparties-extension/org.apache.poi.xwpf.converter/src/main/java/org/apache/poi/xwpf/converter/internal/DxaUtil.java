@@ -63,6 +63,11 @@ public class DxaUtil
         return dxa.intValue() / 20;
     }
 
+    public static float dxa2pointsF( BigInteger dxa )
+    {
+        return dxa.intValue() / 20;
+    }
+    
     public static float dxa2inch( float dxa )
     {
         return dxa2points( dxa ) / 72;

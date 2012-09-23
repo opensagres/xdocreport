@@ -5,31 +5,31 @@ import org.apache.poi.xwpf.usermodel.BodyType;
 import org.apache.poi.xwpf.usermodel.XWPFParagraph;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTDocDefaults;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTPPr;
-import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTSpacing;
+import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTInd;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTStyle;
 
-public abstract class AbstractSpacingParagraphValueProvider<Value>
+public abstract class AbstractIndentationParagraphValueProvider<Value>
     extends AbstractParagraphValueProvider<Value>
 {
     @Override
     public Value getValueFromElement( XWPFParagraph paragraph )
     {
-        return internalGetValue( getSpacing( getCTPPr( paragraph ) ) );
+        return internalGetValue( getInd( getCTPPr( paragraph ) ) );
     }
 
     @Override
     protected Value getValueFromStyle( CTStyle style )
     {
-        return internalGetValue( getSpacing( getCTPPr( style ) ) );
+        return internalGetValue( getInd( getCTPPr( style ) ) );
     }
 
     @Override
     protected Value getValueFromDocDefaultsStyle( CTDocDefaults docDefaults )
     {
-        return internalGetValue( getSpacing( getCTPPr( docDefaults ) ) );
+        return internalGetValue( getInd( getCTPPr( docDefaults ) ) );
     }
 
-    private Value internalGetValue( CTSpacing ind )
+    private Value internalGetValue( CTInd ind )
     {
         if ( ind == null )
         {
@@ -38,13 +38,13 @@ public abstract class AbstractSpacingParagraphValueProvider<Value>
         return getValue( ind );
     }
 
-    public CTSpacing getSpacing( CTPPr pr )
+    public CTInd getInd( CTPPr pr )
     {
         if ( pr == null )
         {
             return null;
         }
-        return pr.getSpacing() == null ? null : pr.getSpacing();
+        return pr.getInd() == null ? null : pr.getInd();
     }
 
     @Override
@@ -61,6 +61,6 @@ public abstract class AbstractSpacingParagraphValueProvider<Value>
         return super.getKey( element, stylesDocument, styleId );
     }
 
-    protected abstract Value getValue( CTSpacing ind );
+    protected abstract Value getValue( CTInd ind );
 
 }

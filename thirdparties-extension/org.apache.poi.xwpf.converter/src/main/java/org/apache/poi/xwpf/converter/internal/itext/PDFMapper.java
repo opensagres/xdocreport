@@ -253,34 +253,31 @@ public class PDFMapper
         }
 
         // text-indent
-        int indentationLeft = docxParagraph.getIndentationLeft();
-        if ( indentationLeft > 0 )
+        Float indentationLeft = styleDocument.getIndentationLeft( docxParagraph );
+        if ( indentationLeft != null )
         {
-            pdfParagraph.setIndentationLeft( dxa2points( indentationLeft ) );
+            pdfParagraph.setIndentationLeft( indentationLeft );
         }
-        int indentationRight = docxParagraph.getIndentationRight();
-        if ( indentationRight > 0 )
+        Float indentationRight = styleDocument.getIndentationRight( docxParagraph );
+        if ( indentationRight != null )
         {
-            pdfParagraph.setIndentationRight( dxa2points( indentationRight ) );
+            pdfParagraph.setIndentationRight( indentationRight );
         }
-        int indentationFirstLine = docxParagraph.getIndentationFirstLine();
-        if ( indentationFirstLine > 0 )
+        Float indentationFirstLine = styleDocument.getIndentationFirstLine( docxParagraph );
+        if ( indentationFirstLine != null )
         {
-            pdfParagraph.setFirstLineIndent( dxa2points( indentationFirstLine ) );
+            pdfParagraph.setFirstLineIndent( indentationFirstLine );
         }
-
-        // verticalAlignment DOES not exists in StyleParagraphProperties iText
-        // TextAlignment textAlignment = p.getVerticalAlignment();
 
         // spacing before
-        Integer spacingBefore = styleDocument.getSpacingBefore(docxParagraph);
+        Integer spacingBefore = styleDocument.getSpacingBefore( docxParagraph );
         if ( spacingBefore != null )
         {
             pdfParagraph.setSpacingBefore( spacingBefore );
         }
 
         // spacing after
-        Integer spacingAfter = styleDocument.getSpacingAfter(docxParagraph);
+        Integer spacingAfter = styleDocument.getSpacingAfter( docxParagraph );
         if ( spacingAfter != null )
         {
             pdfParagraph.setSpacingAfter( spacingAfter.intValue() );
@@ -333,7 +330,6 @@ public class PDFMapper
             case BOTH:
                 pdfParagraph.setAlignment( Element.ALIGN_JUSTIFIED );
                 break;
-
             default:
                 break;
         }

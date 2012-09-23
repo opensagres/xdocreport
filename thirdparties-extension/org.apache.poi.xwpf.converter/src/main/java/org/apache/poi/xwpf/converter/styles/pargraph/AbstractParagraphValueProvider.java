@@ -3,7 +3,9 @@ package org.apache.poi.xwpf.converter.styles.pargraph;
 import org.apache.poi.xwpf.converter.styles.AbstractValueProvider;
 import org.apache.poi.xwpf.converter.styles.XWPFStylesDocument;
 import org.apache.poi.xwpf.usermodel.XWPFParagraph;
+import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTDocDefaults;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTPPr;
+import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTPPrDefault;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTStyle;
 
 public abstract class AbstractParagraphValueProvider<Value>
@@ -20,6 +22,16 @@ public abstract class AbstractParagraphValueProvider<Value>
         return style.getPPr();
     }
 
+    public CTPPr getCTPPr( CTDocDefaults docDefaults )
+    {
+        CTPPrDefault prDefault = docDefaults.getPPrDefault();
+        if ( prDefault == null )
+        {
+            return null;
+        }
+        return prDefault.getPPr();
+    }
+
     @Override
     protected String getStyleID( XWPFParagraph paragraph )
     {
@@ -27,7 +39,7 @@ public abstract class AbstractParagraphValueProvider<Value>
     }
 
     @Override
-    protected CTStyle getDefaultStype( XWPFParagraph element, XWPFStylesDocument styleManager )
+    protected CTStyle getDefaultStyle( XWPFParagraph element, XWPFStylesDocument styleManager )
     {
         return styleManager.getDefaultParagraphStyle();
     }

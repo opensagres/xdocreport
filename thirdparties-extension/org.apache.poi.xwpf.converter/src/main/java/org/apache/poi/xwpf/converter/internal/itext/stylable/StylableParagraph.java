@@ -116,26 +116,8 @@ public class StylableParagraph
                 setIndentationLeft( paragraphProperties.getIndentationLeft() );
                 setFirstLineIndent( paragraphProperties.getIndentationFirstLine() );
 
-                if ( p.getPartType() == BodyType.TABLECELL )
-                {
+                
 
-                }
-                else
-                {
-                    // default space before
-                    Float spacingBefore = paragraphProperties.getSpacingBefore();
-                    if ( spacingBefore != null )
-                    {
-                        setSpacingBefore( spacingBefore );
-                    }
-
-                    // default space after
-                    Float spacingAfter = paragraphProperties.getSpacingAfter();
-                    if ( spacingAfter != null )
-                    {
-                        setSpacingAfter( spacingAfter );
-                    }
-                }
             }
 
         }

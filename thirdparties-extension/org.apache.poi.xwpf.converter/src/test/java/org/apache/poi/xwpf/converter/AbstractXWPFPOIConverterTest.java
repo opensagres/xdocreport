@@ -60,6 +60,13 @@ public abstract class AbstractXWPFPOIConverterTest
     }
 
     @Test
+    public void DocxStructures()
+        throws IOException
+    {
+        doGenerate( "DocxStructures.docx" );
+    }
+    
+    @Test
     public void Exercise1()
         throws IOException
     {

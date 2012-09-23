@@ -10,10 +10,13 @@ import org.apache.poi.xwpf.converter.styles.pargraph.PargraphSpacingBeforeValueP
 import org.apache.poi.xwpf.usermodel.XWPFDocument;
 import org.apache.poi.xwpf.usermodel.XWPFParagraph;
 import org.apache.xmlbeans.XmlException;
+import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTDocDefaults;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTStyle;
 
 public class XWPFStylesDocument
 {
+
+    public static final Object EMPTY_VALUE = new Object();
 
     private final XWPFDocument document;
 
@@ -21,10 +24,13 @@ public class XWPFStylesDocument
 
     private CTStyle defaultParagraphStyle;
 
+    private final Map<String, Object> values;
+
     public XWPFStylesDocument( XWPFDocument document )
     {
         this.document = document;
         this.stylesByStyleId = new HashMap<String, CTStyle>();
+        this.values = new HashMap<String, Object>();
         try
         {
             initialize();
@@ -79,11 +85,21 @@ public class XWPFStylesDocument
         return stylesByStyleId.get( styleId );
     }
 
-    public Object getValue( IValueProvider provider, String styleId )
+    public CTDocDefaults getDocDefaults()
     {
-        if ( styleId != null && styleId.length() > 0 )
+        try
         {
-            return null;
+            return document.getStyle().getDocDefaults();
+        }
+        catch ( XmlException e )
+        {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+        catch ( IOException e )
+        {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
         }
         return null;
     }
@@ -96,6 +112,16 @@ public class XWPFStylesDocument
     public Integer getSpacingAfter( XWPFParagraph docxParagraph )
     {
         return PargraphSpacingAfterValueProvider.INSTANCE.getValue( docxParagraph, this );
+    }
+
+    public <T> T getValue( String key )
+    {
+        return (T) values.get( key );
+    }
+
+    public <T> void setValue( String key, T value )
+    {
+        values.put( key, value );
     }
 
 }

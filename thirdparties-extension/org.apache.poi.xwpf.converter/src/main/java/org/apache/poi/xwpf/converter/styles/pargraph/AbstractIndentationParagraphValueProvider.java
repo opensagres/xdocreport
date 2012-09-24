@@ -3,34 +3,16 @@ package org.apache.poi.xwpf.converter.styles.pargraph;
 import org.apache.poi.xwpf.converter.styles.XWPFStylesDocument;
 import org.apache.poi.xwpf.usermodel.BodyType;
 import org.apache.poi.xwpf.usermodel.XWPFParagraph;
-import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTDocDefaults;
-import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTPPr;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTInd;
-import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTStyle;
+import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTPPr;
 
 public abstract class AbstractIndentationParagraphValueProvider<Value>
     extends AbstractParagraphValueProvider<Value>
 {
     @Override
-    public Value getValueFromElement( XWPFParagraph paragraph )
+    public Value getValue( CTPPr ppr )
     {
-        return internalGetValue( getInd( getCTPPr( paragraph ) ) );
-    }
-
-    @Override
-    protected Value getValueFromStyle( CTStyle style )
-    {
-        return internalGetValue( getInd( getCTPPr( style ) ) );
-    }
-
-    @Override
-    protected Value getValueFromDocDefaultsStyle( CTDocDefaults docDefaults )
-    {
-        return internalGetValue( getInd( getCTPPr( docDefaults ) ) );
-    }
-
-    private Value internalGetValue( CTInd ind )
-    {
+        CTInd ind = getInd( ppr );
         if ( ind == null )
         {
             return null;
@@ -61,6 +43,6 @@ public abstract class AbstractIndentationParagraphValueProvider<Value>
         return super.getKey( element, stylesDocument, styleId );
     }
 
-    protected abstract Value getValue( CTInd ind );
+    public abstract Value getValue( CTInd ind );
 
 }

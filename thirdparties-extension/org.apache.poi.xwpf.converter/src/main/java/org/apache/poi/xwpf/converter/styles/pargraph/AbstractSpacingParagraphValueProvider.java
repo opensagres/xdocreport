@@ -3,48 +3,31 @@ package org.apache.poi.xwpf.converter.styles.pargraph;
 import org.apache.poi.xwpf.converter.styles.XWPFStylesDocument;
 import org.apache.poi.xwpf.usermodel.BodyType;
 import org.apache.poi.xwpf.usermodel.XWPFParagraph;
-import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTDocDefaults;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTPPr;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTSpacing;
-import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTStyle;
 
 public abstract class AbstractSpacingParagraphValueProvider<Value>
     extends AbstractParagraphValueProvider<Value>
 {
-    @Override
-    public Value getValueFromElement( XWPFParagraph paragraph )
-    {
-        return internalGetValue( getSpacing( getCTPPr( paragraph ) ) );
-    }
 
     @Override
-    protected Value getValueFromStyle( CTStyle style )
+    public Value getValue( CTPPr ppr )
     {
-        return internalGetValue( getSpacing( getCTPPr( style ) ) );
-    }
-
-    @Override
-    protected Value getValueFromDocDefaultsStyle( CTDocDefaults docDefaults )
-    {
-        return internalGetValue( getSpacing( getCTPPr( docDefaults ) ) );
-    }
-
-    private Value internalGetValue( CTSpacing ind )
-    {
-        if ( ind == null )
+        CTSpacing spacing = getSpacing( ppr );
+        if ( spacing == null )
         {
             return null;
         }
-        return getValue( ind );
+        return getValue( spacing );
     }
 
-    public CTSpacing getSpacing( CTPPr pr )
+    public CTSpacing getSpacing( CTPPr ppr )
     {
-        if ( pr == null )
+        if ( ppr == null )
         {
             return null;
         }
-        return pr.getSpacing() == null ? null : pr.getSpacing();
+        return ppr.getSpacing() == null ? null : ppr.getSpacing();
     }
 
     @Override

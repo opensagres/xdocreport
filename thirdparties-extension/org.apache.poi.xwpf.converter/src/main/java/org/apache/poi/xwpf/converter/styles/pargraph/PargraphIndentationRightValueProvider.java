@@ -12,7 +12,7 @@ public class PargraphIndentationRightValueProvider
     public static final PargraphIndentationRightValueProvider INSTANCE = new PargraphIndentationRightValueProvider();
 
     @Override
-    protected Float getValue( CTInd ind )
+    public Float getValue( CTInd ind )
     {
         BigInteger right = ind.getRight();
         if ( right != null )

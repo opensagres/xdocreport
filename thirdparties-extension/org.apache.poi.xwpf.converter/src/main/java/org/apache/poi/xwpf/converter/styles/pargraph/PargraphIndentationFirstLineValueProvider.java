@@ -12,7 +12,7 @@ public class PargraphIndentationFirstLineValueProvider
     public static final PargraphIndentationFirstLineValueProvider INSTANCE = new PargraphIndentationFirstLineValueProvider();
 
     @Override
-    protected Float getValue( CTInd ind )
+    public Float getValue( CTInd ind )
     {
         BigInteger firstLine = ind.getFirstLine();
         if ( firstLine != null )

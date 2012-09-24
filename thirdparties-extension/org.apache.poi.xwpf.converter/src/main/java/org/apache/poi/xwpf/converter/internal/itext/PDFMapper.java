@@ -50,6 +50,7 @@ import org.apache.poi.xwpf.converter.internal.itext.stylable.StylableTable;
 import org.apache.poi.xwpf.converter.internal.itext.stylable.StylableTableCell;
 import org.apache.poi.xwpf.converter.internal.itext.styles.Style;
 import org.apache.poi.xwpf.converter.itext.PDFViaITextOptions;
+import org.apache.poi.xwpf.converter.styles.pargraph.PargraphIndentationLeftValueProvider;
 import org.apache.poi.xwpf.converter.styles.pargraph.PargraphSpacingAfterValueProvider;
 import org.apache.poi.xwpf.converter.styles.pargraph.PargraphSpacingBeforeValueProvider;
 import org.apache.poi.xwpf.usermodel.BodyElementType;
@@ -58,9 +59,11 @@ import org.apache.poi.xwpf.usermodel.IBodyElement;
 import org.apache.poi.xwpf.usermodel.LineSpacingRule;
 import org.apache.poi.xwpf.usermodel.ParagraphAlignment;
 import org.apache.poi.xwpf.usermodel.UnderlinePatterns;
+import org.apache.poi.xwpf.usermodel.XWPFAbstractNum;
 import org.apache.poi.xwpf.usermodel.XWPFDocument;
 import org.apache.poi.xwpf.usermodel.XWPFFooter;
 import org.apache.poi.xwpf.usermodel.XWPFHeader;
+import org.apache.poi.xwpf.usermodel.XWPFNum;
 import org.apache.poi.xwpf.usermodel.XWPFParagraph;
 import org.apache.poi.xwpf.usermodel.XWPFPictureData;
 import org.apache.poi.xwpf.usermodel.XWPFRun;
@@ -70,6 +73,7 @@ import org.apache.poi.xwpf.usermodel.XWPFTableCell;
 import org.apache.poi.xwpf.usermodel.XWPFTableRow;
 import org.apache.xmlbeans.XmlCursor;
 import org.apache.xmlbeans.XmlObject;
+import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTLvl;
 import org.openxmlformats.schemas.drawingml.x2006.main.CTPositiveSize2D;
 import org.openxmlformats.schemas.drawingml.x2006.picture.CTPicture;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTBr;
@@ -77,6 +81,7 @@ import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTDecimalNumber;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTDrawing;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTEmpty;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTHdrFtrRef;
+import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTNumPr;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTOnOff;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTPPr;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTPTab;
@@ -283,6 +288,7 @@ public class PDFMapper
             pdfParagraph.setSpacingAfter( spacingAfter.intValue() );
         }
 
+        // docxParagraph.getIndentationLeft()
         CTPPr ppr = docxParagraph.getCTP().getPPr();
         if ( ppr != null )
         {
@@ -312,6 +318,40 @@ public class PDFMapper
                     pdfParagraph.setMultipliedLeading( leading );
                 }
             }
+
+            CTNumPr numPr = ppr.getNumPr();
+            if ( numPr != null )
+            {
+                // - <w:p>
+                // - <w:pPr>
+                // <w:pStyle w:val="style0" />
+                // - <w:numPr>
+                // <w:ilvl w:val="0" />
+                // <w:numId w:val="2" />
+                // </w:numPr>
+
+                CTDecimalNumber ilvl = numPr.getIlvl();
+
+                CTDecimalNumber numID = numPr.getNumId();
+                XWPFNum num = document.getNumbering().getNum( numID.getVal() );
+                CTDecimalNumber abstractNumID = num.getCTNum().getAbstractNumId();
+                XWPFAbstractNum abstractNum = document.getNumbering().getAbstractNum( abstractNumID.getVal() );
+
+                CTLvl lvl = abstractNum.getAbstractNum().getLvlArray( ilvl.getVal().intValue() );
+                CTPPr lvlPPr = lvl.getPPr();
+                if ( lvlPPr != null )
+                {
+                    Float indLeft = PargraphIndentationLeftValueProvider.INSTANCE.getValue( lvlPPr );
+                    if ( indLeft != null )
+                    {
+                        pdfParagraph.setIndentationLeft( indLeft );
+                    }
+
+                }
+                // num.getCTNum().get
+                System.err.println( num );
+
+            }
         }
 
         // text-align
@@ -333,6 +373,7 @@ public class PDFMapper
             default:
                 break;
         }
+
         return pdfParagraph;
     }
 

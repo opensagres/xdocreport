@@ -33,6 +33,26 @@ public abstract class AbstractParagraphValueProvider<Value>
     }
 
     @Override
+    public Value getValueFromElement( XWPFParagraph paragraph )
+    {
+        return getValue( getCTPPr( paragraph ) );
+    }
+
+    @Override
+    protected Value getValueFromStyle( CTStyle style )
+    {
+        return getValue( getCTPPr( style ) );
+    }
+
+    @Override
+    protected Value getValueFromDocDefaultsStyle( CTDocDefaults docDefaults )
+    {
+        return getValue( getCTPPr( docDefaults ) );
+    }
+
+    public abstract Value getValue( CTPPr ppr );
+
+    @Override
     protected String getStyleID( XWPFParagraph paragraph )
     {
         return paragraph.getStyleID();

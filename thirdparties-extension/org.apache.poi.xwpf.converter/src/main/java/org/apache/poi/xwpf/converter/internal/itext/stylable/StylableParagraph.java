@@ -111,13 +111,6 @@ public class StylableParagraph
                     // FIXME : Is it correct???
                     setLeading( lineHeight * super.getTotalLeading() );
                 }
-                // System.err.println("IndentationRight "+paragraphProperties.getIndentationRight());
-                setIndentationRight( paragraphProperties.getIndentationRight() );
-                setIndentationLeft( paragraphProperties.getIndentationLeft() );
-                setFirstLineIndent( paragraphProperties.getIndentationFirstLine() );
-
-                
-
             }
 
         }

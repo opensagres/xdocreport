@@ -170,7 +170,8 @@ public class ODTDocumentHandler
         throws IOException
     {
     	// Re-escape ODT special characters, xml parsing removes them.
-    	content = StringUtils.xmlEscape( content );
+        content = StringUtils.xmlUnescape( content );
+        content = StringUtils.xmlEscape( content );
 
     	if ( insideHeader )
     	{

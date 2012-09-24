@@ -74,7 +74,7 @@ public class HTMLTextStylingTransformer
         // remove special characters \n, \r
         String xml = StringUtils.replaceEach( content, searchList, replacementList );
         // add root element if xml doesn't contain xml root element.
-        xml = START_XML + xml + END_XML;
+        xml = new StringBuilder( START_XML ).append( xml ).append( END_XML ).toString();
 
         if ( LOGGER.isLoggable( Level.FINE ) )
         {

@@ -55,6 +55,22 @@ public class ODTDocumentHandlerTestCase
     }
 
     @Test
+    public void testSpecialCharacterAmp()
+        throws Exception
+    {
+        IContext context = new MockContext();
+        BufferedElement parent = null;
+
+        ITextStylingTransformer formatter = HTMLTextStylingTransformer.INSTANCE;
+        IDocumentHandler handler = new ODTDocumentHandler( parent, context, "content.xml" );
+        formatter.transform( "&amp;&lt;", handler );
+
+        Assert.assertEquals( "", handler.getTextBefore() );
+        Assert.assertEquals( "<text:span>&amp;</text:span><text:span>&lt;</text:span>", handler.getTextBody() );
+        Assert.assertEquals( "", handler.getTextEnd() );
+    }
+
+    @Test
     public void testNbsp()
         throws Exception
     {
@@ -147,7 +163,8 @@ public class ODTDocumentHandlerTestCase
 
         Assert.assertEquals( "", handler.getTextBefore() );
         Assert.assertEquals( "", handler.getTextBody() );
-        Assert.assertEquals( "<text:p><text:span text:style-name=\"XDocReport_Bold\" >text</text:span></text:p>", handler.getTextEnd() );
+        Assert.assertEquals( "<text:p><text:span text:style-name=\"XDocReport_Bold\" >text</text:span></text:p>",
+                             handler.getTextEnd() );
     }
 
     @Test
@@ -163,7 +180,8 @@ public class ODTDocumentHandlerTestCase
 
         Assert.assertEquals( "", handler.getTextBefore() );
         Assert.assertEquals( "", handler.getTextBody() );
-        Assert.assertEquals( "<text:p><text:span text:style-name=\"XDocReport_Bold\" >text</text:span></text:p>", handler.getTextEnd() );
+        Assert.assertEquals( "<text:p><text:span text:style-name=\"XDocReport_Bold\" >text</text:span></text:p>",
+                             handler.getTextEnd() );
     }
 
     @Test
@@ -212,7 +230,8 @@ public class ODTDocumentHandlerTestCase
         formatter.transform( "<span style=\"font-style: italic\">text</span>", handler );
 
         Assert.assertEquals( "", handler.getTextBefore() );
-        Assert.assertEquals( "<text:span text:style-name=\"XDocReport_Italic\" >text</text:span>", handler.getTextBody() );
+        Assert.assertEquals( "<text:span text:style-name=\"XDocReport_Italic\" >text</text:span>",
+                             handler.getTextBody() );
         Assert.assertEquals( "", handler.getTextEnd() );
     }
 
@@ -229,7 +248,8 @@ public class ODTDocumentHandlerTestCase
 
         Assert.assertEquals( "", handler.getTextBefore() );
         Assert.assertEquals( "", handler.getTextBody() );
-        Assert.assertEquals( "<text:p><text:span text:style-name=\"XDocReport_Italic\" >text</text:span></text:p>", handler.getTextEnd() );
+        Assert.assertEquals( "<text:p><text:span text:style-name=\"XDocReport_Italic\" >text</text:span></text:p>",
+                             handler.getTextEnd() );
     }
 
     @Test
@@ -261,7 +281,8 @@ public class ODTDocumentHandlerTestCase
         formatter.transform( "<span style=\"text-decoration: underline\">text</span>", handler );
 
         Assert.assertEquals( "", handler.getTextBefore() );
-        Assert.assertEquals( "<text:span text:style-name=\"XDocReport_Underline\" >text</text:span>", handler.getTextBody() );
+        Assert.assertEquals( "<text:span text:style-name=\"XDocReport_Underline\" >text</text:span>",
+                             handler.getTextBody() );
         Assert.assertEquals( "", handler.getTextEnd() );
     }
 
@@ -278,7 +299,8 @@ public class ODTDocumentHandlerTestCase
 
         Assert.assertEquals( "", handler.getTextBefore() );
         Assert.assertEquals( "", handler.getTextBody() );
-        Assert.assertEquals( "<text:p><text:span text:style-name=\"XDocReport_Underline\" >text</text:span></text:p>", handler.getTextEnd() );
+        Assert.assertEquals( "<text:p><text:span text:style-name=\"XDocReport_Underline\" >text</text:span></text:p>",
+                             handler.getTextEnd() );
     }
 
     @Test
@@ -327,7 +349,8 @@ public class ODTDocumentHandlerTestCase
         formatter.transform( "<span style=\"text-decoration: line-through\">text</span>", handler );
 
         Assert.assertEquals( "", handler.getTextBefore() );
-        Assert.assertEquals( "<text:span text:style-name=\"XDocReport_Strike\" >text</text:span>", handler.getTextBody() );
+        Assert.assertEquals( "<text:span text:style-name=\"XDocReport_Strike\" >text</text:span>",
+                             handler.getTextBody() );
         Assert.assertEquals( "", handler.getTextEnd() );
     }
 
@@ -344,7 +367,8 @@ public class ODTDocumentHandlerTestCase
 
         Assert.assertEquals( "", handler.getTextBefore() );
         Assert.assertEquals( "", handler.getTextBody() );
-        Assert.assertEquals( "<text:p><text:span text:style-name=\"XDocReport_Strike\" >text</text:span></text:p>", handler.getTextEnd() );
+        Assert.assertEquals( "<text:p><text:span text:style-name=\"XDocReport_Strike\" >text</text:span></text:p>",
+                             handler.getTextEnd() );
     }
 
     @Test
@@ -359,7 +383,8 @@ public class ODTDocumentHandlerTestCase
         formatter.transform( "<span style=\"text-decoration: underline line-through\">text</span>", handler );
 
         Assert.assertEquals( "", handler.getTextBefore() );
-        Assert.assertEquals( "<text:span text:style-name=\"XDocReport_Underline\" ><text:span text:style-name=\"XDocReport_Strike\" >text</text:span></text:span>", handler.getTextBody() );
+        Assert.assertEquals( "<text:span text:style-name=\"XDocReport_Underline\" ><text:span text:style-name=\"XDocReport_Strike\" >text</text:span></text:span>",
+                             handler.getTextBody() );
         Assert.assertEquals( "", handler.getTextEnd() );
     }
 
@@ -376,7 +401,8 @@ public class ODTDocumentHandlerTestCase
 
         Assert.assertEquals( "", handler.getTextBefore() );
         Assert.assertEquals( "", handler.getTextBody() );
-        Assert.assertEquals( "<text:p><text:span text:style-name=\"XDocReport_Underline\" ><text:span text:style-name=\"XDocReport_Strike\" >text</text:span></text:span></text:p>", handler.getTextEnd() );
+        Assert.assertEquals( "<text:p><text:span text:style-name=\"XDocReport_Underline\" ><text:span text:style-name=\"XDocReport_Strike\" >text</text:span></text:span></text:p>",
+                             handler.getTextEnd() );
     }
 
     @Test
@@ -408,7 +434,8 @@ public class ODTDocumentHandlerTestCase
         formatter.transform( "<span style=\"vertical-align: sub\">text</span>", handler );
 
         Assert.assertEquals( "", handler.getTextBefore() );
-        Assert.assertEquals( "<text:span text:style-name=\"XDocReport_Subscript\" >text</text:span>", handler.getTextBody() );
+        Assert.assertEquals( "<text:span text:style-name=\"XDocReport_Subscript\" >text</text:span>",
+                             handler.getTextBody() );
         Assert.assertEquals( "", handler.getTextEnd() );
     }
 
@@ -425,7 +452,8 @@ public class ODTDocumentHandlerTestCase
 
         Assert.assertEquals( "", handler.getTextBefore() );
         Assert.assertEquals( "", handler.getTextBody() );
-        Assert.assertEquals( "<text:p><text:span text:style-name=\"XDocReport_Subscript\" >text</text:span></text:p>", handler.getTextEnd() );
+        Assert.assertEquals( "<text:p><text:span text:style-name=\"XDocReport_Subscript\" >text</text:span></text:p>",
+                             handler.getTextEnd() );
     }
 
     @Test
@@ -457,7 +485,8 @@ public class ODTDocumentHandlerTestCase
         formatter.transform( "<span style=\"vertical-align: super\">text</span>", handler );
 
         Assert.assertEquals( "", handler.getTextBefore() );
-        Assert.assertEquals( "<text:span text:style-name=\"XDocReport_Superscript\" >text</text:span>", handler.getTextBody() );
+        Assert.assertEquals( "<text:span text:style-name=\"XDocReport_Superscript\" >text</text:span>",
+                             handler.getTextBody() );
         Assert.assertEquals( "", handler.getTextEnd() );
     }
 
@@ -474,7 +503,8 @@ public class ODTDocumentHandlerTestCase
 
         Assert.assertEquals( "", handler.getTextBefore() );
         Assert.assertEquals( "", handler.getTextBody() );
-        Assert.assertEquals( "<text:p><text:span text:style-name=\"XDocReport_Superscript\" >text</text:span></text:p>", handler.getTextEnd() );
+        Assert.assertEquals( "<text:p><text:span text:style-name=\"XDocReport_Superscript\" >text</text:span></text:p>",
+                             handler.getTextEnd() );
     }
 
     @Test
@@ -879,13 +909,13 @@ public class ODTDocumentHandlerTestCase
 
         ITextStylingTransformer formatter = HTMLTextStylingTransformer.INSTANCE;
         IDocumentHandler handler = new ODTDocumentHandler( parent, context, "content.xml" );
-        formatter.transform( "<p>Before <span style=\"text-decoration: underline;\">Underline <span style=\"font-weight: bold;\">and bold <span style=\"font-style: italic;\">and italic</span>" +
-        		" No italics</span> No bold</span> No Underline</p>", handler );
-
+        formatter.transform( "<p>Before <span style=\"text-decoration: underline;\">Underline <span style=\"font-weight: bold;\">and bold <span style=\"font-style: italic;\">and italic</span>"
+                                 + " No italics</span> No bold</span> No Underline</p>", handler );
 
         Assert.assertEquals( "", handler.getTextBefore() );
         Assert.assertEquals( "", handler.getTextBody() );
-        Assert.assertEquals( "<text:p><text:span>Before </text:span><text:span text:style-name=\"XDocReport_Underline\" >Underline <text:span text:style-name=\"XDocReport_Bold\" >and bold <text:span text:style-name=\"XDocReport_Italic\" >and italic</text:span> No italics</text:span> No bold</text:span><text:span> No Underline</text:span></text:p>", handler.getTextEnd() );
+        Assert.assertEquals( "<text:p><text:span>Before </text:span><text:span text:style-name=\"XDocReport_Underline\" >Underline <text:span text:style-name=\"XDocReport_Bold\" >and bold <text:span text:style-name=\"XDocReport_Italic\" >and italic</text:span> No italics</text:span> No bold</text:span><text:span> No Underline</text:span></text:p>",
+                             handler.getTextEnd() );
     }
 
 }

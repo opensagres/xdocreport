@@ -59,6 +59,23 @@ public class DocxDocumentHandlerTestCase
     }
 
     @Test
+    public void testSpecialCharacterAmp()
+        throws Exception
+    {
+        IContext context = new MockContext();
+        BufferedElement parent = null;
+
+        ITextStylingTransformer formatter = HTMLTextStylingTransformer.INSTANCE;
+        IDocumentHandler handler = new DocxDocumentHandler( parent, context, "word/document.xml" );
+        formatter.transform( "&amp;&lt;", handler );
+
+        Assert.assertEquals( "", handler.getTextBefore() );
+        Assert.assertEquals( "<w:r><w:t xml:space=\"preserve\" >&amp;</w:t></w:r><w:r><w:t xml:space=\"preserve\" >&lt;</w:t></w:r>",
+                             handler.getTextBody() );
+        Assert.assertEquals( "", handler.getTextEnd() );
+    }
+
+    @Test
     public void testNbsp()
         throws Exception
     {

@@ -177,7 +177,6 @@ public class DocxDocumentHandler
         // TODO
     }
 
-
     public void startSuperscript()
         throws IOException
     {
@@ -194,6 +193,10 @@ public class DocxDocumentHandler
     public void handleString( String content )
         throws IOException
     {
+        // Re-escape DOCX special characters, xml parsing removes them.
+        content = StringUtils.xmlUnescape( content );
+        content = StringUtils.xmlEscape( content );
+
         if ( insideHeader )
         {
             // Title of the Header.
@@ -454,7 +457,7 @@ public class DocxDocumentHandler
             // fix issue http://code.google.com/p/xdocreport/issues/detail?id=154
             label = StringUtils.xmlUnescape( label );
             label = StringUtils.xmlEscape( label );
-            
+
             // 2) Update the hyperlink registry to modifiy the Hyperlink Relationship in the _rels/document.xml.rels
             HyperlinkRegistry registry = getHyperlinkRegistry();
             String rId = registry.registerHyperlink( ref );

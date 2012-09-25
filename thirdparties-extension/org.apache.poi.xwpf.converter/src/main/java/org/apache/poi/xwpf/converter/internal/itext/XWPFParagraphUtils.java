@@ -28,7 +28,6 @@ import static org.apache.poi.xwpf.converter.internal.DxaUtil.dxa2points;
 
 import java.awt.Color;
 import java.math.BigInteger;
-import java.util.List;
 
 import org.apache.poi.xwpf.converter.internal.XWPFUtils;
 import org.apache.poi.xwpf.usermodel.ParagraphAlignment;
@@ -40,11 +39,9 @@ import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTInd;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTPPr;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTR;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTRPr;
-import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTShd;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTSpacing;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTStyle;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTTextAlignment;
-import org.w3c.dom.Attr;
 
 import com.lowagie.text.Paragraph;
 

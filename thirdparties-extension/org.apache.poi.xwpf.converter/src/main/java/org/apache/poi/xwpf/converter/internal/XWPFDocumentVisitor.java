@@ -47,7 +47,7 @@ public abstract class XWPFDocumentVisitor<T, E extends IXWPFMasterPage>
 
     private XWPFFooter currentFooter;
 
-    protected final XWPFStylesDocument styleDocument;
+    protected final XWPFStylesDocument stylesDocument;
 
     public XWPFDocumentVisitor( XWPFDocument document )
         throws Exception
@@ -55,7 +55,7 @@ public abstract class XWPFDocumentVisitor<T, E extends IXWPFMasterPage>
         super( document );
         this.masterPageManager = new MasterPageManager( document, this );
 
-        this.styleDocument = new XWPFStylesDocument( document );
+        this.stylesDocument = new XWPFStylesDocument( document );
     }
 
     public MasterPageManager getMasterPageManager()

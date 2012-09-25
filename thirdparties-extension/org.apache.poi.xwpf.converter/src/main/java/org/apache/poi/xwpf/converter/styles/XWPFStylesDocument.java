@@ -16,6 +16,8 @@ import org.apache.xmlbeans.XmlException;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTDocDefaults;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTStyle;
 
+import com.lowagie.text.Font;
+
 public class XWPFStylesDocument
 {
 
@@ -140,6 +142,12 @@ public class XWPFStylesDocument
     public <T> void setValue( String key, T value )
     {
         values.put( key, value );
+    }
+
+    public Font getFont( XWPFParagraph paragraph )
+    {
+        // TODO Auto-generated method stub
+        return null;
     }
 
 }

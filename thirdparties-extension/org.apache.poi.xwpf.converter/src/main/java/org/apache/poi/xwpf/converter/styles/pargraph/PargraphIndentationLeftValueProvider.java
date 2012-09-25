@@ -3,9 +3,7 @@ package org.apache.poi.xwpf.converter.styles.pargraph;
 import java.math.BigInteger;
 
 import org.apache.poi.xwpf.converter.internal.DxaUtil;
-import org.apache.poi.xwpf.converter.styles.XWPFStylesDocument;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTInd;
-import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTPPr;
 
 public class PargraphIndentationLeftValueProvider
     extends AbstractIndentationParagraphValueProvider<Float>

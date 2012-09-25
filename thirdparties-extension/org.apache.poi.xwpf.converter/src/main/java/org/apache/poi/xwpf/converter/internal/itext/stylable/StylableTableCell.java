@@ -33,7 +33,6 @@ import org.apache.poi.xwpf.converter.internal.itext.styles.StyleTableCellPropert
 import org.apache.poi.xwpf.converter.internal.itext.styles.StyleTableRowProperties;
 
 import com.lowagie.text.Element;
-import com.lowagie.text.pdf.PdfPTable;
 
 import fr.opensagres.xdocreport.itext.extension.ExtendedPdfPCell;
 import fr.opensagres.xdocreport.itext.extension.ExtendedPdfPTable;

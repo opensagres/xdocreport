@@ -53,9 +53,9 @@ public abstract class AbstractParagraphValueProvider<Value>
     public abstract Value getValue( CTPPr ppr );
 
     @Override
-    protected String getStyleID( XWPFParagraph paragraph )
+    protected String[] getStyleID( XWPFParagraph paragraph )
     {
-        return paragraph.getStyleID();
+        return new String[] { paragraph.getStyleID() };
     }
 
     @Override

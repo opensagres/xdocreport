@@ -24,19 +24,12 @@
  */
 package org.apache.poi.xwpf.converter.internal.itext.stylable;
 
-import static org.apache.poi.xwpf.converter.internal.DxaUtil.dxa2points;
-
 import java.awt.Color;
-import org.apache.poi.xwpf.converter.internal.itext.XWPFFontRegistry;
-import org.apache.poi.xwpf.converter.internal.itext.styles.FontInfos;
+
 import org.apache.poi.xwpf.converter.internal.itext.styles.Style;
-import org.apache.poi.xwpf.converter.internal.itext.styles.StyleParagraphProperties;
-import org.apache.poi.xwpf.usermodel.BodyType;
-import org.apache.poi.xwpf.usermodel.ParagraphAlignment;
 import org.apache.poi.xwpf.usermodel.XWPFParagraph;
 
 import com.lowagie.text.Element;
-import com.lowagie.text.Font;
 import com.lowagie.text.Paragraph;
 
 import fr.opensagres.xdocreport.itext.extension.ExtendedParagraph;
@@ -77,44 +70,44 @@ public class StylableParagraph
         super.add( element );
     }
 
-    public void applyStyles( XWPFParagraph p, Style style )
-    {
-
-        if ( style != null )
-        {
-            // first process values from "style"
-            // will be overridden by in-line values if available...
-            StyleParagraphProperties paragraphProperties = style.getParagraphProperties();
-
-            if ( paragraphProperties != null )
-            {
-                FontInfos fontInfos = paragraphProperties.getFontInfos();
-                if ( fontInfos != null )
-                {
-                    Font font =
-                        XWPFFontRegistry.getRegistry().getFont( fontInfos.getFontFamily(), fontInfos.getFontEncoding(),
-                                                                fontInfos.getFontSize(), fontInfos.getFontStyle(),
-                                                                fontInfos.getFontColor() );
-                    setFont( font );
-                }
-                // Alignment
-                int alignment = paragraphProperties.getAlignment();
-                if ( alignment != Element.ALIGN_UNDEFINED )
-                {
-                    setAlignment( alignment );
-                }
-
-                Float lineHeight = paragraphProperties.getLineHeight();
-                if ( lineHeight != null )
-                {
-                    // super.getPdfPCell().setMinimumHeight(lineHeight);
-                    // FIXME : Is it correct???
-                    setLeading( lineHeight * super.getTotalLeading() );
-                }
-            }
-
-        }
-    }
+//    public void applyStyles( XWPFParagraph p, Style style )
+//    {
+//
+//        if ( style != null )
+//        {
+//            // first process values from "style"
+//            // will be overridden by in-line values if available...
+//            StyleParagraphProperties paragraphProperties = style.getParagraphProperties();
+//
+//            if ( paragraphProperties != null )
+//            {
+//                FontInfos fontInfos = paragraphProperties.getFontInfos();
+//                if ( fontInfos != null )
+//                {
+//                    Font font =
+//                        XWPFFontRegistry.getRegistry().getFont( fontInfos.getFontFamily(), fontInfos.getFontEncoding(),
+//                                                                fontInfos.getFontSize(), fontInfos.getFontStyle(),
+//                                                                fontInfos.getFontColor() );
+//                    setFont( font );
+//                }
+//                // Alignment
+//                int alignment = paragraphProperties.getAlignment();
+//                if ( alignment != Element.ALIGN_UNDEFINED )
+//                {
+//                    setAlignment( alignment );
+//                }
+//
+//                Float lineHeight = paragraphProperties.getLineHeight();
+//                if ( lineHeight != null )
+//                {
+//                    // super.getPdfPCell().setMinimumHeight(lineHeight);
+//                    // FIXME : Is it correct???
+//                    setLeading( lineHeight * super.getTotalLeading() );
+//                }
+//            }
+//
+//        }
+//    }
 
     // FIXME check with Angelo the purpose of this method....
     public Style getLastStyleApplied()
@@ -141,5 +134,12 @@ public class StylableParagraph
     public void setBackgroundColor( Color backgroundColor )
     {
         getPdfPCell().setBackgroundColor( backgroundColor );
+    }
+
+    @Override
+    public void applyStyles( XWPFParagraph ele, Style style )
+    {
+        // TODO Auto-generated method stub
+        
     }
 }

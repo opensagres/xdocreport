@@ -25,12 +25,6 @@
 package org.apache.poi.xwpf.converter.internal.itext;
 
 import static org.apache.poi.xwpf.converter.internal.DxaUtil.dxa2points;
-import static org.apache.poi.xwpf.converter.internal.XWPFRunUtils.getFontColor;
-import static org.apache.poi.xwpf.converter.internal.XWPFRunUtils.getFontFamily;
-import static org.apache.poi.xwpf.converter.internal.XWPFRunUtils.getRStyle;
-import static org.apache.poi.xwpf.converter.internal.XWPFRunUtils.isBold;
-import static org.apache.poi.xwpf.converter.internal.XWPFRunUtils.isItalic;
-import static org.apache.poi.xwpf.converter.internal.XWPFUtils.getRPr;
 
 import java.awt.Color;
 import java.io.OutputStream;
@@ -51,8 +45,11 @@ import org.apache.poi.xwpf.converter.internal.itext.stylable.StylableTableCell;
 import org.apache.poi.xwpf.converter.internal.itext.styles.Style;
 import org.apache.poi.xwpf.converter.itext.PDFViaITextOptions;
 import org.apache.poi.xwpf.converter.styles.pargraph.PargraphIndentationLeftValueProvider;
-import org.apache.poi.xwpf.converter.styles.pargraph.PargraphSpacingAfterValueProvider;
-import org.apache.poi.xwpf.converter.styles.pargraph.PargraphSpacingBeforeValueProvider;
+import org.apache.poi.xwpf.converter.styles.run.RunFontColorValueProvider;
+import org.apache.poi.xwpf.converter.styles.run.RunFontFamilyValueProvider;
+import org.apache.poi.xwpf.converter.styles.run.RunFontSizeValueProvider;
+import org.apache.poi.xwpf.converter.styles.run.RunFontStyleBoldValueProvider;
+import org.apache.poi.xwpf.converter.styles.run.RunFontStyleItalicValueProvider;
 import org.apache.poi.xwpf.usermodel.BodyElementType;
 import org.apache.poi.xwpf.usermodel.Borders;
 import org.apache.poi.xwpf.usermodel.IBodyElement;
@@ -73,7 +70,6 @@ import org.apache.poi.xwpf.usermodel.XWPFTableCell;
 import org.apache.poi.xwpf.usermodel.XWPFTableRow;
 import org.apache.xmlbeans.XmlCursor;
 import org.apache.xmlbeans.XmlObject;
-import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTLvl;
 import org.openxmlformats.schemas.drawingml.x2006.main.CTPositiveSize2D;
 import org.openxmlformats.schemas.drawingml.x2006.picture.CTPicture;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTBr;
@@ -81,12 +77,12 @@ import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTDecimalNumber;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTDrawing;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTEmpty;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTHdrFtrRef;
+import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTLvl;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTNumPr;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTOnOff;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTPPr;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTPTab;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTR;
-import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTRPr;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTRow;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTSdtCell;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTSectPr;
@@ -215,11 +211,6 @@ public class PDFMapper
 
         // 1) Instanciate a pdfParagraph
         StylableParagraph pdfParagraph = pdfDocument.createParagraph( (IStylableContainer) null );
-        styleEngine.startVisitPargraph( docxParagraph, pdfParagraph );
-        // apply style for the title font, color, bold style...
-        applyStyles( docxParagraph, pdfParagraph );
-
-        // styleEngine.startVisitPargraph( docxParagraph, pdfParagraph );
         pdfParagraph.setITextContainer( parentContainer );
 
         // Paragraph Background color
@@ -258,37 +249,36 @@ public class PDFMapper
         }
 
         // text-indent
-        Float indentationLeft = styleDocument.getIndentationLeft( docxParagraph );
+        Float indentationLeft = stylesDocument.getIndentationLeft( docxParagraph );
         if ( indentationLeft != null )
         {
             pdfParagraph.setIndentationLeft( indentationLeft );
         }
-        Float indentationRight = styleDocument.getIndentationRight( docxParagraph );
+        Float indentationRight = stylesDocument.getIndentationRight( docxParagraph );
         if ( indentationRight != null )
         {
             pdfParagraph.setIndentationRight( indentationRight );
         }
-        Float indentationFirstLine = styleDocument.getIndentationFirstLine( docxParagraph );
+        Float indentationFirstLine = stylesDocument.getIndentationFirstLine( docxParagraph );
         if ( indentationFirstLine != null )
         {
             pdfParagraph.setFirstLineIndent( indentationFirstLine );
         }
 
         // spacing before
-        Integer spacingBefore = styleDocument.getSpacingBefore( docxParagraph );
+        Integer spacingBefore = stylesDocument.getSpacingBefore( docxParagraph );
         if ( spacingBefore != null )
         {
             pdfParagraph.setSpacingBefore( spacingBefore );
         }
 
         // spacing after
-        Integer spacingAfter = styleDocument.getSpacingAfter( docxParagraph );
+        Integer spacingAfter = stylesDocument.getSpacingAfter( docxParagraph );
         if ( spacingAfter != null )
         {
             pdfParagraph.setSpacingAfter( spacingAfter.intValue() );
         }
 
-        // docxParagraph.getIndentationLeft()
         CTPPr ppr = docxParagraph.getCTP().getPPr();
         if ( ppr != null )
         {
@@ -348,9 +338,6 @@ public class PDFMapper
                     }
 
                 }
-                // num.getCTNum().get
-                System.err.println( num );
-
             }
         }
 
@@ -373,7 +360,6 @@ public class PDFMapper
             default:
                 break;
         }
-
         return pdfParagraph;
     }
 
@@ -438,30 +424,40 @@ public class PDFMapper
 
         // Get family name
         // Get CTRPr from style+defaults
-        CTString rStyle = getRStyle( run );
-        CTRPr runRprStyle = getRPr( super.getXWPFStyle( rStyle != null ? rStyle.getVal() : null ) );
-        CTRPr rprStyle = getRPr( super.getXWPFStyle( run.getParagraph().getStyleID() ) );
-        CTRPr rprDefault = getRPr( defaults );
+        // CTString rStyle = getRStyle( run );
+        // CTRPr runRprStyle = getRPr( super.getXWPFStyle( rStyle != null ? rStyle.getVal() : null ) );
+        // CTRPr rprStyle = getRPr( super.getXWPFStyle( run.getParagraph().getStyleID() ) );
+        // CTRPr rprDefault = getRPr( defaults );
 
         // Font family
-        String fontFamily = getFontFamily( run, rprStyle, rprDefault );
+        String fontFamily = RunFontFamilyValueProvider.INSTANCE.getValue( run, stylesDocument );// getFontFamily(
+                                                                                                // run, rprStyle,
+                                                                                                // rprDefault );
 
         // Get font size
-        float fontSize = run.getFontSize();
-
+        Integer fontSize = RunFontSizeValueProvider.INSTANCE.getValue( run, stylesDocument ); // run.getFontSize();
+        if ( fontSize == null )
+        {
+            fontSize = -1;
+        }
         // Get font style
+
         int fontStyle = Font.NORMAL;
-        if ( isBold( run, runRprStyle, rprStyle, rprDefault ) )
+        Boolean bold = RunFontStyleBoldValueProvider.INSTANCE.getValue( run, stylesDocument );
+        if ( bold != null && bold )
         {
             fontStyle |= Font.BOLD;
         }
-        if ( isItalic( run, runRprStyle, rprStyle, rprDefault ) )
+        Boolean italic = RunFontStyleItalicValueProvider.INSTANCE.getValue( run, stylesDocument );
+        if ( italic != null && italic )
         {
             fontStyle |= Font.ITALIC;
         }
 
         // Process color
-        Color fontColor = getFontColor( run, runRprStyle, rprStyle, rprDefault );
+        Color fontColor = RunFontColorValueProvider.INSTANCE.getValue( run, stylesDocument ); // getFontColor( run,
+                                                                                              // runRprStyle, rprStyle,
+                                                                                              // rprDefault );
         // Get font
         Font font =
             XWPFFontRegistry.getRegistry().getFont( fontFamily, options.getFontEncoding(), fontSize, fontStyle,

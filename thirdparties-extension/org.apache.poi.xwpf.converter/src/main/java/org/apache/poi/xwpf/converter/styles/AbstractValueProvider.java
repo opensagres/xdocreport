@@ -20,34 +20,52 @@ public abstract class AbstractValueProvider<Value, XWPFElement>
             return null;
         }
 
-        String styleId = getStyleID( element );
-        String key = getKey( element, stylesDocument, styleId );
+        return getValueFromStyles( element, stylesDocument );
+    }
 
-        Object result = stylesDocument.getValue( key );
-        if ( result != null )
+    public Value getValueFromStyles( XWPFElement element, XWPFStylesDocument stylesDocument )
+    {
+        Value value = null;
+        String[] styleIds = getStyleID( element );
+        if ( styleIds != null )
         {
-            return result.equals( XWPFStylesDocument.EMPTY_VALUE ) ? null : (Value) result;
-        }
+            String styleId = null;
+            for ( int i = 0; i < styleIds.length; i++ )
+            {
+                styleId = styleIds[i];
 
-        // Search value from styles
-        value = getValueFromStyles( element, stylesDocument, key );
-        if ( value != null )
-        {
-            stylesDocument.setValue( key, value );
-        }
-        else
-        {
-            stylesDocument.setValue( key, XWPFStylesDocument.EMPTY_VALUE );
+                String key = getKey( element, stylesDocument, styleId );
+
+                Object result = stylesDocument.getValue( key );
+                if ( result != null )
+                {
+                    // System.err.println("use cache=" + key);
+                    return result.equals( XWPFStylesDocument.EMPTY_VALUE ) ? null : (Value) result;
+                }
+
+                // Search value from styles
+                // System.err.println("compute style=" + key);
+                value = getValueFromStyles( element, stylesDocument, styleId, key );
+                if ( value != null )
+                {
+                    stylesDocument.setValue( key, value );
+                    return value;
+                }
+                else
+                {
+                    stylesDocument.setValue( key, XWPFStylesDocument.EMPTY_VALUE );
+                }
+            }
         }
         return value;
     }
 
     public abstract Value getValueFromElement( XWPFElement element );
 
-    public Value getValueFromStyles( XWPFElement element, XWPFStylesDocument stylesDocument, String key )
+    public Value getValueFromStyles( XWPFElement element, XWPFStylesDocument stylesDocument, String styleId, String key )
     {
 
-        Value value = getValueFromStyleId( element, stylesDocument );
+        Value value = getValueFromStyleId( element, stylesDocument, styleId );
         if ( value != null )
         {
             return value;
@@ -76,9 +94,8 @@ public abstract class AbstractValueProvider<Value, XWPFElement>
         return null;
     }
 
-    private Value getValueFromStyleId( XWPFElement element, XWPFStylesDocument stylesDocument )
+    private Value getValueFromStyleId( XWPFElement element, XWPFStylesDocument stylesDocument, String styleId )
     {
-        String styleId = getStyleID( element );
 
         // Value value = stylesDocument.getValue( this, styleId );
         // if ( value != null )
@@ -122,7 +139,7 @@ public abstract class AbstractValueProvider<Value, XWPFElement>
         return getValueFromStyle( style );
     }
 
-    protected abstract String getStyleID( XWPFElement element );
+    protected abstract String[] getStyleID( XWPFElement element );
 
     protected abstract Value getValueFromStyle( CTStyle style );
 

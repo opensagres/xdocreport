@@ -30,10 +30,6 @@ import org.apache.poi.xwpf.converter.internal.itext.styles.StyleTableProperties;
 import org.apache.poi.xwpf.usermodel.XWPFTable;
 
 import com.lowagie.text.Element;
-import com.lowagie.text.Image;
-import com.lowagie.text.Phrase;
-import com.lowagie.text.pdf.PdfPCell;
-import com.lowagie.text.pdf.PdfPTable;
 
 import fr.opensagres.xdocreport.itext.extension.ExtendedPdfPTable;
 

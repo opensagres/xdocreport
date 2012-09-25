@@ -24,8 +24,6 @@
  */
 package org.apache.poi.xwpf.converter.internal.itext;
 
-import static org.apache.poi.xwpf.converter.internal.DxaUtil.dxa2points;
-
 import java.awt.Color;
 import java.io.IOException;
 import java.io.OutputStream;
@@ -37,7 +35,6 @@ import java.util.logging.Logger;
 
 import org.apache.poi.xwpf.converter.internal.AbstractStyleEngine;
 import org.apache.poi.xwpf.converter.internal.itext.stylable.StylableParagraph;
-import org.apache.poi.xwpf.converter.internal.itext.styles.FontInfos;
 import org.apache.poi.xwpf.converter.internal.itext.styles.Style;
 import org.apache.poi.xwpf.converter.internal.itext.styles.StyleBorder;
 import org.apache.poi.xwpf.converter.internal.itext.styles.StyleParagraphProperties;
@@ -47,20 +44,14 @@ import org.apache.poi.xwpf.usermodel.XWPFDocument;
 import org.apache.poi.xwpf.usermodel.XWPFParagraph;
 import org.apache.poi.xwpf.usermodel.XWPFRun;
 import org.apache.poi.xwpf.usermodel.XWPFStyle;
-import org.apache.poi.xwpf.usermodel.XWPFStyles;
 import org.apache.poi.xwpf.usermodel.XWPFTable;
 import org.apache.poi.xwpf.usermodel.XWPFTableCell;
 import org.apache.xmlbeans.XmlException;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTBorder;
-import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTColor;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTDocDefaults;
-import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTFonts;
-import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTHpsMeasure;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTInd;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTPBdr;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTPPr;
-import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTRPr;
-import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTSpacing;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTString;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTStyle;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTStyles;
@@ -68,15 +59,10 @@ import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTTblBorders;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTTblPrBase;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTTblWidth;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTTextAlignment;
-import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTUnderline;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.STHexColor;
-import org.openxmlformats.schemas.wordprocessingml.x2006.main.STHpsMeasure;
-import org.openxmlformats.schemas.wordprocessingml.x2006.main.STOnOff;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.STTextAlignment;
-import org.openxmlformats.schemas.wordprocessingml.x2006.main.STUnderline;
 
 import com.lowagie.text.Element;
-import com.lowagie.text.Font;
 
 import fr.opensagres.xdocreport.itext.extension.IITextContainer;
 import fr.opensagres.xdocreport.utils.BorderType;
@@ -123,8 +109,8 @@ public class StyleEngineForIText
                     StyleParagraphProperties paragraphProperties =
                         mapStyleParagraphProperties( defaults.getPPrDefault().getPPr() );
                     aStyle.setParagraphProperties( paragraphProperties );
-                    FontInfos fontInfos = processRPR( defaults.getRPrDefault().getRPr() );
-                    paragraphProperties.setFontInfos( fontInfos );
+                    //FontInfos fontInfos = processRPR( defaults.getRPrDefault().getRPr() );
+                    //paragraphProperties.setFontInfos( fontInfos );
                 }
             }
             stylesMap.put( DEFAULT_STYLE, aStyle );
@@ -157,22 +143,22 @@ public class StyleEngineForIText
     private StyleParagraphProperties mapStyleParagraphProperties( CTPPr xwpfParagraphProperties )
     {
         StyleParagraphProperties paragraphProperties = new StyleParagraphProperties();
-        CTSpacing spacing = xwpfParagraphProperties.getSpacing();
-        if ( spacing != null )
-        {
-
-            BigInteger spacingBefore = spacing.getBefore();
-
-            if ( spacingBefore != null )
-            {
-                paragraphProperties.setSpacingBefore( dxa2points( spacingBefore.floatValue() ) );
-            }
-            BigInteger spacingAfter = spacing.getAfter();
-            if ( spacingAfter != null )
-            {
-                paragraphProperties.setSpacingAfter( dxa2points( spacingAfter.floatValue() ) );
-            }
-        }
+//        CTSpacing spacing = xwpfParagraphProperties.getSpacing();
+//        if ( spacing != null )
+//        {
+//
+//            BigInteger spacingBefore = spacing.getBefore();
+//
+//            if ( spacingBefore != null )
+//            {
+//                paragraphProperties.setSpacingBefore( dxa2points( spacingBefore.floatValue() ) );
+//            }
+//            BigInteger spacingAfter = spacing.getAfter();
+//            if ( spacingAfter != null )
+//            {
+//                paragraphProperties.setSpacingAfter( dxa2points( spacingAfter.floatValue() ) );
+//            }
+//        }
 
         CTTextAlignment alignment = xwpfParagraphProperties.getTextAlignment();
         if ( alignment != null )
@@ -211,80 +197,80 @@ public class StyleEngineForIText
         return paragraphProperties;
     }
 
-    private FontInfos processRPR( CTRPr ctParaRPr )
-    {
-
-        FontInfos fontInfos = new FontInfos();
-        CTFonts fonts = ctParaRPr.getRFonts();
-        if ( fonts != null && fonts.getAscii() != null )
-        {
-
-            // font familly
-            fontInfos.setFontFamily( fonts.getAscii() );
-        }
-
-        boolean bold = ctParaRPr.getB() != null && STOnOff.TRUE.equals( ctParaRPr.getB().xgetVal() );
-        boolean italic = ctParaRPr.getI() != null && STOnOff.TRUE.equals( ctParaRPr.getI().xgetVal() );
-
-        if ( bold && italic )
-        {
-            fontInfos.setFontStyle( Font.BOLDITALIC );
-        }
-        else if ( bold )
-        {
-            fontInfos.setFontStyle( Font.BOLD );
-        }
-        else if ( italic )
-        {
-            fontInfos.setFontStyle( Font.ITALIC );
-
-        }
-        // font size
-        CTHpsMeasure hpsMeasure = ctParaRPr.getSz();
-        if ( hpsMeasure != null )
-        {
-
-            STHpsMeasure measure = hpsMeasure.xgetVal();
-            float size = measure.getBigDecimalValue().floatValue();
-            // cf. http://www.schemacentral.com/sc/ooxml/t-w_ST_HpsMeasure.html
-            fontInfos.setFontSize( size / 2 );
-        }
-
-        CTUnderline underline = ctParaRPr.getU();
-
-        int style = fontInfos.getFontStyle();
-        if ( underline != null )
-        {
-
-            STUnderline uu = underline.xgetVal();
-
-            if ( STUnderline.NONE != uu.enumValue() )
-            {
-                style = style | Font.UNDERLINE;
-                fontInfos.setFontStyle( style );
-            }
-        }
-
-        // font color...
-        CTColor ctColor = ctParaRPr.getColor();
-        if ( ctColor != null )
-        {
-
-            STHexColor hexColor = ctColor.xgetVal();
-            String strText = hexColor.getStringValue();
-
-            if ( !"auto".equals( strText ) )
-            {
-
-                Color color = ColorRegistry.getInstance().getColor( "0x" + strText );
-                fontInfos.setFontColor( color );
-            }
-        }
-
-        // font encoding
-        fontInfos.setFontEncoding( options.getFontEncoding() );
-        return fontInfos;
-    }
+//    private FontInfos processRPR( CTRPr ctParaRPr )
+//    {
+//
+//        FontInfos fontInfos = new FontInfos();
+//        CTFonts fonts = ctParaRPr.getRFonts();
+//        if ( fonts != null && fonts.getAscii() != null )
+//        {
+//
+//            // font familly
+//            fontInfos.setFontFamily( fonts.getAscii() );
+//        }
+//
+//        boolean bold = ctParaRPr.getB() != null && STOnOff.TRUE.equals( ctParaRPr.getB().xgetVal() );
+//        boolean italic = ctParaRPr.getI() != null && STOnOff.TRUE.equals( ctParaRPr.getI().xgetVal() );
+//
+//        if ( bold && italic )
+//        {
+//            fontInfos.setFontStyle( Font.BOLDITALIC );
+//        }
+//        else if ( bold )
+//        {
+//            fontInfos.setFontStyle( Font.BOLD );
+//        }
+//        else if ( italic )
+//        {
+//            fontInfos.setFontStyle( Font.ITALIC );
+//
+//        }
+//        // font size
+//        CTHpsMeasure hpsMeasure = ctParaRPr.getSz();
+//        if ( hpsMeasure != null )
+//        {
+//
+//            STHpsMeasure measure = hpsMeasure.xgetVal();
+//            float size = measure.getBigDecimalValue().floatValue();
+//            // cf. http://www.schemacentral.com/sc/ooxml/t-w_ST_HpsMeasure.html
+//            fontInfos.setFontSize( size / 2 );
+//        }
+//
+//        CTUnderline underline = ctParaRPr.getU();
+//
+//        int style = fontInfos.getFontStyle();
+//        if ( underline != null )
+//        {
+//
+//            STUnderline uu = underline.xgetVal();
+//
+//            if ( STUnderline.NONE != uu.enumValue() )
+//            {
+//                style = style | Font.UNDERLINE;
+//                fontInfos.setFontStyle( style );
+//            }
+//        }
+//
+//        // font color...
+//        CTColor ctColor = ctParaRPr.getColor();
+//        if ( ctColor != null )
+//        {
+//
+//            STHexColor hexColor = ctColor.xgetVal();
+//            String strText = hexColor.getStringValue();
+//
+//            if ( !"auto".equals( strText ) )
+//            {
+//
+//                Color color = ColorRegistry.getInstance().getColor( "0x" + strText );
+//                fontInfos.setFontColor( color );
+//            }
+//        }
+//
+//        // font encoding
+//        fontInfos.setFontEncoding( options.getFontEncoding() );
+//        return fontInfos;
+//    }
 
     private void processIndent( StyleParagraphProperties paragraphProperties, CTInd ctInd )
     {
@@ -336,8 +322,8 @@ public class StyleEngineForIText
                 aStyle.setParagraphProperties( paragraphProperties );
                 if ( style.getCTStyle().getRPr() != null )
                 {
-                    FontInfos fontInfos = processRPR( style.getCTStyle().getRPr() );
-                    paragraphProperties.setFontInfos( fontInfos );
+                   // FontInfos fontInfos = processRPR( style.getCTStyle().getRPr() );
+                   // paragraphProperties.setFontInfos( fontInfos );
                 }
 
                 // borders...
@@ -412,7 +398,7 @@ public class StyleEngineForIText
             Style style = stylesMap.get( styleID );
             if ( style == null )
             {
-                style = buildStyle( styleID );
+                //style = buildStyle( styleID );
             }
         }
         return pdfParagraph;
@@ -528,9 +514,7 @@ public class StyleEngineForIText
                 
             }
             //org.openxmlformats.schemas.wordprocessingml.x2006.main.STStyleType.CHARACTER;
-            //stype.intValue();
-            System.err.println(style);
-
+            //stype.intValue();           
         }
       
     }

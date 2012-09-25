@@ -46,7 +46,14 @@ public abstract class AbstractXWPFPOIConverterTest
     }
 
     @Test
-    public void convertDocxBig()
+    public void Docx4j_GettingStarted()
+        throws IOException
+    {
+        doGenerate( "Docx4j_GettingStarted.docx" );
+    }
+    
+    @Test
+    public void DocxBig()
         throws IOException
     {
         doGenerate( "DocxBig.docx" );
@@ -157,6 +164,14 @@ public abstract class AbstractXWPFPOIConverterTest
         doGenerate( "TestFonts.docx" );
     }
 
+    @Test
+    public void TestFontStylesBasedOn()
+        throws IOException
+    {
+        doGenerate( "TestFontStylesBasedOn.docx" );
+    }
+
+    
     @Test
     public void testHeaderFooterPage()
         throws IOException

@@ -40,8 +40,6 @@ public class FontStylesBasedOnTestCase
     private void testParagraph( XWPFParagraph paragraph, XWPFStylesDocument stylesDocument )
     {
 
-        String fontFamily = ParagraphFontFamilyValueProvider.INSTANCE.getValue( paragraph, stylesDocument );
-        System.err.println( fontFamily );
         String styleId = paragraph.getStyleID();
         if ( "Style1".equals( styleId ) )
         {

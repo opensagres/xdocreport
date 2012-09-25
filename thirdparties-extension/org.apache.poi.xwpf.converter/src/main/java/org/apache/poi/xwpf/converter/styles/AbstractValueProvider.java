@@ -10,10 +10,9 @@ public abstract class AbstractValueProvider<Value, XWPFElement>
 
     public Value getValue( XWPFElement element, XWPFStylesDocument stylesDocument )
     {
-        long start = System.currentTimeMillis();
-
+        //long start = System.currentTimeMillis();
         Value value = internalGetValue( element, stylesDocument );
-        System.err.println( "value=" + value + " with " + ( System.currentTimeMillis() - start ) + "ms" );
+        //System.err.println( "value=" + value + " with " + ( System.currentTimeMillis() - start ) + "ms" );
         return value;
 
     };

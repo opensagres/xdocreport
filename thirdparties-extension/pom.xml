@@ -10,6 +10,9 @@
 	<packaging>pom</packaging>
 	<modules>
 		<module>org.apache.poi.xwpf.converter</module>
+		<module>org.apache.poi.xwpf.converters.core</module>
+		<module>org.apache.poi.xwpf.converters.pdf</module>
+		<module>org.apache.poi.xwpf.converters.xhtml</module>						
 		<module>org.odftoolkit.odfdom.converter</module>
 		<module>fr.opensagres.xdocreport.itext.extension</module>
 		<module>org.apache.struts2.views.xdocreport</module>

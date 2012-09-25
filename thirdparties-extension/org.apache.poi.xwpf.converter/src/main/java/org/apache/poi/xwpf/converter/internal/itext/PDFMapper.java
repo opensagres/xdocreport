@@ -203,7 +203,8 @@ public class PDFMapper
     protected IITextContainer startVisitPargraph( XWPFParagraph docxParagraph, IITextContainer parentContainer )
         throws Exception
     {
-        if (docxParagraph.getText().startsWith(  "Cette commande client est co" )) {
+        if ( docxParagraph.getText().startsWith( "Cette commande client est co" ) )
+        {
             System.err.println();
         }
         // 1) Instanciate a pdfParagraph
@@ -321,19 +322,22 @@ public class PDFMapper
 
                 CTDecimalNumber numID = numPr.getNumId();
                 XWPFNum num = document.getNumbering().getNum( numID.getVal() );
-                CTDecimalNumber abstractNumID = num.getCTNum().getAbstractNumId();
-                XWPFAbstractNum abstractNum = document.getNumbering().getAbstractNum( abstractNumID.getVal() );
-
-                CTLvl lvl = abstractNum.getAbstractNum().getLvlArray( ilvl.getVal().intValue() );
-                CTPPr lvlPPr = lvl.getPPr();
-                if ( lvlPPr != null )
+                if ( num != null )
                 {
-                    Float indLeft = ParagraphIndentationLeftValueProvider.INSTANCE.getValue( lvlPPr );
-                    if ( indLeft != null )
-                    {
-                        pdfParagraph.setIndentationLeft( indLeft );
-                    }
+                    CTDecimalNumber abstractNumID = num.getCTNum().getAbstractNumId();
+                    XWPFAbstractNum abstractNum = document.getNumbering().getAbstractNum( abstractNumID.getVal() );
 
+                    CTLvl lvl = abstractNum.getAbstractNum().getLvlArray( ilvl.getVal().intValue() );
+                    CTPPr lvlPPr = lvl.getPPr();
+                    if ( lvlPPr != null )
+                    {
+                        Float indLeft = ParagraphIndentationLeftValueProvider.INSTANCE.getValue( lvlPPr );
+                        if ( indLeft != null )
+                        {
+                            pdfParagraph.setIndentationLeft( indLeft );
+                        }
+
+                    }
                 }
             }
         }
@@ -401,8 +405,8 @@ public class PDFMapper
     protected void visitEmptyRun( IITextContainer paragraphContainer )
         throws Exception
     {
-        // ExtendedParagraph pdfParagraph = (ExtendedParagraph) paragraphContainer;
-        // pdfParagraph.add( Chunk.NEWLINE );
+        //ExtendedParagraph pdfParagraph = (ExtendedParagraph) paragraphContainer;
+        //pdfParagraph.addElement( Chunk.NEWLINE );
     }
 
     @Override

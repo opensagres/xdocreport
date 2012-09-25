@@ -29,6 +29,7 @@ import java.awt.Color;
 import org.apache.poi.xwpf.converter.internal.itext.ColorRegistry;
 import org.apache.poi.xwpf.usermodel.XWPFStyle;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTDocDefaults;
+import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTOnOff;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTRPr;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTRPrDefault;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTSectPr;
@@ -36,6 +37,7 @@ import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTSectType;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTShd;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTStyle;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.STHexColor;
+import org.openxmlformats.schemas.wordprocessingml.x2006.main.STOnOff;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.STSectionMark;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.STShd;
 
@@ -213,5 +215,23 @@ public class XWPFUtils
         g2 = g + (int) ( ( 255 - g ) * percent );
         b2 = b + (int) ( ( 255 - b ) * percent );
         return new Color( r2, g2, b2 );
+    }
+
+    /**
+     * For isBold, isItalic etc
+     */
+    public static boolean isCTOnOff( CTOnOff onoff )
+    {
+        if ( onoff == null )
+        {
+            return false;
+        }
+        if ( !onoff.isSetVal() )
+            return true;
+        if ( onoff.getVal() == STOnOff.ON )
+            return true;
+        if ( onoff.getVal() == STOnOff.TRUE )
+            return true;
+        return false;
     }
 }

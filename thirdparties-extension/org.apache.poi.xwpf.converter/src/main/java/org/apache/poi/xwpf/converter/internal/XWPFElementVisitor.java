@@ -127,12 +127,12 @@ public abstract class XWPFElementVisitor<T>
     protected void visitParagraph( XWPFParagraph paragraph, T container )
         throws Exception
     {
-        if ( paragraph.getRuns().size() > 0 )
-        {
+        //if ( paragraph.getRuns().size() > 0 )
+        //{
             T paragraphContainer = startVisitPargraph( paragraph, container );
             visitParagraphBody( paragraph, paragraphContainer );
             endVisitPargraph( paragraph, container, paragraphContainer );
-        }
+        //}
     }
 
     protected abstract T startVisitPargraph( XWPFParagraph paragraph, T parentContainer )

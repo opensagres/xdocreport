@@ -1,5 +1,6 @@
 package org.apache.poi.xwpf.converter.styles.run;
 
+import org.apache.poi.xwpf.converter.internal.XWPFUtils;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTOnOff;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTRPr;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.STOnOff;
@@ -22,21 +23,7 @@ public class RunFontStyleBoldValueProvider
         {
             return null;
         }
-        return isCTOnOff( pr.getB() );
-    }
-
-    /**
-     * For isBold, isItalic etc
-     */
-    private static boolean isCTOnOff( CTOnOff onoff )
-    {
-        if ( !onoff.isSetVal() )
-            return true;
-        if ( onoff.getVal() == STOnOff.ON )
-            return true;
-        if ( onoff.getVal() == STOnOff.TRUE )
-            return true;
-        return false;
+        return XWPFUtils.isCTOnOff( pr.getB() );
     }
 
 }

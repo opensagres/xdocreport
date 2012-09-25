@@ -9,6 +9,7 @@ import org.apache.poi.xwpf.usermodel.BodyElementType;
 import org.apache.poi.xwpf.usermodel.IBodyElement;
 import org.apache.poi.xwpf.usermodel.XWPFDocument;
 import org.apache.poi.xwpf.usermodel.XWPFParagraph;
+import org.openxmlformats.schemas.officeDocument.x2006.math.CTOnOff;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTHdrFtrRef;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTPPr;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTSectPr;
@@ -148,21 +149,40 @@ public class MasterPageManager
     private void visitHeadersFooters( IXWPFMasterPage masterPage, CTSectPr sectPr )
         throws Exception
     {
+        // see titlePg at http://officeopenxml.com/WPsection.php i
+        // Specifies whether the section should have a different header and footer
+        // for its first page.
+        // If the element is set to true (e.g., <w:titlePg/>),
+        // then the section will use a first page header;
+        // if it is false (e.g., <w:titlePg w:val="false"/>)
+        // (the default value), then the first page uses the odd page header. If the element is set to true but the
+        // first page header type is omitted, then a blank header is created.
+        boolean ignoreFirstHeaderFooter = !XWPFUtils.isCTOnOff( sectPr.getTitlePg() );
+
         Collection<CTHdrFtrRef> headersRef = sectPr.getHeaderReferenceList();
         Collection<CTHdrFtrRef> footersRef = sectPr.getFooterReferenceList();
 
+        boolean firstHeaderFooter = false;
         for ( CTHdrFtrRef headerRef : headersRef )
         {
             STHdrFtr type = headerRef.xgetType();
-            masterPage.setType( type.enumValue().intValue() );
-            visitor.visitHeaderRef( headerRef, sectPr, masterPage );
+            firstHeaderFooter = ( type != null && type.enumValue() == STHdrFtr.FIRST );
+            if ( !firstHeaderFooter || ( firstHeaderFooter && !ignoreFirstHeaderFooter ) )
+            {
+                masterPage.setType( type.enumValue().intValue() );
+                visitor.visitHeaderRef( headerRef, sectPr, masterPage );
+            }
         }
 
         for ( CTHdrFtrRef footerRef : footersRef )
         {
             STHdrFtr type = footerRef.xgetType();
-            masterPage.setType( type.enumValue().intValue() );
-            visitor.visitFooterRef( footerRef, sectPr, masterPage );
+            firstHeaderFooter = ( type != null && type.enumValue() == STHdrFtr.FIRST );
+            if ( !firstHeaderFooter || ( firstHeaderFooter && !ignoreFirstHeaderFooter ) )
+            {
+                masterPage.setType( type.enumValue().intValue() );
+                visitor.visitFooterRef( footerRef, sectPr, masterPage );
+            }
         }
         masterPage.setType( STHdrFtr.INT_FIRST );
 
@@ -190,25 +210,25 @@ public class MasterPageManager
 
     public void onNewPage()
     {
-        
-            if ( currentMasterPage != null )
+
+        if ( currentMasterPage != null )
+        {
+            int oldType = currentMasterPage.getType();
+            int newType = STHdrFtr.INT_DEFAULT;
+            if ( nbPages % 2 == 0 )
             {
-                int oldType = currentMasterPage.getType();
-                int newType = STHdrFtr.INT_DEFAULT;
-                if ( nbPages % 2 == 0 )
+                newType = STHdrFtr.INT_EVEN;
+            }
+            if ( oldType != newType )
+            {
+                boolean changed = currentMasterPage.setType( newType );
+                if ( changed )
                 {
-                    newType = STHdrFtr.INT_EVEN;
-                }
-                if ( oldType != newType )
-                {
-                    boolean changed = currentMasterPage.setType( newType );
-                    if ( changed )
-                    {
-                        //fireSectionChanged( currentMasterPage.getSectPr() );
-                    }
+                    // fireSectionChanged( currentMasterPage.getSectPr() );
                 }
             }
         }
-      //nbPages++;
-   //
+    }
+    // nbPages++;
+    //
 }

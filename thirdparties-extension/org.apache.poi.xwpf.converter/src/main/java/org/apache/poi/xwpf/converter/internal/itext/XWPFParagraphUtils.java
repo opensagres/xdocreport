@@ -24,169 +24,19 @@
  */
 package org.apache.poi.xwpf.converter.internal.itext;
 
-import static org.apache.poi.xwpf.converter.internal.DxaUtil.dxa2points;
-
 import java.awt.Color;
-import java.math.BigInteger;
 
 import org.apache.poi.xwpf.converter.internal.XWPFUtils;
-import org.apache.poi.xwpf.usermodel.ParagraphAlignment;
 import org.apache.poi.xwpf.usermodel.XWPFParagraph;
 import org.apache.poi.xwpf.usermodel.XWPFRun;
 import org.apache.poi.xwpf.usermodel.XWPFStyle;
-import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTDocDefaults;
-import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTInd;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTPPr;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTR;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTRPr;
-import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTSpacing;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTStyle;
-import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTTextAlignment;
-
-import com.lowagie.text.Paragraph;
 
 public class XWPFParagraphUtils
 {
-
-    public static void processLayout( XWPFParagraph paragraph, Paragraph pdfParagraph, XWPFStyle style,
-                                      CTDocDefaults defaults )
-    {
-
-        float indentationLeft = -1;
-        float indentationRight = -1;
-        float firstLineIndent = -1;
-        float spacingBefore = -1;
-        float spacingAfter = -1;
-
-        // 1) From style
-        CTPPr ppr = getPPr( style );
-        if ( ppr != null )
-        {
-
-            // Indentation
-            CTInd ind = ppr.getInd();
-            if ( ind != null )
-            {
-
-                // Left Indentation
-                BigInteger left = ind.getLeft();
-                if ( left != null )
-                {
-                    indentationLeft = dxa2points( left );
-                }
-
-                // Right Indentation
-                BigInteger right = ind.getRight();
-                if ( right != null )
-                {
-                    indentationRight = dxa2points( right );
-                }
-
-                // First line Indentation
-                BigInteger firstLine = ind.getFirstLine();
-                if ( firstLine != null )
-                {
-                    firstLineIndent = dxa2points( firstLine );
-                }
-            }
-
-            // Spacing
-            CTSpacing spacing = ppr.getSpacing();
-            if ( spacing != null )
-            {
-
-                // Spacing before
-                BigInteger before = spacing.getBefore();
-                if ( before != null )
-                {
-                    spacingBefore = dxa2points( before );
-                }
-
-                // Spacing after
-                BigInteger after = spacing.getAfter();
-                if ( after != null )
-                {
-                    spacingAfter = dxa2points( after );
-                }
-            }
-
-            // Text aligment
-            CTTextAlignment textAligment = ppr.getTextAlignment();
-            if ( textAligment != null )
-            {
-                // TODO
-            }
-
-        }
-
-        // 2) From paragraph
-        if ( indentationLeft == -1 && paragraph.getIndentationLeft() != -1 )
-        {
-            indentationLeft = dxa2points( paragraph.getIndentationLeft() );
-
-        }
-        if ( indentationRight == -1 && paragraph.getIndentationRight() != -1 )
-        {
-            indentationRight = dxa2points( paragraph.getIndentationRight() );
-        }
-        if ( firstLineIndent == -1 && paragraph.getIndentationFirstLine() != -1 )
-        {
-            firstLineIndent = dxa2points( paragraph.getIndentationFirstLine() );
-        }
-        if ( spacingBefore == -1 && paragraph.getSpacingBefore() != -1 )
-        {
-            spacingBefore = dxa2points( paragraph.getSpacingBefore() );
-        }
-        if ( spacingAfter == -1 && paragraph.getSpacingAfter() != -1 )
-        {
-            spacingAfter = dxa2points( paragraph.getSpacingAfter() );
-        }
-
-        // 3) From default
-        // TODO
-
-        // Apply
-        if ( indentationLeft != -1 )
-        {
-            pdfParagraph.setIndentationLeft( indentationLeft );
-        }
-        if ( indentationRight != -1 )
-        {
-            pdfParagraph.setIndentationRight( indentationRight );
-        }
-        if ( firstLineIndent != -1 )
-        {
-            pdfParagraph.setFirstLineIndent( firstLineIndent );
-        }
-        if ( spacingBefore != -1 )
-        {
-            pdfParagraph.setSpacingBefore( spacingBefore );
-        }
-        if ( spacingAfter != -1 )
-        {
-            pdfParagraph.setSpacingAfter( spacingAfter );
-        }
-
-        // Aligment
-        ParagraphAlignment alignment = paragraph.getAlignment();
-        switch ( alignment )
-        {
-            case LEFT:
-                pdfParagraph.setAlignment( Paragraph.ALIGN_LEFT );
-                break;
-            case RIGHT:
-                pdfParagraph.setAlignment( Paragraph.ALIGN_RIGHT );
-                break;
-
-            case CENTER:
-                pdfParagraph.setAlignment( Paragraph.ALIGN_CENTER );
-                break;
-
-            case BOTH:
-                pdfParagraph.setAlignment( Paragraph.ALIGN_JUSTIFIED );
-                break;
-        }
-    }
 
     public static CTPPr getPPr( XWPFStyle style )
     {

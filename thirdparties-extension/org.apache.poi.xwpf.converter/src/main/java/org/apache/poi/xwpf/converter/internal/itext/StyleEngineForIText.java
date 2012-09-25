@@ -92,42 +92,10 @@ public class StyleEngineForIText
     {
         super( document );
         this.options = options != null ? options : PDFViaITextOptions.create();
-        buildDefault();
+    
     }
 
-    private void buildDefault()
-    {
-        try
-        {
-
-            CTDocDefaults defaults = document.getStyle().getDocDefaults();
-            Style aStyle = new Style( DEFAULT_STYLE );
-            if ( defaults != null )
-            {
-                if ( defaults.getPPrDefault().getPPr() != null )
-                {
-                    StyleParagraphProperties paragraphProperties =
-                        mapStyleParagraphProperties( defaults.getPPrDefault().getPPr() );
-                    aStyle.setParagraphProperties( paragraphProperties );
-                    //FontInfos fontInfos = processRPR( defaults.getRPrDefault().getRPr() );
-                    //paragraphProperties.setFontInfos( fontInfos );
-                }
-            }
-            stylesMap.put( DEFAULT_STYLE, aStyle );
-            
-            
-            computeDefaultStylId();
-        }
-        catch ( XmlException e )
-        {
-            LOGGER.severe( e.getMessage() );
-        }
-        catch ( IOException e )
-        {
-            LOGGER.severe( e.getMessage() );
-        }
-
-    }
+    
 
     public void visit( Object ele )
     {
@@ -181,12 +149,6 @@ public class StyleEngineForIText
             {
                 paragraphProperties.setAlignment( Element.ALIGN_TOP );
             }
-
-        }
-        CTInd ctInd = xwpfParagraphProperties.getInd();
-        if ( ctInd != null )
-        {
-            processIndent( paragraphProperties, ctInd );
 
         }
 
@@ -272,19 +234,6 @@ public class StyleEngineForIText
 //        return fontInfos;
 //    }
 
-    private void processIndent( StyleParagraphProperties paragraphProperties, CTInd ctInd )
-    {
-        BigInteger firstLine = ctInd.getFirstLine();
-        if ( firstLine != null )
-            paragraphProperties.setIndentationFirstLine( firstLine.intValue() );
-
-        BigInteger left = ctInd.getLeft();
-        if ( left != null )
-            paragraphProperties.setIndentationLeft( left.intValue() );
-        BigInteger right = ctInd.getLeft();
-        if ( right != null )
-            paragraphProperties.setIndentationRight( right );
-    }
 
     private StyleBorder createBorder( CTBorder docxBorder, BorderType borderType )
     {
@@ -503,21 +452,6 @@ public class StyleEngineForIText
         return stylesMap.get( styleID );
     }
 
-    private void computeDefaultStylId() throws XmlException, IOException {
-        List<CTStyle> styles = document.getStyle().getStyleList();
-        for ( CTStyle style : styles )
-        {
-            org.openxmlformats.schemas.wordprocessingml.x2006.main.STOnOff.Enum isDefault = style.getDefault();
-            org.openxmlformats.schemas.wordprocessingml.x2006.main.STStyleType.Enum stype = style.getType();
-
-            switch(stype.intValue()) {
-                
-            }
-            //org.openxmlformats.schemas.wordprocessingml.x2006.main.STStyleType.CHARACTER;
-            //stype.intValue();           
-        }
-      
-    }
     
     // <w:style w:type="paragraph" w:default="1" w:styleId="Normal">
     public String getStyleIdParagraph() {

@@ -45,11 +45,6 @@ import org.apache.poi.xwpf.converter.internal.itext.stylable.StylableTableCell;
 import org.apache.poi.xwpf.converter.internal.itext.styles.Style;
 import org.apache.poi.xwpf.converter.itext.PDFViaITextOptions;
 import org.apache.poi.xwpf.converter.styles.pargraph.PargraphIndentationLeftValueProvider;
-import org.apache.poi.xwpf.converter.styles.run.RunFontColorValueProvider;
-import org.apache.poi.xwpf.converter.styles.run.RunFontFamilyValueProvider;
-import org.apache.poi.xwpf.converter.styles.run.RunFontSizeValueProvider;
-import org.apache.poi.xwpf.converter.styles.run.RunFontStyleBoldValueProvider;
-import org.apache.poi.xwpf.converter.styles.run.RunFontStyleItalicValueProvider;
 import org.apache.poi.xwpf.usermodel.BodyElementType;
 import org.apache.poi.xwpf.usermodel.Borders;
 import org.apache.poi.xwpf.usermodel.IBodyElement;
@@ -422,20 +417,11 @@ public class PDFMapper
             }
         }
 
-        // Get family name
-        // Get CTRPr from style+defaults
-        // CTString rStyle = getRStyle( run );
-        // CTRPr runRprStyle = getRPr( super.getXWPFStyle( rStyle != null ? rStyle.getVal() : null ) );
-        // CTRPr rprStyle = getRPr( super.getXWPFStyle( run.getParagraph().getStyleID() ) );
-        // CTRPr rprDefault = getRPr( defaults );
-
         // Font family
-        String fontFamily = RunFontFamilyValueProvider.INSTANCE.getValue( run, stylesDocument );// getFontFamily(
-                                                                                                // run, rprStyle,
-                                                                                                // rprDefault );
+        String fontFamily = stylesDocument.getFontFamily( run );
 
         // Get font size
-        Integer fontSize = RunFontSizeValueProvider.INSTANCE.getValue( run, stylesDocument ); // run.getFontSize();
+        Integer fontSize = stylesDocument.getFontSize( run );
         if ( fontSize == null )
         {
             fontSize = -1;
@@ -443,21 +429,19 @@ public class PDFMapper
         // Get font style
 
         int fontStyle = Font.NORMAL;
-        Boolean bold = RunFontStyleBoldValueProvider.INSTANCE.getValue( run, stylesDocument );
+        Boolean bold = stylesDocument.getFontStyleBold( run );
         if ( bold != null && bold )
         {
             fontStyle |= Font.BOLD;
         }
-        Boolean italic = RunFontStyleItalicValueProvider.INSTANCE.getValue( run, stylesDocument );
+        Boolean italic = stylesDocument.getFontStyleItalic( run );
         if ( italic != null && italic )
         {
             fontStyle |= Font.ITALIC;
         }
 
         // Process color
-        Color fontColor = RunFontColorValueProvider.INSTANCE.getValue( run, stylesDocument ); // getFontColor( run,
-                                                                                              // runRprStyle, rprStyle,
-                                                                                              // rprDefault );
+        Color fontColor = stylesDocument.getFontColor( run );
         // Get font
         Font font =
             XWPFFontRegistry.getRegistry().getFont( fontFamily, options.getFontEncoding(), fontSize, fontStyle,

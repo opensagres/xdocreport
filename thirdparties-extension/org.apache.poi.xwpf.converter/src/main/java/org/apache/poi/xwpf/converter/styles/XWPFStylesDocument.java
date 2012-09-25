@@ -1,5 +1,6 @@
 package org.apache.poi.xwpf.converter.styles;
 
+import java.awt.Color;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
@@ -10,13 +11,17 @@ import org.apache.poi.xwpf.converter.styles.pargraph.PargraphIndentationLeftValu
 import org.apache.poi.xwpf.converter.styles.pargraph.PargraphIndentationRightValueProvider;
 import org.apache.poi.xwpf.converter.styles.pargraph.PargraphSpacingAfterValueProvider;
 import org.apache.poi.xwpf.converter.styles.pargraph.PargraphSpacingBeforeValueProvider;
+import org.apache.poi.xwpf.converter.styles.run.RunFontColorValueProvider;
+import org.apache.poi.xwpf.converter.styles.run.RunFontFamilyValueProvider;
+import org.apache.poi.xwpf.converter.styles.run.RunFontSizeValueProvider;
+import org.apache.poi.xwpf.converter.styles.run.RunFontStyleBoldValueProvider;
+import org.apache.poi.xwpf.converter.styles.run.RunFontStyleItalicValueProvider;
 import org.apache.poi.xwpf.usermodel.XWPFDocument;
 import org.apache.poi.xwpf.usermodel.XWPFParagraph;
+import org.apache.poi.xwpf.usermodel.XWPFRun;
 import org.apache.xmlbeans.XmlException;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTDocDefaults;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTStyle;
-
-import com.lowagie.text.Font;
 
 public class XWPFStylesDocument
 {
@@ -144,10 +149,28 @@ public class XWPFStylesDocument
         values.put( key, value );
     }
 
-    public Font getFont( XWPFParagraph paragraph )
+    public String getFontFamily( XWPFRun run )
     {
-        // TODO Auto-generated method stub
-        return null;
+        return RunFontFamilyValueProvider.INSTANCE.getValue( run, this );
     }
 
+    public Integer getFontSize( XWPFRun run )
+    {
+        return RunFontSizeValueProvider.INSTANCE.getValue( run, this );
+    }
+
+    public Boolean getFontStyleBold( XWPFRun run )
+    {
+        return RunFontStyleBoldValueProvider.INSTANCE.getValue( run, this );
+    }
+
+    public Boolean getFontStyleItalic( XWPFRun run )
+    {
+        return RunFontStyleItalicValueProvider.INSTANCE.getValue( run, this );
+    }
+
+    public Color getFontColor( XWPFRun run )
+    {
+        return RunFontColorValueProvider.INSTANCE.getValue( run, this );
+    }
 }

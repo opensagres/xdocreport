@@ -1,5 +1,6 @@
 package org.apache.poi.xwpf.converter.styles;
 
+import org.apache.poi.xwpf.converter.internal.StringUtils;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTDocDefaults;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTStyle;
 
@@ -9,23 +10,54 @@ public abstract class AbstractValueProvider<Value, XWPFElement>
 
     public Value getValue( XWPFElement element, XWPFStylesDocument stylesDocument )
     {
-        // Returns value retrieved from the XWPF element (XWPFParagraph, XWPFTable etc)
+        long start = System.currentTimeMillis();
+
+        Value value = internalGetValue( element, stylesDocument );
+        System.err.println( "value=" + value + " with " + ( System.currentTimeMillis() - start ) + "ms" );
+        return value;
+
+    };
+
+    public Value internalGetValue( XWPFElement element, XWPFStylesDocument stylesDocument )
+    {
+        // 1) Inline style : search value retrieved from the XWPF element (XWPFParagraph, XWPFTable etc)
         Value value = getValueFromElement( element );
         if ( value != null )
         {
+            // Value declared in the inline style, return it.
             return value;
         }
         if ( stylesDocument == null )
         {
             return null;
         }
-
+        // 2) External styles: search value declared in a style.
         return getValueFromStyles( element, stylesDocument );
     }
 
     public Value getValueFromStyles( XWPFElement element, XWPFStylesDocument stylesDocument )
     {
-        Value value = null;
+
+        // 1) Search value from the linked style
+        Value value = getValueFromStyleIds( element, stylesDocument );
+        if ( value != null )
+        {
+            return value;
+        }
+
+        String key = getKey( element, stylesDocument, null );
+        Object result = stylesDocument.getValue( key );
+        if ( result != null )
+        {
+            return result.equals( XWPFStylesDocument.EMPTY_VALUE ) ? null : (Value) result;
+        }
+        value = getDefaultValue( element, stylesDocument );
+        updateValueCache( stylesDocument, key, value );
+        return value;
+    }
+
+    public Value getValueFromStyleIds( XWPFElement element, XWPFStylesDocument stylesDocument )
+    {
         String[] styleIds = getStyleID( element );
         if ( styleIds != null )
         {
@@ -33,45 +65,17 @@ public abstract class AbstractValueProvider<Value, XWPFElement>
             for ( int i = 0; i < styleIds.length; i++ )
             {
                 styleId = styleIds[i];
-
-                String key = getKey( element, stylesDocument, styleId );
-
-                Object result = stylesDocument.getValue( key );
-                if ( result != null )
-                {
-                    // System.err.println("use cache=" + key);
-                    return result.equals( XWPFStylesDocument.EMPTY_VALUE ) ? null : (Value) result;
-                }
-
-                // Search value from styles
-                // System.err.println("compute style=" + key);
-                value = getValueFromStyles( element, stylesDocument, styleId, key );
+                Value value = getValueFromStyleId( element, stylesDocument, styleId );
                 if ( value != null )
                 {
-                    stylesDocument.setValue( key, value );
                     return value;
-                }
-                else
-                {
-                    stylesDocument.setValue( key, XWPFStylesDocument.EMPTY_VALUE );
                 }
             }
         }
-        return value;
+        return null;
     }
 
     public abstract Value getValueFromElement( XWPFElement element );
-
-    public Value getValueFromStyles( XWPFElement element, XWPFStylesDocument stylesDocument, String styleId, String key )
-    {
-
-        Value value = getValueFromStyleId( element, stylesDocument, styleId );
-        if ( value != null )
-        {
-            return value;
-        }
-        return getDefaultValue( element, stylesDocument );
-    }
 
     protected Value getDefaultValue( XWPFElement element, XWPFStylesDocument stylesDocument )
     {
@@ -97,29 +101,59 @@ public abstract class AbstractValueProvider<Value, XWPFElement>
     private Value getValueFromStyleId( XWPFElement element, XWPFStylesDocument stylesDocument, String styleId )
     {
 
-        // Value value = stylesDocument.getValue( this, styleId );
-        // if ( value != null )
-        // {
-        // return (Value) value;
-        // }
-        Value value = null;
-        CTStyle style = stylesDocument.getStyle( styleId );
-        while ( style != null )
+        if ( StringUtils.isEmpty( styleId ) )
         {
-            value = getValueFromStyle( style, stylesDocument );
-            if ( value != null )
-            {
-                return value;
-            }
-            style = stylesDocument.getStyle( ( getBasisStyleID( style ) ) );
+            return null;
         }
 
-        return null;
+        // Search from cache
+        String key = getKey( element, stylesDocument, styleId );
+        Object result = stylesDocument.getValue( key );
+        if ( result != null )
+        {
+            return result.equals( XWPFStylesDocument.EMPTY_VALUE ) ? null : (Value) result;
+        }
+
+        // Value is not computed, compute it
+        CTStyle style = stylesDocument.getStyle( styleId );
+        if ( style == null )
+        {
+            // should never come
+            stylesDocument.setValue( key, XWPFStylesDocument.EMPTY_VALUE );
+            return null;
+        }
+
+        // try to compute value
+        Value value = getValueFromStyle( style, stylesDocument );
+        if ( value != null )
+        {
+            // Value is computed, cache it and return it.
+            stylesDocument.setValue( key, value );
+            return value;
+        }
+
+        // Check if style has ancestor with basedOn
+        value = getValueFromStyleId( element, stylesDocument, getBasisStyleID( style ) );
+        updateValueCache( stylesDocument, key, value );
+        return value;
+    }
+
+    private void updateValueCache( XWPFStylesDocument stylesDocument, String key, Value value )
+    {
+        if ( value != null )
+        {
+            // Value is computed, cache it and return it.
+            stylesDocument.setValue( key, value );
+        }
+        else
+        {
+            stylesDocument.setValue( key, XWPFStylesDocument.EMPTY_VALUE );
+        }
     }
 
     protected String getKey( XWPFElement element, XWPFStylesDocument stylesDocument, String styleId )
     {
-        if ( styleId != null && styleId.length() > 0 )
+        if ( StringUtils.isNotEmpty( styleId ) )
         {
             return new StringBuilder( this.getClass().getName() ).append( "_" ).append( styleId ).toString();
         }

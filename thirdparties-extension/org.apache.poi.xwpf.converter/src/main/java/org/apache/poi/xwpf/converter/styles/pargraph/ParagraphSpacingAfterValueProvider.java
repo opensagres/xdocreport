@@ -8,11 +8,11 @@ import org.apache.poi.xwpf.usermodel.BodyType;
 import org.apache.poi.xwpf.usermodel.XWPFParagraph;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTSpacing;
 
-public class PargraphSpacingAfterValueProvider
+public class ParagraphSpacingAfterValueProvider
     extends AbstractSpacingParagraphValueProvider<Integer>
 {
 
-    public static PargraphSpacingAfterValueProvider INSTANCE = new PargraphSpacingAfterValueProvider();
+    public static ParagraphSpacingAfterValueProvider INSTANCE = new ParagraphSpacingAfterValueProvider();
 
     @Override
     protected Integer getDefaultValue( XWPFParagraph paragraph, XWPFStylesDocument stylesDocument )

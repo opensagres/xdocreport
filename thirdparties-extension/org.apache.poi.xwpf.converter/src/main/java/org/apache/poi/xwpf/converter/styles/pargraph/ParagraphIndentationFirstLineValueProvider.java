@@ -5,11 +5,11 @@ import java.math.BigInteger;
 import org.apache.poi.xwpf.converter.internal.DxaUtil;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTInd;
 
-public class PargraphIndentationFirstLineValueProvider
+public class ParagraphIndentationFirstLineValueProvider
     extends AbstractIndentationParagraphValueProvider<Float>
 {
 
-    public static final PargraphIndentationFirstLineValueProvider INSTANCE = new PargraphIndentationFirstLineValueProvider();
+    public static final ParagraphIndentationFirstLineValueProvider INSTANCE = new ParagraphIndentationFirstLineValueProvider();
 
     @Override
     public Float getValue( CTInd ind )

@@ -5,19 +5,19 @@ import java.math.BigInteger;
 import org.apache.poi.xwpf.converter.internal.DxaUtil;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTInd;
 
-public class PargraphIndentationLeftValueProvider
+public class ParagraphIndentationRightValueProvider
     extends AbstractIndentationParagraphValueProvider<Float>
 {
 
-    public static final PargraphIndentationLeftValueProvider INSTANCE = new PargraphIndentationLeftValueProvider();
+    public static final ParagraphIndentationRightValueProvider INSTANCE = new ParagraphIndentationRightValueProvider();
 
     @Override
     public Float getValue( CTInd ind )
     {
-        BigInteger left = ind.getLeft();
-        if ( left != null )
+        BigInteger right = ind.getRight();
+        if ( right != null )
         {
-            return DxaUtil.dxa2pointsF( left );
+            return DxaUtil.dxa2pointsF( right );
         }
         return null;
     }

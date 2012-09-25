@@ -6,16 +6,18 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.apache.poi.xwpf.converter.styles.pargraph.PargraphIndentationFirstLineValueProvider;
-import org.apache.poi.xwpf.converter.styles.pargraph.PargraphIndentationLeftValueProvider;
-import org.apache.poi.xwpf.converter.styles.pargraph.PargraphIndentationRightValueProvider;
-import org.apache.poi.xwpf.converter.styles.pargraph.PargraphSpacingAfterValueProvider;
-import org.apache.poi.xwpf.converter.styles.pargraph.PargraphSpacingBeforeValueProvider;
+import org.apache.poi.xwpf.converter.styles.pargraph.ParagraphAlignmentValueProvider;
+import org.apache.poi.xwpf.converter.styles.pargraph.ParagraphIndentationFirstLineValueProvider;
+import org.apache.poi.xwpf.converter.styles.pargraph.ParagraphIndentationLeftValueProvider;
+import org.apache.poi.xwpf.converter.styles.pargraph.ParagraphIndentationRightValueProvider;
+import org.apache.poi.xwpf.converter.styles.pargraph.ParagraphSpacingAfterValueProvider;
+import org.apache.poi.xwpf.converter.styles.pargraph.ParagraphSpacingBeforeValueProvider;
 import org.apache.poi.xwpf.converter.styles.run.RunFontColorValueProvider;
 import org.apache.poi.xwpf.converter.styles.run.RunFontFamilyValueProvider;
 import org.apache.poi.xwpf.converter.styles.run.RunFontSizeValueProvider;
 import org.apache.poi.xwpf.converter.styles.run.RunFontStyleBoldValueProvider;
 import org.apache.poi.xwpf.converter.styles.run.RunFontStyleItalicValueProvider;
+import org.apache.poi.xwpf.usermodel.ParagraphAlignment;
 import org.apache.poi.xwpf.usermodel.XWPFDocument;
 import org.apache.poi.xwpf.usermodel.XWPFParagraph;
 import org.apache.poi.xwpf.usermodel.XWPFRun;
@@ -116,27 +118,27 @@ public class XWPFStylesDocument
 
     public Integer getSpacingBefore( XWPFParagraph docxParagraph )
     {
-        return PargraphSpacingBeforeValueProvider.INSTANCE.getValue( docxParagraph, this );
+        return ParagraphSpacingBeforeValueProvider.INSTANCE.getValue( docxParagraph, this );
     }
 
     public Integer getSpacingAfter( XWPFParagraph docxParagraph )
     {
-        return PargraphSpacingAfterValueProvider.INSTANCE.getValue( docxParagraph, this );
+        return ParagraphSpacingAfterValueProvider.INSTANCE.getValue( docxParagraph, this );
     }
 
     public Float getIndentationLeft( XWPFParagraph paragraph )
     {
-        return PargraphIndentationLeftValueProvider.INSTANCE.getValue( paragraph, this );
+        return ParagraphIndentationLeftValueProvider.INSTANCE.getValue( paragraph, this );
     }
 
     public Float getIndentationRight( XWPFParagraph paragraph )
     {
-        return PargraphIndentationRightValueProvider.INSTANCE.getValue( paragraph, this );
+        return ParagraphIndentationRightValueProvider.INSTANCE.getValue( paragraph, this );
     }
 
     public Float getIndentationFirstLine( XWPFParagraph paragraph )
     {
-        return PargraphIndentationFirstLineValueProvider.INSTANCE.getValue( paragraph, this );
+        return ParagraphIndentationFirstLineValueProvider.INSTANCE.getValue( paragraph, this );
     }
 
     public <T> T getValue( String key )
@@ -172,5 +174,10 @@ public class XWPFStylesDocument
     public Color getFontColor( XWPFRun run )
     {
         return RunFontColorValueProvider.INSTANCE.getValue( run, this );
+    }
+
+    public ParagraphAlignment getParagraphAlignment( XWPFParagraph paragraph )
+    {
+        return ParagraphAlignmentValueProvider.INSTANCE.getValue( paragraph, this );
     }
 }

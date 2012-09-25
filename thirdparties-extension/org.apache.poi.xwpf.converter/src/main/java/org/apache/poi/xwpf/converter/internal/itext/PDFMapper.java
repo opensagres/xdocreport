@@ -44,7 +44,7 @@ import org.apache.poi.xwpf.converter.internal.itext.stylable.StylableTable;
 import org.apache.poi.xwpf.converter.internal.itext.stylable.StylableTableCell;
 import org.apache.poi.xwpf.converter.internal.itext.styles.Style;
 import org.apache.poi.xwpf.converter.itext.PDFViaITextOptions;
-import org.apache.poi.xwpf.converter.styles.pargraph.PargraphIndentationLeftValueProvider;
+import org.apache.poi.xwpf.converter.styles.pargraph.ParagraphIndentationLeftValueProvider;
 import org.apache.poi.xwpf.usermodel.BodyElementType;
 import org.apache.poi.xwpf.usermodel.Borders;
 import org.apache.poi.xwpf.usermodel.IBodyElement;
@@ -203,7 +203,9 @@ public class PDFMapper
     protected IITextContainer startVisitPargraph( XWPFParagraph docxParagraph, IITextContainer parentContainer )
         throws Exception
     {
-
+        if (docxParagraph.getText().startsWith(  "Cette commande client est co" )) {
+            System.err.println();
+        }
         // 1) Instanciate a pdfParagraph
         StylableParagraph pdfParagraph = pdfDocument.createParagraph( (IStylableContainer) null );
         pdfParagraph.setITextContainer( parentContainer );
@@ -326,7 +328,7 @@ public class PDFMapper
                 CTPPr lvlPPr = lvl.getPPr();
                 if ( lvlPPr != null )
                 {
-                    Float indLeft = PargraphIndentationLeftValueProvider.INSTANCE.getValue( lvlPPr );
+                    Float indLeft = ParagraphIndentationLeftValueProvider.INSTANCE.getValue( lvlPPr );
                     if ( indLeft != null )
                     {
                         pdfParagraph.setIndentationLeft( indLeft );
@@ -337,23 +339,26 @@ public class PDFMapper
         }
 
         // text-align
-        ParagraphAlignment alignment = docxParagraph.getAlignment();
-        switch ( alignment )
+        ParagraphAlignment alignment = stylesDocument.getParagraphAlignment( docxParagraph );
+        if ( alignment != null )
         {
-            case LEFT:
-                pdfParagraph.setAlignment( Element.ALIGN_LEFT );
-                break;
-            case RIGHT:
-                pdfParagraph.setAlignment( Element.ALIGN_RIGHT );
-                break;
-            case CENTER:
-                pdfParagraph.setAlignment( Element.ALIGN_CENTER );
-                break;
-            case BOTH:
-                pdfParagraph.setAlignment( Element.ALIGN_JUSTIFIED );
-                break;
-            default:
-                break;
+            switch ( alignment )
+            {
+                case LEFT:
+                    pdfParagraph.setAlignment( Element.ALIGN_LEFT );
+                    break;
+                case RIGHT:
+                    pdfParagraph.setAlignment( Element.ALIGN_RIGHT );
+                    break;
+                case CENTER:
+                    pdfParagraph.setAlignment( Element.ALIGN_CENTER );
+                    break;
+                case BOTH:
+                    pdfParagraph.setAlignment( Element.ALIGN_JUSTIFIED );
+                    break;
+                default:
+                    break;
+            }
         }
         return pdfParagraph;
     }

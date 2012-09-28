@@ -353,6 +353,20 @@ public class PdfMapper
         this.currentRunFont =
             ITextFontRegistry.getRegistry().getFont( fontFamily, options.getFontEncoding(), fontSize, fontStyle,
                                                      fontColor );
+
+        // to support chinese character see blog
+        // http://acai-hsieh.blogspot.fr/2012/08/how-can-xdocreport-to-pdf-supply.html
+        // but we cannot hard coded that.
+        // Waiting explanation about font managemenet with docx on
+        // http://code.google.com/p/xdocreport/issues/detail?id=81
+        // BaseFont bfChinese =
+        // BaseFont.createFont( "c:/Windows/Fonts/arialuni.ttf", BaseFont.IDENTITY_H, BaseFont.EMBEDDED );
+        // currentRunFont =
+        // new Font( bfChinese, currentRunFont.getSize(), currentRunFont.getStyle(), currentRunFont.getColor() );
+        // if (fontFamily != null) {
+        // currentRunFont.setFamily( fontFamily );
+        // }
+
         // Underline patterns
         this.currentRunUnderlinePatterns = docxRun.getUnderline();
         this.currentRunBackgroundColor = stylesDocument.getBackgroundColor( docxRun ); // XWPFParagraphUtils.getBackgroundColor(
@@ -535,29 +549,26 @@ public class PdfMapper
                     pdfPCell.setRotation( 270 );
                 }
             }
+        }
 
-            // // Vertical aligment
-            CTVerticalJc vAlign = tcPr.getVAlign();
-            if ( vAlign != null )
+        // // Vertical aligment
+        Enum jc = stylesDocument.getTableCellVerticalAlignment( cell );
+        if ( jc != null )
+        {
+            switch ( jc.intValue() )
             {
-                Enum jc = vAlign.getVal();
-                if ( jc != null )
-                {
-                    switch ( jc.intValue() )
-                    {
-                        case STVerticalJc.INT_BOTTOM:
-                            pdfPCell.setVerticalAlignment( Element.ALIGN_BOTTOM );
-                            break;
-                        case STVerticalJc.INT_CENTER:
-                            pdfPCell.setVerticalAlignment( Element.ALIGN_MIDDLE );
-                            break;
-                        case STVerticalJc.INT_TOP:
-                            pdfPCell.setVerticalAlignment( Element.ALIGN_TOP );
-                            break;
-                    }
-                }
+                case STVerticalJc.INT_BOTTOM:
+                    pdfPCell.setVerticalAlignment( Element.ALIGN_BOTTOM );
+                    break;
+                case STVerticalJc.INT_CENTER:
+                    pdfPCell.setVerticalAlignment( Element.ALIGN_MIDDLE );
+                    break;
+                case STVerticalJc.INT_TOP:
+                    pdfPCell.setVerticalAlignment( Element.ALIGN_TOP );
+                    break;
             }
         }
+
         int height = row.getHeight();
         if ( height > 0 )
         {

@@ -68,8 +68,14 @@ public abstract class XWPFDocumentVisitor<T, O extends Options, E extends IXWPFM
     }
 
     protected XWPFStylesDocument createStylesDocument( XWPFDocument document )
+        throws XmlException, IOException
     {
         return new XWPFStylesDocument( document );
+    }
+
+    public XWPFStylesDocument getStylesDocument()
+    {
+        return stylesDocument;
     }
 
     public MasterPageManager getMasterPageManager()

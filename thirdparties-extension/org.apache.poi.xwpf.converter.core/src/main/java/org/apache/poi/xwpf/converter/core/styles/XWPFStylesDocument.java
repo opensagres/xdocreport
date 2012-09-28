@@ -18,13 +18,18 @@ import org.apache.poi.xwpf.converter.core.styles.run.RunFontFamilyValueProvider;
 import org.apache.poi.xwpf.converter.core.styles.run.RunFontSizeValueProvider;
 import org.apache.poi.xwpf.converter.core.styles.run.RunFontStyleBoldValueProvider;
 import org.apache.poi.xwpf.converter.core.styles.run.RunFontStyleItalicValueProvider;
+import org.apache.poi.xwpf.converter.core.styles.table.cell.TableCellVerticalAlignmentValueProvider;
 import org.apache.poi.xwpf.usermodel.ParagraphAlignment;
 import org.apache.poi.xwpf.usermodel.XWPFDocument;
 import org.apache.poi.xwpf.usermodel.XWPFParagraph;
 import org.apache.poi.xwpf.usermodel.XWPFRun;
+import org.apache.poi.xwpf.usermodel.XWPFTableCell;
 import org.apache.xmlbeans.XmlException;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTDocDefaults;
+import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTPPr;
+import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTString;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTStyle;
+import org.openxmlformats.schemas.wordprocessingml.x2006.main.STVerticalJc.Enum;
 
 public class XWPFStylesDocument
 {
@@ -37,27 +42,21 @@ public class XWPFStylesDocument
 
     private CTStyle defaultParagraphStyle;
 
+    private CTStyle defaultTableStyle;
+
     private final Map<String, Object> values;
 
+    private CTStyle defaultCharacterStyle;
+
+    private CTStyle defaultNumberingStyle;
+
     public XWPFStylesDocument( XWPFDocument document )
+        throws XmlException, IOException
     {
         this.document = document;
         this.stylesByStyleId = new HashMap<String, CTStyle>();
         this.values = new HashMap<String, Object>();
-        try
-        {
-            initialize();
-        }
-        catch ( XmlException e )
-        {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        }
-        catch ( IOException e )
-        {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        }
+        initialize();
     }
 
     private void initialize()
@@ -69,22 +68,38 @@ public class XWPFStylesDocument
             org.openxmlformats.schemas.wordprocessingml.x2006.main.STOnOff.Enum isDefault = style.getDefault();
             org.openxmlformats.schemas.wordprocessingml.x2006.main.STStyleType.Enum type = style.getType();
 
-            if ( isDefault != null
-                && isDefault.intValue() == org.openxmlformats.schemas.wordprocessingml.x2006.main.STOnOff.INT_X_1 )
+            boolean isDefaultStyle =
+                ( isDefault != null && isDefault.intValue() == org.openxmlformats.schemas.wordprocessingml.x2006.main.STOnOff.INT_X_1 );
+            if ( isDefaultStyle )
             {
                 // default
                 if ( type != null )
                 {
                     switch ( type.intValue() )
                     {
+                        case org.openxmlformats.schemas.wordprocessingml.x2006.main.STStyleType.INT_CHARACTER:
+                            defaultCharacterStyle = style;
+                            break;
+                        case org.openxmlformats.schemas.wordprocessingml.x2006.main.STStyleType.INT_NUMBERING:
+                            defaultNumberingStyle = style;
+                            break;
                         case org.openxmlformats.schemas.wordprocessingml.x2006.main.STStyleType.INT_PARAGRAPH:
                             defaultParagraphStyle = style;
+                            break;
+                        case org.openxmlformats.schemas.wordprocessingml.x2006.main.STStyleType.INT_TABLE:
+                            defaultTableStyle = style;
+                            break;
                     }
                 }
 
             }
+            visitStyle( style, isDefaultStyle );
             stylesByStyleId.put( style.getStyleId(), style );
         }
+    }
+
+    protected void visitStyle( CTStyle style, boolean defaultStyle )
+    {
 
     }
 
@@ -132,9 +147,19 @@ public class XWPFStylesDocument
         return ParagraphIndentationLeftValueProvider.INSTANCE.getValue( paragraph, this );
     }
 
+    public Float getIndentationLeft( CTPPr pPr )
+    {
+        return ParagraphIndentationLeftValueProvider.INSTANCE.getValue( pPr );
+    }
+
     public Float getIndentationRight( XWPFParagraph paragraph )
     {
         return ParagraphIndentationRightValueProvider.INSTANCE.getValue( paragraph, this );
+    }
+
+    public Float getIndentationRight( CTPPr pPr )
+    {
+        return ParagraphIndentationRightValueProvider.INSTANCE.getValue( pPr );
     }
 
     public Float getIndentationFirstLine( XWPFParagraph paragraph )
@@ -186,4 +211,34 @@ public class XWPFStylesDocument
     {
         return RunBackgroundColorValueProvider.INSTANCE.getValue( run, this );
     }
+
+    public CTStyle getDefaultCharacterStyle()
+    {
+        return defaultCharacterStyle;
+    }
+
+    public CTStyle getDefaultNumberingStyle()
+    {
+        return defaultNumberingStyle;
+    }
+
+    public CTStyle getDefaultTableStyle()
+    {
+        return defaultTableStyle;
+    }
+
+    public Enum getTableCellVerticalAlignment( XWPFTableCell cell )
+    {
+        return TableCellVerticalAlignmentValueProvider.INSTANCE.getValue( cell, this );
+    }
+
+    public CTStyle getStyle( CTString basedOn )
+    {
+        if ( basedOn == null )
+        {
+            return null;
+        }
+        return getStyle( basedOn.getVal() );
+    }
+
 }

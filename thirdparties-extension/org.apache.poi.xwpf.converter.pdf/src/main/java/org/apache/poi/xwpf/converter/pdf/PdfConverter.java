@@ -45,23 +45,6 @@ public class PdfConverter
         return INSTANCE;
     }
 
-    // redefining method here might solve classloading issues
-    @Override
-    public void convert( XWPFDocument XWPFDocument, OutputStream out, PdfOptions options )
-        throws XWPFConverterException, IOException
-    {
-        // TODO Auto-generated method stub
-        super.convert( XWPFDocument, out, options );
-    }
-
-    // redefining method here might solve classloading issues
-    @Override
-    public void convert( XWPFDocument XWPFDocument, Writer writer, PdfOptions options )
-        throws XWPFConverterException, IOException
-    {
-        super.convert( XWPFDocument, writer, options );
-    }
-
     @Override
     protected void doConvert( XWPFDocument document, OutputStream out, Writer writer, PdfOptions options )
         throws XWPFConverterException, IOException

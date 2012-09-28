@@ -3,9 +3,7 @@ package org.apache.poi.xwpf.converter.core.styles;
 import java.awt.Color;
 import java.util.List;
 
-import org.apache.poi.xwpf.converter.core.styles.XWPFStylesDocument;
 import org.apache.poi.xwpf.converter.core.utils.ColorHelper;
-import org.apache.poi.xwpf.converter.core.utils.XWPFUtils;
 import org.apache.poi.xwpf.usermodel.BodyElementType;
 import org.apache.poi.xwpf.usermodel.IBodyElement;
 import org.apache.poi.xwpf.usermodel.XWPFDocument;

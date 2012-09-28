@@ -1,27 +1,37 @@
 package org.apache.poi.xwpf.converter.xhtml.internal;
 
 import static org.apache.poi.xwpf.converter.xhtml.XHTMLConstants.BODY_ELEMENT;
+import static org.apache.poi.xwpf.converter.xhtml.XHTMLConstants.BR_ELEMENT;
+import static org.apache.poi.xwpf.converter.xhtml.XHTMLConstants.CLASS_ATTR;
 import static org.apache.poi.xwpf.converter.xhtml.XHTMLConstants.HEAD_ELEMENT;
 import static org.apache.poi.xwpf.converter.xhtml.XHTMLConstants.HTML_ELEMENT;
 import static org.apache.poi.xwpf.converter.xhtml.XHTMLConstants.P_ELEMENT;
+import static org.apache.poi.xwpf.converter.xhtml.XHTMLConstants.STYLE_ATTR;
 import static org.apache.poi.xwpf.converter.xhtml.XHTMLConstants.TABLE_ELEMENT;
-import static org.apache.poi.xwpf.converter.xhtml.XHTMLConstants.TR_ELEMENT;
 import static org.apache.poi.xwpf.converter.xhtml.XHTMLConstants.TD_ELEMENT;
-
-import static org.apache.poi.xwpf.converter.xhtml.XHTMLConstants.CLASS_ATTR;
+import static org.apache.poi.xwpf.converter.xhtml.XHTMLConstants.TR_ELEMENT;
+import static org.apache.poi.xwpf.converter.xhtml.XHTMLConstants.SRC_ATTR;
+import static org.apache.poi.xwpf.converter.xhtml.XHTMLConstants.IMG_ELEMENT;
+import static org.apache.poi.xwpf.converter.xhtml.XHTMLConstants.SPAN_ELEMENT;
 
 import java.io.IOException;
 
+import org.apache.poi.xwpf.converter.core.IURIResolver;
 import org.apache.poi.xwpf.converter.core.IXWPFMasterPage;
 import org.apache.poi.xwpf.converter.core.XWPFDocumentVisitor;
 import org.apache.poi.xwpf.converter.core.styles.XWPFStylesDocument;
 import org.apache.poi.xwpf.converter.core.utils.StringUtils;
 import org.apache.poi.xwpf.converter.xhtml.XHTMLOptions;
+import org.apache.poi.xwpf.converter.xhtml.internal.styles.CSSStyle;
 import org.apache.poi.xwpf.converter.xhtml.internal.styles.CSSStylesDocument;
+import org.apache.poi.xwpf.converter.xhtml.internal.utils.SAXHelper;
+import org.apache.poi.xwpf.converter.xhtml.internal.utils.StringEscapeUtils;
 import org.apache.poi.xwpf.usermodel.XWPFDocument;
 import org.apache.poi.xwpf.usermodel.XWPFFooter;
 import org.apache.poi.xwpf.usermodel.XWPFHeader;
 import org.apache.poi.xwpf.usermodel.XWPFParagraph;
+import org.apache.poi.xwpf.usermodel.XWPFPictureData;
+import org.apache.poi.xwpf.usermodel.XWPFRun;
 import org.apache.poi.xwpf.usermodel.XWPFTable;
 import org.apache.poi.xwpf.usermodel.XWPFTableCell;
 import org.apache.poi.xwpf.usermodel.XWPFTableRow;
@@ -29,7 +39,9 @@ import org.apache.xmlbeans.XmlException;
 import org.openxmlformats.schemas.drawingml.x2006.picture.CTPicture;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTBr;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTHdrFtrRef;
+import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTPPr;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTPTab;
+import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTRPr;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTSectPr;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTText;
 import org.xml.sax.Attributes;
@@ -41,15 +53,22 @@ public class XHTMLMapper
     extends XWPFDocumentVisitor<Object, XHTMLOptions, XHTMLMasterPage>
 {
 
+    private static final String WORD_MEDIA = "word/media/";
+
     private final ContentHandler contentHandler;
 
     private boolean generateStyles = true;
+
+    private final IURIResolver resolver;
+
+    private AttributesImpl currentRunAttributes;
 
     public XHTMLMapper( XWPFDocument document, ContentHandler contentHandler, XHTMLOptions options )
         throws Exception
     {
         super( document, options != null ? options : XHTMLOptions.create() );
         this.contentHandler = contentHandler;
+        this.resolver = getOptions().getURIResolver();
     }
 
     @Override
@@ -101,14 +120,15 @@ public class XHTMLMapper
     protected Object startVisitParagraph( XWPFParagraph paragraph, Object parentContainer )
         throws Exception
     {
-        AttributesImpl attributes = null;
         // 1) create attributes
-        // Create class attributes.
-        String classNames = getStylesDocument().getClassNames( paragraph.getStyleID() );
-        if ( StringUtils.isNotEmpty( classNames ) )
-        {
-            attributes = SAXHelper.addAttrValue( attributes, CLASS_ATTR, classNames );
-        }
+
+        // 1.1) Create "class" attributes.
+        AttributesImpl attributes = createClassAttribute( paragraph.getStyleID() );
+
+        // 1.2) Create "style" attributes.
+        CTPPr pPr = paragraph.getCTP().getPPr();
+        CSSStyle cssStyle = getStylesDocument().createCSSStyle( pPr );
+        attributes = createStyleAttribute( cssStyle, attributes );
 
         // 2) create element
         startElement( P_ELEMENT, attributes );
@@ -123,32 +143,68 @@ public class XHTMLMapper
     }
 
     @Override
+    protected void visitRun( XWPFRun run, Object paragraphContainer )
+        throws Exception
+    {
+
+        XWPFParagraph paragraph = run.getParagraph();
+        // 1) create attributes
+
+        // 1.1) Create "class" attributes.
+        this.currentRunAttributes = createClassAttribute( paragraph.getStyleID() );
+
+        // 1.2) Create "style" attributes.
+        CTRPr rPr = run.getCTR().getRPr();
+        CSSStyle cssStyle = getStylesDocument().createCSSStyle( rPr );
+        this.currentRunAttributes = createStyleAttribute( cssStyle, currentRunAttributes );
+
+        super.visitRun( run, paragraphContainer );
+
+        this.currentRunAttributes = null;
+    }
+
+    @Override
     protected void visitEmptyRun( Object paragraphContainer )
         throws Exception
     {
-        startElement( "br" );
+        startElement( BR_ELEMENT );
     }
 
     @Override
     protected void visitText( CTText ctText, Object paragraphContainer )
         throws Exception
     {
-        characters( ctText.getStringValue() );
+        if ( currentRunAttributes != null )
+        {
+            startElement( SPAN_ELEMENT, currentRunAttributes );
+        }
+        String text = ctText.getStringValue();
+        if ( StringUtils.isNotEmpty( text ) )
+        {
+            // Escape with HTML characters
+            characters( StringEscapeUtils.escapeHtml( text ) );
+        }
+        else
+        {
+            characters( "&nbsp;" );
+        }
+        if ( currentRunAttributes != null )
+        {
+            endElement( SPAN_ELEMENT );
+        }
     }
 
     @Override
     protected void visitTab( CTPTab o, Object paragraphContainer )
         throws Exception
     {
-        // TODO Auto-generated method stub
-
     }
 
     @Override
     protected void visitBR( CTBr o, Object paragraphContainer )
         throws Exception
     {
-        startElement( "br" );
+        startElement( BR_ELEMENT );
     }
 
     @Override
@@ -163,7 +219,12 @@ public class XHTMLMapper
     protected Object startVisitTable( XWPFTable table, float[] colWidths, Object tableContainer )
         throws Exception
     {
-        startElement( TABLE_ELEMENT );
+        // 1) create attributes
+        // Create class attributes.
+        AttributesImpl attributes = createClassAttribute( table.getStyleID() );
+
+        // 2) create element
+        startElement( TABLE_ELEMENT, attributes );
         return null;
     }
 
@@ -178,7 +239,15 @@ public class XHTMLMapper
     protected void startVisitTableRow( XWPFTableRow row, Object tableContainer, boolean firstRow, boolean lastRow )
         throws Exception
     {
-        startElement( TR_ELEMENT );
+
+        // 1) create attributes
+        // Create class attributes.
+        XWPFTable table = row.getTable();
+        AttributesImpl attributes = createClassAttribute( table.getStyleID() );
+
+        // 2) create element
+        startElement( TR_ELEMENT, attributes );
+
     }
 
     @Override
@@ -193,7 +262,15 @@ public class XHTMLMapper
                                           boolean firstCell, boolean lastCell )
         throws Exception
     {
-        startElement( TD_ELEMENT );
+        // 1) create attributes
+        // Create class attributes.
+        XWPFTableRow row = cell.getTableRow();
+        XWPFTable table = row.getTable();
+        AttributesImpl attributes = createClassAttribute( table.getStyleID() );
+
+        // 2) create element
+        startElement( TD_ELEMENT, attributes );
+
         return null;
     }
 
@@ -224,8 +301,23 @@ public class XHTMLMapper
     protected void visitPicture( CTPicture picture, Object parentContainer )
         throws Exception
     {
-        // TODO Auto-generated method stub
-
+        AttributesImpl attributes = null;
+        String blipId = picture.getBlipFill().getBlip().getEmbed();
+        // Src attribute
+        XWPFPictureData pictureData = super.getPictureDataByID( blipId );
+        if ( pictureData != null )
+        {
+            String src = pictureData.getFileName();
+            if ( StringUtils.isNotEmpty( src ) )
+            {
+                src = resolver.resolve( WORD_MEDIA + src );
+                attributes = SAXHelper.addAttrValue( attributes, SRC_ATTR, src );
+            }
+        }
+        if ( attributes != null )
+        {
+            startElement( IMG_ELEMENT, attributes );
+        }
     }
 
     @Override
@@ -271,4 +363,26 @@ public class XHTMLMapper
         return (CSSStylesDocument) super.getStylesDocument();
     }
 
+    private AttributesImpl createClassAttribute( String styleID )
+    {
+        String classNames = getStylesDocument().getClassNames( styleID );
+        if ( StringUtils.isNotEmpty( classNames ) )
+        {
+            return SAXHelper.addAttrValue( null, CLASS_ATTR, classNames );
+        }
+        return null;
+    }
+
+    private AttributesImpl createStyleAttribute( CSSStyle cssStyle, AttributesImpl attributes )
+    {
+        if ( cssStyle != null )
+        {
+            String inlineStyles = cssStyle.getInlineStyles();
+            if ( StringUtils.isNotEmpty( inlineStyles ) )
+            {
+                attributes = SAXHelper.addAttrValue( attributes, STYLE_ATTR, inlineStyles );
+            }
+        }
+        return attributes;
+    }
 }

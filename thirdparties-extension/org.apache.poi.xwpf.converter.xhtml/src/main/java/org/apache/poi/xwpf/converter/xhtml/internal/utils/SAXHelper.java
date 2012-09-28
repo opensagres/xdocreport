@@ -1,6 +1,7 @@
-package org.apache.poi.xwpf.converter.xhtml.internal;
+package org.apache.poi.xwpf.converter.xhtml.internal.utils;
 
 import org.apache.poi.xwpf.converter.xhtml.XHTMLConstants;
+import org.apache.poi.xwpf.converter.xhtml.internal.EmptyAttributes;
 import org.xml.sax.Attributes;
 import org.xml.sax.ContentHandler;
 import org.xml.sax.SAXException;

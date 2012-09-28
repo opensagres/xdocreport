@@ -100,7 +100,7 @@ public class FontStylesBasedOnTestCase
         // Assert.assertEquals( "Magneto", fontFamily );
 
         // size= 11
-        Integer fontSize = stylesDocument.getFontSize( run );
+        Float fontSize = stylesDocument.getFontSize( run );
         Assert.assertNotNull( fontSize );
         Assert.assertEquals( 11, fontSize.intValue() );
 
@@ -161,7 +161,7 @@ public class FontStylesBasedOnTestCase
         // Assert.assertEquals( "Magneto", fontFamily );
 
         // size= 20
-        Integer fontSize = stylesDocument.getFontSize( run );
+        Float fontSize = stylesDocument.getFontSize( run );
         Assert.assertNotNull( fontSize );
         Assert.assertEquals( 20, fontSize.intValue() );
 
@@ -223,7 +223,7 @@ public class FontStylesBasedOnTestCase
         Assert.assertEquals( "Magneto", fontFamily );
 
         // size= 20
-        Integer fontSize = stylesDocument.getFontSize( run );
+        Float fontSize = stylesDocument.getFontSize( run );
         Assert.assertNotNull( fontSize );
         Assert.assertEquals( 20, fontSize.intValue() );
 
@@ -285,7 +285,7 @@ public class FontStylesBasedOnTestCase
         Assert.assertEquals( "Chiller", fontFamily );
 
         // size= 20
-        Integer fontSize = stylesDocument.getFontSize( run );
+        Float fontSize = stylesDocument.getFontSize( run );
         Assert.assertNotNull( fontSize );
         Assert.assertEquals( 20, fontSize.intValue() );
 

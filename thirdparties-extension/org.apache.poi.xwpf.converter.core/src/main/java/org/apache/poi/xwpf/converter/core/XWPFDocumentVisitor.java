@@ -78,6 +78,11 @@ public abstract class XWPFDocumentVisitor<T, O extends Options, E extends IXWPFM
         return stylesDocument;
     }
 
+    public O getOptions()
+    {
+        return options;
+    }
+
     public MasterPageManager getMasterPageManager()
     {
         return masterPageManager;

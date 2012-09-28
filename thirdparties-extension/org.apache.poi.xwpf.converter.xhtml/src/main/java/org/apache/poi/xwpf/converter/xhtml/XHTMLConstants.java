@@ -23,9 +23,17 @@ public class XHTMLConstants
 
     public static final String P_ELEMENT = "p";
 
+    public static final String BR_ELEMENT = "br";
+
+    public static final String SPAN_ELEMENT = "span";
+
+    public static final String IMG_ELEMENT = "img";
+
     // Attributes
     public static final String CLASS_ATTR = "class";
 
-    public static final String SPAN_ELEMENT = "span";
+    public static final String STYLE_ATTR = "style";
+
+    public static final String SRC_ATTR = "src";
 
 }

@@ -102,7 +102,7 @@ public class CopyOfCopyOfFontStylesBasedOnTestCase
         Assert.assertEquals( "Times New Roman", fontFamily );
 
         // size= 12
-        Integer fontSize = stylesDocument.getFontSize( run );
+        Float fontSize = stylesDocument.getFontSize( run );
         Assert.assertNotNull( fontSize );
         Assert.assertEquals( 12, fontSize.intValue() );
 

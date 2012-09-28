@@ -54,7 +54,6 @@ import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTTcBorders;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTTcPr;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTText;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTTextDirection;
-import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTVerticalJc;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.STVerticalJc;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.STVerticalJc.Enum;
 
@@ -327,10 +326,10 @@ public class PdfMapper
         String fontFamily = stylesDocument.getFontFamily( docxRun );
 
         // Get font size
-        Integer fontSize = stylesDocument.getFontSize( docxRun );
+        Float fontSize = stylesDocument.getFontSize( docxRun );
         if ( fontSize == null )
         {
-            fontSize = -1;
+            fontSize = -1f;
         }
         // Get font style
 
@@ -346,7 +345,7 @@ public class PdfMapper
             fontStyle |= Font.ITALIC;
         }
 
-        // Process color
+        // Font color
         Color fontColor = stylesDocument.getFontColor( docxRun );
 
         // Font

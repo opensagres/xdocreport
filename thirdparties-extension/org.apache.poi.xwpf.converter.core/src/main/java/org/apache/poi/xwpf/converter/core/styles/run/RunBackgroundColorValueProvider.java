@@ -18,6 +18,6 @@ public class RunBackgroundColorValueProvider
         {
             return null;
         }
-        return ColorHelper.getColor( rPr.getShd() );
+        return ColorHelper.getFillColor( rPr.getShd() );
     }
 }

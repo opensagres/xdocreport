@@ -96,7 +96,7 @@ public class CopyOfFontStylesBasedOnTestCase
         // Assert.assertEquals( "Calibri (Corps)", fontFamily );
 
         // size= 96
-        Integer fontSize = stylesDocument.getFontSize( run );
+        Float fontSize = stylesDocument.getFontSize( run );
         Assert.assertNotNull( fontSize );
         Assert.assertEquals( 96, fontSize.intValue() );
 

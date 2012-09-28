@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.apache.poi.xwpf.converter.core.styles.pargraph.ParagraphAlignmentValueProvider;
+import org.apache.poi.xwpf.converter.core.styles.pargraph.ParagraphBackgroundColorValueProvider;
 import org.apache.poi.xwpf.converter.core.styles.pargraph.ParagraphIndentationFirstLineValueProvider;
 import org.apache.poi.xwpf.converter.core.styles.pargraph.ParagraphIndentationLeftValueProvider;
 import org.apache.poi.xwpf.converter.core.styles.pargraph.ParagraphIndentationRightValueProvider;
@@ -27,6 +28,7 @@ import org.apache.poi.xwpf.usermodel.XWPFTableCell;
 import org.apache.xmlbeans.XmlException;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTDocDefaults;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTPPr;
+import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTRPr;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTString;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTStyle;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.STVerticalJc.Enum;
@@ -137,9 +139,19 @@ public class XWPFStylesDocument
         return ParagraphSpacingBeforeValueProvider.INSTANCE.getValue( docxParagraph, this );
     }
 
+    public Float getSpacingBefore( CTPPr pPr )
+    {
+        return ParagraphSpacingBeforeValueProvider.INSTANCE.getValue( pPr );
+    }
+
     public Float getSpacingAfter( XWPFParagraph docxParagraph )
     {
         return ParagraphSpacingAfterValueProvider.INSTANCE.getValue( docxParagraph, this );
+    }
+
+    public Float getSpacingAfter( CTPPr pPr )
+    {
+        return ParagraphSpacingAfterValueProvider.INSTANCE.getValue( pPr );
     }
 
     public Float getIndentationLeft( XWPFParagraph paragraph )
@@ -167,24 +179,34 @@ public class XWPFStylesDocument
         return ParagraphIndentationFirstLineValueProvider.INSTANCE.getValue( paragraph, this );
     }
 
-    public <T> T getValue( String key )
+    public Color getBackgroundColor( XWPFParagraph paragraph )
     {
-        return (T) values.get( key );
+        return ParagraphBackgroundColorValueProvider.INSTANCE.getValue( paragraph, this );
     }
-
-    public <T> void setValue( String key, T value )
+    
+    public Color getBackgroundColor( CTPPr pPr )
     {
-        values.put( key, value );
+        return ParagraphBackgroundColorValueProvider.INSTANCE.getValue( pPr );
     }
-
+    
     public String getFontFamily( XWPFRun run )
     {
         return RunFontFamilyValueProvider.INSTANCE.getValue( run, this );
     }
 
-    public Integer getFontSize( XWPFRun run )
+    public String getFontFamily( CTRPr rPr )
+    {
+        return RunFontFamilyValueProvider.INSTANCE.getValue( rPr );
+    }
+
+    public Float getFontSize( XWPFRun run )
     {
         return RunFontSizeValueProvider.INSTANCE.getValue( run, this );
+    }
+
+    public Float getFontSize( CTRPr rPr )
+    {
+        return RunFontSizeValueProvider.INSTANCE.getValue( rPr );
     }
 
     public Boolean getFontStyleBold( XWPFRun run )
@@ -192,9 +214,24 @@ public class XWPFStylesDocument
         return RunFontStyleBoldValueProvider.INSTANCE.getValue( run, this );
     }
 
+    public Boolean getFontStyleBold( CTRPr rPr )
+    {
+        return RunFontStyleBoldValueProvider.INSTANCE.getValue( rPr );
+    }
+
     public Boolean getFontStyleItalic( XWPFRun run )
     {
         return RunFontStyleItalicValueProvider.INSTANCE.getValue( run, this );
+    }
+
+    public Boolean getFontStyleItalic( CTRPr rPr )
+    {
+        return RunFontStyleItalicValueProvider.INSTANCE.getValue( rPr );
+    }
+
+    public Color getFontColor( CTRPr rPr )
+    {
+        return RunFontColorValueProvider.INSTANCE.getValue( rPr );
     }
 
     public Color getFontColor( XWPFRun run )
@@ -207,9 +244,19 @@ public class XWPFStylesDocument
         return ParagraphAlignmentValueProvider.INSTANCE.getValue( paragraph, this );
     }
 
+    public ParagraphAlignment getParagraphAlignment( CTPPr pPr )
+    {
+        return ParagraphAlignmentValueProvider.INSTANCE.getValue( pPr );
+    }
+
     public Color getBackgroundColor( XWPFRun run )
     {
         return RunBackgroundColorValueProvider.INSTANCE.getValue( run, this );
+    }
+
+    public Color getBackgroundColor( CTRPr rPr )
+    {
+        return RunBackgroundColorValueProvider.INSTANCE.getValue( rPr );
     }
 
     public CTStyle getDefaultCharacterStyle()
@@ -239,6 +286,16 @@ public class XWPFStylesDocument
             return null;
         }
         return getStyle( basedOn.getVal() );
+    }
+
+    public <T> T getValue( String key )
+    {
+        return (T) values.get( key );
+    }
+
+    public <T> void setValue( String key, T value )
+    {
+        values.put( key, value );
     }
 
 }

@@ -72,6 +72,13 @@ public abstract class AbstractODFDOMConverterTest
     }
 
     @Test
+    public void Taksee()
+        throws Exception
+    {
+        doGenerate( "Taksee.odt" );
+    }
+    
+    @Test
     public void testColor()
         throws Exception
     {

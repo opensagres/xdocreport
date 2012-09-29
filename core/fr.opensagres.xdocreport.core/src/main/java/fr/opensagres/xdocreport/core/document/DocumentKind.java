@@ -30,5 +30,28 @@ package fr.opensagres.xdocreport.core.document;
 public enum DocumentKind
 {
 
-    ODT, ODS, ODP, DOCX, PPTX
+    ODT("application/vnd.oasis.opendocument.text"), ODS("application/vnd.oasis.opendocument.spreadsheet"), ODP("application/vnd.oasis.opendocument.presentation"), DOCX("application/vnd.openxmlformats-officedocument.wordprocessingml.document"), PPTX("application/vnd.openxmlformats-officedocument.presentationml.presentation");
+
+    private final String mimeType;
+
+
+    private DocumentKind(String mimeType) {
+		this.mimeType=mimeType;
+	}
+
+    public String getMimeType() {
+		return mimeType;
+	}
+
+	public static DocumentKind fromMimeType(String mimetype2) {
+		DocumentKind[] kinds = values();
+
+		for (int i = 0; i < kinds.length; i++) {
+			if(kinds[i].getMimeType().equals(mimetype2))
+				return kinds[i];
+		}
+
+		//not found...
+		return null;
+	}
 }

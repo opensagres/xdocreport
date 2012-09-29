@@ -95,6 +95,12 @@ public class CSSStylesDocument
                 style.addProperty( "text-align", "right" );
                 style.addProperty( "text-indent", getValue( indentationRight ) );
             }
+            // indentation first line
+            Float indentationFirstLine = super.getIndentationFirstLine( pPr );
+            if ( indentationFirstLine != null )
+            {
+                style.addProperty( "text-indent", getValue( indentationFirstLine ) );
+            }
 
             // Aligment
             ParagraphAlignment alignment = super.getParagraphAlignment( pPr );
@@ -177,6 +183,7 @@ public class CSSStylesDocument
             String fontFamily = super.getFontFamily( rPr );
             if ( StringUtils.isNotEmpty( fontFamily ) )
             {
+                fontFamily = new StringBuilder( "'" ).append( fontFamily ).append( "'" ).toString();
                 style.addProperty( "font-family", fontFamily );
             }
             // Font size
@@ -203,8 +210,8 @@ public class CSSStylesDocument
             {
                 style.addProperty( "color", XWPFUtils.toHexString( fontColor ) );
             }
-            // TODO Underlines
-            UnderlinePatterns underlinePatterns = null;// supergetUnderline();
+            // Underlines
+            UnderlinePatterns underlinePatterns = super.getUnderline( rPr );
             if ( underlinePatterns != null )
             {
                 switch ( underlinePatterns )
@@ -236,8 +243,11 @@ public class CSSStylesDocument
      */
     private void visitStyle( String className, CTTblPrBase tblPr, boolean defaultStyle )
     {
-        CSSStyle style = new CSSStyle( XHTMLConstants.TABLE_ELEMENT, className );
-        getCSSStyles().add( style );
+        if ( tblPr != null )
+        {
+            CSSStyle style = new CSSStyle( XHTMLConstants.TABLE_ELEMENT, className );
+            getCSSStyles().add( style );
+        }
     }
 
     // -------------------------------- Table row styles
@@ -268,6 +278,13 @@ public class CSSStylesDocument
         if ( tcPr != null )
         {
             CSSStyle style = new CSSStyle( XHTMLConstants.TD_ELEMENT, className );
+
+            // backround color
+            Color backgroundColor = super.getTableCellBackgroundColor( tcPr );
+            if ( backgroundColor != null )
+            {
+                style.addProperty( "background-color", XWPFUtils.toHexString( backgroundColor ) );
+            }
             getCSSStyles().add( style );
         }
     }
@@ -292,7 +309,7 @@ public class CSSStylesDocument
         SAXHelper.startElement( contentHandler, XHTMLConstants.STYLE_ELEMENT, null );
         for ( CSSStyle style : cssStyles )
         {
-            SAXHelper.characters( contentHandler, "\n" );
+            // SAXHelper.characters( contentHandler, "\n" );
             style.save( contentHandler );
         }
         SAXHelper.endElement( contentHandler, XHTMLConstants.STYLE_ELEMENT );
@@ -330,10 +347,17 @@ public class CSSStylesDocument
 
     private String getClassName( String styleId, boolean spaceAfter )
     {
+        StringBuilder className = new StringBuilder();
+        char firstChar = styleId.charAt( 0 );
+        if ( Character.isDigit( firstChar ) )
+        {
+            // class name must not started with a number (Chrome doesn't works with that).
+            className.append( 'X' ).toString();
+        }
         if ( spaceAfter )
         {
-            return new StringBuilder( styleId ).append( ' ' ).toString();
+            return className.append( styleId ).append( ' ' ).toString();
         }
-        return styleId;
+        return className.append( styleId ).toString();
     }
 }

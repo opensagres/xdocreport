@@ -19,8 +19,11 @@ import org.apache.poi.xwpf.converter.core.styles.run.RunFontFamilyValueProvider;
 import org.apache.poi.xwpf.converter.core.styles.run.RunFontSizeValueProvider;
 import org.apache.poi.xwpf.converter.core.styles.run.RunFontStyleBoldValueProvider;
 import org.apache.poi.xwpf.converter.core.styles.run.RunFontStyleItalicValueProvider;
+import org.apache.poi.xwpf.converter.core.styles.run.RunUnderlineValueProvider;
+import org.apache.poi.xwpf.converter.core.styles.table.cell.TableCellBackgroundColorValueProvider;
 import org.apache.poi.xwpf.converter.core.styles.table.cell.TableCellVerticalAlignmentValueProvider;
 import org.apache.poi.xwpf.usermodel.ParagraphAlignment;
+import org.apache.poi.xwpf.usermodel.UnderlinePatterns;
 import org.apache.poi.xwpf.usermodel.XWPFDocument;
 import org.apache.poi.xwpf.usermodel.XWPFParagraph;
 import org.apache.poi.xwpf.usermodel.XWPFRun;
@@ -31,6 +34,7 @@ import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTPPr;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTRPr;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTString;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTStyle;
+import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTTcPr;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.STVerticalJc.Enum;
 
 public class XWPFStylesDocument
@@ -134,6 +138,12 @@ public class XWPFStylesDocument
         return null;
     }
 
+    // -------------------- Paragraph
+
+    /**
+     * @param docxParagraph
+     * @return
+     */
     public Float getSpacingBefore( XWPFParagraph docxParagraph )
     {
         return ParagraphSpacingBeforeValueProvider.INSTANCE.getValue( docxParagraph, this );
@@ -179,16 +189,41 @@ public class XWPFStylesDocument
         return ParagraphIndentationFirstLineValueProvider.INSTANCE.getValue( paragraph, this );
     }
 
+    public Float getIndentationFirstLine( CTPPr pPr )
+    {
+        return ParagraphIndentationFirstLineValueProvider.INSTANCE.getValue( pPr );
+    }
+
     public Color getBackgroundColor( XWPFParagraph paragraph )
     {
         return ParagraphBackgroundColorValueProvider.INSTANCE.getValue( paragraph, this );
     }
-    
+
     public Color getBackgroundColor( CTPPr pPr )
     {
         return ParagraphBackgroundColorValueProvider.INSTANCE.getValue( pPr );
     }
-    
+
+    /**
+     * @param paragraph
+     * @return
+     */
+    public ParagraphAlignment getParagraphAlignment( XWPFParagraph paragraph )
+    {
+        return ParagraphAlignmentValueProvider.INSTANCE.getValue( paragraph, this );
+    }
+
+    public ParagraphAlignment getParagraphAlignment( CTPPr pPr )
+    {
+        return ParagraphAlignmentValueProvider.INSTANCE.getValue( pPr );
+    }
+
+    // -------------------- Run
+
+    /**
+     * @param run
+     * @return
+     */
     public String getFontFamily( XWPFRun run )
     {
         return RunFontFamilyValueProvider.INSTANCE.getValue( run, this );
@@ -229,24 +264,24 @@ public class XWPFStylesDocument
         return RunFontStyleItalicValueProvider.INSTANCE.getValue( rPr );
     }
 
-    public Color getFontColor( CTRPr rPr )
-    {
-        return RunFontColorValueProvider.INSTANCE.getValue( rPr );
-    }
-
     public Color getFontColor( XWPFRun run )
     {
         return RunFontColorValueProvider.INSTANCE.getValue( run, this );
     }
 
-    public ParagraphAlignment getParagraphAlignment( XWPFParagraph paragraph )
+    public Color getFontColor( CTRPr rPr )
     {
-        return ParagraphAlignmentValueProvider.INSTANCE.getValue( paragraph, this );
+        return RunFontColorValueProvider.INSTANCE.getValue( rPr );
     }
 
-    public ParagraphAlignment getParagraphAlignment( CTPPr pPr )
+    public UnderlinePatterns getUnderline( CTRPr rPr )
     {
-        return ParagraphAlignmentValueProvider.INSTANCE.getValue( pPr );
+        return RunUnderlineValueProvider.INSTANCE.getValue( rPr );
+    }
+
+    public UnderlinePatterns getUnderline( XWPFRun run )
+    {
+        return RunUnderlineValueProvider.INSTANCE.getValue( run, this );
     }
 
     public Color getBackgroundColor( XWPFRun run )
@@ -257,6 +292,27 @@ public class XWPFStylesDocument
     public Color getBackgroundColor( CTRPr rPr )
     {
         return RunBackgroundColorValueProvider.INSTANCE.getValue( rPr );
+    }
+
+    // ------------------------ Table cell
+
+    /**
+     * @param cell
+     * @return
+     */
+    public Enum getTableCellVerticalAlignment( XWPFTableCell cell )
+    {
+        return TableCellVerticalAlignmentValueProvider.INSTANCE.getValue( cell, this );
+    }
+
+    public Color getTableCellBackgroundColor( XWPFTableCell cell )
+    {
+        return TableCellBackgroundColorValueProvider.INSTANCE.getValue( cell, this );
+    }
+
+    public Color getTableCellBackgroundColor( CTTcPr tcPr )
+    {
+        return TableCellBackgroundColorValueProvider.INSTANCE.getValue( tcPr );
     }
 
     public CTStyle getDefaultCharacterStyle()
@@ -272,11 +328,6 @@ public class XWPFStylesDocument
     public CTStyle getDefaultTableStyle()
     {
         return defaultTableStyle;
-    }
-
-    public Enum getTableCellVerticalAlignment( XWPFTableCell cell )
-    {
-        return TableCellVerticalAlignmentValueProvider.INSTANCE.getValue( cell, this );
     }
 
     public CTStyle getStyle( CTString basedOn )

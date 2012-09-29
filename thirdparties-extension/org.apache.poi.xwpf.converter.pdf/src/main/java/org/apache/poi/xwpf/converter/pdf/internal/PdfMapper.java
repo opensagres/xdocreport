@@ -367,7 +367,7 @@ public class PdfMapper
         // }
 
         // Underline patterns
-        this.currentRunUnderlinePatterns = docxRun.getUnderline();
+        this.currentRunUnderlinePatterns = stylesDocument.getUnderline( docxRun );
         this.currentRunBackgroundColor = stylesDocument.getBackgroundColor( docxRun ); // XWPFParagraphUtils.getBackgroundColor(
         // run );
 
@@ -501,14 +501,6 @@ public class PdfMapper
                 pdfPCell.setColspan( colspan );
             }
 
-            // Backround Color
-            CTShd shd = tcPr.getShd();
-            Color backgroundColor = ColorHelper.getFillColor( shd );
-            if ( backgroundColor != null )
-            {
-                pdfPCell.setBackgroundColor( backgroundColor );
-            }
-
             // Borders
             // Table Properties on cells
 
@@ -548,6 +540,13 @@ public class PdfMapper
                     pdfPCell.setRotation( 270 );
                 }
             }
+        }
+
+        // Backround Color
+        Color backgroundColor = stylesDocument.getTableCellBackgroundColor( cell );
+        if ( backgroundColor != null )
+        {
+            pdfPCell.setBackgroundColor( backgroundColor );
         }
 
         // // Vertical aligment

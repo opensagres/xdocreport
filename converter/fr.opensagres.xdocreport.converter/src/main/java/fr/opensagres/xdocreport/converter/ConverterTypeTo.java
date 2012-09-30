@@ -30,5 +30,15 @@ package fr.opensagres.xdocreport.converter;
 public enum ConverterTypeTo
 {
 
-    XHTML, FO, PDF
+    XHTML("text/html"), FO("TODO"), PDF("application/pdf");
+
+    private final String mimeType;
+
+	private ConverterTypeTo(String mimeType) {
+		this.mimeType = mimeType;
+	}
+
+	public String getMimeType() {
+		return mimeType;
+	}
 }

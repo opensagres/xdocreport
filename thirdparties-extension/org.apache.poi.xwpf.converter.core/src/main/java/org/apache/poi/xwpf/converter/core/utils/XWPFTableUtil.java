@@ -27,8 +27,6 @@ package org.apache.poi.xwpf.converter.core.utils;
 import static org.apache.poi.xwpf.converter.core.utils.DxaUtil.dxa2points;
 
 import java.awt.Color;
-import java.awt.Rectangle;
-import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -45,9 +43,7 @@ import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTTblGrid;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTTblGridCol;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTTblPr;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTTblWidth;
-import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTTcBorders;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTTcPr;
-import org.openxmlformats.schemas.wordprocessingml.x2006.main.STBorder;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.STTblWidth;
 import org.w3c.dom.Attr;
 import org.w3c.dom.Node;

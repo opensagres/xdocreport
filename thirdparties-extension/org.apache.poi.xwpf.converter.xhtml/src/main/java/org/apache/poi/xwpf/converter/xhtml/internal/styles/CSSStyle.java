@@ -28,8 +28,11 @@ public class CSSStyle
         throws SAXException
     {
         StringBuilder style = new StringBuilder( tagName );
-        style.append( '.' );
-        style.append( className );
+        if ( className != null )
+        {
+            style.append( '.' );
+            style.append( className );
+        }
         style.append( '{' );
 
         buildInlineStyles( style );

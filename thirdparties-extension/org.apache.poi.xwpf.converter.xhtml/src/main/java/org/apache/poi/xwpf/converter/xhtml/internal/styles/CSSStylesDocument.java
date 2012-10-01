@@ -1,7 +1,31 @@
 package org.apache.poi.xwpf.converter.xhtml.internal.styles;
 
-import static org.apache.poi.xwpf.converter.xhtml.XHTMLConstants.P_ELEMENT;
-import static org.apache.poi.xwpf.converter.xhtml.XHTMLConstants.SPAN_ELEMENT;
+import static org.apache.poi.xwpf.converter.xhtml.internal.XHTMLConstants.P_ELEMENT;
+import static org.apache.poi.xwpf.converter.xhtml.internal.XHTMLConstants.SPAN_ELEMENT;
+import static org.apache.poi.xwpf.converter.xhtml.internal.XHTMLConstants.TABLE_ELEMENT;
+import static org.apache.poi.xwpf.converter.xhtml.internal.XHTMLConstants.TD_ELEMENT;
+import static org.apache.poi.xwpf.converter.xhtml.internal.XHTMLConstants.TR_ELEMENT;
+import static org.apache.poi.xwpf.converter.xhtml.internal.styles.CSSStylePropertyConstants.BACKGROUND_COLOR;
+import static org.apache.poi.xwpf.converter.xhtml.internal.styles.CSSStylePropertyConstants.COLOR;
+import static org.apache.poi.xwpf.converter.xhtml.internal.styles.CSSStylePropertyConstants.FONT_FAMILY;
+import static org.apache.poi.xwpf.converter.xhtml.internal.styles.CSSStylePropertyConstants.FONT_SIZE;
+import static org.apache.poi.xwpf.converter.xhtml.internal.styles.CSSStylePropertyConstants.FONT_STYLE;
+import static org.apache.poi.xwpf.converter.xhtml.internal.styles.CSSStylePropertyConstants.FONT_STYLE_ITALIC;
+import static org.apache.poi.xwpf.converter.xhtml.internal.styles.CSSStylePropertyConstants.FONT_WEIGHT;
+import static org.apache.poi.xwpf.converter.xhtml.internal.styles.CSSStylePropertyConstants.FONT_WEIGHT_BOLD;
+import static org.apache.poi.xwpf.converter.xhtml.internal.styles.CSSStylePropertyConstants.HEIGHT;
+import static org.apache.poi.xwpf.converter.xhtml.internal.styles.CSSStylePropertyConstants.MARGIN_BOTTOM;
+import static org.apache.poi.xwpf.converter.xhtml.internal.styles.CSSStylePropertyConstants.MARGIN_TOP;
+import static org.apache.poi.xwpf.converter.xhtml.internal.styles.CSSStylePropertyConstants.MIN_HEIGHT;
+import static org.apache.poi.xwpf.converter.xhtml.internal.styles.CSSStylePropertyConstants.TEXT_ALIGN;
+import static org.apache.poi.xwpf.converter.xhtml.internal.styles.CSSStylePropertyConstants.TEXT_ALIGN_CENTER;
+import static org.apache.poi.xwpf.converter.xhtml.internal.styles.CSSStylePropertyConstants.TEXT_ALIGN_JUSTIFIED;
+import static org.apache.poi.xwpf.converter.xhtml.internal.styles.CSSStylePropertyConstants.TEXT_ALIGN_LEFT;
+import static org.apache.poi.xwpf.converter.xhtml.internal.styles.CSSStylePropertyConstants.TEXT_ALIGN_RIGHT;
+import static org.apache.poi.xwpf.converter.xhtml.internal.styles.CSSStylePropertyConstants.TEXT_DECORATION;
+import static org.apache.poi.xwpf.converter.xhtml.internal.styles.CSSStylePropertyConstants.TEXT_DECORATION_UNDERLINE;
+import static org.apache.poi.xwpf.converter.xhtml.internal.styles.CSSStylePropertyConstants.TEXT_INDENT;
+import static org.apache.poi.xwpf.converter.xhtml.internal.styles.CSSStylePropertyConstants.WIDTH;
 
 import java.awt.Color;
 import java.io.IOException;
@@ -10,8 +34,10 @@ import java.util.List;
 
 import org.apache.poi.xwpf.converter.core.styles.XWPFStylesDocument;
 import org.apache.poi.xwpf.converter.core.utils.StringUtils;
+import org.apache.poi.xwpf.converter.core.utils.TableHeight;
+import org.apache.poi.xwpf.converter.core.utils.TableWidth;
 import org.apache.poi.xwpf.converter.core.utils.XWPFUtils;
-import org.apache.poi.xwpf.converter.xhtml.XHTMLConstants;
+import org.apache.poi.xwpf.converter.xhtml.internal.XHTMLConstants;
 import org.apache.poi.xwpf.converter.xhtml.internal.utils.SAXHelper;
 import org.apache.poi.xwpf.usermodel.ParagraphAlignment;
 import org.apache.poi.xwpf.usermodel.UnderlinePatterns;
@@ -30,14 +56,38 @@ public class CSSStylesDocument
     extends XWPFStylesDocument
 {
 
-    private static final String PT = "pt";
+    private static final String CR = "\n";
+
+    private static final String PT_UNIT = "pt";
+
+    private static final Object PERCENT_UNIT = "%";
 
     private List<CSSStyle> cssStyles;
 
-    public CSSStylesDocument( XWPFDocument document )
+    private final boolean ignoreStylesIfUnused;
+
+    private final Integer indent;
+
+    public CSSStylesDocument( XWPFDocument document, boolean ignoreStylesIfUnused, Integer indent )
         throws XmlException, IOException
     {
-        super( document );
+        super( document, false );
+        this.ignoreStylesIfUnused = ignoreStylesIfUnused;
+        this.indent = indent;
+        this.initialize();
+    }
+
+    @Override
+    protected void initialize()
+        throws XmlException, IOException
+    {
+        // default paragraph
+        CSSStyle defaultPStyle = new CSSStyle( P_ELEMENT, null );
+        defaultPStyle.addProperty( MARGIN_TOP, "0pt" );
+        defaultPStyle.addProperty( MARGIN_BOTTOM, "1pt" );
+        getCSSStyles().add( defaultPStyle );
+
+        super.initialize();
     }
 
     @Override
@@ -80,26 +130,30 @@ public class CSSStylesDocument
     {
         if ( pPr != null )
         {
-            CSSStyle style = new CSSStyle( P_ELEMENT, className );
+            String tagName = P_ELEMENT;
+            CSSStyle style = ignoreStylesIfUnused ? null : getOrCreateStyle( null, tagName, className );
             // indentation left
             Float indentationLeft = super.getIndentationLeft( pPr );
             if ( indentationLeft != null )
             {
-                style.addProperty( "text-align", "left" );
-                style.addProperty( "text-indent", getValue( indentationLeft ) );
+                style = getOrCreateStyle( style, tagName, className );
+                style.addProperty( TEXT_ALIGN, TEXT_ALIGN_LEFT );
+                style.addProperty( TEXT_INDENT, getValueAsPoint( indentationLeft ) );
             }
             // indentation right
             Float indentationRight = super.getIndentationRight( pPr );
             if ( indentationRight != null )
             {
-                style.addProperty( "text-align", "right" );
-                style.addProperty( "text-indent", getValue( indentationRight ) );
+                style = getOrCreateStyle( style, tagName, className );
+                style.addProperty( TEXT_ALIGN, TEXT_ALIGN_RIGHT );
+                style.addProperty( TEXT_INDENT, getValueAsPoint( indentationRight ) );
             }
             // indentation first line
             Float indentationFirstLine = super.getIndentationFirstLine( pPr );
             if ( indentationFirstLine != null )
             {
-                style.addProperty( "text-indent", getValue( indentationFirstLine ) );
+                style = getOrCreateStyle( style, tagName, className );
+                style.addProperty( TEXT_INDENT, getValueAsPoint( indentationFirstLine ) );
             }
 
             // Aligment
@@ -109,18 +163,21 @@ public class CSSStylesDocument
                 switch ( alignment )
                 {
                     case LEFT:
-                        style.addProperty( "text-align", "left" );
+                        style = getOrCreateStyle( style, tagName, className );
+                        style.addProperty( TEXT_ALIGN, TEXT_ALIGN_LEFT );
                         break;
                     case RIGHT:
-                        style.addProperty( "text-align", "right" );
+                        style = getOrCreateStyle( style, tagName, className );
+                        style.addProperty( TEXT_ALIGN, TEXT_ALIGN_RIGHT );
                         break;
-
                     case CENTER:
-                        style.addProperty( "text-align", "center" );
+                        style = getOrCreateStyle( style, tagName, className );
+                        style.addProperty( TEXT_ALIGN, TEXT_ALIGN_CENTER );
                         break;
 
                     case BOTH:
-                        style.addProperty( "text-align", "justified" );
+                        style = getOrCreateStyle( style, tagName, className );
+                        style.addProperty( TEXT_ALIGN, TEXT_ALIGN_JUSTIFIED );
                         break;
                 }
             }
@@ -128,28 +185,21 @@ public class CSSStylesDocument
             Float spacingBefore = super.getSpacingBefore( pPr );
             if ( spacingBefore != null )
             {
-                style.addProperty( "margin-top", getValue( spacingBefore ) );
-            }
-            else
-            {
-                // By default p element are no margin top/bottom;
-                style.addProperty( "margin-top", "0" );
+                style = getOrCreateStyle( style, tagName, className );
+                style.addProperty( MARGIN_TOP, getValueAsPoint( spacingBefore ) );
             }
             Float spacingAfter = super.getSpacingAfter( pPr );
             if ( spacingAfter != null )
             {
-                style.addProperty( "margin-bottom", getValue( spacingAfter ) );
-            }
-            else
-            {
-                // By default p element are no margin top/bottom;
-                style.addProperty( "margin-bottom", "1pt" );
+                style = getOrCreateStyle( style, tagName, className );
+                style.addProperty( MARGIN_BOTTOM, getValueAsPoint( spacingAfter ) );
             }
             // Background color
             Color backgroundColor = super.getBackgroundColor( pPr );
             if ( backgroundColor != null )
             {
-                style.addProperty( "background-color", XWPFUtils.toHexString( backgroundColor ) );
+                style = getOrCreateStyle( style, tagName, className );
+                style.addProperty( BACKGROUND_COLOR, XWPFUtils.toHexString( backgroundColor ) );
             }
             return style;
         }
@@ -177,38 +227,44 @@ public class CSSStylesDocument
     {
         if ( rPr != null )
         {
-            CSSStyle style = new CSSStyle( SPAN_ELEMENT, className );
+            String tagName = SPAN_ELEMENT;
+            CSSStyle style = ignoreStylesIfUnused ? null : getOrCreateStyle( null, tagName, className );
 
             // Font family
             String fontFamily = super.getFontFamily( rPr );
             if ( StringUtils.isNotEmpty( fontFamily ) )
             {
                 fontFamily = new StringBuilder( "'" ).append( fontFamily ).append( "'" ).toString();
-                style.addProperty( "font-family", fontFamily );
+                style = getOrCreateStyle( style, tagName, className );
+                style.addProperty( FONT_FAMILY, fontFamily );
             }
             // Font size
             Float fontSize = super.getFontSize( rPr );
             if ( fontSize != null )
             {
-                style.addProperty( "font-size", getValue( fontSize ) );
+                style = getOrCreateStyle( style, tagName, className );
+                style.addProperty( FONT_SIZE, getValueAsPoint( fontSize ) );
             }
             // Font Bold
             Boolean bold = super.getFontStyleBold( rPr );
             if ( bold != null && bold )
             {
-                style.addProperty( "font-weight", "bold" );
+                style = getOrCreateStyle( style, tagName, className );
+                style.addProperty( FONT_WEIGHT, FONT_WEIGHT_BOLD );
             }
             // Font Italic
             Boolean italic = super.getFontStyleItalic( rPr );
             if ( italic != null && italic )
             {
-                style.addProperty( "font-style", "italic" );
+                style = getOrCreateStyle( style, tagName, className );
+                style.addProperty( FONT_STYLE, FONT_STYLE_ITALIC );
             }
             // Font color
             Color fontColor = super.getFontColor( rPr );
             if ( fontColor != null )
             {
-                style.addProperty( "color", XWPFUtils.toHexString( fontColor ) );
+                style = getOrCreateStyle( style, tagName, className );
+                style.addProperty( COLOR, XWPFUtils.toHexString( fontColor ) );
             }
             // Underlines
             UnderlinePatterns underlinePatterns = super.getUnderline( rPr );
@@ -217,7 +273,8 @@ public class CSSStylesDocument
                 switch ( underlinePatterns )
                 {
                     case SINGLE:
-                        style.addProperty( "text-decoration", "underline" );
+                        style = getOrCreateStyle( style, tagName, className );
+                        style.addProperty( TEXT_DECORATION, TEXT_DECORATION_UNDERLINE );
                         break;
                     default:
                         break;
@@ -227,7 +284,8 @@ public class CSSStylesDocument
             Color backgroundColor = super.getBackgroundColor( rPr );
             if ( backgroundColor != null )
             {
-                style.addProperty( "background-color", XWPFUtils.toHexString( backgroundColor ) );
+                style = getOrCreateStyle( style, tagName, className );
+                style.addProperty( BACKGROUND_COLOR, XWPFUtils.toHexString( backgroundColor ) );
             }
             return style;
         }
@@ -243,11 +301,40 @@ public class CSSStylesDocument
      */
     private void visitStyle( String className, CTTblPrBase tblPr, boolean defaultStyle )
     {
-        if ( tblPr != null )
+        CSSStyle style = createCSSStyle( tblPr, className );
+        if ( style != null )
         {
-            CSSStyle style = new CSSStyle( XHTMLConstants.TABLE_ELEMENT, className );
             getCSSStyles().add( style );
         }
+    }
+
+    public CSSStyle createCSSStyle( CTTblPrBase tblPr )
+    {
+        return createCSSStyle( tblPr, null );
+    }
+
+    public CSSStyle createCSSStyle( CTTblPrBase tblPr, String className )
+    {
+        if ( tblPr != null )
+        {
+            String tagName = TABLE_ELEMENT;
+            CSSStyle style = ignoreStylesIfUnused ? null : getOrCreateStyle( null, tagName, className );
+
+            TableWidth tableWidth = super.getTableWidth( tblPr );
+            if ( tableWidth != null && tableWidth.width > 0 )
+            {
+                style = getOrCreateStyle( style, tagName, className );
+                style.addProperty( WIDTH, getStyleWidth( tableWidth ) );
+            }
+
+            return style;
+        }
+        return null;
+    }
+
+    private String getStyleWidth( TableWidth tableWidth )
+    {
+        return tableWidth.percentUnit ? getValueAsPercent( tableWidth.width ) : getValueAsPoint( tableWidth.width );
     }
 
     // -------------------------------- Table row styles
@@ -259,11 +346,43 @@ public class CSSStylesDocument
      */
     private void visitStyle( String className, CTTrPr trPr, boolean defaultStyle )
     {
-        if ( trPr != null )
+        CSSStyle style = createCSSStyle( trPr, className );
+        if ( style != null )
         {
-            CSSStyle style = new CSSStyle( XHTMLConstants.TR_ELEMENT, className );
             getCSSStyles().add( style );
         }
+    }
+
+    public CSSStyle createCSSStyle( CTTrPr trPr )
+    {
+        return createCSSStyle( trPr, null );
+    }
+
+    public CSSStyle createCSSStyle( CTTrPr trPr, String className )
+    {
+        if ( trPr != null )
+        {
+            String tagName = TR_ELEMENT;
+            CSSStyle style = ignoreStylesIfUnused ? null : getOrCreateStyle( null, tagName, className );
+
+            // min-height / height
+            TableHeight tableHeight = super.getTableRowHeight( trPr );
+            if ( tableHeight != null )
+            {
+                if ( tableHeight.minimum )
+                {
+                    style = getOrCreateStyle( style, tagName, className );
+                    style.addProperty( MIN_HEIGHT, getValueAsPoint( tableHeight.height ) );
+                }
+                else
+                {
+                    style = getOrCreateStyle( style, tagName, className );
+                    style.addProperty( HEIGHT, getValueAsPoint( tableHeight.height ) );
+                }
+            }
+            return style;
+        }
+        return null;
     }
 
     // -------------------------------- Table cell styles
@@ -275,18 +394,42 @@ public class CSSStylesDocument
      */
     private void visitStyle( String className, CTTcPr tcPr, boolean defaultStyle )
     {
+        CSSStyle style = createCSSStyle( tcPr, className );
+        if ( style != null )
+        {
+            getCSSStyles().add( style );
+        }
+    }
+
+    public CSSStyle createCSSStyle( CTTcPr tcPr )
+    {
+        return createCSSStyle( tcPr, null );
+    }
+
+    public CSSStyle createCSSStyle( CTTcPr tcPr, String className )
+    {
         if ( tcPr != null )
         {
-            CSSStyle style = new CSSStyle( XHTMLConstants.TD_ELEMENT, className );
+            String tagName = TD_ELEMENT;
+            CSSStyle style = ignoreStylesIfUnused ? null : getOrCreateStyle( null, tagName, className );
 
-            // backround color
+            // cell width
+            TableWidth cellWidth = super.getTableCellWith( tcPr );
+            if ( cellWidth != null )
+            {
+                style = getOrCreateStyle( style, tagName, className );
+                style.addProperty( WIDTH, getStyleWidth( cellWidth ) );
+            }
+            // background color
             Color backgroundColor = super.getTableCellBackgroundColor( tcPr );
             if ( backgroundColor != null )
             {
-                style.addProperty( "background-color", XWPFUtils.toHexString( backgroundColor ) );
+                style = getOrCreateStyle( style, tagName, className );
+                style.addProperty( BACKGROUND_COLOR, XWPFUtils.toHexString( backgroundColor ) );
             }
-            getCSSStyles().add( style );
+            return style;
         }
+        return null;
     }
 
     public List<CSSStyle> getCSSStyles()
@@ -302,22 +445,31 @@ public class CSSStylesDocument
         throws SAXException
     {
         List<CSSStyle> cssStyles = getCSSStyles();
-        if ( cssStyles.size() < 1 )
+        if ( ignoreStylesIfUnused && cssStyles.size() < 1 )
         {
-
+            return;
         }
+
         SAXHelper.startElement( contentHandler, XHTMLConstants.STYLE_ELEMENT, null );
         for ( CSSStyle style : cssStyles )
         {
-            // SAXHelper.characters( contentHandler, "\n" );
+            if ( indent != null )
+            {
+                SAXHelper.characters( contentHandler, CR );
+            }
             style.save( contentHandler );
         }
         SAXHelper.endElement( contentHandler, XHTMLConstants.STYLE_ELEMENT );
     }
 
-    private String getValue( float value )
+    public String getValueAsPoint( float value )
     {
-        return new StringBuilder( String.valueOf( value ) ).append( PT ).toString();
+        return new StringBuilder( String.valueOf( value ) ).append( PT_UNIT ).toString();
+    }
+
+    private String getValueAsPercent( float value )
+    {
+        return new StringBuilder( String.valueOf( value ) ).append( PERCENT_UNIT ).toString();
     }
 
     public String getClassNames( String styleID )
@@ -360,4 +512,22 @@ public class CSSStylesDocument
         }
         return className.append( styleId ).toString();
     }
+
+    private CSSStyle getOrCreateStyle( CSSStyle style, String tagName, String className )
+    {
+        if ( style != null )
+        {
+            return style;
+        }
+        return new CSSStyle( tagName, className );
+    }
+    
+//    private String () {
+//        // see http://www.css3maker.com/text-rotation.html
+//        -webkit-transform: rotate(90deg);
+//    -moz-transform: rotate(90deg);
+//    -ms-transform: matrix(1.239,-0.124,-0.547,0.843,0,0);
+//    -o-transform: matrix(1.239,-0.124,-0.547,0.843,0,0);
+//    transform: matrix(1.239,-0.124,-0.547,0.843,0,0);
+//    }
 }

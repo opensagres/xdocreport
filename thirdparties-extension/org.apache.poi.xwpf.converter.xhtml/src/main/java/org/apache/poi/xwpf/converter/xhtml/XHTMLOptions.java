@@ -31,20 +31,25 @@ public class XHTMLOptions
     extends Options
 {
 
-    private int indent;
+    private static final XHTMLOptions DEFAULT = new XHTMLOptions();
 
-    private boolean generateCSSComments;
+    private Integer indent;
 
     private boolean omitHeaderFooterPages;
 
     private boolean fragment;
 
-    private IURIResolver resolver = IURIResolver.DEFAULT;
+    private boolean ignoreStylesIfUnused;
+
+    private IURIResolver resolver;
 
     private XHTMLOptions()
     {
+        this.indent = null;
         this.omitHeaderFooterPages = false;
         this.fragment = false;
+        this.ignoreStylesIfUnused = true;
+        this.resolver = IURIResolver.DEFAULT;
     }
 
     public static XHTMLOptions create()
@@ -52,25 +57,19 @@ public class XHTMLOptions
         return new XHTMLOptions();
     }
 
-    public int getIndent()
+    public static XHTMLOptions getDefault()
+    {
+        return DEFAULT;
+    }
+
+    public Integer getIndent()
     {
         return indent;
     }
 
-    public XHTMLOptions indent( int indent )
+    public XHTMLOptions indent( Integer indent )
     {
         this.indent = indent;
-        return this;
-    }
-
-    public boolean isGenerateCSSComments()
-    {
-        return generateCSSComments;
-    }
-
-    public XHTMLOptions generateCSSComments( boolean generateCSSComments )
-    {
-        this.generateCSSComments = generateCSSComments;
         return this;
     }
 
@@ -107,4 +106,14 @@ public class XHTMLOptions
         return this;
     }
 
+    public boolean isIgnoreStylesIfUnused()
+    {
+        return ignoreStylesIfUnused;
+    }
+
+    public XHTMLOptions setIgnoreStylesIfUnused( boolean ignoreStylesIfUnused )
+    {
+        this.ignoreStylesIfUnused = ignoreStylesIfUnused;
+        return this;
+    }
 }

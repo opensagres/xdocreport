@@ -1,25 +1,35 @@
 package org.apache.poi.xwpf.converter.xhtml.internal;
 
-import static org.apache.poi.xwpf.converter.xhtml.XHTMLConstants.BODY_ELEMENT;
-import static org.apache.poi.xwpf.converter.xhtml.XHTMLConstants.BR_ELEMENT;
-import static org.apache.poi.xwpf.converter.xhtml.XHTMLConstants.CLASS_ATTR;
-import static org.apache.poi.xwpf.converter.xhtml.XHTMLConstants.HEAD_ELEMENT;
-import static org.apache.poi.xwpf.converter.xhtml.XHTMLConstants.HTML_ELEMENT;
-import static org.apache.poi.xwpf.converter.xhtml.XHTMLConstants.P_ELEMENT;
-import static org.apache.poi.xwpf.converter.xhtml.XHTMLConstants.STYLE_ATTR;
-import static org.apache.poi.xwpf.converter.xhtml.XHTMLConstants.TABLE_ELEMENT;
-import static org.apache.poi.xwpf.converter.xhtml.XHTMLConstants.TD_ELEMENT;
-import static org.apache.poi.xwpf.converter.xhtml.XHTMLConstants.TR_ELEMENT;
-import static org.apache.poi.xwpf.converter.xhtml.XHTMLConstants.SRC_ATTR;
-import static org.apache.poi.xwpf.converter.xhtml.XHTMLConstants.IMG_ELEMENT;
-import static org.apache.poi.xwpf.converter.xhtml.XHTMLConstants.SPAN_ELEMENT;
+import static org.apache.poi.xwpf.converter.xhtml.internal.XHTMLConstants.BODY_ELEMENT;
+import static org.apache.poi.xwpf.converter.xhtml.internal.XHTMLConstants.BR_ELEMENT;
+import static org.apache.poi.xwpf.converter.xhtml.internal.XHTMLConstants.CLASS_ATTR;
+import static org.apache.poi.xwpf.converter.xhtml.internal.XHTMLConstants.COLSPAN_ATTR;
+import static org.apache.poi.xwpf.converter.xhtml.internal.XHTMLConstants.DIV_ELEMENT;
+import static org.apache.poi.xwpf.converter.xhtml.internal.XHTMLConstants.HEAD_ELEMENT;
+import static org.apache.poi.xwpf.converter.xhtml.internal.XHTMLConstants.HTML_ELEMENT;
+import static org.apache.poi.xwpf.converter.xhtml.internal.XHTMLConstants.IMG_ELEMENT;
+import static org.apache.poi.xwpf.converter.xhtml.internal.XHTMLConstants.P_ELEMENT;
+import static org.apache.poi.xwpf.converter.xhtml.internal.XHTMLConstants.SPACE_ENTITY;
+import static org.apache.poi.xwpf.converter.xhtml.internal.XHTMLConstants.SPAN_ELEMENT;
+import static org.apache.poi.xwpf.converter.xhtml.internal.XHTMLConstants.SRC_ATTR;
+import static org.apache.poi.xwpf.converter.xhtml.internal.XHTMLConstants.STYLE_ATTR;
+import static org.apache.poi.xwpf.converter.xhtml.internal.XHTMLConstants.TABLE_ELEMENT;
+import static org.apache.poi.xwpf.converter.xhtml.internal.XHTMLConstants.TD_ELEMENT;
+import static org.apache.poi.xwpf.converter.xhtml.internal.XHTMLConstants.TR_ELEMENT;
+import static org.apache.poi.xwpf.converter.xhtml.internal.styles.CSSStylePropertyConstants.MARGIN_BOTTOM;
+import static org.apache.poi.xwpf.converter.xhtml.internal.styles.CSSStylePropertyConstants.MARGIN_LEFT;
+import static org.apache.poi.xwpf.converter.xhtml.internal.styles.CSSStylePropertyConstants.MARGIN_RIGHT;
+import static org.apache.poi.xwpf.converter.xhtml.internal.styles.CSSStylePropertyConstants.MARGIN_TOP;
+import static org.apache.poi.xwpf.converter.xhtml.internal.styles.CSSStylePropertyConstants.WIDTH;
 
 import java.io.IOException;
+import java.math.BigInteger;
 
 import org.apache.poi.xwpf.converter.core.IURIResolver;
 import org.apache.poi.xwpf.converter.core.IXWPFMasterPage;
 import org.apache.poi.xwpf.converter.core.XWPFDocumentVisitor;
 import org.apache.poi.xwpf.converter.core.styles.XWPFStylesDocument;
+import org.apache.poi.xwpf.converter.core.utils.DxaUtil;
 import org.apache.poi.xwpf.converter.core.utils.StringUtils;
 import org.apache.poi.xwpf.converter.xhtml.XHTMLOptions;
 import org.apache.poi.xwpf.converter.xhtml.internal.styles.CSSStyle;
@@ -41,8 +51,12 @@ import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTBr;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTHdrFtrRef;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTPPr;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTPTab;
+import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTPageMar;
+import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTPageSz;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTRPr;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTSectPr;
+import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTTblPr;
+import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTTcPr;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTText;
 import org.xml.sax.Attributes;
 import org.xml.sax.ContentHandler;
@@ -63,19 +77,22 @@ public class XHTMLMapper
 
     private AttributesImpl currentRunAttributes;
 
+    private boolean pageDiv;
+
     public XHTMLMapper( XWPFDocument document, ContentHandler contentHandler, XHTMLOptions options )
         throws Exception
     {
-        super( document, options != null ? options : XHTMLOptions.create() );
+        super( document, options != null ? options : XHTMLOptions.getDefault() );
         this.contentHandler = contentHandler;
         this.resolver = getOptions().getURIResolver();
+        this.pageDiv = false;
     }
 
     @Override
     protected XWPFStylesDocument createStylesDocument( XWPFDocument document )
         throws XmlException, IOException
     {
-        return new CSSStylesDocument( document );
+        return new CSSStylesDocument( document, options.isIgnoreStylesIfUnused(), options.getIndent() );
     }
 
     @Override
@@ -106,6 +123,10 @@ public class XHTMLMapper
     protected void endVisitDocument()
         throws Exception
     {
+        if ( pageDiv )
+        {
+            endElement( DIV_ELEMENT );
+        }
         if ( !options.isFragment() )
         {
             // body end
@@ -168,6 +189,7 @@ public class XHTMLMapper
         throws Exception
     {
         startElement( BR_ELEMENT );
+        endElement( BR_ELEMENT );
     }
 
     @Override
@@ -186,7 +208,7 @@ public class XHTMLMapper
         }
         else
         {
-            characters( "&nbsp;" );
+            characters( SPACE_ENTITY );
         }
         if ( currentRunAttributes != null )
         {
@@ -205,6 +227,7 @@ public class XHTMLMapper
         throws Exception
     {
         startElement( BR_ELEMENT );
+        endElement( BR_ELEMENT );
     }
 
     @Override
@@ -220,8 +243,13 @@ public class XHTMLMapper
         throws Exception
     {
         // 1) create attributes
-        // Create class attributes.
+        // 1.1) Create class attributes.
         AttributesImpl attributes = createClassAttribute( table.getStyleID() );
+
+        // 1.2) Create "style" attributes.
+        CTTblPr tblPr = table.getCTTbl().getTblPr();
+        CSSStyle cssStyle = getStylesDocument().createCSSStyle( tblPr );
+        attributes = createStyleAttribute( cssStyle, attributes );
 
         // 2) create element
         startElement( TABLE_ELEMENT, attributes );
@@ -263,10 +291,22 @@ public class XHTMLMapper
         throws Exception
     {
         // 1) create attributes
-        // Create class attributes.
+        // 1.1) Create class attributes.
         XWPFTableRow row = cell.getTableRow();
         XWPFTable table = row.getTable();
         AttributesImpl attributes = createClassAttribute( table.getStyleID() );
+
+        // 1.2) Create "style" attributes.
+        CTTcPr tcPr = cell.getCTTc().getTcPr();
+        CSSStyle cssStyle = getStylesDocument().createCSSStyle( tcPr );
+        attributes = createStyleAttribute( cssStyle, attributes );
+
+        // colspan attribute
+        BigInteger gridSpan = stylesDocument.getTableCellGridSpan( cell );
+        if ( gridSpan != null )
+        {
+            attributes = SAXHelper.addAttrValue( attributes, COLSPAN_ATTR, String.valueOf( gridSpan.intValue() ) );
+        }
 
         // 2) create element
         startElement( TD_ELEMENT, attributes );
@@ -323,7 +363,80 @@ public class XHTMLMapper
     @Override
     protected void setActiveMasterPage( XHTMLMasterPage masterPage )
     {
-        // TODO Auto-generated method stub
+        if ( pageDiv )
+        {
+            try
+            {
+                endElement( DIV_ELEMENT );
+            }
+            catch ( SAXException e )
+            {
+                // TODO Auto-generated catch block
+                e.printStackTrace();
+            }
+        }
+        AttributesImpl attributes = new AttributesImpl();
+        CSSStyle style = new CSSStyle( DIV_ELEMENT, null );
+        CTSectPr sectPr = masterPage.getSectPr();
+        CTPageSz pageSize = sectPr.getPgSz();
+        if ( pageSize != null )
+        {
+            // Width
+            BigInteger width = pageSize.getW();
+            if ( width != null )
+            {
+                style.addProperty( WIDTH, getStylesDocument().getValueAsPoint( DxaUtil.dxa2points( width ) ) );
+            }
+        }
+
+        CTPageMar pageMargin = sectPr.getPgMar();
+        if ( pageMargin != null )
+        {
+            // margin bottom
+            BigInteger marginBottom = pageMargin.getBottom();
+            if ( marginBottom != null )
+            {
+                float marginBottomPt = DxaUtil.dxa2points( marginBottom );
+                style.addProperty( MARGIN_BOTTOM, getStylesDocument().getValueAsPoint( marginBottomPt ) );
+            }
+            // margin top
+            BigInteger marginTop = pageMargin.getTop();
+            if ( marginTop != null )
+            {
+                float marginTopPt = DxaUtil.dxa2points( marginTop );
+                style.addProperty( MARGIN_TOP, getStylesDocument().getValueAsPoint( marginTopPt ) );
+            }
+            // margin left
+            BigInteger marginLeft = pageMargin.getLeft();
+            if ( marginLeft != null )
+            {
+                float marginLeftPt = DxaUtil.dxa2points( marginLeft );
+                style.addProperty( MARGIN_LEFT, getStylesDocument().getValueAsPoint( marginLeftPt ) );
+            }
+            // margin right
+            BigInteger marginRight = pageMargin.getRight();
+            if ( marginRight != null )
+            {
+                float marginRightPt = DxaUtil.dxa2points( marginRight );
+                style.addProperty( MARGIN_RIGHT, getStylesDocument().getValueAsPoint( marginRightPt ) );
+            }
+        }
+        String s = style.getInlineStyles();
+        if ( StringUtils.isNotEmpty( s ) )
+        {
+            SAXHelper.addAttrValue( attributes, STYLE_ATTR, s );
+        }
+        try
+        {
+            startElement( DIV_ELEMENT, attributes );
+        }
+        catch ( SAXException e )
+        {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+
+        pageDiv = true;
 
     }
 

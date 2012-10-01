@@ -20,27 +20,46 @@ public class SimpleContentHandler
 
     private StringBuilder currentCharacters;
 
+    private final Integer indent;
+    
+    private int nbElements;
+
+    private boolean firstElement;
+
+    
     public SimpleContentHandler( OutputStream out )
     {
         this( out, null );
     }
 
-    public SimpleContentHandler( Writer writer )
+    public SimpleContentHandler( OutputStream out, Integer indent )
     {
-        this( null, writer );
+        this( out, null, indent );
     }
 
-    private SimpleContentHandler( OutputStream out, Writer writer )
+    public SimpleContentHandler( Writer writer )
+    {
+        this( writer, null );
+    }
+
+    public SimpleContentHandler( Writer writer, Integer indent )
+    {
+        this( null, writer, indent );
+    }
+
+    private SimpleContentHandler( OutputStream out, Writer writer, Integer indent )
     {
         this.out = out;
         this.writer = writer;
         this.currentCharacters = new StringBuilder();
+        this.indent = indent;
+        this.firstElement = true;
     }
 
     @Override
     public void startElement( String uri, String localName, String name, Attributes attributes )
         throws SAXException
-    {
+    {        
         if ( startingElement )
         {
             write( ">" );
@@ -50,7 +69,8 @@ public class SimpleContentHandler
             flushCharacters( currentCharacters.toString() );
             resetCharacters();
         }
-        
+
+        doIndentIfNeeded();
         write( "<" );
         write( localName );
         int length = attributes.getLength();
@@ -70,12 +90,31 @@ public class SimpleContentHandler
             }
         }
         startingElement = true;
+        firstElement = false;
+        nbElements++;
+    }
+
+    private void doIndentIfNeeded() throws SAXException
+    {
+        if (indent == null || firstElement) {
+            return;
+        }
+        StringBuilder content = new StringBuilder("\n");
+        for ( int i = 0; i < nbElements; i++ )
+        {
+            for ( int j = 0; j < indent; j++ )
+            {
+                content.append( ' ' );
+            }            
+        }
+        write(content.toString());
     }
 
     @Override
     public final void endElement( String uri, String localName, String name )
         throws SAXException
     {
+        nbElements--;
         if ( currentCharacters.length() > 0 )
         {
             // Flush caracters
@@ -90,10 +129,11 @@ public class SimpleContentHandler
         }
         else
         {
+            doIndentIfNeeded();
             write( "</" );
             write( localName );
             write( ">" );
-        }
+        }        
     }
 
     @Override
@@ -176,9 +216,4 @@ public class SimpleContentHandler
         }
     }
 
-    private void write( char c )
-    {
-        // TODO Auto-generated method stub
-
-    }
 }

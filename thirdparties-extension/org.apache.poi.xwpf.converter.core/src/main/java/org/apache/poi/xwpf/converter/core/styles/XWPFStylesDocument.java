@@ -2,6 +2,7 @@ package org.apache.poi.xwpf.converter.core.styles;
 
 import java.awt.Color;
 import java.io.IOException;
+import java.math.BigInteger;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -20,21 +21,32 @@ import org.apache.poi.xwpf.converter.core.styles.run.RunFontSizeValueProvider;
 import org.apache.poi.xwpf.converter.core.styles.run.RunFontStyleBoldValueProvider;
 import org.apache.poi.xwpf.converter.core.styles.run.RunFontStyleItalicValueProvider;
 import org.apache.poi.xwpf.converter.core.styles.run.RunUnderlineValueProvider;
+import org.apache.poi.xwpf.converter.core.styles.table.TableWidthValueProvider;
 import org.apache.poi.xwpf.converter.core.styles.table.cell.TableCellBackgroundColorValueProvider;
+import org.apache.poi.xwpf.converter.core.styles.table.cell.TableCellGridSpanValueProvider;
 import org.apache.poi.xwpf.converter.core.styles.table.cell.TableCellVerticalAlignmentValueProvider;
+import org.apache.poi.xwpf.converter.core.styles.table.cell.TableCellWidthValueProvider;
+import org.apache.poi.xwpf.converter.core.styles.table.row.TableRowHeightValueProvider;
+import org.apache.poi.xwpf.converter.core.utils.TableHeight;
+import org.apache.poi.xwpf.converter.core.utils.TableWidth;
 import org.apache.poi.xwpf.usermodel.ParagraphAlignment;
 import org.apache.poi.xwpf.usermodel.UnderlinePatterns;
 import org.apache.poi.xwpf.usermodel.XWPFDocument;
 import org.apache.poi.xwpf.usermodel.XWPFParagraph;
 import org.apache.poi.xwpf.usermodel.XWPFRun;
+import org.apache.poi.xwpf.usermodel.XWPFTable;
 import org.apache.poi.xwpf.usermodel.XWPFTableCell;
+import org.apache.poi.xwpf.usermodel.XWPFTableRow;
 import org.apache.xmlbeans.XmlException;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTDocDefaults;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTPPr;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTRPr;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTString;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTStyle;
+import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTTblPr;
+import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTTblPrBase;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTTcPr;
+import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTTrPr;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.STVerticalJc.Enum;
 
 public class XWPFStylesDocument
@@ -59,13 +71,22 @@ public class XWPFStylesDocument
     public XWPFStylesDocument( XWPFDocument document )
         throws XmlException, IOException
     {
+        this( document, true );
+    }
+
+    public XWPFStylesDocument( XWPFDocument document, boolean lazyInitialization )
+        throws XmlException, IOException
+    {
         this.document = document;
         this.stylesByStyleId = new HashMap<String, CTStyle>();
         this.values = new HashMap<String, Object>();
-        initialize();
+        if ( lazyInitialization )
+        {
+            initialize();
+        }
     }
 
-    private void initialize()
+    protected void initialize()
         throws XmlException, IOException
     {
         List<CTStyle> styles = document.getStyle().getStyleList();
@@ -294,6 +315,47 @@ public class XWPFStylesDocument
         return RunBackgroundColorValueProvider.INSTANCE.getValue( rPr );
     }
 
+    // ------------------------ Table
+
+    /**
+     * @param table
+     * @return
+     */
+    public TableWidth getTableWidth( XWPFTable table )
+    {
+        return TableWidthValueProvider.INSTANCE.getValue( table, this );
+    }
+
+    public TableWidth getTableWidth( CTTblPr tblPr )
+    {
+        return TableWidthValueProvider.INSTANCE.getValue( tblPr );
+    }
+
+    public TableWidth getTableWidth( CTTblPrBase tblPr )
+    {
+        return TableWidthValueProvider.INSTANCE.getValue( tblPr );
+    }
+
+    // ------------------------ Table row
+
+    /**
+     * @param row
+     * @return
+     */
+    public TableHeight getTableRowHeight( XWPFTableRow row )
+    {
+        return TableRowHeightValueProvider.INSTANCE.getValue( row, this );
+    }
+
+    /**
+     * @param cell
+     * @return
+     */
+    public TableHeight getTableRowHeight( CTTrPr trPr )
+    {
+        return TableRowHeightValueProvider.INSTANCE.getValue( trPr );
+    }
+
     // ------------------------ Table cell
 
     /**
@@ -313,6 +375,26 @@ public class XWPFStylesDocument
     public Color getTableCellBackgroundColor( CTTcPr tcPr )
     {
         return TableCellBackgroundColorValueProvider.INSTANCE.getValue( tcPr );
+    }
+
+    public BigInteger getTableCellGridSpan( XWPFTableCell cell )
+    {
+        return TableCellGridSpanValueProvider.INSTANCE.getValue( cell, this );
+    }
+
+    public BigInteger getTableCellGridSpan( CTTcPr tcPr )
+    {
+        return TableCellGridSpanValueProvider.INSTANCE.getValue( tcPr );
+    }
+
+    public TableWidth getTableCellWith( XWPFTableCell cell )
+    {
+        return TableCellWidthValueProvider.INSTANCE.getValue( cell, this );
+    }
+
+    public TableWidth getTableCellWith( CTTcPr tcPr )
+    {
+        return TableCellWidthValueProvider.INSTANCE.getValue( tcPr );
     }
 
     public CTStyle getDefaultCharacterStyle()

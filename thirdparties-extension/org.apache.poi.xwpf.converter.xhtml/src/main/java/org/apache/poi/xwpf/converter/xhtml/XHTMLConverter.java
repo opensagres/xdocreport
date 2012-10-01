@@ -51,8 +51,10 @@ public class XHTMLConverter
         throws XWPFConverterException, IOException
     {
 
+        options = options != null ? options : XHTMLOptions.getDefault();
         ContentHandler contentHandler =
-            out != null ? new SimpleContentHandler( out ) : new SimpleContentHandler( writer );
+            out != null ? new SimpleContentHandler( out, options.getIndent() )
+                            : new SimpleContentHandler( writer, options.getIndent() );
         convert( document, contentHandler, options );
     }
 
@@ -61,6 +63,7 @@ public class XHTMLConverter
     {
         try
         {
+            options = options != null ? options : XHTMLOptions.getDefault();
             XHTMLMapper mapper = new XHTMLMapper( document, contentHandler, options );
             mapper.start();
         }

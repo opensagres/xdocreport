@@ -11,7 +11,7 @@ import java.util.logging.Logger;
 import org.apache.poi.xwpf.converter.core.IXWPFMasterPage;
 import org.apache.poi.xwpf.converter.core.XWPFDocumentVisitor;
 import org.apache.poi.xwpf.converter.core.styles.pargraph.ParagraphIndentationLeftValueProvider;
-import org.apache.poi.xwpf.converter.core.utils.ColorHelper;
+import org.apache.poi.xwpf.converter.core.utils.TableHeight;
 import org.apache.poi.xwpf.converter.core.utils.TableWidth;
 import org.apache.poi.xwpf.converter.core.utils.XWPFTableUtil;
 import org.apache.poi.xwpf.converter.pdf.PdfOptions;
@@ -47,7 +47,6 @@ import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTNumPr;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTPPr;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTPTab;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTSectPr;
-import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTShd;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTSpacing;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTTblBorders;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTTcBorders;
@@ -448,10 +447,10 @@ public class PdfMapper
         throws DocumentException
     {
         // 2) Compute tableWith
-        TableWidth tableWidth = XWPFTableUtil.getTableWidth( table );
+        TableWidth tableWidth = stylesDocument.getTableWidth( table );
         StylableTable pdfPTable = pdfDocument.createTable( pdfParentContainer, colWidths.length );
         pdfPTable.setTotalWidth( colWidths );
-        if ( tableWidth.width > 0 )
+        if ( tableWidth != null && tableWidth.width > 0 )
         {
             if ( tableWidth.percentUnit )
             {
@@ -488,18 +487,6 @@ public class PdfMapper
         CTTcPr tcPr = cell.getCTTc().getTcPr();
         if ( tcPr != null )
         {
-
-            // Colspan
-            Integer colspan = null;
-            CTDecimalNumber gridSpan = tcPr.getGridSpan();
-            if ( gridSpan != null )
-            {
-                colspan = gridSpan.getVal().intValue();
-            }
-            if ( colspan != null )
-            {
-                pdfPCell.setColspan( colspan );
-            }
 
             // Borders
             // Table Properties on cells
@@ -542,6 +529,12 @@ public class PdfMapper
             }
         }
 
+        // Colspan
+        BigInteger gridSpan = stylesDocument.getTableCellGridSpan( cell );
+        if ( gridSpan != null )
+        {
+            pdfPCell.setColspan( gridSpan.intValue() );
+        }
         // Backround Color
         Color backgroundColor = stylesDocument.getTableCellBackgroundColor( cell );
         if ( backgroundColor != null )
@@ -567,10 +560,17 @@ public class PdfMapper
             }
         }
 
-        int height = row.getHeight();
-        if ( height > 0 )
+        TableHeight tableHeight = stylesDocument.getTableRowHeight( row );
+        if ( tableHeight != null )
         {
-            pdfPCell.setMinimumHeight( dxa2points( height ) );
+            if ( tableHeight.minimum )
+            {
+                pdfPCell.setMinimumHeight( tableHeight.height );
+            }
+            else
+            {
+                pdfPCell.setFixedHeight( tableHeight.height );
+            }
         }
         return pdfPCell;
     }

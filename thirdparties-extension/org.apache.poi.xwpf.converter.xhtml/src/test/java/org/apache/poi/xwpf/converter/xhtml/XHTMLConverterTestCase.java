@@ -51,8 +51,9 @@ public class XHTMLConverterTestCase
 
         XWPFDocument document = new XWPFDocument( AbstractXWPFPOIConverterTest.class.getResourceAsStream( fileInName ) );
 
+        XHTMLOptions options = null;//XHTMLOptions.create().indent( 4 );
         OutputStream out = System.out;
-        XHTMLConverter.getInstance().convert( document, out, null );
+        XHTMLConverter.getInstance().convert( document, out, options );
 
         System.err.println( "Elapsed time=" + ( System.currentTimeMillis() - startTime ) + "(ms)" );
     }
@@ -67,10 +68,10 @@ public class XHTMLConverterTestCase
         long startTime = System.currentTimeMillis();
 
         XWPFDocument document = new XWPFDocument( AbstractXWPFPOIConverterTest.class.getResourceAsStream( fileInName ) );
-        // String
-        // root=XWPFPOI2PDFViaiTextConverterTest.class.getClassLoader().getResource(".").getFile();
+
+        XHTMLOptions options = XHTMLOptions.create().indent( 4 );
         OutputStream out = new FileOutputStream( new File( fileOutName ) );
-        XHTMLConverter.getInstance().convert( document, out, null );
+        XHTMLConverter.getInstance().convert( document, out, options );
 
         System.out.println( "Generate " + fileOutName + " with " + ( System.currentTimeMillis() - startTime ) + " ms." );
     }

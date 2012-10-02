@@ -1,6 +1,7 @@
 package org.apache.poi.xwpf.converter.core.styles;
 
 import org.apache.poi.xwpf.converter.core.utils.StringUtils;
+import org.apache.poi.xwpf.usermodel.XWPFTableCell;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTDocDefaults;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTStyle;
 
@@ -30,10 +31,17 @@ public abstract class AbstractValueProvider<Value, XWPFElement>
         {
             return null;
         }
+        
+        // Get the table cell which embedd the XWPF element and null otherwise
+        XWPFTableCell cell = getEmbeddedTableCell(element);
+        
+        
         // 2) External styles: search value declared in a style.
         return getValueFromStyles( element, stylesDocument );
     }
 
+    protected abstract XWPFTableCell getEmbeddedTableCell( XWPFElement element );
+    
     public Value getValueFromStyles( XWPFElement element, XWPFStylesDocument stylesDocument )
     {
 

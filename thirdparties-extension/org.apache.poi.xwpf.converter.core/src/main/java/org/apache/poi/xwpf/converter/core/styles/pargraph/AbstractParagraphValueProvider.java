@@ -1,8 +1,13 @@
 package org.apache.poi.xwpf.converter.core.styles.pargraph;
 
+import java.util.List;
+
 import org.apache.poi.xwpf.converter.core.styles.AbstractValueProvider;
 import org.apache.poi.xwpf.converter.core.styles.XWPFStylesDocument;
+import org.apache.poi.xwpf.converter.core.utils.StringUtils;
+import org.apache.poi.xwpf.converter.core.utils.StylesHelper;
 import org.apache.poi.xwpf.usermodel.XWPFParagraph;
+import org.apache.poi.xwpf.usermodel.XWPFTableCell;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTDocDefaults;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTPPr;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTPPrDefault;
@@ -55,12 +60,23 @@ public abstract class AbstractParagraphValueProvider<Value>
     @Override
     protected String[] getStyleID( XWPFParagraph paragraph )
     {
-        return new String[] { paragraph.getStyleID() };
+        List<String> styleIDs = StylesHelper.getStyleIDs( paragraph );
+        if ( styleIDs != null )
+        {
+            return styleIDs.toArray( StringUtils.EMPTY_STRING_ARRAY );
+        }
+        return null;
     }
 
     @Override
     protected CTStyle getDefaultStyle( XWPFParagraph element, XWPFStylesDocument styleManager )
     {
         return styleManager.getDefaultParagraphStyle();
+    }
+
+    @Override
+    protected XWPFTableCell getEmbeddedTableCell( XWPFParagraph paragraph )
+    {
+        return StylesHelper.getEmbeddedTableCell( paragraph );
     }
 }

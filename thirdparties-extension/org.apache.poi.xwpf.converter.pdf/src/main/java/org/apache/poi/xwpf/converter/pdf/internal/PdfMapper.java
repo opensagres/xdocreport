@@ -343,7 +343,7 @@ public class PdfMapper
         {
             fontSize = -1f;
         }
-        
+
         // Get font style
         int fontStyle = Font.NORMAL;
         Boolean bold = stylesDocument.getFontStyleBold( docxRun );
@@ -452,7 +452,6 @@ public class PdfMapper
         throws Exception
     {
         StylableTable pdfPTable = createPDFTable( table, colWidths, pdfParentContainer );
-        pdfPTable.setLockedWidth( true );
         return pdfPTable;
     }
 
@@ -473,6 +472,38 @@ public class PdfMapper
             {
                 pdfPTable.setTotalWidth( tableWidth.width );
             }
+        }
+        pdfPTable.setLockedWidth( true );
+
+        // Table alignment
+        ParagraphAlignment alignment = stylesDocument.getTableAlignment( table );
+        if ( alignment != null )
+        {
+            switch ( alignment )
+            {
+                case LEFT:
+                    pdfPTable.setHorizontalAlignment( Element.ALIGN_LEFT );
+                    break;
+                case RIGHT:
+                    pdfPTable.setHorizontalAlignment( Element.ALIGN_RIGHT );
+                    break;
+                case CENTER:
+                    pdfPTable.setHorizontalAlignment( Element.ALIGN_CENTER );
+                    break;
+                case BOTH:
+                    pdfPTable.setHorizontalAlignment( Element.ALIGN_JUSTIFIED );
+                    break;
+                default:
+                    break;
+            }
+        }
+
+        // Table indentation
+        Float indentation = stylesDocument.getTableIndentation( table );
+        if ( indentation != null )
+        {
+            // TODO : manage indentation left when iText ExtendedTable will support that
+            pdfPTable.setHorizontalAlignment( Element.ALIGN_LEFT );
         }
         return pdfPTable;
     }

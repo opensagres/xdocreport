@@ -21,6 +21,8 @@ import org.apache.poi.xwpf.converter.core.styles.run.RunFontSizeValueProvider;
 import org.apache.poi.xwpf.converter.core.styles.run.RunFontStyleBoldValueProvider;
 import org.apache.poi.xwpf.converter.core.styles.run.RunFontStyleItalicValueProvider;
 import org.apache.poi.xwpf.converter.core.styles.run.RunUnderlineValueProvider;
+import org.apache.poi.xwpf.converter.core.styles.table.TableAlignmentValueProvider;
+import org.apache.poi.xwpf.converter.core.styles.table.TableIndentationValueProvider;
 import org.apache.poi.xwpf.converter.core.styles.table.TableWidthValueProvider;
 import org.apache.poi.xwpf.converter.core.styles.table.cell.TableCellBackgroundColorValueProvider;
 import org.apache.poi.xwpf.converter.core.styles.table.cell.TableCellGridSpanValueProvider;
@@ -336,6 +338,36 @@ public class XWPFStylesDocument
     public TableWidth getTableWidth( CTTblPrBase tblPr )
     {
         return TableWidthValueProvider.INSTANCE.getValue( tblPr );
+    }
+
+    public ParagraphAlignment getTableAlignment( XWPFTable table )
+    {
+        return TableAlignmentValueProvider.INSTANCE.getValue( table, this );
+    }
+
+    public ParagraphAlignment getTableAlignment( CTTblPr tblPr )
+    {
+        return TableAlignmentValueProvider.INSTANCE.getValue( tblPr );
+    }
+
+    public ParagraphAlignment getTableAlignment( CTTblPrBase tblPr )
+    {
+        return TableAlignmentValueProvider.INSTANCE.getValue( tblPr );
+    }
+
+    public Float getTableIndentation( XWPFTable table )
+    {
+        return TableIndentationValueProvider.INSTANCE.getValue( table, this );
+    }
+
+    public Float getTableIndentation( CTTblPr tblPr )
+    {
+        return TableIndentationValueProvider.INSTANCE.getValue( tblPr );
+    }
+
+    public Float getTableIndentation( CTTblPrBase tblPr )
+    {
+        return TableIndentationValueProvider.INSTANCE.getValue( tblPr );
     }
 
     // ------------------------ Table row

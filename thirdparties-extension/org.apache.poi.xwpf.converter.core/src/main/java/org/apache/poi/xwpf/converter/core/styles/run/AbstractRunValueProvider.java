@@ -1,8 +1,15 @@
 package org.apache.poi.xwpf.converter.core.styles.run;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.apache.poi.xwpf.converter.core.styles.AbstractValueProvider;
 import org.apache.poi.xwpf.converter.core.styles.XWPFStylesDocument;
+import org.apache.poi.xwpf.converter.core.utils.StringUtils;
+import org.apache.poi.xwpf.converter.core.utils.StylesHelper;
+import org.apache.poi.xwpf.usermodel.XWPFParagraph;
 import org.apache.poi.xwpf.usermodel.XWPFRun;
+import org.apache.poi.xwpf.usermodel.XWPFTableCell;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTDocDefaults;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTRPr;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTRPrDefault;
@@ -56,21 +63,37 @@ public abstract class AbstractRunValueProvider<Value>
     @Override
     protected String[] getStyleID( XWPFRun run )
     {
+        XWPFParagraph paragraph = run.getParagraph();
+        List<String> styleIDs = StylesHelper.getStyleIDs( paragraph );
         CTRPr rPr = getRPr( run );
         if ( rPr != null )
         {
             CTString style = rPr.getRStyle();
             if ( style != null )
             {
-                return new String[] { style.getVal(), run.getParagraph().getStyleID() };
+                if ( styleIDs == null )
+                {
+                    styleIDs = new ArrayList<String>();
+                }
+                styleIDs.add( 0, style.getVal() );
             }
         }
-        return new String[] { run.getParagraph().getStyleID() };
+        if ( styleIDs != null )
+        {
+            return styleIDs.toArray( StringUtils.EMPTY_STRING_ARRAY );
+        }
+        return null;
     }
 
     @Override
     protected CTStyle getDefaultStyle( XWPFRun element, XWPFStylesDocument styleManager )
     {
         return styleManager.getDefaultParagraphStyle();
+    }
+
+    @Override
+    protected XWPFTableCell getEmbeddedTableCell( XWPFRun run )
+    {
+        return StylesHelper.getEmbeddedTableCell( run.getParagraph() );
     }
 }

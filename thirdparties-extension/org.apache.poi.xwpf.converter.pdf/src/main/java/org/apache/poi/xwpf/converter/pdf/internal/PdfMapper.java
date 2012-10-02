@@ -292,7 +292,6 @@ public class PdfMapper
                         {
                             pdfParagraph.setIndentationLeft( indLeft );
                         }
-
                     }
                 }
             }
@@ -310,11 +309,25 @@ public class PdfMapper
         pdfParentContainer.addElement( pdfParagraph.getContainer() );
     }
 
+    // ------------------------- Run
+
     @Override
     protected void visitEmptyRun( IITextContainer pdfParagraphContainer )
         throws Exception
     {
-
+        StylableParagraph paragraph = (StylableParagraph) pdfParagraphContainer;
+        IITextContainer parent = paragraph.getParent();
+        if ( parent instanceof StylableTableCell )
+        {
+            StylableTableCell cell = (StylableTableCell) parent;
+            if ( cell.getRotation() > 0 )
+            {
+                // Run paragraph belongs to Cell which has rotation, ignore the empty run.
+                return;
+            }
+        }
+        // Add new PDF line
+        pdfParagraphContainer.addElement( Chunk.NEWLINE );
     }
 
     @Override
@@ -330,8 +343,8 @@ public class PdfMapper
         {
             fontSize = -1f;
         }
+        
         // Get font style
-
         int fontStyle = Font.NORMAL;
         Boolean bold = stylesDocument.getFontStyleBold( docxRun );
         if ( bold != null && bold )
@@ -472,6 +485,8 @@ public class PdfMapper
 
     }
 
+    // ------------------------- Table Cell
+
     @Override
     protected IITextContainer startVisitTableCell( XWPFTableCell cell, IITextContainer pdfTableContainer,
                                                    boolean firstRow, boolean lastRow, boolean firstCell,
@@ -513,19 +528,21 @@ public class PdfMapper
             // border-bottom
             pdfPCell.setBorder( cellBorders, tableBorders, tableStyleBorders, firstRow, lastRow, firstCell, lastCell,
                                 Rectangle.BOTTOM );
+        }
 
-            // Text direction <w:textDirection
-            CTTextDirection direction = tcPr.getTextDirection();
-            if ( direction != null )
+        // Text direction <w:textDirection
+        CTTextDirection direction = stylesDocument.getTextDirection( cell );
+        if ( direction != null )
+        {
+            int dir = direction.getVal().intValue();
+            switch ( dir )
             {
-                if ( "btLr".equals( direction.getVal().toString() ) )
-                {
+                case org.openxmlformats.schemas.wordprocessingml.x2006.main.STTextDirection.INT_BT_LR:
                     pdfPCell.setRotation( 90 );
-                }
-                else if ( "tbRl".equals( direction.getVal().toString() ) )
-                {
+                    break;
+                case org.openxmlformats.schemas.wordprocessingml.x2006.main.STTextDirection.INT_TB_RL:
                     pdfPCell.setRotation( 270 );
-                }
+                    break;
             }
         }
 

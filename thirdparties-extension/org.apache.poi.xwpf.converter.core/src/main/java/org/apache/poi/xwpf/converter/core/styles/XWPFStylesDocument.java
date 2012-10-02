@@ -24,6 +24,7 @@ import org.apache.poi.xwpf.converter.core.styles.run.RunUnderlineValueProvider;
 import org.apache.poi.xwpf.converter.core.styles.table.TableWidthValueProvider;
 import org.apache.poi.xwpf.converter.core.styles.table.cell.TableCellBackgroundColorValueProvider;
 import org.apache.poi.xwpf.converter.core.styles.table.cell.TableCellGridSpanValueProvider;
+import org.apache.poi.xwpf.converter.core.styles.table.cell.TableCellTextDirectionValueProvider;
 import org.apache.poi.xwpf.converter.core.styles.table.cell.TableCellVerticalAlignmentValueProvider;
 import org.apache.poi.xwpf.converter.core.styles.table.cell.TableCellWidthValueProvider;
 import org.apache.poi.xwpf.converter.core.styles.table.row.TableRowHeightValueProvider;
@@ -46,6 +47,7 @@ import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTStyle;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTTblPr;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTTblPrBase;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTTcPr;
+import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTTextDirection;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTTrPr;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.STVerticalJc.Enum;
 
@@ -395,6 +397,16 @@ public class XWPFStylesDocument
     public TableWidth getTableCellWith( CTTcPr tcPr )
     {
         return TableCellWidthValueProvider.INSTANCE.getValue( tcPr );
+    }
+
+    public CTTextDirection getTextDirection( XWPFTableCell cell )
+    {
+        return TableCellTextDirectionValueProvider.INSTANCE.getValue( cell, this );
+    }
+
+    public CTTextDirection getTextDirection( CTTcPr tcPr )
+    {
+        return TableCellTextDirectionValueProvider.INSTANCE.getValue( tcPr );
     }
 
     public CTStyle getDefaultCharacterStyle()

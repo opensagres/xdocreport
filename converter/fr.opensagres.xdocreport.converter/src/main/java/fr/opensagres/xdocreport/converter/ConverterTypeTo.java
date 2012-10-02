@@ -27,16 +27,22 @@ package fr.opensagres.xdocreport.converter;
 /**
  * XDocReport available converter type to another format.
  */
-public enum ConverterTypeTo
-{
+public enum ConverterTypeTo {
 
-    XHTML("text/html","htm"), FO("TODO","fo"), PDF("application/pdf","pdf");
+	XHTML(MimeMappingConstants.XHTML_MIME_TYPE,
+			MimeMappingConstants.XHTML_EXTENSION),
+			FO(
+			MimeMappingConstants.XML_MIME_TYPE,
+			MimeMappingConstants.FO_EXTENSION),
+			PDF(
+			MimeMappingConstants.PDF_MIME_TYPE,
+			MimeMappingConstants.PDF_EXTENSION);
 
-    private final String mimeType;
+	private final String mimeType;
 
-    private final String extension;
+	private final String extension;
 
-	private ConverterTypeTo(String mimeType,String extension) {
+	private ConverterTypeTo(String mimeType, String extension) {
 		this.mimeType = mimeType;
 		this.extension = extension;
 	}
@@ -44,6 +50,7 @@ public enum ConverterTypeTo
 	public String getMimeType() {
 		return mimeType;
 	}
+
 	public String getExtension() {
 		return extension;
 	}

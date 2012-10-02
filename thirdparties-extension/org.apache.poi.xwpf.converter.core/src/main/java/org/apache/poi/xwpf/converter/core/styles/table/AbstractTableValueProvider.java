@@ -3,6 +3,7 @@ package org.apache.poi.xwpf.converter.core.styles.table;
 import org.apache.poi.xwpf.converter.core.styles.AbstractValueProvider;
 import org.apache.poi.xwpf.converter.core.styles.XWPFStylesDocument;
 import org.apache.poi.xwpf.usermodel.XWPFTable;
+import org.apache.poi.xwpf.usermodel.XWPFTableCell;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTDocDefaults;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTStyle;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTTblPr;
@@ -59,5 +60,11 @@ public abstract class AbstractTableValueProvider<Value>
     protected CTStyle getDefaultStyle( XWPFTable table, XWPFStylesDocument stylesDocument )
     {
         return stylesDocument.getDefaultTableStyle();
+    }
+    
+    @Override
+    protected XWPFTableCell getEmbeddedTableCell( XWPFTable element )
+    {     
+        return null;
     }
 }

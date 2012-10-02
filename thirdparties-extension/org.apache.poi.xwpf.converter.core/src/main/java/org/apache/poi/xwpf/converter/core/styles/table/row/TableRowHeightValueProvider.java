@@ -4,6 +4,7 @@ import static org.apache.poi.xwpf.converter.core.utils.DxaUtil.dxa2points;
 
 import java.math.BigInteger;
 
+import org.apache.poi.xwpf.converter.core.utils.DxaUtil;
 import org.apache.poi.xwpf.converter.core.utils.TableHeight;
 import org.apache.poi.xwpf.converter.core.utils.TableWidth;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTHeight;
@@ -55,7 +56,7 @@ public class TableRowHeightValueProvider
         }
         // val -- Specifies the row's height, in twentieths of a point.
         BigInteger value = trHeight.getVal();
-        float height = value.floatValue() / 20f;
+        float height = DxaUtil.dxa2points( value );
         return new TableHeight( height, minimum );
     }
 

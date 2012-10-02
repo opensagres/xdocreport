@@ -206,10 +206,10 @@ public class XHTMLMapper
             // Escape with HTML characters
             characters( StringEscapeUtils.escapeHtml( text ) );
         }
-        else
-        {
-            characters( SPACE_ENTITY );
-        }
+        //else
+        //{
+        //    characters( SPACE_ENTITY );
+        //}
         if ( currentRunAttributes != null )
         {
             endElement( SPAN_ELEMENT );

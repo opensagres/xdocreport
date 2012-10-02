@@ -292,7 +292,6 @@ public class PdfMapper
                         {
                             pdfParagraph.setIndentationLeft( indLeft );
                         }
-
                     }
                 }
             }
@@ -310,11 +309,25 @@ public class PdfMapper
         pdfParentContainer.addElement( pdfParagraph.getContainer() );
     }
 
+    // ------------------------- Run
+
     @Override
     protected void visitEmptyRun( IITextContainer pdfParagraphContainer )
         throws Exception
     {
-
+        StylableParagraph paragraph = (StylableParagraph) pdfParagraphContainer;
+        IITextContainer parent = paragraph.getParent();
+        if ( parent instanceof StylableTableCell )
+        {
+            StylableTableCell cell = (StylableTableCell) parent;
+            if ( cell.getRotation() > 0 )
+            {
+                // Run paragraph belongs to Cell which has rotation, ignore the empty run.
+                return;
+            }
+        }
+        // Add new PDF line
+        pdfParagraphContainer.addElement( Chunk.NEWLINE );
     }
 
     @Override
@@ -330,8 +343,8 @@ public class PdfMapper
         {
             fontSize = -1f;
         }
-        // Get font style
 
+        // Get font style
         int fontStyle = Font.NORMAL;
         Boolean bold = stylesDocument.getFontStyleBold( docxRun );
         if ( bold != null && bold )
@@ -439,7 +452,6 @@ public class PdfMapper
         throws Exception
     {
         StylableTable pdfPTable = createPDFTable( table, colWidths, pdfParentContainer );
-        pdfPTable.setLockedWidth( true );
         return pdfPTable;
     }
 
@@ -461,6 +473,38 @@ public class PdfMapper
                 pdfPTable.setTotalWidth( tableWidth.width );
             }
         }
+        pdfPTable.setLockedWidth( true );
+
+        // Table alignment
+        ParagraphAlignment alignment = stylesDocument.getTableAlignment( table );
+        if ( alignment != null )
+        {
+            switch ( alignment )
+            {
+                case LEFT:
+                    pdfPTable.setHorizontalAlignment( Element.ALIGN_LEFT );
+                    break;
+                case RIGHT:
+                    pdfPTable.setHorizontalAlignment( Element.ALIGN_RIGHT );
+                    break;
+                case CENTER:
+                    pdfPTable.setHorizontalAlignment( Element.ALIGN_CENTER );
+                    break;
+                case BOTH:
+                    pdfPTable.setHorizontalAlignment( Element.ALIGN_JUSTIFIED );
+                    break;
+                default:
+                    break;
+            }
+        }
+
+        // Table indentation
+        Float indentation = stylesDocument.getTableIndentation( table );
+        if ( indentation != null )
+        {
+            // TODO : manage indentation left when iText ExtendedTable will support that
+            pdfPTable.setHorizontalAlignment( Element.ALIGN_LEFT );
+        }
         return pdfPTable;
     }
 
@@ -471,6 +515,8 @@ public class PdfMapper
         pdfParentContainer.addElement( (Element) pdfTableContainer );
 
     }
+
+    // ------------------------- Table Cell
 
     @Override
     protected IITextContainer startVisitTableCell( XWPFTableCell cell, IITextContainer pdfTableContainer,
@@ -513,19 +559,21 @@ public class PdfMapper
             // border-bottom
             pdfPCell.setBorder( cellBorders, tableBorders, tableStyleBorders, firstRow, lastRow, firstCell, lastCell,
                                 Rectangle.BOTTOM );
+        }
 
-            // Text direction <w:textDirection
-            CTTextDirection direction = tcPr.getTextDirection();
-            if ( direction != null )
+        // Text direction <w:textDirection
+        CTTextDirection direction = stylesDocument.getTextDirection( cell );
+        if ( direction != null )
+        {
+            int dir = direction.getVal().intValue();
+            switch ( dir )
             {
-                if ( "btLr".equals( direction.getVal().toString() ) )
-                {
+                case org.openxmlformats.schemas.wordprocessingml.x2006.main.STTextDirection.INT_BT_LR:
                     pdfPCell.setRotation( 90 );
-                }
-                else if ( "tbRl".equals( direction.getVal().toString() ) )
-                {
+                    break;
+                case org.openxmlformats.schemas.wordprocessingml.x2006.main.STTextDirection.INT_TB_RL:
                     pdfPCell.setRotation( 270 );
-                }
+                    break;
             }
         }
 

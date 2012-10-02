@@ -24,8 +24,6 @@
  */
 package org.apache.poi.xwpf.converter.pdf.internal.elements;
 
-import com.lowagie.text.Element;
-
 import fr.opensagres.xdocreport.itext.extension.ExtendedPdfPTable;
 import fr.opensagres.xdocreport.itext.extension.IITextContainer;
 
@@ -56,11 +54,6 @@ public class StylableTable
     public StylableDocument getOwnerDocument()
     {
         return ownerDocument;
-    }
-
-    public Element getElement()
-    {
-        return this;
     }
 
     public int getColIdx()

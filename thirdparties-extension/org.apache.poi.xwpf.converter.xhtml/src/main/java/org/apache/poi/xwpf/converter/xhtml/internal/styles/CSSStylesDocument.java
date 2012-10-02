@@ -48,6 +48,7 @@ import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTRPr;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTStyle;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTTblPrBase;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTTcPr;
+import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTTextDirection;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTTrPr;
 import org.xml.sax.ContentHandler;
 import org.xml.sax.SAXException;
@@ -427,6 +428,29 @@ public class CSSStylesDocument
                 style = getOrCreateStyle( style, tagName, className );
                 style.addProperty( BACKGROUND_COLOR, XWPFUtils.toHexString( backgroundColor ) );
             }
+            CTTextDirection direction = super.getTextDirection( tcPr );
+            if ( direction != null )
+            {
+                // see http://www.css3maker.com/text-rotation.html
+                int dir = direction.getVal().intValue();
+                switch ( dir )
+                {
+                    case org.openxmlformats.schemas.wordprocessingml.x2006.main.STTextDirection.INT_BT_LR:
+                        style = getOrCreateStyle( style, tagName, className );
+                        style.addProperty( "-webkit-transform", "rotate(270deg)" );
+                        style.addProperty( "-moz-transform", "rotate(270deg)" );
+                        style.addProperty( "-o-transform", "rotate(270deg)" );
+                        style.addProperty( "writing-mode", "bt-lr" ); // For IE
+                        break;
+                    case org.openxmlformats.schemas.wordprocessingml.x2006.main.STTextDirection.INT_TB_RL:
+                        style = getOrCreateStyle( style, tagName, className );
+                        style.addProperty( "-webkit-transform", "rotate(90deg)" );
+                        style.addProperty( "-moz-transform", "rotate(90deg)" );
+                        style.addProperty( "-o-transform", "rotate(90deg)" );                        
+                        style.addProperty( "writing-mode", "tb-rl" ); // For IE
+                        break;
+                }
+            }
             return style;
         }
         return null;
@@ -521,13 +545,13 @@ public class CSSStylesDocument
         }
         return new CSSStyle( tagName, className );
     }
-    
-//    private String () {
-//        // see http://www.css3maker.com/text-rotation.html
-//        -webkit-transform: rotate(90deg);
-//    -moz-transform: rotate(90deg);
-//    -ms-transform: matrix(1.239,-0.124,-0.547,0.843,0,0);
-//    -o-transform: matrix(1.239,-0.124,-0.547,0.843,0,0);
-//    transform: matrix(1.239,-0.124,-0.547,0.843,0,0);
-//    }
+
+    // private String () {
+    // // see http://www.css3maker.com/text-rotation.html
+    // -webkit-transform: rotate(90deg);
+    // -moz-transform: rotate(90deg);
+    // -ms-transform: matrix(1.239,-0.124,-0.547,0.843,0,0);
+    // -o-transform: matrix(1.239,-0.124,-0.547,0.843,0,0);
+    // transform: matrix(1.239,-0.124,-0.547,0.843,0,0);
+    // }
 }

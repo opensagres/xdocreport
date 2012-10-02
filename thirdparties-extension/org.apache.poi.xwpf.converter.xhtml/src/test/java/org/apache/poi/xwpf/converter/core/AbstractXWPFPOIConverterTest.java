@@ -32,14 +32,21 @@ public abstract class AbstractXWPFPOIConverterTest
 {
 
     @Test
-    public void convertCV()
+    public void AdvancedTable()
+        throws IOException
+    {
+        doGenerate( "AdvancedTable.docx" );
+    }
+
+    @Test
+    public void CV()
         throws IOException
     {
         doGenerate( "CV.docx" );
     }
 
     @Test
-    public void generateCV2()
+    public void CV2()
         throws IOException
     {
         doGenerate( "CV2.docx" );
@@ -51,7 +58,7 @@ public abstract class AbstractXWPFPOIConverterTest
     {
         doGenerate( "Docx4j_GettingStarted.docx" );
     }
-    
+
     @Test
     public void DocxBig()
         throws IOException
@@ -60,7 +67,7 @@ public abstract class AbstractXWPFPOIConverterTest
     }
 
     @Test
-    public void testDocxLettreRelance()
+    public void DocxLettreRelance()
         throws IOException
     {
         doGenerate( "DocxLettreRelance.docx" );
@@ -72,7 +79,7 @@ public abstract class AbstractXWPFPOIConverterTest
     {
         doGenerate( "DocxStructures.docx" );
     }
-    
+
     @Test
     public void Exercise1()
         throws IOException
@@ -88,10 +95,10 @@ public abstract class AbstractXWPFPOIConverterTest
     }
 
     @Test
-    public void Oriel()
+    public void Issue52()
         throws IOException
     {
-        doGenerate( "Oriel.docx" );
+        doGenerate( "Issue52.docx" );
     }
 
     @Test
@@ -102,6 +109,20 @@ public abstract class AbstractXWPFPOIConverterTest
     }
 
     @Test
+    public void Oriel()
+        throws IOException
+    {
+        doGenerate( "Oriel.docx" );
+    }
+
+    @Test
+    public void PersAngaben()
+        throws IOException
+    {
+        doGenerate( "PersAngaben.docx" );
+    }
+
+    @Test
     public void SittingPretty()
         throws IOException
     {
@@ -109,21 +130,14 @@ public abstract class AbstractXWPFPOIConverterTest
     }
 
     @Test
-    public void issue52()
-        throws IOException
-    {
-        doGenerate( "Issue52.docx" );
-    }
-
-    @Test
-    public void testTemplateGeneral()
+    public void TemplateGeneral()
         throws IOException
     {
         doGenerate( "TemplateGeneral.docx" );
     }
 
     @Test
-    public void testTemplateIndividuel()
+    public void TemplateIndividuel()
         throws IOException
     {
         doGenerate( "TemplateIndividuel.docx" );
@@ -171,7 +185,6 @@ public abstract class AbstractXWPFPOIConverterTest
         doGenerate( "TestFontStylesBasedOn.docx" );
     }
 
-    
     @Test
     public void testHeaderFooterPage()
         throws IOException
@@ -233,13 +246,6 @@ public abstract class AbstractXWPFPOIConverterTest
         throws IOException
     {
         doGenerate( "TestTitle.docx" );
-    }
-
-    @Test
-    public void convertPersAngaben()
-        throws IOException
-    {
-        doGenerate( "PersAngaben.docx" );
     }
 
     protected abstract void doGenerate( String fileName )

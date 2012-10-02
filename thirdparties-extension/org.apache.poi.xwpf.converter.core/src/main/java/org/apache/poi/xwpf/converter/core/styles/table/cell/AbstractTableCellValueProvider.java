@@ -57,4 +57,10 @@ public abstract class AbstractTableCellValueProvider<Value>
     {
         return stylesDocument.getDefaultTableStyle();
     }
+
+    @Override
+    protected XWPFTableCell getEmbeddedTableCell( XWPFTableCell element )
+    {
+        return null;
+    }
 }

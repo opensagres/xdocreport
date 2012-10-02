@@ -1,7 +1,12 @@
 package org.apache.poi.xwpf.converter.core.styles.pargraph;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.apache.poi.xwpf.converter.core.styles.AbstractValueProvider;
 import org.apache.poi.xwpf.converter.core.styles.XWPFStylesDocument;
+import org.apache.poi.xwpf.converter.core.utils.StringUtils;
+import org.apache.poi.xwpf.converter.core.utils.StylesHelper;
 import org.apache.poi.xwpf.usermodel.XWPFParagraph;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTDocDefaults;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTParaRPr;
@@ -59,16 +64,25 @@ public abstract class AbstractParagraphRunValueProvider<Value>
     @Override
     protected String[] getStyleID( XWPFParagraph paragraph )
     {
+        List<String> styleIDs = StylesHelper.getStyleIDs( paragraph );
         CTParaRPr rPr = getCTParaRPr( paragraph );
         if ( rPr != null )
         {
             CTString style = rPr.getRStyle();
             if ( style != null )
             {
-                return new String[] { paragraph.getStyleID(), style.getVal() };
+                if ( styleIDs == null )
+                {
+                    styleIDs = new ArrayList<String>();
+                }
+                styleIDs.add( 0, style.getVal() );
             }
         }
-        return new String[] { paragraph.getStyleID() };
+        if ( styleIDs != null )
+        {
+            return styleIDs.toArray( StringUtils.EMPTY_STRING_ARRAY );
+        }
+        return null;
     }
 
     @Override

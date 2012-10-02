@@ -27,6 +27,7 @@ package org.apache.poi.xwpf.converter.core.utils;
 import static org.apache.poi.xwpf.converter.core.utils.DxaUtil.dxa2points;
 
 import java.awt.Color;
+import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -44,6 +45,7 @@ import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTTblGridCol;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTTblPr;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTTblWidth;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTTcPr;
+import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTTrPr;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.STTblWidth;
 import org.w3c.dom.Attr;
 import org.w3c.dom.Node;
@@ -60,10 +62,11 @@ public class XWPFTableUtil
     public static float[] computeColWidths( XWPFTable table )
     {
 
+        XWPFTableRow firstRow = getFirstRow( table );
         float[] colWidths;
         // Get first row to know if there is cell which have gridSpan to compute
         // columns number.
-        int nbCols = getNumberOfColumnFromFirstRow( table );
+        int nbCols = getNumberOfColumns( firstRow );
 
         // Compare nbCols computed with number of grid colList
         CTTblGrid grid = table.getCTTbl().getTblGrid();
@@ -103,11 +106,16 @@ public class XWPFTableUtil
         }
         else
         {
+            // If w:gridAfter is defined, ignore the last columns defined on the gridColumn
+            int nbColumnsToIgnoreBefore = getNbColumnsToIgnore( firstRow, true );
+            int nbColumnsToIgnoreAfter = getNbColumnsToIgnore( firstRow, false );
+            int nbColumns = cols.size() - nbColumnsToIgnoreBefore - nbColumnsToIgnoreAfter;
+
             // nbCols computed is equals to number of grid colList
             // columns width can be computed by using the grid colList
-            colWidths = new float[cols.size()];
+            colWidths = new float[nbColumns];
             float colWidth = -1;
-            for ( int i = 0; i < colWidths.length; i++ )
+            for ( int i = nbColumnsToIgnoreBefore; i < colWidths.length; i++ )
             {
                 CTTblGridCol tblGridCol = cols.get( i );
                 colWidth = tblGridCol.getW().floatValue();
@@ -117,6 +125,33 @@ public class XWPFTableUtil
         return colWidths;
     }
 
+    private static int getNbColumnsToIgnore( XWPFTableRow row, boolean before )
+    {
+        CTTrPr trPr = row.getCtRow().getTrPr();
+        if ( trPr == null )
+        {
+            return 0;
+        }
+
+        List<CTDecimalNumber> gridBeforeAfters = before ? trPr.getGridBeforeList() : trPr.getGridAfterList();
+        if ( gridBeforeAfters == null || gridBeforeAfters.size() < 1 )
+        {
+            return 0;
+        }
+        int nbColumns = 0;
+        BigInteger val = null;
+        for ( CTDecimalNumber gridBeforeAfter : gridBeforeAfters )
+        {
+            val = gridBeforeAfter.getVal();
+            if ( val != null )
+            {
+                nbColumns += val.intValue();
+            }
+        }
+
+        return nbColumns;
+    }
+
     /**
      * Returns number of column if the XWPF table by using the declared cell (which can declare gridSpan) from the first
      * row.
@@ -124,30 +159,39 @@ public class XWPFTableUtil
      * @param table
      * @return
      */
-    public static int getNumberOfColumnFromFirstRow( XWPFTable table )
+    public static int getNumberOfColumns( XWPFTableRow row )
     {
+        if ( row == null )
+        {
+            return 0;
+        }
         // Get first row to know if there is cell which have gridSpan to compute
         // columns number.
         int nbCols = 0;
-        int numberOfRows = table.getNumberOfRows();
-        if ( numberOfRows > 0 )
+        List<XWPFTableCell> tableCellsOffFirstRow = row.getTableCells();
+        for ( XWPFTableCell tableCellOffFirstRow : tableCellsOffFirstRow )
         {
-            XWPFTableRow firstRow = table.getRow( 0 );
-            List<XWPFTableCell> tableCellsOffFirstRow = firstRow.getTableCells();
-            for ( XWPFTableCell tableCellOffFirstRow : tableCellsOffFirstRow )
+            CTDecimalNumber gridSpan = getGridSpan( tableCellOffFirstRow );
+            if ( gridSpan != null )
             {
-                CTDecimalNumber gridSpan = getGridSpan( tableCellOffFirstRow );
-                if ( gridSpan != null )
-                {
-                    nbCols += gridSpan.getVal().intValue();
-                }
-                else
-                {
-                    nbCols += 1;
-                }
+                nbCols += gridSpan.getVal().intValue();
+            }
+            else
+            {
+                nbCols += 1;
             }
         }
         return nbCols;
+    }
+
+    public static XWPFTableRow getFirstRow( XWPFTable table )
+    {
+        int numberOfRows = table.getNumberOfRows();
+        if ( numberOfRows > 0 )
+        {
+            return table.getRow( 0 );
+        }
+        return null;
     }
 
     public static CTDecimalNumber getGridSpan( XWPFTableCell cell )

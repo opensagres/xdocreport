@@ -27,7 +27,7 @@ public abstract class AbstractSpacingParagraphValueProvider<Value>
         {
             return null;
         }
-        return ppr.getSpacing() == null ? null : ppr.getSpacing();
+        return ppr.getSpacing();
     }
 
     @Override

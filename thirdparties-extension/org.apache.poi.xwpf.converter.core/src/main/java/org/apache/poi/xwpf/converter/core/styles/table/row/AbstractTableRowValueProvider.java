@@ -6,6 +6,7 @@ import org.apache.poi.xwpf.usermodel.XWPFTableCell;
 import org.apache.poi.xwpf.usermodel.XWPFTableRow;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTDocDefaults;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTStyle;
+import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTTblStylePr;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTTrPr;
 
 public abstract class AbstractTableRowValueProvider<Value>
@@ -61,8 +62,14 @@ public abstract class AbstractTableRowValueProvider<Value>
     }
 
     @Override
-    protected XWPFTableCell getEmbeddedTableCell( XWPFTableRow element )
+    protected XWPFTableCell getParentTableCell( XWPFTableRow element )
     {
+        return null;
+    }
+    
+    @Override
+    protected Value getValueFromTableStyle( CTTblStylePr tblStylePr )
+    {     
         return null;
     }
 }

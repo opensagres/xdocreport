@@ -48,6 +48,7 @@ import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTString;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTStyle;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTTblPr;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTTblPrBase;
+import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTTblStylePr;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTTcPr;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTTextDirection;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTTrPr;
@@ -71,6 +72,8 @@ public class XWPFStylesDocument
     private CTStyle defaultCharacterStyle;
 
     private CTStyle defaultNumberingStyle;
+
+    private Map<XWPFTable, TableInfo> tableInfos;
 
     public XWPFStylesDocument( XWPFDocument document )
         throws XmlException, IOException
@@ -473,6 +476,47 @@ public class XWPFStylesDocument
     public <T> void setValue( String key, T value )
     {
         values.put( key, value );
+    }
+
+    public TableCellInfo getTableCellInfo( XWPFTableCell cell )
+    {
+        XWPFTable table = cell.getTableRow().getTable();
+        return getTableInfo( table ).getCellInfo( cell );
+    }
+
+    public TableInfo getTableInfo( XWPFTable table )
+    {
+        if ( tableInfos == null )
+        {
+            tableInfos = new HashMap<XWPFTable, TableInfo>();
+        }
+        TableInfo tableInfo = tableInfos.get( table );
+        if ( tableInfo == null )
+        {
+            tableInfo = new TableInfo( table, this );
+            tableInfos.put( table, tableInfo );
+        }
+        return tableInfo;
+    }
+
+    public CTTblStylePr getTableStyle( String tableStyleID,
+                                       org.openxmlformats.schemas.wordprocessingml.x2006.main.STTblStyleOverrideType.Enum type )
+    {
+        CTStyle style = getStyle( tableStyleID );
+        if ( style == null )
+        {
+            return null;
+        }
+        // TODO cache it
+        List<CTTblStylePr> tblStylePrs = style.getTblStylePrList();
+        for ( CTTblStylePr tblStylePr : tblStylePrs )
+        {
+            if ( type.equals( tblStylePr.getType() ) )
+            {
+                return tblStylePr;
+            }
+        }
+        return null;
     }
 
 }

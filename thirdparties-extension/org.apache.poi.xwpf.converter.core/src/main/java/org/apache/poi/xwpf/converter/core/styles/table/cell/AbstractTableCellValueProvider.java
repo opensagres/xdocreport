@@ -5,6 +5,7 @@ import org.apache.poi.xwpf.converter.core.styles.XWPFStylesDocument;
 import org.apache.poi.xwpf.usermodel.XWPFTableCell;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTDocDefaults;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTStyle;
+import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTTblStylePr;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTTcPr;
 
 public abstract class AbstractTableCellValueProvider<Value>
@@ -19,6 +20,11 @@ public abstract class AbstractTableCellValueProvider<Value>
     public CTTcPr getTcPr( CTStyle style )
     {
         return style.getTcPr();
+    }
+
+    public CTTcPr getTcPr( CTTblStylePr tblStylePr )
+    {
+        return tblStylePr.getTcPr();
     }
 
     public CTTcPr getTcPr( CTDocDefaults docDefaults )
@@ -39,6 +45,12 @@ public abstract class AbstractTableCellValueProvider<Value>
     }
 
     @Override
+    protected Value getValueFromTableStyle( CTTblStylePr tblStylePr )
+    {
+        return getValue( getTcPr( tblStylePr ) );
+    }
+
+    @Override
     protected Value getValueFromDocDefaultsStyle( CTDocDefaults docDefaults )
     {
         return getValue( getTcPr( docDefaults ) );
@@ -49,7 +61,7 @@ public abstract class AbstractTableCellValueProvider<Value>
     @Override
     protected String[] getStyleID( XWPFTableCell cell )
     {
-        return new String[] { cell.getTableRow().getTable().getStyleID() };
+        return null;
     }
 
     @Override
@@ -59,8 +71,9 @@ public abstract class AbstractTableCellValueProvider<Value>
     }
 
     @Override
-    protected XWPFTableCell getEmbeddedTableCell( XWPFTableCell element )
+    protected XWPFTableCell getParentTableCell( XWPFTableCell cell )
     {
-        return null;
+        return cell;
     }
+
 }

@@ -12,6 +12,7 @@ import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTDocDefaults;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTPPr;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTPPrDefault;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTStyle;
+import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTTblStylePr;
 
 public abstract class AbstractParagraphValueProvider<Value>
     extends AbstractValueProvider<Value, XWPFParagraph>
@@ -25,6 +26,11 @@ public abstract class AbstractParagraphValueProvider<Value>
     public CTPPr getCTPPr( CTStyle style )
     {
         return style.getPPr();
+    }
+
+    public CTPPr getCTPPr( CTTblStylePr tblStylePr )
+    {
+        return tblStylePr.getPPr();
     }
 
     public CTPPr getCTPPr( CTDocDefaults docDefaults )
@@ -47,6 +53,12 @@ public abstract class AbstractParagraphValueProvider<Value>
     protected Value getValueFromStyle( CTStyle style )
     {
         return getValue( getCTPPr( style ) );
+    }
+
+    @Override
+    protected Value getValueFromTableStyle( CTTblStylePr tblStylePr )
+    {
+        return getValue( getCTPPr( tblStylePr ) );
     }
 
     @Override
@@ -75,7 +87,7 @@ public abstract class AbstractParagraphValueProvider<Value>
     }
 
     @Override
-    protected XWPFTableCell getEmbeddedTableCell( XWPFParagraph paragraph )
+    protected XWPFTableCell getParentTableCell( XWPFParagraph paragraph )
     {
         return StylesHelper.getEmbeddedTableCell( paragraph );
     }

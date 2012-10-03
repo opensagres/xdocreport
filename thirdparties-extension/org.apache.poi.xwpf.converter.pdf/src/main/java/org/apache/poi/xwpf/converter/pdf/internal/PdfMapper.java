@@ -93,7 +93,7 @@ public class PdfMapper
     public PdfMapper( XWPFDocument document, OutputStream out, PdfOptions options )
         throws Exception
     {
-        super( document, options != null ? options : PdfOptions.create() );
+        super( document, options != null ? options : PdfOptions.getDefault() );
         this.out = out;
     }
 
@@ -362,8 +362,7 @@ public class PdfMapper
 
         // Font
         this.currentRunFont =
-            ITextFontRegistry.getRegistry().getFont( fontFamily, options.getFontEncoding(), fontSize, fontStyle,
-                                                     fontColor );
+            options.getFontProvider().getFont( fontFamily, options.getFontEncoding(), fontSize, fontStyle, fontColor );
 
         // to support chinese character see blog
         // http://acai-hsieh.blogspot.fr/2012/08/how-can-xdocreport-to-pdf-supply.html
@@ -520,12 +519,18 @@ public class PdfMapper
 
     @Override
     protected IITextContainer startVisitTableCell( XWPFTableCell cell, IITextContainer pdfTableContainer,
-                                                   boolean firstRow, boolean lastRow, boolean firstCell,
-                                                   boolean lastCell )
+                                                   boolean firstRow, boolean lastRow, boolean firstCol, boolean lastCol )
         throws Exception
     {
-        StylableTable pdfPTable = (StylableTable) pdfTableContainer;
         XWPFTableRow row = cell.getTableRow();
+        XWPFTable table = row.getTable();
+
+        // 1) store table cell info
+        stylesDocument.getTableInfo( table ).addCellInfo( cell, firstRow, lastRow, firstCol, lastCol );
+
+        // 2) create PDF cell
+        StylableTable pdfPTable = (StylableTable) pdfTableContainer;
+
         StylableTableCell pdfPCell = pdfDocument.createTableCell( pdfPTable );
         // pdfPCell.setUseAscender( true );
         // pdfPCell.setUseDescender( true );
@@ -548,16 +553,16 @@ public class PdfMapper
             CTTblBorders tableBorders = XWPFTableUtil.getTblBorders( cell.getTableRow().getTable() );
             CTTcBorders cellBorders = tcPr.getTcBorders();
             // border-left
-            pdfPCell.setBorder( cellBorders, tableBorders, tableStyleBorders, firstRow, lastRow, firstCell, lastCell,
+            pdfPCell.setBorder( cellBorders, tableBorders, tableStyleBorders, firstRow, lastRow, firstCol, lastCol,
                                 Rectangle.LEFT );
             // border-right
-            pdfPCell.setBorder( cellBorders, tableBorders, tableStyleBorders, firstRow, lastRow, firstCell, lastCell,
+            pdfPCell.setBorder( cellBorders, tableBorders, tableStyleBorders, firstRow, lastRow, firstCol, lastCol,
                                 Rectangle.RIGHT );
             // border-top
-            pdfPCell.setBorder( cellBorders, tableBorders, tableStyleBorders, firstRow, lastRow, firstCell, lastCell,
+            pdfPCell.setBorder( cellBorders, tableBorders, tableStyleBorders, firstRow, lastRow, firstCol, lastCol,
                                 Rectangle.TOP );
             // border-bottom
-            pdfPCell.setBorder( cellBorders, tableBorders, tableStyleBorders, firstRow, lastRow, firstCell, lastCell,
+            pdfPCell.setBorder( cellBorders, tableBorders, tableStyleBorders, firstRow, lastRow, firstCol, lastCol,
                                 Rectangle.BOTTOM );
         }
 

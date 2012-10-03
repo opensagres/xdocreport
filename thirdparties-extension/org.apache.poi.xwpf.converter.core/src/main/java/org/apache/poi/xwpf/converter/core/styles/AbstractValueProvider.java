@@ -1,9 +1,11 @@
 package org.apache.poi.xwpf.converter.core.styles;
 
 import org.apache.poi.xwpf.converter.core.utils.StringUtils;
+import org.apache.poi.xwpf.usermodel.XWPFTable;
 import org.apache.poi.xwpf.usermodel.XWPFTableCell;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTDocDefaults;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTStyle;
+import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTTblStylePr;
 
 public abstract class AbstractValueProvider<Value, XWPFElement>
     implements IValueProvider<Value, XWPFElement>
@@ -31,22 +33,15 @@ public abstract class AbstractValueProvider<Value, XWPFElement>
         {
             return null;
         }
-        
-        // Get the table cell which embedd the XWPF element and null otherwise
-        XWPFTableCell cell = getEmbeddedTableCell(element);
-        
-        
         // 2) External styles: search value declared in a style.
         return getValueFromStyles( element, stylesDocument );
     }
 
-    protected abstract XWPFTableCell getEmbeddedTableCell( XWPFElement element );
-    
     public Value getValueFromStyles( XWPFElement element, XWPFStylesDocument stylesDocument )
     {
 
         // 1) At first get from cache or compute the default value
-        String key = getKey( element, stylesDocument, null );
+        String key = getKey( element, stylesDocument, null, null );
         // search from the cache
         Object defaultValue = stylesDocument.getValue( key );
         if ( defaultValue == null )
@@ -66,8 +61,175 @@ public abstract class AbstractValueProvider<Value, XWPFElement>
         {
             return getValueOrNull( result );
         }
+        // 3) Search if the XWPF element (paragraph or run) belongs to table which is styled.
+        XWPFTableCell cell = getParentTableCell( element );
+        if ( cell != null )
+        {
+            XWPFTable table = cell.getTableRow().getTable();
+            String tableStyleID = table.getStyleID();
+            if ( StringUtils.isNotEmpty( tableStyleID ) )
+            {
+                // the current XWPFElement paragraph, run, etc belongs to a cell of a table which is styled.
+
+                // 1) search styles from <w:style w:type="table" w:styleId="XXX"><w:tblStylePr
+                // w:type="firstRow">, <w:tblStylePr w:type="lastRow">, etc
+                TableCellInfo cellInfo = stylesDocument.getTableCellInfo( cell );
+                result = getValueFromTableStyleId( element, stylesDocument, tableStyleID, cellInfo );
+                if ( result != null )
+                {
+                    return getValueOrNull( result );
+                }
+                // no styles founded, search from the <w:style w:type="table" w:styleId="XXXX">
+                result = getValueFromStyleId( element, stylesDocument, table.getStyleID(), defaultValue );
+                if ( result != null )
+                {
+                    return getValueOrNull( result );
+                }
+            }
+        }
         updateValueCache( stylesDocument, key, defaultValue );
         return getValueOrNull( defaultValue );
+    }
+
+    private Object getValueFromTableStyleId( XWPFElement element, XWPFStylesDocument stylesDocument,
+                                             String tableStyleID, TableCellInfo cellInfo )
+    {
+        if ( StringUtils.isEmpty( tableStyleID ) )
+        {
+            return null;
+        }
+
+        Object value = getValueFromTableStyleIdRow( element, stylesDocument, tableStyleID, cellInfo );
+        if ( value != null )
+        {
+            return value;
+        }
+        if ( cellInfo.canApplyFirstCol() )
+        {
+            Object result = getValueFromTableStyleIdFirstCol( element, stylesDocument, tableStyleID );
+            if ( result != null )
+            {
+                return result;
+            }
+        }
+        else if ( cellInfo.canApplyLastCol() )
+        {
+            Object result = getValueFromTableStyleIdLastCol( element, stylesDocument, tableStyleID );
+            if ( result != null )
+            {
+                return result;
+            }
+        }
+        return null;
+    }
+
+    private Object getValueFromTableStyleIdRow( XWPFElement element, XWPFStylesDocument stylesDocument,
+                                                String tableStyleID, TableCellInfo cellInfo )
+    {
+        if ( cellInfo.canApplyFirstRow() )
+        {
+            Object value = getValueFromTableStyleIdFirstRow( element, stylesDocument, tableStyleID );
+            if ( value != null )
+            {
+                return value;
+            }
+
+        }
+        else if ( cellInfo.canApplyLastRow() )
+        {
+            Object result = getValueFromTableStyleIdLastRow( element, stylesDocument, tableStyleID );
+            if ( result != null )
+            {
+                return result;
+            }
+        }
+        return null;
+    }
+
+    private Object getValueFromTableStyleIdFirstRow( XWPFElement element, XWPFStylesDocument stylesDocument,
+                                                     String tableStyleID )
+    {
+        return getValueFromTableStyleId( element,
+                                         stylesDocument,
+                                         tableStyleID,
+                                         org.openxmlformats.schemas.wordprocessingml.x2006.main.STTblStyleOverrideType.FIRST_ROW );
+    }
+
+    private Object getValueFromTableStyleIdLastRow( XWPFElement element, XWPFStylesDocument stylesDocument,
+                                                    String tableStyleID )
+    {
+        return getValueFromTableStyleId( element,
+                                         stylesDocument,
+                                         tableStyleID,
+                                         org.openxmlformats.schemas.wordprocessingml.x2006.main.STTblStyleOverrideType.LAST_ROW );
+    }
+
+    private Object getValueFromTableStyleIdFirstCol( XWPFElement element, XWPFStylesDocument stylesDocument,
+                                                     String tableStyleID )
+    {
+        return getValueFromTableStyleId( element,
+                                         stylesDocument,
+                                         tableStyleID,
+                                         org.openxmlformats.schemas.wordprocessingml.x2006.main.STTblStyleOverrideType.FIRST_COL );
+    }
+
+    private Object getValueFromTableStyleIdLastCol( XWPFElement element, XWPFStylesDocument stylesDocument,
+                                                    String tableStyleID )
+    {
+        return getValueFromTableStyleId( element,
+                                         stylesDocument,
+                                         tableStyleID,
+                                         org.openxmlformats.schemas.wordprocessingml.x2006.main.STTblStyleOverrideType.LAST_COL );
+    }
+
+    private Object getValueFromTableStyleId( XWPFElement element,
+                                             XWPFStylesDocument stylesDocument,
+                                             String tableStyleID,
+                                             org.openxmlformats.schemas.wordprocessingml.x2006.main.STTblStyleOverrideType.Enum type )
+    {
+        Object defaultValue = XWPFStylesDocument.EMPTY_VALUE;
+        if ( StringUtils.isEmpty( tableStyleID ) )
+        {
+            return null;
+        }
+
+        // Search from cache
+        String key = getKey( element, stylesDocument, tableStyleID, type );
+        Object result = stylesDocument.getValue( key );
+        if ( result != null )
+        {
+            return getValueOrNull( result );
+        }
+        // Value is not computed, compute it
+
+        // Get the table style
+        CTStyle style = stylesDocument.getStyle( tableStyleID );
+        if ( style == null )
+        {
+            // should never come
+            stylesDocument.setValue( key, defaultValue );
+            return null;
+        }
+
+        // try to compute it
+        Object value = null;
+        CTTblStylePr tblStylePr = stylesDocument.getTableStyle( tableStyleID, type );
+        if ( tblStylePr != null )
+        {
+            value = getValueFromTableStyle( tblStylePr );
+            if ( value != null )
+            {
+                // Value is computed, cache it and return it.
+                stylesDocument.setValue( key, value );
+                return value;
+            }
+
+            // Check if style has ancestor with basedOn
+            value = getValueFromTableStyleId( element, stylesDocument, getBasisStyleID( style ), type );
+        }
+        value = value != null ? value : defaultValue;
+        updateValueCache( stylesDocument, key, value );
+        return getValueOrNull( value );
     }
 
     private Value getValueOrNull( Object result )
@@ -87,7 +249,7 @@ public abstract class AbstractValueProvider<Value, XWPFElement>
                 Object value = getValueFromStyleId( element, stylesDocument, styleId, defaultValue );
                 if ( value != null )
                 {
-                    return value;
+                    return getValueOrNull(value);
                 }
             }
         }
@@ -126,7 +288,7 @@ public abstract class AbstractValueProvider<Value, XWPFElement>
         }
 
         // Search from cache
-        String key = getKey( element, stylesDocument, styleId );
+        String key = getKey( element, stylesDocument, styleId, null );
         Object result = stylesDocument.getValue( key );
         if ( result != null )
         {
@@ -134,6 +296,8 @@ public abstract class AbstractValueProvider<Value, XWPFElement>
         }
 
         // Value is not computed, compute it
+
+        // Get the style
         CTStyle style = stylesDocument.getStyle( styleId );
         if ( style == null )
         {
@@ -171,13 +335,28 @@ public abstract class AbstractValueProvider<Value, XWPFElement>
         }
     }
 
-    protected String getKey( XWPFElement element, XWPFStylesDocument stylesDocument, String styleId )
+    protected String getKey( XWPFElement element, XWPFStylesDocument stylesDocument, String styleId,
+                             org.openxmlformats.schemas.wordprocessingml.x2006.main.STTblStyleOverrideType.Enum type )
     {
+        return getKeyBuffer( element, stylesDocument, styleId, type ).toString();
+    }
+
+    protected StringBuilder getKeyBuffer( XWPFElement element,
+                                          XWPFStylesDocument stylesDocument,
+                                          String styleId,
+                                          org.openxmlformats.schemas.wordprocessingml.x2006.main.STTblStyleOverrideType.Enum type )
+    {
+        StringBuilder key = new StringBuilder( this.getClass().getName() );
         if ( StringUtils.isNotEmpty( styleId ) )
         {
-            return new StringBuilder( this.getClass().getName() ).append( "_" ).append( styleId ).toString();
+            key.append( "_" ).append( styleId ).toString();
         }
-        return this.getClass().getName();
+        if ( type != null )
+        {
+            key.append( "_table" );
+            key.append( type.intValue() );
+        }
+        return key;
     }
 
     private String getBasisStyleID( CTStyle style )
@@ -191,6 +370,8 @@ public abstract class AbstractValueProvider<Value, XWPFElement>
     protected abstract String[] getStyleID( XWPFElement element );
 
     protected abstract Value getValueFromStyle( CTStyle style );
+
+    protected abstract Value getValueFromTableStyle( CTTblStylePr tblStylePr );
 
     protected Value getValueFromDefaultStyle( XWPFElement element, XWPFStylesDocument stylesDocument )
     {
@@ -221,5 +402,13 @@ public abstract class AbstractValueProvider<Value, XWPFElement>
     protected abstract Value getValueFromDocDefaultsStyle( CTDocDefaults docDefaults );
 
     protected abstract CTStyle getDefaultStyle( XWPFElement element, XWPFStylesDocument stylesDocument );
+
+    /**
+     * Returns the table cell which is the parent of the XWPF element and null otherwise
+     * 
+     * @param element
+     * @return
+     */
+    protected abstract XWPFTableCell getParentTableCell( XWPFElement element );
 
 }

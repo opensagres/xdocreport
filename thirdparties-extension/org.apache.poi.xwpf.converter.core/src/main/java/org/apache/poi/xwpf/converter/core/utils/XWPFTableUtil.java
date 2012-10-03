@@ -37,6 +37,7 @@ import org.apache.poi.xwpf.usermodel.XWPFTableCell;
 import org.apache.poi.xwpf.usermodel.XWPFTableRow;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTBorder;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTDecimalNumber;
+import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTShortHexNumber;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTTbl;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTTblBorders;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTTblCellMar;
@@ -52,6 +53,28 @@ import org.w3c.dom.Node;
 
 public class XWPFTableUtil
 {
+
+    private static final String MAIN_NAMESPACE = "http://schemas.openxmlformats.org/wordprocessingml/2006/main";
+
+    // Hexa Bitmask for tblLook.
+
+    public static final int DEFAULT_TBLLOOK = 0x0000;
+
+    public static final int APPLY_FIRST_ROW_CONDITIONNAL_FORMATTING = 0x0020; // Apply first row conditional formatting
+
+    public static final int APPLY_LAST_ROW_CONDITIONNAL_FORMATTING = 0x0040; // Apply last row conditional formatting
+
+    public static final int APPLY_FIRST_COLUMN_CONDITIONNAL_FORMATTING = 0x0080; // Apply first column conditional
+                                                                                 // formatting
+
+    public static final int APPLY_LAST_COLUMN_CONDITIONNAL_FORMATTING = 0x0100; // Apply last column conditional
+                                                                                // formatting
+
+    public static final int DO_NOT_APPLY_ROW_BANDING_CONDITIONNAL_FORMATTING = 0x0200; // Do not apply row banding
+                                                                                       // conditional formatting
+
+    public static final int DO_NOT_APPLY_COLUMN_BANDING_CONDITIONNAL_FORMATTING = 0x0400; // Do not apply column banding
+                                                                                          // conditional formatting
 
     /**
      * Compute column widths of the XWPF table.
@@ -319,9 +342,7 @@ public class XWPFTableUtil
         }
         // border.getColor returns object???, use attribute w:color to get
         // the color.
-        Node colorAttr =
-            border.getDomNode().getAttributes().getNamedItemNS( "http://schemas.openxmlformats.org/wordprocessingml/2006/main",
-                                                                "color" );
+        Node colorAttr = border.getDomNode().getAttributes().getNamedItemNS( MAIN_NAMESPACE, "color" );
         if ( colorAttr != null )
         {
             Object val = border.getVal();
@@ -330,4 +351,62 @@ public class XWPFTableUtil
         return null;
     }
 
+    public static CTShortHexNumber getTblLook( XWPFTable table )
+    {
+        CTTblPr tblPr = getTblPr( table );
+        if ( tblPr != null )
+        {
+            return tblPr.getTblLook();
+        }
+        return null;
+
+    }
+
+    public static int getTblLookVal( XWPFTable table )
+    {
+        int tblLook = DEFAULT_TBLLOOK;
+        CTShortHexNumber hexNumber = getTblLook( table );
+        if ( hexNumber != null && !hexNumber.isNil() )
+        {
+            // CTShortHexNumber#getVal() returns byte[] and not byte, use attr value ???
+            Attr attr = (Attr) hexNumber.getDomNode().getAttributes().getNamedItemNS( MAIN_NAMESPACE, "val" );
+            if ( attr != null )
+            {
+                String value = attr.getValue();
+                try
+                {
+                    tblLook = Integer.parseInt( value, 16 );
+                }
+                catch ( Throwable e )
+                {
+                    e.printStackTrace();
+                }
+            }
+        }
+        return tblLook;
+    }
+
+    public static boolean canApplyFirstRow( int tblLookVal )
+    {
+        int mask = APPLY_FIRST_ROW_CONDITIONNAL_FORMATTING;
+        return ( tblLookVal & mask ) == mask;
+    }
+
+    public static boolean canApplyLastRow( int tblLookVal )
+    {
+        int mask = APPLY_LAST_ROW_CONDITIONNAL_FORMATTING;
+        return ( tblLookVal & mask ) == mask;
+    }
+
+    public static boolean canApplyFirstCol( int tblLookVal )
+    {
+        int mask = APPLY_FIRST_COLUMN_CONDITIONNAL_FORMATTING;
+        return ( tblLookVal & mask ) == mask;
+    }
+
+    public static boolean canApplyLastCol( int tblLookVal )
+    {
+        int mask = APPLY_LAST_COLUMN_CONDITIONNAL_FORMATTING;
+        return ( tblLookVal & mask ) == mask;
+    }
 }

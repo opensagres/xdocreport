@@ -124,7 +124,7 @@ public class StyleEngineForIText
     public StyleEngineForIText( OdfDocument odfDocument, PdfOptions options )
     {
         super( odfDocument );
-        this.options = options != null ? options : PdfOptions.create();
+        this.options = options != null ? options : PdfOptions.getDefault();
     }
 
     public void visit( OfficeStylesElement ele )
@@ -194,7 +194,7 @@ public class StyleEngineForIText
         }
 
         // 3) Create style
-        style = new Style( styleName, familyName, masterPageName );
+        style = new Style( options.getFontProvider(), styleName, familyName, masterPageName );
 
         // 4) Apply default style if needed
         // Style defaultStyle = null;
@@ -680,7 +680,7 @@ public class StyleEngineForIText
         StyleTextProperties textProperties = currentStyle.getTextProperties();
         if ( textProperties == null )
         {
-            textProperties = new StyleTextProperties();
+            textProperties = new StyleTextProperties( options.getFontProvider() );
             currentStyle.setTextProperties( textProperties );
         }
 
@@ -808,16 +808,16 @@ public class StyleEngineForIText
 
         String textPositionStyle = ele.getStyleTextPositionAttribute();
 
-        if( StringUtils.isNotEmpty( textPositionStyle ) )
+        if ( StringUtils.isNotEmpty( textPositionStyle ) )
         {
-        	if( textPositionStyle.contains("super") )
-        	{
-        		textProperties.setTextPosition(5.0f);
-        	}
-        	else if( textPositionStyle.contains("sub") )
-        	{
-        		textProperties.setTextPosition(-2.0f);
-        	}
+            if ( textPositionStyle.contains( "super" ) )
+            {
+                textProperties.setTextPosition( 5.0f );
+            }
+            else if ( textPositionStyle.contains( "sub" ) )
+            {
+                textProperties.setTextPosition( -2.0f );
+            }
         }
 
         super.visit( ele );
@@ -1431,7 +1431,7 @@ public class StyleEngineForIText
         // 1 default style
         // 2 parent element style
         // 3 current style
-        Style newStyle = new Style( newStyleName, newFamilyName, newMasterPageName );
+        Style newStyle = new Style( options.getFontProvider(), newStyleName, newFamilyName, newMasterPageName );
         if ( parentElementStyle != null )
         {
             // parent element style contains default style

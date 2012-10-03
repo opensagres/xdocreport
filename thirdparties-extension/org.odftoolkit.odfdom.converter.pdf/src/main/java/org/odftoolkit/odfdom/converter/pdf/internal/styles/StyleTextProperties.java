@@ -24,10 +24,11 @@
  */
 package org.odftoolkit.odfdom.converter.pdf.internal.styles;
 
-import com.lowagie.text.Font;
 import java.awt.Color;
 
-import org.odftoolkit.odfdom.converter.pdf.internal.ODFFontRegistry;
+import com.lowagie.text.Font;
+
+import fr.opensagres.xdocreport.itext.extension.font.IFontProvider;
 
 public class StyleTextProperties
 {
@@ -52,19 +53,24 @@ public class StyleTextProperties
 
     private Float textPosition;
 
-    public StyleTextProperties()
+    private final IFontProvider fontProvider;
+
+    public StyleTextProperties( IFontProvider fontProvider )
     {
+        this.fontProvider = fontProvider;
     }
 
-    public StyleTextProperties( StyleTextProperties textProperties )
+    public StyleTextProperties( IFontProvider fontProvider, StyleTextProperties textProperties )
     {
         if ( textProperties != null )
         {
             merge( textProperties );
         }
+        this.fontProvider = fontProvider;
     }
 
-    public StyleTextProperties( StyleTextProperties textProperties1, StyleTextProperties textProperties2 )
+    public StyleTextProperties( IFontProvider fontProvider, StyleTextProperties textProperties1,
+                                StyleTextProperties textProperties2 )
     {
         if ( textProperties1 != null )
         {
@@ -74,6 +80,7 @@ public class StyleTextProperties
         {
             merge( textProperties2 );
         }
+        this.fontProvider = fontProvider;
     }
 
     public void merge( StyleTextProperties textProperties )
@@ -116,7 +123,7 @@ public class StyleTextProperties
         }
         if ( textProperties.getTextPosition() != null )
         {
-        	textPosition = textProperties.getTextPosition();
+            textPosition = textProperties.getTextPosition();
         }
     }
 
@@ -150,19 +157,19 @@ public class StyleTextProperties
 
     public Font getFont()
     {
-    	Float adjustedFontSize;
+        Float adjustedFontSize;
 
         if ( hasFontProperties() )
         {
-        	adjustedFontSize = fontSize;
+            adjustedFontSize = fontSize;
 
-        	// Shrink font size if sub or super scripted
-        	if( textPosition != null )
-        	{
-        		adjustedFontSize *= 0.63f;
-        	}
+            // Shrink font size if sub or super scripted
+            if ( textPosition != null )
+            {
+                adjustedFontSize *= 0.63f;
+            }
 
-            return ODFFontRegistry.getRegistry().getFont( fontName, fontEncoding, adjustedFontSize, getStyleFlag(), fontColor );
+            return fontProvider.getFont( fontName, fontEncoding, adjustedFontSize, getStyleFlag(), fontColor );
         }
         else
         {

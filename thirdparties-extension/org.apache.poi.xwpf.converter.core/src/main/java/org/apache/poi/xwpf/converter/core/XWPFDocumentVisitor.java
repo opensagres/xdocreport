@@ -1,6 +1,7 @@
 package org.apache.poi.xwpf.converter.core;
 
 import java.io.IOException;
+import java.math.BigInteger;
 import java.util.List;
 
 import org.apache.poi.openxml4j.opc.PackagePart;
@@ -357,8 +358,8 @@ public abstract class XWPFDocumentVisitor<T, O extends Options, E extends IXWPFM
 
         int nbColumns = colWidths.length;
         // Process cell
-        boolean firstCell = false;
-        boolean lastCell = false;
+        boolean firstCol = true;
+        boolean lastCol = false;
         List<XWPFTableCell> cells = row.getTableCells();
         if ( nbColumns > cells.size() )
         {
@@ -371,7 +372,8 @@ public abstract class XWPFDocumentVisitor<T, O extends Options, E extends IXWPFM
             // <w:sdtContent>
             // <w:tc> <= this tc which is a XWPFTableCell is not included in the row.getTableCells();
 
-            firstCell = true;
+            firstCol = true;
+            int cellIndex = 0;
             CTRow ctRow = row.getCtRow();
             XmlCursor c = ctRow.newCursor();
             c.selectPath( "./*" );
@@ -382,8 +384,10 @@ public abstract class XWPFDocumentVisitor<T, O extends Options, E extends IXWPFM
                 {
                     CTTc tc = (CTTc) o;
                     XWPFTableCell cell = row.getTableCell( tc );
-                    visitCell( cell, tableContainer, firstRow, lastRow, firstCell, lastCell );
-                    firstCell = false;
+                    cellIndex = getCellIndex( cellIndex, cell );
+                    lastCol = ( cellIndex == nbColumns - 1 );
+                    visitCell( cell, tableContainer, firstRow, lastRow, firstCol, lastCol );
+                    firstCol = false;
                 }
                 else if ( o instanceof CTSdtCell )
                 {
@@ -393,8 +397,10 @@ public abstract class XWPFDocumentVisitor<T, O extends Options, E extends IXWPFM
                     for ( CTTc ctTc : tcList )
                     {
                         XWPFTableCell cell = new XWPFTableCell( ctTc, row, row.getTable().getBody() );
-                        visitCell( cell, tableContainer, firstRow, lastRow, firstCell, lastCell );
-                        firstCell = false;
+                        cellIndex = getCellIndex( cellIndex, cell );
+                        lastCol = ( cellIndex == nbColumns - 1 );
+                        visitCell( cell, tableContainer, firstRow, lastRow, firstCol, lastCol );
+                        firstCol = false;
                     }
                 }
             }
@@ -405,14 +411,28 @@ public abstract class XWPFDocumentVisitor<T, O extends Options, E extends IXWPFM
             // Column number is equal to cells number.
             for ( int i = 0; i < cells.size(); i++ )
             {
-                firstCell = ( i == 0 );
-                lastCell = ( i == cells.size() - 1 );
+                lastCol = ( i == cells.size() - 1 );
                 XWPFTableCell cell = cells.get( i );
-                visitCell( cell, tableContainer, firstRow, lastRow, firstCell, lastCell );
+                visitCell( cell, tableContainer, firstRow, lastRow, firstCol, lastCol );
+                firstCol = false;
             }
         }
 
         endVisitTableRow( row, tableContainer, firstRow, lastRow );
+    }
+
+    private int getCellIndex( int cellIndex, XWPFTableCell cell )
+    {
+        BigInteger gridSpan = stylesDocument.getTableCellGridSpan( cell.getCTTc().getTcPr() );
+        if ( gridSpan != null )
+        {
+            cellIndex = cellIndex + gridSpan.intValue();
+        }
+        else
+        {
+            cellIndex++;
+        }
+        return cellIndex;
     }
 
     protected void startVisitTableRow( XWPFTableRow row, T tableContainer, boolean firstRow, boolean lastRow )
@@ -428,10 +448,10 @@ public abstract class XWPFDocumentVisitor<T, O extends Options, E extends IXWPFM
     }
 
     protected void visitCell( XWPFTableCell cell, T tableContainer, boolean firstRow, boolean lastRow,
-                              boolean firstCell, boolean lastCell )
+                              boolean firstCol, boolean lastCol )
         throws Exception
     {
-        T tableCellContainer = startVisitTableCell( cell, tableContainer, firstRow, lastRow, firstCell, lastCell );
+        T tableCellContainer = startVisitTableCell( cell, tableContainer, firstRow, lastRow, firstCol, lastCol );
         visitTableCellBody( cell, tableCellContainer );
         endVisitTableCell( cell, tableContainer, tableCellContainer );
     }
@@ -444,7 +464,7 @@ public abstract class XWPFDocumentVisitor<T, O extends Options, E extends IXWPFM
     }
 
     protected abstract T startVisitTableCell( XWPFTableCell cell, T tableContainer, boolean firstRow, boolean lastRow,
-                                              boolean firstCell, boolean lastCell )
+                                              boolean firstCol, boolean lastCol )
         throws Exception;
 
     protected abstract void endVisitTableCell( XWPFTableCell cell, T tableContainer, T tableCellContainer )

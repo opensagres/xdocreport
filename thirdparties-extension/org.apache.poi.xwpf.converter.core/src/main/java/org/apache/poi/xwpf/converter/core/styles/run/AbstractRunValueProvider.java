@@ -15,6 +15,7 @@ import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTRPr;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTRPrDefault;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTString;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTStyle;
+import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTTblStylePr;
 
 public abstract class AbstractRunValueProvider<Value>
     extends AbstractValueProvider<Value, XWPFRun>
@@ -40,6 +41,11 @@ public abstract class AbstractRunValueProvider<Value>
         return prDefault.getRPr();
     }
 
+    public CTRPr getRPr( CTTblStylePr tblStylePr )
+    {
+        return tblStylePr.getRPr();
+    }
+
     @Override
     public Value getValueFromElement( XWPFRun run )
     {
@@ -50,6 +56,12 @@ public abstract class AbstractRunValueProvider<Value>
     protected Value getValueFromStyle( CTStyle style )
     {
         return getValue( getRPr( style ) );
+    }
+
+    @Override
+    protected Value getValueFromTableStyle( CTTblStylePr tblStylePr )
+    {
+        return getValue( getRPr( tblStylePr ) );
     }
 
     @Override
@@ -92,7 +104,7 @@ public abstract class AbstractRunValueProvider<Value>
     }
 
     @Override
-    protected XWPFTableCell getEmbeddedTableCell( XWPFRun run )
+    protected XWPFTableCell getParentTableCell( XWPFRun run )
     {
         return StylesHelper.getEmbeddedTableCell( run.getParagraph() );
     }

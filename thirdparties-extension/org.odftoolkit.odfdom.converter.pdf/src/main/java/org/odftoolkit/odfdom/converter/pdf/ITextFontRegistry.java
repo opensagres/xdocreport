@@ -22,11 +22,11 @@
  * OF CONTRACT, TORT OR OTHERWISE,  ARISING FROM, OUT OF OR IN CONNECTION
  * WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
-package org.odftoolkit.odfdom.converter.pdf.internal;
+package org.odftoolkit.odfdom.converter.pdf;
 
 import fr.opensagres.xdocreport.itext.extension.font.AbstractFontRegistry;
 
-public class ODFFontRegistry
+public class ITextFontRegistry
     extends AbstractFontRegistry
 {
 
@@ -34,9 +34,9 @@ public class ODFFontRegistry
 
     //private static final String COURRIER_NEW_FONT_FAMILY_NAME = "Courier New";
 
-    private static final ODFFontRegistry INSTANCE = new ODFFontRegistry();
+    private static final ITextFontRegistry INSTANCE = new ITextFontRegistry();
 
-    public static ODFFontRegistry getRegistry()
+    public static ITextFontRegistry getRegistry()
     {
         return INSTANCE;
     }

@@ -29,7 +29,7 @@ import java.awt.Color;
 import com.lowagie.text.Font;
 import com.lowagie.text.FontFactory;
 
-public abstract class AbstractFontRegistry
+public abstract class AbstractFontRegistry implements IFontProvider
 {
 
     private boolean systemEncodingDeterminated;

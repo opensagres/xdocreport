@@ -8,6 +8,7 @@ import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTDocDefaults;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTStyle;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTTblPr;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTTblPrBase;
+import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTTblStylePr;
 
 public abstract class AbstractTableValueProvider<Value>
     extends AbstractValueProvider<Value, XWPFTable>
@@ -39,6 +40,12 @@ public abstract class AbstractTableValueProvider<Value>
     {
         return getValue( getTblPr( style ) );
     }
+    
+    @Override
+    protected Value getValueFromTableStyle( CTTblStylePr tblStylePr )
+    {     
+        return null;
+    }
 
     @Override
     protected Value getValueFromDocDefaultsStyle( CTDocDefaults docDefaults )
@@ -63,7 +70,7 @@ public abstract class AbstractTableValueProvider<Value>
     }
     
     @Override
-    protected XWPFTableCell getEmbeddedTableCell( XWPFTable element )
+    protected XWPFTableCell getParentTableCell( XWPFTable element )
     {     
         return null;
     }

@@ -27,6 +27,8 @@ package org.odftoolkit.odfdom.converter.pdf.internal.styles;
 import java.util.List;
 import java.util.Map;
 
+import fr.opensagres.xdocreport.itext.extension.font.IFontProvider;
+
 public class Style
 {
     private final String styleName;
@@ -61,11 +63,14 @@ public class Style
 
     private List<StyleColumnProperties> columnPropertiesList;
 
-    public Style( String styleName, String familyName, String masterPageName )
+    private final IFontProvider fontProvider;
+
+    public Style( IFontProvider fontProvider, String styleName, String familyName, String masterPageName )
     {
         this.styleName = styleName;
         this.familyName = familyName;
         this.masterPageName = masterPageName;
+        this.fontProvider = fontProvider;
     }
 
     public void merge( Style style )
@@ -121,7 +126,7 @@ public class Style
         {
             if ( style.getTextProperties() != null )
             {
-                textProperties = new StyleTextProperties( style.getTextProperties() );
+                textProperties = new StyleTextProperties( fontProvider, style.getTextProperties() );
             }
         }
         else

@@ -26,21 +26,21 @@ public class StylesHelper
             styleIDs.add( paragraphStyleId );
         }
         // if paragraph is include in a table which defines a style, use this tabe style
-        IBody body = paragraph.getBody();
-        if ( body != null && body.getPartType() == BodyType.TABLECELL )
-        {
-            XWPFTableCell cell = (XWPFTableCell) body;
-            XWPFTable table = cell.getTableRow().getTable();
-            String tableStyleID = table.getStyleID();
-            if ( StringUtils.isNotEmpty( tableStyleID ) )
-            {
-                if ( styleIDs == null )
-                {
-                    styleIDs = new ArrayList<String>();
-                }
-                styleIDs.add( tableStyleID );
-            }
-        }
+//        IBody body = paragraph.getBody();
+//        if ( body != null && body.getPartType() == BodyType.TABLECELL )
+//        {
+//            XWPFTableCell cell = (XWPFTableCell) body;
+//            XWPFTable table = cell.getTableRow().getTable();
+//            String tableStyleID = table.getStyleID();
+//            if ( StringUtils.isNotEmpty( tableStyleID ) )
+//            {
+//                if ( styleIDs == null )
+//                {
+//                    styleIDs = new ArrayList<String>();
+//                }
+//                styleIDs.add( tableStyleID );
+//            }
+//        }
         return styleIDs;
     }
 

@@ -25,23 +25,43 @@
 package org.apache.poi.xwpf.converter.pdf;
 
 import org.apache.poi.xwpf.converter.core.Options;
-import org.apache.poi.xwpf.converter.pdf.internal.ITextFontRegistry;
 
+import fr.opensagres.xdocreport.itext.extension.font.IFontProvider;
+
+/**
+ * Pdf options to customize the DOCX->PDF converter.
+ */
 public class PdfOptions
     extends Options
 {
 
-    private String fontEncoding = ITextFontRegistry.getRegistry().getSystemEncoding();
+    private static final PdfOptions DEFAULT = new PdfOptions();
+
+    private String fontEncoding;
+
+    private IFontProvider fontProvider;
 
     private PdfOptions()
     {
+        this.fontEncoding = ITextFontRegistry.getRegistry().getSystemEncoding();
+        this.fontProvider = ITextFontRegistry.getRegistry();
     }
 
+    /**
+     * Create an instance of Pdf options.
+     * 
+     * @return
+     */
     public static PdfOptions create()
     {
         return new PdfOptions();
     }
 
+    /**
+     * Returns the font encoding.
+     * 
+     * @return
+     */
     public String getFontEncoding()
     {
         return fontEncoding;
@@ -57,5 +77,37 @@ public class PdfOptions
     {
         this.fontEncoding = fontEncoding;
         return this;
+    }
+
+    /**
+     * Set the font provider.
+     * 
+     * @param fontProvider
+     * @return
+     */
+    public PdfOptions fontProvider( IFontProvider fontProvider )
+    {
+        this.fontProvider = fontProvider;
+        return this;
+    }
+
+    /**
+     * Returns the font provider.
+     * 
+     * @return
+     */
+    public IFontProvider getFontProvider()
+    {
+        return fontProvider;
+    }
+
+    /**
+     * Returns the default Pdf Options.
+     * 
+     * @return
+     */
+    public static PdfOptions getDefault()
+    {
+        return DEFAULT;
     }
 }

@@ -35,10 +35,16 @@ public class XHTMLOptions
 
     private boolean generateCSSComments;
 
+    private boolean omitHeaderFooterPages;
+
+    private boolean fragment;
+
     private IURIResolver resolver = IURIResolver.DEFAULT;
 
     private XHTMLOptions()
     {
+        this.omitHeaderFooterPages = false;
+        this.fragment = false;
     }
 
     public static XHTMLOptions create()
@@ -78,4 +84,27 @@ public class XHTMLOptions
         this.resolver = resolver;
         return this;
     }
+
+    public boolean isOmitHeaderFooterPages()
+    {
+        return omitHeaderFooterPages;
+    }
+
+    public XHTMLOptions setOmitHeaderFooterPages( boolean omitHeaderFooterPages )
+    {
+        this.omitHeaderFooterPages = omitHeaderFooterPages;
+        return this;
+    }
+
+    public boolean isFragment()
+    {
+        return fragment;
+    }
+
+    public XHTMLOptions setFragment( boolean fragment )
+    {
+        this.fragment = fragment;
+        return this;
+    }
+
 }

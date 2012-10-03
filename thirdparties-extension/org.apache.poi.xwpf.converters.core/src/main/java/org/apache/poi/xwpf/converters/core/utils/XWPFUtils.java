@@ -26,6 +26,7 @@ package org.apache.poi.xwpf.converters.core.utils;
 
 import java.awt.Color;
 
+import org.apache.poi.xwpf.converters.core.PageOrientation;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTOnOff;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTSectPr;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTSectType;
@@ -51,7 +52,21 @@ public class XWPFUtils
         return sectType.getVal() == STSectionMark.CONTINUOUS;
     }
 
-   
+    public static PageOrientation getPageOrientation( org.openxmlformats.schemas.wordprocessingml.x2006.main.STPageOrientation.Enum orientation )
+    {
+        if ( orientation != null )
+        {
+            if ( org.openxmlformats.schemas.wordprocessingml.x2006.main.STPageOrientation.LANDSCAPE.equals( orientation ) )
+            {
+                return PageOrientation.Landscape;
+            }
+            else
+            {
+                return PageOrientation.Portrait;
+            }
+        }
+        return null;
+    }
 
     private static String getStringVal( Object val )
     {

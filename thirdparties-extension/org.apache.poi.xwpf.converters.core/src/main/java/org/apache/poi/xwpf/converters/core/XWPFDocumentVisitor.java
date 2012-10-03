@@ -1,12 +1,11 @@
 package org.apache.poi.xwpf.converters.core;
 
 import java.io.IOException;
-import java.io.OutputStream;
 import java.util.List;
 
 import org.apache.poi.openxml4j.opc.PackagePart;
-import org.apache.poi.ss.formula.functions.T;
 import org.apache.poi.xwpf.converters.core.styles.XWPFStylesDocument;
+import org.apache.poi.xwpf.converters.core.utils.XWPFTableUtil;
 import org.apache.poi.xwpf.usermodel.IBodyElement;
 import org.apache.poi.xwpf.usermodel.XWPFDocument;
 import org.apache.poi.xwpf.usermodel.XWPFFooter;
@@ -26,17 +25,28 @@ import org.openxmlformats.schemas.drawingml.x2006.main.CTGraphicalObjectData;
 import org.openxmlformats.schemas.drawingml.x2006.picture.CTPicture;
 import org.openxmlformats.schemas.drawingml.x2006.wordprocessingDrawing.CTAnchor;
 import org.openxmlformats.schemas.drawingml.x2006.wordprocessingDrawing.CTInline;
+import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTBr;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTDrawing;
+import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTEmpty;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTHdrFtr;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTHdrFtrRef;
+import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTOnOff;
+import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTPPr;
+import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTPTab;
+import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTR;
+import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTRow;
+import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTSdtCell;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTSectPr;
+import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTTc;
+import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTText;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.FtrDocument;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.HdrDocument;
+import org.openxmlformats.schemas.wordprocessingml.x2006.main.STOnOff;
 
-public abstract class XWPFDocumentVisitor<E extends IXWPFMasterPage>
+public abstract class XWPFDocumentVisitor<T, O extends Options, E extends IXWPFMasterPage>
 {
 
-    private final XWPFDocument document;
+    protected final XWPFDocument document;
 
     private final MasterPageManager masterPageManager;
 
@@ -46,12 +56,20 @@ public abstract class XWPFDocumentVisitor<E extends IXWPFMasterPage>
 
     protected final XWPFStylesDocument stylesDocument;
 
-    public XWPFDocumentVisitor( XWPFDocument document )
+    protected final O options;
+
+    public XWPFDocumentVisitor( XWPFDocument document, O options )
         throws Exception
     {
         this.document = document;
+        this.options = options;
         this.masterPageManager = new MasterPageManager( document, this );
-        this.stylesDocument = new XWPFStylesDocument( document );
+        this.stylesDocument = createStylesDocument( document );
+    }
+
+    protected XWPFStylesDocument createStylesDocument( XWPFDocument document )
+    {
+        return new XWPFStylesDocument( document );
     }
 
     public MasterPageManager getMasterPageManager()
@@ -67,20 +85,20 @@ public abstract class XWPFDocumentVisitor<E extends IXWPFMasterPage>
      * @param out
      * @throws Exception
      */
-    public void visit( OutputStream out )
+    public void start()
         throws Exception
     {
-        T container = startVisitDocument( out );
+        T container = startVisitDocument();
 
         // Create IText, XHTML element for each XWPF elements from the w:body
         List<IBodyElement> bodyElements = document.getBodyElements();
         visitBodyElements( bodyElements, container );
 
         endVisitDocument();
-        out.close();
+
     }
 
-    protected abstract T startVisitDocument( OutputStream out )
+    protected abstract T startVisitDocument()
         throws Exception;
 
     protected abstract void endVisitDocument()
@@ -130,15 +148,15 @@ public abstract class XWPFDocumentVisitor<E extends IXWPFMasterPage>
             // to update the header/footer declared in the <w:headerReference/<w:footerReference
             masterPageManager.update( paragraph );
         }
-        T paragraphContainer = startVisitPargraph( paragraph, container );
+        T paragraphContainer = startVisitParagraph( paragraph, container );
         visitParagraphBody( paragraph, paragraphContainer );
-        endVisitPargraph( paragraph, container, paragraphContainer );
+        endVisitParagraph( paragraph, container, paragraphContainer );
     }
 
-    protected abstract T startVisitPargraph( XWPFParagraph paragraph, T parentContainer )
+    protected abstract T startVisitParagraph( XWPFParagraph paragraph, T parentContainer )
         throws Exception;
 
-    protected abstract void endVisitPargraph( XWPFParagraph paragraph, T parentContainer, T paragraphContainer )
+    protected abstract void endVisitParagraph( XWPFParagraph paragraph, T parentContainer, T paragraphContainer )
         throws Exception;
 
     protected void visitParagraphBody( XWPFParagraph paragraph, T paragraphContainer )
@@ -181,23 +199,123 @@ public abstract class XWPFDocumentVisitor<E extends IXWPFMasterPage>
                 visitRun( run, paragraphContainer );
             }
         }
+
+        // Page Break
+        // Cannot use paragraph.isPageBreak() because it throw NPE because
+        // pageBreak.getVal() can be null.
+        CTPPr ppr = paragraph.getCTP().getPPr();
+        if ( ppr != null )
+        {
+            if ( ppr.isSetPageBreakBefore() )
+            {
+                CTOnOff pageBreak = ppr.getPageBreakBefore();
+                if ( pageBreak != null
+                    && ( pageBreak.getVal() == null || pageBreak.getVal().intValue() == STOnOff.INT_TRUE ) )
+                {
+                    pageBreak();
+                }
+            }
+        }
     }
 
     protected abstract void visitEmptyRun( T paragraphContainer )
         throws Exception;
 
-    protected abstract void visitRun( XWPFRun run, T paragraphContainer )
+    protected void visitRun( XWPFRun run, T paragraphContainer )
+        throws Exception
+    {
+        CTR ctr = run.getCTR();
+
+        // <w:lastRenderedPageBreak />
+        List<CTEmpty> lastRenderedPageBreakList = ctr.getLastRenderedPageBreakList();
+        if ( lastRenderedPageBreakList != null && lastRenderedPageBreakList.size() > 0 )
+        {
+            for ( CTEmpty lastRenderedPageBreak : lastRenderedPageBreakList )
+            {
+                pageBreak();
+            }
+        }
+
+        // Loop for each element of <w:run text, tab, image etc
+        // to keep the oder of thoses elements.
+        XmlCursor c = ctr.newCursor();
+        c.selectPath( "./*" );
+        while ( c.toNextSelection() )
+        {
+            XmlObject o = c.getObject();
+
+            if ( o instanceof CTText )
+            {
+                CTText ctText = (CTText) o;
+                String tagName = o.getDomNode().getNodeName();
+                // Field Codes (w:instrText, defined in spec sec. 17.16.23)
+                // come up as instances of CTText, but we don't want them
+                // in the normal text output
+                if ( !"w:instrText".equals( tagName ) )
+                {
+                    visitText( ctText, paragraphContainer );
+                }
+            }
+            else if ( o instanceof CTPTab )
+            {
+                visitTab( (CTPTab) o, paragraphContainer );
+            }
+            else if ( o instanceof CTBr )
+            {
+                visitBR( (CTBr) o, paragraphContainer );
+            }
+            else if ( o instanceof CTEmpty )
+            {
+                // Some inline text elements get returned not as
+                // themselves, but as CTEmpty, owing to some odd
+                // definitions around line 5642 of the XSDs
+                // This bit works around it, and replicates the above
+                // rules for that case
+                String tagName = o.getDomNode().getNodeName();
+                if ( "w:tab".equals( tagName ) )
+                {
+                    visitTab( null, paragraphContainer );
+                }
+                if ( "w:br".equals( tagName ) )
+                {
+                    visitBR( null, paragraphContainer );
+                }
+                if ( "w:cr".equals( tagName ) )
+                {
+                    visitBR( null, paragraphContainer );
+                }
+            }
+            else if ( o instanceof CTDrawing )
+            {
+                visitDrawing( (CTDrawing) o, paragraphContainer );
+            }
+        }
+        c.dispose();
+    }
+
+    protected abstract void visitText( CTText ctText, T paragraphContainer )
+        throws Exception;
+
+    protected abstract void visitTab( CTPTab o, T paragraphContainer )
+        throws Exception;
+
+    protected abstract void visitBR( CTBr o, T paragraphContainer )
+        throws Exception;
+
+    protected abstract void pageBreak()
         throws Exception;
 
     protected void visitTable( XWPFTable table, T container )
         throws Exception
     {
-        T tableContainer = startVisitTable( table, container );
-        visitTableBody( table, tableContainer );
+        // 1) Compute colWidth
+        float[] colWidths = XWPFTableUtil.computeColWidths( table );
+        T tableContainer = startVisitTable( table, colWidths, container );
+        visitTableBody( table, colWidths, tableContainer );
         endVisitTable( table, container, tableContainer );
     }
 
-    protected void visitTableBody( XWPFTable table, T tableContainer )
+    protected void visitTableBody( XWPFTable table, float[] colWidths, T tableContainer )
         throws Exception
     {
         // Proces Row
@@ -209,30 +327,93 @@ public abstract class XWPFDocumentVisitor<E extends IXWPFMasterPage>
             firstRow = ( i == 0 );
             lastRow = ( i == rows.size() - 1 );
             XWPFTableRow row = rows.get( i );
-            visitTableRow( row, tableContainer, firstRow, lastRow );
+            visitTableRow( row, colWidths, tableContainer, firstRow, lastRow );
         }
     }
 
-    protected abstract T startVisitTable( XWPFTable table, T tableContainer )
+    protected abstract T startVisitTable( XWPFTable table, float[] colWidths, T tableContainer )
         throws Exception;
 
     protected abstract void endVisitTable( XWPFTable table, T parentContainer, T tableContainer )
         throws Exception;
 
-    protected void visitTableRow( XWPFTableRow row, T tableContainer, boolean firstRow, boolean lastRow )
+    protected void visitTableRow( XWPFTableRow row, float[] colWidths, T tableContainer, boolean firstRow,
+                                  boolean lastRow )
         throws Exception
     {
+
+        startVisitTableRow( row, tableContainer, firstRow, lastRow );
+
+        int nbColumns = colWidths.length;
         // Process cell
         boolean firstCell = false;
         boolean lastCell = false;
         List<XWPFTableCell> cells = row.getTableCells();
-        for ( int i = 0; i < cells.size(); i++ )
+        if ( nbColumns > cells.size() )
         {
-            firstCell = ( i == 0 );
-            lastCell = ( i == cells.size() - 1 );
-            XWPFTableCell cell = cells.get( i );
-            visitCell( cell, tableContainer, firstRow, lastRow, firstCell, lastCell );
+            // Columns number is not equal to cells number.
+            // POI have a bug with
+            // <w:tr w:rsidR="00C55C20">
+            // <w:tc>
+            // <w:tc>...
+            // <w:sdt>
+            // <w:sdtContent>
+            // <w:tc> <= this tc which is a XWPFTableCell is not included in the row.getTableCells();
+
+            firstCell = true;
+            CTRow ctRow = row.getCtRow();
+            XmlCursor c = ctRow.newCursor();
+            c.selectPath( "./*" );
+            while ( c.toNextSelection() )
+            {
+                XmlObject o = c.getObject();
+                if ( o instanceof CTTc )
+                {
+                    CTTc tc = (CTTc) o;
+                    XWPFTableCell cell = row.getTableCell( tc );
+                    visitCell( cell, tableContainer, firstRow, lastRow, firstCell, lastCell );
+                    firstCell = false;
+                }
+                else if ( o instanceof CTSdtCell )
+                {
+                    // Fix bug of POI
+                    CTSdtCell sdtCell = (CTSdtCell) o;
+                    List<CTTc> tcList = sdtCell.getSdtContent().getTcList();
+                    for ( CTTc ctTc : tcList )
+                    {
+                        XWPFTableCell cell = new XWPFTableCell( ctTc, row, row.getTable().getBody() );
+                        visitCell( cell, tableContainer, firstRow, lastRow, firstCell, lastCell );
+                        firstCell = false;
+                    }
+                }
+            }
+            c.dispose();
         }
+        else
+        {
+            // Column number is equal to cells number.
+            for ( int i = 0; i < cells.size(); i++ )
+            {
+                firstCell = ( i == 0 );
+                lastCell = ( i == cells.size() - 1 );
+                XWPFTableCell cell = cells.get( i );
+                visitCell( cell, tableContainer, firstRow, lastRow, firstCell, lastCell );
+            }
+        }
+
+        endVisitTableRow( row, tableContainer, firstRow, lastRow );
+    }
+
+    protected void startVisitTableRow( XWPFTableRow row, T tableContainer, boolean firstRow, boolean lastRow )
+        throws Exception
+    {
+
+    }
+
+    protected void endVisitTableRow( XWPFTableRow row, T tableContainer, boolean firstRow, boolean lastRow )
+        throws Exception
+    {
+
     }
 
     protected void visitCell( XWPFTableCell cell, T tableContainer, boolean firstRow, boolean lastRow,
@@ -252,9 +433,11 @@ public abstract class XWPFDocumentVisitor<E extends IXWPFMasterPage>
     }
 
     protected abstract T startVisitTableCell( XWPFTableCell cell, T tableContainer, boolean firstRow, boolean lastRow,
-                                              boolean firstCell, boolean lastCell );
+                                              boolean firstCell, boolean lastCell )
+        throws Exception;
 
-    protected abstract void endVisitTableCell( XWPFTableCell cell, T tableContainer, T tableCellContainer );
+    protected abstract void endVisitTableCell( XWPFTableCell cell, T tableContainer, T tableCellContainer )
+        throws Exception;
 
     protected XWPFStyle getXWPFStyle( String styleID )
     {

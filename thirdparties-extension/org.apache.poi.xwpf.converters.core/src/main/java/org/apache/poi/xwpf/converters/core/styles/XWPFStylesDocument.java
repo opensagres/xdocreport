@@ -12,6 +12,7 @@ import org.apache.poi.xwpf.converters.core.styles.pargraph.ParagraphIndentationL
 import org.apache.poi.xwpf.converters.core.styles.pargraph.ParagraphIndentationRightValueProvider;
 import org.apache.poi.xwpf.converters.core.styles.pargraph.ParagraphSpacingAfterValueProvider;
 import org.apache.poi.xwpf.converters.core.styles.pargraph.ParagraphSpacingBeforeValueProvider;
+import org.apache.poi.xwpf.converters.core.styles.run.RunBackgroundColorValueProvider;
 import org.apache.poi.xwpf.converters.core.styles.run.RunFontColorValueProvider;
 import org.apache.poi.xwpf.converters.core.styles.run.RunFontFamilyValueProvider;
 import org.apache.poi.xwpf.converters.core.styles.run.RunFontSizeValueProvider;
@@ -179,5 +180,10 @@ public class XWPFStylesDocument
     public ParagraphAlignment getParagraphAlignment( XWPFParagraph paragraph )
     {
         return ParagraphAlignmentValueProvider.INSTANCE.getValue( paragraph, this );
+    }
+
+    public Color getBackgroundColor( XWPFRun run )
+    {
+        return RunBackgroundColorValueProvider.INSTANCE.getValue( run, this );
     }
 }

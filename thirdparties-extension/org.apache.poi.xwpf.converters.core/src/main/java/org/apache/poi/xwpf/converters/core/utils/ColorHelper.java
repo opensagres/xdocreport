@@ -3,11 +3,14 @@ package org.apache.poi.xwpf.converters.core.utils;
 import java.awt.Color;
 
 import org.apache.poi.xwpf.converters.core.registry.ColorRegistry;
+import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTBorder;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTColor;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTRPr;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTShd;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.STHexColor;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.STShd;
+import org.w3c.dom.Attr;
+import org.w3c.dom.Node;
 
 public class ColorHelper
 {
@@ -37,10 +40,10 @@ public class ColorHelper
                 Object val = ctColor.getVal();
                 return ColorHelper.getColor( color, val, false );
             }
-            else
-            {
-                return ColorHelper.getColor( rPr.getShd() );
-            }
+            // else
+            // {
+            // return ColorHelper.getColor( rPr.getShd() );
+            // }
         }
         return null;
     }
@@ -131,5 +134,24 @@ public class ColorHelper
         g2 = g + (int) ( ( 255 - g ) * percent );
         b2 = b + (int) ( ( 255 - b ) * percent );
         return new Color( r2, g2, b2 );
+    }
+
+    public static Color getBorderColor( CTBorder border )
+    {
+        if ( border == null )
+        {
+            return null;
+        }
+        // border.getColor returns object???, use attribute w:color to get
+        // the color.
+        Node colorAttr =
+            border.getDomNode().getAttributes().getNamedItemNS( "http://schemas.openxmlformats.org/wordprocessingml/2006/main",
+                                                                "color" );
+        if ( colorAttr != null )
+        {
+            Object val = border.getVal();
+            return ColorHelper.getColor( ( (Attr) colorAttr ).getValue(), val, false );
+        }
+        return null;
     }
 }

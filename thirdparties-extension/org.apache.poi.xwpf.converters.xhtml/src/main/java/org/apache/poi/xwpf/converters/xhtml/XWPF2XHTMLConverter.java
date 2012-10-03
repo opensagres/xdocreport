@@ -29,11 +29,11 @@ import java.io.OutputStream;
 import java.io.Writer;
 
 import org.apache.poi.xwpf.converters.core.AbstractXWPFConverter;
-import org.apache.poi.xwpf.converters.core.IURIResolver;
 import org.apache.poi.xwpf.converters.core.IXWPFConverter;
 import org.apache.poi.xwpf.converters.core.XWPFConverterException;
 import org.apache.poi.xwpf.converters.xhtml.internal.XHTMLMapper;
 import org.apache.poi.xwpf.usermodel.XWPFDocument;
+import org.xml.sax.ContentHandler;
 
 public class XWPF2XHTMLConverter
     extends AbstractXWPFConverter<XHTMLOptions>
@@ -51,27 +51,23 @@ public class XWPF2XHTMLConverter
         throws XWPFConverterException, IOException
     {
 
-        int indent = 0;
-        IURIResolver resolver = IURIResolver.DEFAULT;
-        if ( options != null )
-        {
-            indent = options.getIndent();
-            if ( options.getURIResolver() != null )
-            {
-                resolver = options.getURIResolver();
-            }
-        }
+        ContentHandler contentHandler =
+            out != null ? new SAXWriterContentHandler( out ) : new SAXWriterContentHandler( writer );
+        convert( document, contentHandler, options );
+    }
 
+    public void convert( XWPFDocument document, ContentHandler contentHandler, XHTMLOptions options )
+        throws XWPFConverterException, IOException
+    {
         try
         {
-            XHTMLMapper mapper = new XHTMLMapper( document, indent, resolver );
-           // mapper.visit( out );
+            XHTMLMapper mapper = new XHTMLMapper( document, contentHandler, options );
+            mapper.start();
         }
         catch ( Exception e )
         {
             throw new XWPFConverterException( e );
         }
-
     }
 
 }

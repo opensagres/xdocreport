@@ -35,6 +35,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import fr.opensagres.xdocreport.converter.MimeMapping;
+import fr.opensagres.xdocreport.core.utils.HttpHeaderUtils;
 import fr.opensagres.xdocreport.core.utils.StringUtils;
 import fr.opensagres.xdocreport.document.IXDocReport;
 import fr.opensagres.xdocreport.document.ProcessState;
@@ -52,26 +53,6 @@ public abstract class BaseXDocReportServlet
 {
 
     private static final long serialVersionUID = -5890298276937085849L;
-
-    // HTTP Header constants
-    private static final String SAT_6_MAY_1995_12_00_00_GMT = "Sat, 6 May 1995 12:00:00 GMT";
-
-    private static final String EXPIRES = "Expires";
-
-    private static final String POST_CHECK_0_PRE_CHECK_0 = "post-check=0, pre-check=0";
-
-    private static final String NO_CACHE = "no-cache";
-
-    private static final String PRAGMA = "Pragma";
-
-    private static final String NO_STORE_NO_CACHE_MUST_REVALIDATE = "no-store, no-cache, must-revalidate";
-
-    private static final String CACHE_CONTROL_HTTP_HEADER = "Cache-Control";
-
-    // Content-Disposition HTTP response Header
-    private static final String CONTENT_DISPOSITION_HEADER = "Content-Disposition";
-
-    private static final String ATTACHMENT_FILENAME = "attachment; filename=\"";
 
     private String encoding;
 
@@ -289,13 +270,14 @@ public abstract class BaseXDocReportServlet
     {
         // see article http://onjava.com/pub/a/onjava/excerpt/jebp_3/index2.html
         // Set to expire far in the past.
-        response.setHeader( EXPIRES, SAT_6_MAY_1995_12_00_00_GMT );
+        response.setHeader( HttpHeaderUtils.EXPIRES, HttpHeaderUtils.SAT_6_MAY_1995_12_00_00_GMT );
         // Set standard HTTP/1.1 no-cache headers.
-        response.setHeader( CACHE_CONTROL_HTTP_HEADER, NO_STORE_NO_CACHE_MUST_REVALIDATE );
+        response.setHeader( HttpHeaderUtils.CACHE_CONTROL_HTTP_HEADER,
+                            HttpHeaderUtils.NO_STORE_NO_CACHE_MUST_REVALIDATE );
         // Set IE extended HTTP/1.1 no-cache headers (use addHeader).
-        response.addHeader( CACHE_CONTROL_HTTP_HEADER, POST_CHECK_0_PRE_CHECK_0 );
+        response.addHeader( HttpHeaderUtils.CACHE_CONTROL_HTTP_HEADER, HttpHeaderUtils.POST_CHECK_0_PRE_CHECK_0 );
         // Set standard HTTP/1.0 no-cache header.
-        response.setHeader( PRAGMA, NO_CACHE );
+        response.setHeader( HttpHeaderUtils.PRAGMA, HttpHeaderUtils.NO_CACHE );
     }
 
     protected void prepareHTTPResponse( String reportId, MimeMapping mimeMapping, HttpServletRequest request,
@@ -312,7 +294,7 @@ public abstract class BaseXDocReportServlet
             String contentDisposition = getContentDisposition( reportId, mimeMapping, request );
             if ( StringUtils.isNotEmpty( contentDisposition ) )
             {
-                response.setHeader( CONTENT_DISPOSITION_HEADER, contentDisposition.toString() );
+                response.setHeader( HttpHeaderUtils.CONTENT_DISPOSITION_HEADER, contentDisposition.toString() );
             }
         }
         // Disable HTTP response cache
@@ -332,7 +314,7 @@ public abstract class BaseXDocReportServlet
             String contentDisposition = getContentDisposition( entryName );
             if ( StringUtils.isNotEmpty( contentDisposition ) )
             {
-                response.setHeader( CONTENT_DISPOSITION_HEADER, contentDisposition.toString() );
+                response.setHeader( HttpHeaderUtils.CONTENT_DISPOSITION_HEADER, contentDisposition.toString() );
             }
         }
 
@@ -365,10 +347,7 @@ public abstract class BaseXDocReportServlet
 
     protected String getContentDisposition( String fileName )
     {
-        StringBuilder contentDisposition = new StringBuilder( ATTACHMENT_FILENAME );
-        contentDisposition.append( fileName );
-        contentDisposition.append( "\"" );
-        return contentDisposition.toString();
+        return HttpHeaderUtils.getAttachmentFileName( fileName );
     }
 
     /**

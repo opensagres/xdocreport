@@ -28,7 +28,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 
-import org.odftoolkit.odfdom.converter.ODFConverterException;
+import org.odftoolkit.odfdom.converter.core.ODFConverterException;
 import org.odftoolkit.odfdom.converter.xhtml.XHTMLOptions;
 import org.odftoolkit.odfdom.doc.OdfTextDocument;
 
@@ -90,7 +90,7 @@ public class ODF2XHTMLConverter
         final IURIResolver resolver = OptionsHelper.getURIResolver( options );
         if ( resolver != null )
         {
-            xhtmlOptions.URIResolver( new org.odftoolkit.odfdom.converter.IURIResolver()
+            xhtmlOptions.URIResolver( new org.odftoolkit.odfdom.converter.core.IURIResolver()
             {
                 public String resolve( String uri )
                 {

@@ -28,8 +28,9 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 
-import org.odftoolkit.odfdom.converter.ODFConverterException;
-import org.odftoolkit.odfdom.converter.itext.PDFViaITextOptions;
+import org.odftoolkit.odfdom.converter.core.ODFConverterException;
+import org.odftoolkit.odfdom.converter.pdf.PdfConverter;
+import org.odftoolkit.odfdom.converter.pdf.PdfOptions;
 import org.odftoolkit.odfdom.doc.OdfTextDocument;
 
 import fr.opensagres.xdocreport.converter.MimeMapping;
@@ -58,9 +59,7 @@ public class ODF2PDFViaITextConverter
         try
         {
             OdfTextDocument odfDocument = OdfTextDocument.loadDocument( in );
-            org.odftoolkit.odfdom.converter.itext.ODF2PDFViaITextConverter.getInstance().convert( odfDocument,
-                                                                                                  out,
-                                                                                                  toPDFViaITextOptions( options ) );
+            PdfConverter.getInstance().convert( odfDocument, out, toPdfOptions( options ) );
         }
         catch ( ODFConverterException e )
         {
@@ -76,18 +75,18 @@ public class ODF2PDFViaITextConverter
         }
     }
 
-    public PDFViaITextOptions toPDFViaITextOptions( Options options )
+    public PdfOptions toPdfOptions( Options options )
     {
         if ( options == null )
         {
             return null;
         }
-        Object value = options.getSubOptions( PDFViaITextOptions.class );
-        if ( value instanceof PDFViaITextOptions )
+        Object value = options.getSubOptions( PdfOptions.class );
+        if ( value instanceof PdfOptions )
         {
-            return (PDFViaITextOptions) value;
+            return (PdfOptions) value;
         }
-        PDFViaITextOptions pdfOptions = PDFViaITextOptions.create();
+        PdfOptions pdfOptions = PdfOptions.create();
         // Populate font encoding
         String fontEncoding = OptionsHelper.getFontEncoding( options );
         if ( StringUtils.isNotEmpty( fontEncoding ) )

@@ -28,6 +28,7 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.logging.Logger;
 
+import org.apache.poi.xwpf.converter.xhtml.XHTMLConverter;
 import org.apache.poi.xwpf.converter.xhtml.XHTMLOptions;
 import org.apache.poi.xwpf.usermodel.XWPFDocument;
 
@@ -64,9 +65,7 @@ public class XWPF2XHTMLConverter
         try
         {
             XWPFDocument document = new XWPFDocument( in );
-            org.apache.poi.xwpf.converter.xhtml.XWPF2XHTMLConverter.getInstance().convert( document, out,
-                                                                                           toXHTMLOptions( options ) );
-
+            XHTMLConverter.getInstance().convert( document, out, toXHTMLOptions( options ) );
         }
         catch ( Exception e )
         {
@@ -90,7 +89,7 @@ public class XWPF2XHTMLConverter
         final IURIResolver resolver = OptionsHelper.getURIResolver( options );
         if ( resolver != null )
         {
-            xhtmlOptions.URIResolver( new org.apache.poi.xwpf.converter.IURIResolver()
+            xhtmlOptions.URIResolver( new org.apache.poi.xwpf.converter.core.IURIResolver()
             {
                 public String resolve( String uri )
                 {

@@ -28,7 +28,8 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.logging.Logger;
 
-import org.apache.poi.xwpf.converter.itext.PDFViaITextOptions;
+import org.apache.poi.xwpf.converter.pdf.PdfConverter;
+import org.apache.poi.xwpf.converter.pdf.PdfOptions;
 import org.apache.poi.xwpf.usermodel.XWPFDocument;
 
 import fr.opensagres.xdocreport.converter.MimeMapping;
@@ -63,31 +64,27 @@ public class XWPF2PDFViaITextConverter
         try
         {
             XWPFDocument document = new XWPFDocument( in );
-            org.apache.poi.xwpf.converter.itext.XWPF2PDFViaITextConverter.getInstance().convert( document,
-                                                                                                 out,
-                                                                                                 toPDFViaITextOptions( options ) );
-
+            PdfConverter.getInstance().convert( document, out, toPdfOptions( options ) );
         }
         catch ( Exception e )
         {
-
             LOGGER.severe( e.getMessage() );
             throw new XDocConverterException( e );
         }
     }
 
-    public PDFViaITextOptions toPDFViaITextOptions( Options options )
+    public PdfOptions toPdfOptions( Options options )
     {
         if ( options == null )
         {
             return null;
         }
-        Object value = options.getSubOptions( PDFViaITextOptions.class );
-        if ( value instanceof PDFViaITextOptions )
+        Object value = options.getSubOptions( PdfOptions.class );
+        if ( value instanceof PdfOptions )
         {
-            return (PDFViaITextOptions) value;
+            return (PdfOptions) value;
         }
-        PDFViaITextOptions pdfOptions = PDFViaITextOptions.create();
+        PdfOptions pdfOptions = PdfOptions.create();
         // Populate font encoding
         String fontEncoding = OptionsHelper.getFontEncoding( options );
         if ( StringUtils.isNotEmpty( fontEncoding ) )

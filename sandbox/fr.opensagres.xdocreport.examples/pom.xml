@@ -59,22 +59,14 @@
 		<dependency>
 			<groupId>fr.opensagres.xdocreport</groupId>
 			<artifactId>fr.opensagres.xdocreport.converter</artifactId>
-			<version>0.9.1-SNAPSHOT</version>
-			
+			<version>0.9.1-SNAPSHOT</version>			
 		</dependency>
 
 		<!-- XDocReport Converters Implementation -->
 		<dependency>
 			<groupId>fr.opensagres.xdocreport</groupId>
 			<artifactId>fr.opensagres.xdocreport.converter.odt</artifactId>
-			<version>0.9.1-SNAPSHOT</version>
-			
-		</dependency>
-		<dependency>
-			<groupId>fr.opensagres.xdocreport</groupId>
-			<artifactId>fr.opensagres.xdocreport.converter.docx</artifactId>
-			<version>0.9.1-SNAPSHOT</version>
-			
+			<version>0.9.1-SNAPSHOT</version>			
 		</dependency>
 		<dependency>
 			<groupId>fr.opensagres.xdocreport</groupId>

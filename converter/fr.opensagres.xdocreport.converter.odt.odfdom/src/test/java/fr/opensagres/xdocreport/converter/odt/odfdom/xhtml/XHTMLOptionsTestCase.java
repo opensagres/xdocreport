@@ -76,7 +76,7 @@ public class XHTMLOptionsTestCase
         throws Exception
     {
         XHTMLOptions xhtmlOptions1 =
-            XHTMLOptions.create().URIResolver( new org.odftoolkit.odfdom.converter.IURIResolver()
+            XHTMLOptions.create().URIResolver( new org.odftoolkit.odfdom.converter.core.IURIResolver()
             {
 
                 public String resolve( String uri )

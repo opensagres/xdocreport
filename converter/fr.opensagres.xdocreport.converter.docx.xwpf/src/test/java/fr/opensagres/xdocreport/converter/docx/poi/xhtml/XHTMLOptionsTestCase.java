@@ -76,7 +76,7 @@ public class XHTMLOptionsTestCase
         throws Exception
     {
         XHTMLOptions xhtmlOptions1 =
-            XHTMLOptions.create().URIResolver( new org.apache.poi.xwpf.converter.IURIResolver()
+            XHTMLOptions.create().URIResolver( new org.apache.poi.xwpf.converter.core.IURIResolver()
             {
 
                 public String resolve( String uri )

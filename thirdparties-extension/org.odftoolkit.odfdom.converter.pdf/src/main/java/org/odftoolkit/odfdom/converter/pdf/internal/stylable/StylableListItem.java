@@ -1,0 +1,114 @@
+/**
+ * Copyright (C) 2011 The XDocReport Team <xdocreport@googlegroups.com>
+ *
+ * All rights reserved.
+ *
+ * Permission is hereby granted, free  of charge, to any person obtaining
+ * a  copy  of this  software  and  associated  documentation files  (the
+ * "Software"), to  deal in  the Software without  restriction, including
+ * without limitation  the rights to  use, copy, modify,  merge, publish,
+ * distribute,  sublicense, and/or sell  copies of  the Software,  and to
+ * permit persons to whom the Software  is furnished to do so, subject to
+ * the following conditions:
+ *
+ * The  above  copyright  notice  and  this permission  notice  shall  be
+ * included in all copies or substantial portions of the Software.
+ *
+ * THE  SOFTWARE IS  PROVIDED  "AS  IS", WITHOUT  WARRANTY  OF ANY  KIND,
+ * EXPRESS OR  IMPLIED, INCLUDING  BUT NOT LIMITED  TO THE  WARRANTIES OF
+ * MERCHANTABILITY,    FITNESS    FOR    A   PARTICULAR    PURPOSE    AND
+ * NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE
+ * LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION
+ * OF CONTRACT, TORT OR OTHERWISE,  ARISING FROM, OUT OF OR IN CONNECTION
+ * WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+ */
+package org.odftoolkit.odfdom.converter.pdf.internal.stylable;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import org.odftoolkit.odfdom.converter.pdf.internal.styles.Style;
+
+import com.lowagie.text.Chunk;
+import com.lowagie.text.Element;
+import com.lowagie.text.ListItem;
+import com.lowagie.text.Phrase;
+
+import fr.opensagres.xdocreport.itext.extension.IITextContainer;
+
+/**
+ * fixes for pdf conversion by Leszek Piotrowicz <leszekp@safe-mail.net>
+ */
+public class StylableListItem
+    extends ListItem
+    implements IStylableContainer
+{
+    private static final long serialVersionUID = 664309269352903329L;
+
+    private IStylableContainer parent;
+
+    private List<Element> elements = new ArrayList<Element>();
+
+    public StylableListItem( IStylableFactory ownerDocument, IStylableContainer parent )
+    {
+        this.parent = parent;
+    }
+
+    public StylableListItem( Phrase phrase )
+    {
+        super( phrase );
+    }
+
+    public List<Element> getElements()
+    {
+        return elements;
+    }
+
+    public void addElement( Element element )
+    {
+        elements.add( element );
+    }
+
+    @Override
+    public void setListSymbol( Chunk symbol )
+    {
+        Chunk chunk = new Chunk( symbol );
+        // adjust chunk attributes like text rise
+        // use StylableParagraph mechanism
+        StylableParagraph p = new StylableParagraph( null, null );
+        p.setFont( chunk.getFont() );
+        p.addElement( chunk );
+        p.getElement(); // post-processing here
+        chunk = (Chunk) p.getChunks().get( 0 );
+
+        super.setListSymbol( chunk );
+    }
+
+    public void applyStyles( Style style )
+    {
+    }
+
+    public Style getLastStyleApplied()
+    {
+        return null;
+    }
+
+    public IStylableContainer getParent()
+    {
+        return parent;
+    }
+
+    public Element getElement()
+    {
+        return this;
+    }
+
+    public IITextContainer getITextContainer()
+    {
+        return parent;
+    }
+
+    public void setITextContainer( IITextContainer container )
+    {
+    }
+}

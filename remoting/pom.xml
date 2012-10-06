@@ -14,13 +14,12 @@
 		<module>fr.opensagres.xdocreport.remoting.resources.services.client</module>
 		<module>fr.opensagres.xdocreport.remoting.resources.services.server</module>
 		<module>fr.opensagres.xdocreport.remoting.converter</module>
-		<!-- TODO
+		<module>fr.opensagres.xdocreport.remoting.converter.server</module>
+		<!-- TODO ?
 		<module>
 			fr.opensagres.xdocreport.remoting.converter.client
 		</module>
-		<module>
-			fr.opensagres.xdocreport.remoting.converter.server
-		</module> -->
+		-->
 	</modules>
 	<dependencies>
 		<dependency>

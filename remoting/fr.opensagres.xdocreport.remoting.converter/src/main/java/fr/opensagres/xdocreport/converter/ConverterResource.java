@@ -13,8 +13,8 @@ public interface ConverterResource
 
     @POST
     @Path( "convertPDF" )
-    @Consumes( MediaType.WILDCARD )
-    @Produces( MediaType.WILDCARD )
+    @Consumes( {MediaType.APPLICATION_XML,MediaType.APPLICATION_JSON} )
+    @Produces( {MediaType.APPLICATION_XML,MediaType.APPLICATION_JSON} )
     BinaryFile convertPDF( Request request );
 
 }

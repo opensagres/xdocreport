@@ -59,6 +59,7 @@ import org.odftoolkit.odfdom.dom.attribute.style.StyleNumFormatAttribute;
 import org.odftoolkit.odfdom.dom.attribute.style.StyleTextLineThroughStyleAttribute;
 import org.odftoolkit.odfdom.dom.attribute.style.StyleTextUnderlineStyleAttribute;
 import org.odftoolkit.odfdom.dom.attribute.style.StyleWrapAttribute;
+import org.odftoolkit.odfdom.dom.attribute.table.TableAlignAttribute;
 import org.odftoolkit.odfdom.dom.element.OdfStyleBase;
 import org.odftoolkit.odfdom.dom.element.office.OfficeAutomaticStylesElement;
 import org.odftoolkit.odfdom.dom.element.office.OfficeMasterStylesElement;
@@ -100,7 +101,6 @@ import fr.opensagres.xdocreport.utils.StringUtils;
 public class StyleEngineForIText
     extends AbstractStyleEngine
 {
-
     private static final String PORTRAIT = "portrait";
 
     private static final String LANDSCAPE = "landscape";
@@ -837,41 +837,64 @@ public class StyleEngineForIText
 
         }
 
-        // // margin
-        // String margin = ele.getFoMarginAttribute();
-        // if (StringUtils.isNotEmpty(margin)) {
-        // cssStyleSheet.setCSSProperty("margin", margin);
-        // }
-        //
-        // // margin-bottom
-        // String marginBottom = ele.getFoMarginBottomAttribute();
-        // if (StringUtils.isNotEmpty(marginBottom)) {
-        // cssStyleSheet.setCSSProperty("margin-bottom", marginBottom);
-        // }
-        //
-        // // margin-left
-        // String marginLeft = ele.getFoMarginLeftAttribute();
-        // if (StringUtils.isNotEmpty(marginLeft)) {
-        // cssStyleSheet.setCSSProperty("margin-left", marginLeft);
-        // }
-        //
-        // // margin-bottom
-        // String marginRight = ele.getFoMarginRightAttribute();
-        // if (StringUtils.isNotEmpty(marginRight)) {
-        // cssStyleSheet.setCSSProperty("margin-right", marginRight);
-        // }
-        //
-        // // margin-top
-        // String marginTop = ele.getFoMarginTopAttribute();
-        // if (StringUtils.isNotEmpty(marginTop)) {
-        // cssStyleSheet.setCSSProperty("margin-top", marginTop);
-        // }
-
         // width
         String width = ele.getStyleWidthAttribute();
         if ( StringUtils.isNotEmpty( width ) )
         {
             tableProperties.setWidth( ODFUtils.getDimensionAsPoint( width ) );
+        }
+
+        // align
+        String align = ele.getTableAlignAttribute();
+        if ( StringUtils.isNotEmpty( align ) )
+        {
+            if ( TableAlignAttribute.Value.LEFT.toString().equals( align ) )
+            {
+                tableProperties.setAlignment( Element.ALIGN_LEFT );
+            }
+            else if ( TableAlignAttribute.Value.RIGHT.toString().equals( align ) )
+            {
+                tableProperties.setAlignment( Element.ALIGN_RIGHT );
+            }
+            else
+            {
+                tableProperties.setAlignment( Element.ALIGN_CENTER );
+            }
+        }
+
+        // margin
+        String margin = ele.getFoMarginAttribute();
+        if ( StringUtils.isNotEmpty( margin ) )
+        {
+            tableProperties.setMargin( ODFUtils.getDimensionAsPoint( margin ) );
+        }
+
+        // margin-bottom
+        String marginBottom = ele.getFoMarginBottomAttribute();
+        if ( StringUtils.isNotEmpty( marginBottom ) )
+        {
+            tableProperties.setMarginBottom( ODFUtils.getDimensionAsPoint( marginBottom ) );
+        }
+
+        // margin-left
+        String marginLeft = ele.getFoMarginLeftAttribute();
+        if ( StringUtils.isNotEmpty( marginLeft ) )
+        {
+            tableProperties.setMarginLeft( ODFUtils.getDimensionAsPoint( marginLeft ) );
+        }
+
+        // margin-right
+        String marginRight = ele.getFoMarginRightAttribute();
+        if ( StringUtils.isNotEmpty( marginRight ) )
+        {
+            tableProperties.setMarginRight( ODFUtils.getDimensionAsPoint( marginRight ) );
+        }
+
+        // margin-top
+        String marginTop = ele.getFoMarginTopAttribute();
+        if ( StringUtils.isNotEmpty( marginTop ) )
+        {
+            tableProperties.setMarginTop( ODFUtils.getDimensionAsPoint( marginTop ) );
         }
 
         super.visit( ele );

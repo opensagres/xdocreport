@@ -28,6 +28,9 @@ import org.odftoolkit.odfdom.converter.pdf.internal.styles.Style;
 import org.odftoolkit.odfdom.converter.pdf.internal.styles.StyleTableProperties;
 
 import com.lowagie.text.Element;
+import com.lowagie.text.Table;
+import com.lowagie.text.pdf.PdfPCell;
+import com.lowagie.text.pdf.PdfPTable;
 
 import fr.opensagres.xdocreport.itext.extension.ExtendedPdfPTable;
 
@@ -41,6 +44,10 @@ public class StylableTable
 
     private Style lastStyleApplied = null;
 
+    private PdfPCell wrapperCell;
+
+    private PdfPTable wrapperTable;
+
     public StylableTable( StylableDocument ownerDocument, IStylableContainer parent, int numColumns )
     {
         super( numColumns );
@@ -49,21 +56,84 @@ public class StylableTable
         super.setSpacingBefore( 0.0f );
         this.ownerDocument = ownerDocument;
         this.parent = parent;
+        super.setLockedWidth( true );
+        super.setHorizontalAlignment( Element.ALIGN_LEFT );
     }
 
     public void applyStyles( Style style )
     {
         this.lastStyleApplied = style;
 
+        // width
         StyleTableProperties tableProperties = style.getTableProperties();
         if ( tableProperties != null )
         {
             if ( tableProperties.getWidth() != null )
             {
                 super.setTotalWidth( tableProperties.getWidth() );
-                super.setLockedWidth( true );
             }
         }
+
+        // alignment
+        int alignment = tableProperties.getAlignment();
+        if ( alignment != Element.ALIGN_UNDEFINED )
+        {
+            super.setHorizontalAlignment( alignment );
+        }
+
+        // margins
+        Float margin = tableProperties.getMargin();
+        if ( margin != null && margin > 0.0f )
+        {
+            getWrapperCell().setPadding( margin );
+        }
+        Float marginLeft = tableProperties.getMarginLeft();
+        if ( marginLeft != null && marginLeft > 0.0f )
+        {
+            getWrapperCell().setPaddingLeft( marginLeft );
+        }
+        Float marginRight = tableProperties.getMarginRight();
+        if ( marginRight != null && marginRight > 0.0f )
+        {
+            getWrapperCell().setPaddingRight( marginRight );
+        }
+        Float marginTop = tableProperties.getMarginTop();
+        if ( marginTop != null && marginTop > 0.0f )
+        {
+            getWrapperCell().setPaddingTop( marginTop );
+        }
+        Float marginBottom = tableProperties.getMarginBottom();
+        if ( marginBottom != null && marginBottom > 0.0f )
+        {
+            getWrapperCell().setPaddingBottom( marginBottom );
+        }
+    }
+
+    private PdfPCell createCell()
+    {
+        PdfPCell cell = new PdfPCell();
+        cell.setBorder( Table.NO_BORDER );
+        cell.setPadding( 0.0f );
+        cell.setUseBorderPadding( true );
+        return cell;
+    }
+
+    private PdfPTable createTable( float totalWidth, PdfPCell cell )
+    {
+        PdfPTable table = new PdfPTable( 1 );
+        table.setTotalWidth( totalWidth + cell.getPaddingLeft() + cell.getPaddingRight() );
+        table.setLockedWidth( true );
+        table.addCell( cell );
+        return table;
+    }
+
+    private PdfPCell getWrapperCell()
+    {
+        if ( wrapperCell == null )
+        {
+            wrapperCell = createCell();
+        }
+        return wrapperCell;
     }
 
     public Style getLastStyleApplied()
@@ -83,6 +153,16 @@ public class StylableTable
 
     public Element getElement()
     {
+        if ( wrapperTable != null )
+        {
+            return wrapperTable;
+        }
+        else if ( wrapperCell != null )
+        {
+            wrapperCell.addElement( this );
+            wrapperTable = createTable( this.getTotalWidth(), wrapperCell );
+            return wrapperTable;
+        }
         return this;
     }
 

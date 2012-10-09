@@ -9,6 +9,10 @@ import java.util.Map;
 
 import org.apache.poi.xwpf.converter.core.styles.pargraph.ParagraphAlignmentValueProvider;
 import org.apache.poi.xwpf.converter.core.styles.pargraph.ParagraphBackgroundColorValueProvider;
+import org.apache.poi.xwpf.converter.core.styles.pargraph.ParagraphBorderBottomValueProvider;
+import org.apache.poi.xwpf.converter.core.styles.pargraph.ParagraphBorderLeftValueProvider;
+import org.apache.poi.xwpf.converter.core.styles.pargraph.ParagraphBorderRightValueProvider;
+import org.apache.poi.xwpf.converter.core.styles.pargraph.ParagraphBorderTopValueProvider;
 import org.apache.poi.xwpf.converter.core.styles.pargraph.ParagraphIndentationFirstLineValueProvider;
 import org.apache.poi.xwpf.converter.core.styles.pargraph.ParagraphIndentationLeftValueProvider;
 import org.apache.poi.xwpf.converter.core.styles.pargraph.ParagraphIndentationRightValueProvider;
@@ -43,6 +47,7 @@ import org.apache.poi.xwpf.usermodel.XWPFTable;
 import org.apache.poi.xwpf.usermodel.XWPFTableCell;
 import org.apache.poi.xwpf.usermodel.XWPFTableRow;
 import org.apache.xmlbeans.XmlException;
+import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTBorder;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTDocDefaults;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTPPr;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTRPr;
@@ -248,6 +253,46 @@ public class XWPFStylesDocument
     public ParagraphAlignment getParagraphAlignment( CTPPr pPr )
     {
         return ParagraphAlignmentValueProvider.INSTANCE.getValue( pPr );
+    }
+
+    public CTBorder getBorderTop( XWPFParagraph docxParagraph )
+    {
+        return ParagraphBorderTopValueProvider.INSTANCE.getValue( docxParagraph, this );
+    }
+
+    public CTBorder getBorderTop( CTPPr pPr )
+    {
+        return ParagraphBorderTopValueProvider.INSTANCE.getValue( pPr );
+    }
+
+    public CTBorder getBorderBottom( XWPFParagraph docxParagraph )
+    {
+        return ParagraphBorderBottomValueProvider.INSTANCE.getValue( docxParagraph, this );
+    }
+
+    public CTBorder getBorderBottom( CTPPr pPr )
+    {
+        return ParagraphBorderBottomValueProvider.INSTANCE.getValue( pPr );
+    }
+
+    public CTBorder getBorderLeft( XWPFParagraph docxParagraph )
+    {
+        return ParagraphBorderLeftValueProvider.INSTANCE.getValue( docxParagraph, this );
+    }
+
+    public CTBorder getBorderLeft( CTPPr pPr )
+    {
+        return ParagraphBorderLeftValueProvider.INSTANCE.getValue( pPr );
+    }
+
+    public CTBorder getBorderRight( XWPFParagraph docxParagraph )
+    {
+        return ParagraphBorderRightValueProvider.INSTANCE.getValue( docxParagraph, this );
+    }
+
+    public CTBorder getBorderRight( CTPPr pPr )
+    {
+        return ParagraphBorderRightValueProvider.INSTANCE.getValue( pPr );
     }
 
     // -------------------- Run

@@ -25,11 +25,17 @@
 package org.apache.poi.xwpf.converter.pdf.internal.elements;
 
 import java.awt.Color;
+import java.math.BigInteger;
 
 import javax.swing.text.Style;
 
+import org.apache.poi.xwpf.converter.core.utils.ColorHelper;
+import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTBorder;
+import org.openxmlformats.schemas.wordprocessingml.x2006.main.STBorder;
+
 import com.lowagie.text.Element;
 import com.lowagie.text.Paragraph;
+import com.lowagie.text.Rectangle;
 
 import fr.opensagres.xdocreport.itext.extension.ExtendedParagraph;
 import fr.opensagres.xdocreport.itext.extension.IITextContainer;
@@ -46,8 +52,6 @@ public class StylableParagraph
     private final StylableDocument ownerDocument;
 
     private IITextContainer parent;
-
-    private Style lastStyleApplied = null;
 
     public StylableParagraph( StylableDocument ownerDocument, IITextContainer parent )
     {
@@ -69,50 +73,44 @@ public class StylableParagraph
         super.add( element );
     }
 
-//    public void applyStyles( XWPFParagraph p, Style style )
-//    {
-//
-//        if ( style != null )
-//        {
-//            // first process values from "style"
-//            // will be overridden by in-line values if available...
-//            StyleParagraphProperties paragraphProperties = style.getParagraphProperties();
-//
-//            if ( paragraphProperties != null )
-//            {
-//                FontInfos fontInfos = paragraphProperties.getFontInfos();
-//                if ( fontInfos != null )
-//                {
-//                    Font font =
-//                        XWPFFontRegistry.getRegistry().getFont( fontInfos.getFontFamily(), fontInfos.getFontEncoding(),
-//                                                                fontInfos.getFontSize(), fontInfos.getFontStyle(),
-//                                                                fontInfos.getFontColor() );
-//                    setFont( font );
-//                }
-//                // Alignment
-//                int alignment = paragraphProperties.getAlignment();
-//                if ( alignment != Element.ALIGN_UNDEFINED )
-//                {
-//                    setAlignment( alignment );
-//                }
-//
-//                Float lineHeight = paragraphProperties.getLineHeight();
-//                if ( lineHeight != null )
-//                {
-//                    // super.getPdfPCell().setMinimumHeight(lineHeight);
-//                    // FIXME : Is it correct???
-//                    setLeading( lineHeight * super.getTotalLeading() );
-//                }
-//            }
-//
-//        }
-//    }
-
-    // FIXME check with Angelo the purpose of this method....
-    public Style getLastStyleApplied()
-    {
-        return lastStyleApplied;
-    }
+    // public void applyStyles( XWPFParagraph p, Style style )
+    // {
+    //
+    // if ( style != null )
+    // {
+    // // first process values from "style"
+    // // will be overridden by in-line values if available...
+    // StyleParagraphProperties paragraphProperties = style.getParagraphProperties();
+    //
+    // if ( paragraphProperties != null )
+    // {
+    // FontInfos fontInfos = paragraphProperties.getFontInfos();
+    // if ( fontInfos != null )
+    // {
+    // Font font =
+    // XWPFFontRegistry.getRegistry().getFont( fontInfos.getFontFamily(), fontInfos.getFontEncoding(),
+    // fontInfos.getFontSize(), fontInfos.getFontStyle(),
+    // fontInfos.getFontColor() );
+    // setFont( font );
+    // }
+    // // Alignment
+    // int alignment = paragraphProperties.getAlignment();
+    // if ( alignment != Element.ALIGN_UNDEFINED )
+    // {
+    // setAlignment( alignment );
+    // }
+    //
+    // Float lineHeight = paragraphProperties.getLineHeight();
+    // if ( lineHeight != null )
+    // {
+    // // super.getPdfPCell().setMinimumHeight(lineHeight);
+    // // FIXME : Is it correct???
+    // setLeading( lineHeight * super.getTotalLeading() );
+    // }
+    // }
+    //
+    // }
+    // }
 
     // FIXME check with Angelo the purpose of this method....
     public IITextContainer getParent()
@@ -125,14 +123,76 @@ public class StylableParagraph
         return ownerDocument;
     }
 
-    public Element getElement()
+    public void setBorder( CTBorder border, int borderSide )
     {
-        return this;// super.getContainer();
-    }
+        if ( border == null )
+        {
+            return;
+        }
+        boolean noBorder = ( STBorder.NONE == border.getVal() || STBorder.NIL == border.getVal() );
 
-    public void setBackgroundColor( Color backgroundColor )
-    {
-        getPdfPCell().setBackgroundColor( backgroundColor );
-    }
+        // No border
+        if ( noBorder )
+        {
+            return;
+        }
+        else
+        {
+            float size = -1;
+            BigInteger borderSize = border.getSz();
+            if ( borderSize != null )
+            {
+                // http://officeopenxml.com/WPtableBorders.php
+                // if w:sz="4" => 1/4 points
+                size = borderSize.floatValue() / 8f;
+            }
 
+            Color borderColor = ColorHelper.getBorderColor( border );
+
+            switch ( borderSide )
+            {
+                case Rectangle.TOP:
+                    if ( size != -1 )
+                    {
+                        this.setBorderWidthTop( size );
+                    }
+                    if ( borderColor != null )
+                    {
+
+                        super.setBorderColorTop( borderColor );
+                    }
+                    break;
+                case Rectangle.BOTTOM:
+                    if ( size != -1 )
+                    {
+                        this.setBorderWidthBottom( size );
+                    }
+                    if ( borderColor != null )
+                    {
+                        super.setBorderColorBottom( borderColor );
+                    }
+                    break;
+                case Rectangle.LEFT:
+                    if ( size != -1 )
+                    {
+                        this.setBorderWidthLeft( size );
+                    }
+                    if ( borderColor != null )
+                    {
+                        super.setBorderColorLeft( borderColor );
+                    }
+                    break;
+                case Rectangle.RIGHT:
+                    if ( size != -1 )
+                    {
+                        this.setBorderWidthRight( size );
+                    }
+                    if ( borderColor != null )
+                    {
+                        super.setBorderColorRight( borderColor );
+                    }
+                    break;
+            }
+        }
+    }
 }

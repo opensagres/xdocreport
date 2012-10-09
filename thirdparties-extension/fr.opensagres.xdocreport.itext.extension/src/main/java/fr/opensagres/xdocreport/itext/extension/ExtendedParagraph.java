@@ -24,9 +24,11 @@
  */
 package fr.opensagres.xdocreport.itext.extension;
 
+import java.awt.Color;
+
 import com.lowagie.text.Element;
 import com.lowagie.text.Paragraph;
-import com.lowagie.text.Rectangle;
+import com.lowagie.text.Table;
 import com.lowagie.text.pdf.PdfPCell;
 import com.lowagie.text.pdf.PdfPTable;
 
@@ -35,11 +37,11 @@ public class ExtendedParagraph
     implements IITextContainer
 {
 
-    private PdfPTable table;
-
-    private PdfPCell cell;
-
     private IITextContainer container;
+
+    protected PdfPCell wrapperCell;
+
+    protected PdfPTable wrapperTable;
 
     public ExtendedParagraph()
     {
@@ -55,44 +57,6 @@ public class ExtendedParagraph
         super.add( element );
     }
 
-    public Element getContainer()
-    {
-        if ( cell != null )
-        {
-            if ( table == null )
-            {
-                table = new PdfPTable( 1 );
-                table.setWidthPercentage( 100f );
-                cell.addElement( this );
-                table.addCell( cell );
-            }
-            return table;
-        }
-        return this;
-    }
-
-    public PdfPCell getPdfPCell()
-    {
-        if ( cell != null )
-        {
-            return cell;
-        }
-        cell = createPdfPCell();
-        return cell;
-    }
-
-    private synchronized PdfPCell createPdfPCell()
-    {
-        if ( cell != null )
-        {
-            return cell;
-        }
-        PdfPCell cell = new PdfPCell();
-        cell.setBorder( Rectangle.NO_BORDER );
-        // cell.setPadding(0);
-        return cell;
-    }
-
     public IITextContainer getITextContainer()
     {
         return container;
@@ -101,5 +65,156 @@ public class ExtendedParagraph
     public void setITextContainer( IITextContainer container )
     {
         this.container = container;
+    }
+
+    private PdfPCell createCell()
+    {
+        PdfPCell cell = new PdfPCell();
+        cell.setBorder( Table.NO_BORDER );
+        cell.setPadding( 0.0f );
+        cell.setUseBorderPadding( true );
+        cell.getColumn().setAdjustFirstLine( false );
+        cell.setUseDescender( true );
+        return cell;
+    }
+
+    private PdfPTable createTable( PdfPCell cell )
+    {
+        PdfPTable table = new PdfPTable( 1 );
+        table.setWidthPercentage( 100.0f );
+        table.addCell( cell );
+        return table;
+    }
+
+    protected PdfPCell getWrapperCell()
+    {
+        if ( wrapperCell == null )
+        {
+            wrapperCell = createCell();
+        }
+        return wrapperCell;
+    }
+
+    protected PdfPTable createWrapperTable( PdfPCell wrapperCell )
+    {
+        PdfPTable wrapperTable = null;
+        // wrap this paragraph into a table if necessary
+        if ( wrapperCell != null )
+        {
+            // background color or borders were set
+            wrapperCell.addElement( this );
+            wrapperTable = createTable( wrapperCell );
+            if ( getIndentationLeft() > 0.0f || getIndentationRight() > 0.0f || getSpacingBefore() > 0.0f
+                || getSpacingAfter() > 0.0f )
+            {
+                // margins were set, have to wrap the cell again
+                PdfPCell outerCell = createCell();
+                outerCell.setPaddingLeft( getIndentationLeft() );
+                setIndentationLeft( 0.0f );
+                outerCell.setPaddingRight( getIndentationRight() );
+                setIndentationRight( 0.0f );
+                outerCell.setPaddingTop( getSpacingBefore() );
+                setSpacingBefore( 0.0f );
+                outerCell.setPaddingBottom( getSpacingAfter() );
+                setSpacingAfter( 0.0f );
+                outerCell.addElement( wrapperTable );
+                wrapperTable = createTable( outerCell );
+            }
+        }
+        return wrapperTable;
+    }
+
+    public Element getElement()
+    {
+        if ( wrapperCell != null )
+        {
+            wrapperTable = createWrapperTable( wrapperCell );
+        }
+        return wrapperTable != null ? wrapperTable : this;
+    }
+
+    public void setBackgroundColor( Color backgroundColor )
+    {
+        getWrapperCell().setBackgroundColor( backgroundColor );
+    }
+
+    /**
+     * Sets the width of the Top border.
+     * 
+     * @param borderWidthTop a width
+     */
+    public void setBorderWidthTop( float borderWidthTop )
+    {
+        getWrapperCell().setBorderWidthTop( borderWidthTop );
+    }
+
+    /**
+     * Sets the color of the top border.
+     * 
+     * @param borderColorTop a <CODE>Color</CODE>
+     */
+    public void setBorderColorTop( Color borderColorTop )
+    {
+        getWrapperCell().setBorderColorTop( borderColorTop );
+    }
+
+    /**
+     * Sets the width of the bottom border.
+     * 
+     * @param borderWidthBottom a width
+     */
+    public void setBorderWidthBottom( float borderWidthBottom )
+    {
+        getWrapperCell().setBorderWidthBottom( borderWidthBottom );
+    }
+
+    /**
+     * Sets the color of the Bottom border.
+     * 
+     * @param borderColorBottom a <CODE>Color</CODE>
+     */
+    public void setBorderColorBottom( Color borderColorBottom )
+    {
+        getWrapperCell().setBorderColorBottom( borderColorBottom );
+    }
+
+    /**
+     * Sets the width of the Left border.
+     * 
+     * @param borderWidthLeft a width
+     */
+    public void setBorderWidthLeft( float borderWidthLeft )
+    {
+        getWrapperCell().setBorderWidthLeft( borderWidthLeft );
+    }
+
+    /**
+     * Sets the color of the Left border.
+     * 
+     * @param borderColorLeft a <CODE>Color</CODE>
+     */
+    public void setBorderColorLeft( Color borderColorLeft )
+    {
+        getWrapperCell().setBorderColorLeft( borderColorLeft );
+    }
+
+    /**
+     * Sets the width of the Right border.
+     * 
+     * @param borderWidthRight a width
+     */
+    public void setBorderWidthRight( float borderWidthRight )
+    {
+        getWrapperCell().setBorderWidthRight( borderWidthRight );
+    }
+
+    /**
+     * Sets the color of the Right border.
+     * 
+     * @param borderColorRight a <CODE>Color</CODE>
+     */
+    public void setBorderColorRight( Color borderColorRight )
+    {
+        getWrapperCell().setBorderColorRight( borderColorRight );
     }
 }

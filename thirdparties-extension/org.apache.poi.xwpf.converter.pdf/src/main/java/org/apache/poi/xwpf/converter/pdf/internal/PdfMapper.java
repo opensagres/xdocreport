@@ -37,6 +37,7 @@ import org.apache.poi.xwpf.usermodel.XWPFTableCell;
 import org.apache.poi.xwpf.usermodel.XWPFTableRow;
 import org.openxmlformats.schemas.drawingml.x2006.main.CTPositiveSize2D;
 import org.openxmlformats.schemas.drawingml.x2006.picture.CTPicture;
+import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTBorder;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTBr;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTDecimalNumber;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTHdrFtrRef;
@@ -230,6 +231,26 @@ public class PdfMapper
             }
         }
 
+        // background-color
+        Color backgroundColor = stylesDocument.getBackgroundColor( docxParagraph );
+        if ( backgroundColor != null )
+        {
+            pdfParagraph.setBackgroundColor( backgroundColor );
+        }
+
+        // border
+        CTBorder borderTop = stylesDocument.getBorderTop( docxParagraph );
+        pdfParagraph.setBorder( borderTop, Rectangle.TOP );
+
+        CTBorder borderBottom = stylesDocument.getBorderBottom( docxParagraph );
+        pdfParagraph.setBorder( borderBottom, Rectangle.BOTTOM );
+
+        CTBorder borderLeft = stylesDocument.getBorderLeft( docxParagraph );
+        pdfParagraph.setBorder( borderLeft, Rectangle.LEFT );
+
+        CTBorder borderRight = stylesDocument.getBorderRight( docxParagraph );
+        pdfParagraph.setBorder( borderRight, Rectangle.RIGHT );
+
         CTPPr ppr = docxParagraph.getCTP().getPPr();
         if ( ppr != null )
         {
@@ -303,7 +324,7 @@ public class PdfMapper
     {
         // add the iText paragraph in the current parent container.
         ExtendedParagraph pdfParagraph = (ExtendedParagraph) pdfParagraphContainer;
-        pdfParentContainer.addElement( pdfParagraph.getContainer() );
+        pdfParentContainer.addElement( pdfParagraph.getElement() );
     }
 
     // ------------------------- Run
@@ -496,7 +517,7 @@ public class PdfMapper
 
         // Table indentation
         Float indentation = stylesDocument.getTableIndentation( table );
-        if ( indentation != null)
+        if ( indentation != null )
         {
             pdfPTable.setPaddingLeft( indentation );
         }
@@ -565,7 +586,7 @@ public class PdfMapper
             pdfPCell.setColspan( gridSpan.intValue() );
         }
 
-        // Backround Color
+        // Background Color
         Color backgroundColor = stylesDocument.getTableCellBackgroundColor( cell );
         if ( backgroundColor != null )
         {

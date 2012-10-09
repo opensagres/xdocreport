@@ -63,9 +63,9 @@ public class ExtendedParagraphTestCase
 
             p1.setFont( FontFactory.getFont( BaseFont.TIMES_ROMAN, 10f, Font.BOLD, Color.BLUE ) );
             // p1.setFont(new Font(FontFamily.TIMES_ROMAN, 10f, Font.BOLD, Color.BLUE));
-            p1.getPdfPCell().setBorder( Rectangle.BOX );
+            p1.getWrapperCell().setBorder( Rectangle.BOX );
             p1.add( new Chunk( "Title 1" ) );
-            document.add( p1.getContainer() );
+            document.add( p1.getElement() );
 
             Paragraph separator = new Paragraph();
             separator.add( Chunk.NEWLINE );
@@ -73,9 +73,9 @@ public class ExtendedParagraphTestCase
 
             // Custom border
             ExtendedParagraph p2 = new ExtendedParagraph();
-            p2.getPdfPCell().setCellEvent( new RoundRectangle( new int[] { 0xFF, 0x00, 0xFF, 0x00 } ) );
+            p2.getWrapperCell().setCellEvent( new RoundRectangle( new int[] { 0xFF, 0x00, 0xFF, 0x00 } ) );
             p2.add( new Chunk( "Title 2" ) );
-            document.add( p2.getContainer() );
+            document.add( p2.getElement() );
 
             separator = new Paragraph();
             separator.add( Chunk.NEWLINE );

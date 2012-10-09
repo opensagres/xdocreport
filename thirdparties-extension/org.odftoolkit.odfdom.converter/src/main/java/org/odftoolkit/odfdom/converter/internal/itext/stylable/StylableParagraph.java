@@ -270,16 +270,7 @@ public class StylableParagraph
         table.addCell( cell );
         return table;
     }
-
-    private PdfPCell getWrapperCell()
-    {
-        if ( wrapperCell == null )
-        {
-            wrapperCell = createCell();
-        }
-        return wrapperCell;
-    }
-
+    
     public Style getLastStyleApplied()
     {
         return lastStyleApplied;

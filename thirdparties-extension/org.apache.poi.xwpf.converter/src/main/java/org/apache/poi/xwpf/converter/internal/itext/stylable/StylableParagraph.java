@@ -126,16 +126,6 @@ public class StylableParagraph
         return ownerDocument;
     }
 
-    public Element getElement()
-    {
-        return this;// super.getContainer();
-    }
-
-    public void setBackgroundColor( Color backgroundColor )
-    {
-        getPdfPCell().setBackgroundColor( backgroundColor );
-    }
-
     @Override
     public void applyStyles( XWPFParagraph ele, Style style )
     {

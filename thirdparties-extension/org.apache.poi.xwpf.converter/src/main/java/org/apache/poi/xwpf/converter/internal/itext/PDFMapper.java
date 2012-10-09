@@ -242,7 +242,7 @@ public class PDFMapper
         }
         if ( border > 0 )
         {
-            pdfParagraph.getPdfPCell().setBorder( border );
+            // pdfParagraph.getPdfPCell().setBorder( border );
             // pdfParagraph.getPdfPCell().setCellEvent( new CustomPdfPCellEvent() );
         }
 
@@ -398,15 +398,15 @@ public class PDFMapper
 
         // Paragraph
         ExtendedParagraph pdfParagraph = (ExtendedParagraph) paragraphContainer;
-        parentContainer.addElement( pdfParagraph.getContainer() );
+        parentContainer.addElement( pdfParagraph.getElement() );
     }
 
     @Override
     protected void visitEmptyRun( IITextContainer paragraphContainer )
         throws Exception
     {
-        //ExtendedParagraph pdfParagraph = (ExtendedParagraph) paragraphContainer;
-        //pdfParagraph.addElement( Chunk.NEWLINE );
+        // ExtendedParagraph pdfParagraph = (ExtendedParagraph) paragraphContainer;
+        // pdfParagraph.addElement( Chunk.NEWLINE );
     }
 
     @Override

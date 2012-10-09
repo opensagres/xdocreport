@@ -38,10 +38,7 @@ import com.lowagie.text.Chunk;
 import com.lowagie.text.Element;
 import com.lowagie.text.Font;
 import com.lowagie.text.Paragraph;
-import com.lowagie.text.Table;
 import com.lowagie.text.pdf.BaseFont;
-import com.lowagie.text.pdf.PdfPCell;
-import com.lowagie.text.pdf.PdfPTable;
 
 import fr.opensagres.xdocreport.itext.extension.ExtendedParagraph;
 
@@ -63,10 +60,6 @@ public class StylableParagraph
     private Style lastStyleApplied = null;
 
     private boolean elementPostProcessed = false;
-
-    private PdfPCell wrapperCell;
-
-    private PdfPTable wrapperTable;
 
     public StylableParagraph( StylableDocument ownerDocument, IStylableContainer parent )
     {
@@ -192,7 +185,7 @@ public class StylableParagraph
             Color backgroundColor = paragraphProperties.getBackgroundColor();
             if ( backgroundColor != null && !Color.WHITE.equals( backgroundColor ) )
             {
-                getWrapperCell().setBackgroundColor( backgroundColor );
+                super.setBackgroundColor( backgroundColor );
             }
 
             // border
@@ -251,34 +244,6 @@ public class StylableParagraph
         }
     }
 
-    private PdfPCell createCell()
-    {
-        PdfPCell cell = new PdfPCell();
-        cell.setBorder( Table.NO_BORDER );
-        cell.setPadding( 0.0f );
-        cell.setUseBorderPadding( true );
-        cell.getColumn().setAdjustFirstLine( false );
-        cell.setUseDescender( true );
-        return cell;
-    }
-
-    private PdfPTable createTable( PdfPCell cell )
-    {
-        PdfPTable table = new PdfPTable( 1 );
-        table.setWidthPercentage( 100.0f );
-        table.addCell( cell );
-        return table;
-    }
-
-    private PdfPCell getWrapperCell()
-    {
-        if ( wrapperCell == null )
-        {
-            wrapperCell = createCell();
-        }
-        return wrapperCell;
-    }
-
     public Style getLastStyleApplied()
     {
         return lastStyleApplied;
@@ -295,6 +260,7 @@ public class StylableParagraph
     }
 
     @SuppressWarnings( "unchecked" )
+    @Override
     public Element getElement()
     {
         if ( !elementPostProcessed )
@@ -363,31 +329,8 @@ public class StylableParagraph
                     chunk.setTextRise( chunk.getTextRise() + textRise );
                 }
             }
-
-            // wrap this paragraph into a table if necessary
-            if ( wrapperCell != null )
-            {
-                // background color or borders were set
-                wrapperCell.addElement( this );
-                wrapperTable = createTable( wrapperCell );
-                if ( getIndentationLeft() > 0.0f || getIndentationRight() > 0.0f || getSpacingBefore() > 0.0f
-                    || getSpacingAfter() > 0.0f )
-                {
-                    // margins were set, have to wrap the cell again
-                    PdfPCell outerCell = createCell();
-                    outerCell.setPaddingLeft( getIndentationLeft() );
-                    setIndentationLeft( 0.0f );
-                    outerCell.setPaddingRight( getIndentationRight() );
-                    setIndentationRight( 0.0f );
-                    outerCell.setPaddingTop( getSpacingBefore() );
-                    setSpacingBefore( 0.0f );
-                    outerCell.setPaddingBottom( getSpacingAfter() );
-                    setSpacingAfter( 0.0f );
-                    outerCell.addElement( wrapperTable );
-                    wrapperTable = createTable( outerCell );
-                }
-            }
         }
-        return wrapperTable != null ? wrapperTable : this;
+        return super.getElement();
     }
+
 }

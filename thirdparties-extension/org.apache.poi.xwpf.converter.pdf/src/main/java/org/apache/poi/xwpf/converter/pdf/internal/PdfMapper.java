@@ -13,7 +13,6 @@ import org.apache.poi.xwpf.converter.core.XWPFDocumentVisitor;
 import org.apache.poi.xwpf.converter.core.styles.pargraph.ParagraphIndentationLeftValueProvider;
 import org.apache.poi.xwpf.converter.core.utils.TableHeight;
 import org.apache.poi.xwpf.converter.core.utils.TableWidth;
-import org.apache.poi.xwpf.converter.core.utils.XWPFTableUtil;
 import org.apache.poi.xwpf.converter.pdf.PdfOptions;
 import org.apache.poi.xwpf.converter.pdf.internal.elements.StylableDocument;
 import org.apache.poi.xwpf.converter.pdf.internal.elements.StylableHeaderFooter;
@@ -33,7 +32,6 @@ import org.apache.poi.xwpf.usermodel.XWPFNum;
 import org.apache.poi.xwpf.usermodel.XWPFParagraph;
 import org.apache.poi.xwpf.usermodel.XWPFPictureData;
 import org.apache.poi.xwpf.usermodel.XWPFRun;
-import org.apache.poi.xwpf.usermodel.XWPFStyle;
 import org.apache.poi.xwpf.usermodel.XWPFTable;
 import org.apache.poi.xwpf.usermodel.XWPFTableCell;
 import org.apache.poi.xwpf.usermodel.XWPFTableRow;
@@ -50,7 +48,6 @@ import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTSectPr;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTSpacing;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTTblBorders;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTTcBorders;
-import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTTcPr;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTText;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTTextDirection;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.STVerticalJc;
@@ -499,10 +496,9 @@ public class PdfMapper
 
         // Table indentation
         Float indentation = stylesDocument.getTableIndentation( table );
-        if ( indentation != null )
+        if ( indentation != null)
         {
-            // TODO : manage indentation left when iText ExtendedTable will support that
-            pdfPTable.setHorizontalAlignment( Element.ALIGN_LEFT );
+            pdfPTable.setPaddingLeft( indentation );
         }
         return pdfPTable;
     }
@@ -511,7 +507,7 @@ public class PdfMapper
     protected void endVisitTable( XWPFTable table, IITextContainer pdfParentContainer, IITextContainer pdfTableContainer )
         throws Exception
     {
-        pdfParentContainer.addElement( (Element) pdfTableContainer );
+        pdfParentContainer.addElement( ( (ExtendedPdfPTable) pdfTableContainer ).getElement() );
 
     }
 
@@ -535,36 +531,16 @@ public class PdfMapper
         // pdfPCell.setUseAscender( true );
         // pdfPCell.setUseDescender( true );
 
-        CTTcPr tcPr = cell.getCTTc().getTcPr();
-        if ( tcPr != null )
-        {
-
-            // Borders
-            // Table Properties on cells
-
-            // overridden locally
-            CTTblBorders tableStyleBorders = null;
-            XWPFStyle tableStyle = super.getXWPFStyle( cell.getTableRow().getTable().getStyleID() );
-            if ( tableStyle != null )
-            {
-                tableStyleBorders = tableStyle.getCTStyle().getTblPr().getTblBorders();
-            }
-
-            CTTblBorders tableBorders = XWPFTableUtil.getTblBorders( cell.getTableRow().getTable() );
-            CTTcBorders cellBorders = tcPr.getTcBorders();
-            // border-left
-            pdfPCell.setBorder( cellBorders, tableBorders, tableStyleBorders, firstRow, lastRow, firstCol, lastCol,
-                                Rectangle.LEFT );
-            // border-right
-            pdfPCell.setBorder( cellBorders, tableBorders, tableStyleBorders, firstRow, lastRow, firstCol, lastCol,
-                                Rectangle.RIGHT );
-            // border-top
-            pdfPCell.setBorder( cellBorders, tableBorders, tableStyleBorders, firstRow, lastRow, firstCol, lastCol,
-                                Rectangle.TOP );
-            // border-bottom
-            pdfPCell.setBorder( cellBorders, tableBorders, tableStyleBorders, firstRow, lastRow, firstCol, lastCol,
-                                Rectangle.BOTTOM );
-        }
+        CTTblBorders tableBorders = stylesDocument.getTableBorders( table );
+        CTTcBorders cellBorders = stylesDocument.getTableCellBorders( cell );
+        // border-left
+        pdfPCell.setBorder( cellBorders, tableBorders, firstRow, lastRow, firstCol, lastCol, Rectangle.LEFT );
+        // border-right
+        pdfPCell.setBorder( cellBorders, tableBorders, firstRow, lastRow, firstCol, lastCol, Rectangle.RIGHT );
+        // border-top
+        pdfPCell.setBorder( cellBorders, tableBorders, firstRow, lastRow, firstCol, lastCol, Rectangle.TOP );
+        // border-bottom
+        pdfPCell.setBorder( cellBorders, tableBorders, firstRow, lastRow, firstCol, lastCol, Rectangle.BOTTOM );
 
         // Text direction <w:textDirection
         CTTextDirection direction = stylesDocument.getTextDirection( cell );
@@ -588,6 +564,7 @@ public class PdfMapper
         {
             pdfPCell.setColspan( gridSpan.intValue() );
         }
+
         // Backround Color
         Color backgroundColor = stylesDocument.getTableCellBackgroundColor( cell );
         if ( backgroundColor != null )

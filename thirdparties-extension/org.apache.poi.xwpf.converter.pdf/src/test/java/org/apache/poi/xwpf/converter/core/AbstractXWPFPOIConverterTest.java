@@ -66,6 +66,13 @@ public abstract class AbstractXWPFPOIConverterTest
         doGenerate( "DocxBig.docx" );
     }
 
+    //@Test
+    public void DocxBig2()
+        throws IOException
+    {
+        doGenerate( "DocxBig2.docx" );
+    }
+
     @Test
     public void DocxLettreRelance()
         throws IOException
@@ -80,6 +87,13 @@ public abstract class AbstractXWPFPOIConverterTest
         doGenerate( "DocxStructures.docx" );
     }
 
+    @Test
+    public void EntretienAnnuel()
+        throws IOException
+    {
+        doGenerate( "EntretienAnnuel.docx" );
+    }
+    
     @Test
     public void Exercise1()
         throws IOException
@@ -141,13 +155,6 @@ public abstract class AbstractXWPFPOIConverterTest
         throws IOException
     {
         doGenerate( "TemplateIndividuel.docx" );
-    }
-
-    @Test
-    public void testChineseCharacters()
-        throws IOException
-    {
-        doGenerate( "TestChineseCharacters.docx" );
     }
 
     @Test

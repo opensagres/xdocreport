@@ -85,32 +85,46 @@ public class StylableTableCell
         return this;
     }
 
-    public void setBorder( CTTcBorders cellBorders, CTTblBorders tableBorders, CTTblBorders tableStyleBorders,
-                           boolean firstRow, boolean lastRow, boolean firstCell, boolean lastCell, int borderSide )
+    public void setBorder( CTTcBorders cellBorders, CTTblBorders tableBorders, boolean firstRow, boolean lastRow,
+                           boolean firstCol, boolean lastCol, int borderSide )
     {
-        if ( cellBorders == null && tableBorders == null && tableStyleBorders == null )
+        if ( cellBorders == null && tableBorders == null )
         {
             this.disableBorderSide( borderSide );
             return;
         }
+        boolean comesFromTable = false;
         // border from cell
         CTBorder cellBorder = getBorder( cellBorders, borderSide );
         if ( cellBorder == null )
         {
             // border from table
-            cellBorder = getBorder( tableBorders, firstRow, lastRow, firstCell, lastCell, borderSide );
-        }
-        if ( cellBorder == null )
-        {
-            // border from table style
-            cellBorder = getBorder( tableStyleBorders, firstRow, lastRow, firstCell, lastCell, borderSide );
+            cellBorder = getBorder( tableBorders, firstRow, lastRow, firstCol, lastCol, borderSide );
+            comesFromTable = true;
         }
         if ( cellBorder == null )
         {
             this.disableBorderSide( borderSide );
             return;
         }
-        setBorder( cellBorder, borderSide );
+        boolean inside = comesFromTable ? false : isInsideBorder( firstRow, lastRow, firstCol, lastCol, borderSide );
+        setBorder( cellBorder, borderSide, inside );
+    }
+
+    private boolean isInsideBorder( boolean firstRow, boolean lastRow, boolean firstCol, boolean lastCol, int borderSide )
+    {
+        switch ( borderSide )
+        {
+            case Rectangle.TOP:
+                return !firstRow;
+            case Rectangle.BOTTOM:
+                return !lastRow;
+            case Rectangle.LEFT:
+                return !firstCol;
+            case Rectangle.RIGHT:
+                return !lastCol;
+        }
+        return false;
     }
 
     public static CTBorder getBorder( CTTcBorders cellBorders, int borderSide )
@@ -122,7 +136,6 @@ public class StylableTableCell
         switch ( borderSide )
         {
             case Rectangle.TOP:
-
                 return cellBorders.getTop();
             case Rectangle.BOTTOM:
                 return cellBorders.getBottom();
@@ -134,8 +147,8 @@ public class StylableTableCell
         return null;
     }
 
-    public static CTBorder getBorder( CTTblBorders tableBorders, boolean firstRow, boolean lastRow, boolean firstCell,
-                                      boolean lastCell, int borderSide )
+    public static CTBorder getBorder( CTTblBorders tableBorders, boolean firstRow, boolean lastRow, boolean firstCol,
+                                      boolean lastCol, int borderSide )
     {
         if ( tableBorders == null )
         {
@@ -156,13 +169,13 @@ public class StylableTableCell
                 }
                 return tableBorders.getInsideH();
             case Rectangle.LEFT:
-                if ( firstCell )
+                if ( firstCol )
                 {
                     return tableBorders.getLeft();
                 }
                 return tableBorders.getInsideV();
             case Rectangle.RIGHT:
-                if ( lastCell )
+                if ( lastCol )
                 {
                     return tableBorders.getRight();
                 }
@@ -171,7 +184,7 @@ public class StylableTableCell
         return null;
     }
 
-    public void setBorder( CTBorder border, int borderSide )
+    public void setBorder( CTBorder border, int borderSide, boolean inside )
     {
         if ( border == null )
         {

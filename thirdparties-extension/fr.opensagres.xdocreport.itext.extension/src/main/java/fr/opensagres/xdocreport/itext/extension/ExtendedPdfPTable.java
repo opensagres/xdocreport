@@ -27,6 +27,7 @@ package fr.opensagres.xdocreport.itext.extension;
 import com.lowagie.text.Element;
 import com.lowagie.text.Image;
 import com.lowagie.text.Phrase;
+import com.lowagie.text.Table;
 import com.lowagie.text.pdf.PdfPCell;
 import com.lowagie.text.pdf.PdfPRow;
 import com.lowagie.text.pdf.PdfPTable;
@@ -40,15 +41,17 @@ public class ExtendedPdfPTable
 
     private boolean empty;
 
+    private PdfPCell wrapperCell;
+
+    private PdfPTable wrapperTable;
+
     public ExtendedPdfPTable( int numColumns )
     {
         super( numColumns );
-        // Ugly code to resolve this problem : When Paragraph is before
-        // PDFTable, space before paragraph and table is
-        // too little and paragraph content cut the table.
-        // Add spacing before to resolve that.
-        super.setSpacingBefore( 5f );
+        super.setSpacingBefore( 0f );
         this.empty = true;
+        super.setLockedWidth( true );
+        super.setHorizontalAlignment( Element.ALIGN_LEFT );
     }
 
     public void addElement( Element element )
@@ -210,5 +213,97 @@ public class ExtendedPdfPTable
     public boolean isEmpty()
     {
         return empty;
+    }
+
+    /**
+     * Sets the padding of the contents in the cell (space between content and border).
+     * 
+     * @param padding
+     */
+    public void setPadding( float padding )
+    {
+        getWrapperCell().setPadding( padding );
+    }
+
+    /**
+     * Setter for property paddingLeft.
+     * 
+     * @param paddingLeft New value of property paddingLeft.
+     */
+    public void setPaddingLeft( float paddingLeft )
+    {
+        getWrapperCell().setPaddingLeft( paddingLeft );
+    }
+
+    /**
+     * Setter for property paddingRight.
+     * 
+     * @param paddingRight New value of property paddingRight.
+     */
+    public void setPaddingRight( float paddingRight )
+    {
+        getWrapperCell().setPaddingRight( paddingRight );
+    }
+
+    /**
+     * Setter for property paddingBottom.
+     * 
+     * @param paddingBottom New value of property paddingBottom.
+     */
+    public void setPaddingBottom( float paddingBottom )
+    {
+        getWrapperCell().setPaddingBottom( paddingBottom );
+    }
+
+    /**
+     * Setter for property paddingTop.
+     * 
+     * @param paddingTop New value of property paddingTop.
+     */
+    public void setPaddingTop( float paddingTop )
+    {
+        getWrapperCell().setPaddingTop( paddingTop );
+    }
+
+    private PdfPCell createCell()
+    {
+        PdfPCell cell = new PdfPCell();
+        cell.setBorder( Table.NO_BORDER );
+        cell.setPadding( 0.0f );
+        cell.setUseBorderPadding( true );
+        return cell;
+    }
+
+    private PdfPTable createTable( PdfPCell cell )
+    {
+        PdfPTable table = new PdfPTable( 1 );
+        table.setWidthPercentage( 100f );
+        table.setSplitLate( false );
+        table.addCell( cell );
+        return table;
+    }
+
+    private PdfPCell getWrapperCell()
+    {
+        if ( wrapperCell == null )
+        {
+            wrapperCell = createCell();
+        }
+        return wrapperCell;
+    }
+
+    public Element getElement()
+    {
+        if ( wrapperTable != null )
+        {
+            return wrapperTable;
+        }
+        else if ( wrapperCell != null )
+        {
+            wrapperCell.addElement( this );
+            wrapperTable = createTable( wrapperCell );
+            return wrapperTable;
+        }
+        return this;
     }
 }

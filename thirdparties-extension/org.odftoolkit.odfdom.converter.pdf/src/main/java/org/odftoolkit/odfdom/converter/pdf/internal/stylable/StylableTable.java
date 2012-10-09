@@ -123,6 +123,7 @@ public class StylableTable
         PdfPTable table = new PdfPTable( 1 );
         table.setTotalWidth( totalWidth + cell.getPaddingLeft() + cell.getPaddingRight() );
         table.setLockedWidth( true );
+        table.setSplitLate( false );
         table.addCell( cell );
         return table;
     }

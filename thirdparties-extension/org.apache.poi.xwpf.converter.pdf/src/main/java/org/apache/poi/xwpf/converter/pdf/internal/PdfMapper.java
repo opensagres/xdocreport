@@ -122,7 +122,8 @@ public class PdfMapper
     protected void visitHeader( XWPFHeader header, CTHdrFtrRef headerRef, CTSectPr sectPr, StylableMasterPage masterPage )
         throws Exception
     {
-        StylableHeaderFooter pdfHeader = new StylableHeaderFooter( pdfDocument, true );
+        BigInteger headerY = sectPr.getPgMar() != null ? sectPr.getPgMar().getHeader() : null;
+        StylableHeaderFooter pdfHeader = new StylableHeaderFooter( pdfDocument, headerY, true );
         List<IBodyElement> bodyElements = header.getBodyElements();
         StylableTableCell tableCell = getHeaderFooterTableCell( pdfHeader, bodyElements );
         visitBodyElements( bodyElements, tableCell );
@@ -133,7 +134,8 @@ public class PdfMapper
     protected void visitFooter( XWPFFooter footer, CTHdrFtrRef footerRef, CTSectPr sectPr, StylableMasterPage masterPage )
         throws Exception
     {
-        StylableHeaderFooter pdfFooter = new StylableHeaderFooter( pdfDocument, false );
+        BigInteger footerY = sectPr.getPgMar() != null ? sectPr.getPgMar().getFooter() : null;
+        StylableHeaderFooter pdfFooter = new StylableHeaderFooter( pdfDocument, footerY, false );
         List<IBodyElement> bodyElements = footer.getBodyElements();
         StylableTableCell tableCell = getHeaderFooterTableCell( pdfFooter, bodyElements );
         visitBodyElements( footer.getBodyElements(), tableCell );
@@ -593,7 +595,7 @@ public class PdfMapper
             pdfPCell.setBackgroundColor( backgroundColor );
         }
 
-        // // Vertical aligment
+        // Vertical aligment
         Enum jc = stylesDocument.getTableCellVerticalAlignment( cell );
         if ( jc != null )
         {
@@ -610,7 +612,45 @@ public class PdfMapper
                     break;
             }
         }
+        // Cell margin
+        Float marginTop = stylesDocument.getTableCellMarginTop( cell );
+        if ( marginTop == null )
+        {
+            marginTop = stylesDocument.getTableMarginTop( table );
+        }
+        if ( marginTop != null && marginTop > 0)
+        {
+            pdfPCell.setPaddingTop( marginTop );
+        }
+        Float marginBottom = stylesDocument.getTableCellMarginBottom( cell );
+        if ( marginBottom == null )
+        {
+            marginBottom = stylesDocument.getTableMarginBottom( table );
+        }
+        if ( marginBottom != null && marginBottom > 0)
+        {
+            pdfPCell.setPaddingBottom( marginBottom );
+        }
+        Float marginLeft = stylesDocument.getTableCellMarginLeft( cell );
+        if ( marginLeft == null )
+        {
+            marginLeft = stylesDocument.getTableMarginLeft( table );
+        }
+        if ( marginLeft != null )
+        {
+            pdfPCell.setPaddingLeft( marginLeft );
+        }
+        Float marginRight = stylesDocument.getTableCellMarginRight( cell );
+        if ( marginRight == null )
+        {
+            marginRight = stylesDocument.getTableMarginRight( table );
+        }
+        if ( marginRight != null )
+        {
+            pdfPCell.setPaddingRight( marginRight );
+        }
 
+        // Row height
         TableHeight tableHeight = stylesDocument.getTableRowHeight( row );
         if ( tableHeight != null )
         {

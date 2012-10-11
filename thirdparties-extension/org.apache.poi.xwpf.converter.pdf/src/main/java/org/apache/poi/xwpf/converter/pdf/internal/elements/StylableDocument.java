@@ -29,6 +29,7 @@ import fr.opensagres.xdocreport.itext.extension.ExtendedHeaderFooter;
 import fr.opensagres.xdocreport.itext.extension.ExtendedPdfPTable;
 import fr.opensagres.xdocreport.itext.extension.IITextContainer;
 import fr.opensagres.xdocreport.itext.extension.IMasterPage;
+import fr.opensagres.xdocreport.itext.extension.IMasterPageHeaderFooter;
 
 public class StylableDocument
     extends ExtendedDocument
@@ -205,25 +206,25 @@ public class StylableDocument
         return new StylableParagraph( this, title, null );
     }
 
-//    public StylablePhrase createPhrase( IITextContainer parent )
-//    {
-//        return new StylablePhrase( this, parent );
-//    }
-//
-//    public StylableAnchor createAnchor( IITextContainer parent )
-//    {
-//        return new StylableAnchor( this, parent );
-//    }
-//
-//    public StylableList createList( IITextContainer parent )
-//    {
-//        return new StylableList( this, parent );
-//    }
-//
-//    public StylableListItem createListItem( IITextContainer parent )
-//    {
-//        return new StylableListItem( this, parent );
-//    }
+    // public StylablePhrase createPhrase( IITextContainer parent )
+    // {
+    // return new StylablePhrase( this, parent );
+    // }
+    //
+    // public StylableAnchor createAnchor( IITextContainer parent )
+    // {
+    // return new StylableAnchor( this, parent );
+    // }
+    //
+    // public StylableList createList( IITextContainer parent )
+    // {
+    // return new StylableList( this, parent );
+    // }
+    //
+    // public StylableListItem createListItem( IITextContainer parent )
+    // {
+    // return new StylableListItem( this, parent );
+    // }
 
     public StylableTable createTable( IITextContainer parent, int numColumns )
     {
@@ -339,6 +340,28 @@ public class StylableDocument
             {
                 super.onStartPage( writer, doc );
                 StylableDocument.this.onStartPage();
+            }
+
+            @Override
+            protected float getHeaderY( IMasterPageHeaderFooter header )
+            {
+                Float headerY = ( (StylableHeaderFooter) header ).getY();
+                if ( headerY != null )
+                {
+                    return document.getPageSize().getHeight() - headerY;
+                }
+                return super.getHeaderY( header );
+            }
+
+            @Override
+            protected float getFooterY( IMasterPageHeaderFooter footer )
+            {
+                Float footerY = ( (StylableHeaderFooter) footer ).getY();
+                if ( footerY != null )
+                {
+                    return document.getOriginMarginBottom() + footerY;
+                }
+                return super.getFooterY( footer );
             }
         };
     }

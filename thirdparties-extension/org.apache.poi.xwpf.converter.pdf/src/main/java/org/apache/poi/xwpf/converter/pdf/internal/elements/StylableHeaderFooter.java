@@ -24,10 +24,13 @@
  */
 package org.apache.poi.xwpf.converter.pdf.internal.elements;
 
+import java.math.BigInteger;
+
+import org.apache.poi.xwpf.converter.core.utils.DxaUtil;
+
 import com.lowagie.text.Table;
 import com.lowagie.text.pdf.PdfContentByte;
 
-import fr.opensagres.xdocreport.itext.extension.ExtendedPdfPTable;
 import fr.opensagres.xdocreport.itext.extension.IMasterPageHeaderFooter;
 
 /**
@@ -46,12 +49,23 @@ public class StylableHeaderFooter
 
     private boolean flushed;
 
-    public StylableHeaderFooter( StylableDocument ownerDocument, boolean header )
+    private final Float y;
+
+    public StylableHeaderFooter( StylableDocument ownerDocument, BigInteger dxaY, boolean header )
     {
         super( ownerDocument, null, 1 );
         this.ownerDocument = ownerDocument;
         this.header = header;
-        this.flushed = false;
+        tableCell = ownerDocument.createTableCell( this );
+        tableCell.setBorder( Table.NO_BORDER );
+        // set padding to zero for proper alignment
+        tableCell.setPadding( 0.0f );
+        this.y = dxaY != null ? DxaUtil.dxa2points( dxaY ) : null;
+    }
+
+    public StylableTableCell getTableCell()
+    {
+        return tableCell;
     }
 
     private void setWidthIfNecessary()
@@ -76,11 +90,8 @@ public class StylableHeaderFooter
         {
             return;
         }
+        super.addCell( tableCell );
         flushed = true;
-        if ( !tableCell.isEmpty() )
-        {
-            super.addCell( tableCell );
-        }
     }
 
     @Override
@@ -90,22 +101,8 @@ public class StylableHeaderFooter
         return super.writeSelectedRows( rowStart, rowEnd, xPos, yPos, canvas );
     }
 
-    public StylableTableCell getTableCell()
+    public Float getY()
     {
-        return getTableCell( null );
-    }
-
-    public StylableTableCell getTableCell( ExtendedPdfPTable pdfTable )
-    {
-        if ( tableCell == null )
-        {
-            tableCell =
-                pdfTable == null ? ownerDocument.createTableCell( this ) : ownerDocument.createTableCell( this,
-                                                                                                          pdfTable );
-            tableCell.setBorder( Table.NO_BORDER );
-            // set padding to zero for proper alignment
-            tableCell.setPadding( 0.0f );
-        }
-        return tableCell;
+        return y;
     }
 }

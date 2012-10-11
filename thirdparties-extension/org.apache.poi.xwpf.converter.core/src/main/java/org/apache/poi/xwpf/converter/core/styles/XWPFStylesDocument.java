@@ -28,10 +28,18 @@ import org.apache.poi.xwpf.converter.core.styles.run.RunUnderlineValueProvider;
 import org.apache.poi.xwpf.converter.core.styles.table.TableAlignmentValueProvider;
 import org.apache.poi.xwpf.converter.core.styles.table.TableBordersValueProvider;
 import org.apache.poi.xwpf.converter.core.styles.table.TableIndentationValueProvider;
+import org.apache.poi.xwpf.converter.core.styles.table.TableMarginBottomValueProvider;
+import org.apache.poi.xwpf.converter.core.styles.table.TableMarginLeftValueProvider;
+import org.apache.poi.xwpf.converter.core.styles.table.TableMarginRightValueProvider;
+import org.apache.poi.xwpf.converter.core.styles.table.TableMarginTopValueProvider;
 import org.apache.poi.xwpf.converter.core.styles.table.TableWidthValueProvider;
 import org.apache.poi.xwpf.converter.core.styles.table.cell.TableCellBackgroundColorValueProvider;
 import org.apache.poi.xwpf.converter.core.styles.table.cell.TableCellBordersValueProvider;
 import org.apache.poi.xwpf.converter.core.styles.table.cell.TableCellGridSpanValueProvider;
+import org.apache.poi.xwpf.converter.core.styles.table.cell.TableCellMarginBottomValueProvider;
+import org.apache.poi.xwpf.converter.core.styles.table.cell.TableCellMarginLeftValueProvider;
+import org.apache.poi.xwpf.converter.core.styles.table.cell.TableCellMarginRightValueProvider;
+import org.apache.poi.xwpf.converter.core.styles.table.cell.TableCellMarginTopValueProvider;
 import org.apache.poi.xwpf.converter.core.styles.table.cell.TableCellTextDirectionValueProvider;
 import org.apache.poi.xwpf.converter.core.styles.table.cell.TableCellVerticalAlignmentValueProvider;
 import org.apache.poi.xwpf.converter.core.styles.table.cell.TableCellWidthValueProvider;
@@ -437,6 +445,46 @@ public class XWPFStylesDocument
         return TableBordersValueProvider.INSTANCE.getValue( tblPr );
     }
 
+    public Float getTableMarginTop( XWPFTable table )
+    {
+        return TableMarginTopValueProvider.INSTANCE.getValue( table, this );
+    }
+
+    public Float getTableMarginTop( CTTblPrBase tcPr )
+    {
+        return TableMarginTopValueProvider.INSTANCE.getValue( tcPr );
+    }
+
+    public Float getTableMarginBottom( XWPFTable table )
+    {
+        return TableMarginBottomValueProvider.INSTANCE.getValue( table, this );
+    }
+
+    public Float getTableMarginBottom( CTTblPrBase tcPr )
+    {
+        return TableMarginBottomValueProvider.INSTANCE.getValue( tcPr );
+    }
+
+    public Float getTableMarginLeft( XWPFTable table )
+    {
+        return TableMarginLeftValueProvider.INSTANCE.getValue( table, this );
+    }
+
+    public Float getTableMarginLeft( CTTblPrBase tcPr )
+    {
+        return TableMarginLeftValueProvider.INSTANCE.getValue( tcPr );
+    }
+
+    public Float getTableMarginRight( XWPFTable table )
+    {
+        return TableMarginRightValueProvider.INSTANCE.getValue( table, this );
+    }
+
+    public Float getTableMarginRight( CTTblPrBase tcPr )
+    {
+        return TableMarginRightValueProvider.INSTANCE.getValue( tcPr );
+    }
+
     // ------------------------ Table row
 
     /**
@@ -516,6 +564,46 @@ public class XWPFStylesDocument
     public CTTcBorders getTableCellBorders( CTTcPr tcPr )
     {
         return TableCellBordersValueProvider.INSTANCE.getValue( tcPr );
+    }
+
+    public Float getTableCellMarginTop( XWPFTableCell cell )
+    {
+        return TableCellMarginTopValueProvider.INSTANCE.getValue( cell, this );
+    }
+
+    public Float getTableCellMarginTop( CTTcPr tcPr )
+    {
+        return TableCellMarginTopValueProvider.INSTANCE.getValue( tcPr );
+    }
+
+    public Float getTableCellMarginBottom( XWPFTableCell cell )
+    {
+        return TableCellMarginBottomValueProvider.INSTANCE.getValue( cell, this );
+    }
+
+    public Float getTableCellMarginBottom( CTTcPr tcPr )
+    {
+        return TableCellMarginBottomValueProvider.INSTANCE.getValue( tcPr );
+    }
+
+    public Float getTableCellMarginLeft( XWPFTableCell cell )
+    {
+        return TableCellMarginLeftValueProvider.INSTANCE.getValue( cell, this );
+    }
+
+    public Float getTableCellMarginLeft( CTTcPr tcPr )
+    {
+        return TableCellMarginLeftValueProvider.INSTANCE.getValue( tcPr );
+    }
+
+    public Float getTableCellMarginRight( XWPFTableCell cell )
+    {
+        return TableCellMarginRightValueProvider.INSTANCE.getValue( cell, this );
+    }
+
+    public Float getTableCellMarginRight( CTTcPr tcPr )
+    {
+        return TableCellMarginRightValueProvider.INSTANCE.getValue( tcPr );
     }
 
     public CTStyle getDefaultCharacterStyle()

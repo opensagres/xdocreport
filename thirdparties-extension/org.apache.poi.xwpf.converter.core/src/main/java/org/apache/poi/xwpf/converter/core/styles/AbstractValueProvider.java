@@ -80,7 +80,7 @@ public abstract class AbstractValueProvider<Value, XWPFElement>
                     return getValueOrNull( result );
                 }
                 // no styles founded, search from the <w:style w:type="table" w:styleId="XXXX">
-                result = getValueFromStyleId( element, stylesDocument, table.getStyleID(), defaultValue );
+                result = getValueFromStyleId( element, stylesDocument, tableStyleID, defaultValue );
                 if ( result != null )
                 {
                     return getValueOrNull( result );

@@ -53,6 +53,13 @@ public abstract class AbstractXWPFPOIConverterTest
     }
 
     @Test
+    public void DIF()
+        throws IOException
+    {
+        doGenerate( "DIF.docx" );
+    }
+
+    @Test
     public void Docx4j_GettingStarted()
         throws IOException
     {
@@ -66,7 +73,7 @@ public abstract class AbstractXWPFPOIConverterTest
         doGenerate( "DocxBig.docx" );
     }
 
-    //@Test
+    // @Test
     public void DocxBig2()
         throws IOException
     {
@@ -93,7 +100,7 @@ public abstract class AbstractXWPFPOIConverterTest
     {
         doGenerate( "EntretienAnnuel.docx" );
     }
-    
+
     @Test
     public void Exercise1()
         throws IOException
@@ -193,6 +200,14 @@ public abstract class AbstractXWPFPOIConverterTest
     }
 
     @Test
+    public void TestHeader()
+        throws IOException
+    {
+        doGenerate( "TestHeader.docx" );
+    }
+
+    
+    @Test
     public void testHeaderFooterPage()
         throws IOException
     {
@@ -233,7 +248,7 @@ public abstract class AbstractXWPFPOIConverterTest
     {
         doGenerate( "TestTableAlignment.docx" );
     }
-    
+
     @Test
     public void TestTableBorder()
         throws IOException

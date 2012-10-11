@@ -34,7 +34,7 @@ import com.lowagie.text.pdf.PdfWriter;
 public class ExtendedHeaderFooter
     extends PdfPageEventHelper
 {
-    private final ExtendedDocument document;
+    protected final ExtendedDocument document;
 
     private IMasterPage masterPage;
 
@@ -68,7 +68,7 @@ public class ExtendedHeaderFooter
             {
                 // compute upper-left corner coordinates
                 float x = document.getOriginMarginLeft();
-                float y = document.getPageSize().getHeight() - document.getOriginMarginTop();
+                float y = getHeaderY( header );
 
                 header.writeSelectedRows( 0, -1, x, y, writer.getDirectContentUnder() );
             }
@@ -78,11 +78,21 @@ public class ExtendedHeaderFooter
             {
                 // compute upper-left corner coordinates
                 float x = document.getOriginMarginLeft();
-                float y = document.getOriginMarginBottom() + footer.getTotalHeight();
+                float y = getFooterY( footer );
 
                 footer.writeSelectedRows( 0, -1, x, y, writer.getDirectContentUnder() );
             }
         }
+    }
+
+    protected float getFooterY( IMasterPageHeaderFooter footer )
+    {
+        return document.getOriginMarginBottom() + footer.getTotalHeight();
+    }
+
+    protected float getHeaderY( IMasterPageHeaderFooter header )
+    {
+        return document.getPageSize().getHeight() - document.getOriginMarginTop();
     }
 
     public void setMasterPage( IMasterPage masterPage )
@@ -106,5 +116,5 @@ public class ExtendedHeaderFooter
 
         this.masterPage = masterPage;
     }
-    
+
 }

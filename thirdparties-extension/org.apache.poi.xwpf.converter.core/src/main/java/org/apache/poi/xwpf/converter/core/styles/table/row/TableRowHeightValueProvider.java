@@ -4,9 +4,9 @@ import static org.apache.poi.xwpf.converter.core.utils.DxaUtil.dxa2points;
 
 import java.math.BigInteger;
 
+import org.apache.poi.xwpf.converter.core.TableHeight;
+import org.apache.poi.xwpf.converter.core.TableWidth;
 import org.apache.poi.xwpf.converter.core.utils.DxaUtil;
-import org.apache.poi.xwpf.converter.core.utils.TableHeight;
-import org.apache.poi.xwpf.converter.core.utils.TableWidth;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTHeight;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTTblWidth;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTTrPr;

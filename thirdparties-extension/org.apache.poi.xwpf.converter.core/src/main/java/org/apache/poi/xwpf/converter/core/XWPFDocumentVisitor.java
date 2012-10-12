@@ -352,8 +352,7 @@ public abstract class XWPFDocumentVisitor<T, O extends Options, E extends IXWPFM
     protected void visitTableRow( XWPFTableRow row, float[] colWidths, T tableContainer, boolean firstRow,
                                   boolean lastRow )
         throws Exception
-    {
-
+    {        
         startVisitTableRow( row, tableContainer, firstRow, lastRow );
 
         int nbColumns = colWidths.length;
@@ -385,7 +384,7 @@ public abstract class XWPFDocumentVisitor<T, O extends Options, E extends IXWPFM
                     CTTc tc = (CTTc) o;
                     XWPFTableCell cell = row.getTableCell( tc );
                     cellIndex = getCellIndex( cellIndex, cell );
-                    lastCol = ( cellIndex == nbColumns - 1 );
+                    lastCol = ( cellIndex == nbColumns  );
                     visitCell( cell, tableContainer, firstRow, lastRow, firstCol, lastCol );
                     firstCol = false;
                 }
@@ -398,7 +397,7 @@ public abstract class XWPFDocumentVisitor<T, O extends Options, E extends IXWPFM
                     {
                         XWPFTableCell cell = new XWPFTableCell( ctTc, row, row.getTable().getBody() );
                         cellIndex = getCellIndex( cellIndex, cell );
-                        lastCol = ( cellIndex == nbColumns - 1 );
+                        lastCol = ( cellIndex == nbColumns );
                         visitCell( cell, tableContainer, firstRow, lastRow, firstCol, lastCol );
                         firstCol = false;
                     }

@@ -8,11 +8,13 @@ import java.math.BigInteger;
 import java.util.List;
 import java.util.logging.Logger;
 
+import org.apache.poi.xwpf.converter.core.BorderSide;
 import org.apache.poi.xwpf.converter.core.IXWPFMasterPage;
+import org.apache.poi.xwpf.converter.core.TableCellBorder;
+import org.apache.poi.xwpf.converter.core.TableHeight;
+import org.apache.poi.xwpf.converter.core.TableWidth;
 import org.apache.poi.xwpf.converter.core.XWPFDocumentVisitor;
 import org.apache.poi.xwpf.converter.core.styles.pargraph.ParagraphIndentationLeftValueProvider;
-import org.apache.poi.xwpf.converter.core.utils.TableHeight;
-import org.apache.poi.xwpf.converter.core.utils.TableWidth;
 import org.apache.poi.xwpf.converter.pdf.PdfOptions;
 import org.apache.poi.xwpf.converter.pdf.internal.elements.StylableDocument;
 import org.apache.poi.xwpf.converter.pdf.internal.elements.StylableHeaderFooter;
@@ -47,8 +49,6 @@ import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTPPr;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTPTab;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTSectPr;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTSpacing;
-import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTTblBorders;
-import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTTcBorders;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTText;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTTextDirection;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.STVerticalJc;
@@ -554,16 +554,32 @@ public class PdfMapper
         // pdfPCell.setUseAscender( true );
         // pdfPCell.setUseDescender( true );
 
-        CTTblBorders tableBorders = stylesDocument.getTableBorders( table );
-        CTTcBorders cellBorders = stylesDocument.getTableCellBorders( cell );
-        // border-left
-        pdfPCell.setBorder( cellBorders, tableBorders, firstRow, lastRow, firstCol, lastCol, Rectangle.LEFT );
-        // border-right
-        pdfPCell.setBorder( cellBorders, tableBorders, firstRow, lastRow, firstCol, lastCol, Rectangle.RIGHT );
         // border-top
-        pdfPCell.setBorder( cellBorders, tableBorders, firstRow, lastRow, firstCol, lastCol, Rectangle.TOP );
+        TableCellBorder borderTop = stylesDocument.getTableCellBorderWithConflicts( cell, BorderSide.TOP );
+        pdfPCell.setBorderTop( borderTop );
+
         // border-bottom
-        pdfPCell.setBorder( cellBorders, tableBorders, firstRow, lastRow, firstCol, lastCol, Rectangle.BOTTOM );
+        TableCellBorder borderBottom = stylesDocument.getTableCellBorderWithConflicts( cell, BorderSide.BOTTOM );
+        pdfPCell.setBorderBottom( borderBottom );
+        
+        // border-left
+        TableCellBorder borderLeft = stylesDocument.getTableCellBorderWithConflicts( cell, BorderSide.LEFT );
+        pdfPCell.setBorderLeft( borderLeft );
+        
+        // border-right
+        TableCellBorder borderRight = stylesDocument.getTableCellBorderWithConflicts( cell, BorderSide.RIGHT );
+        pdfPCell.setBorderRight( borderRight );
+
+        // CTTblBorders tableBorders = stylesDocument.getTableBorders( table );
+        // CTTcBorders cellBorders = stylesDocument.getTableCellBorders( cell );
+        // // border-left
+        // pdfPCell.setBorder( cellBorders, tableBorders, firstRow, lastRow, firstCol, lastCol, Rectangle.LEFT );
+        // // border-right
+        // pdfPCell.setBorder( cellBorders, tableBorders, firstRow, lastRow, firstCol, lastCol, Rectangle.RIGHT );
+        // // border-top
+        // pdfPCell.setBorder( cellBorders, tableBorders, firstRow, lastRow, firstCol, lastCol, Rectangle.TOP );
+        // // border-bottom
+        // pdfPCell.setBorder( cellBorders, tableBorders, firstRow, lastRow, firstCol, lastCol, Rectangle.BOTTOM );
 
         // Text direction <w:textDirection
         CTTextDirection direction = stylesDocument.getTextDirection( cell );
@@ -618,7 +634,7 @@ public class PdfMapper
         {
             marginTop = stylesDocument.getTableMarginTop( table );
         }
-        if ( marginTop != null && marginTop > 0)
+        if ( marginTop != null && marginTop > 0 )
         {
             pdfPCell.setPaddingTop( marginTop );
         }
@@ -627,7 +643,7 @@ public class PdfMapper
         {
             marginBottom = stylesDocument.getTableMarginBottom( table );
         }
-        if ( marginBottom != null && marginBottom > 0)
+        if ( marginBottom != null && marginBottom > 0 )
         {
             pdfPCell.setPaddingBottom( marginBottom );
         }
@@ -662,6 +678,12 @@ public class PdfMapper
             {
                 pdfPCell.setFixedHeight( tableHeight.height );
             }
+        }
+        // No wrap
+        Boolean noWrap = stylesDocument.getTableCellNoWrap( cell );
+        if ( noWrap != null )
+        {
+            pdfPCell.setNoWrap( noWrap );
         }
         return pdfPCell;
     }

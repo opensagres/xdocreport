@@ -2,7 +2,7 @@ package org.apache.poi.xwpf.converter.core.styles.table;
 
 import static org.apache.poi.xwpf.converter.core.utils.DxaUtil.dxa2points;
 
-import org.apache.poi.xwpf.converter.core.utils.TableWidth;
+import org.apache.poi.xwpf.converter.core.TableWidth;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTTblPr;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTTblPrBase;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTTblWidth;

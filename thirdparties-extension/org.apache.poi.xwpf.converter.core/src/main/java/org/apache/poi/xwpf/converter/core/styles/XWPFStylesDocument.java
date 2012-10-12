@@ -7,6 +7,10 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.poi.xwpf.converter.core.BorderSide;
+import org.apache.poi.xwpf.converter.core.TableCellBorder;
+import org.apache.poi.xwpf.converter.core.TableHeight;
+import org.apache.poi.xwpf.converter.core.TableWidth;
 import org.apache.poi.xwpf.converter.core.styles.pargraph.ParagraphAlignmentValueProvider;
 import org.apache.poi.xwpf.converter.core.styles.pargraph.ParagraphBackgroundColorValueProvider;
 import org.apache.poi.xwpf.converter.core.styles.pargraph.ParagraphBorderBottomValueProvider;
@@ -26,7 +30,12 @@ import org.apache.poi.xwpf.converter.core.styles.run.RunFontStyleBoldValueProvid
 import org.apache.poi.xwpf.converter.core.styles.run.RunFontStyleItalicValueProvider;
 import org.apache.poi.xwpf.converter.core.styles.run.RunUnderlineValueProvider;
 import org.apache.poi.xwpf.converter.core.styles.table.TableAlignmentValueProvider;
-import org.apache.poi.xwpf.converter.core.styles.table.TableBordersValueProvider;
+import org.apache.poi.xwpf.converter.core.styles.table.TableBorderBottomValueProvider;
+import org.apache.poi.xwpf.converter.core.styles.table.TableBorderInsideHValueProvider;
+import org.apache.poi.xwpf.converter.core.styles.table.TableBorderInsideVValueProvider;
+import org.apache.poi.xwpf.converter.core.styles.table.TableBorderLeftValueProvider;
+import org.apache.poi.xwpf.converter.core.styles.table.TableBorderRightValueProvider;
+import org.apache.poi.xwpf.converter.core.styles.table.TableBorderTopValueProvider;
 import org.apache.poi.xwpf.converter.core.styles.table.TableIndentationValueProvider;
 import org.apache.poi.xwpf.converter.core.styles.table.TableMarginBottomValueProvider;
 import org.apache.poi.xwpf.converter.core.styles.table.TableMarginLeftValueProvider;
@@ -34,18 +43,22 @@ import org.apache.poi.xwpf.converter.core.styles.table.TableMarginRightValueProv
 import org.apache.poi.xwpf.converter.core.styles.table.TableMarginTopValueProvider;
 import org.apache.poi.xwpf.converter.core.styles.table.TableWidthValueProvider;
 import org.apache.poi.xwpf.converter.core.styles.table.cell.TableCellBackgroundColorValueProvider;
-import org.apache.poi.xwpf.converter.core.styles.table.cell.TableCellBordersValueProvider;
+import org.apache.poi.xwpf.converter.core.styles.table.cell.TableCellBorderBottomValueProvider;
+import org.apache.poi.xwpf.converter.core.styles.table.cell.TableCellBorderInsideHValueProvider;
+import org.apache.poi.xwpf.converter.core.styles.table.cell.TableCellBorderInsideVValueProvider;
+import org.apache.poi.xwpf.converter.core.styles.table.cell.TableCellBorderLeftValueProvider;
+import org.apache.poi.xwpf.converter.core.styles.table.cell.TableCellBorderRightValueProvider;
+import org.apache.poi.xwpf.converter.core.styles.table.cell.TableCellBorderTopValueProvider;
 import org.apache.poi.xwpf.converter.core.styles.table.cell.TableCellGridSpanValueProvider;
 import org.apache.poi.xwpf.converter.core.styles.table.cell.TableCellMarginBottomValueProvider;
 import org.apache.poi.xwpf.converter.core.styles.table.cell.TableCellMarginLeftValueProvider;
 import org.apache.poi.xwpf.converter.core.styles.table.cell.TableCellMarginRightValueProvider;
 import org.apache.poi.xwpf.converter.core.styles.table.cell.TableCellMarginTopValueProvider;
+import org.apache.poi.xwpf.converter.core.styles.table.cell.TableCellNoWrapValueProvider;
 import org.apache.poi.xwpf.converter.core.styles.table.cell.TableCellTextDirectionValueProvider;
 import org.apache.poi.xwpf.converter.core.styles.table.cell.TableCellVerticalAlignmentValueProvider;
 import org.apache.poi.xwpf.converter.core.styles.table.cell.TableCellWidthValueProvider;
 import org.apache.poi.xwpf.converter.core.styles.table.row.TableRowHeightValueProvider;
-import org.apache.poi.xwpf.converter.core.utils.TableHeight;
-import org.apache.poi.xwpf.converter.core.utils.TableWidth;
 import org.apache.poi.xwpf.usermodel.ParagraphAlignment;
 import org.apache.poi.xwpf.usermodel.UnderlinePatterns;
 import org.apache.poi.xwpf.usermodel.XWPFDocument;
@@ -61,11 +74,9 @@ import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTPPr;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTRPr;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTString;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTStyle;
-import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTTblBorders;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTTblPr;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTTblPrBase;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTTblStylePr;
-import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTTcBorders;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTTcPr;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTTextDirection;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTTrPr;
@@ -430,19 +441,94 @@ public class XWPFStylesDocument
         return TableIndentationValueProvider.INSTANCE.getValue( tblPr );
     }
 
-    public CTTblBorders getTableBorders( XWPFTable table )
+    public TableCellBorder getTableBorderTop( XWPFTable table )
     {
-        return TableBordersValueProvider.INSTANCE.getValue( table, this );
+        return TableBorderTopValueProvider.INSTANCE.getValue( table, this );
     }
 
-    public CTTblBorders getTableBorders( CTTblPr tblPr )
+    public TableCellBorder getTableBorderTop( CTTblPr tblPr )
     {
-        return TableBordersValueProvider.INSTANCE.getValue( tblPr );
+        return TableBorderTopValueProvider.INSTANCE.getValue( tblPr );
     }
 
-    public CTTblBorders getTableBorders( CTTblPrBase tblPr )
+    public TableCellBorder getTableBorderTop( CTTblPrBase tblPr )
     {
-        return TableBordersValueProvider.INSTANCE.getValue( tblPr );
+        return TableBorderTopValueProvider.INSTANCE.getValue( tblPr );
+    }
+
+    public TableCellBorder getTableBorderBottom( XWPFTable table )
+    {
+        return TableBorderBottomValueProvider.INSTANCE.getValue( table, this );
+    }
+
+    public TableCellBorder getTableBorderBottom( CTTblPr tblPr )
+    {
+        return TableBorderBottomValueProvider.INSTANCE.getValue( tblPr );
+    }
+
+    public TableCellBorder getTableBorderBottom( CTTblPrBase tblPr )
+    {
+        return TableBorderBottomValueProvider.INSTANCE.getValue( tblPr );
+    }
+
+    public TableCellBorder getTableBorderLeft( XWPFTable table )
+    {
+        return TableBorderLeftValueProvider.INSTANCE.getValue( table, this );
+    }
+
+    public TableCellBorder getTableBorderLeft( CTTblPr tblPr )
+    {
+        return TableBorderLeftValueProvider.INSTANCE.getValue( tblPr );
+    }
+
+    public TableCellBorder getTableBorderLeft( CTTblPrBase tblPr )
+    {
+        return TableBorderLeftValueProvider.INSTANCE.getValue( tblPr );
+    }
+
+    public TableCellBorder getTableBorderRight( XWPFTable table )
+    {
+        return TableBorderRightValueProvider.INSTANCE.getValue( table, this );
+    }
+
+    public TableCellBorder getTableBorderRight( CTTblPr tblPr )
+    {
+        return TableBorderRightValueProvider.INSTANCE.getValue( tblPr );
+    }
+
+    public TableCellBorder getTableBorderRight( CTTblPrBase tblPr )
+    {
+        return TableBorderRightValueProvider.INSTANCE.getValue( tblPr );
+    }
+
+    public TableCellBorder getTableBorderInsideH( XWPFTable table )
+    {
+        return TableBorderInsideHValueProvider.INSTANCE.getValue( table, this );
+    }
+
+    public TableCellBorder getTableBorderInsideH( CTTblPr tblPr )
+    {
+        return TableBorderInsideHValueProvider.INSTANCE.getValue( tblPr );
+    }
+
+    public TableCellBorder getTableBorderInsideH( CTTblPrBase tblPr )
+    {
+        return TableBorderInsideHValueProvider.INSTANCE.getValue( tblPr );
+    }
+
+    public TableCellBorder getTableBorderInsideV( XWPFTable table )
+    {
+        return TableBorderInsideVValueProvider.INSTANCE.getValue( table, this );
+    }
+
+    public TableCellBorder getTableBorderInsideV( CTTblPr tblPr )
+    {
+        return TableBorderInsideVValueProvider.INSTANCE.getValue( tblPr );
+    }
+
+    public TableCellBorder getTableBorderInsideV( CTTblPrBase tblPr )
+    {
+        return TableBorderInsideVValueProvider.INSTANCE.getValue( tblPr );
     }
 
     public Float getTableMarginTop( XWPFTable table )
@@ -556,14 +642,172 @@ public class XWPFStylesDocument
         return TableCellTextDirectionValueProvider.INSTANCE.getValue( tcPr );
     }
 
-    public CTTcBorders getTableCellBorders( XWPFTableCell cell )
+    /**
+     * Returns the table cell borders with conflicts.
+     * 
+     * @param cell
+     * @param borderSide
+     * @return
+     * @see http://officeopenxml.com/WPtableCellBorderConflicts.php
+     */
+    public TableCellBorder getTableCellBorderWithConflicts( XWPFTableCell cell, BorderSide borderSide )
     {
-        return TableCellBordersValueProvider.INSTANCE.getValue( cell, this );
+        /**
+         * Conflicts between cell borders and table and table-level exception borders If the cell spacing is zero, then
+         * there is a conflict. The following rules apply as between cell borders and table and table-level exception
+         * (row) borders (Reference: ECMA-376, 3rd Edition (June, 2011), Fundamentals and Markup Language Reference §
+         * 17.4.40.):
+         */
+
+        /**
+         * 1) If there is a cell border, then the cell border is displayed.
+         */
+
+        /**
+         * 2) If there is no cell border but there is a table-level exception border on the row, then that table-level
+         * exception border is displayed.
+         */
+
+        /**
+         * 3) If there is no cell or table-level exception border, then the table border is displayed.
+         */
+
+        TableCellBorder border = getTableCellBorder( cell, borderSide );
+        if ( border == null )
+        {
+            XWPFTable table = cell.getTableRow().getTable();
+            TableCellInfo cellInfo = getTableCellInfo( cell );
+            boolean borderInside = cellInfo.isInside( borderSide );
+            if ( borderInside )
+            {
+                border = getTableCellBorderInside( cell, borderSide );
+                if ( border == null )
+                {
+                    border = getTableBorderInside( table, borderSide );
+                }
+            }
+            if ( border == null && !borderInside )
+            {
+                border = getTableBorder( table, borderSide );
+            }
+        }
+        return border;
     }
 
-    public CTTcBorders getTableCellBorders( CTTcPr tcPr )
+    public TableCellBorder getTableBorder( XWPFTable table, BorderSide borderSide )
     {
-        return TableCellBordersValueProvider.INSTANCE.getValue( tcPr );
+        switch ( borderSide )
+        {
+            case TOP:
+                return getTableBorderTop( table );
+            case BOTTOM:
+                return getTableBorderBottom( table );
+            case LEFT:
+                return getTableBorderLeft( table );
+            case RIGHT:
+                return getTableBorderRight( table );
+        }
+        return null;
+    }
+
+    public TableCellBorder getTableBorderInside( XWPFTable table, BorderSide borderSide )
+    {
+        switch ( borderSide )
+        {
+            case TOP:
+            case BOTTOM:
+                return getTableBorderInsideH( table );
+            default:
+                return getTableBorderInsideV( table );
+        }
+    }
+
+    public TableCellBorder getTableCellBorderInside( XWPFTableCell cell, BorderSide borderSide )
+    {
+        switch ( borderSide )
+        {
+            case TOP:
+            case BOTTOM:
+                return getTableCellBorderInsideH( cell );
+            default:
+                return getTableCellBorderInsideV( cell );
+        }
+    }
+
+    public TableCellBorder getTableCellBorder( XWPFTableCell cell, BorderSide borderSide )
+    {
+        switch ( borderSide )
+        {
+            case TOP:
+                return getTableCellBorderTop( cell );
+            case BOTTOM:
+                return getTableCellBorderBottom( cell );
+            case LEFT:
+                return getTableCellBorderLeft( cell );
+            case RIGHT:
+                return getTableCellBorderRight( cell );
+        }
+        return null;
+    }
+
+    public TableCellBorder getTableCellBorderTop( XWPFTableCell cell )
+    {
+        return TableCellBorderTopValueProvider.INSTANCE.getValue( cell, this );
+    }
+
+    public TableCellBorder getTableCellBorderTop( CTTcPr tcPr )
+    {
+        return TableCellBorderTopValueProvider.INSTANCE.getValue( tcPr );
+    }
+
+    public TableCellBorder getTableCellBorderBottom( XWPFTableCell cell )
+    {
+        return TableCellBorderBottomValueProvider.INSTANCE.getValue( cell, this );
+    }
+
+    public TableCellBorder getTableCellBorderBottom( CTTcPr tcPr )
+    {
+        return TableCellBorderBottomValueProvider.INSTANCE.getValue( tcPr );
+    }
+
+    public TableCellBorder getTableCellBorderLeft( XWPFTableCell cell )
+    {
+        return TableCellBorderLeftValueProvider.INSTANCE.getValue( cell, this );
+    }
+
+    public TableCellBorder getTableCellBorderLeft( CTTcPr tcPr )
+    {
+        return TableCellBorderLeftValueProvider.INSTANCE.getValue( tcPr );
+    }
+
+    public TableCellBorder getTableCellBorderRight( XWPFTableCell cell )
+    {
+        return TableCellBorderRightValueProvider.INSTANCE.getValue( cell, this );
+    }
+
+    public TableCellBorder getTableCellBorderRight( CTTcPr tcPr )
+    {
+        return TableCellBorderRightValueProvider.INSTANCE.getValue( tcPr );
+    }
+
+    public TableCellBorder getTableCellBorderInsideH( XWPFTableCell cell )
+    {
+        return TableCellBorderInsideHValueProvider.INSTANCE.getValue( cell, this );
+    }
+
+    public TableCellBorder getTableCellBorderInsideH( CTTcPr tcPr )
+    {
+        return TableCellBorderInsideHValueProvider.INSTANCE.getValue( tcPr );
+    }
+
+    public TableCellBorder getTableCellBorderInsideV( XWPFTableCell cell )
+    {
+        return TableCellBorderInsideVValueProvider.INSTANCE.getValue( cell, this );
+    }
+
+    public TableCellBorder getTableCellBorderInsideV( CTTcPr tcPr )
+    {
+        return TableCellBorderInsideVValueProvider.INSTANCE.getValue( tcPr );
     }
 
     public Float getTableCellMarginTop( XWPFTableCell cell )
@@ -604,6 +848,16 @@ public class XWPFStylesDocument
     public Float getTableCellMarginRight( CTTcPr tcPr )
     {
         return TableCellMarginRightValueProvider.INSTANCE.getValue( tcPr );
+    }
+
+    public Boolean getTableCellNoWrap( XWPFTableCell cell )
+    {
+        return TableCellNoWrapValueProvider.INSTANCE.getValue( cell, this );
+    }
+
+    public Boolean getTableCellNoWrap( CTTcPr tcPr )
+    {
+        return TableCellNoWrapValueProvider.INSTANCE.getValue( tcPr );
     }
 
     public CTStyle getDefaultCharacterStyle()

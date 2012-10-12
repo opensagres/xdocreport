@@ -1,4 +1,4 @@
-package org.apache.poi.xwpf.converter.core.utils;
+package org.apache.poi.xwpf.converter.core;
 
 public class TableHeight
 {

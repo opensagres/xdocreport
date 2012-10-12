@@ -27,6 +27,7 @@ package org.apache.poi.xwpf.converter.pdf.internal.elements;
 import java.awt.Color;
 import java.math.BigInteger;
 
+import org.apache.poi.xwpf.converter.core.TableCellBorder;
 import org.apache.poi.xwpf.converter.core.utils.ColorHelper;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTBorder;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTTblBorders;
@@ -93,22 +94,48 @@ public class StylableTableCell
             this.disableBorderSide( borderSide );
             return;
         }
-        boolean comesFromTable = false;
-        // border from cell
-        CTBorder cellBorder = getBorder( cellBorders, borderSide );
+
+        boolean insideBorder = false;
+        boolean tmpInsideBorder = insideBorder;
+
+        // search border from cell
+        CTBorder cellBorder = getBorder( cellBorders, borderSide, false );
         if ( cellBorder == null )
         {
-            // border from table
-            cellBorder = getBorder( tableBorders, firstRow, lastRow, firstCol, lastCol, borderSide );
-            comesFromTable = true;
+            insideBorder = isInsideBorder( firstRow, lastRow, firstCol, lastCol, borderSide );
+            // none cell border found
+            if ( insideBorder )
+            {
+                // it's inside cell, search if there are border inside (insideH/insideV).
+                cellBorder = getBorder( cellBorders, borderSide, true );
+                tmpInsideBorder = cellBorder != null;
+            }
+
+            if ( cellBorder == null )
+            {
+                // none cell border found
+
+                // search border from table
+                cellBorder = getBorder( tableBorders, borderSide, insideBorder );
+                //
+                if ( cellBorder == null )
+                {
+                    if ( insideBorder )
+                    {
+                        // // it's inside cell, search if there are border no inside
+                        cellBorder = getBorder( tableBorders, borderSide, false );
+                        // tmpInsideBorder = cellBorder != null;
+                    }
+                }
+            }
+            // insideBorder = tmpInsideBorder;
         }
         if ( cellBorder == null )
         {
             this.disableBorderSide( borderSide );
             return;
         }
-        boolean inside = comesFromTable ? false : isInsideBorder( firstRow, lastRow, firstCol, lastCol, borderSide );
-        setBorder( cellBorder, borderSide, inside );
+        setBorder( cellBorder, borderSide, insideBorder );
     }
 
     private boolean isInsideBorder( boolean firstRow, boolean lastRow, boolean firstCol, boolean lastCol, int borderSide )
@@ -127,7 +154,7 @@ public class StylableTableCell
         return false;
     }
 
-    public static CTBorder getBorder( CTTcBorders cellBorders, int borderSide )
+    public static CTBorder getBorder( CTTcBorders cellBorders, int borderSide, boolean insideBorder )
     {
         if ( cellBorders == null )
         {
@@ -136,19 +163,34 @@ public class StylableTableCell
         switch ( borderSide )
         {
             case Rectangle.TOP:
+                if ( insideBorder )
+                {
+                    return cellBorders.getInsideH();
+                }
                 return cellBorders.getTop();
             case Rectangle.BOTTOM:
+                if ( insideBorder )
+                {
+                    return cellBorders.getInsideH();
+                }
                 return cellBorders.getBottom();
             case Rectangle.LEFT:
+                if ( insideBorder )
+                {
+                    return cellBorders.getInsideV();
+                }
                 return cellBorders.getLeft();
             case Rectangle.RIGHT:
+                if ( insideBorder )
+                {
+                    return cellBorders.getInsideV();
+                }
                 return cellBorders.getRight();
         }
         return null;
     }
 
-    public static CTBorder getBorder( CTTblBorders tableBorders, boolean firstRow, boolean lastRow, boolean firstCol,
-                                      boolean lastCol, int borderSide )
+    public static CTBorder getBorder( CTTblBorders tableBorders, int borderSide, boolean insideBorder )
     {
         if ( tableBorders == null )
         {
@@ -157,25 +199,25 @@ public class StylableTableCell
         switch ( borderSide )
         {
             case Rectangle.TOP:
-                if ( firstRow )
+                if ( !insideBorder )
                 {
                     return tableBorders.getTop();
                 }
                 return tableBorders.getInsideH();
             case Rectangle.BOTTOM:
-                if ( lastRow )
+                if ( !insideBorder )
                 {
                     return tableBorders.getBottom();
                 }
                 return tableBorders.getInsideH();
             case Rectangle.LEFT:
-                if ( firstCol )
+                if ( !insideBorder )
                 {
                     return tableBorders.getLeft();
                 }
                 return tableBorders.getInsideV();
             case Rectangle.RIGHT:
-                if ( lastCol )
+                if ( !insideBorder )
                 {
                     return tableBorders.getRight();
                 }
@@ -184,7 +226,7 @@ public class StylableTableCell
         return null;
     }
 
-    public void setBorder( CTBorder border, int borderSide, boolean inside )
+    public void setBorder( CTBorder border, int borderSide, boolean insideBorder )
     {
         if ( border == null )
         {
@@ -207,6 +249,11 @@ public class StylableTableCell
                 // http://officeopenxml.com/WPtableBorders.php
                 // if w:sz="4" => 1/4 points
                 size = borderSize.floatValue() / 8f;
+
+                if ( insideBorder )
+                {
+                    size = size / 2f;
+                }
             }
 
             Color borderColor = ColorHelper.getBorderColor( border );
@@ -255,6 +302,81 @@ public class StylableTableCell
                     }
                     break;
             }
+        }
+    }
+
+    public void setBorderTop( TableCellBorder borderTop )
+    {
+        setBorder( borderTop, Rectangle.TOP );
+    }
+
+    public void setBorderBottom( TableCellBorder borderBottom )
+    {
+        setBorder( borderBottom, Rectangle.BOTTOM );
+    }
+
+    public void setBorderLeft( TableCellBorder borderLeft )
+    {
+        setBorder( borderLeft, Rectangle.LEFT );
+    }
+
+    public void setBorderRight( TableCellBorder borderRight )
+    {
+        setBorder( borderRight, Rectangle.RIGHT );
+    }
+
+    public void setBorder( TableCellBorder border, int borderSide )
+    {
+        if ( border == null || !border.hasBorder() )
+        {
+            this.disableBorderSide( borderSide );
+            return;
+        }
+        Float borderSize = border.getBorderSize();
+        Color borderColor = border.getBorderColor();
+        switch ( borderSide )
+        {
+            case Rectangle.TOP:
+                if ( borderSize != null )
+                {
+                    this.setBorderWidthTop( borderSize );
+                }
+                if ( borderColor != null )
+                {
+
+                    this.setBorderColorTop( borderColor );
+                }
+                break;
+            case Rectangle.BOTTOM:
+                if ( borderSize != null )
+                {
+                    this.setBorderWidthBottom( borderSize );
+                }
+                if ( borderColor != null )
+                {
+                    this.setBorderColorBottom( borderColor );
+                }
+                break;
+            case Rectangle.LEFT:
+                if ( borderSize != null )
+                {
+                    this.setBorderWidthLeft( borderSize );
+                }
+                if ( borderColor != null )
+                {
+                    this.setBorderColorLeft( borderColor );
+                }
+                break;
+            case Rectangle.RIGHT:
+                if ( borderSize != null )
+                {
+                    this.setBorderWidthRight( borderSize );
+                }
+                if ( borderColor != null )
+                {
+                    this.setBorderColorRight( borderColor );
+                }
+                break;
         }
     }
 

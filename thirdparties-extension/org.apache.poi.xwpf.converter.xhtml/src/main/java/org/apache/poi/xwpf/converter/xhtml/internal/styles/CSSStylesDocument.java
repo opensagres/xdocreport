@@ -32,10 +32,10 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.poi.xwpf.converter.core.TableHeight;
+import org.apache.poi.xwpf.converter.core.TableWidth;
 import org.apache.poi.xwpf.converter.core.styles.XWPFStylesDocument;
 import org.apache.poi.xwpf.converter.core.utils.StringUtils;
-import org.apache.poi.xwpf.converter.core.utils.TableHeight;
-import org.apache.poi.xwpf.converter.core.utils.TableWidth;
 import org.apache.poi.xwpf.converter.core.utils.XWPFUtils;
 import org.apache.poi.xwpf.converter.xhtml.internal.XHTMLConstants;
 import org.apache.poi.xwpf.converter.xhtml.internal.utils.SAXHelper;

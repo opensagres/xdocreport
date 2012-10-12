@@ -1,5 +1,8 @@
 package org.apache.poi.xwpf.converter.core.styles;
 
+import org.apache.poi.xwpf.converter.core.BorderSide;
+import org.apache.poi.xwpf.usermodel.XWPFTableCell;
+
 public class TableCellInfo
 {
 
@@ -60,5 +63,33 @@ public class TableCellInfo
     public boolean canApplyLastCol()
     {
         return isLastCol() && tableInfo.canApplyLastCol();
+    }
+
+    public boolean isInside( BorderSide borderSide )
+    {
+        return isInside( firstRow, lastRow, firstCol, lastCol, borderSide );
+    }
+
+    private boolean isInside( boolean firstRow, boolean lastRow, boolean firstCol, boolean lastCol,
+                              BorderSide borderSide )
+    {
+        switch ( borderSide )
+        {
+            case TOP:
+                return !firstRow;
+            case BOTTOM:
+                return !lastRow;
+            case LEFT:
+                return !firstCol;
+            case RIGHT:
+                return !lastCol;
+        }
+        return false;
+    }
+
+    public void getTableCellBorder( XWPFTableCell cell, BorderSide borderSide )
+    {
+        // TODO Auto-generated method stub
+        
     }
 }

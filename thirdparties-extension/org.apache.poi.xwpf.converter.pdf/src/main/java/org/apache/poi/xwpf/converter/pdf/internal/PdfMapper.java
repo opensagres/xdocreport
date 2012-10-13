@@ -445,8 +445,18 @@ public class PdfMapper
     protected void visitTab( CTPTab tab, IITextContainer pdfParagraphContainer )
         throws Exception
     {
-        Chunk pdfTab = new Chunk( new VerticalPositionMark() );
-        pdfParagraphContainer.addElement( pdfTab );
+
+        if ( tab == null )
+        {
+            float defaultTabStop = getDefaultTabStop();
+            Chunk pdfTab = new Chunk( new VerticalPositionMark(), defaultTabStop, false );
+            pdfParagraphContainer.addElement( pdfTab );
+        }
+        else
+        {
+            Chunk pdfTab = new Chunk( new VerticalPositionMark() );
+            pdfParagraphContainer.addElement( pdfTab );
+        }
     }
 
     @Override
@@ -556,19 +566,19 @@ public class PdfMapper
 
         // border-top
         TableCellBorder borderTop = stylesDocument.getTableCellBorderWithConflicts( cell, BorderSide.TOP );
-        pdfPCell.setBorderTop( borderTop );
+        pdfPCell.setBorderTop( borderTop, stylesDocument.isBorderInside( cell, BorderSide.TOP ) );
 
         // border-bottom
         TableCellBorder borderBottom = stylesDocument.getTableCellBorderWithConflicts( cell, BorderSide.BOTTOM );
-        pdfPCell.setBorderBottom( borderBottom );
-        
+        pdfPCell.setBorderBottom( borderBottom, stylesDocument.isBorderInside( cell, BorderSide.BOTTOM ) );
+
         // border-left
         TableCellBorder borderLeft = stylesDocument.getTableCellBorderWithConflicts( cell, BorderSide.LEFT );
-        pdfPCell.setBorderLeft( borderLeft );
-        
+        pdfPCell.setBorderLeft( borderLeft, stylesDocument.isBorderInside( cell, BorderSide.LEFT ) );
+
         // border-right
         TableCellBorder borderRight = stylesDocument.getTableCellBorderWithConflicts( cell, BorderSide.RIGHT );
-        pdfPCell.setBorderRight( borderRight );
+        pdfPCell.setBorderRight( borderRight, stylesDocument.isBorderInside( cell, BorderSide.RIGHT ) );
 
         // CTTblBorders tableBorders = stylesDocument.getTableBorders( table );
         // CTTcBorders cellBorders = stylesDocument.getTableCellBorders( cell );

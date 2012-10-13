@@ -14,11 +14,5 @@ public class TableBorderInsideVValueProvider
     {
         return borders.getInsideV();
     }
-    
-    @Override
-    protected boolean isInside()
-    {
-        return true;
-    }
 
 }

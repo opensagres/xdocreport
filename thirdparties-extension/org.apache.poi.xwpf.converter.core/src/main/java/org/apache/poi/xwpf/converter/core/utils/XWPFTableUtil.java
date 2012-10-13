@@ -337,7 +337,7 @@ public class XWPFTableUtil
         return null;
     }
 
-    public static TableCellBorder getTableCellBorder( CTBorder border, boolean inside )
+    public static TableCellBorder getTableCellBorder( CTBorder border )
     {
         if ( border != null )
         {
@@ -353,14 +353,6 @@ public class XWPFTableUtil
                 // http://officeopenxml.com/WPtableBorders.php
                 // if w:sz="4" => 1/4 points
                 borderSize = size.floatValue() / 8f;
-                
-                if (inside) {
-                    // divide the border side by 2 to avoid multiply with 2 the border
-                    // this code simplify the "Conflicts between adjacent cells"
-                    // http://officeopenxml.com/WPtableCellBorderConflicts.php
-                    borderSize = borderSize / 2;                    
-                }
-                
             }
             Color borderColor = ColorHelper.getBorderColor( border );
             return new TableCellBorder( borderSize, borderColor );

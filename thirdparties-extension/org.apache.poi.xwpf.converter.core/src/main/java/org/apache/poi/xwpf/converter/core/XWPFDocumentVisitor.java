@@ -1,11 +1,14 @@
 package org.apache.poi.xwpf.converter.core;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.math.BigInteger;
 import java.util.List;
 
+import org.apache.poi.POIXMLDocumentPart;
 import org.apache.poi.openxml4j.opc.PackagePart;
 import org.apache.poi.xwpf.converter.core.styles.XWPFStylesDocument;
+import org.apache.poi.xwpf.converter.core.utils.DxaUtil;
 import org.apache.poi.xwpf.converter.core.utils.XWPFTableUtil;
 import org.apache.poi.xwpf.usermodel.IBodyElement;
 import org.apache.poi.xwpf.usermodel.XWPFDocument;
@@ -13,7 +16,9 @@ import org.apache.poi.xwpf.usermodel.XWPFFooter;
 import org.apache.poi.xwpf.usermodel.XWPFHeader;
 import org.apache.poi.xwpf.usermodel.XWPFParagraph;
 import org.apache.poi.xwpf.usermodel.XWPFPictureData;
+import org.apache.poi.xwpf.usermodel.XWPFRelation;
 import org.apache.poi.xwpf.usermodel.XWPFRun;
+import org.apache.poi.xwpf.usermodel.XWPFSettings;
 import org.apache.poi.xwpf.usermodel.XWPFStyle;
 import org.apache.poi.xwpf.usermodel.XWPFTable;
 import org.apache.poi.xwpf.usermodel.XWPFTableCell;
@@ -38,14 +43,19 @@ import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTR;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTRow;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTSdtCell;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTSectPr;
+import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTSettings;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTTc;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTText;
+import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTTwipsMeasure;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.FtrDocument;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.HdrDocument;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.STOnOff;
+import org.openxmlformats.schemas.wordprocessingml.x2006.main.SettingsDocument;
 
 public abstract class XWPFDocumentVisitor<T, O extends Options, E extends IXWPFMasterPage>
 {
+
+    private static final float DEFAULT_TAB_STOP_POINT = DxaUtil.dxa2points( 720f );
 
     protected final XWPFDocument document;
 
@@ -58,6 +68,12 @@ public abstract class XWPFDocumentVisitor<T, O extends Options, E extends IXWPFM
     protected final XWPFStylesDocument stylesDocument;
 
     protected final O options;
+
+    private Float defaultTabStop;
+
+    private XWPFSettings settings;
+
+    private CTSettings ctSettings;
 
     public XWPFDocumentVisitor( XWPFDocument document, O options )
         throws Exception
@@ -352,7 +368,7 @@ public abstract class XWPFDocumentVisitor<T, O extends Options, E extends IXWPFM
     protected void visitTableRow( XWPFTableRow row, float[] colWidths, T tableContainer, boolean firstRow,
                                   boolean lastRow )
         throws Exception
-    {        
+    {
         startVisitTableRow( row, tableContainer, firstRow, lastRow );
 
         int nbColumns = colWidths.length;
@@ -384,7 +400,7 @@ public abstract class XWPFDocumentVisitor<T, O extends Options, E extends IXWPFM
                     CTTc tc = (CTTc) o;
                     XWPFTableCell cell = row.getTableCell( tc );
                     cellIndex = getCellIndex( cellIndex, cell );
-                    lastCol = ( cellIndex == nbColumns  );
+                    lastCol = ( cellIndex == nbColumns );
                     visitCell( cell, tableContainer, firstRow, lastRow, firstCol, lastCol );
                     firstCol = false;
                 }
@@ -642,4 +658,77 @@ public abstract class XWPFDocumentVisitor<T, O extends Options, E extends IXWPFM
      */
     protected abstract IXWPFMasterPage createMasterPage( CTSectPr sectPr );
 
+    /**
+     * 17.15.1.25 defaultTabStop (Distance Between Automatic Tab Stops) This element specifies the value which shall be
+     * used as the multiplier to generate automatic tab stops in this document. Automatic tab stops refer to the tab
+     * stop locations which occur after all custom tab stops in the current paragraph have been surpassed. If this
+     * element is omitted, then automatic tab stops should be generated at 720 twentieths of a point (0.5") intervals
+     * across the displayed page. [Example: Consider a WordprocessingML document
+     * 
+     * @return
+     */
+    protected float getDefaultTabStop()
+    {
+        if ( defaultTabStop == null )
+        {
+            CTSettings settings = getCTSettings();
+            if ( settings != null )
+            {
+                CTTwipsMeasure value = settings.getDefaultTabStop();
+                if ( value != null )
+                {
+                    if ( !value.isNil() )
+                    {
+                        this.defaultTabStop = DxaUtil.dxa2points( value.getVal() );
+                    }
+
+                }
+            }
+            if ( defaultTabStop == null )
+            {
+                this.defaultTabStop = DEFAULT_TAB_STOP_POINT;
+            }
+        }
+        return defaultTabStop;
+    }
+
+    public XWPFSettings getSettings()
+    {
+        if ( settings != null )
+        {
+            return settings;
+        }
+        for ( POIXMLDocumentPart p : document.getRelations() )
+        {
+            String relation = p.getPackageRelationship().getRelationshipType();
+            if ( relation.equals( XWPFRelation.SETTINGS.getRelation() ) )
+            {
+                settings = (XWPFSettings) p;
+            }
+        }
+        return settings;
+    }
+
+    public CTSettings getCTSettings()
+    {
+        if ( ctSettings != null )
+        {
+            return ctSettings;
+        }
+        XWPFSettings settings = getSettings();
+        if ( settings != null )
+        {
+            ctSettings = CTSettings.Factory.newInstance();
+            try
+            {
+                InputStream inputStream = settings.getPackagePart().getInputStream();
+                ctSettings = SettingsDocument.Factory.parse( inputStream ).getSettings();
+            }
+            catch ( Exception e )
+            {
+
+            }
+        }
+        return ctSettings;
+    }
 }

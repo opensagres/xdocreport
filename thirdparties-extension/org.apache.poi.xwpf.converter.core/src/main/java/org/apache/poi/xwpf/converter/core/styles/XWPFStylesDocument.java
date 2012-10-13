@@ -676,8 +676,7 @@ public class XWPFStylesDocument
         if ( border == null )
         {
             XWPFTable table = cell.getTableRow().getTable();
-            TableCellInfo cellInfo = getTableCellInfo( cell );
-            boolean borderInside = cellInfo.isInside( borderSide );
+            boolean borderInside = isBorderInside( cell, borderSide );
             if ( borderInside )
             {
                 border = getTableCellBorderInside( cell, borderSide );
@@ -692,6 +691,13 @@ public class XWPFStylesDocument
             }
         }
         return border;
+    }
+
+    public boolean isBorderInside( XWPFTableCell cell, BorderSide borderSide )
+    {
+        TableCellInfo cellInfo = getTableCellInfo( cell );
+        boolean borderInside = cellInfo.isInside( borderSide );
+        return borderInside;
     }
 
     public TableCellBorder getTableBorder( XWPFTable table, BorderSide borderSide )

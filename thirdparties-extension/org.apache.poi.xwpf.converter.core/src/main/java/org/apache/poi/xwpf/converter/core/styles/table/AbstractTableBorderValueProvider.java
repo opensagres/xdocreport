@@ -38,12 +38,11 @@ public abstract class AbstractTableBorderValueProvider
         if ( borders != null )
         {
             CTBorder border = getBorder( borders );
-            return XWPFTableUtil.getTableCellBorder( border, isInside() );
+            return XWPFTableUtil.getTableCellBorder( border );
         }
         return null;
     }
 
     public abstract CTBorder getBorder( CTTblBorders borders );
 
-    protected abstract boolean isInside();
 }

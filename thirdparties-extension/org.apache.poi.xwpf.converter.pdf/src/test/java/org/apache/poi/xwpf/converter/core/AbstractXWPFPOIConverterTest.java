@@ -271,6 +271,20 @@ public abstract class AbstractXWPFPOIConverterTest
     }
 
     @Test
+    public void TestTableNested()
+        throws IOException
+    {
+        doGenerate( "TestTableNested.docx" );
+    }
+    
+    @Test
+    public void TestTabulation()
+        throws IOException
+    {
+        doGenerate( "TestTabulation.docx" );
+    }
+    
+    @Test
     public void testTitle()
         throws IOException
     {

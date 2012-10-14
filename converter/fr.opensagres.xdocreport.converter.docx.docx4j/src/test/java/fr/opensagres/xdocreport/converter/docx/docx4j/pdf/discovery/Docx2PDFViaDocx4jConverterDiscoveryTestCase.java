@@ -22,13 +22,37 @@
  * OF CONTRACT, TORT OR OTHERWISE,  ARISING FROM, OUT OF OR IN CONNECTION
  * WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
-package fr.opensagres.xdocreport.converter;
+package fr.opensagres.xdocreport.converter.docx.docx4j.pdf.discovery;
 
-/**
- * XDocReport available converter via which explains how converter is done.
- */
-public enum ConverterTypeVia
+import junit.framework.TestCase;
+import fr.opensagres.xdocreport.converter.ConverterRegistry;
+import fr.opensagres.xdocreport.converter.ConverterTypeTo;
+import fr.opensagres.xdocreport.converter.ConverterTypeVia;
+import fr.opensagres.xdocreport.converter.IConverter;
+import fr.opensagres.xdocreport.converter.Options;
+import fr.opensagres.xdocreport.converter.docx.docx4j.pdf.Docx2PDFViaDocx4jConverter;
+import fr.opensagres.xdocreport.core.document.DocumentKind;
+
+public class Docx2PDFViaDocx4jConverterDiscoveryTestCase
+    extends TestCase
 {
 
-    FOP, XSL, ITEXT, ODFDOM, XWPF, DOCX4J
+    /**
+     * Test converter is well registered in the ConverterRegistry by using "converter-discovery.properties".
+     * 
+     * @throws Exception
+     */
+    public void testDiscovery()
+        throws Exception
+    {
+        Options o = Options.getFrom( DocumentKind.DOCX ).to( ConverterTypeTo.PDF ).via( ConverterTypeVia.DOCX4J );
+
+        // Test if converter is not null
+        IConverter converter = ConverterRegistry.getRegistry().getConverter( o );
+        assertNotNull( converter );
+
+        // Test instance class of the converter
+        assertEquals( Docx2PDFViaDocx4jConverter.class, converter.getClass() );
+    }
+
 }

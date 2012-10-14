@@ -22,13 +22,33 @@
  * OF CONTRACT, TORT OR OTHERWISE,  ARISING FROM, OUT OF OR IN CONNECTION
  * WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
-package fr.opensagres.xdocreport.converter;
+package fr.opensagres.converter.docx;
 
-/**
- * XDocReport available converter via which explains how converter is done.
- */
-public enum ConverterTypeVia
+import java.util.Iterator;
+import java.util.ServiceLoader;
+
+import org.junit.Assert;
+import org.junit.Test;
+
+import fr.opensagres.xdocreport.converter.discovery.IConverterDiscovery;
+
+public class ServiceRegistryTest
 {
 
-    FOP, XSL, ITEXT, ODFDOM, XWPF, DOCX4J
+    @Test
+    public void test()
+    {
+        
+        Iterator<IConverterDiscovery> toto =
+                ServiceLoader.load( IConverterDiscovery.class ).iterator();
+
+        Assert.assertNotNull( toto );
+        Assert.assertTrue( toto.hasNext() );
+        while ( toto.hasNext() )
+        {
+            IConverterDiscovery converterDiscovery = (IConverterDiscovery) toto.next();
+            System.out.println( converterDiscovery );
+        }
+    }
+
 }

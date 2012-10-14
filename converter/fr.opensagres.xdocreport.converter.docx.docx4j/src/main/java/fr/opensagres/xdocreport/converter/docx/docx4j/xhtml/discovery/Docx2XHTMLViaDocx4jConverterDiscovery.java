@@ -22,13 +22,46 @@
  * OF CONTRACT, TORT OR OTHERWISE,  ARISING FROM, OUT OF OR IN CONNECTION
  * WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
-package fr.opensagres.xdocreport.converter;
+package fr.opensagres.xdocreport.converter.docx.docx4j.xhtml.discovery;
 
-/**
- * XDocReport available converter via which explains how converter is done.
- */
-public enum ConverterTypeVia
+import fr.opensagres.xdocreport.converter.ConverterTypeTo;
+import fr.opensagres.xdocreport.converter.ConverterTypeVia;
+import fr.opensagres.xdocreport.converter.IConverter;
+import fr.opensagres.xdocreport.converter.discovery.IConverterDiscovery;
+import fr.opensagres.xdocreport.converter.docx.docx4j.xhtml.Docx2XHTMLViaDocx4jConverter;
+import fr.opensagres.xdocreport.core.document.DocumentKind;
+
+public class Docx2XHTMLViaDocx4jConverterDiscovery
+    implements IConverterDiscovery
 {
 
-    FOP, XSL, ITEXT, ODFDOM, XWPF, DOCX4J
+    public String getId()
+    {
+        return "Docx2XHTMLViaDocx4jConverter";
+    }
+
+    public String getDescription()
+    {
+        return "Convert DOCX 2 XHTML via docx4j";
+    }
+
+    public String getFrom()
+    {
+        return DocumentKind.DOCX.name();
+    }
+
+    public String getTo()
+    {
+        return ConverterTypeTo.XHTML.name();
+    }
+
+    public String getVia()
+    {
+        return ConverterTypeVia.DOCX4J.name();
+    }
+
+    public IConverter getConverter()
+    {
+        return Docx2XHTMLViaDocx4jConverter.getInstance();
+    }
 }

@@ -285,7 +285,9 @@ public class ExtendedPdfPTable
     private PdfPTable createTable( PdfPCell cell )
     {
         PdfPTable table = new PdfPTable( 1 );
-        table.setWidthPercentage( 100f );
+        table.setHorizontalAlignment( this.getHorizontalAlignment() );
+        table.setTotalWidth( cell.getPaddingLeft() + this.getTotalWidth() + cell.getPaddingRight() );
+        table.setLockedWidth( true );
         table.setSplitLate( false );
         table.addCell( cell );
         return table;

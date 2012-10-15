@@ -58,7 +58,7 @@ public class PdfConvertChineseTestCase
     }
 
     // Uncomment that once the problem with StackOverflow will be fixed.
-    // @Test
+    @Test
     public void TestChineseCharactersWithFloatImage()
         throws Exception
     {

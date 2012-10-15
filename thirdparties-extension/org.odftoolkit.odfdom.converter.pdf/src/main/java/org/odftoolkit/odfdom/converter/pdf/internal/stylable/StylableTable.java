@@ -47,6 +47,7 @@ public class StylableTable
         // cancel ExtendedPdfPTable settings
         // we raise text in StylableParagraph so extra spacing here is unnecessary
         super.setSpacingBefore( 0.0f );
+        super.setSplitLate( false );
         this.ownerDocument = ownerDocument;
         this.parent = parent;
     }

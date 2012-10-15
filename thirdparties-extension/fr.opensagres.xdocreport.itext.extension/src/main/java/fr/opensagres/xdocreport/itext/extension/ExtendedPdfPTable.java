@@ -36,7 +36,6 @@ public class ExtendedPdfPTable
     extends PdfPTable
     implements IITextContainer
 {
-
     private IITextContainer container;
 
     private boolean empty;
@@ -72,9 +71,14 @@ public class ExtendedPdfPTable
         this.container = container;
     }
 
+    public float getRowHeight( int idx )
+    {
+        return getRowHeight( idx, false );
+    }
+
     /**
      * Gets the height of a particular row.
-     * 
+     *
      * @param idx the row index (starts at 0)
      * @param firsttime is this the first time the row heigh is calculated?
      * @return the height of a particular row
@@ -105,16 +109,20 @@ public class ExtendedPdfPTable
             cell = tmprow.getCells()[i];
             float tmp = 0;
             // AZERR patch : sometimes cell is null????
-            if ( cell != null )
+            // LP : cell may be null if colspan/rowspan occurs
+            // create a dummy cell to avoid NullPointerException
+            if ( cell == null )
             {
-                if ( cell.getRowspan() == rs + 1 )
+                cell = new PdfPCell();
+                tmprow.getCells()[i] = cell;
+            }
+            if ( cell.getRowspan() == rs + 1 )
+            {
+                tmp = cell.getMaxHeight();
+                while ( rs > 0 )
                 {
-                    tmp = cell.getMaxHeight();
-                    while ( rs > 0 )
-                    {
-                        tmp -= getRowHeight( idx - rs );
-                        rs--;
-                    }
+                    tmp -= getRowHeight( idx - rs );
+                    rs--;
                 }
             }
             if ( tmp > height )
@@ -126,7 +134,7 @@ public class ExtendedPdfPTable
 
     /**
      * Checks if there are rows above belonging to a rowspan.
-     * 
+     *
      * @param currRow the current row to check
      * @param currCol the current column to check
      * @return true if there's a cell above that belongs to a rowspan
@@ -217,7 +225,7 @@ public class ExtendedPdfPTable
 
     /**
      * Sets the padding of the contents in the cell (space between content and border).
-     * 
+     *
      * @param padding
      */
     public void setPadding( float padding )
@@ -227,7 +235,7 @@ public class ExtendedPdfPTable
 
     /**
      * Setter for property paddingLeft.
-     * 
+     *
      * @param paddingLeft New value of property paddingLeft.
      */
     public void setPaddingLeft( float paddingLeft )
@@ -237,7 +245,7 @@ public class ExtendedPdfPTable
 
     /**
      * Setter for property paddingRight.
-     * 
+     *
      * @param paddingRight New value of property paddingRight.
      */
     public void setPaddingRight( float paddingRight )
@@ -247,7 +255,7 @@ public class ExtendedPdfPTable
 
     /**
      * Setter for property paddingBottom.
-     * 
+     *
      * @param paddingBottom New value of property paddingBottom.
      */
     public void setPaddingBottom( float paddingBottom )
@@ -257,7 +265,7 @@ public class ExtendedPdfPTable
 
     /**
      * Setter for property paddingTop.
-     * 
+     *
      * @param paddingTop New value of property paddingTop.
      */
     public void setPaddingTop( float paddingTop )

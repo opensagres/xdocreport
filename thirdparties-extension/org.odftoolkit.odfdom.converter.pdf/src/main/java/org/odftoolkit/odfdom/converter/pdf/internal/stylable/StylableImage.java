@@ -114,7 +114,7 @@ public class StylableImage
         }
         return chunk;
     }
-    
+
     public static Image getImage( byte[] imgb )
     {
         try

@@ -1081,7 +1081,7 @@ public class StyleEngineForIText
     // 2nd level --- text:list-level-style-bullet --- if list item label is a char
     // 2nd level --- text:list-level-style-image --- if list item label is an image
     // 2nd level --- text:list-level-style-number --- if list item label is a number
-    // 3rd level ----- style:list-level-properties --- optional image dimensions
+    // 3rd level ----- style:list-level-properties --- image dimensions, indentation info
     // 4th level ------- style:list-level-label-alignment --- indentation info
     @Override
     public void visit( TextListStyleElement ele )
@@ -1107,6 +1107,7 @@ public class StyleEngineForIText
             // TODO what if this style is not computed yet?
             Style style = getStyle( "text", styleName, null );
             currentStyle.merge( style );
+            listProperties.setLabelStyleSpecified( true );
         }
 
         // bullet-char
@@ -1182,6 +1183,7 @@ public class StyleEngineForIText
             // TODO what if this style is not computed yet?
             Style style = getStyle( "text", styleName, null );
             currentStyle.merge( style );
+            listProperties.setLabelStyleSpecified( true );
         }
 
         // start-value
@@ -1256,6 +1258,20 @@ public class StyleEngineForIText
         if ( StringUtils.isNotEmpty( height ) )
         {
             listProperties.setHeight( ODFUtils.getDimensionAsPoint( height ) );
+        }
+
+        // space-before
+        String spaceBefore = ele.getTextSpaceBeforeAttribute();
+        if ( StringUtils.isNotEmpty( spaceBefore ) )
+        {
+            listProperties.setSpaceBefore( ODFUtils.getDimensionAsPoint( spaceBefore ) );
+        }
+
+        // min-label-width
+        String minLabelWidth = ele.getTextMinLabelWidthAttribute();
+        if ( StringUtils.isNotEmpty( minLabelWidth ) )
+        {
+            listProperties.setMinLabelWidth( ODFUtils.getDimensionAsPoint( minLabelWidth ) );
         }
 
         super.visit( ele );

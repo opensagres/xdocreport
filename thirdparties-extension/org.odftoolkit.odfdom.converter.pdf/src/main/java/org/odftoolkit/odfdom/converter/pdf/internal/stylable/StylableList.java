@@ -24,6 +24,7 @@
  */
 package org.odftoolkit.odfdom.converter.pdf.internal.stylable;
 
+import java.util.ArrayList;
 import java.util.Map;
 
 import org.odftoolkit.odfdom.converter.pdf.internal.styles.Style;
@@ -69,6 +70,17 @@ public class StylableList
         super.setPreSymbol( "" );
         super.setPostSymbol( "" );
         super.setListSymbol( "" );
+        super.setAutoindent( false );
+    }
+
+    public int getIndex()
+    {
+        return first + list.size();
+    }
+
+    public void setFirst( int first )
+    {
+        this.first = first;
     }
 
     public void addElement( Element element )
@@ -92,11 +104,31 @@ public class StylableList
         {
             Paragraph p = (Paragraph) element;
             ListItem li = new StylableListItem( p );
+            // determine font, it may be set explicitly or use paragraph font
+            Font symbolFont = symbol.getFont();
+            if ( symbolFont.isStandardFont() )
+            {
+                ArrayList<Chunk> chunks = p.getChunks();
+                for ( Chunk chunk : chunks )
+                {
+                    // use first specified font
+                    if ( !chunk.getFont().isStandardFont() )
+                    {
+                        symbolFont = chunk.getFont();
+                        break;
+                    }
+                }
+                if ( symbolFont.isStandardFont() )
+                {
+                    // use paragraph font
+                    symbolFont = p.getFont();
+                }
+            }
             if ( addLabel )
             {
                 if ( numbered || lettered || romanNumbered )
                 {
-                    Chunk chunk = new Chunk( preSymbol, symbol.getFont() );
+                    Chunk chunk = new Chunk( preSymbol, symbolFont );
                     int index = first + list.size();
                     if ( lettered )
                     {
@@ -115,14 +147,14 @@ public class StylableList
                 }
                 else
                 {
-                    li.setListSymbol( symbol );
+                    li.setListSymbol( new Chunk( symbol.getContent(), symbolFont ) );
                 }
             }
             else
             {
-                li.setListSymbol( new Chunk( "", symbol.getFont() ) );
+                li.setListSymbol( new Chunk( "", symbolFont ) );
             }
-            li.setIndentationLeft( symbolIndent, autoindent );
+            li.setIndentationLeft( symbolIndent );
             li.setIndentationRight( 0.0f );
             list.add( li );
         }
@@ -159,13 +191,16 @@ public class StylableList
                     // list item label is a char
                     Chunk symbol = new Chunk( bulletChar );
 
-                    StyleTextProperties textProperties = style.getTextProperties();
-                    if ( textProperties != null )
+                    if ( listProperties.isLabelStyleSpecified() )
                     {
-                        Font font = textProperties.getFont();
-                        if ( font != null )
+                        StyleTextProperties textProperties = style.getTextProperties();
+                        if ( textProperties != null )
                         {
-                            symbol.setFont( font );
+                            Font font = textProperties.getFont();
+                            if ( font != null )
+                            {
+                                symbol.setFont( font );
+                            }
                         }
                     }
 
@@ -196,13 +231,16 @@ public class StylableList
                     // list item label is a number
                     Chunk symbol = new Chunk( "" );
 
-                    StyleTextProperties textProperties = style.getTextProperties();
-                    if ( textProperties != null )
+                    if ( listProperties.isLabelStyleSpecified() )
                     {
-                        Font font = textProperties.getFont();
-                        if ( font != null )
+                        StyleTextProperties textProperties = style.getTextProperties();
+                        if ( textProperties != null )
                         {
-                            symbol.setFont( font );
+                            Font font = textProperties.getFont();
+                            if ( font != null )
+                            {
+                                symbol.setFont( font );
+                            }
                         }
                     }
 
@@ -238,13 +276,22 @@ public class StylableList
                     super.setListSymbol( symbol );
                 }
 
+                // set indentation, it is specified in different way by Open Office and MsWord
                 Float marginLeft = listProperties.getMarginLeft();
                 Float textIndent = listProperties.getTextIndent();
+                Float spaceBefore = listProperties.getSpaceBefore();
+                Float minLabelWidth = listProperties.getMinLabelWidth();
                 if ( marginLeft != null && textIndent != null )
                 {
+                    // ODT generated by Open Office
                     super.setIndentationLeft( Math.max( marginLeft + textIndent, 0.0f ) );
                     super.setSymbolIndent( Math.max( -textIndent, 0.0f ) );
-                    super.setAutoindent( false );
+                }
+                else if ( spaceBefore != null && minLabelWidth != null )
+                {
+                    // ODT generated by MsWord
+                    super.setIndentationLeft( Math.max( spaceBefore - minLabelWidth, 0.0f ) );
+                    super.setSymbolIndent( Math.max( minLabelWidth, 0.0f ) );
                 }
             }
         }

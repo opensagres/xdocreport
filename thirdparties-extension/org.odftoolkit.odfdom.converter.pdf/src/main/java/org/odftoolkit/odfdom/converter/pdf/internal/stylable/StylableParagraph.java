@@ -154,7 +154,7 @@ public class StylableParagraph
             else
             {
                 Float textIndent = paragraphProperties.getTextIndent();
-                if ( textIndent != null )
+                if ( textIndent != null && textIndent > 0.0f )
                 {
                     super.setFirstLineIndent( textIndent );
                 }

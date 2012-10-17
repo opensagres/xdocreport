@@ -37,7 +37,11 @@ public class StyleListProperties
 
     private Image image; // label before list item is an image
 
+    private boolean labelStyleSpecified; // is style for a label specified
+
     private Float marginLeft; // list item text indent
+
+    private Float minLabelWidth; // label width
 
     private StyleNumFormat numFormat; // number format
 
@@ -45,11 +49,17 @@ public class StyleListProperties
 
     private String numSuffix; // label suffix
 
+    private Float spaceBefore; // list item text indent
+
     private Integer startValue; // numbering start value
 
     private Float textIndent; // label indent relative to text indent, negative value
 
     private Float width; // width of an image
+
+    // we have two mechanisms of indentation of text and label
+    // in open office marginLeft and textIndent are used
+    // in MsWord spaceBefore and minLabelWidth are used
 
     public StyleListProperties()
     {
@@ -85,6 +95,16 @@ public class StyleListProperties
         this.image = image;
     }
 
+    public boolean isLabelStyleSpecified()
+    {
+        return labelStyleSpecified;
+    }
+
+    public void setLabelStyleSpecified( boolean labelStyleSpecified )
+    {
+        this.labelStyleSpecified = labelStyleSpecified;
+    }
+
     public Float getMarginLeft()
     {
         return marginLeft;
@@ -93,6 +113,16 @@ public class StyleListProperties
     public void setMarginLeft( Float marginLeft )
     {
         this.marginLeft = marginLeft;
+    }
+
+    public Float getMinLabelWidth()
+    {
+        return minLabelWidth;
+    }
+
+    public void setMinLabelWidth( Float minLabelWidth )
+    {
+        this.minLabelWidth = minLabelWidth;
     }
 
     public StyleNumFormat getNumFormat()
@@ -123,6 +153,16 @@ public class StyleListProperties
     public void setNumSuffix( String numSuffix )
     {
         this.numSuffix = numSuffix;
+    }
+
+    public Float getSpaceBefore()
+    {
+        return spaceBefore;
+    }
+
+    public void setSpaceBefore( Float spaceBefore )
+    {
+        this.spaceBefore = spaceBefore;
     }
 
     public Integer getStartValue()

@@ -34,6 +34,7 @@ import org.apache.poi.xwpf.converter.core.styles.run.RunFontFamilyValueProvider;
 import org.apache.poi.xwpf.converter.core.styles.run.RunFontSizeValueProvider;
 import org.apache.poi.xwpf.converter.core.styles.run.RunFontStyleBoldValueProvider;
 import org.apache.poi.xwpf.converter.core.styles.run.RunFontStyleItalicValueProvider;
+import org.apache.poi.xwpf.converter.core.styles.run.RunFontStyleStrikeValueProvider;
 import org.apache.poi.xwpf.converter.core.styles.run.RunTextHighlightingValueProvider;
 import org.apache.poi.xwpf.converter.core.styles.run.RunUnderlineValueProvider;
 import org.apache.poi.xwpf.converter.core.styles.table.TableAlignmentValueProvider;
@@ -403,6 +404,16 @@ public class XWPFStylesDocument
     public Boolean getFontStyleItalic( CTRPr rPr )
     {
         return RunFontStyleItalicValueProvider.INSTANCE.getValue( rPr );
+    }
+
+    public Boolean getFontStyleStrike( XWPFRun run )
+    {
+        return RunFontStyleStrikeValueProvider.INSTANCE.getValue( run, this );
+    }
+
+    public Boolean getFontStyleStrike( CTRPr rPr )
+    {
+        return RunFontStyleStrikeValueProvider.INSTANCE.getValue( rPr );
     }
 
     public Color getFontColor( XWPFRun run )

@@ -413,6 +413,11 @@ public class PdfMapper
         {
             fontStyle |= Font.ITALIC;
         }
+        Boolean strike = stylesDocument.getFontStyleStrike( docxRun );
+        if ( strike != null && strike )
+        {
+            fontStyle |= Font.STRIKETHRU;
+        }
 
         // Font color
         Color fontColor = stylesDocument.getFontColor( docxRun );
@@ -479,6 +484,7 @@ public class PdfMapper
                 textChunk.setUnderline( 1, -2 );
             }
         }
+        
         // background color
         if ( currentRunBackgroundColor != null )
         {

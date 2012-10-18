@@ -1,15 +1,16 @@
 package org.apache.poi.xwpf.converter.xhtml.internal;
 
+import static org.apache.poi.xwpf.converter.xhtml.internal.XHTMLConstants.A_ELEMENT;
 import static org.apache.poi.xwpf.converter.xhtml.internal.XHTMLConstants.BODY_ELEMENT;
 import static org.apache.poi.xwpf.converter.xhtml.internal.XHTMLConstants.BR_ELEMENT;
 import static org.apache.poi.xwpf.converter.xhtml.internal.XHTMLConstants.CLASS_ATTR;
 import static org.apache.poi.xwpf.converter.xhtml.internal.XHTMLConstants.COLSPAN_ATTR;
 import static org.apache.poi.xwpf.converter.xhtml.internal.XHTMLConstants.DIV_ELEMENT;
 import static org.apache.poi.xwpf.converter.xhtml.internal.XHTMLConstants.HEAD_ELEMENT;
+import static org.apache.poi.xwpf.converter.xhtml.internal.XHTMLConstants.HREF_ATTR;
 import static org.apache.poi.xwpf.converter.xhtml.internal.XHTMLConstants.HTML_ELEMENT;
 import static org.apache.poi.xwpf.converter.xhtml.internal.XHTMLConstants.IMG_ELEMENT;
 import static org.apache.poi.xwpf.converter.xhtml.internal.XHTMLConstants.P_ELEMENT;
-import static org.apache.poi.xwpf.converter.xhtml.internal.XHTMLConstants.SPACE_ENTITY;
 import static org.apache.poi.xwpf.converter.xhtml.internal.XHTMLConstants.SPAN_ELEMENT;
 import static org.apache.poi.xwpf.converter.xhtml.internal.XHTMLConstants.SRC_ATTR;
 import static org.apache.poi.xwpf.converter.xhtml.internal.XHTMLConstants.STYLE_ATTR;
@@ -55,6 +56,7 @@ import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTPageMar;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTPageSz;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTRPr;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTSectPr;
+import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTTabs;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTTblPr;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTTcPr;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTText;
@@ -206,14 +208,43 @@ public class XHTMLMapper
             // Escape with HTML characters
             characters( StringEscapeUtils.escapeHtml( text ) );
         }
-        //else
-        //{
-        //    characters( SPACE_ENTITY );
-        //}
+        // else
+        // {
+        // characters( SPACE_ENTITY );
+        // }
         if ( currentRunAttributes != null )
         {
             endElement( SPAN_ELEMENT );
         }
+    }
+
+    @Override
+    protected void visitHyperlink( CTText ctText, String hrefHyperlink, Object paragraphContainer )
+        throws Exception
+    {
+        AttributesImpl hyperlinkAttributes = new AttributesImpl();
+        SAXHelper.addAttrValue( hyperlinkAttributes, HREF_ATTR, hrefHyperlink );
+        startElement( A_ELEMENT, hyperlinkAttributes );
+        if ( currentRunAttributes != null )
+        {
+            startElement( SPAN_ELEMENT, currentRunAttributes );
+        }
+        String text = ctText.getStringValue();
+        if ( StringUtils.isNotEmpty( text ) )
+        {
+            // Escape with HTML characters
+            characters( StringEscapeUtils.escapeHtml( text ) );
+        }
+        // else
+        // {
+        // characters( SPACE_ENTITY );
+        // }
+        if ( currentRunAttributes != null )
+        {
+            endElement( SPAN_ELEMENT );
+        }
+        endElement( A_ELEMENT );
+
     }
 
     @Override
@@ -223,11 +254,18 @@ public class XHTMLMapper
     }
 
     @Override
-    protected void visitBR( CTBr o, Object paragraphContainer )
+    protected void visitTabs( CTTabs tabs, Object paragraphContainer )
         throws Exception
     {
+        // TODO Auto-generated method stub
+
+    }
+
+    @Override
+    protected void addNewLine( CTBr br, Object paragraphContainer ) throws Exception
+    {
         startElement( BR_ELEMENT );
-        endElement( BR_ELEMENT );
+        endElement( BR_ELEMENT );        
     }
 
     @Override

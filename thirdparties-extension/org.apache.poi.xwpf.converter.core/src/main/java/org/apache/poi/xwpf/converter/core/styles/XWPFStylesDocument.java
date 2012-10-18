@@ -2,12 +2,16 @@ package org.apache.poi.xwpf.converter.core.styles;
 
 import java.awt.Color;
 import java.io.IOException;
+import java.io.InputStream;
 import java.math.BigInteger;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.poi.POIXMLDocumentPart;
 import org.apache.poi.xwpf.converter.core.BorderSide;
+import org.apache.poi.xwpf.converter.core.ParagraphLineSpacing;
 import org.apache.poi.xwpf.converter.core.TableCellBorder;
 import org.apache.poi.xwpf.converter.core.TableHeight;
 import org.apache.poi.xwpf.converter.core.TableWidth;
@@ -20,8 +24,10 @@ import org.apache.poi.xwpf.converter.core.styles.pargraph.ParagraphBorderTopValu
 import org.apache.poi.xwpf.converter.core.styles.pargraph.ParagraphIndentationFirstLineValueProvider;
 import org.apache.poi.xwpf.converter.core.styles.pargraph.ParagraphIndentationLeftValueProvider;
 import org.apache.poi.xwpf.converter.core.styles.pargraph.ParagraphIndentationRightValueProvider;
+import org.apache.poi.xwpf.converter.core.styles.pargraph.ParagraphLineSpacingValueProvider;
 import org.apache.poi.xwpf.converter.core.styles.pargraph.ParagraphSpacingAfterValueProvider;
 import org.apache.poi.xwpf.converter.core.styles.pargraph.ParagraphSpacingBeforeValueProvider;
+import org.apache.poi.xwpf.converter.core.styles.pargraph.ParagraphTabsValueProvider;
 import org.apache.poi.xwpf.converter.core.styles.run.RunBackgroundColorValueProvider;
 import org.apache.poi.xwpf.converter.core.styles.run.RunFontColorValueProvider;
 import org.apache.poi.xwpf.converter.core.styles.run.RunFontFamilyValueProvider;
@@ -59,33 +65,43 @@ import org.apache.poi.xwpf.converter.core.styles.table.cell.TableCellTextDirecti
 import org.apache.poi.xwpf.converter.core.styles.table.cell.TableCellVerticalAlignmentValueProvider;
 import org.apache.poi.xwpf.converter.core.styles.table.cell.TableCellWidthValueProvider;
 import org.apache.poi.xwpf.converter.core.styles.table.row.TableRowHeightValueProvider;
+import org.apache.poi.xwpf.converter.core.utils.DxaUtil;
 import org.apache.poi.xwpf.usermodel.ParagraphAlignment;
 import org.apache.poi.xwpf.usermodel.UnderlinePatterns;
 import org.apache.poi.xwpf.usermodel.XWPFDocument;
 import org.apache.poi.xwpf.usermodel.XWPFParagraph;
+import org.apache.poi.xwpf.usermodel.XWPFRelation;
 import org.apache.poi.xwpf.usermodel.XWPFRun;
+import org.apache.poi.xwpf.usermodel.XWPFSettings;
 import org.apache.poi.xwpf.usermodel.XWPFTable;
 import org.apache.poi.xwpf.usermodel.XWPFTableCell;
 import org.apache.poi.xwpf.usermodel.XWPFTableRow;
 import org.apache.xmlbeans.XmlException;
+import org.openxmlformats.schemas.drawingml.x2006.main.ThemeDocument;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTBorder;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTDocDefaults;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTPPr;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTRPr;
+import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTSettings;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTString;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTStyle;
+import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTTabs;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTTblPr;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTTblPrBase;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTTblStylePr;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTTcPr;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTTextDirection;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTTrPr;
+import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTTwipsMeasure;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.STVerticalJc.Enum;
+import org.openxmlformats.schemas.wordprocessingml.x2006.main.SettingsDocument;
 
 public class XWPFStylesDocument
 {
 
     public static final Object EMPTY_VALUE = new Object();
+
+    private static final float DEFAULT_TAB_STOP_POINT = DxaUtil.dxa2points( 720f );
 
     private final XWPFDocument document;
 
@@ -102,6 +118,14 @@ public class XWPFStylesDocument
     private CTStyle defaultNumberingStyle;
 
     private Map<XWPFTable, TableInfo> tableInfos;
+
+    private Float defaultTabStop;
+
+    private XWPFSettings settings;
+
+    private CTSettings ctSettings;
+
+    private List<ThemeDocument> themeDocuments;
 
     public XWPFStylesDocument( XWPFDocument document )
         throws XmlException, IOException
@@ -312,6 +336,26 @@ public class XWPFStylesDocument
     public CTBorder getBorderRight( CTPPr pPr )
     {
         return ParagraphBorderRightValueProvider.INSTANCE.getValue( pPr );
+    }
+
+    public CTTabs getParagraphTabs( XWPFParagraph docxParagraph )
+    {
+        return ParagraphTabsValueProvider.INSTANCE.getValue( docxParagraph, this );
+    }
+
+    public CTTabs getParagraphTabs( CTPPr pPr )
+    {
+        return ParagraphTabsValueProvider.INSTANCE.getValue( pPr );
+    }
+
+    public ParagraphLineSpacing getParagraphSpacing( XWPFParagraph docxParagraph )
+    {
+        return ParagraphLineSpacingValueProvider.INSTANCE.getValue( docxParagraph, this );
+    }
+
+    public ParagraphLineSpacing getParagraphSpacing( CTPPr pPr )
+    {
+        return ParagraphLineSpacingValueProvider.INSTANCE.getValue( pPr );
     }
 
     // -------------------- Run
@@ -655,7 +699,7 @@ public class XWPFStylesDocument
         /**
          * Conflicts between cell borders and table and table-level exception borders If the cell spacing is zero, then
          * there is a conflict. The following rules apply as between cell borders and table and table-level exception
-         * (row) borders (Reference: ECMA-376, 3rd Edition (June, 2011), Fundamentals and Markup Language Reference §
+         * (row) borders (Reference: ECMA-376, 3rd Edition (June, 2011), Fundamentals and Markup Language Reference
          * 17.4.40.):
          */
 
@@ -666,10 +710,6 @@ public class XWPFStylesDocument
         /**
          * 2) If there is no cell border but there is a table-level exception border on the row, then that table-level
          * exception border is displayed.
-         */
-
-        /**
-         * 3) If there is no cell or table-level exception border, then the table border is displayed.
          */
 
         TableCellBorder border = getTableCellBorder( cell, borderSide );
@@ -687,6 +727,9 @@ public class XWPFStylesDocument
             }
             if ( border == null && !borderInside )
             {
+                /**
+                 * 3) If there is no cell or table-level exception border, then the table border is displayed.
+                 */
                 border = getTableBorder( table, borderSide );
             }
         }
@@ -939,6 +982,102 @@ public class XWPFStylesDocument
             }
         }
         return null;
+    }
+
+    /**
+     * 17.15.1.25 defaultTabStop (Distance Between Automatic Tab Stops) This element specifies the value which shall be
+     * used as the multiplier to generate automatic tab stops in this document. Automatic tab stops refer to the tab
+     * stop locations which occur after all custom tab stops in the current paragraph have been surpassed. If this
+     * element is omitted, then automatic tab stops should be generated at 720 twentieths of a point (0.5") intervals
+     * across the displayed page. [Example: Consider a WordprocessingML document
+     * 
+     * @return
+     */
+    public float getDefaultTabStop()
+    {
+        if ( defaultTabStop == null )
+        {
+            CTSettings settings = getCTSettings();
+            if ( settings != null )
+            {
+                CTTwipsMeasure value = settings.getDefaultTabStop();
+                if ( value != null )
+                {
+                    if ( !value.isNil() )
+                    {
+                        this.defaultTabStop = DxaUtil.dxa2points( value.getVal() );
+                    }
+
+                }
+            }
+            if ( defaultTabStop == null )
+            {
+                this.defaultTabStop = DEFAULT_TAB_STOP_POINT;
+            }
+        }
+        return defaultTabStop;
+    }
+
+    public XWPFSettings getSettings()
+    {
+        if ( settings != null )
+        {
+            return settings;
+        }
+        for ( POIXMLDocumentPart p : document.getRelations() )
+        {
+            String relationshipType = p.getPackageRelationship().getRelationshipType();
+            if ( relationshipType.equals( XWPFRelation.SETTINGS.getRelation() ) )
+            {
+                settings = (XWPFSettings) p;
+                return settings;
+            }
+        }
+        return null;
+    }
+
+    public CTSettings getCTSettings()
+    {
+        if ( ctSettings != null )
+        {
+            return ctSettings;
+        }
+        XWPFSettings settings = getSettings();
+        if ( settings != null )
+        {
+            try
+            {
+                InputStream inputStream = settings.getPackagePart().getInputStream();
+                ctSettings = SettingsDocument.Factory.parse( inputStream ).getSettings();
+            }
+            catch ( Exception e )
+            {
+
+            }
+        }
+        return ctSettings;
+    }
+
+    public List<ThemeDocument> getThemeDocuments()
+        throws Exception
+    {
+        if ( themeDocuments == null )
+        {
+            themeDocuments = new ArrayList<ThemeDocument>();
+
+            for ( POIXMLDocumentPart p : document.getRelations() )
+            {
+                String relationshipType = p.getPackageRelationship().getRelationshipType();
+                if ( relationshipType.equals( "http://schemas.openxmlformats.org/officeDocument/2006/relationships/theme" ) )
+                {
+                    InputStream inputStream = p.getPackagePart().getInputStream();
+                    ThemeDocument theme = ThemeDocument.Factory.parse( inputStream );
+                    themeDocuments.add( theme );
+                }
+            }            
+
+        }
+        return themeDocuments;
     }
 
 }

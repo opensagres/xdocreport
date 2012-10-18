@@ -249,7 +249,7 @@ public abstract class AbstractValueProvider<Value, XWPFElement>
                 Object value = getValueFromStyleId( element, stylesDocument, styleId, defaultValue );
                 if ( value != null )
                 {
-                    return getValueOrNull(value);
+                    return getValueOrNull( value );
                 }
             }
         }
@@ -391,7 +391,7 @@ public abstract class AbstractValueProvider<Value, XWPFElement>
         {
             return null;
         }
-        Value value = getValueFromDocDefaultsStyle( stylesDocument.getDocDefaults() );
+        Value value = getValueFromDocDefaultsStyle( docDefaults, stylesDocument );
         if ( value != null )
         {
             return value;
@@ -399,7 +399,7 @@ public abstract class AbstractValueProvider<Value, XWPFElement>
         return null;
     }
 
-    protected abstract Value getValueFromDocDefaultsStyle( CTDocDefaults docDefaults );
+    protected abstract Value getValueFromDocDefaultsStyle( CTDocDefaults docDefaults, XWPFStylesDocument stylesDocument );
 
     protected abstract CTStyle getDefaultStyle( XWPFElement element, XWPFStylesDocument stylesDocument );
 

@@ -10,11 +10,13 @@ import java.util.logging.Logger;
 
 import org.apache.poi.xwpf.converter.core.BorderSide;
 import org.apache.poi.xwpf.converter.core.IXWPFMasterPage;
+import org.apache.poi.xwpf.converter.core.ParagraphLineSpacing;
 import org.apache.poi.xwpf.converter.core.TableCellBorder;
 import org.apache.poi.xwpf.converter.core.TableHeight;
 import org.apache.poi.xwpf.converter.core.TableWidth;
 import org.apache.poi.xwpf.converter.core.XWPFDocumentVisitor;
 import org.apache.poi.xwpf.converter.core.styles.pargraph.ParagraphIndentationLeftValueProvider;
+import org.apache.poi.xwpf.converter.core.utils.DxaUtil;
 import org.apache.poi.xwpf.converter.pdf.PdfOptions;
 import org.apache.poi.xwpf.converter.pdf.internal.elements.StylableDocument;
 import org.apache.poi.xwpf.converter.pdf.internal.elements.StylableHeaderFooter;
@@ -23,7 +25,6 @@ import org.apache.poi.xwpf.converter.pdf.internal.elements.StylableParagraph;
 import org.apache.poi.xwpf.converter.pdf.internal.elements.StylableTable;
 import org.apache.poi.xwpf.converter.pdf.internal.elements.StylableTableCell;
 import org.apache.poi.xwpf.usermodel.IBodyElement;
-import org.apache.poi.xwpf.usermodel.LineSpacingRule;
 import org.apache.poi.xwpf.usermodel.ParagraphAlignment;
 import org.apache.poi.xwpf.usermodel.UnderlinePatterns;
 import org.apache.poi.xwpf.usermodel.XWPFAbstractNum;
@@ -48,19 +49,26 @@ import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTNumPr;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTPPr;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTPTab;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTSectPr;
-import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTSpacing;
+import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTTabStop;
+import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTTabs;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTText;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTTextDirection;
+import org.openxmlformats.schemas.wordprocessingml.x2006.main.STTabJc;
+import org.openxmlformats.schemas.wordprocessingml.x2006.main.STTabTlc;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.STVerticalJc;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.STVerticalJc.Enum;
 
+import com.lowagie.text.Anchor;
 import com.lowagie.text.Chunk;
 import com.lowagie.text.DocumentException;
 import com.lowagie.text.Element;
 import com.lowagie.text.Font;
 import com.lowagie.text.Image;
+import com.lowagie.text.Paragraph;
 import com.lowagie.text.Rectangle;
 import com.lowagie.text.pdf.PdfPCell;
+import com.lowagie.text.pdf.draw.DottedLineSeparator;
+import com.lowagie.text.pdf.draw.LineSeparator;
 import com.lowagie.text.pdf.draw.VerticalPositionMark;
 
 import fr.opensagres.xdocreport.itext.extension.ExtendedParagraph;
@@ -87,6 +95,10 @@ public class PdfMapper
     private UnderlinePatterns currentRunUnderlinePatterns;
 
     private Color currentRunBackgroundColor;
+
+    private Float currentRunX;
+
+    private boolean pageBreakOnNextParagraph;
 
     public PdfMapper( XWPFDocument document, OutputStream out, PdfOptions options )
         throws Exception
@@ -174,6 +186,8 @@ public class PdfMapper
     protected IITextContainer startVisitParagraph( XWPFParagraph docxParagraph, IITextContainer pdfParentContainer )
         throws Exception
     {
+        this.currentRunX = null;
+
         // instanciate a pdfParagraph
         StylableParagraph pdfParagraph = pdfDocument.createParagraph( pdfParentContainer );
 
@@ -196,7 +210,7 @@ public class PdfMapper
             pdfParagraph.setFirstLineIndent( indentationFirstLine );
         }
 
-        // spacing before
+        // // spacing before
         Float spacingBefore = stylesDocument.getSpacingBefore( docxParagraph );
         if ( spacingBefore != null )
         {
@@ -208,6 +222,27 @@ public class PdfMapper
         if ( spacingAfter != null )
         {
             pdfParagraph.setSpacingAfter( spacingAfter );
+        }
+
+        ParagraphLineSpacing lineSpacing = stylesDocument.getParagraphSpacing( docxParagraph );
+        if ( lineSpacing != null )
+        {
+            if ( lineSpacing.getLeading() != null && lineSpacing.getMultipleLeading() != null )
+            {
+                pdfParagraph.setLeading( lineSpacing.getLeading(), lineSpacing.getMultipleLeading() );
+            }
+            else
+            {
+                if ( lineSpacing.getLeading() != null )
+                {
+                    pdfParagraph.setLeading( lineSpacing.getLeading() );
+                }
+                if ( lineSpacing.getMultipleLeading() != null )
+                {
+                    pdfParagraph.setMultipliedLeading( lineSpacing.getMultipleLeading() );
+                }
+            }
+
         }
 
         // text-align
@@ -256,32 +291,32 @@ public class PdfMapper
         CTPPr ppr = docxParagraph.getCTP().getPPr();
         if ( ppr != null )
         {
-            CTSpacing spacing = ppr.getSpacing();
-            if ( spacing != null )
-            {
-                BigInteger line = spacing.getLine();
-                if ( line != null )
-                {
-                    float leading = -1;
-                    // see http://officeopenxml.com/WPspacing.php
-                    // Note: If the value of the lineRule attribute is atLeast or exactly, then the value of the line
-                    // attribute is interpreted as 240th of a point. If the value of lineRule is auto, then the value of
-                    // line is interpreted as 240th of a line.
-                    LineSpacingRule lineSpacingRule = docxParagraph.getSpacingLineRule();
-                    switch ( lineSpacingRule )
-                    {
-                        case AT_LEAST:
-                        case EXACT:
-                            // FIXME : is that?
-                            leading = line.floatValue() / 240;
-                            break;
-                        case AUTO:
-                            leading = line.floatValue() / 240;
-                            break;
-                    }
-                    pdfParagraph.setMultipliedLeading( leading );
-                }
-            }
+            // CTSpacing spacing = ppr.getSpacing();
+            // if ( spacing != null )
+            // {
+            // BigInteger line = spacing.getLine();
+            // if ( line != null )
+            // {
+            // float leading = -1;
+            // // see http://officeopenxml.com/WPspacing.php
+            // // Note: If the value of the lineRule attribute is atLeast or exactly, then the value of the line
+            // // attribute is interpreted as 240th of a point. If the value of lineRule is auto, then the value of
+            // // line is interpreted as 240th of a line.
+            // LineSpacingRule lineSpacingRule = docxParagraph.getSpacingLineRule();
+            // switch ( lineSpacingRule )
+            // {
+            // case AT_LEAST:
+            // case EXACT:
+            // // FIXME : is that?
+            // leading = line.floatValue() / 240;
+            // break;
+            // case AUTO:
+            // leading = line.floatValue() / 240;
+            // break;
+            // }
+            // pdfParagraph.setMultipliedLeading( leading );
+            // }
+            // }
 
             CTNumPr numPr = ppr.getNumPr();
             if ( numPr != null )
@@ -327,6 +362,8 @@ public class PdfMapper
         // add the iText paragraph in the current parent container.
         ExtendedParagraph pdfParagraph = (ExtendedParagraph) pdfParagraphContainer;
         pdfParentContainer.addElement( pdfParagraph.getElement() );
+
+        this.currentRunX = null;
     }
 
     // ------------------------- Run
@@ -384,23 +421,9 @@ public class PdfMapper
         this.currentRunFont =
             options.getFontProvider().getFont( fontFamily, options.getFontEncoding(), fontSize, fontStyle, fontColor );
 
-        // to support chinese character see blog
-        // http://acai-hsieh.blogspot.fr/2012/08/how-can-xdocreport-to-pdf-supply.html
-        // but we cannot hard coded that.
-        // Waiting explanation about font managemenet with docx on
-        // http://code.google.com/p/xdocreport/issues/detail?id=81
-        // BaseFont bfChinese =
-        // BaseFont.createFont( "c:/Windows/Fonts/arialuni.ttf", BaseFont.IDENTITY_H, BaseFont.EMBEDDED );
-        // currentRunFont =
-        // new Font( bfChinese, currentRunFont.getSize(), currentRunFont.getStyle(), currentRunFont.getColor() );
-        // if (fontFamily != null) {
-        // currentRunFont.setFamily( fontFamily );
-        // }
-
         // Underline patterns
         this.currentRunUnderlinePatterns = stylesDocument.getUnderline( docxRun );
-        this.currentRunBackgroundColor = stylesDocument.getBackgroundColor( docxRun ); // XWPFParagraphUtils.getBackgroundColor(
-        // run );
+        this.currentRunBackgroundColor = stylesDocument.getBackgroundColor( docxRun );
 
         super.visitRun( docxRun, pdfParagraphContainer );
 
@@ -410,8 +433,23 @@ public class PdfMapper
     }
 
     @Override
+    protected void visitHyperlink( CTText ctText, String hrefHyperlink, IITextContainer pdfParagraphContainer )
+        throws Exception
+    {
+        Anchor anchor = new Anchor( createTextChunk( ctText ) );
+        anchor.setReference( hrefHyperlink );
+        pdfParagraphContainer.addElement( anchor );
+    }
+
+    @Override
     protected void visitText( CTText docxText, IITextContainer pdfParagraphContainer )
         throws Exception
+    {
+        Chunk textChunk = createTextChunk( docxText );
+        pdfParagraphContainer.addElement( textChunk );
+    }
+
+    private Chunk createTextChunk( CTText docxText )
     {
         Chunk textChunk = new Chunk( docxText.getStringValue(), currentRunFont );
 
@@ -438,7 +476,11 @@ public class PdfMapper
         {
             textChunk.setBackground( currentRunBackgroundColor );
         }
-        pdfParagraphContainer.addElement( textChunk );
+        if ( currentRunX != null )
+        {
+            this.currentRunX += textChunk.getWidthPoint();
+        }
+        return textChunk;
     }
 
     @Override
@@ -446,25 +488,220 @@ public class PdfMapper
         throws Exception
     {
 
-        if ( tab == null )
+        // TODO manage this case.
+        //
+        // if ( tab == null )
+        // {
+        // float defaultTabStop = stylesDocument.getDefaultTabStop();
+        // Chunk pdfTab = new Chunk( new VerticalPositionMark(), defaultTabStop, false );
+        // pdfParagraphContainer.addElement( pdfTab );
+        // }
+        // else
+        // {
+        // Chunk pdfTab = new Chunk( new VerticalPositionMark() );
+        // pdfParagraphContainer.addElement( pdfTab );
+        // }
+    }
+
+    @Override
+    protected void visitTabs( CTTabs tabs, IITextContainer pdfParagraphContainer )
+        throws Exception
+    {
+        if ( currentRunX == null )
         {
-            float defaultTabStop = getDefaultTabStop();
-            Chunk pdfTab = new Chunk( new VerticalPositionMark(), defaultTabStop, false );
-            pdfParagraphContainer.addElement( pdfTab );
+            currentRunX = ( (Paragraph) pdfParagraphContainer ).getFirstLineIndent();
+            List<Chunk> chunks = ( (Paragraph) pdfParagraphContainer ).getChunks();
+            for ( Chunk chunk : chunks )
+            {
+                currentRunX += chunk.getWidthPoint();
+            }
         }
         else
         {
-            Chunk pdfTab = new Chunk( new VerticalPositionMark() );
+            if ( currentRunX >= pdfDocument.getPageWidth() )
+            {
+                currentRunX = 0f;
+            }
+        }
+        Chunk pdfTab = null;
+        if ( tabs == null )
+        {
+            float defaultTabStop = stylesDocument.getDefaultTabStop();
+            float pageWidth = pdfDocument.getPageWidth();
+            int nbInterval = (int) ( pageWidth / defaultTabStop );
+            Float lastX = getTabStopPosition( currentRunX, defaultTabStop, nbInterval );
+
+            if ( lastX != null )
+            {
+                currentRunX = lastX;
+
+                VerticalPositionMark mark = new VerticalPositionMark();
+                pdfTab = new Chunk( mark, currentRunX );
+            }
+
+        }
+        else
+        {
+            List<CTTabStop> tabList = tabs.getTabList();
+
+            CTTabStop tabStop = getTabStop( tabList );
+            if ( tabStop != null )
+            {
+                float lastX = DxaUtil.dxa2points( tabStop.getPos().floatValue() );
+
+                if ( lastX > 0 )
+                {
+                    currentRunX = lastX;
+
+                    // tab leader : Specifies the character which shall be used to fill in the space created by a tab
+                    // which
+                    // ends
+                    // at this custom tab stop. This character shall be repeated as required to completely fill the
+                    // tab spacing generated by the tab character.
+                    org.openxmlformats.schemas.wordprocessingml.x2006.main.STTabTlc.Enum leader = tabStop.getLeader();
+                    VerticalPositionMark mark = createVerticalPositionMark( leader );
+
+                    if ( tabStop.getVal().equals( org.openxmlformats.schemas.wordprocessingml.x2006.main.STTabJc.RIGHT ) )
+                    {
+                        pdfTab = new Chunk( mark );
+                    }
+                    else
+                    {
+                        pdfTab = new Chunk( mark, currentRunX );
+                    }
+
+                }
+            }
+        }
+
+        if ( pdfTab != null )
+        {
             pdfParagraphContainer.addElement( pdfTab );
         }
     }
 
+    private Float getTabStopPosition( float currentPosition, float interval, int nbInterval )
+    {
+        Float nextPosition = null;
+        float newPosition = 0f;
+        for ( int i = 1; i < nbInterval; i++ )
+        {
+            newPosition = interval * i;
+            if ( currentPosition < newPosition )
+            {
+                nextPosition = newPosition;
+                break;
+            }
+        }
+        return nextPosition;
+    }
+
+    private VerticalPositionMark createVerticalPositionMark( org.openxmlformats.schemas.wordprocessingml.x2006.main.STTabTlc.Enum leader )
+    {
+        if ( leader != null )
+        {
+            if ( leader == STTabTlc.DOT )
+            {
+                return new DottedLineSeparator();
+            }
+            else if ( leader == STTabTlc.UNDERSCORE )
+            {
+                return new LineSeparator();
+            }
+        }
+        return new VerticalPositionMark();
+    }
+
+    private CTTabStop getTabStop( List<CTTabStop> tabList )
+    {
+        if ( tabList.size() == 1 )
+        {
+            CTTabStop tabStop = tabList.get( 0 );
+            if ( isClearTab( tabStop ) )
+            {
+                return null;
+            }
+            return tabStop;
+
+        }
+        CTTabStop selectedTabStop = null;
+        for ( CTTabStop tabStop : tabList )
+        {
+            if ( isClearTab( tabStop ) )
+            {
+                continue;
+            }
+
+            if ( canApplyTabStop( tabStop ) )
+            {
+                return tabStop;
+            }
+            //
+            // if ( selectedTabStop == null )
+            // {
+            // selectedTabStop = tabStop;
+            // }
+            // else
+            // {
+            // if ( tabStop.getPos().floatValue() > selectedTabStop.getPos().floatValue() )
+            // {
+            // selectedTabStop = tabStop;
+            // }
+            // }
+        }
+        // TODO : retrieve the well tab stop according the current width of the line.
+        return null;
+    }
+
+    private boolean canApplyTabStop( CTTabStop tabStop )
+    {
+        if ( tabStop.getVal().equals( STTabJc.LEFT ) )
+        {
+
+            if ( currentRunX < DxaUtil.dxa2points( tabStop.getPos().floatValue() ) )
+            {
+
+                return true;
+
+            }
+        }
+        else if ( tabStop.getVal().equals( STTabJc.RIGHT ) )
+        {
+            if ( pdfDocument.getWidthLimit() - ( currentRunX + DxaUtil.dxa2points( tabStop.getPos().floatValue() ) ) <= 0 )
+            {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    private boolean isClearTab( CTTabStop tabStop )
+    {
+        org.openxmlformats.schemas.wordprocessingml.x2006.main.STTabJc.Enum tabVal = tabStop.getVal();
+        if ( tabVal != null )
+        {
+            if ( tabVal.equals( STTabJc.CLEAR ) )
+            {
+                // Specifies that the current tab stop is cleared and shall be removed and ignored when processing
+                // the contents of this document
+                return true;
+            }
+        }
+        return false;
+    }
+
     @Override
-    protected void visitBR( CTBr br, IITextContainer pdfParagraphContainer )
-        throws Exception
+    protected void addNewLine( CTBr br, IITextContainer pdfParagraphContainer ) throws Exception
     {
         pdfParagraphContainer.addElement( Chunk.NEWLINE );
+    }
 
+    @Override
+    protected void visitBR( CTBr br, IITextContainer paragraphContainer )
+        throws Exception
+    {
+        currentRunX = 0f;
+        super.visitBR( br, paragraphContainer );
     }
 
     @Override
@@ -566,7 +803,17 @@ public class PdfMapper
 
         // border-top
         TableCellBorder borderTop = stylesDocument.getTableCellBorderWithConflicts( cell, BorderSide.TOP );
-        pdfPCell.setBorderTop( borderTop, stylesDocument.isBorderInside( cell, BorderSide.TOP ) );
+        if ( borderTop != null )
+        {
+            boolean borderTopInside = stylesDocument.isBorderInside( cell, BorderSide.TOP );
+            if ( borderTopInside )
+            {
+                // Manage conflict border with the adjacent border bottom
+
+            }
+        }
+
+        pdfPCell.setBorderTop( borderTop, false );
 
         // border-bottom
         TableCellBorder borderBottom = stylesDocument.getTableCellBorderWithConflicts( cell, BorderSide.BOTTOM );
@@ -579,17 +826,6 @@ public class PdfMapper
         // border-right
         TableCellBorder borderRight = stylesDocument.getTableCellBorderWithConflicts( cell, BorderSide.RIGHT );
         pdfPCell.setBorderRight( borderRight, stylesDocument.isBorderInside( cell, BorderSide.RIGHT ) );
-
-        // CTTblBorders tableBorders = stylesDocument.getTableBorders( table );
-        // CTTcBorders cellBorders = stylesDocument.getTableCellBorders( cell );
-        // // border-left
-        // pdfPCell.setBorder( cellBorders, tableBorders, firstRow, lastRow, firstCol, lastCol, Rectangle.LEFT );
-        // // border-right
-        // pdfPCell.setBorder( cellBorders, tableBorders, firstRow, lastRow, firstCol, lastCol, Rectangle.RIGHT );
-        // // border-top
-        // pdfPCell.setBorder( cellBorders, tableBorders, firstRow, lastRow, firstCol, lastCol, Rectangle.TOP );
-        // // border-bottom
-        // pdfPCell.setBorder( cellBorders, tableBorders, firstRow, lastRow, firstCol, lastCol, Rectangle.BOTTOM );
 
         // Text direction <w:textDirection
         CTTextDirection direction = stylesDocument.getTextDirection( cell );

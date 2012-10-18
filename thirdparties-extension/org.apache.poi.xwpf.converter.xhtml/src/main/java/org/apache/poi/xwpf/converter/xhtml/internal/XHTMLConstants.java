@@ -26,10 +26,12 @@ public class XHTMLConstants
     public static final String BR_ELEMENT = "br";
 
     public static final String DIV_ELEMENT = "div";
-    
+
     public static final String SPAN_ELEMENT = "span";
 
     public static final String IMG_ELEMENT = "img";
+
+    public static final String A_ELEMENT = "a";
 
     // Attributes
     public static final String CLASS_ATTR = "class";
@@ -39,8 +41,10 @@ public class XHTMLConstants
     public static final String SRC_ATTR = "src";
 
     public static final String COLSPAN_ATTR = "colspan";
+
+    public static final String HREF_ATTR = "href";
     
     // Entity
-    
+
     public static final String SPACE_ENTITY = "&#32;";
 }

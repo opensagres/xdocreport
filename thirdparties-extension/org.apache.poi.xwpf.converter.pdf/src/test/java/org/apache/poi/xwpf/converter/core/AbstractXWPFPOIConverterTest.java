@@ -116,6 +116,13 @@ public abstract class AbstractXWPFPOIConverterTest
     }
 
     @Test
+    public void FormattingTests()
+        throws IOException
+    {
+        doGenerate( "FormattingTests.docx" );
+    }
+    
+    @Test
     public void Issue52()
         throws IOException
     {
@@ -186,7 +193,7 @@ public abstract class AbstractXWPFPOIConverterTest
     }
 
     @Test
-    public void testFonts()
+    public void TestFonts()
         throws IOException
     {
         doGenerate( "TestFonts.docx" );
@@ -227,7 +234,7 @@ public abstract class AbstractXWPFPOIConverterTest
     {
         doGenerate( "TestLandscapeFormat.docx" );
     }
-
+    
     @Test
     public void testParagraphAlignment()
         throws IOException

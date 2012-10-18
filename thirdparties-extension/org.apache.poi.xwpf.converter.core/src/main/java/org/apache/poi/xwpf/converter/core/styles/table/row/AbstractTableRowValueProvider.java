@@ -42,7 +42,7 @@ public abstract class AbstractTableRowValueProvider<Value>
     }
 
     @Override
-    protected Value getValueFromDocDefaultsStyle( CTDocDefaults docDefaults )
+    protected Value getValueFromDocDefaultsStyle( CTDocDefaults docDefaults, XWPFStylesDocument stylesDocument )
     {
         return getValue( getTrPr( docDefaults ) );
     }

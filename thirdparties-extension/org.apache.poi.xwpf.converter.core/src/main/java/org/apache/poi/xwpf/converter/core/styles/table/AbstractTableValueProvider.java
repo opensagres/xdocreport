@@ -48,7 +48,7 @@ public abstract class AbstractTableValueProvider<Value>
     }
 
     @Override
-    protected Value getValueFromDocDefaultsStyle( CTDocDefaults docDefaults )
+    protected Value getValueFromDocDefaultsStyle( CTDocDefaults docDefaults, XWPFStylesDocument stylesDocument )
     {
         return getValue( getTblPr( docDefaults ) );
     }

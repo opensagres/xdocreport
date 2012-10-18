@@ -13,6 +13,6 @@ public class RunUnderlineValueProvider
     public UnderlinePatterns getValue( CTRPr rPr )
     {
         return ( rPr != null && rPr.isSetU() ) ? UnderlinePatterns.valueOf( rPr.getU().getVal().intValue() )
-                        : UnderlinePatterns.NONE;
+                        : null;
     }
 }

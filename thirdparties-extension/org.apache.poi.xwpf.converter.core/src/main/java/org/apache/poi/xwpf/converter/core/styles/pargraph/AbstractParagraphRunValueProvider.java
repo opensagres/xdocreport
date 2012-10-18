@@ -52,7 +52,7 @@ public abstract class AbstractParagraphRunValueProvider<Value>
     }
 
     @Override
-    protected Value getValueFromDocDefaultsStyle( CTDocDefaults docDefaults )
+    protected Value getValueFromDocDefaultsStyle( CTDocDefaults docDefaults, XWPFStylesDocument stylesDocument)
     {
         return getValue( getRPr( docDefaults ) );
     }

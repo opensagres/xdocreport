@@ -41,6 +41,11 @@ public class StylableTable
         super( numColumns );
         this.ownerDocument = ownerDocument;
         this.parent = parent;
+        // Ugly code to resolve this problem : When Paragraph is before
+        // PDFTable, space before paragraph and table is
+        // too little and paragraph content cut the table.
+        // Add spacing before to resolve that.
+        super.setSpacingBefore( 5f );
     }
 
     public IITextContainer getParent()

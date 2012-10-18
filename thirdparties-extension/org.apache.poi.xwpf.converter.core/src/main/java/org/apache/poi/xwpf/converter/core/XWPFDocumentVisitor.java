@@ -1,14 +1,12 @@
 package org.apache.poi.xwpf.converter.core;
 
 import java.io.IOException;
-import java.io.InputStream;
 import java.math.BigInteger;
 import java.util.List;
 
-import org.apache.poi.POIXMLDocumentPart;
 import org.apache.poi.openxml4j.opc.PackagePart;
 import org.apache.poi.xwpf.converter.core.styles.XWPFStylesDocument;
-import org.apache.poi.xwpf.converter.core.utils.DxaUtil;
+import org.apache.poi.xwpf.converter.core.utils.StringUtils;
 import org.apache.poi.xwpf.converter.core.utils.XWPFTableUtil;
 import org.apache.poi.xwpf.usermodel.IBodyElement;
 import org.apache.poi.xwpf.usermodel.XWPFDocument;
@@ -16,9 +14,7 @@ import org.apache.poi.xwpf.usermodel.XWPFFooter;
 import org.apache.poi.xwpf.usermodel.XWPFHeader;
 import org.apache.poi.xwpf.usermodel.XWPFParagraph;
 import org.apache.poi.xwpf.usermodel.XWPFPictureData;
-import org.apache.poi.xwpf.usermodel.XWPFRelation;
 import org.apache.poi.xwpf.usermodel.XWPFRun;
-import org.apache.poi.xwpf.usermodel.XWPFSettings;
 import org.apache.poi.xwpf.usermodel.XWPFStyle;
 import org.apache.poi.xwpf.usermodel.XWPFTable;
 import org.apache.poi.xwpf.usermodel.XWPFTableCell;
@@ -43,19 +39,16 @@ import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTR;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTRow;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTSdtCell;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTSectPr;
-import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTSettings;
+import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTTabs;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTTc;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTText;
-import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTTwipsMeasure;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.FtrDocument;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.HdrDocument;
+import org.openxmlformats.schemas.wordprocessingml.x2006.main.STBrType;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.STOnOff;
-import org.openxmlformats.schemas.wordprocessingml.x2006.main.SettingsDocument;
 
 public abstract class XWPFDocumentVisitor<T, O extends Options, E extends IXWPFMasterPage>
 {
-
-    private static final float DEFAULT_TAB_STOP_POINT = DxaUtil.dxa2points( 720f );
 
     protected final XWPFDocument document;
 
@@ -69,11 +62,9 @@ public abstract class XWPFDocumentVisitor<T, O extends Options, E extends IXWPFM
 
     protected final O options;
 
-    private Float defaultTabStop;
+    private String currentInstrText;
 
-    private XWPFSettings settings;
-
-    private CTSettings ctSettings;
+    private boolean pageBreakOnNextParagraph;
 
     public XWPFDocumentVisitor( XWPFDocument document, O options )
         throws Exception
@@ -176,9 +167,16 @@ public abstract class XWPFDocumentVisitor<T, O extends Options, E extends IXWPFM
             // to update the header/footer declared in the <w:headerReference/<w:footerReference
             masterPageManager.update( paragraph );
         }
+        this.currentInstrText = null;
+        if (pageBreakOnNextParagraph) {
+            pageBreak();
+        }
+        this.pageBreakOnNextParagraph = false;
+        
         T paragraphContainer = startVisitParagraph( paragraph, container );
         visitParagraphBody( paragraph, paragraphContainer );
         endVisitParagraph( paragraph, container, paragraphContainer );
+        this.currentInstrText = null;
     }
 
     protected abstract T startVisitParagraph( XWPFParagraph paragraph, T parentContainer )
@@ -229,7 +227,7 @@ public abstract class XWPFDocumentVisitor<T, O extends Options, E extends IXWPFM
         }
 
         // Page Break
-        // Cannot use paragraph.isPageBreak() because it throw NPE because
+        // Cannot use paragraph.isPageBreak() because it throws NPE because
         // pageBreak.getVal() can be null.
         CTPPr ppr = paragraph.getCTP().getPPr();
         if ( ppr != null )
@@ -255,17 +253,17 @@ public abstract class XWPFDocumentVisitor<T, O extends Options, E extends IXWPFM
         CTR ctr = run.getCTR();
 
         // <w:lastRenderedPageBreak />
-        List<CTEmpty> lastRenderedPageBreakList = ctr.getLastRenderedPageBreakList();
-        if ( lastRenderedPageBreakList != null && lastRenderedPageBreakList.size() > 0 )
-        {
-            for ( CTEmpty lastRenderedPageBreak : lastRenderedPageBreakList )
-            {
-                pageBreak();
-            }
-        }
+        // List<CTEmpty> lastRenderedPageBreakList = ctr.getLastRenderedPageBreakList();
+        // if ( lastRenderedPageBreakList != null && lastRenderedPageBreakList.size() > 0 )
+        // {
+        // for ( CTEmpty lastRenderedPageBreak : lastRenderedPageBreakList )
+        // {
+        // pageBreak();
+        // }
+        // }
 
         // Loop for each element of <w:run text, tab, image etc
-        // to keep the oder of thoses elements.
+        // to keep the order of thoses elements.
         XmlCursor c = ctr.newCursor();
         c.selectPath( "./*" );
         while ( c.toNextSelection() )
@@ -279,9 +277,22 @@ public abstract class XWPFDocumentVisitor<T, O extends Options, E extends IXWPFM
                 // Field Codes (w:instrText, defined in spec sec. 17.16.23)
                 // come up as instances of CTText, but we don't want them
                 // in the normal text output
-                if ( !"w:instrText".equals( tagName ) )
+                if ( "w:instrText".equals( tagName ) )
                 {
-                    visitText( ctText, paragraphContainer );
+                    currentInstrText = ctText.getStringValue();
+                }
+                else
+                {
+                    // Check if it's hyperlink
+                    String hrefHyperlink = getCurrentHRefHyperLink();
+                    if ( hrefHyperlink != null )
+                    {
+                        visitHyperlink( ctText, hrefHyperlink, paragraphContainer );
+                    }
+                    else
+                    {
+                        visitText( ctText, paragraphContainer );
+                    }
                 }
             }
             else if ( o instanceof CTPTab )
@@ -302,7 +313,8 @@ public abstract class XWPFDocumentVisitor<T, O extends Options, E extends IXWPFM
                 String tagName = o.getDomNode().getNodeName();
                 if ( "w:tab".equals( tagName ) )
                 {
-                    visitTab( null, paragraphContainer );
+                    CTTabs tabs = stylesDocument.getParagraphTabs( run.getParagraph() );
+                    visitTabs( tabs, paragraphContainer );
                 }
                 if ( "w:br".equals( tagName ) )
                 {
@@ -321,14 +333,71 @@ public abstract class XWPFDocumentVisitor<T, O extends Options, E extends IXWPFM
         c.dispose();
     }
 
+    private String getCurrentHRefHyperLink()
+    {
+        if ( StringUtils.isEmpty( currentInstrText ) )
+        {
+            return null;
+        }
+        currentInstrText = currentInstrText.trim();
+        // test if it's <w:instrText>HYPERLINK "http://code.google.com/p/xdocrepor"</w:instrText>
+        if ( currentInstrText.startsWith( "HYPERLINK" ) )
+        {
+            currentInstrText = currentInstrText.substring( "HYPERLINK".length(), currentInstrText.length() );
+            currentInstrText = currentInstrText.trim();
+            if ( currentInstrText.startsWith( "\"" ) )
+            {
+                currentInstrText = currentInstrText.substring( 1, currentInstrText.length() );
+            }
+            if ( currentInstrText.endsWith( "\"" ) )
+            {
+                currentInstrText = currentInstrText.substring( 0, currentInstrText.length() - 1 );
+            }
+            return currentInstrText;
+        }
+        return null;
+    }
+
+    protected abstract void visitHyperlink( CTText ctText, String hrefHyperlink, T paragraphContainer )
+        throws Exception;
+
     protected abstract void visitText( CTText ctText, T paragraphContainer )
         throws Exception;
 
     protected abstract void visitTab( CTPTab o, T paragraphContainer )
         throws Exception;
 
-    protected abstract void visitBR( CTBr o, T paragraphContainer )
+    protected abstract void visitTabs( CTTabs tabs, T paragraphContainer )
         throws Exception;
+
+    protected void visitBR( CTBr br, T paragraphContainer )
+        throws Exception
+    {
+        org.openxmlformats.schemas.wordprocessingml.x2006.main.STBrType.Enum brType = getBrType( br );
+        if ( brType.equals( STBrType.PAGE ) )
+        {
+            pageBreakOnNextParagraph = true;
+        }
+        else
+        {
+            addNewLine(br, paragraphContainer);
+        }
+    }
+
+    private org.openxmlformats.schemas.wordprocessingml.x2006.main.STBrType.Enum getBrType( CTBr br )
+    {
+        if ( br != null )
+        {
+            org.openxmlformats.schemas.wordprocessingml.x2006.main.STBrType.Enum brType = br.getType();
+            if ( brType != null )
+            {
+                return brType;
+            }
+        }
+        return STBrType.TEXT_WRAPPING;
+    }
+
+    protected abstract void addNewLine( CTBr br, T paragraphContainer ) throws Exception;
 
     protected abstract void pageBreak()
         throws Exception;
@@ -658,77 +727,4 @@ public abstract class XWPFDocumentVisitor<T, O extends Options, E extends IXWPFM
      */
     protected abstract IXWPFMasterPage createMasterPage( CTSectPr sectPr );
 
-    /**
-     * 17.15.1.25 defaultTabStop (Distance Between Automatic Tab Stops) This element specifies the value which shall be
-     * used as the multiplier to generate automatic tab stops in this document. Automatic tab stops refer to the tab
-     * stop locations which occur after all custom tab stops in the current paragraph have been surpassed. If this
-     * element is omitted, then automatic tab stops should be generated at 720 twentieths of a point (0.5") intervals
-     * across the displayed page. [Example: Consider a WordprocessingML document
-     * 
-     * @return
-     */
-    protected float getDefaultTabStop()
-    {
-        if ( defaultTabStop == null )
-        {
-            CTSettings settings = getCTSettings();
-            if ( settings != null )
-            {
-                CTTwipsMeasure value = settings.getDefaultTabStop();
-                if ( value != null )
-                {
-                    if ( !value.isNil() )
-                    {
-                        this.defaultTabStop = DxaUtil.dxa2points( value.getVal() );
-                    }
-
-                }
-            }
-            if ( defaultTabStop == null )
-            {
-                this.defaultTabStop = DEFAULT_TAB_STOP_POINT;
-            }
-        }
-        return defaultTabStop;
-    }
-
-    public XWPFSettings getSettings()
-    {
-        if ( settings != null )
-        {
-            return settings;
-        }
-        for ( POIXMLDocumentPart p : document.getRelations() )
-        {
-            String relation = p.getPackageRelationship().getRelationshipType();
-            if ( relation.equals( XWPFRelation.SETTINGS.getRelation() ) )
-            {
-                settings = (XWPFSettings) p;
-            }
-        }
-        return settings;
-    }
-
-    public CTSettings getCTSettings()
-    {
-        if ( ctSettings != null )
-        {
-            return ctSettings;
-        }
-        XWPFSettings settings = getSettings();
-        if ( settings != null )
-        {
-            ctSettings = CTSettings.Factory.newInstance();
-            try
-            {
-                InputStream inputStream = settings.getPackagePart().getInputStream();
-                ctSettings = SettingsDocument.Factory.parse( inputStream ).getSettings();
-            }
-            catch ( Exception e )
-            {
-
-            }
-        }
-        return ctSettings;
-    }
 }

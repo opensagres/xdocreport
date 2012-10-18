@@ -11,18 +11,22 @@ public class TableCellBorder
 
     private final Color borderColor;
 
-    public TableCellBorder( boolean hasBorder )
+    private final boolean fromTableCell;
+
+    public TableCellBorder( boolean hasBorder, boolean fromTableCell )
     {
         this.hasBorder = hasBorder;
         this.borderSize = null;
         this.borderColor = null;
+        this.fromTableCell = fromTableCell;
     }
 
-    public TableCellBorder( Float borderSize, Color borderColor )
+    public TableCellBorder( Float borderSize, Color borderColor, boolean fromTableCell )
     {
         this.hasBorder = true;
         this.borderSize = borderSize;
         this.borderColor = borderColor;
+        this.fromTableCell = fromTableCell;
     }
 
     public boolean hasBorder()
@@ -38,6 +42,11 @@ public class TableCellBorder
     public Color getBorderColor()
     {
         return borderColor;
+    }
+
+    public boolean isFromTableCell()
+    {
+        return fromTableCell;
     }
 
 }

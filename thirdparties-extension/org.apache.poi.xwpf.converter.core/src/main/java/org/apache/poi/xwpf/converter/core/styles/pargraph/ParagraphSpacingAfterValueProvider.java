@@ -30,6 +30,7 @@ public class ParagraphSpacingAfterValueProvider
         BigInteger after = spacing.getAfter();
         if ( after != null )
         {
+            
             return DxaUtil.dxa2points( after );
         }
         return null;

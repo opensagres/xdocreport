@@ -38,7 +38,7 @@ public abstract class AbstractTableBorderValueProvider
         if ( borders != null )
         {
             CTBorder border = getBorder( borders );
-            return XWPFTableUtil.getTableCellBorder( border );
+            return XWPFTableUtil.getTableCellBorder( border, false );
         }
         return null;
     }

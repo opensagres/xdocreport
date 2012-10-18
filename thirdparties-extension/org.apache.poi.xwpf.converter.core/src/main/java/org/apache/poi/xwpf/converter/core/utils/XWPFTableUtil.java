@@ -337,15 +337,15 @@ public class XWPFTableUtil
         return null;
     }
 
-    public static TableCellBorder getTableCellBorder( CTBorder border )
+    public static TableCellBorder getTableCellBorder( CTBorder border, boolean fromTableCell )
     {
         if ( border != null )
         {
             boolean noBorder = ( STBorder.NONE == border.getVal() || STBorder.NIL == border.getVal() );
             if ( noBorder )
             {
-                return new TableCellBorder( !noBorder );
-            }   
+                return new TableCellBorder( !noBorder, fromTableCell );
+            }
             Float borderSize = null;
             BigInteger size = border.getSz();
             if ( size != null )
@@ -355,7 +355,7 @@ public class XWPFTableUtil
                 borderSize = size.floatValue() / 8f;
             }
             Color borderColor = ColorHelper.getBorderColor( border );
-            return new TableCellBorder( borderSize, borderColor );
+            return new TableCellBorder( borderSize, borderColor, fromTableCell );
         }
         return null;
     }

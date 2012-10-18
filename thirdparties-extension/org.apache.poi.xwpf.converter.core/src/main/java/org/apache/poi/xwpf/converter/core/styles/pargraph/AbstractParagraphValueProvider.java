@@ -62,7 +62,7 @@ public abstract class AbstractParagraphValueProvider<Value>
     }
 
     @Override
-    protected Value getValueFromDocDefaultsStyle( CTDocDefaults docDefaults )
+    protected Value getValueFromDocDefaultsStyle( CTDocDefaults docDefaults, XWPFStylesDocument stylesDocument )
     {
         return getValue( getCTPPr( docDefaults ) );
     }

@@ -80,15 +80,15 @@ public class JAXWSResourcesServiceClientTestCase {
 
 		String ct = "multipart/mixed";
 		post.setRequestHeader("Content-Type", ct);
-		Part[] parts = new Part[3];
+		Part[] parts = new Part[4];
 		String fileName = "ODTCV.odt";
 
 
 
-		parts[0] = new StringPart("outputFormat", "PDF");
+		parts[0] = new StringPart("outputFormat", ConverterTypeTo.PDF.name());
 		parts[1] = new FilePart("datafile", new File(root,fileName),"application/vnd.oasis.opendocument.text","UTF-8");
 		parts[2] = new StringPart("operation", "download");
-
+		parts[3] = new StringPart("via", ConverterTypeVia.ITEXT.name());
 		post.setRequestEntity(new MultipartRequestEntity(parts, post
 				.getParams()));
 

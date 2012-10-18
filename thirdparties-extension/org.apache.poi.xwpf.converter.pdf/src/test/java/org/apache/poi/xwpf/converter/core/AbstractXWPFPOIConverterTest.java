@@ -290,6 +290,13 @@ public abstract class AbstractXWPFPOIConverterTest
     {
         doGenerate( "TestTabulation.docx" );
     }
+
+    @Test
+    public void TestTextHighlighting()
+        throws IOException
+    {
+        doGenerate( "TestTextHighlighting.docx" );
+    }
     
     @Test
     public void testTitle()

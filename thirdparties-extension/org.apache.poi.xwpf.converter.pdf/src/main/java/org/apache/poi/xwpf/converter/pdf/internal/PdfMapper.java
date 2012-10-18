@@ -423,7 +423,15 @@ public class PdfMapper
 
         // Underline patterns
         this.currentRunUnderlinePatterns = stylesDocument.getUnderline( docxRun );
+
+        // background color
         this.currentRunBackgroundColor = stylesDocument.getBackgroundColor( docxRun );
+
+        // highlight
+        if ( currentRunBackgroundColor == null )
+        {
+            this.currentRunBackgroundColor = stylesDocument.getTextHighlighting( docxRun );
+        }
 
         super.visitRun( docxRun, pdfParagraphContainer );
 
@@ -691,7 +699,8 @@ public class PdfMapper
     }
 
     @Override
-    protected void addNewLine( CTBr br, IITextContainer pdfParagraphContainer ) throws Exception
+    protected void addNewLine( CTBr br, IITextContainer pdfParagraphContainer )
+        throws Exception
     {
         pdfParagraphContainer.addElement( Chunk.NEWLINE );
     }

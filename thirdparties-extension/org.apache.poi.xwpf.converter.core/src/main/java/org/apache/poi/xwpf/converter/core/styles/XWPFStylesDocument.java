@@ -34,6 +34,7 @@ import org.apache.poi.xwpf.converter.core.styles.run.RunFontFamilyValueProvider;
 import org.apache.poi.xwpf.converter.core.styles.run.RunFontSizeValueProvider;
 import org.apache.poi.xwpf.converter.core.styles.run.RunFontStyleBoldValueProvider;
 import org.apache.poi.xwpf.converter.core.styles.run.RunFontStyleItalicValueProvider;
+import org.apache.poi.xwpf.converter.core.styles.run.RunTextHighlightingValueProvider;
 import org.apache.poi.xwpf.converter.core.styles.run.RunUnderlineValueProvider;
 import org.apache.poi.xwpf.converter.core.styles.table.TableAlignmentValueProvider;
 import org.apache.poi.xwpf.converter.core.styles.table.TableBorderBottomValueProvider;
@@ -432,6 +433,16 @@ public class XWPFStylesDocument
     public Color getBackgroundColor( CTRPr rPr )
     {
         return RunBackgroundColorValueProvider.INSTANCE.getValue( rPr );
+    }
+
+    public Color getTextHighlighting( XWPFRun run )
+    {
+        return RunTextHighlightingValueProvider.INSTANCE.getValue( run, this );
+    }
+
+    public Color getTextHighlighting( CTRPr rPr )
+    {
+        return RunTextHighlightingValueProvider.INSTANCE.getValue( rPr );
     }
 
     // ------------------------ Table
@@ -1074,7 +1085,7 @@ public class XWPFStylesDocument
                     ThemeDocument theme = ThemeDocument.Factory.parse( inputStream );
                     themeDocuments.add( theme );
                 }
-            }            
+            }
 
         }
         return themeDocuments;

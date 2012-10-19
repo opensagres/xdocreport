@@ -45,7 +45,7 @@ public class XWPF2PDFViaITextConverterDiscoveryTestCase
     public void testDiscovery()
         throws Exception
     {
-        Options o = Options.getFrom( DocumentKind.DOCX ).to( ConverterTypeTo.PDF ).via( ConverterTypeVia.ITEXT );
+        Options o = Options.getFrom( DocumentKind.DOCX ).to( ConverterTypeTo.PDF ).via( ConverterTypeVia.XWPF );
 
         // Test if converter is not null
         IConverter converter = ConverterRegistry.getRegistry().getConverter( o );

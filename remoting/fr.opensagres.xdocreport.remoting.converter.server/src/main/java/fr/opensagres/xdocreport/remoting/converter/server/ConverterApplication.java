@@ -1,4 +1,4 @@
-package fr.opensagres.xdocreport.converter.internal;
+package fr.opensagres.xdocreport.remoting.converter.server;
 
 import java.util.HashSet;
 import java.util.Set;

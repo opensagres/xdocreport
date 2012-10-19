@@ -57,7 +57,7 @@ public class XWPF2PDFViaITextConverterDiscovery
 
     public String getVia()
     {
-        return ConverterTypeVia.ITEXT.name();
+        return ConverterTypeVia.XWPF.name();
     }
 
     public IConverter getConverter()

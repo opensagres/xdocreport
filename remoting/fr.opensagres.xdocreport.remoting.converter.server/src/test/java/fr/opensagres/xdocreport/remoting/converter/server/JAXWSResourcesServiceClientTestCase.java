@@ -1,4 +1,4 @@
-package fr.opensagres.xdocreport.converter;
+package fr.opensagres.xdocreport.remoting.converter.server;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -19,10 +19,12 @@ import org.junit.Assert;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
-import fr.opensagres.xdocreport.converter.internal.BinaryFileMessageBodyReader;
-import fr.opensagres.xdocreport.converter.internal.BinaryFileMessageBodyWriter;
-import fr.opensagres.xdocreport.converter.internal.ConverterResourceImpl;
+import fr.opensagres.xdocreport.converter.ConverterTypeTo;
+import fr.opensagres.xdocreport.converter.ConverterTypeVia;
 import fr.opensagres.xdocreport.core.io.IOUtils;
+import fr.opensagres.xdocreport.remoting.converter.BinaryFile;
+import fr.opensagres.xdocreport.remoting.converter.ConverterResource;
+import fr.opensagres.xdocreport.remoting.converter.Request;
 
 public class JAXWSResourcesServiceClientTestCase {
 
@@ -88,7 +90,7 @@ public class JAXWSResourcesServiceClientTestCase {
 		parts[0] = new StringPart("outputFormat", ConverterTypeTo.PDF.name());
 		parts[1] = new FilePart("datafile", new File(root,fileName),"application/vnd.oasis.opendocument.text","UTF-8");
 		parts[2] = new StringPart("operation", "download");
-		parts[3] = new StringPart("via", ConverterTypeVia.ITEXT.name());
+		parts[3] = new StringPart("via", ConverterTypeVia.ODFDOM.name());
 		post.setRequestEntity(new MultipartRequestEntity(parts, post
 				.getParams()));
 

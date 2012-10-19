@@ -57,7 +57,7 @@ public class ODF2PDFViaITextConverterDiscovery
 
     public String getVia()
     {
-        return ConverterTypeVia.ITEXT.name();
+        return ConverterTypeVia.ODFDOM.name();
     }
 
     public IConverter getConverter()

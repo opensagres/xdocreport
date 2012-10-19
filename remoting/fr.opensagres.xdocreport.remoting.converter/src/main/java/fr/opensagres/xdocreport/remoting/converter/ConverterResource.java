@@ -1,4 +1,4 @@
-package fr.opensagres.xdocreport.converter;
+package fr.opensagres.xdocreport.remoting.converter;
 
 import javax.ws.rs.Consumes;
 import javax.ws.rs.POST;

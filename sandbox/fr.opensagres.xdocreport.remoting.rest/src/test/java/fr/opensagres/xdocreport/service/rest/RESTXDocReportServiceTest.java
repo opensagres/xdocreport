@@ -215,7 +215,7 @@ System.out.println(client.getCurrentURI());
         WSOptions options = new WSOptions();
         options.setFrom( DocumentKind.DOCX.name() );
         options.setTo( ConverterTypeTo.PDF.name() );
-        options.setVia( ConverterTypeVia.ITEXT.name() );
+        options.setVia( ConverterTypeVia.XWPF.name() );
 
         report.setOptions( options );
         //client.post( report);

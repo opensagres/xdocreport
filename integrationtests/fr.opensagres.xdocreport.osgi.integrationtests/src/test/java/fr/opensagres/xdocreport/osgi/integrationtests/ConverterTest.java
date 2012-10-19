@@ -120,7 +120,7 @@ public class ConverterTest
         try
         {
 
-            Options o = Options.getFrom( DocumentKind.ODT ).to( ConverterTypeTo.PDF ).via( ConverterTypeVia.ITEXT );
+            Options o = Options.getFrom( DocumentKind.ODT ).to( ConverterTypeTo.PDF ).via( ConverterTypeVia.ODFDOM );
 
             // Test if converter is not null
             IConverter converter = ConverterRegistry.getRegistry().getConverter( o );
@@ -140,7 +140,7 @@ public class ConverterTest
     {
         try
         {
-            Options o = Options.getFrom( DocumentKind.DOCX ).to( ConverterTypeTo.PDF ).via( ConverterTypeVia.ITEXT );
+            Options o = Options.getFrom( DocumentKind.DOCX ).to( ConverterTypeTo.PDF ).via( ConverterTypeVia.XWPF );
 
             // Test if converter is not null
             IConverter converter = ConverterRegistry.getRegistry().getConverter( o );

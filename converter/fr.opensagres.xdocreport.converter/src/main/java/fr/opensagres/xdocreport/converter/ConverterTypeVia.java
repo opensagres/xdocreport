@@ -30,5 +30,5 @@ package fr.opensagres.xdocreport.converter;
 public enum ConverterTypeVia
 {
 
-    FOP, XSL, ITEXT, ODFDOM, XWPF, DOCX4J
+    FOP, XSL, ODFDOM, XWPF, DOCX4J
 }

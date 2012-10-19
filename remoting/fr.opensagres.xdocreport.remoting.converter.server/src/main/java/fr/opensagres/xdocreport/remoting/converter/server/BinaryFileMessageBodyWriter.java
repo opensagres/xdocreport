@@ -22,7 +22,7 @@
  * OF CONTRACT, TORT OR OTHERWISE,  ARISING FROM, OUT OF OR IN CONNECTION
  * WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
-package fr.opensagres.xdocreport.converter.internal;
+package fr.opensagres.xdocreport.remoting.converter.server;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -36,7 +36,7 @@ import javax.ws.rs.core.MultivaluedMap;
 import javax.ws.rs.ext.MessageBodyWriter;
 import javax.ws.rs.ext.Provider;
 
-import fr.opensagres.xdocreport.converter.BinaryFile;
+import fr.opensagres.xdocreport.remoting.converter.BinaryFile;
 
 @Provider
 public class BinaryFileMessageBodyWriter

@@ -30,7 +30,7 @@
 //
 
 
-package fr.opensagres.xdocreport.converter;
+package fr.opensagres.xdocreport.remoting.converter;
 
 import java.io.InputStream;
 

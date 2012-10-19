@@ -45,7 +45,7 @@ public class ODF2PDFViaITextConverterDiscoveryTestCase
     public void testDiscovery()
         throws Exception
     {
-        Options o = Options.getFrom( DocumentKind.ODT ).to( ConverterTypeTo.PDF ).via( ConverterTypeVia.ITEXT );
+        Options o = Options.getFrom( DocumentKind.ODT ).to( ConverterTypeTo.PDF ).via( ConverterTypeVia.ODFDOM );
 
         // Test if converter is not null
         IConverter converter = ConverterRegistry.getRegistry().getConverter( o );

@@ -1,4 +1,4 @@
-package fr.opensagres.xdocreport.converter;
+package fr.opensagres.xdocreport.remoting.converter;
 
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;

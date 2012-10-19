@@ -1,10 +1,9 @@
-package fr.opensagres.xdocreport.converter.internal;
+package fr.opensagres.xdocreport.remoting.converter.server;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
-import java.io.PrintStream;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -21,23 +20,22 @@ import javax.ws.rs.core.StreamingOutput;
 
 import org.apache.cxf.jaxrs.ext.multipart.Multipart;
 
-import fr.opensagres.xdocreport.converter.BinaryFile;
 import fr.opensagres.xdocreport.converter.ConverterRegistry;
-import fr.opensagres.xdocreport.converter.ConverterResource;
 import fr.opensagres.xdocreport.converter.ConverterTypeTo;
-import fr.opensagres.xdocreport.converter.ConverterTypeVia;
 import fr.opensagres.xdocreport.converter.IConverter;
 import fr.opensagres.xdocreport.converter.Options;
-import fr.opensagres.xdocreport.converter.Request;
 import fr.opensagres.xdocreport.converter.XDocConverterException;
 import fr.opensagres.xdocreport.core.document.DocumentKind;
 import fr.opensagres.xdocreport.core.io.IOUtils;
 import fr.opensagres.xdocreport.core.logging.LogUtils;
 import fr.opensagres.xdocreport.core.utils.HttpHeaderUtils;
+import fr.opensagres.xdocreport.remoting.converter.BinaryFile;
+import fr.opensagres.xdocreport.remoting.converter.ConverterResource;
+import fr.opensagres.xdocreport.remoting.converter.Request;
 
 /**
- * REST Web Service
- *
+ * Converter REST Web Service
+ * 
  * @author pleclercq
  */
 @Path( "/" )
@@ -47,13 +45,15 @@ public class ConverterResourceImpl
 
     private static final String DOWNLOAD_OPERATION = "download";
 
-    private static final Logger LOGGER=LogUtils.getLogger(ConverterResourceImpl.class);
+    private static final Logger LOGGER = LogUtils.getLogger( ConverterResourceImpl.class );
+
+    @Deprecated
     public BinaryFile convertPDF( Request request )
     {
         ByteArrayOutputStream out = new ByteArrayOutputStream();
         // 1) Create options ODT 2 PDF to select well converter form the
         // registry
-        ConverterTypeTo to=        ConverterTypeTo.PDF;
+        ConverterTypeTo to = ConverterTypeTo.PDF;
         Options options = Options.getFrom( DocumentKind.ODT ).to( to );
 
         // 2) Get the converter from the registry
@@ -72,7 +72,6 @@ public class ConverterResourceImpl
             e.printStackTrace();
         }
 
-
         BinaryFile response = new BinaryFile();
 
         response.setContent( new ByteArrayInputStream( out.toByteArray() ) );
@@ -85,10 +84,11 @@ public class ConverterResourceImpl
     @Consumes( MediaType.WILDCARD )
     @Produces( MediaType.WILDCARD )
     @Path( "/convert" )
-  public  Response convert( @Multipart( "outputFormat" ) String outputFormat,
-		  @Multipart( "datafile" ) final DataSource content,
-		  @Multipart( "operation" )String operation,
-		  @Multipart( "via" ) String via )
+    public Response convert( @Multipart( "outputFormat" )
+    String outputFormat, @Multipart( "datafile" )
+    final DataSource content, @Multipart( "operation" )
+    String operation, @Multipart( "via" )
+    String via )
     {
         try
         {
@@ -98,6 +98,7 @@ public class ConverterResourceImpl
             {
                 throw new XDocConverterException( "Converter service cannot support the output format=" + outputFormat );
             }
+            
             // 2) retrieve the document kind from the input mimeType
             String mimeType = content.getContentType();
             DocumentKind documentKind = DocumentKind.fromMimeType( mimeType );
@@ -105,10 +106,9 @@ public class ConverterResourceImpl
             {
                 throw new XDocConverterException( "Converter service cannot support mime-type=" + mimeType );
             }
+            
             // 3) Get the converter from the registry
-
-            final Options options = Options.getFrom( documentKind ).to( to ).via(via);
-
+            final Options options = Options.getFrom( documentKind ).to( to ).via( via );
             final IConverter converter = ConverterRegistry.getRegistry().getConverter( options );
 
             // 4) Create an instance of JAX-RS StreamingOutput to convert the inputstream and set the result in the
@@ -120,18 +120,21 @@ public class ConverterResourceImpl
                 {
                     try
                     {
-                    	long start =System.currentTimeMillis();
+                        long start = System.currentTimeMillis();
                         converter.convert( content.getInputStream(), out, options );
 
-                        if(LOGGER.isLoggable(Level.INFO)){
-                        	LOGGER.info("Time spent in conversion "+(System.currentTimeMillis()-start) +" ms");
+                        if ( LOGGER.isLoggable( Level.INFO ) )
+                        {
+                            LOGGER.info( "Time spent in conversion " + ( System.currentTimeMillis() - start ) + " ms" );
                         }
                     }
                     catch ( XDocConverterException e )
                     {
 
-                    	//exception, let's the user know what happened...
-                        e.printStackTrace(new PrintStream(out));
+                        if ( LOGGER.isLoggable( Level.SEVERE ) )
+                        {
+                            LOGGER.log( Level.SEVERE, "Converter error", e );
+                        }
                         throw new WebApplicationException( e );
                     }
                     finally
@@ -156,13 +159,12 @@ public class ConverterResourceImpl
         catch ( XDocConverterException e )
         {
             throw new WebApplicationException( e );
-
         }
     }
 
     /**
      * Returns true if operation is download and false otherwise.
-     *
+     * 
      * @param operation
      * @return
      */
@@ -173,7 +175,7 @@ public class ConverterResourceImpl
 
     /**
      * Returns the output file name.
-     *
+     * 
      * @param filename
      * @param to
      * @return

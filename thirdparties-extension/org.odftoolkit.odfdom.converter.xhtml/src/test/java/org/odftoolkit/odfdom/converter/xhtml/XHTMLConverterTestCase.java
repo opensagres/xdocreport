@@ -57,7 +57,7 @@ public class XHTMLConverterTestCase
         options.URIResolver( new FileURIResolver( new File( "Pictures" ) ) );
 
         OutputStream out = System.out;
-        ODF2XHTMLConverter.getInstance().convert( document, out, options );
+        XHTMLConverter.getInstance().convert( document, out, options );
 
         System.out.println( "Elapsed time=" + ( System.currentTimeMillis() - startTime ) );
     }
@@ -79,7 +79,7 @@ public class XHTMLConverterTestCase
         options.URIResolver( new FileURIResolver( new File( "Pictures" ) ) );
 
         OutputStream out = new FileOutputStream( new File( fileOutName ) );
-        ODF2XHTMLConverter.getInstance().convert( document, out, options );
+        XHTMLConverter.getInstance().convert( document, out, options );
 
         System.out.println( "Generate " + fileOutName + " with " + ( System.currentTimeMillis() - startTime ) + " ms." );
     }

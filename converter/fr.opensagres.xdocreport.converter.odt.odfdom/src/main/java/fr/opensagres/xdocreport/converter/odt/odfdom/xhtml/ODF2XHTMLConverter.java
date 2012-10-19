@@ -58,7 +58,7 @@ public class ODF2XHTMLConverter
         try
         {
             OdfTextDocument odfDocument = OdfTextDocument.loadDocument( in );
-            org.odftoolkit.odfdom.converter.xhtml.ODF2XHTMLConverter.getInstance().convert( odfDocument, out,
+            org.odftoolkit.odfdom.converter.xhtml.XHTMLConverter.getInstance().convert( odfDocument, out,
                                                                                             toXHTMLOptions( options ) );
         }
         catch ( ODFConverterException e )

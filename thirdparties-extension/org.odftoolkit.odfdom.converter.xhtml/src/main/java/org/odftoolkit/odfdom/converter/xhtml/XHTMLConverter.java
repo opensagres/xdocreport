@@ -39,13 +39,13 @@ import org.odftoolkit.odfdom.dom.OdfContentDom;
 import org.odftoolkit.odfdom.dom.OdfStylesDom;
 import org.odftoolkit.odfdom.incubator.doc.office.OdfOfficeMasterStyles;
 
-public class ODF2XHTMLConverter
+public class XHTMLConverter
     extends AbstractODFConverter<XHTMLOptions>
 {
 
-    private static final ODF2XHTMLConverter INSTANCE = new ODF2XHTMLConverter();
+    private static final XHTMLConverter INSTANCE = new XHTMLConverter();
 
-    public static ODF2XHTMLConverter getInstance()
+    public static XHTMLConverter getInstance()
     {
         return INSTANCE;
     }

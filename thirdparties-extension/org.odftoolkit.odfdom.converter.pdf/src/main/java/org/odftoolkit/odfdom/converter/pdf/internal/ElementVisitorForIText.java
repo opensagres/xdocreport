@@ -65,6 +65,7 @@ import org.odftoolkit.odfdom.dom.element.style.StyleHeaderLeftElement;
 import org.odftoolkit.odfdom.dom.element.style.StyleMasterPageElement;
 import org.odftoolkit.odfdom.dom.element.table.TableTableCellElement;
 import org.odftoolkit.odfdom.dom.element.table.TableTableElement;
+import org.odftoolkit.odfdom.dom.element.table.TableTableHeaderRowsElement;
 import org.odftoolkit.odfdom.dom.element.table.TableTableRowElement;
 import org.odftoolkit.odfdom.dom.element.text.TextAElement;
 import org.odftoolkit.odfdom.dom.element.text.TextBookmarkElement;
@@ -100,10 +101,6 @@ public class ElementVisitorForIText
 
     // private final PDFViaITextOptions options;
 
-    private List<Integer> currentHeadingNumbering;
-
-    private StylableList previousList;
-
     private IStylableContainer currentContainer;
 
     private StylableMasterPage currentMasterPage;
@@ -112,9 +109,19 @@ public class ElementVisitorForIText
 
     private boolean parseOfficeTextElement = false;
 
+    private List<Integer> currentHeadingNumbering;
+
+    private StylableTable currentTable;
+
+    private boolean currentTableInsideHeaderRows;
+
+    private int currentTableHeaderRowCount;
+
     private Style currentRowStyle;
 
     private int currentListLevel;
+
+    private StylableList previousList;
 
     public ElementVisitorForIText( OdfDocument odfDocument, OutputStream out, Writer writer,
                                    StyleEngineForIText styleEngine, PdfOptions options )
@@ -337,6 +344,7 @@ public class ElementVisitorForIText
     {
         float[] columnWidth = ODFUtils.getColumnWidths( ele, odfDocument );
         StylableTable table = document.createTable( currentContainer, columnWidth.length );
+        currentTable = table;
         try
         {
             table.setTotalWidth( columnWidth );
@@ -347,6 +355,22 @@ public class ElementVisitorForIText
         }
         applyStyles( ele, table );
         addITextContainer( ele, table );
+        currentTable = null;
+    }
+
+    // ---------------------- visit table:table-header-rows
+
+    @Override
+    public void visit( TableTableHeaderRowsElement ele )
+    {
+        // we want to count table rows nested
+        // inside table header rows element
+        // to determine how many header rows we have in current table
+        currentTableInsideHeaderRows = true;
+        currentTableHeaderRowCount = 0;
+        super.visit( ele );
+        currentTable.setHeaderRows( currentTableHeaderRowCount );
+        currentTableInsideHeaderRows = false;
     }
 
     // ---------------------- visit table:table-row
@@ -357,6 +381,10 @@ public class ElementVisitorForIText
         currentRowStyle = getStyle( ele, null );
         super.visit( ele );
         currentRowStyle = null;
+        if ( currentTable != null && currentTableInsideHeaderRows )
+        {
+            currentTableHeaderRowCount++;
+        }
     }
 
     // ---------------------- visit table:table-cell

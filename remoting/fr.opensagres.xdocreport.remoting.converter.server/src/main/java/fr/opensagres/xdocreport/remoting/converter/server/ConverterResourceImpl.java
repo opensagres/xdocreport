@@ -28,6 +28,7 @@ import fr.opensagres.xdocreport.converter.XDocConverterException;
 import fr.opensagres.xdocreport.core.document.DocumentKind;
 import fr.opensagres.xdocreport.core.io.IOUtils;
 import fr.opensagres.xdocreport.core.logging.LogUtils;
+import fr.opensagres.xdocreport.core.utils.Assert;
 import fr.opensagres.xdocreport.core.utils.HttpHeaderUtils;
 import fr.opensagres.xdocreport.remoting.converter.BinaryFile;
 import fr.opensagres.xdocreport.remoting.converter.ConverterResource;
@@ -35,7 +36,7 @@ import fr.opensagres.xdocreport.remoting.converter.Request;
 
 /**
  * Converter REST Web Service
- * 
+ *
  * @author pleclercq
  */
 @Path( "/" )
@@ -81,24 +82,28 @@ public class ConverterResourceImpl
     }
 
     @POST
-    @Consumes( MediaType.WILDCARD )
+    @Consumes( MediaType.MULTIPART_FORM_DATA )
     @Produces( MediaType.WILDCARD )
     @Path( "/convert" )
-    public Response convert( @Multipart( "outputFormat" )
-    String outputFormat, @Multipart( "datafile" )
-    final DataSource content, @Multipart( "operation" )
-    String operation, @Multipart( "via" )
-    String via )
+    public Response convert(
+    		@Multipart( "outputFormat" ) String outputFormat,
+    		@Multipart( "datafile" ) final DataSource content,
+    		@Multipart( "operation" ) String operation,
+    		@Multipart( "via" ) String via )
     {
         try
         {
+        	Assert.notNull(content.getName(), "file is required");
+        	Assert.notNull(outputFormat, "outputFormat is required");
+        	Assert.notNull(via, "via is required");
+        	Assert.notNull(operation, "operation is required");
             // 1) Get the converter type to use
             ConverterTypeTo to = ConverterTypeTo.valueOf( outputFormat );
             if ( to == null )
             {
                 throw new XDocConverterException( "Converter service cannot support the output format=" + outputFormat );
             }
-            
+
             // 2) retrieve the document kind from the input mimeType
             String mimeType = content.getContentType();
             DocumentKind documentKind = DocumentKind.fromMimeType( mimeType );
@@ -106,7 +111,7 @@ public class ConverterResourceImpl
             {
                 throw new XDocConverterException( "Converter service cannot support mime-type=" + mimeType );
             }
-            
+
             // 3) Get the converter from the registry
             final Options options = Options.getFrom( documentKind ).to( to ).via( via );
             final IConverter converter = ConverterRegistry.getRegistry().getConverter( options );
@@ -136,6 +141,14 @@ public class ConverterResourceImpl
                             LOGGER.log( Level.SEVERE, "Converter error", e );
                         }
                         throw new WebApplicationException( e );
+                    } catch ( RuntimeException e )
+                    {
+
+                        if ( LOGGER.isLoggable( Level.SEVERE ) )
+                        {
+                            LOGGER.log( Level.SEVERE, "RuntimeException", e );
+                        }
+                        throw new WebApplicationException( e );
                     }
                     finally
                     {
@@ -156,15 +169,15 @@ public class ConverterResourceImpl
             return responseBuilder.build();
 
         }
-        catch ( XDocConverterException e )
+        catch ( Exception e )
         {
-            throw new WebApplicationException( e );
+            throw new RuntimeException( e);
         }
     }
 
     /**
      * Returns true if operation is download and false otherwise.
-     * 
+     *
      * @param operation
      * @return
      */
@@ -175,7 +188,7 @@ public class ConverterResourceImpl
 
     /**
      * Returns the output file name.
-     * 
+     *
      * @param filename
      * @param to
      * @return

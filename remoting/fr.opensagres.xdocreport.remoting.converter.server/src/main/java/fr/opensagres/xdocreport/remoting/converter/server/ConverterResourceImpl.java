@@ -82,7 +82,7 @@ public class ConverterResourceImpl
     }
 
     @POST
-    @Consumes( MediaType.MULTIPART_FORM_DATA )
+    @Consumes( MediaType.WILDCARD )
     @Produces( MediaType.WILDCARD )
     @Path( "/convert" )
     public Response convert(

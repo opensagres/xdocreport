@@ -89,7 +89,7 @@ public class ConverterResourceImpl
     		@Multipart( "outputFormat" ) String outputFormat,
     		@Multipart( "datafile" ) final DataSource content,
     		@Multipart( "operation" ) String operation,
-    		@Multipart( "via" ) String via )
+    		@Multipart( "via" ) final String via )
     {
         try
         {
@@ -130,7 +130,7 @@ public class ConverterResourceImpl
 
                         if ( LOGGER.isLoggable( Level.INFO ) )
                         {
-                            LOGGER.info( "Time spent in conversion " + ( System.currentTimeMillis() - start ) + " ms" );
+                            LOGGER.info( "Time spent to convert "+content.getName() +": "+  ( System.currentTimeMillis() - start ) + " ms using "+via );
                         }
                     }
                     catch ( XDocConverterException e )

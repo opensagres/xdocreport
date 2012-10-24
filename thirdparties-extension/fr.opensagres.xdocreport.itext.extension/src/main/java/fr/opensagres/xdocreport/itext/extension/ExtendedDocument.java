@@ -62,7 +62,6 @@ public class ExtendedDocument
         super( rectangle );
         this.writer = ExtendedPdfWriter.getInstance( this, out );
         headerFooter = createExtendedHeaderFooter();
-
         writer.setPageEvent( headerFooter );
         this.originMarginTop = marginTop;
         this.originMarginBottom = marginBottom;
@@ -84,11 +83,6 @@ public class ExtendedDocument
         this.originMarginLeft = marginLeft;
     }
 
-    protected ExtendedHeaderFooter createExtendedHeaderFooter()
-    {
-        return new ExtendedHeaderFooter( this );
-    }
-
     public ExtendedDocument( OutputStream out )
         throws DocumentException
     {
@@ -99,6 +93,17 @@ public class ExtendedDocument
         this.originMarginBottom = marginBottom;
         this.originMarginRight = marginRight;
         this.originMarginLeft = marginLeft;
+    }
+
+    protected ExtendedHeaderFooter createExtendedHeaderFooter()
+    {
+        return new ExtendedHeaderFooter( this );
+    }
+
+    @Override
+    public int getPageNumber()
+    {
+        return writer.getCurrentPageNumber();
     }
 
     public boolean setOriginalMargins( float marginLeft, float marginRight, float marginTop, float marginBottom )

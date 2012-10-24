@@ -74,6 +74,7 @@ import org.odftoolkit.odfdom.dom.element.text.TextLineBreakElement;
 import org.odftoolkit.odfdom.dom.element.text.TextListElement;
 import org.odftoolkit.odfdom.dom.element.text.TextListItemElement;
 import org.odftoolkit.odfdom.dom.element.text.TextPElement;
+import org.odftoolkit.odfdom.dom.element.text.TextPageNumberElement;
 import org.odftoolkit.odfdom.dom.element.text.TextSElement;
 import org.odftoolkit.odfdom.dom.element.text.TextSectionElement;
 import org.odftoolkit.odfdom.dom.element.text.TextSoftPageBreakElement;
@@ -333,7 +334,7 @@ public class ElementVisitorForIText
     public void visit( TextBookmarkElement ele )
     {
         // destination for a local anchor
-        createChunk( "\u00A0", ele.getTextNameAttribute() );
+        createChunk( "\u00A0", ele.getTextNameAttribute(), false );
     }
 
     // ---------------------- visit table:table (ex : <table:table
@@ -527,12 +528,18 @@ public class ElementVisitorForIText
     }
 
     @Override
-    protected void processTextNode( Text node )
+    public void visit( TextPageNumberElement ele )
     {
-        createChunk( node.getTextContent(), null );
+        createChunk( "#", null, true );
     }
 
-    private Chunk createChunk( String textContent, String localDestinationName )
+    @Override
+    protected void processTextNode( Text node )
+    {
+        createChunk( node.getTextContent(), null, false );
+    }
+
+    private Chunk createChunk( String textContent, String localDestinationName, boolean pageNumberChunk )
     {
         StylableChunk chunk = document.createChunk( currentContainer, textContent );
         Style style = currentContainer.getLastStyleApplied();
@@ -543,6 +550,10 @@ public class ElementVisitorForIText
         if ( localDestinationName != null )
         {
             chunk.setLocalDestination( localDestinationName );
+        }
+        if ( pageNumberChunk )
+        {
+            chunk.setPageNumberChunk( pageNumberChunk );
         }
         addITextElement( chunk.getElement() );
         return chunk;

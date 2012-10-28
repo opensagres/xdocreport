@@ -64,11 +64,11 @@ public class FreemarkerDocumentFormatter
 
     private static final String XML_ESCAPE = "?xml";
 
-    private static final String START_REPLACE_ESCAPE = "?replace(\"";
+    private static final String START_REPLACE_ESCAPE = "?replace('";
 
-    private static final String BODY_REPLACE_ESCAPE = "\",\"";
+    private static final String BODY_REPLACE_ESCAPE = "','";
 
-    private static final String END_REPLACE_ESCAPE = "\")";
+    private static final String END_REPLACE_ESCAPE = "')";
 
     private static final String CLOSE_ESCAPE = "]\n";
 

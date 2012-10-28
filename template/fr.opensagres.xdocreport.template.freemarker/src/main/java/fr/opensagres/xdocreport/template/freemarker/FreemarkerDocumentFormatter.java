@@ -42,6 +42,7 @@ public class FreemarkerDocumentFormatter
     extends AbstractDocumentFormatter
 {
 
+
     private static final String START_ASSIGN_DIRECTIVE = "[#assign ";
 
     private static final String CLOSE_ASSIGN_DIRECTIVE = "]";
@@ -87,6 +88,10 @@ public class FreemarkerDocumentFormatter
     private static final String START_NOPARSE = "[#noparse]";
 
     private static final String END_NOPARSE = "[/#noparse]";
+
+    private static final String START_CDATA = "[#--<![CDATA[--]";
+
+    private static final String END_CDATA = "[#--]]>--]";
 
     public String formatAsFieldItemList( String content, String fieldName, boolean forceAsField )
     {
@@ -167,6 +172,7 @@ public class FreemarkerDocumentFormatter
         {
             return;
         }
+
         startEscape.append( START_ESCAPE );
         if ( configuration.escapeXML() )
         {
@@ -181,10 +187,12 @@ public class FreemarkerDocumentFormatter
             startEscape.append( replaceText.getNewText() );
             startEscape.append( END_REPLACE_ESCAPE );
         }
-
         if ( startEscape.length() > 0 )
         {
             startEscape.append( CLOSE_ESCAPE );
+            // Freemarker escape+replace must be enclosed with CDATA because replace can contains some XML elements
+            startEscape.insert( 0, START_CDATA );
+            startEscape.append( END_CDATA );
             setStartDocumentDirective( startEscape.toString() );
             setEndDocumentDirective( END_ESCAPE );
         }

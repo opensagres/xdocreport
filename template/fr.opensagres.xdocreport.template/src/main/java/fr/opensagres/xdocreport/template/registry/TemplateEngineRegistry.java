@@ -120,6 +120,7 @@ public class TemplateEngineRegistry
 
     public Map<String, ITemplateEngineDiscovery> getTemplateEnginesDiscoveryCache()
     {
+        initializeIfNeeded();
         return templateEnginesDiscoveryCache;
     }
 

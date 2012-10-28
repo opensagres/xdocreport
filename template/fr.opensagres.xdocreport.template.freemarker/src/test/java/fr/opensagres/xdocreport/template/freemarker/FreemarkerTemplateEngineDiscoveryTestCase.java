@@ -24,33 +24,42 @@
  */
 package fr.opensagres.xdocreport.template.freemarker;
 
-import junit.framework.TestCase;
+import java.util.Map;
+
+import org.junit.Assert;
+import org.junit.Test;
+
+import fr.opensagres.xdocreport.template.ITemplateEngine;
+import fr.opensagres.xdocreport.template.TemplateEngineKind;
+import fr.opensagres.xdocreport.template.discovery.ITemplateEngineDiscovery;
+import fr.opensagres.xdocreport.template.registry.TemplateEngineRegistry;
 
 public class FreemarkerTemplateEngineDiscoveryTestCase
-    extends TestCase
+
 {
 
+    @Test
     public void testTemplateEngineNoExists()
         throws Exception
     {
-        // FIXME PLQ
-        // boolean exists = TemplateEngineRegistry.getRegistry().exists("Unknown",
-        // null);
-        // assertFalse("ITemplateEngine with id='Unknown' must not exists", exists);
-        //
-        // ITemplateEngine templateEngine = TemplateEngineRegistry.getRegistry()
-        // .getTemplateEngine("Unknown", null);
-        // assertNull("ITemplateEngine with id='Unknown' must be null.",
-        // templateEngine);
+        String kind = "Unknown";
+        Map<String, ITemplateEngineDiscovery> templateEnginesDiscoveryCache =
+            TemplateEngineRegistry.getRegistry().getTemplateEnginesDiscoveryCache();
+        Assert.assertEquals( 1, templateEnginesDiscoveryCache.values().size() );
+        ITemplateEngineDiscovery discovery = templateEnginesDiscoveryCache.get( kind );
+        Assert.assertNull( "ITemplateEngine with id='Unknown' must be null.", discovery );
     }
 
+    @Test
     public void testGetTemplateEngine()
     {
-        // FIXME PLQ
-        // TemplateEngineKind kind = TemplateEngineKind.Freemarker;
-        // ITemplateEngine templateEngine = TemplateEngineRegistry.getRegistry()
-        // .getTemplateEngine(kind, null);
-        // assertNotNull("Cannot retrieve template engine with kind=" + kind.name(),
-        // templateEngine);
+        TemplateEngineKind kind = TemplateEngineKind.Freemarker;
+        Map<String, ITemplateEngineDiscovery> templateEnginesDiscoveryCache =
+            TemplateEngineRegistry.getRegistry().getTemplateEnginesDiscoveryCache();
+        Assert.assertEquals( 1, templateEnginesDiscoveryCache.values().size() );
+        ITemplateEngineDiscovery discovery = templateEnginesDiscoveryCache.get( kind.name() );
+        Assert.assertNotNull( "Cannot retrieve template engine discovery with kind=" + kind.name(), discovery );
+        ITemplateEngine templateEngine = discovery.createTemplateEngine();
+        Assert.assertNotNull( "Cannot retrieve template engine with kind=" + kind.name(), templateEngine );
     }
 }

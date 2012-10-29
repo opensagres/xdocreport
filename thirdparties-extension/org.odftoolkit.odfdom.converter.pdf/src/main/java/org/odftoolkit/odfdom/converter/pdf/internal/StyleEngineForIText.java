@@ -46,6 +46,7 @@ import org.odftoolkit.odfdom.converter.pdf.internal.styles.StyleNumFormat;
 import org.odftoolkit.odfdom.converter.pdf.internal.styles.StylePageLayoutProperties;
 import org.odftoolkit.odfdom.converter.pdf.internal.styles.StyleParagraphProperties;
 import org.odftoolkit.odfdom.converter.pdf.internal.styles.StyleSectionProperties;
+import org.odftoolkit.odfdom.converter.pdf.internal.styles.StyleTabStopProperties;
 import org.odftoolkit.odfdom.converter.pdf.internal.styles.StyleTableCellProperties;
 import org.odftoolkit.odfdom.converter.pdf.internal.styles.StyleTableProperties;
 import org.odftoolkit.odfdom.converter.pdf.internal.styles.StyleTableRowProperties;
@@ -58,6 +59,7 @@ import org.odftoolkit.odfdom.dom.attribute.fo.FoKeepTogetherAttribute;
 import org.odftoolkit.odfdom.dom.attribute.style.StyleNumFormatAttribute;
 import org.odftoolkit.odfdom.dom.attribute.style.StyleTextLineThroughStyleAttribute;
 import org.odftoolkit.odfdom.dom.attribute.style.StyleTextUnderlineStyleAttribute;
+import org.odftoolkit.odfdom.dom.attribute.style.StyleTypeAttribute;
 import org.odftoolkit.odfdom.dom.attribute.style.StyleWrapAttribute;
 import org.odftoolkit.odfdom.dom.attribute.table.TableAlignAttribute;
 import org.odftoolkit.odfdom.dom.element.OdfStyleBase;
@@ -77,6 +79,8 @@ import org.odftoolkit.odfdom.dom.element.style.StylePageLayoutPropertiesElement;
 import org.odftoolkit.odfdom.dom.element.style.StyleParagraphPropertiesElement;
 import org.odftoolkit.odfdom.dom.element.style.StyleSectionPropertiesElement;
 import org.odftoolkit.odfdom.dom.element.style.StyleStyleElement;
+import org.odftoolkit.odfdom.dom.element.style.StyleTabStopElement;
+import org.odftoolkit.odfdom.dom.element.style.StyleTabStopsElement;
 import org.odftoolkit.odfdom.dom.element.style.StyleTableCellPropertiesElement;
 import org.odftoolkit.odfdom.dom.element.style.StyleTablePropertiesElement;
 import org.odftoolkit.odfdom.dom.element.style.StyleTableRowPropertiesElement;
@@ -675,6 +679,62 @@ public class StyleEngineForIText
         super.visit( ele );
     }
 
+    @Override
+    public void visit( StyleTabStopsElement ele )
+    {
+        currentStyle.setTabStopPropertiesList( null );
+        super.visit( ele );
+    }
+
+    @Override
+    public void visit( StyleTabStopElement ele )
+    {
+        List<StyleTabStopProperties> tabStopPropertiesList = currentStyle.getTabStopPropertiesList();
+        if ( tabStopPropertiesList == null )
+        {
+            tabStopPropertiesList = new ArrayList<StyleTabStopProperties>();
+            currentStyle.setTabStopPropertiesList( tabStopPropertiesList );
+        }
+        StyleTabStopProperties tabStopProperties = new StyleTabStopProperties();
+
+        // leader-text
+        String leaderText = ele.getStyleLeaderTextAttribute();
+        if ( StringUtils.isNotEmpty( leaderText ) )
+        {
+            tabStopProperties.setLeaderText( leaderText );
+        }
+
+        // position
+        String position = ele.getStylePositionAttribute();
+        if ( StringUtils.isNotEmpty( position ) )
+        {
+            tabStopProperties.setPosition( ODFUtils.getDimensionAsPoint( position ) );
+        }
+
+        // type
+        String type = ele.getStyleTypeAttribute();
+        if ( StringUtils.isNotEmpty( type ) )
+        {
+            if ( StyleTypeAttribute.Value.LEFT.toString().equals( type ) )
+            {
+                tabStopProperties.setType( Element.ALIGN_LEFT );
+            }
+            else if ( StyleTypeAttribute.Value.RIGHT.toString().equals( type ) )
+            {
+                tabStopProperties.setType( Element.ALIGN_RIGHT );
+            }
+            else
+            {
+                tabStopProperties.setType( Element.ALIGN_CENTER );
+            }
+        }
+
+        tabStopPropertiesList.add( tabStopProperties );
+
+        super.visit( ele );
+    }
+
+    @Override
     public void visit( StyleTextPropertiesElement ele )
     {
         StyleTextProperties textProperties = currentStyle.getTextProperties();
@@ -823,6 +883,7 @@ public class StyleEngineForIText
         super.visit( ele );
     }
 
+    @Override
     public void visit( StyleTablePropertiesElement ele )
     {
 
@@ -1359,6 +1420,7 @@ public class StyleEngineForIText
             sectionProperties.setMarginRight( ODFUtils.getDimensionAsPoint( marginRight ) );
         }
 
+        currentStyle.setColumnsProperties( null );
         super.visit( ele );
     }
 
@@ -1394,11 +1456,11 @@ public class StyleEngineForIText
     @Override
     public void visit( StyleColumnElement ele )
     {
-        List<StyleColumnProperties> styleColumnPropertiesList = currentStyle.getColumnPropertiesList();
-        if ( styleColumnPropertiesList == null )
+        List<StyleColumnProperties> columnPropertiesList = currentStyle.getColumnPropertiesList();
+        if ( columnPropertiesList == null )
         {
-            styleColumnPropertiesList = new ArrayList<StyleColumnProperties>();
-            currentStyle.setColumnPropertiesList( styleColumnPropertiesList );
+            columnPropertiesList = new ArrayList<StyleColumnProperties>();
+            currentStyle.setColumnPropertiesList( columnPropertiesList );
         }
         StyleColumnProperties columnProperties = new StyleColumnProperties();
 
@@ -1423,7 +1485,7 @@ public class StyleEngineForIText
             columnProperties.setEndIndent( ODFUtils.getDimensionAsPoint( endIndent ) );
         }
 
-        styleColumnPropertiesList.add( columnProperties );
+        columnPropertiesList.add( columnProperties );
 
         super.visit( ele );
     }

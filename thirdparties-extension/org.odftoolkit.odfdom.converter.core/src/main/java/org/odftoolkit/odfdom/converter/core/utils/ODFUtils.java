@@ -43,6 +43,8 @@ import org.w3c.dom.NodeList;
  */
 public class ODFUtils
 {
+    public static final String NON_BREAKING_SPACE = "\u00A0";
+
     // Unit constants
     private static final String REL_SIZE_UNIT = "*";
 
@@ -201,7 +203,7 @@ public class ODFUtils
 
     /**
      * Returns true if the given string has percent unit and false otherwise.
-     * 
+     *
      * @param s
      * @return
      */
@@ -212,7 +214,7 @@ public class ODFUtils
 
     /**
      * Measurement conversion from millimeters to points.
-     * 
+     *
      * @param value a value in millimeters
      * @return a value in points
      * @since 2.1.2
@@ -224,7 +226,7 @@ public class ODFUtils
 
     /**
      * Measurement conversion from inches to points.
-     * 
+     *
      * @param value a value in inches
      * @return a value in points
      * @since 2.1.2
@@ -236,7 +238,7 @@ public class ODFUtils
 
     /**
      * Measurement conversion from millimeters to inches.
-     * 
+     *
      * @param value a value in millimeters
      * @return a value in inches
      * @since 2.1.2

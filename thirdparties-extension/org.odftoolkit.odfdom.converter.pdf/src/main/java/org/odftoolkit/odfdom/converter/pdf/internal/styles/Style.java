@@ -45,6 +45,8 @@ public class Style
 
     private StyleParagraphProperties paragraphProperties;
 
+    private List<StyleTabStopProperties> tabStopPropertiesList;
+
     private StyleTextProperties textProperties;
 
     private StyleTableProperties tableProperties;
@@ -87,6 +89,10 @@ public class Style
         if ( style.getFooterProperties() != null )
         {
             footerProperties = style.getFooterProperties();
+        }
+        if ( style.getTabStopPropertiesList() != null )
+        {
+            tabStopPropertiesList = style.getTabStopPropertiesList();
         }
         if ( style.getListPropertiesMap() != null )
         {
@@ -255,6 +261,16 @@ public class Style
     public void setParagraphProperties( StyleParagraphProperties paragraphProperties )
     {
         this.paragraphProperties = paragraphProperties;
+    }
+
+    public List<StyleTabStopProperties> getTabStopPropertiesList()
+    {
+        return tabStopPropertiesList;
+    }
+
+    public void setTabStopPropertiesList( List<StyleTabStopProperties> tabStopPropertiesList )
+    {
+        this.tabStopPropertiesList = tabStopPropertiesList;
     }
 
     public StyleTextProperties getTextProperties()

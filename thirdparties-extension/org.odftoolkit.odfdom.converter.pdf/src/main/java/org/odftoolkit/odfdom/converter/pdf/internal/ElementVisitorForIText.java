@@ -49,6 +49,7 @@ import org.odftoolkit.odfdom.converter.pdf.internal.stylable.StylableListItem;
 import org.odftoolkit.odfdom.converter.pdf.internal.stylable.StylableMasterPage;
 import org.odftoolkit.odfdom.converter.pdf.internal.stylable.StylableParagraph;
 import org.odftoolkit.odfdom.converter.pdf.internal.stylable.StylablePhrase;
+import org.odftoolkit.odfdom.converter.pdf.internal.stylable.StylableTab;
 import org.odftoolkit.odfdom.converter.pdf.internal.stylable.StylableTable;
 import org.odftoolkit.odfdom.converter.pdf.internal.stylable.StylableTableCell;
 import org.odftoolkit.odfdom.converter.pdf.internal.styles.Style;
@@ -70,6 +71,7 @@ import org.odftoolkit.odfdom.dom.element.table.TableTableRowElement;
 import org.odftoolkit.odfdom.dom.element.text.TextAElement;
 import org.odftoolkit.odfdom.dom.element.text.TextBookmarkElement;
 import org.odftoolkit.odfdom.dom.element.text.TextHElement;
+import org.odftoolkit.odfdom.dom.element.text.TextIndexBodyElement;
 import org.odftoolkit.odfdom.dom.element.text.TextLineBreakElement;
 import org.odftoolkit.odfdom.dom.element.text.TextListElement;
 import org.odftoolkit.odfdom.dom.element.text.TextListItemElement;
@@ -80,13 +82,14 @@ import org.odftoolkit.odfdom.dom.element.text.TextSectionElement;
 import org.odftoolkit.odfdom.dom.element.text.TextSoftPageBreakElement;
 import org.odftoolkit.odfdom.dom.element.text.TextSpanElement;
 import org.odftoolkit.odfdom.dom.element.text.TextTabElement;
+import org.odftoolkit.odfdom.dom.element.text.TextTableOfContentElement;
+import org.odftoolkit.odfdom.dom.element.text.TextTableOfContentSourceElement;
 import org.odftoolkit.odfdom.pkg.OdfElement;
 import org.w3c.dom.Node;
 import org.w3c.dom.Text;
 
 import com.lowagie.text.Chunk;
 import com.lowagie.text.DocumentException;
-import com.lowagie.text.Element;
 import com.lowagie.text.Font;
 import com.lowagie.text.Image;
 
@@ -110,19 +113,21 @@ public class ElementVisitorForIText
 
     private boolean parseOfficeTextElement = false;
 
-    private List<Integer> currentHeadingNumbering;
+    private boolean inTableOfContent; // tabs processing
 
-    private StylableTable currentTable;
+    private List<Integer> currentHeadingNumbering; // heading processing
 
-    private boolean currentTableInsideHeaderRows;
+    private StylableTable currentTable; // table processing
 
-    private int currentTableHeaderRowCount;
+    private boolean currentTableInsideHeaderRows; // table processing
 
-    private Style currentRowStyle;
+    private int currentTableHeaderRowCount; // table processing
 
-    private int currentListLevel;
+    private Style currentRowStyle; // table processing
 
-    private StylableList previousList;
+    private int currentListLevel; // list processing
+
+    private StylableList previousList; // list processing
 
     public ElementVisitorForIText( OdfDocument odfDocument, OutputStream out, Writer writer,
                                    StyleEngineForIText styleEngine, PdfOptions options )
@@ -226,6 +231,27 @@ public class ElementVisitorForIText
     }
 
     @Override
+    public void visit( TextTableOfContentElement ele )
+    {
+        inTableOfContent = true;
+        super.visit( ele );
+        inTableOfContent = false;
+    }
+
+    @Override
+    public void visit( TextTableOfContentSourceElement ele )
+    {
+        // do not visit child nodes
+        // they may contain unnecessary text
+    }
+
+    @Override
+    public void visit( TextIndexBodyElement ele )
+    {
+        super.visit( ele );
+    }
+
+    @Override
     public void visit( TextSectionElement ele )
     {
         StylableDocumentSection documentSection =
@@ -273,15 +299,6 @@ public class ElementVisitorForIText
         applyStyles( ele, paragraph );
         addITextContainer( ele, paragraph );
 
-    }
-
-    // ---------------------- visit //text:tab
-
-    @Override
-    public void visit( TextTabElement ele )
-    {
-        // ele.getParentNode();
-        // System.err.println(ele);
     }
 
     // ---------------------- visit //text:span
@@ -334,7 +351,9 @@ public class ElementVisitorForIText
     public void visit( TextBookmarkElement ele )
     {
         // destination for a local anchor
-        createChunk( "\u00A0", ele.getTextNameAttribute(), false );
+        // chunk with empty text does not work as local anchor
+        // so we create chunk with non breaking space as text content
+        createAndAddChunk( ODFUtils.NON_BREAKING_SPACE, ele.getTextNameAttribute(), false );
     }
 
     // ---------------------- visit table:table (ex : <table:table
@@ -498,7 +517,7 @@ public class ElementVisitorForIText
                     {
                         applyStyles( frame, image );
                     }
-                    addITextElement( image.getElement() );
+                    addITextElement( image );
                 }
             }
         }
@@ -511,12 +530,26 @@ public class ElementVisitorForIText
     {
     }
 
+    // ---------------------- visit //text:tab
+
+    @Override
+    public void visit( TextTabElement ele )
+    {
+        StylableTab tab = new StylableTab( document, currentContainer, inTableOfContent );
+        Style style = currentContainer.getLastStyleApplied();
+        if ( style != null )
+        {
+            tab.applyStyles( style );
+        }
+        addITextElement( tab );
+    }
+
     // ---------------------- visit text:line-break
 
     @Override
     public void visit( TextLineBreakElement ele )
     {
-        currentContainer.addElement( Chunk.NEWLINE );
+        createAndAddChunk( "\n", null, false );
     }
 
     // ---------------------- visit text:s
@@ -524,23 +557,38 @@ public class ElementVisitorForIText
     @Override
     public void visit( TextSElement ele )
     {
-        currentContainer.addElement( new Chunk( " " ) );
+        String spaceStr = " ";
+        Integer spaceCount = ele.getTextCAttribute();
+        if ( spaceCount != null && spaceCount > 1 )
+        {
+            for ( int i = 1; i < spaceCount; i++ )
+            {
+                spaceStr += " ";
+            }
+        }
+        createAndAddChunk( spaceStr, null, false );
     }
 
     @Override
     public void visit( TextPageNumberElement ele )
     {
-        createChunk( "#", null, true );
+        createAndAddChunk( "#", null, true );
     }
 
     @Override
     protected void processTextNode( Text node )
     {
-        createChunk( node.getTextContent(), null, false );
+        createAndAddChunk( node.getTextContent(), null, false );
     }
 
-    private Chunk createChunk( String textContent, String localDestinationName, boolean pageNumberChunk )
+    private Chunk createAndAddChunk( String textContent, String localDestinationName, boolean pageNumberChunk )
     {
+        // StylableChunk can replace several ODT elements
+        // plain text
+        // text:bookmark
+        // text:line-break
+        // text:s
+        // text:page-number
         StylableChunk chunk = document.createChunk( currentContainer, textContent );
         Style style = currentContainer.getLastStyleApplied();
         if ( style != null )
@@ -555,7 +603,7 @@ public class ElementVisitorForIText
         {
             chunk.setPageNumberChunk( pageNumberChunk );
         }
-        addITextElement( chunk.getElement() );
+        addITextElement( chunk );
         return chunk;
     }
 
@@ -593,9 +641,9 @@ public class ElementVisitorForIText
         }
     }
 
-    private void addITextElement( Element element )
+    private void addITextElement( IStylableElement element )
     {
-        currentContainer.addElement( element );
+        currentContainer.addElement( element.getElement() );
     }
 
     private void applyStyles( OdfElement ele, IStylableElement element )

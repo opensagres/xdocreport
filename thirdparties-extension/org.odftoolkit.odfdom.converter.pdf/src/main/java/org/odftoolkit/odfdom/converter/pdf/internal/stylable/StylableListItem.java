@@ -72,16 +72,10 @@ public class StylableListItem
     @Override
     public void setListSymbol( Chunk symbol )
     {
-        Chunk chunk = new Chunk( symbol );
         // adjust chunk attributes like text rise
         // use StylableParagraph mechanism
-        StylableParagraph p = new StylableParagraph( null, null );
-        p.setFont( chunk.getFont() );
-        p.addElement( chunk );
-        p.getElement(); // post-processing here
-        chunk = (Chunk) p.getChunks().get( 0 );
-
-        super.setListSymbol( chunk );
+        symbol = StylableParagraph.createAdjustedChunk( symbol.getContent(), symbol.getFont() );
+        super.setListSymbol( symbol );
     }
 
     public void applyStyles( Style style )

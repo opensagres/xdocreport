@@ -27,6 +27,7 @@ package org.odftoolkit.odfdom.converter.pdf.internal.stylable;
 import java.awt.Color;
 import java.util.ArrayList;
 
+import org.odftoolkit.odfdom.converter.core.utils.ODFUtils;
 import org.odftoolkit.odfdom.converter.pdf.internal.styles.Style;
 import org.odftoolkit.odfdom.converter.pdf.internal.styles.StyleBorder;
 import org.odftoolkit.odfdom.converter.pdf.internal.styles.StyleBreak;
@@ -262,6 +263,17 @@ public class StylableParagraph
         return ownerDocument;
     }
 
+    public static Chunk createAdjustedChunk( String content, Font font )
+    {
+        // adjust chunk attributes like text rise
+        // use StylableParagraph mechanism
+        StylableParagraph p = new StylableParagraph( null, null );
+        p.setFont( font );
+        p.addElement( new Chunk( content, font ) );
+        p.getElement(); // post-processing here
+        return (Chunk) p.getChunks().get( 0 );
+    }
+
     @SuppressWarnings( "unchecked" )
     @Override
     public Element getElement()
@@ -284,7 +296,7 @@ public class StylableParagraph
             }
             if ( empty )
             {
-                super.add( new Chunk( "\u00A0" ) ); // non breaking space
+                super.add( new Chunk( ODFUtils.NON_BREAKING_SPACE ) );
             }
 
             // adjust line height and baseline

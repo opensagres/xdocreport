@@ -140,9 +140,9 @@ public class ExtendedPdfPTable
      * @return true if there's a cell above that belongs to a rowspan
      * @since 2.1.6
      */
+    @SuppressWarnings( "all" )
     boolean rowSpanAbove( int currRow, int currCol )
     {
-
         if ( ( currCol >= getNumberOfColumns() ) || ( currCol < 0 ) || ( currRow == 0 ) )
             return false;
 

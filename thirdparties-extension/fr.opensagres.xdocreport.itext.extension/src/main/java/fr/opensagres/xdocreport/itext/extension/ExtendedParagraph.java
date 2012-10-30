@@ -36,6 +36,7 @@ public class ExtendedParagraph
     extends Paragraph
     implements IITextContainer
 {
+    private static final long serialVersionUID = 664309269352903329L;
 
     private IITextContainer container;
 
@@ -71,7 +72,7 @@ public class ExtendedParagraph
     {
         PdfPCell cell = new PdfPCell();
         cell.setBorder( Table.NO_BORDER );
-        //cell.setPadding( 0.0f );
+        // cell.setPadding( 0.0f );
         cell.setUseBorderPadding( true );
         cell.getColumn().setAdjustFirstLine( false );
         cell.setUseDescender( true );
@@ -82,6 +83,7 @@ public class ExtendedParagraph
     {
         PdfPTable table = new PdfPTable( 1 );
         table.setWidthPercentage( 100.0f );
+        table.setSplitLate( false );
         table.addCell( cell );
         return table;
     }
@@ -140,7 +142,7 @@ public class ExtendedParagraph
 
     /**
      * Sets the width of the Top border.
-     * 
+     *
      * @param borderWidthTop a width
      */
     public void setBorderWidthTop( float borderWidthTop )
@@ -150,7 +152,7 @@ public class ExtendedParagraph
 
     /**
      * Sets the color of the top border.
-     * 
+     *
      * @param borderColorTop a <CODE>Color</CODE>
      */
     public void setBorderColorTop( Color borderColorTop )
@@ -160,7 +162,7 @@ public class ExtendedParagraph
 
     /**
      * Sets the width of the bottom border.
-     * 
+     *
      * @param borderWidthBottom a width
      */
     public void setBorderWidthBottom( float borderWidthBottom )
@@ -170,7 +172,7 @@ public class ExtendedParagraph
 
     /**
      * Sets the color of the Bottom border.
-     * 
+     *
      * @param borderColorBottom a <CODE>Color</CODE>
      */
     public void setBorderColorBottom( Color borderColorBottom )
@@ -180,7 +182,7 @@ public class ExtendedParagraph
 
     /**
      * Sets the width of the Left border.
-     * 
+     *
      * @param borderWidthLeft a width
      */
     public void setBorderWidthLeft( float borderWidthLeft )
@@ -190,7 +192,7 @@ public class ExtendedParagraph
 
     /**
      * Sets the color of the Left border.
-     * 
+     *
      * @param borderColorLeft a <CODE>Color</CODE>
      */
     public void setBorderColorLeft( Color borderColorLeft )
@@ -200,7 +202,7 @@ public class ExtendedParagraph
 
     /**
      * Sets the width of the Right border.
-     * 
+     *
      * @param borderWidthRight a width
      */
     public void setBorderWidthRight( float borderWidthRight )
@@ -210,7 +212,7 @@ public class ExtendedParagraph
 
     /**
      * Sets the color of the Right border.
-     * 
+     *
      * @param borderColorRight a <CODE>Color</CODE>
      */
     public void setBorderColorRight( Color borderColorRight )

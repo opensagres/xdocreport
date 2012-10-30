@@ -119,12 +119,6 @@ public class ElementVisitorForIText
 
     private StylableTable currentTable; // table processing
 
-    private boolean currentTableInsideHeaderRows; // table processing
-
-    private int currentTableHeaderRowCount; // table processing
-
-    private Style currentRowStyle; // table processing
-
     private int currentListLevel; // list processing
 
     private StylableList previousList; // list processing
@@ -364,7 +358,6 @@ public class ElementVisitorForIText
     {
         float[] columnWidth = ODFUtils.getColumnWidths( ele, odfDocument );
         StylableTable table = document.createTable( currentContainer, columnWidth.length );
-        currentTable = table;
         try
         {
             table.setTotalWidth( columnWidth );
@@ -374,8 +367,10 @@ public class ElementVisitorForIText
             // Do nothing
         }
         applyStyles( ele, table );
+        StylableTable oldTable = currentTable;
+        currentTable = table;
         addITextContainer( ele, table );
-        currentTable = null;
+        currentTable = oldTable;
     }
 
     // ---------------------- visit table:table-header-rows
@@ -383,14 +378,11 @@ public class ElementVisitorForIText
     @Override
     public void visit( TableTableHeaderRowsElement ele )
     {
-        // we want to count table rows nested
-        // inside table header rows element
+        // we want to count table rows nested inside table header rows element
         // to determine how many header rows we have in current table
-        currentTableInsideHeaderRows = true;
-        currentTableHeaderRowCount = 0;
+        currentTable.beginTableHeaderRows();
         super.visit( ele );
-        currentTable.setHeaderRows( currentTableHeaderRowCount );
-        currentTableInsideHeaderRows = false;
+        currentTable.endTableHeaderRows();
     }
 
     // ---------------------- visit table:table-row
@@ -398,13 +390,10 @@ public class ElementVisitorForIText
     @Override
     public void visit( TableTableRowElement ele )
     {
-        currentRowStyle = getStyle( ele, null );
+        Style currentRowStyle = getStyle( ele, null );
+        currentTable.beginTableRow( currentRowStyle );
         super.visit( ele );
-        currentRowStyle = null;
-        if ( currentTable != null && currentTableInsideHeaderRows )
-        {
-            currentTableHeaderRowCount++;
-        }
+        currentTable.endTableRow();
     }
 
     // ---------------------- visit table:table-cell
@@ -428,9 +417,9 @@ public class ElementVisitorForIText
 
         }
         // Apply styles coming from table-row
-        if ( currentRowStyle != null )
+        if ( currentTable.getCurrentRowStyle() != null )
         {
-            tableCell.applyStyles( currentRowStyle );
+            tableCell.applyStyles( currentTable.getCurrentRowStyle() );
         }
         // Apply styles coming from table-cell
         applyStyles( ele, tableCell );

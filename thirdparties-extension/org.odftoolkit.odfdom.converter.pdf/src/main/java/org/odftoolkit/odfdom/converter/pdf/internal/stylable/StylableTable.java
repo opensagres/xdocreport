@@ -41,15 +41,73 @@ public class StylableTable
 
     private Style lastStyleApplied = null;
 
+    private boolean inTableHeaderRows;
+
+    private boolean inTableRow;
+
+    private Style currentRowStyle;
+
     public StylableTable( StylableDocument ownerDocument, IStylableContainer parent, int numColumns )
     {
         super( numColumns );
         // cancel ExtendedPdfPTable settings
         // we raise text in StylableParagraph so extra spacing here is unnecessary
         super.setSpacingBefore( 0.0f );
-        super.setSplitLate( false );
         this.ownerDocument = ownerDocument;
         this.parent = parent;
+    }
+
+    public Style getCurrentRowStyle()
+    {
+        return currentRowStyle;
+    }
+
+    public void beginTableHeaderRows()
+    {
+        inTableHeaderRows = true;
+    }
+
+    public void endTableHeaderRows()
+    {
+        inTableHeaderRows = false;
+    }
+
+    public void beginTableRow( Style currentRowStyle )
+    {
+        // beginTableRow/addElement/endTableRow protects before too many/too less cells in a row than declared
+        inTableRow = true;
+        this.currentRowStyle = currentRowStyle;
+    }
+
+    public void endTableRow()
+    {
+        // fill row with empty cells if necessary
+        while ( currentRowIdx != 0 )
+        {
+            StylableTableCell cell = new StylableTableCell( ownerDocument, this );
+            addElement( cell );
+        }
+        inTableRow = false;
+        currentRowStyle = null;
+        if ( inTableHeaderRows )
+        {
+            // increment header rows count
+            setHeaderRows( getHeaderRows() + 1 );
+        }
+    }
+
+    @Override
+    public void addElement( Element element )
+    {
+        if ( inTableRow )
+        {
+            super.addElement( element );
+        }
+        if ( currentRowIdx == 0 )
+        {
+            // row fully filled, end row
+            endTableRow();
+        }
     }
 
     public void applyStyles( Style style )

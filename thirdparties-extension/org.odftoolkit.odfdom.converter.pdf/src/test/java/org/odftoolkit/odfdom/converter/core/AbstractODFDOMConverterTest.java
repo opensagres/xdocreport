@@ -30,42 +30,56 @@ public abstract class AbstractODFDOMConverterTest
 {
 
     @Test
-    public void convertCV()
+    public void CV()
         throws Exception
     {
         doGenerate( "CV.odt" );
     }
 
     @Test
-    public void convertHeaderFooterTable()
+    public void FormattingTests()
+        throws Exception
+    {
+        doGenerate( "FormattingTests.odt" );
+    }
+    
+    @Test
+    public void HeaderFooterTable()
         throws Exception
     {
         doGenerate( "HeaderFooterTable.odt" );
     }
-
+    
     @Test
-    public void convertODTBig()
+    public void Issue175()
+        throws Exception
+    {
+        doGenerate( "Issue175.odt" );
+    }
+    
+    @Test
+    public void ODTBig()
         throws Exception
     {
         doGenerate( "ODTBig.odt" );
     }
 
     @Test
-    public void testODTLettreRelance()
+    public void ODTLettreRelance()
         throws Exception
     {
         doGenerate( "ODTLettreRelance.odt" );
     }
 
     @Test
-    public void testODTStructures()
+    public void ODTStructures()
         throws Exception
     {
         doGenerate( "ODTStructures.odt" );
     }
 
     @Test
-    public void testParagraphFomatting()
+    public void ParagraphFomatting()
         throws Exception
     {
         doGenerate( "ParagraphFomatting.odt" );
@@ -79,98 +93,98 @@ public abstract class AbstractODFDOMConverterTest
     }
     
     @Test
-    public void testColor()
+    public void TestColor()
         throws Exception
     {
         doGenerate( "TestColor.odt" );
     }
 
     @Test
-    public void testComplexTable()
+    public void TestComplexTable()
         throws Exception
     {
         doGenerate( "TestComplexTable.odt" );
     }
 
     @Test
-    public void testFonts()
+    public void TestFonts()
         throws Exception
     {
         doGenerate( "TestFonts.odt" );
     }
 
     @Test
-    public void testHeaderFooterPage()
+    public void TestHeaderFooterPage()
         throws Exception
     {
         doGenerate( "TestHeaderFooterPage.odt" );
     }
 
     @Test
-    public void testLandscapeFormat()
+    public void TestLandscapeFormat()
         throws Exception
     {
         doGenerate( "TestLandscapeFormat.odt" );
     }
 
     @Test
-    public void testParagraphWithBackground()
+    public void TestParagraphWithBackground()
         throws Exception
     {
         doGenerate( "TestParagraphWithBackground.odt" );
     }
 
     @Test
-    public void testParagraphWithBorder()
+    public void TestParagraphWithBorder()
         throws Exception
     {
         doGenerate( "TestParagraphWithBorder.odt" );
     }
 
     @Test
-    public void testSpacingBefore()
+    public void TestSpacingBefore()
         throws Exception
     {
         doGenerate( "TestSpacingBefore.odt" );
     }
 
     @Test
-    public void testTable()
+    public void TestTable()
         throws Exception
     {
         doGenerate( "TestTable.odt" );
     }
 
     @Test
-    public void testTableWithBorder()
+    public void TestTableWithBorder()
         throws Exception
     {
         doGenerate( "TestTableWithBorder.odt" );
     }
 
     @Test
-    public void testTableWithSpace()
+    public void TestTableWithSpace()
         throws Exception
     {
         doGenerate( "TestTableWithSpace.odt" );
     }
 
     @Test
-    public void testTextSectionsAndBreaks()
+    public void TestTextSectionsAndBreaks()
         throws Exception
     {
         doGenerate( "TestTextSectionsAndBreaks.odt" );
     }
 
     @Test
-    public void testTextSectionsAndTabulators()
+    public void TestTextSectionsAndTabulators()
         throws Exception
     {
         doGenerate( "TestTextSectionsAndTabulators.odt" );
     }
 
     @Test
-    public void testTitle()
+    public void TestTitle()
         throws Exception
     {
         doGenerate( "TestTitle.odt" );

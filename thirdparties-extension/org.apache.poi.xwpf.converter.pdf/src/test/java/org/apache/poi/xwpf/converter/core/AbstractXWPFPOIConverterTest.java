@@ -73,7 +73,7 @@ public abstract class AbstractXWPFPOIConverterTest
         doGenerate( "DocxBig.docx" );
     }
 
-    // @Test
+    //@Test
     public void DocxBig2()
         throws IOException
     {
@@ -121,6 +121,13 @@ public abstract class AbstractXWPFPOIConverterTest
     {
         doGenerate( "FormattingTests.docx" );
     }
+
+    @Test
+    public void Issue160()
+        throws IOException
+    {
+        doGenerate( "Issue160.docx" );
+    }
     
     @Test
     public void Issue52()
@@ -129,6 +136,13 @@ public abstract class AbstractXWPFPOIConverterTest
         doGenerate( "Issue52.docx" );
     }
 
+    @Test
+    public void NotePosteDeTravail()
+        throws IOException
+    {
+        doGenerate( "NotePosteDeTravail.docx" );
+    }
+    
     @Test
     public void ooxml()
         throws IOException
@@ -213,7 +227,6 @@ public abstract class AbstractXWPFPOIConverterTest
         doGenerate( "TestHeader.docx" );
     }
 
-    
     @Test
     public void testHeaderFooterPage()
         throws IOException
@@ -234,7 +247,7 @@ public abstract class AbstractXWPFPOIConverterTest
     {
         doGenerate( "TestLandscapeFormat.docx" );
     }
-    
+
     @Test
     public void testParagraphAlignment()
         throws IOException
@@ -283,7 +296,7 @@ public abstract class AbstractXWPFPOIConverterTest
     {
         doGenerate( "TestTableNested.docx" );
     }
-    
+
     @Test
     public void TestTabulation()
         throws IOException
@@ -297,7 +310,7 @@ public abstract class AbstractXWPFPOIConverterTest
     {
         doGenerate( "TestTextHighlighting.docx" );
     }
-    
+
     @Test
     public void testTitle()
         throws IOException

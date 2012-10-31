@@ -67,6 +67,10 @@ import org.apache.poi.xwpf.converter.core.styles.table.cell.TableCellTextDirecti
 import org.apache.poi.xwpf.converter.core.styles.table.cell.TableCellVerticalAlignmentValueProvider;
 import org.apache.poi.xwpf.converter.core.styles.table.cell.TableCellWidthValueProvider;
 import org.apache.poi.xwpf.converter.core.styles.table.row.TableRowHeightValueProvider;
+import org.apache.poi.xwpf.converter.core.styles.table.row.TableRowMarginBottomValueProvider;
+import org.apache.poi.xwpf.converter.core.styles.table.row.TableRowMarginLeftValueProvider;
+import org.apache.poi.xwpf.converter.core.styles.table.row.TableRowMarginRightValueProvider;
+import org.apache.poi.xwpf.converter.core.styles.table.row.TableRowMarginTopValueProvider;
 import org.apache.poi.xwpf.converter.core.utils.DxaUtil;
 import org.apache.poi.xwpf.usermodel.ParagraphAlignment;
 import org.apache.poi.xwpf.usermodel.UnderlinePatterns;
@@ -90,6 +94,7 @@ import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTStyle;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTTabs;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTTblPr;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTTblPrBase;
+import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTTblPrEx;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTTblStylePr;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTTcPr;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTTextDirection;
@@ -655,6 +660,46 @@ public class XWPFStylesDocument
     public TableHeight getTableRowHeight( CTTrPr trPr )
     {
         return TableRowHeightValueProvider.INSTANCE.getValue( trPr );
+    }
+
+    public Float getTableRowMarginTop( XWPFTableRow row )
+    {
+        return TableRowMarginTopValueProvider.INSTANCE.getValue( row, this );
+    }
+
+    public Float getTableRowMarginTop( CTTblPrEx tblPrEx )
+    {
+        return TableRowMarginTopValueProvider.INSTANCE.getValue( tblPrEx );
+    }
+
+    public Float getTableRowMarginBottom( XWPFTableRow row )
+    {
+        return TableRowMarginBottomValueProvider.INSTANCE.getValue( row, this );
+    }
+
+    public Float getTableRowMarginBottom( CTTblPrEx tblPrEx )
+    {
+        return TableRowMarginBottomValueProvider.INSTANCE.getValue( tblPrEx );
+    }
+
+    public Float getTableRowMarginLeft( XWPFTableRow row )
+    {
+        return TableRowMarginLeftValueProvider.INSTANCE.getValue( row, this );
+    }
+
+    public Float getTableRowMarginLeft( CTTblPrEx tblPrEx )
+    {
+        return TableRowMarginLeftValueProvider.INSTANCE.getValue( tblPrEx );
+    }
+
+    public Float getTableRowMarginRight( XWPFTableRow row )
+    {
+        return TableRowMarginRightValueProvider.INSTANCE.getValue( row, this );
+    }
+
+    public Float getTableRowMarginRight( CTTblPrEx tblPrEx )
+    {
+        return TableRowMarginRightValueProvider.INSTANCE.getValue( tblPrEx );
     }
 
     // ------------------------ Table cell

@@ -123,7 +123,6 @@ public class StylableTab
         return chunk;
     }
 
-    @Override
     public void draw( PdfContentByte canvas, float llx, float lly, float urx, float ury, float y )
     {
         if ( font.getBaseFont() != null && font.getSize() > 0.0 && leaderText.trim().length() > 0 )

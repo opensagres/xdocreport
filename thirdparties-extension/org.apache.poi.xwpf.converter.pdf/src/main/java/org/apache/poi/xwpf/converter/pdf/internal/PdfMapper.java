@@ -1,6 +1,6 @@
 package org.apache.poi.xwpf.converter.pdf.internal;
 
-import static org.apache.poi.xwpf.converter.core.utils.DxaUtil.dxa2points;
+import static org.apache.poi.xwpf.converter.core.utils.DxaUtil.emu2points;
 
 import java.awt.Color;
 import java.io.OutputStream;
@@ -71,6 +71,7 @@ import com.lowagie.text.pdf.draw.DottedLineSeparator;
 import com.lowagie.text.pdf.draw.LineSeparator;
 import com.lowagie.text.pdf.draw.VerticalPositionMark;
 
+import fr.opensagres.xdocreport.itext.extension.ExtendedImage;
 import fr.opensagres.xdocreport.itext.extension.ExtendedParagraph;
 import fr.opensagres.xdocreport.itext.extension.ExtendedPdfPCell;
 import fr.opensagres.xdocreport.itext.extension.ExtendedPdfPTable;
@@ -97,8 +98,6 @@ public class PdfMapper
     private Color currentRunBackgroundColor;
 
     private Float currentRunX;
-
-    private boolean pageBreakOnNextParagraph;
 
     public PdfMapper( XWPFDocument document, OutputStream out, PdfOptions options )
         throws Exception
@@ -484,7 +483,7 @@ public class PdfMapper
                 textChunk.setUnderline( 1, -2 );
             }
         }
-        
+
         // background color
         if ( currentRunBackgroundColor != null )
         {
@@ -893,16 +892,24 @@ public class PdfMapper
         Float marginTop = stylesDocument.getTableCellMarginTop( cell );
         if ( marginTop == null )
         {
-            marginTop = stylesDocument.getTableMarginTop( table );
+            marginTop = stylesDocument.getTableRowMarginTop( row );
+            if ( marginTop == null )
+            {
+                marginTop = stylesDocument.getTableMarginTop( table );
+            }
         }
-        if ( marginTop != null && marginTop > 0 )
+        if ( marginTop != null)
         {
             pdfPCell.setPaddingTop( marginTop );
         }
         Float marginBottom = stylesDocument.getTableCellMarginBottom( cell );
         if ( marginBottom == null )
         {
-            marginBottom = stylesDocument.getTableMarginBottom( table );
+            marginBottom = stylesDocument.getTableRowMarginBottom( row );
+            if ( marginBottom == null )
+            {
+                marginBottom = stylesDocument.getTableMarginBottom( table );
+            }
         }
         if ( marginBottom != null && marginBottom > 0 )
         {
@@ -911,7 +918,11 @@ public class PdfMapper
         Float marginLeft = stylesDocument.getTableCellMarginLeft( cell );
         if ( marginLeft == null )
         {
-            marginLeft = stylesDocument.getTableMarginLeft( table );
+            marginLeft = stylesDocument.getTableRowMarginLeft( row );
+            if ( marginLeft == null )
+            {
+                marginLeft = stylesDocument.getTableMarginLeft( table );
+            }
         }
         if ( marginLeft != null )
         {
@@ -920,7 +931,11 @@ public class PdfMapper
         Float marginRight = stylesDocument.getTableCellMarginRight( cell );
         if ( marginRight == null )
         {
-            marginRight = stylesDocument.getTableMarginRight( table );
+            marginRight = stylesDocument.getTableRowMarginRight( row );
+            if ( marginRight == null )
+            {
+                marginRight = stylesDocument.getTableMarginRight( table );
+            }
         }
         if ( marginRight != null )
         {
@@ -959,7 +974,7 @@ public class PdfMapper
     }
 
     @Override
-    protected void visitPicture( CTPicture picture, IITextContainer pdfParentContainer )
+    protected void visitPicture( CTPicture picture, Float offsetX, Float offsetY, IITextContainer pdfParentContainer )
         throws Exception
     {
         CTPositiveSize2D ext = picture.getSpPr().getXfrm().getExt();
@@ -974,7 +989,7 @@ public class PdfMapper
             try
             {
                 Image img = Image.getInstance( pictureData.getData() );
-                img.scaleAbsolute( dxa2points( x ) / 635, dxa2points( y ) / 635 );
+                img.scaleAbsolute( emu2points( x ), emu2points( y ) );
 
                 IITextContainer parentOfParentContainer = pdfParentContainer.getITextContainer();
                 if ( parentOfParentContainer != null && parentOfParentContainer instanceof PdfPCell )
@@ -983,7 +998,26 @@ public class PdfMapper
                 }
                 else
                 {
-                    pdfParentContainer.addElement( new Chunk( img, 0, 0, false ) );
+                    if ( offsetY != null )
+                    {
+                        ExtendedImage extImg = new ExtendedImage( img, -offsetY );
+                        // if run-through set line height to zero
+                        // so subsequent text will run through the image, not below
+                        Chunk chunk = new Chunk( extImg, offsetX, -extImg.getScaledHeight() );
+                        pdfParentContainer.addElement( chunk );
+                    }
+                    else
+                    {
+                        if ( pdfParentContainer instanceof Paragraph )
+                        {
+                            // I don't know why but we need add some spacing before in the paragraph
+                            // otherwise the image cut the text of the below paragraph (see FormattingTests JUnit)?
+                            Paragraph paragraph = (Paragraph) pdfParentContainer;
+                            paragraph.setSpacingBefore( paragraph.getSpacingBefore() + 5f );
+                        }
+                        pdfParentContainer.addElement( new Chunk( img, offsetX != null ? offsetX : 0,
+                                                                  offsetY != null ? -offsetY : 0, false ) );
+                    }
                 }
 
             }
@@ -994,5 +1028,4 @@ public class PdfMapper
 
         }
     }
-
 }

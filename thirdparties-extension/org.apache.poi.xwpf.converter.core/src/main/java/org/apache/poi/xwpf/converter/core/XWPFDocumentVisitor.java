@@ -6,6 +6,7 @@ import java.util.List;
 
 import org.apache.poi.openxml4j.opc.PackagePart;
 import org.apache.poi.xwpf.converter.core.styles.XWPFStylesDocument;
+import org.apache.poi.xwpf.converter.core.utils.DxaUtil;
 import org.apache.poi.xwpf.converter.core.utils.StringUtils;
 import org.apache.poi.xwpf.converter.core.utils.XWPFTableUtil;
 import org.apache.poi.xwpf.usermodel.IBodyElement;
@@ -27,6 +28,10 @@ import org.openxmlformats.schemas.drawingml.x2006.main.CTGraphicalObjectData;
 import org.openxmlformats.schemas.drawingml.x2006.picture.CTPicture;
 import org.openxmlformats.schemas.drawingml.x2006.wordprocessingDrawing.CTAnchor;
 import org.openxmlformats.schemas.drawingml.x2006.wordprocessingDrawing.CTInline;
+import org.openxmlformats.schemas.drawingml.x2006.wordprocessingDrawing.CTPosH;
+import org.openxmlformats.schemas.drawingml.x2006.wordprocessingDrawing.CTPosV;
+import org.openxmlformats.schemas.drawingml.x2006.wordprocessingDrawing.STRelFromH;
+import org.openxmlformats.schemas.drawingml.x2006.wordprocessingDrawing.STRelFromV;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTBr;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTDrawing;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTEmpty;
@@ -168,11 +173,12 @@ public abstract class XWPFDocumentVisitor<T, O extends Options, E extends IXWPFM
             masterPageManager.update( paragraph );
         }
         this.currentInstrText = null;
-        if (pageBreakOnNextParagraph) {
+        if ( pageBreakOnNextParagraph )
+        {
             pageBreak();
         }
         this.pageBreakOnNextParagraph = false;
-        
+
         T paragraphContainer = startVisitParagraph( paragraph, container );
         visitParagraphBody( paragraph, paragraphContainer );
         endVisitParagraph( paragraph, container, paragraphContainer );
@@ -380,7 +386,7 @@ public abstract class XWPFDocumentVisitor<T, O extends Options, E extends IXWPFM
         }
         else
         {
-            addNewLine(br, paragraphContainer);
+            addNewLine( br, paragraphContainer );
         }
     }
 
@@ -397,7 +403,8 @@ public abstract class XWPFDocumentVisitor<T, O extends Options, E extends IXWPFM
         return STBrType.TEXT_WRAPPING;
     }
 
-    protected abstract void addNewLine( CTBr br, T paragraphContainer ) throws Exception;
+    protected abstract void addNewLine( CTBr br, T paragraphContainer )
+        throws Exception;
 
     protected abstract void pageBreak()
         throws Exception;
@@ -652,30 +659,83 @@ public abstract class XWPFDocumentVisitor<T, O extends Options, E extends IXWPFM
         throws Exception
     {
         CTGraphicalObject graphic = anchor.getGraphic();
-        if ( graphic != null )
+
+        /*
+         * wp:positionH relativeFrom="column"> <wp:posOffset>-898525</wp:posOffset> </wp:positionH>
+         */
+        Float offsetX = null;
+        CTPosH positionH = anchor.getPositionH();
+        if ( positionH != null )
         {
-            CTGraphicalObjectData graphicData = graphic.getGraphicData();
-            if ( graphicData != null )
-            {
-                XmlCursor c = graphicData.newCursor();
-                c.selectPath( "./*" );
-                while ( c.toNextSelection() )
-                {
-                    XmlObject o = c.getObject();
-                    if ( o instanceof CTPicture )
-                    {
-                        visitPicture( (CTPicture) o, parentContainer );
-                    }
-                }
-                c.dispose();
-            }
+            offsetX = getImageOffsetX( positionH );
+
         }
+
+        Float offsetY = null;
+        CTPosV positionV = anchor.getPositionV();
+        if ( positionV != null )
+        {
+            offsetY = getImageOffsetY( positionV );
+        }
+        visitGraphicalObject( parentContainer, graphic, offsetX, offsetY );
+    }
+
+    protected Float getImageOffsetX( CTPosH positionH )
+    {
+        int posOffsetH = positionH.getPosOffset();
+        org.openxmlformats.schemas.drawingml.x2006.wordprocessingDrawing.STRelFromH.Enum relativeFromH =
+            positionH.getRelativeFrom();
+        if ( relativeFromH == null )
+        {
+            // not sure with that
+            relativeFromH = STRelFromH.COLUMN;
+        }
+        if ( STRelFromH.PAGE.equals( relativeFromH ) )
+        {
+
+        }
+        else if ( STRelFromH.COLUMN.equals( relativeFromH ) )
+        {
+            return DxaUtil.emu2points( posOffsetH );
+        }
+        return null;
+    }
+
+    protected Float getImageOffsetY( CTPosV positionV )
+    {
+        int posOffsetV = positionV.getPosOffset();
+        org.openxmlformats.schemas.drawingml.x2006.wordprocessingDrawing.STRelFromV.Enum relativeFromV =
+            positionV.getRelativeFrom();
+        if ( relativeFromV == null )
+        {
+            // not sure with that
+            relativeFromV = STRelFromV.PAGE;
+        }
+        if ( STRelFromV.PAGE.equals( relativeFromV ) )
+        {
+
+        }
+        else if ( STRelFromV.BOTTOM_MARGIN.equals( relativeFromV ) )
+        {
+            return DxaUtil.emu2points( posOffsetV );
+        }
+        else if ( STRelFromV.PARAGRAPH.equals( relativeFromV ) )
+        {
+            return DxaUtil.emu2points( posOffsetV );
+        }
+        return null;
     }
 
     protected void visitInline( CTInline inline, T parentContainer )
         throws Exception
     {
         CTGraphicalObject graphic = inline.getGraphic();
+        visitGraphicalObject( parentContainer, graphic, null, null );
+    }
+
+    private void visitGraphicalObject( T parentContainer, CTGraphicalObject graphic, Float offsetX, Float offsetY )
+        throws Exception
+    {
         if ( graphic != null )
         {
             CTGraphicalObjectData graphicData = graphic.getGraphicData();
@@ -688,7 +748,7 @@ public abstract class XWPFDocumentVisitor<T, O extends Options, E extends IXWPFM
                     XmlObject o = c.getObject();
                     if ( o instanceof CTPicture )
                     {
-                        visitPicture( (CTPicture) o, parentContainer );
+                        visitPicture( (CTPicture) o, offsetX, offsetY, parentContainer );
                     }
                 }
                 c.dispose();
@@ -696,7 +756,7 @@ public abstract class XWPFDocumentVisitor<T, O extends Options, E extends IXWPFM
         }
     }
 
-    protected abstract void visitPicture( CTPicture picture, T parentContainer )
+    protected abstract void visitPicture( CTPicture picture, Float offsetX, Float offsetY, T parentContainer )
         throws Exception;
 
     protected XWPFPictureData getPictureDataByID( String blipId )

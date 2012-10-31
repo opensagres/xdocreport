@@ -40,6 +40,8 @@ import org.apache.poi.xwpf.usermodel.XWPFTableCell;
 import org.apache.poi.xwpf.usermodel.XWPFTableRow;
 import org.openxmlformats.schemas.drawingml.x2006.main.CTPositiveSize2D;
 import org.openxmlformats.schemas.drawingml.x2006.picture.CTPicture;
+import org.openxmlformats.schemas.drawingml.x2006.wordprocessingDrawing.STRelFromH;
+import org.openxmlformats.schemas.drawingml.x2006.wordprocessingDrawing.STRelFromV;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTBorder;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTBr;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTDecimalNumber;
@@ -898,7 +900,7 @@ public class PdfMapper
                 marginTop = stylesDocument.getTableMarginTop( table );
             }
         }
-        if ( marginTop != null)
+        if ( marginTop != null )
         {
             pdfPCell.setPaddingTop( marginTop );
         }
@@ -974,9 +976,15 @@ public class PdfMapper
     }
 
     @Override
-    protected void visitPicture( CTPicture picture, Float offsetX, Float offsetY, IITextContainer pdfParentContainer )
+    protected void visitPicture( CTPicture picture,
+                                 Float offsetX,
+                                 org.openxmlformats.schemas.drawingml.x2006.wordprocessingDrawing.STRelFromH.Enum relativeFromH,
+                                 Float offsetY,
+                                 org.openxmlformats.schemas.drawingml.x2006.wordprocessingDrawing.STRelFromV.Enum relativeFromV,
+                                 IITextContainer pdfParentContainer )
         throws Exception
     {
+
         CTPositiveSize2D ext = picture.getSpPr().getXfrm().getExt();
         long x = ext.getCx();
         long y = ext.getCy();
@@ -998,12 +1006,57 @@ public class PdfMapper
                 }
                 else
                 {
-                    if ( offsetY != null )
+                    float chunkOffsetX = 0;
+                    if ( offsetX != null )
+                    {
+                        if ( STRelFromH.CHARACTER.equals( relativeFromH ) )
+                        {
+                            chunkOffsetX = offsetX;
+                        }
+                        else if ( STRelFromH.COLUMN.equals( relativeFromH ) )
+                        {
+                            chunkOffsetX = offsetX;
+                        }
+                        else if ( STRelFromH.INSIDE_MARGIN.equals( relativeFromH ) )
+                        {
+                            chunkOffsetX = offsetX;
+                        }
+                        else if ( STRelFromH.LEFT_MARGIN.equals( relativeFromH ) )
+                        {
+                            chunkOffsetX = offsetX;
+                        }
+                        else if ( STRelFromH.MARGIN.equals( relativeFromH ) )
+                        {
+                            chunkOffsetX = offsetX;
+                        }
+                        else if ( STRelFromH.OUTSIDE_MARGIN.equals( relativeFromH ) )
+                        {
+                            chunkOffsetX = offsetX;
+                        }
+                        else if ( STRelFromH.PAGE.equals( relativeFromH ) )
+                        {
+                            chunkOffsetX = offsetX - pdfDocument.left();
+                        }
+
+                    }
+
+                    float chunkOffsetY = 0;
+                    boolean useExtendedImage = false;
+                    if ( STRelFromV.PARAGRAPH.equals( relativeFromV ) )
+                    {
+                        useExtendedImage = true;
+                    }
+
+                    if ( useExtendedImage )
                     {
                         ExtendedImage extImg = new ExtendedImage( img, -offsetY );
-                        // if run-through set line height to zero
-                        // so subsequent text will run through the image, not below
-                        Chunk chunk = new Chunk( extImg, offsetX, -extImg.getScaledHeight() );
+
+                        if ( STRelFromV.PARAGRAPH.equals( relativeFromV ) )
+                        {
+                            chunkOffsetY = -extImg.getScaledHeight();
+                        }
+
+                        Chunk chunk = new Chunk( extImg, chunkOffsetX, chunkOffsetY, false );
                         pdfParentContainer.addElement( chunk );
                     }
                     else
@@ -1015,8 +1068,7 @@ public class PdfMapper
                             Paragraph paragraph = (Paragraph) pdfParentContainer;
                             paragraph.setSpacingBefore( paragraph.getSpacingBefore() + 5f );
                         }
-                        pdfParentContainer.addElement( new Chunk( img, offsetX != null ? offsetX : 0,
-                                                                  offsetY != null ? -offsetY : 0, false ) );
+                        pdfParentContainer.addElement( new Chunk( img, chunkOffsetX, chunkOffsetY, false ) );
                     }
                 }
 

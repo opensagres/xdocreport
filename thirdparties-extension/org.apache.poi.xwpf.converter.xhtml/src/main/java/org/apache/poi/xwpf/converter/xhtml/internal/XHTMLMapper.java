@@ -48,9 +48,7 @@ import org.apache.poi.xwpf.usermodel.XWPFTableCell;
 import org.apache.poi.xwpf.usermodel.XWPFTableRow;
 import org.apache.xmlbeans.XmlException;
 import org.openxmlformats.schemas.drawingml.x2006.picture.CTPicture;
-import org.openxmlformats.schemas.drawingml.x2006.wordprocessingDrawing.CTPosH;
-import org.openxmlformats.schemas.drawingml.x2006.wordprocessingDrawing.CTPosV;
-import org.openxmlformats.schemas.drawingml.x2006.wordprocessingDrawing.STRelFromH;
+import org.openxmlformats.schemas.drawingml.x2006.wordprocessingDrawing.STRelFromH.Enum;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTBr;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTHdrFtrRef;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTPPr;
@@ -380,9 +378,15 @@ public class XHTMLMapper
     }
 
     @Override
-    protected void visitPicture( CTPicture picture, Float offsetX, Float offsetY, Object parentContainer )
+    protected void visitPicture( CTPicture picture,
+                                 Float offsetX,
+                                 Enum relativeFromH,
+                                 Float offsetY,
+                                 org.openxmlformats.schemas.drawingml.x2006.wordprocessingDrawing.STRelFromV.Enum relativeFromV,
+                                 Object parentContainer )
         throws Exception
     {
+
         AttributesImpl attributes = null;
         String blipId = picture.getBlipFill().getBlip().getEmbed();
         // Src attribute

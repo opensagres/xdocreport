@@ -179,6 +179,13 @@ public abstract class AbstractXWPFPOIConverterTest
     }
 
     @Test
+    public void Taksee()
+        throws IOException
+    {
+        doGenerate( "Taksee.docx" );
+    }
+    
+    @Test
     public void TemplateGeneral()
         throws IOException
     {
@@ -263,7 +270,21 @@ public abstract class AbstractXWPFPOIConverterTest
     }
 
     @Test
-    public void testParagraphAlignment()
+    public void TestPageNumber()
+        throws IOException
+    {
+        doGenerate( "TestPageNumber.docx" );
+    }
+
+    @Test
+    public void TestPageWithBorder()
+        throws IOException
+    {
+        doGenerate( "TestPageWithBorder.docx" );
+    }
+    
+    @Test
+    public void TestParagraphAlignment()
         throws IOException
     {
         doGenerate( "TestParagraphAlignment.docx" );

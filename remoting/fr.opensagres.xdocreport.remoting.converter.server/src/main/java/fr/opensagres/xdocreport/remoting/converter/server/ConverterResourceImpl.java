@@ -114,7 +114,7 @@ public class ConverterResourceImpl
 
             // 3) Get the converter from the registry
             final Options options = Options.getFrom( documentKind ).to( to ).via( via );
-            final IConverter converter = ConverterRegistry.getRegistry().getConverter( options );
+            final IConverter converter = ConverterRegistry.getRegistry().findConverter( options );
 
             // 4) Create an instance of JAX-RS StreamingOutput to convert the inputstream and set the result in the
             // response stream.

@@ -30,7 +30,7 @@ public class ParagraphSpacingAfterValueProvider
         BigInteger after = spacing.getAfter();
         if ( after != null )
         {
-            
+
             return DxaUtil.dxa2points( after );
         }
         return null;
@@ -39,11 +39,14 @@ public class ParagraphSpacingAfterValueProvider
     @Override
     protected Float getStaticValue( XWPFParagraph paragraph, XWPFStylesDocument stylesDocument )
     {
-        // if ( pargraph.getPartType() != BodyType.TABLECELL )
-        // {
-        return 10f;
-        // }
-        // return null;
+        // Not sure with this rule. But it seems that when styles.xml doesn't declare "w:rPrDefault"
+        // default value is 10pt.
+        if ( stylesDocument.getDocDefaults() == null )
+        {
+            // see Issue52 JUnit.
+            return 10f;
+        }
+        return null;
     }
 
 }

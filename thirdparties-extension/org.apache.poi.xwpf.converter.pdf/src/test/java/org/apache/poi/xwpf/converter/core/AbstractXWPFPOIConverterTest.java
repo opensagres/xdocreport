@@ -39,6 +39,14 @@ public abstract class AbstractXWPFPOIConverterTest
     }
 
     @Test
+    public void AvanceSurFrais()
+        throws IOException
+    {
+        doGenerate( "AvanceSurFrais.docx" );
+    }
+
+    
+    @Test
     public void CV()
         throws IOException
     {

@@ -13,6 +13,7 @@ import org.apache.poi.xwpf.usermodel.IBodyElement;
 import org.apache.poi.xwpf.usermodel.XWPFDocument;
 import org.apache.poi.xwpf.usermodel.XWPFFooter;
 import org.apache.poi.xwpf.usermodel.XWPFHeader;
+import org.apache.poi.xwpf.usermodel.XWPFHyperlinkRun;
 import org.apache.poi.xwpf.usermodel.XWPFParagraph;
 import org.apache.poi.xwpf.usermodel.XWPFPictureData;
 import org.apache.poi.xwpf.usermodel.XWPFRun;
@@ -37,13 +38,20 @@ import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTDrawing;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTEmpty;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTHdrFtr;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTHdrFtrRef;
+import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTHyperlink;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTOnOff;
+import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTP;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTPPr;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTPTab;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTR;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTRow;
+import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTRunTrackChange;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTSdtCell;
+import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTSdtContentRun;
+import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTSdtRun;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTSectPr;
+import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTSimpleField;
+import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTSmartTagRun;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTTabs;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTTc;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTText;
@@ -232,10 +240,20 @@ public abstract class XWPFDocumentVisitor<T, O extends Options, E extends IXWPFM
         }
         else
         {
-            for ( XWPFRun run : paragraph.getRuns() )
-            {
-                visitRun( run, paragraphContainer );
-            }
+            // Loop for each element of <w:r, w:fldSimple
+            // to keep the order of thoses elements.
+            CTP ctp = paragraph.getCTP();
+            visitRuns( paragraph, ctp, paragraphContainer );
+
+            // for ( XWPFRun run : paragraph.getRuns() )
+            // {
+            // Node parent = run.getCTR().getDomNode().getParentNode();
+            // // XmlObject u = (XmlObject)parent;
+            // // parent.getUser() ;
+            //
+            // System.err.println( parent );
+            // visitRun( run, paragraphContainer );
+            // }
         }
 
         // Page Break
@@ -256,10 +274,74 @@ public abstract class XWPFDocumentVisitor<T, O extends Options, E extends IXWPFM
         }
     }
 
+    private void visitRuns( XWPFParagraph paragraph, CTP ctp, T paragraphContainer )
+        throws Exception
+    {
+        XmlCursor c = ctp.newCursor();
+        c.selectPath( "child::*" );
+        while ( c.toNextSelection() )
+        {
+            XmlObject o = c.getObject();
+            if ( o instanceof CTR )
+            {
+                XWPFRun run = new XWPFRun( (CTR) o, paragraph );
+                visitRun( run, false, paragraphContainer );
+            }
+            if ( o instanceof CTHyperlink )
+            {
+                CTHyperlink link = (CTHyperlink) o;
+                for ( CTR r : link.getRList() )
+                {
+                    XWPFRun run = new XWPFHyperlinkRun( link, r, paragraph );
+                    visitRun( run, false, paragraphContainer );
+                }
+            }
+            if ( o instanceof CTSdtRun )
+            {
+                CTSdtContentRun run = ( (CTSdtRun) o ).getSdtContent();
+                for ( CTR r : run.getRList() )
+                {
+                    XWPFRun ru = new XWPFRun( r, paragraph );
+                    visitRun( ru, false, paragraphContainer );
+                }
+            }
+            if ( o instanceof CTRunTrackChange )
+            {
+                for ( CTR r : ( (CTRunTrackChange) o ).getRList() )
+                {
+                    XWPFRun run = new XWPFRun( r, paragraph );
+                    visitRun( run, false, paragraphContainer );
+                }
+            }
+            if ( o instanceof CTSimpleField )
+            {
+                CTSimpleField simpleField = (CTSimpleField) o;
+                /*
+                 * Support page numbering<w:fldSimple w:instr=" PAGE \* MERGEFORMAT "> <w:r> <w:rPr> <w:noProof/>
+                 * </w:rPr> <w:t>- 1 -</w:t> </w:r> </w:fldSimple>
+                 */
+                String instr = simpleField.getInstr();
+                boolean pageNumber = instr.toLowerCase().contains( "page" );
+                for ( CTR r : simpleField.getRList() )
+                {
+                    XWPFRun run = new XWPFRun( r, paragraph );
+                    visitRun( run, pageNumber, paragraphContainer );
+                }
+            }
+            if ( o instanceof CTSmartTagRun )
+            {
+                // Smart Tags can be nested many times.
+                // This implementation does not preserve the tagging information
+                // buildRunsInOrderFromXml(o);
+            }
+        }
+        c.dispose();
+    }
+
     protected abstract void visitEmptyRun( T paragraphContainer )
         throws Exception;
 
-    protected void visitRun( XWPFRun run, T paragraphContainer )
+    protected void visitRun( XWPFRun run, boolean pageNumber, T paragraphContainer )
         throws Exception
     {
         CTR ctr = run.getCTR();
@@ -303,7 +385,7 @@ public abstract class XWPFDocumentVisitor<T, O extends Options, E extends IXWPFM
                     }
                     else
                     {
-                        visitText( ctText, paragraphContainer );
+                        visitText( ctText, pageNumber, paragraphContainer );
                     }
                 }
             }
@@ -373,7 +455,7 @@ public abstract class XWPFDocumentVisitor<T, O extends Options, E extends IXWPFM
     protected abstract void visitHyperlink( CTText ctText, String hrefHyperlink, T paragraphContainer )
         throws Exception;
 
-    protected abstract void visitText( CTText ctText, T paragraphContainer )
+    protected abstract void visitText( CTText ctText, boolean pageNumber, T paragraphContainer )
         throws Exception;
 
     protected abstract void visitTab( CTPTab o, T paragraphContainer )

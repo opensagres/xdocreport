@@ -27,13 +27,10 @@ package org.apache.poi.xwpf.converter.pdf.internal.elements;
 import java.awt.Color;
 import java.math.BigInteger;
 
-import javax.swing.text.Style;
-
 import org.apache.poi.xwpf.converter.core.utils.ColorHelper;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTBorder;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.STBorder;
 
-import com.lowagie.text.Element;
 import com.lowagie.text.Paragraph;
 import com.lowagie.text.Rectangle;
 
@@ -66,11 +63,6 @@ public class StylableParagraph
         super( title );
         this.ownerDocument = ownerDocument;
         this.parent = parent;
-    }
-
-    public void addElement( Element element )
-    {
-        super.add( element );
     }
 
     // public void applyStyles( XWPFParagraph p, Style style )

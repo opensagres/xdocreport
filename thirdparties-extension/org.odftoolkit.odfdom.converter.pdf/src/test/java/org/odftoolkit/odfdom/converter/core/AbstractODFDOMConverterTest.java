@@ -128,6 +128,13 @@ public abstract class AbstractODFDOMConverterTest
     }
 
     @Test
+    public void TestPageNumber()
+        throws Exception
+    {
+        doGenerate( "TestPageNumber.odt" );
+    }
+
+    @Test
     public void TestParagraphWithBackground()
         throws Exception
     {

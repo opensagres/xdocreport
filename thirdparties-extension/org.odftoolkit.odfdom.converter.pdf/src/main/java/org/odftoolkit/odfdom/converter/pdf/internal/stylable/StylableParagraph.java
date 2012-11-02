@@ -78,14 +78,6 @@ public class StylableParagraph
         super.setMultipliedLeading( DEFAULT_LINE_HEIGHT );
     }
 
-    public void addElement( Element element )
-    {
-        // in function add(Element element) chunks are cloned
-        // it is not correct for chunks with dynamic content (ie page number)
-        // use function add(int index, Element element) because in this function chunks are added without cloning
-        super.add( size(), element );
-    }
-
     public void applyStyles( Style style )
     {
         this.lastStyleApplied = style;

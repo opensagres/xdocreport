@@ -73,6 +73,7 @@ import com.lowagie.text.pdf.draw.DottedLineSeparator;
 import com.lowagie.text.pdf.draw.LineSeparator;
 import com.lowagie.text.pdf.draw.VerticalPositionMark;
 
+import fr.opensagres.xdocreport.itext.extension.ExtendedChunk;
 import fr.opensagres.xdocreport.itext.extension.ExtendedImage;
 import fr.opensagres.xdocreport.itext.extension.ExtendedParagraph;
 import fr.opensagres.xdocreport.itext.extension.ExtendedPdfPCell;
@@ -389,7 +390,7 @@ public class PdfMapper
     }
 
     @Override
-    protected void visitRun( XWPFRun docxRun, IITextContainer pdfParagraphContainer )
+    protected void visitRun( XWPFRun docxRun, boolean pageNumber, IITextContainer pdfParagraphContainer )
         throws Exception
     {
         // Font family
@@ -439,7 +440,7 @@ public class PdfMapper
             this.currentRunBackgroundColor = stylesDocument.getTextHighlighting( docxRun );
         }
 
-        super.visitRun( docxRun, pdfParagraphContainer );
+        super.visitRun( docxRun, pageNumber, pdfParagraphContainer );
 
         this.currentRunFont = null;
         this.currentRunUnderlinePatterns = null;
@@ -450,22 +451,25 @@ public class PdfMapper
     protected void visitHyperlink( CTText ctText, String hrefHyperlink, IITextContainer pdfParagraphContainer )
         throws Exception
     {
-        Anchor anchor = new Anchor( createTextChunk( ctText ) );
+        Anchor anchor = new Anchor( createTextChunk( ctText, false ) );
         anchor.setReference( hrefHyperlink );
         pdfParagraphContainer.addElement( anchor );
     }
 
     @Override
-    protected void visitText( CTText docxText, IITextContainer pdfParagraphContainer )
+    protected void visitText( CTText docxText, boolean pageNumber, IITextContainer pdfParagraphContainer )
         throws Exception
     {
-        Chunk textChunk = createTextChunk( docxText );
+        Chunk textChunk = createTextChunk( docxText, pageNumber );
         pdfParagraphContainer.addElement( textChunk );
     }
 
-    private Chunk createTextChunk( CTText docxText )
+    private Chunk createTextChunk( CTText docxText, boolean pageNumber )
     {
-        Chunk textChunk = new Chunk( docxText.getStringValue(), currentRunFont );
+
+        Chunk textChunk =
+            pageNumber ? new ExtendedChunk( pdfDocument, true, currentRunFont ) : new Chunk( docxText.getStringValue(),
+                                                                                             currentRunFont );
 
         if ( currentRunUnderlinePatterns != null )
         {

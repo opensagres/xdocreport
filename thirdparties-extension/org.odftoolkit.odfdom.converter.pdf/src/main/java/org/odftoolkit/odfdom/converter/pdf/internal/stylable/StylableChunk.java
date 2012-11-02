@@ -29,43 +29,23 @@ import java.awt.Color;
 import org.odftoolkit.odfdom.converter.pdf.internal.styles.Style;
 import org.odftoolkit.odfdom.converter.pdf.internal.styles.StyleTextProperties;
 
-import com.lowagie.text.Chunk;
 import com.lowagie.text.Element;
 import com.lowagie.text.Font;
 
+import fr.opensagres.xdocreport.itext.extension.ExtendedChunk;
+
 public class StylableChunk
-    extends Chunk
+    extends ExtendedChunk
     implements IStylableElement
 {
-    private final StylableDocument ownerDocument;
-
     private final IStylableContainer parent;
 
     private Style lastStyleApplied = null;
 
-    private boolean pageNumberChunk;
-
     public StylableChunk( StylableDocument ownerDocument, IStylableContainer parent, String textContent )
     {
-        super( textContent );
-        this.ownerDocument = ownerDocument;
+        super( ownerDocument, textContent );
         this.parent = parent;
-    }
-
-    public boolean isPageNumberChunk()
-    {
-        return pageNumberChunk;
-    }
-
-    public void setPageNumberChunk( boolean pageNumberChunk )
-    {
-        this.pageNumberChunk = pageNumberChunk;
-    }
-
-    @Override
-    public String getContent()
-    {
-        return pageNumberChunk ? String.valueOf( ownerDocument.getPageNumber() ) : super.getContent();
     }
 
     public void applyStyles( Style style )

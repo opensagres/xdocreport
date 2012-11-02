@@ -167,7 +167,7 @@ public class XHTMLMapper
     }
 
     @Override
-    protected void visitRun( XWPFRun run, Object paragraphContainer )
+    protected void visitRun( XWPFRun run, boolean pageNumber, Object paragraphContainer )
         throws Exception
     {
 
@@ -182,7 +182,7 @@ public class XHTMLMapper
         CSSStyle cssStyle = getStylesDocument().createCSSStyle( rPr );
         this.currentRunAttributes = createStyleAttribute( cssStyle, currentRunAttributes );
 
-        super.visitRun( run, paragraphContainer );
+        super.visitRun( run, pageNumber, paragraphContainer );
 
         this.currentRunAttributes = null;
     }
@@ -196,7 +196,7 @@ public class XHTMLMapper
     }
 
     @Override
-    protected void visitText( CTText ctText, Object paragraphContainer )
+    protected void visitText( CTText ctText, boolean pageNumber, Object paragraphContainer )
         throws Exception
     {
         if ( currentRunAttributes != null )

@@ -28,8 +28,10 @@ import java.util.ArrayList;
 import java.util.Map;
 
 import org.odftoolkit.odfdom.converter.pdf.internal.styles.Style;
+import org.odftoolkit.odfdom.converter.pdf.internal.styles.StyleLineHeight;
 import org.odftoolkit.odfdom.converter.pdf.internal.styles.StyleListProperties;
 import org.odftoolkit.odfdom.converter.pdf.internal.styles.StyleNumFormat;
+import org.odftoolkit.odfdom.converter.pdf.internal.styles.StyleParagraphProperties;
 import org.odftoolkit.odfdom.converter.pdf.internal.styles.StyleTextProperties;
 
 import com.lowagie.text.Chunk;
@@ -37,8 +39,7 @@ import com.lowagie.text.Element;
 import com.lowagie.text.Font;
 import com.lowagie.text.Image;
 import com.lowagie.text.List;
-import com.lowagie.text.ListItem;
-import com.lowagie.text.Paragraph;
+import com.lowagie.text.Phrase;
 import com.lowagie.text.factories.RomanAlphabetFactory;
 import com.lowagie.text.factories.RomanNumberFactory;
 
@@ -100,10 +101,19 @@ public class StylableList
     @SuppressWarnings( "unchecked" )
     private void addElement( Element element, boolean addLabel )
     {
-        if ( element instanceof Paragraph )
+        if ( element instanceof Chunk )
         {
-            Paragraph p = (Paragraph) element;
-            ListItem li = new StylableListItem( p );
+            // may it happen?
+            Chunk ch = (Chunk) element;
+            StylableParagraph p = new StylableParagraph( null, null );
+            p.setFont( ch.getFont() );
+            p.addElement( ch );
+            element = p.getElement();
+        }
+        if ( element instanceof Phrase )
+        {
+            Phrase p = (Phrase) element;
+            StylableListItem li = new StylableListItem( p );
             // determine font, it may be set explicitly or use paragraph font
             Font symbolFont = symbol.getFont();
             if ( symbolFont.isStandardFont() )
@@ -124,35 +134,53 @@ public class StylableList
                     symbolFont = p.getFont();
                 }
             }
+            // determine line height
+            float lineHeight = StylableParagraph.DEFAULT_LINE_HEIGHT;
+            boolean lineHeightProportional = true;
+            if ( element instanceof IStylableElement )
+            {
+                IStylableElement stylableElement = (IStylableElement) element;
+                Style style = stylableElement.getLastStyleApplied();
+                if ( style != null )
+                {
+                    StyleParagraphProperties paragraphProperties = style.getParagraphProperties();
+                    StyleLineHeight lineHeightObj = paragraphProperties.getLineHeight();
+                    if ( lineHeightObj != null && lineHeightObj.getLineHeight() != null )
+                    {
+                        lineHeight = lineHeightObj.getLineHeight();
+                        lineHeightProportional = lineHeightObj.isLineHeightProportional();
+                    }
+                }
+            }
             if ( addLabel )
             {
                 if ( numbered || lettered || romanNumbered )
                 {
-                    Chunk chunk = new Chunk( preSymbol, symbolFont );
+                    StringBuilder sbuf = new StringBuilder( preSymbol );
                     int index = first + list.size();
                     if ( lettered )
                     {
-                        chunk.append( RomanAlphabetFactory.getString( index, lowercase ) );
+                        sbuf.append( RomanAlphabetFactory.getString( index, lowercase ) );
                     }
                     else if ( romanNumbered )
                     {
-                        chunk.append( RomanNumberFactory.getString( index, lowercase ) );
+                        sbuf.append( RomanNumberFactory.getString( index, lowercase ) );
                     }
                     else
                     {
-                        chunk.append( String.valueOf( index ) );
+                        sbuf.append( index );
                     }
-                    chunk.append( postSymbol );
-                    li.setListSymbol( chunk );
+                    sbuf.append( postSymbol );
+                    li.setListSymbol( sbuf.toString(), symbolFont, lineHeight, lineHeightProportional );
                 }
                 else
                 {
-                    li.setListSymbol( new Chunk( symbol.getContent(), symbolFont ) );
+                    li.setListSymbol( symbol.getContent(), symbolFont, lineHeight, lineHeightProportional );
                 }
             }
             else
             {
-                li.setListSymbol( new Chunk( "", symbolFont ) );
+                li.setListSymbol( "", symbolFont, lineHeight, lineHeightProportional );
             }
             li.setIndentationLeft( symbolIndent );
             li.setIndentationRight( 0.0f );
@@ -170,6 +198,17 @@ public class StylableList
         }
     }
 
+    public static StyleListProperties getListProperties( Map<Integer, StyleListProperties> listPropertiesMap, int level )
+    {
+        StyleListProperties listProperties = null;
+        for ( int i = level; i >= 0 && listProperties == null; i-- )
+        {
+            // find style for current or nearest lower list level
+            listProperties = listPropertiesMap.get( i );
+        }
+        return listProperties;
+    }
+
     public void applyStyles( Style style )
     {
         this.lastStyleApplied = style;
@@ -177,12 +216,7 @@ public class StylableList
         Map<Integer, StyleListProperties> listPropertiesMap = style.getListPropertiesMap();
         if ( listPropertiesMap != null )
         {
-            StyleListProperties listProperties = null;
-            for ( int i = listLevel; i >= 0 && listProperties == null; i-- )
-            {
-                // find style for current or nearest lower list level
-                listProperties = listPropertiesMap.get( i );
-            }
+            StyleListProperties listProperties = getListProperties( listPropertiesMap, listLevel );
             if ( listProperties != null )
             {
                 String bulletChar = listProperties.getBulletChar();
@@ -191,16 +225,13 @@ public class StylableList
                     // list item label is a char
                     Chunk symbol = new Chunk( bulletChar );
 
-                    if ( listProperties.isLabelStyleSpecified() )
+                    StyleTextProperties textProperties = listProperties.getTextProperties();
+                    if ( textProperties != null )
                     {
-                        StyleTextProperties textProperties = style.getTextProperties();
-                        if ( textProperties != null )
+                        Font font = textProperties.getFont();
+                        if ( font != null )
                         {
-                            Font font = textProperties.getFont();
-                            if ( font != null )
-                            {
-                                symbol.setFont( font );
-                            }
+                            symbol.setFont( font );
                         }
                     }
 
@@ -231,16 +262,13 @@ public class StylableList
                     // list item label is a number
                     Chunk symbol = new Chunk( "" );
 
-                    if ( listProperties.isLabelStyleSpecified() )
+                    StyleTextProperties textProperties = listProperties.getTextProperties();
+                    if ( textProperties != null )
                     {
-                        StyleTextProperties textProperties = style.getTextProperties();
-                        if ( textProperties != null )
+                        Font font = textProperties.getFont();
+                        if ( font != null )
                         {
-                            Font font = textProperties.getFont();
-                            if ( font != null )
-                            {
-                                symbol.setFont( font );
-                            }
+                            symbol.setFont( font );
                         }
                     }
 
@@ -250,23 +278,23 @@ public class StylableList
                         super.setFirst( startValue );
                     }
 
-                    String numPrefix = listProperties.getNumPrefix();
-                    if ( numPrefix != null )
-                    {
-                        super.setPreSymbol( numPrefix );
-                        symbol = new Chunk( numPrefix, symbol.getFont() );
-                    }
-
-                    String numSuffix = listProperties.getNumSuffix();
-                    if ( numSuffix != null )
-                    {
-                        super.setPostSymbol( numSuffix );
-                        symbol.append( numSuffix );
-                    }
-
                     StyleNumFormat numFormat = listProperties.getNumFormat();
                     if ( numFormat != null )
                     {
+                        String numPrefix = listProperties.getNumPrefix();
+                        if ( numPrefix != null )
+                        {
+                            super.setPreSymbol( numPrefix );
+                            symbol = new Chunk( numPrefix, symbol.getFont() );
+                        }
+
+                        String numSuffix = listProperties.getNumSuffix();
+                        if ( numSuffix != null )
+                        {
+                            super.setPostSymbol( numSuffix );
+                            symbol.append( numSuffix );
+                        }
+
                         super.setNumbered( true );
                         super.setLettered( numFormat.isAlphabetical() );
                         this.romanNumbered = numFormat.isRoman();
@@ -290,7 +318,7 @@ public class StylableList
                 else if ( spaceBefore != null && minLabelWidth != null )
                 {
                     // ODT generated by MsWord
-                    super.setIndentationLeft( Math.max( spaceBefore - minLabelWidth, 0.0f ) );
+                    super.setIndentationLeft( Math.max( spaceBefore, 0.0f ) );
                     super.setSymbolIndent( Math.max( minLabelWidth, 0.0f ) );
                 }
             }

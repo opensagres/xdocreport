@@ -27,6 +27,8 @@ package org.odftoolkit.odfdom.converter.pdf.internal.stylable;
 import java.util.List;
 
 import org.odftoolkit.odfdom.converter.pdf.internal.styles.Style;
+import org.odftoolkit.odfdom.converter.pdf.internal.styles.StyleLineHeight;
+import org.odftoolkit.odfdom.converter.pdf.internal.styles.StyleParagraphProperties;
 import org.odftoolkit.odfdom.converter.pdf.internal.styles.StyleTabStopProperties;
 import org.odftoolkit.odfdom.converter.pdf.internal.styles.StyleTextProperties;
 
@@ -48,6 +50,10 @@ public class StylableTab
     private Style lastStyleApplied = null;
 
     private Font font = new Font();
+
+    private float lineHeight = StylableParagraph.DEFAULT_LINE_HEIGHT;
+
+    private boolean lineHeightProportional = true;
 
     private String leaderText = " ";
 
@@ -80,6 +86,18 @@ public class StylableTab
             if ( font != null )
             {
                 this.font = font;
+            }
+        }
+
+        StyleParagraphProperties paragraphProperties = style.getParagraphProperties();
+        if ( paragraphProperties != null )
+        {
+            // line height
+            StyleLineHeight lineHeight = paragraphProperties.getLineHeight();
+            if ( lineHeight != null && lineHeight.getLineHeight() != null )
+            {
+                this.lineHeight = lineHeight.getLineHeight();
+                this.lineHeightProportional = lineHeight.isLineHeightProportional();
             }
         }
 
@@ -145,7 +163,8 @@ public class StylableTab
             // compute x offset - as if tab were right aligned
             float xoffset = width - new Chunk( txt, font ).getWidthPoint();
             // compute y offset - use StylableParagraph mechanism
-            float yoffset = StylableParagraph.createAdjustedChunk( txt, font ).getTextRise();
+            Chunk tmp = StylableParagraph.createAdjustedChunk( txt, font, lineHeight, lineHeightProportional );
+            float yoffset = tmp.getTextRise();
             // draw
             canvas.saveState();
             canvas.beginText();
@@ -155,6 +174,7 @@ public class StylableTab
             canvas.restoreState();
         }
     }
+
 
     //
     // probably not used

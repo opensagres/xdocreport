@@ -37,7 +37,6 @@ import org.odftoolkit.odfdom.converter.pdf.internal.styles.Style;
 import org.odftoolkit.odfdom.converter.pdf.internal.styles.StyleBorder;
 import org.odftoolkit.odfdom.converter.pdf.internal.styles.StyleBreak;
 import org.odftoolkit.odfdom.converter.pdf.internal.styles.StyleColumnProperties;
-import org.odftoolkit.odfdom.converter.pdf.internal.styles.StyleColumnsProperties;
 import org.odftoolkit.odfdom.converter.pdf.internal.styles.StyleGraphicProperties;
 import org.odftoolkit.odfdom.converter.pdf.internal.styles.StyleHeaderFooterProperties;
 import org.odftoolkit.odfdom.converter.pdf.internal.styles.StyleLineHeight;
@@ -56,10 +55,13 @@ import org.odftoolkit.odfdom.dom.attribute.fo.FoBreakBeforeAttribute;
 import org.odftoolkit.odfdom.dom.attribute.fo.FoFontStyleAttribute;
 import org.odftoolkit.odfdom.dom.attribute.fo.FoFontWeightAttribute;
 import org.odftoolkit.odfdom.dom.attribute.fo.FoKeepTogetherAttribute;
+import org.odftoolkit.odfdom.dom.attribute.fo.FoTextAlignAttribute;
 import org.odftoolkit.odfdom.dom.attribute.style.StyleNumFormatAttribute;
+import org.odftoolkit.odfdom.dom.attribute.style.StylePrintOrientationAttribute;
 import org.odftoolkit.odfdom.dom.attribute.style.StyleTextLineThroughStyleAttribute;
 import org.odftoolkit.odfdom.dom.attribute.style.StyleTextUnderlineStyleAttribute;
 import org.odftoolkit.odfdom.dom.attribute.style.StyleTypeAttribute;
+import org.odftoolkit.odfdom.dom.attribute.style.StyleVerticalAlignAttribute;
 import org.odftoolkit.odfdom.dom.attribute.style.StyleWrapAttribute;
 import org.odftoolkit.odfdom.dom.attribute.table.TableAlignAttribute;
 import org.odftoolkit.odfdom.dom.element.OdfStyleBase;
@@ -89,6 +91,10 @@ import org.odftoolkit.odfdom.dom.element.text.TextListLevelStyleBulletElement;
 import org.odftoolkit.odfdom.dom.element.text.TextListLevelStyleImageElement;
 import org.odftoolkit.odfdom.dom.element.text.TextListLevelStyleNumberElement;
 import org.odftoolkit.odfdom.dom.element.text.TextListStyleElement;
+import org.odftoolkit.odfdom.dom.element.text.TextOutlineLevelStyleElement;
+import org.odftoolkit.odfdom.dom.element.text.TextOutlineStyleElement;
+import org.odftoolkit.odfdom.dom.style.OdfStyleFamily;
+import org.odftoolkit.odfdom.pkg.OdfElement;
 import org.w3c.dom.Node;
 
 import com.lowagie.text.Element;
@@ -105,21 +111,17 @@ import fr.opensagres.xdocreport.utils.StringUtils;
 public class StyleEngineForIText
     extends AbstractStyleEngine
 {
-    private static final String PORTRAIT = "portrait";
-
-    private static final String LANDSCAPE = "landscape";
-
-    private static final String BOTTOM = "bottom";
-
-    private static final String MIDDLE = "middle";
-
-    private static final String TOP = "top";
-
-    private static final String BASELINE = "baseline";
+    private static final String OUTLINE = "outline";
 
     private Style currentStyle = null;
 
-    private Integer currentTextLevel;
+    private Map<Integer, StyleListProperties> currentListPropertiesMap;
+
+    private StyleListProperties currentListProperties;
+
+    private List<StyleTabStopProperties> currentTabStopPropertiesList;
+
+    private List<StyleColumnProperties> currentColumnPropertiesList;
 
     private final PdfOptions options;
 
@@ -161,14 +163,16 @@ public class StyleEngineForIText
         computeStyle( ele, false );
     }
 
-    private Style computeStyle( OdfStyleBase styleBase, boolean isDefaultStyle )
+    private Style computeStyle( OdfElement odfElement, boolean isDefaultStyle )
     {
-        if ( styleBase == null )
+        if ( odfElement == null )
         {
             return null;
         }
+        OdfStyleBase styleBase = odfElement instanceof OdfStyleBase ? (OdfStyleBase) odfElement : null;
+
         // 1) Check if style is in the cache
-        String familyName = styleBase.getFamilyName();
+        String familyName = styleBase != null ? styleBase.getFamilyName() : OUTLINE;
         String styleName = null;
         String masterPageName = null;
         if ( !isDefaultStyle )
@@ -215,7 +219,7 @@ public class StyleEngineForIText
 
         // 5) Apply Parent style
         List<Style> parentsStyles = null;
-        OdfStyleBase parentStyleBase = styleBase.getParentStyle();
+        OdfStyleBase parentStyleBase = styleBase != null ? styleBase.getParentStyle() : null;
         while ( parentStyleBase != null )
         {
             Style parentStyle = computeStyle( parentStyleBase, isDefaultStyle );
@@ -229,17 +233,17 @@ public class StyleEngineForIText
             }
             parentStyleBase = parentStyleBase.getParentStyle();
         }
-
         if ( parentsStyles != null )
         {
             for ( Style parentsStyle : parentsStyles )
             {
-                style.merge( parentsStyle );
+                style.merge( parentsStyle, false );
             }
         }
+
         // 6) Apply current style
         currentStyle = style;
-        super.visit( styleBase );
+        super.visit( odfElement );
 
         // 7) register style in the cache
         stylesMap.put( styleId, style );
@@ -386,11 +390,11 @@ public class StyleEngineForIText
         String orientation = ele.getStylePrintOrientationAttribute();
         if ( StringUtils.isNotEmpty( orientation ) )
         {
-            if ( LANDSCAPE.equals( orientation ) )
+            if ( StylePrintOrientationAttribute.Value.LANDSCAPE.toString().equals( orientation ) )
             {
                 pageLayoutProperties.setOrientation( PageOrientation.Landscape );
             }
-            else if ( PORTRAIT.equals( orientation ) )
+            else if ( StylePrintOrientationAttribute.Value.PORTRAIT.toString().equals( orientation ) )
             {
                 pageLayoutProperties.setOrientation( PageOrientation.Portrait );
             }
@@ -603,27 +607,27 @@ public class StyleEngineForIText
         if ( StringUtils.isNotEmpty( textAlign ) )
         {
             int alignment = Element.ALIGN_UNDEFINED;
-            if ( "start".equals( textAlign ) )
+            if ( FoTextAlignAttribute.Value.START.toString().equals( textAlign ) )
             {
                 alignment = Element.ALIGN_LEFT;
             }
-            else if ( "end".equals( textAlign ) )
+            else if ( FoTextAlignAttribute.Value.END.toString().equals( textAlign ) )
             {
                 alignment = Element.ALIGN_RIGHT;
             }
-            else if ( "left".equals( textAlign ) )
+            else if ( FoTextAlignAttribute.Value.LEFT.toString().equals( textAlign ) )
             {
                 alignment = Element.ALIGN_LEFT;
             }
-            else if ( "right".equals( textAlign ) )
+            else if ( FoTextAlignAttribute.Value.RIGHT.toString().equals( textAlign ) )
             {
                 alignment = Element.ALIGN_RIGHT;
             }
-            else if ( "center".equals( textAlign ) )
+            else if ( FoTextAlignAttribute.Value.CENTER.toString().equals( textAlign ) )
             {
                 alignment = Element.ALIGN_CENTER;
             }
-            else if ( "justify".equals( textAlign ) )
+            else if ( FoTextAlignAttribute.Value.JUSTIFY.toString().equals( textAlign ) )
             {
                 alignment = Element.ALIGN_JUSTIFIED;
             }
@@ -682,20 +686,21 @@ public class StyleEngineForIText
     @Override
     public void visit( StyleTabStopsElement ele )
     {
-        currentStyle.setTabStopPropertiesList( null );
+        currentTabStopPropertiesList = new ArrayList<StyleTabStopProperties>();
         super.visit( ele );
+        currentStyle.setTabStopPropertiesList( currentTabStopPropertiesList );
+        currentTabStopPropertiesList = null;
     }
 
     @Override
     public void visit( StyleTabStopElement ele )
     {
-        List<StyleTabStopProperties> tabStopPropertiesList = currentStyle.getTabStopPropertiesList();
-        if ( tabStopPropertiesList == null )
+        if ( currentTabStopPropertiesList == null )
         {
-            tabStopPropertiesList = new ArrayList<StyleTabStopProperties>();
-            currentStyle.setTabStopPropertiesList( tabStopPropertiesList );
+            return;
         }
         StyleTabStopProperties tabStopProperties = new StyleTabStopProperties();
+        currentTabStopPropertiesList.add( tabStopProperties );
 
         // leader-text
         String leaderText = ele.getStyleLeaderTextAttribute();
@@ -728,8 +733,6 @@ public class StyleEngineForIText
                 tabStopProperties.setType( Element.ALIGN_CENTER );
             }
         }
-
-        tabStopPropertiesList.add( tabStopProperties );
 
         super.visit( ele );
     }
@@ -867,7 +870,6 @@ public class StyleEngineForIText
         }
 
         String textPositionStyle = ele.getStyleTextPositionAttribute();
-
         if ( StringUtils.isNotEmpty( textPositionStyle ) )
         {
             if ( textPositionStyle.contains( "super" ) )
@@ -961,9 +963,6 @@ public class StyleEngineForIText
         super.visit( ele );
     }
 
-    // visit <style:style style:name="Tableau1.1"
-    // style:family="table-row"><style:table-row-properties
-    // style:row-height="0.801cm" style:keep-together="true" ...
     @Override
     public void visit( StyleTableRowPropertiesElement ele )
     {
@@ -990,9 +989,6 @@ public class StyleEngineForIText
         }
 
     }
-
-    // visit <style:style ...
-    // style:family="table-cell">/style:table-cell-properties
 
     @Override
     public void visit( StyleTableCellPropertiesElement ele )
@@ -1085,19 +1081,19 @@ public class StyleEngineForIText
         String verticalAlign = ele.getStyleVerticalAlignAttribute();
         if ( StringUtils.isNotEmpty( verticalAlign ) )
         {
-            if ( BASELINE.equals( verticalAlign ) )
+            if ( StyleVerticalAlignAttribute.Value.BASELINE.toString().equals( verticalAlign ) )
             {
                 tableCellProperties.setVerticalAlignment( Element.ALIGN_BASELINE );
             }
-            else if ( TOP.equals( verticalAlign ) )
+            else if ( StyleVerticalAlignAttribute.Value.TOP.toString().equals( verticalAlign ) )
             {
                 tableCellProperties.setVerticalAlignment( Element.ALIGN_TOP );
             }
-            else if ( MIDDLE.equals( verticalAlign ) )
+            else if ( StyleVerticalAlignAttribute.Value.MIDDLE.toString().equals( verticalAlign ) )
             {
                 tableCellProperties.setVerticalAlignment( Element.ALIGN_MIDDLE );
             }
-            else if ( BOTTOM.equals( verticalAlign ) )
+            else if ( StyleVerticalAlignAttribute.Value.BOTTOM.toString().equals( verticalAlign ) )
             {
                 tableCellProperties.setVerticalAlignment( Element.ALIGN_BOTTOM );
             }
@@ -1147,28 +1143,33 @@ public class StyleEngineForIText
     @Override
     public void visit( TextListStyleElement ele )
     {
+        currentListPropertiesMap = new HashMap<Integer, StyleListProperties>();
         computeStyle( ele, false );
+        currentStyle.setListPropertiesMap( currentListPropertiesMap );
+        currentListPropertiesMap = null;
     }
 
     @Override
     public void visit( TextListLevelStyleBulletElement ele )
     {
         Integer textLevel = ele.getTextLevelAttribute();
-        if ( textLevel == null )
+        if ( currentListPropertiesMap == null || textLevel == null )
         {
             return;
         }
-        currentTextLevel = textLevel;
-        StyleListProperties listProperties = getStyleListProperties();
+        StyleListProperties listProperties = new StyleListProperties();
+        currentListPropertiesMap.put( textLevel, listProperties );
 
         // text style to apply to list item label
         String styleName = ele.getTextStyleNameAttribute();
         if ( StringUtils.isNotEmpty( styleName ) )
         {
             // TODO what if this style is not computed yet?
-            Style style = getStyle( "text", styleName, null );
-            currentStyle.merge( style );
-            listProperties.setLabelStyleSpecified( true );
+            Style style = getStyle( OdfStyleFamily.Text.getName(), styleName, null );
+            if ( style != null )
+            {
+                listProperties.setTextProperties( style.getTextProperties() );
+            }
         }
 
         // bullet-char
@@ -1192,20 +1193,21 @@ public class StyleEngineForIText
             listProperties.setNumSuffix( numSuffix );
         }
 
+        currentListProperties = listProperties;
         super.visit( ele );
-        currentTextLevel = 0;
+        currentListProperties = null;
     }
 
     @Override
     public void visit( TextListLevelStyleImageElement ele )
     {
         Integer textLevel = ele.getTextLevelAttribute();
-        if ( textLevel == null )
+        if ( currentListPropertiesMap == null || textLevel == null )
         {
             return;
         }
-        currentTextLevel = textLevel;
-        StyleListProperties listProperties = getStyleListProperties();
+        StyleListProperties listProperties = new StyleListProperties();
+        currentListPropertiesMap.put( textLevel, listProperties );
 
         // image href
         String href = ele.getXlinkHrefAttribute();
@@ -1222,29 +1224,32 @@ public class StyleEngineForIText
             }
         }
 
+        currentListProperties = listProperties;
         super.visit( ele );
-        currentTextLevel = 0;
+        currentListProperties = null;
     }
 
     @Override
     public void visit( TextListLevelStyleNumberElement ele )
     {
         Integer textLevel = ele.getTextLevelAttribute();
-        if ( textLevel == null )
+        if ( currentListPropertiesMap == null || textLevel == null )
         {
             return;
         }
-        currentTextLevel = textLevel;
-        StyleListProperties listProperties = getStyleListProperties();
+        StyleListProperties listProperties = new StyleListProperties();
+        currentListPropertiesMap.put( textLevel, listProperties );
 
         // text style to apply to list item label
         String styleName = ele.getTextStyleNameAttribute();
         if ( StringUtils.isNotEmpty( styleName ) )
         {
             // TODO what if this style is not computed yet?
-            Style style = getStyle( "text", styleName, null );
-            currentStyle.merge( style );
-            listProperties.setLabelStyleSpecified( true );
+            Style style = getStyle( OdfStyleFamily.Text.getName(), styleName, null );
+            if ( style != null )
+            {
+                listProperties.setTextProperties( style.getTextProperties() );
+            }
         }
 
         // start-value
@@ -1252,6 +1257,13 @@ public class StyleEngineForIText
         if ( startValue != null )
         {
             listProperties.setStartValue( startValue );
+        }
+
+        // display-levels
+        Integer displayLevels = ele.getTextDisplayLevelsAttribute();
+        if ( displayLevels != null )
+        {
+            listProperties.setDisplayLevels( displayLevels );
         }
 
         // num-prefix
@@ -1294,18 +1306,19 @@ public class StyleEngineForIText
             }
         }
 
+        currentListProperties = listProperties;
         super.visit( ele );
-        currentTextLevel = 0;
+        currentListProperties = null;
     }
 
     @Override
     public void visit( StyleListLevelPropertiesElement ele )
     {
-        if ( currentTextLevel == null )
+        if ( currentListProperties == null )
         {
             return;
         }
-        StyleListProperties listProperties = getStyleListProperties();
+        StyleListProperties listProperties = currentListProperties;
 
         // width
         String width = ele.getFoWidthAttribute();
@@ -1341,11 +1354,11 @@ public class StyleEngineForIText
     @Override
     public void visit( StyleListLevelLabelAlignmentElement ele )
     {
-        if ( currentTextLevel == null )
+        if ( currentListProperties == null )
         {
             return;
         }
-        StyleListProperties listProperties = getStyleListProperties();
+        StyleListProperties listProperties = currentListProperties;
 
         // margin-left
         String marginLeft = ele.getFoMarginLeftAttribute();
@@ -1364,21 +1377,103 @@ public class StyleEngineForIText
         super.visit( ele );
     }
 
-    private StyleListProperties getStyleListProperties()
+    // outline styling is similar to list styling, use the same data structures
+    // we flatten the structure into a map of {outline-level->StyleListProperties}
+    // there may be only one default outline style
+    //
+    // 1st level - text:outline-style --- enclosing style
+    // 2nd level --- text:outline-level-style --- number format, start value, ...
+    // 3rd level ----- style:list-level-properties --- ignored
+
+    @Override
+    public void visit( TextOutlineStyleElement ele )
     {
-        Map<Integer, StyleListProperties> listPropertiesMap = currentStyle.getListPropertiesMap();
-        if ( listPropertiesMap == null )
+        currentListPropertiesMap = new HashMap<Integer, StyleListProperties>();
+        computeStyle( ele, true );
+        currentStyle.setOutlinePropertiesMap( currentListPropertiesMap );
+        currentListPropertiesMap = null;
+    }
+
+    @Override
+    public void visit( TextOutlineLevelStyleElement ele )
+    {
+        Integer textLevel = ele.getTextLevelAttribute();
+        if ( currentListPropertiesMap == null || textLevel == null )
         {
-            listPropertiesMap = new HashMap<Integer, StyleListProperties>();
-            currentStyle.setListPropertiesMap( listPropertiesMap );
+            return;
         }
-        StyleListProperties listProperties = listPropertiesMap.get( currentTextLevel );
-        if ( listProperties == null )
+        StyleListProperties listProperties = new StyleListProperties();
+        currentListPropertiesMap.put( textLevel, listProperties );
+
+        // text style to apply to list item label
+        String styleName = ele.getTextStyleNameAttribute();
+        if ( StringUtils.isNotEmpty( styleName ) )
         {
-            listProperties = new StyleListProperties();
-            listPropertiesMap.put( currentTextLevel, listProperties );
+            // TODO what if this style is not computed yet?
+            Style style = getStyle( OdfStyleFamily.Text.getName(), styleName, null );
+            if ( style != null )
+            {
+                listProperties.setTextProperties( style.getTextProperties() );
+            }
         }
-        return listProperties;
+
+        // start-value
+        Integer startValue = ele.getTextStartValueAttribute();
+        if ( startValue != null )
+        {
+            listProperties.setStartValue( startValue );
+        }
+
+        // display-levels
+        Integer displayLevels = ele.getTextDisplayLevelsAttribute();
+        if ( displayLevels != null )
+        {
+            listProperties.setDisplayLevels( displayLevels );
+        }
+
+        // num-prefix
+        String numPrefix = ele.getStyleNumPrefixAttribute();
+        if ( StringUtils.isNotEmpty( numPrefix ) )
+        {
+            listProperties.setNumPrefix( numPrefix );
+        }
+
+        // num-suffix
+        String numSuffix = ele.getStyleNumSuffixAttribute();
+        if ( StringUtils.isNotEmpty( numSuffix ) )
+        {
+            listProperties.setNumSuffix( numSuffix );
+        }
+
+        // num-format
+        String numFormat = ele.getStyleNumFormatAttribute();
+        if ( StringUtils.isNotEmpty( numFormat ) )
+        {
+            if ( StyleNumFormatAttribute.Value.a.toString().equals( numFormat ) )
+            {
+                listProperties.setNumFormat( StyleNumFormat.createAlphabetical( true ) );
+            }
+            else if ( StyleNumFormatAttribute.Value.A.toString().equals( numFormat ) )
+            {
+                listProperties.setNumFormat( StyleNumFormat.createAlphabetical( false ) );
+            }
+            else if ( StyleNumFormatAttribute.Value.i.toString().equals( numFormat ) )
+            {
+                listProperties.setNumFormat( StyleNumFormat.createRoman( true ) );
+            }
+            else if ( StyleNumFormatAttribute.Value.I.toString().equals( numFormat ) )
+            {
+                listProperties.setNumFormat( StyleNumFormat.createRoman( false ) );
+            }
+            else
+            {
+                listProperties.setNumFormat( StyleNumFormat.createNumerical() );
+            }
+        }
+
+        currentListProperties = listProperties;
+        super.visit( ele );
+        currentListProperties = null;
     }
 
     // visit //style:section-properties
@@ -1420,7 +1515,6 @@ public class StyleEngineForIText
             sectionProperties.setMarginRight( ODFUtils.getDimensionAsPoint( marginRight ) );
         }
 
-        currentStyle.setColumnsProperties( null );
         super.visit( ele );
     }
 
@@ -1428,41 +1522,43 @@ public class StyleEngineForIText
     @Override
     public void visit( StyleColumnsElement ele )
     {
-        StyleColumnsProperties columnsProperties = currentStyle.getColumnsProperties();
-        if ( columnsProperties == null )
+        StyleSectionProperties sectionProperties = currentStyle.getSectionProperties();
+        if ( sectionProperties == null )
         {
-            columnsProperties = new StyleColumnsProperties();
-            currentStyle.setColumnsProperties( columnsProperties );
+            sectionProperties = new StyleSectionProperties();
+            currentStyle.setSectionProperties( sectionProperties );
         }
 
         // column-count
         Integer columnCount = ele.getFoColumnCountAttribute();
         if ( columnCount != null )
         {
-            columnsProperties.setColumnCount( columnCount );
+            sectionProperties.setColumnCount( columnCount );
         }
 
         // column-gap
         String columnGap = ele.getFoColumnGapAttribute();
         if ( StringUtils.isNotEmpty( columnGap ) )
         {
-            columnsProperties.setColumnGap( ODFUtils.getDimensionAsPoint( columnGap ) );
+            sectionProperties.setColumnGap( ODFUtils.getDimensionAsPoint( columnGap ) );
         }
 
+        currentColumnPropertiesList = new ArrayList<StyleColumnProperties>();
         super.visit( ele );
+        currentStyle.setColumnPropertiesList( currentColumnPropertiesList );
+        currentColumnPropertiesList = null;
     }
 
     // visit //style:column
     @Override
     public void visit( StyleColumnElement ele )
     {
-        List<StyleColumnProperties> columnPropertiesList = currentStyle.getColumnPropertiesList();
-        if ( columnPropertiesList == null )
+        if ( currentColumnPropertiesList == null )
         {
-            columnPropertiesList = new ArrayList<StyleColumnProperties>();
-            currentStyle.setColumnPropertiesList( columnPropertiesList );
+            return;
         }
         StyleColumnProperties columnProperties = new StyleColumnProperties();
+        currentColumnPropertiesList.add( columnProperties );
 
         // rel-width
         String relWidth = ele.getStyleRelWidthAttribute();
@@ -1484,8 +1580,6 @@ public class StyleEngineForIText
         {
             columnProperties.setEndIndent( ODFUtils.getDimensionAsPoint( endIndent ) );
         }
-
-        columnPropertiesList.add( columnProperties );
 
         super.visit( ele );
     }
@@ -1536,7 +1630,7 @@ public class StyleEngineForIText
         if ( parentElementStyle != null )
         {
             // parent element style contains default style
-            newStyle.merge( parentElementStyle );
+            newStyle.merge( parentElementStyle, true );
         }
         else
         {
@@ -1545,14 +1639,14 @@ public class StyleEngineForIText
             {
                 if ( s.getStyleName() == null )
                 {
-                    newStyle.merge( s );
+                    newStyle.merge( s, true );
                 }
             }
         }
         // merge current style
         if ( style != null )
         {
-            newStyle.merge( style );
+            newStyle.merge( style, true );
         }
         return newStyle;
     }

@@ -24,6 +24,9 @@
  */
 package org.odftoolkit.odfdom.converter.pdf.internal.styles;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -59,9 +62,9 @@ public class Style
 
     private Map<Integer, StyleListProperties> listPropertiesMap;
 
-    private StyleSectionProperties sectionProperties;
+    private Map<Integer, StyleListProperties> outlinePropertiesMap;
 
-    private StyleColumnsProperties columnsProperties;
+    private StyleSectionProperties sectionProperties;
 
     private List<StyleColumnProperties> columnPropertiesList;
 
@@ -75,40 +78,47 @@ public class Style
         this.fontProvider = fontProvider;
     }
 
-    public void merge( Style style )
+    public void merge( Style style, boolean fullPropagation )
     {
-        // propagate properties which are not fully merged
-        if ( style.getPageLayoutProperties() != null )
+        if ( fullPropagation )
         {
-            pageLayoutProperties = style.getPageLayoutProperties();
-        }
-        if ( style.getHeaderProperties() != null )
-        {
-            headerProperties = style.getHeaderProperties();
-        }
-        if ( style.getFooterProperties() != null )
-        {
-            footerProperties = style.getFooterProperties();
-        }
-        if ( style.getTabStopPropertiesList() != null )
-        {
-            tabStopPropertiesList = style.getTabStopPropertiesList();
-        }
-        if ( style.getListPropertiesMap() != null )
-        {
-            listPropertiesMap = style.getListPropertiesMap();
-        }
-        if ( style.getSectionProperties() != null )
-        {
-            sectionProperties = style.getSectionProperties();
-        }
-        if ( style.getColumnsProperties() != null )
-        {
-            columnsProperties = style.getColumnsProperties();
-        }
-        if ( style.getColumnPropertiesList() != null )
-        {
-            columnPropertiesList = style.getColumnPropertiesList();
+            // propagate properties which are not fully merged
+            if ( style.getPageLayoutProperties() != null )
+            {
+                pageLayoutProperties = style.getPageLayoutProperties();
+            }
+            if ( style.getHeaderProperties() != null )
+            {
+                headerProperties = style.getHeaderProperties();
+            }
+            if ( style.getFooterProperties() != null )
+            {
+                footerProperties = style.getFooterProperties();
+            }
+            if ( style.getTabStopPropertiesList() != null )
+            {
+                tabStopPropertiesList = new ArrayList<StyleTabStopProperties>( style.getTabStopPropertiesList() );
+                tabStopPropertiesList = Collections.unmodifiableList( tabStopPropertiesList );
+            }
+            if ( style.getListPropertiesMap() != null )
+            {
+                listPropertiesMap = new HashMap<Integer, StyleListProperties>( style.getListPropertiesMap() );
+                listPropertiesMap = Collections.unmodifiableMap( listPropertiesMap );
+            }
+            if ( style.getOutlinePropertiesMap() != null )
+            {
+                outlinePropertiesMap = new HashMap<Integer, StyleListProperties>( style.getOutlinePropertiesMap() );
+                outlinePropertiesMap = Collections.unmodifiableMap( outlinePropertiesMap );
+            }
+            if ( style.getSectionProperties() != null )
+            {
+                sectionProperties = style.getSectionProperties();
+            }
+            if ( style.getColumnPropertiesList() != null )
+            {
+                columnPropertiesList = new ArrayList<StyleColumnProperties>( style.getColumnPropertiesList() );
+                columnPropertiesList = Collections.unmodifiableList( columnPropertiesList );
+            }
         }
 
         // Merge paragraph properties
@@ -333,6 +343,16 @@ public class Style
         this.listPropertiesMap = listPropertiesMap;
     }
 
+    public Map<Integer, StyleListProperties> getOutlinePropertiesMap()
+    {
+        return outlinePropertiesMap;
+    }
+
+    public void setOutlinePropertiesMap( Map<Integer, StyleListProperties> outlinePropertiesMap )
+    {
+        this.outlinePropertiesMap = outlinePropertiesMap;
+    }
+
     public StyleSectionProperties getSectionProperties()
     {
         return sectionProperties;
@@ -341,16 +361,6 @@ public class Style
     public void setSectionProperties( StyleSectionProperties sectionProperties )
     {
         this.sectionProperties = sectionProperties;
-    }
-
-    public StyleColumnsProperties getColumnsProperties()
-    {
-        return columnsProperties;
-    }
-
-    public void setColumnsProperties( StyleColumnsProperties columnsProperties )
-    {
-        this.columnsProperties = columnsProperties;
     }
 
     public List<StyleColumnProperties> getColumnPropertiesList()

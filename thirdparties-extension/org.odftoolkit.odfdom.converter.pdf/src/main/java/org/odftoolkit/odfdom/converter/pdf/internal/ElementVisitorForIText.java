@@ -70,6 +70,7 @@ import org.odftoolkit.odfdom.dom.element.table.TableTableHeaderRowsElement;
 import org.odftoolkit.odfdom.dom.element.table.TableTableRowElement;
 import org.odftoolkit.odfdom.dom.element.text.TextAElement;
 import org.odftoolkit.odfdom.dom.element.text.TextBookmarkElement;
+import org.odftoolkit.odfdom.dom.element.text.TextBookmarkStartElement;
 import org.odftoolkit.odfdom.dom.element.text.TextHElement;
 import org.odftoolkit.odfdom.dom.element.text.TextIndexBodyElement;
 import org.odftoolkit.odfdom.dom.element.text.TextLineBreakElement;
@@ -84,6 +85,7 @@ import org.odftoolkit.odfdom.dom.element.text.TextSpanElement;
 import org.odftoolkit.odfdom.dom.element.text.TextTabElement;
 import org.odftoolkit.odfdom.dom.element.text.TextTableOfContentElement;
 import org.odftoolkit.odfdom.dom.element.text.TextTableOfContentSourceElement;
+import org.odftoolkit.odfdom.dom.style.OdfStyleFamily;
 import org.odftoolkit.odfdom.pkg.OdfElement;
 import org.w3c.dom.Node;
 import org.w3c.dom.Text;
@@ -275,7 +277,8 @@ public class ElementVisitorForIText
         }
         while ( currentHeadingNumbering.size() < outlineLevel )
         {
-            currentHeadingNumbering.add( 1 );
+            currentHeadingNumbering.add( StylableHeading.getFirst( currentContainer.getLastStyleApplied(),
+                                                                   currentHeadingNumbering.size() + 1 ) );
         }
 
         StylableHeading heading =
@@ -336,6 +339,10 @@ public class ElementVisitorForIText
         }
 
         // set the link
+        if ( reference.endsWith( StylableHeading.IMPLICIT_REFERENCE_SUFFIX ) )
+        {
+            reference = "#" + StylableHeading.generateImplicitDestination( reference );
+        }
         anchor.setReference( reference );
         // Add to current container.
         addITextContainer( ele, anchor );
@@ -346,8 +353,16 @@ public class ElementVisitorForIText
     {
         // destination for a local anchor
         // chunk with empty text does not work as local anchor
-        // so we create chunk with non breaking space as text content
-        createAndAddChunk( ODFUtils.NON_BREAKING_SPACE, ele.getTextNameAttribute(), false );
+        // so we create chunk with invisible but not empty text content
+        // if bookmark is the last chunk in a paragraph something must be added after or it does not work
+        createAndAddChunk( ODFUtils.TAB_STR, ele.getTextNameAttribute(), false );
+    }
+
+    @Override
+    public void visit( TextBookmarkStartElement ele )
+    {
+        createAndAddChunk( ODFUtils.TAB_STR, ele.getTextNameAttribute(), false );
+        super.visit( ele );
     }
 
     // ---------------------- visit table:table (ex : <table:table
@@ -682,7 +697,7 @@ public class ElementVisitorForIText
 
             String styleName = ele.getTextStyleNameAttribute();
 
-            style = styleEngine.getStyle( "list", styleName, parentElementStyle );
+            style = styleEngine.getStyle( OdfStyleFamily.List.getName(), styleName, parentElementStyle );
         }
         return style;
     }

@@ -27,10 +27,12 @@ package org.odftoolkit.odfdom.converter.pdf.internal.stylable;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.odftoolkit.odfdom.converter.core.ODFConverterException;
 import org.odftoolkit.odfdom.converter.pdf.internal.styles.Style;
 
 import com.lowagie.text.Chunk;
 import com.lowagie.text.Element;
+import com.lowagie.text.Font;
 import com.lowagie.text.ListItem;
 import com.lowagie.text.Phrase;
 
@@ -70,11 +72,16 @@ public class StylableListItem
     }
 
     @Override
-    public void setListSymbol( Chunk symbol )
+    public void setListSymbol( Chunk chunk )
+    {
+        throw new ODFConverterException( "internal error - do not call setListSymbol(Chunk chunk)" );
+    }
+
+    public void setListSymbol( String content, Font font, float lineHeight, boolean lineHeightProportional )
     {
         // adjust chunk attributes like text rise
         // use StylableParagraph mechanism
-        symbol = StylableParagraph.createAdjustedChunk( symbol.getContent(), symbol.getFont() );
+        Chunk symbol = StylableParagraph.createAdjustedChunk( content, font, lineHeight, lineHeightProportional );
         super.setListSymbol( symbol );
     }
 

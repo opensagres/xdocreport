@@ -33,11 +33,11 @@ public class StyleListProperties
 {
     private String bulletChar; // label before list item is a char
 
+    private Integer displayLevels; // how many nested levels display in a label
+
     private Float height; // height of an image
 
     private Image image; // label before list item is an image
-
-    private boolean labelStyleSpecified; // is style for a label specified
 
     private Float marginLeft; // list item text indent
 
@@ -54,6 +54,8 @@ public class StyleListProperties
     private Integer startValue; // numbering start value
 
     private Float textIndent; // label indent relative to text indent, negative value
+
+    private StyleTextProperties textProperties; // label text properties
 
     private Float width; // width of an image
 
@@ -75,6 +77,16 @@ public class StyleListProperties
         this.bulletChar = bulletChar;
     }
 
+    public Integer getDisplayLevels()
+    {
+        return displayLevels;
+    }
+
+    public void setDisplayLevels( Integer displayLevels )
+    {
+        this.displayLevels = displayLevels;
+    }
+
     public Float getHeight()
     {
         return height;
@@ -93,16 +105,6 @@ public class StyleListProperties
     public void setImage( Image image )
     {
         this.image = image;
-    }
-
-    public boolean isLabelStyleSpecified()
-    {
-        return labelStyleSpecified;
-    }
-
-    public void setLabelStyleSpecified( boolean labelStyleSpecified )
-    {
-        this.labelStyleSpecified = labelStyleSpecified;
     }
 
     public Float getMarginLeft()
@@ -183,6 +185,16 @@ public class StyleListProperties
     public void setTextIndent( Float textIndent )
     {
         this.textIndent = textIndent;
+    }
+
+    public StyleTextProperties getTextProperties()
+    {
+        return textProperties;
+    }
+
+    public void setTextProperties( StyleTextProperties textProperties )
+    {
+        this.textProperties = textProperties;
     }
 
     public Float getWidth()

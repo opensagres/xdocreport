@@ -25,15 +25,25 @@
 package org.odftoolkit.odfdom.converter.pdf.internal.stylable;
 
 import java.util.List;
+import java.util.Map;
 
+import org.odftoolkit.odfdom.converter.core.utils.ODFUtils;
 import org.odftoolkit.odfdom.converter.pdf.internal.styles.Style;
+import org.odftoolkit.odfdom.converter.pdf.internal.styles.StyleListProperties;
+import org.odftoolkit.odfdom.converter.pdf.internal.styles.StyleNumFormat;
+import org.odftoolkit.odfdom.converter.pdf.internal.styles.StyleTextProperties;
 
 import com.lowagie.text.Chunk;
+import com.lowagie.text.Font;
+import com.lowagie.text.factories.RomanAlphabetFactory;
+import com.lowagie.text.factories.RomanNumberFactory;
 
 public class StylableHeading
     extends StylableParagraph
 {
     private static final long serialVersionUID = 664309269352903329L;
+
+    public static final String IMPLICIT_REFERENCE_SUFFIX = "|outline";
 
     private List<Integer> headingNumbering;
 
@@ -43,19 +53,154 @@ public class StylableHeading
         this.headingNumbering = headingNumbering;
     }
 
+    public static int getFirst( Style style, int outlineLevel )
+    {
+        int first = 1;
+        Map<Integer, StyleListProperties> listPropertiesMap = style != null ? style.getOutlinePropertiesMap() : null;
+        if ( listPropertiesMap != null )
+        {
+            StyleListProperties listProperties = StylableList.getListProperties( listPropertiesMap, outlineLevel );
+            if ( listProperties != null )
+            {
+                // start-value
+                Integer startValue = listProperties.getStartValue();
+                if ( startValue != null )
+                {
+                    first = startValue;
+                }
+            }
+        }
+        return first;
+    }
+
     @Override
     public void applyStyles( Style style )
     {
         super.applyStyles( style );
 
-        // compute numbering
+        int outlineLevel = headingNumbering.size();
+        Map<Integer, StyleListProperties> listPropertiesMap = style.getOutlinePropertiesMap();
+        if ( listPropertiesMap != null )
+        {
+            int displayCount = 1;
+            StyleListProperties listProperties = StylableList.getListProperties( listPropertiesMap, outlineLevel );
+            if ( listProperties != null )
+            {
+                // display-levels
+                Integer displayLevels = listProperties.getDisplayLevels();
+                if ( displayLevels != null && displayLevels > 1 )
+                {
+                    displayCount = Math.min( displayLevels, outlineLevel );
+                }
+            }
+
+            // add leading numbering ie 1.2.3.
+            addNumbering( listPropertiesMap, displayCount );
+        }
+
+        // add implicit bookmark
+        Chunk chunk = new Chunk( ODFUtils.TAB_STR );
+        chunk.setLocalDestination( generateImplicitDestination( headingNumbering ) );
+        addElement( chunk );
+    }
+
+    private void addNumbering( Map<Integer, StyleListProperties> listPropertiesMap, int displayCount )
+    {
+        for ( int i = 0; i < displayCount; i++ )
+        {
+            StyleListProperties listProperties = StylableList.getListProperties( listPropertiesMap, i + 1 );
+            int value = headingNumbering.get( i );
+            if ( listProperties != null )
+            {
+                Chunk chunk = formatNumber( listProperties, value );
+                addElement( chunk );
+            }
+        }
+    }
+
+    private Chunk formatNumber( StyleListProperties listProperties, int value )
+    {
+        Chunk symbol = new Chunk( "", getFont() );
+
+        StyleTextProperties textProperties = listProperties.getTextProperties();
+        if ( textProperties != null )
+        {
+            Font font = textProperties.getFont();
+            if ( font != null )
+            {
+                symbol.setFont( font );
+            }
+        }
+
+        StyleNumFormat numFormat = listProperties.getNumFormat();
+        if ( numFormat != null )
+        {
+            StringBuilder sbuf = new StringBuilder();
+
+            // num-prefix
+            String numPrefix = listProperties.getNumPrefix();
+            if ( numPrefix != null )
+            {
+                sbuf.append( numPrefix );
+            }
+
+            // number
+            if ( numFormat.isAlphabetical() )
+            {
+                sbuf.append( RomanAlphabetFactory.getString( value, numFormat.isLowercase() ) );
+            }
+            else if ( numFormat.isRoman() )
+            {
+                sbuf.append( RomanNumberFactory.getString( value, numFormat.isLowercase() ) );
+            }
+            else
+            {
+                sbuf.append( value );
+            }
+
+            // num-suffix
+            String numSuffix = listProperties.getNumSuffix();
+            if ( numSuffix != null )
+            {
+                sbuf.append( numSuffix );
+            }
+
+            symbol.append( sbuf.toString() );
+        }
+        return symbol;
+    }
+
+    public static String generateImplicitDestination( String s )
+    {
+        if ( s.startsWith( "#" ) )
+        {
+            s = s.substring( 1 );
+        }
+        StringBuilder sbuf = new StringBuilder();
+        for ( char ch : s.toCharArray() )
+        {
+            if ( Character.isDigit( ch ) || ch == '.' )
+            {
+                sbuf.append( ch );
+            }
+            else
+            {
+                break;
+            }
+        }
+        sbuf.append( IMPLICIT_REFERENCE_SUFFIX );
+        return sbuf.toString();
+    }
+
+    private static String generateImplicitDestination( List<Integer> headingNumbering )
+    {
         StringBuilder sbuf = new StringBuilder();
         for ( Integer nr : headingNumbering )
         {
             sbuf.append( nr.toString() );
             sbuf.append( "." );
         }
-        sbuf.append( " " );
-        addElement( new Chunk( sbuf.toString() ) );
+        sbuf.append( IMPLICIT_REFERENCE_SUFFIX );
+        return sbuf.toString();
     }
 }

@@ -43,7 +43,9 @@ import org.w3c.dom.NodeList;
  */
 public class ODFUtils
 {
-    public static final String NON_BREAKING_SPACE = "\u00A0";
+    public static final String NON_BREAKING_SPACE_STR = "\u00A0";
+
+    public static final String TAB_STR = "\t";
 
     // Unit constants
     private static final String REL_SIZE_UNIT = "*";
@@ -250,7 +252,7 @@ public class ODFUtils
 
     public static String getDimensionAsPixel( String s )
     {
-        // px: pixel units � 1px is equal to 0.75pt.
+        // px: pixel units 1px is equal to 0.75pt.
         if ( s != null && s.endsWith( "*" ) )
         {
             return s;

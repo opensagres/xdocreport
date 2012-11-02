@@ -33,6 +33,10 @@ public class StyleSectionProperties
 {
     private Color backgroundColor;
 
+    private Integer columnCount;
+
+    private Float columnGap;
+
     private Boolean dontBalanceTextColumns;
 
     private Float marginLeft;
@@ -51,6 +55,26 @@ public class StyleSectionProperties
     public void setBackgroundColor( Color backgroundColor )
     {
         this.backgroundColor = backgroundColor;
+    }
+
+    public Integer getColumnCount()
+    {
+        return columnCount;
+    }
+
+    public void setColumnCount( Integer columnCount )
+    {
+        this.columnCount = columnCount;
+    }
+
+    public Float getColumnGap()
+    {
+        return columnGap;
+    }
+
+    public void setColumnGap( Float columnGap )
+    {
+        this.columnGap = columnGap;
     }
 
     public Boolean getDontBalanceTextColumns()

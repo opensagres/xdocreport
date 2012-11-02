@@ -30,7 +30,6 @@ import java.util.List;
 import org.odftoolkit.odfdom.converter.core.ODFConverterException;
 import org.odftoolkit.odfdom.converter.pdf.internal.styles.Style;
 import org.odftoolkit.odfdom.converter.pdf.internal.styles.StyleColumnProperties;
-import org.odftoolkit.odfdom.converter.pdf.internal.styles.StyleColumnsProperties;
 import org.odftoolkit.odfdom.converter.pdf.internal.styles.StyleSectionProperties;
 
 import com.lowagie.text.DocumentException;
@@ -372,23 +371,23 @@ public class StylableDocumentSection
         // create one row table which will layout section text
         if ( style != null )
         {
+            StyleSectionProperties sectionProperties = style.getSectionProperties();
             List<StyleColumnProperties> columnPropertiesList = style.getColumnPropertiesList();
-            StyleColumnsProperties columnsProperties = style.getColumnsProperties();
             if ( columnPropertiesList != null && !columnPropertiesList.isEmpty() )
             {
                 // explicit column list
                 return createLayoutTable( width, height, columnPropertiesList );
             }
-            else if ( columnsProperties != null )
+            else if ( sectionProperties != null )
             {
                 // we have columns properties
                 // make table with columns of equal width
                 columnPropertiesList = new ArrayList<StyleColumnProperties>();
 
-                Integer columnCount = columnsProperties.getColumnCount();
+                Integer columnCount = sectionProperties.getColumnCount();
                 int colCount = columnCount != null ? columnCount : 1;
 
-                Float columnGap = columnsProperties.getColumnGap();
+                Float columnGap = sectionProperties.getColumnGap();
                 float halfGap = columnGap != null ? columnGap / 2.0f : 0.0f;
 
                 for ( int i = 0; i < colCount; i++ )

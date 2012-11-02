@@ -52,7 +52,7 @@ public class StylableParagraph
 {
     private static final long serialVersionUID = 664309269352903329L;
 
-    private static final float DEFAULT_LINE_HEIGHT = 1.0f;
+    public static final float DEFAULT_LINE_HEIGHT = 1.0f;
 
     private final StylableDocument ownerDocument;
 
@@ -263,12 +263,20 @@ public class StylableParagraph
         return ownerDocument;
     }
 
-    public static Chunk createAdjustedChunk( String content, Font font )
+    public static Chunk createAdjustedChunk( String content, Font font, float lineHeight, boolean lineHeightProportional )
     {
         // adjust chunk attributes like text rise
         // use StylableParagraph mechanism
         StylableParagraph p = new StylableParagraph( null, null );
         p.setFont( font );
+        if ( lineHeightProportional )
+        {
+            p.setMultipliedLeading( lineHeight );
+        }
+        else
+        {
+            p.setLeading( lineHeight );
+        }
         p.addElement( new Chunk( content, font ) );
         p.getElement(); // post-processing here
         return (Chunk) p.getChunks().get( 0 );
@@ -296,7 +304,23 @@ public class StylableParagraph
             }
             if ( empty )
             {
-                super.add( new Chunk( ODFUtils.NON_BREAKING_SPACE ) );
+                super.add( new Chunk( ODFUtils.NON_BREAKING_SPACE_STR ) );
+            }
+
+            // post process bookmarks
+            chunks = getChunks();
+            if ( chunks.size() > 0 )
+            {
+                Chunk lastChunk = chunks.get( chunks.size() - 1 );
+                String localDestination = null;
+                if ( lastChunk.getAttributes() != null )
+                {
+                    localDestination = (String) lastChunk.getAttributes().get( Chunk.LOCALDESTINATION );
+                }
+                if ( localDestination != null )
+                {
+                    super.add( new Chunk( ODFUtils.NON_BREAKING_SPACE_STR ) );
+                }
             }
 
             // adjust line height and baseline

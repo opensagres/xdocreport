@@ -4,7 +4,7 @@ import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTTblCellMar;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTTblWidth;
 
 public class TableRowMarginRightValueProvider
-    extends AbstractTablelRowMarginValueProvider
+    extends AbstractTableRowMarginValueProvider
 {
 
     public static final TableRowMarginRightValueProvider INSTANCE = new TableRowMarginRightValueProvider();

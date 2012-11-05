@@ -67,6 +67,7 @@ import org.apache.poi.xwpf.converter.core.styles.table.cell.TableCellTextDirecti
 import org.apache.poi.xwpf.converter.core.styles.table.cell.TableCellVMergeValueProvider;
 import org.apache.poi.xwpf.converter.core.styles.table.cell.TableCellVerticalAlignmentValueProvider;
 import org.apache.poi.xwpf.converter.core.styles.table.cell.TableCellWidthValueProvider;
+import org.apache.poi.xwpf.converter.core.styles.table.row.TableRowHeaderValueProvider;
 import org.apache.poi.xwpf.converter.core.styles.table.row.TableRowHeightValueProvider;
 import org.apache.poi.xwpf.converter.core.styles.table.row.TableRowMarginBottomValueProvider;
 import org.apache.poi.xwpf.converter.core.styles.table.row.TableRowMarginLeftValueProvider;
@@ -704,6 +705,11 @@ public class XWPFStylesDocument
         return TableRowMarginRightValueProvider.INSTANCE.getValue( tblPrEx );
     }
 
+    public boolean isTableRowHeader( XWPFTableRow row )
+    {
+        return TableRowHeaderValueProvider.INSTANCE.getValue( row, this );
+    }
+    
     // ------------------------ Table cell
 
     /**

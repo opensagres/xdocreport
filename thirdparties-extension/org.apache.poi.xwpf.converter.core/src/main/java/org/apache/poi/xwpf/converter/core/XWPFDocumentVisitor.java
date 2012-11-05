@@ -302,17 +302,18 @@ public abstract class XWPFDocumentVisitor<T, O extends Options, E extends IXWPFM
             // line must be generated.
             XWPFTableRow row = cell.getTableRow();
             List<XWPFTableCell> cells = row.getTableCells();
-            for ( int i = 0; i < cells.size(); i++ ) 
+            for ( XWPFTableCell c : cells )
             {
-                XWPFTableCell c = cells.get( i );
-                if (c.getBodyElements().size() != 1) {
+                if ( c.getBodyElements().size() != 1 )
+                {
                     return false;
                 }
                 IBodyElement element = c.getBodyElements().get( 0 );
-                if (element.getElementType() != BodyElementType.PARAGRAPH) {
+                if ( element.getElementType() != BodyElementType.PARAGRAPH )
+                {
                     return false;
                 }
-                return ((XWPFParagraph)element).getRuns().size() == 0;
+                return ( (XWPFParagraph) element ).getRuns().size() == 0;
             }
             return true;
 
@@ -587,7 +588,9 @@ public abstract class XWPFDocumentVisitor<T, O extends Options, E extends IXWPFM
                                   boolean lastRowIfNoneVMerge, int rowIndex, int rowsSize )
         throws Exception
     {
-        startVisitTableRow( row, tableContainer, rowIndex );
+
+        boolean headerRow = stylesDocument.isTableRowHeader( row );
+        startVisitTableRow( row, tableContainer, rowIndex, headerRow );
 
         int nbColumns = colWidths.length;
         // Process cell
@@ -670,7 +673,7 @@ public abstract class XWPFDocumentVisitor<T, O extends Options, E extends IXWPFM
             }
         }
 
-        endVisitTableRow( row, tableContainer, firstRow, lastRow );
+        endVisitTableRow( row, tableContainer, firstRow, lastRow, headerRow );
     }
 
     private boolean isLastRow( boolean lastRowIfNoneVMerge, int rowIndex, int rowsSize, List<XWPFTableCell> vMergedCells )
@@ -696,13 +699,14 @@ public abstract class XWPFDocumentVisitor<T, O extends Options, E extends IXWPFM
         return cellIndex;
     }
 
-    protected void startVisitTableRow( XWPFTableRow row, T tableContainer, int rowIndex )
+    protected void startVisitTableRow( XWPFTableRow row, T tableContainer, int rowIndex, boolean headerRow )
         throws Exception
     {
 
     }
 
-    protected void endVisitTableRow( XWPFTableRow row, T tableContainer, boolean firstRow, boolean lastRow )
+    protected void endVisitTableRow( XWPFTableRow row, T tableContainer, boolean firstRow, boolean lastRow,
+                                     boolean headerRow )
         throws Exception
     {
 

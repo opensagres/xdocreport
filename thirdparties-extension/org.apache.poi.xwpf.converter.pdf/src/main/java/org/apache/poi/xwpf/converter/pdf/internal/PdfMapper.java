@@ -69,6 +69,7 @@ import com.lowagie.text.Image;
 import com.lowagie.text.Paragraph;
 import com.lowagie.text.Rectangle;
 import com.lowagie.text.pdf.PdfPCell;
+import com.lowagie.text.pdf.PdfPTable;
 import com.lowagie.text.pdf.draw.DottedLineSeparator;
 import com.lowagie.text.pdf.draw.LineSeparator;
 import com.lowagie.text.pdf.draw.VerticalPositionMark;
@@ -799,6 +800,20 @@ public class PdfMapper
     {
         pdfParentContainer.addElement( ( (ExtendedPdfPTable) pdfTableContainer ).getElement() );
 
+    }
+
+    // ------------------------- Table Row
+
+    @Override
+    protected void startVisitTableRow( XWPFTableRow row, IITextContainer tableContainer, int rowIndex, boolean headerRow )
+        throws Exception
+    {
+        if ( headerRow )
+        {
+            PdfPTable table = (PdfPTable) tableContainer;
+            table.setHeaderRows( table.getHeaderRows() + 1 );
+        }
+        super.startVisitTableRow( row, tableContainer, rowIndex, headerRow );
     }
 
     // ------------------------- Table Cell

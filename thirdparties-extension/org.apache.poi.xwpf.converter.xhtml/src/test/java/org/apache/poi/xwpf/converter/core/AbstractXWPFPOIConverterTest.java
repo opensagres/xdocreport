@@ -39,6 +39,14 @@ public abstract class AbstractXWPFPOIConverterTest
     }
 
     @Test
+    public void AvanceSurFrais()
+        throws IOException
+    {
+        doGenerate( "AvanceSurFrais.docx" );
+    }
+
+    
+    @Test
     public void CV()
         throws IOException
     {
@@ -53,6 +61,13 @@ public abstract class AbstractXWPFPOIConverterTest
     }
 
     @Test
+    public void DIF()
+        throws IOException
+    {
+        doGenerate( "DIF.docx" );
+    }
+
+    @Test
     public void Docx4j_GettingStarted()
         throws IOException
     {
@@ -64,6 +79,13 @@ public abstract class AbstractXWPFPOIConverterTest
         throws IOException
     {
         doGenerate( "DocxBig.docx" );
+    }
+
+    // @Test
+    public void DocxBig2()
+        throws IOException
+    {
+        doGenerate( "DocxBig2.docx" );
     }
 
     @Test
@@ -81,6 +103,13 @@ public abstract class AbstractXWPFPOIConverterTest
     }
 
     @Test
+    public void EntretienAnnuel()
+        throws IOException
+    {
+        doGenerate( "EntretienAnnuel.docx" );
+    }
+
+    @Test
     public void Exercise1()
         throws IOException
     {
@@ -95,10 +124,38 @@ public abstract class AbstractXWPFPOIConverterTest
     }
 
     @Test
+    public void FormattingTests()
+        throws IOException
+    {
+        doGenerate( "FormattingTests.docx" );
+    }
+
+    @Test
+    public void Issue160()
+        throws IOException
+    {
+        doGenerate( "Issue160.docx" );
+    }
+
+    @Test
+    public void Issue175()
+        throws IOException
+    {
+        doGenerate( "Issue175.docx" );
+    }
+
+    @Test
     public void Issue52()
         throws IOException
     {
         doGenerate( "Issue52.docx" );
+    }
+
+    @Test
+    public void NotePosteDeTravail()
+        throws IOException
+    {
+        doGenerate( "NotePosteDeTravail.docx" );
     }
 
     @Test
@@ -130,6 +187,13 @@ public abstract class AbstractXWPFPOIConverterTest
     }
 
     @Test
+    public void Taksee()
+        throws IOException
+    {
+        doGenerate( "Taksee.docx" );
+    }
+    
+    @Test
     public void TemplateGeneral()
         throws IOException
     {
@@ -144,35 +208,28 @@ public abstract class AbstractXWPFPOIConverterTest
     }
 
     @Test
-    public void testChineseCharacters()
-        throws IOException
-    {
-        doGenerate( "TestChineseCharacters.docx" );
-    }
-
-    @Test
-    public void testColor()
+    public void TestColor()
         throws IOException
     {
         doGenerate( "TestColor.docx" );
     }
 
     @Test
-    public void testColorAuto()
+    public void TestColorAuto()
         throws IOException
     {
         doGenerate( "TestColorAuto.docx" );
     }
 
     @Test
-    public void testComplexTable()
+    public void TestComplexTable()
         throws IOException
     {
         doGenerate( "TestComplexTable.docx" );
     }
 
     @Test
-    public void testFonts()
+    public void TestFonts()
         throws IOException
     {
         doGenerate( "TestFonts.docx" );
@@ -186,63 +243,119 @@ public abstract class AbstractXWPFPOIConverterTest
     }
 
     @Test
-    public void testHeaderFooterPage()
+    public void TestHeader()
+        throws IOException
+    {
+        doGenerate( "TestHeader.docx" );
+    }
+
+    @Test
+    public void TestHeaderFooterPage()
         throws IOException
     {
         doGenerate( "TestHeaderFooterPage.docx" );
     }
 
     @Test
-    public void testHeaderFooterPageFirstEvenDefault()
+    public void TestHeaderFooterPageFirstEvenDefault()
         throws IOException
     {
         doGenerate( "TestHeaderFooterPageFirstEvenDefault.docx" );
     }
 
     @Test
-    public void testLandscapeFormat()
+    public void TestImageWithFloat()
+        throws IOException
+    {
+        doGenerate( "TestImageWithFloat.docx" );
+    }
+
+    @Test
+    public void TestLandscapeFormat()
         throws IOException
     {
         doGenerate( "TestLandscapeFormat.docx" );
     }
 
     @Test
-    public void testParagraphAlignment()
+    public void TestPageNumber()
+        throws IOException
+    {
+        doGenerate( "TestPageNumber.docx" );
+    }
+
+    @Test
+    public void TestPageWithBorder()
+        throws IOException
+    {
+        doGenerate( "TestPageWithBorder.docx" );
+    }
+    
+    @Test
+    public void TestParagraphAlignment()
         throws IOException
     {
         doGenerate( "TestParagraphAlignment.docx" );
     }
 
     @Test
-    public void testTable()
+    public void TestTable()
         throws IOException
     {
         doGenerate( "TestTable.docx" );
     }
 
     @Test
-    public void testTableBorder()
+    public void TestTableAlignment()
+        throws IOException
+    {
+        doGenerate( "TestTableAlignment.docx" );
+    }
+
+    @Test
+    public void TestTableBorder()
         throws IOException
     {
         doGenerate( "TestTableBorder.docx" );
     }
 
     @Test
-    public void testTestTableCellAlignment()
+    public void TestTestTableCellAlignment()
         throws IOException
     {
         doGenerate( "TestTableCellAlignment.docx" );
     }
 
     @Test
-    public void testTestTableCellTextOrientation()
+    public void TestTestTableCellTextOrientation()
         throws IOException
     {
         doGenerate( "TestTableCellTextOrientation.docx" );
     }
 
     @Test
-    public void testTitle()
+    public void TestTableNested()
+        throws IOException
+    {
+        doGenerate( "TestTableNested.docx" );
+    }
+
+    @Test
+    public void TestTabulation()
+        throws IOException
+    {
+        doGenerate( "TestTabulation.docx" );
+    }
+
+    @Test
+    public void TestTextHighlighting()
+        throws IOException
+    {
+        doGenerate( "TestTextHighlighting.docx" );
+    }
+
+    @Test
+    public void TestTitle()
         throws IOException
     {
         doGenerate( "TestTitle.docx" );

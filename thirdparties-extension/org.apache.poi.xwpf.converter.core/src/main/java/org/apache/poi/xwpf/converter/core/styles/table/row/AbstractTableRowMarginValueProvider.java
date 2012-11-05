@@ -5,7 +5,7 @@ import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTTblCellMar;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTTblPrEx;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTTblWidth;
 
-public abstract class AbstractTablelRowMarginValueProvider
+public abstract class AbstractTableRowMarginValueProvider
     extends AbstractTableRowExValueProvider<Float>
 {
 

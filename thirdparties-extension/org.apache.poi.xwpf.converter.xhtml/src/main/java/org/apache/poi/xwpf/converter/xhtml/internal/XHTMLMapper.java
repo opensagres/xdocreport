@@ -17,6 +17,7 @@ import static org.apache.poi.xwpf.converter.xhtml.internal.XHTMLConstants.SRC_AT
 import static org.apache.poi.xwpf.converter.xhtml.internal.XHTMLConstants.STYLE_ATTR;
 import static org.apache.poi.xwpf.converter.xhtml.internal.XHTMLConstants.TABLE_ELEMENT;
 import static org.apache.poi.xwpf.converter.xhtml.internal.XHTMLConstants.TD_ELEMENT;
+import static org.apache.poi.xwpf.converter.xhtml.internal.XHTMLConstants.TH_ELEMENT;
 import static org.apache.poi.xwpf.converter.xhtml.internal.XHTMLConstants.TR_ELEMENT;
 import static org.apache.poi.xwpf.converter.xhtml.internal.styles.CSSStylePropertyConstants.MARGIN_BOTTOM;
 import static org.apache.poi.xwpf.converter.xhtml.internal.styles.CSSStylePropertyConstants.MARGIN_LEFT;
@@ -306,7 +307,7 @@ public class XHTMLMapper
     }
 
     @Override
-    protected void startVisitTableRow( XWPFTableRow row, Object tableContainer, int rowIndex )
+    protected void startVisitTableRow( XWPFTableRow row, Object tableContainer, int rowIndex, boolean headerRow )
         throws Exception
     {
 
@@ -316,15 +317,29 @@ public class XHTMLMapper
         AttributesImpl attributes = createClassAttribute( table.getStyleID() );
 
         // 2) create element
-        startElement( TR_ELEMENT, attributes );
-
+        if ( headerRow )
+        {
+            startElement( TH_ELEMENT, attributes );
+        }
+        else
+        {
+            startElement( TR_ELEMENT, attributes );
+        }
     }
 
     @Override
-    protected void endVisitTableRow( XWPFTableRow row, Object tableContainer, boolean firstRow, boolean lastRow )
+    protected void endVisitTableRow( XWPFTableRow row, Object tableContainer, boolean firstRow, boolean lastRow,
+                                     boolean headerRow )
         throws Exception
     {
-        endElement( TR_ELEMENT );
+        if ( headerRow )
+        {
+            endElement( TH_ELEMENT );
+        }
+        else
+        {
+            endElement( TR_ELEMENT );
+        }
     }
 
     @Override

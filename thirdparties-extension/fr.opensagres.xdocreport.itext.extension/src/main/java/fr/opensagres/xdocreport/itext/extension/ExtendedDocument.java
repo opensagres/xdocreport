@@ -167,6 +167,10 @@ public class ExtendedDocument
     {
         headerFooter.setMasterPage( masterPage );
     }
+    
+    public IMasterPage getActiveMasterPage() {
+        return headerFooter.getMasterPage();
+    }
 
     public void addMasterPage( IMasterPage currentMasterPage )
     {

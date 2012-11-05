@@ -19,6 +19,8 @@ public class XHTMLConstants
 
     public static final String TR_ELEMENT = "tr";
 
+    public static final String TH_ELEMENT = "th";
+
     public static final String TD_ELEMENT = "td";
 
     public static final String P_ELEMENT = "p";

@@ -117,4 +117,8 @@ public class ExtendedHeaderFooter
         this.masterPage = masterPage;
     }
 
+    public IMasterPage getMasterPage()
+    {
+        return masterPage;
+    }
 }

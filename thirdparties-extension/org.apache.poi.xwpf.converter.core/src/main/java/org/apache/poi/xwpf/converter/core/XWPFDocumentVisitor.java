@@ -359,8 +359,11 @@ public abstract class XWPFDocumentVisitor<T, O extends Options, E extends IXWPFM
                         }
                         else
                         {
-                            XWPFRun run = new XWPFRun( lastR, paragraph );
-                            visitRun( run, false, paragraphContainer );
+                            if ( lastR != null )
+                            {
+                                XWPFRun run = new XWPFRun( lastR, paragraph );
+                                visitRun( run, false, paragraphContainer );
+                            }
                         }
                         fldCharTypeBegin = false;
                         lastR = null;

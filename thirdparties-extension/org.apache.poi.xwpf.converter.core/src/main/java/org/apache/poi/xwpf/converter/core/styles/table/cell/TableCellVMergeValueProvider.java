@@ -2,13 +2,14 @@ package org.apache.poi.xwpf.converter.core.styles.table.cell;
 
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTTcPr;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTVMerge;
+import org.openxmlformats.schemas.wordprocessingml.x2006.main.STMerge;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.STMerge.Enum;
 
-public class TableCelVMergeValueProvider
+public class TableCellVMergeValueProvider
     extends AbstractTableCellValueProvider<Enum>
 {
 
-    public static final TableCelVMergeValueProvider INSTANCE = new TableCelVMergeValueProvider();
+    public static final TableCellVMergeValueProvider INSTANCE = new TableCellVMergeValueProvider();
 
     @Override
     public Enum getValue( CTTcPr tcPr )
@@ -18,7 +19,12 @@ public class TableCelVMergeValueProvider
             CTVMerge vMerge = tcPr.getVMerge();
             if ( vMerge != null )
             {
-                return vMerge.getVal();
+                Enum val = vMerge.getVal();
+                if ( val == null )
+                {
+                    return STMerge.CONTINUE;
+                }
+                return val;
             }
         }
         return null;

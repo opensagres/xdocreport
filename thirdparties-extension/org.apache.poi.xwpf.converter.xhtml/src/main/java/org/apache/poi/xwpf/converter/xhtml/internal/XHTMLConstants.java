@@ -42,8 +42,10 @@ public class XHTMLConstants
 
     public static final String COLSPAN_ATTR = "colspan";
 
+    public static final String ROWSPAN_ATTR = "rowspan";
+
     public static final String HREF_ATTR = "href";
-    
+
     // Entity
 
     public static final String SPACE_ENTITY = "&#32;";

@@ -34,6 +34,16 @@ public class SAXHelper
      * @param name
      * @param value
      */
+    public static AttributesImpl addAttrValue( AttributesImpl attributes, String name, int value )
+   {
+    return addAttrValue( attributes, name, String.valueOf( value ));    
+   }
+
+    /**
+     * @param attributes
+     * @param name
+     * @param value
+     */
     public static AttributesImpl addAttrValue( AttributesImpl attributes, String name, String value )
     {
         if ( attributes == null )

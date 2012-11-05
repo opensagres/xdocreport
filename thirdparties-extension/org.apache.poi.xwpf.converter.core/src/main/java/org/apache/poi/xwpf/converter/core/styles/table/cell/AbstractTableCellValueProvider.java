@@ -6,6 +6,7 @@ import org.apache.poi.xwpf.usermodel.XWPFTableCell;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTDocDefaults;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTStyle;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTTblStylePr;
+import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTTc;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTTcPr;
 
 public abstract class AbstractTableCellValueProvider<Value>
@@ -14,7 +15,12 @@ public abstract class AbstractTableCellValueProvider<Value>
 
     public CTTcPr getTcPr( XWPFTableCell cell )
     {
-        return cell.getCTTc().getTcPr();
+        CTTc tc = cell.getCTTc();
+        if ( tc == null )
+        {
+            return null;
+        }
+        return tc.getTcPr();
     }
 
     public CTTcPr getTcPr( CTStyle style )

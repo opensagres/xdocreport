@@ -64,6 +64,7 @@ import org.apache.poi.xwpf.converter.core.styles.table.cell.TableCellMarginRight
 import org.apache.poi.xwpf.converter.core.styles.table.cell.TableCellMarginTopValueProvider;
 import org.apache.poi.xwpf.converter.core.styles.table.cell.TableCellNoWrapValueProvider;
 import org.apache.poi.xwpf.converter.core.styles.table.cell.TableCellTextDirectionValueProvider;
+import org.apache.poi.xwpf.converter.core.styles.table.cell.TableCellVMergeValueProvider;
 import org.apache.poi.xwpf.converter.core.styles.table.cell.TableCellVerticalAlignmentValueProvider;
 import org.apache.poi.xwpf.converter.core.styles.table.cell.TableCellWidthValueProvider;
 import org.apache.poi.xwpf.converter.core.styles.table.row.TableRowHeightValueProvider;
@@ -100,6 +101,7 @@ import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTTcPr;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTTextDirection;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTTrPr;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTTwipsMeasure;
+import org.openxmlformats.schemas.wordprocessingml.x2006.main.STMerge;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.STVerticalJc.Enum;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.SettingsDocument;
 
@@ -751,6 +753,16 @@ public class XWPFStylesDocument
     public CTTextDirection getTextDirection( CTTcPr tcPr )
     {
         return TableCellTextDirectionValueProvider.INSTANCE.getValue( tcPr );
+    }
+
+    public STMerge.Enum getTableCellVMerge( XWPFTableCell cell )
+    {
+        return TableCellVMergeValueProvider.INSTANCE.getValue( cell, this );
+    }
+
+    public STMerge.Enum getTableCellVMerge( CTTcPr tcPr )
+    {
+        return TableCellVMergeValueProvider.INSTANCE.getValue( tcPr );
     }
 
     /**

@@ -2,6 +2,8 @@ package org.apache.poi.xwpf.converter.core;
 
 import java.io.IOException;
 import java.math.BigInteger;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import org.apache.poi.openxml4j.opc.PackagePart;
@@ -9,6 +11,9 @@ import org.apache.poi.xwpf.converter.core.styles.XWPFStylesDocument;
 import org.apache.poi.xwpf.converter.core.utils.DxaUtil;
 import org.apache.poi.xwpf.converter.core.utils.StringUtils;
 import org.apache.poi.xwpf.converter.core.utils.XWPFTableUtil;
+import org.apache.poi.xwpf.usermodel.BodyElementType;
+import org.apache.poi.xwpf.usermodel.BodyType;
+import org.apache.poi.xwpf.usermodel.IBody;
 import org.apache.poi.xwpf.usermodel.IBodyElement;
 import org.apache.poi.xwpf.usermodel.XWPFDocument;
 import org.apache.poi.xwpf.usermodel.XWPFFooter;
@@ -58,6 +63,7 @@ import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTText;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.FtrDocument;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.HdrDocument;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.STBrType;
+import org.openxmlformats.schemas.wordprocessingml.x2006.main.STMerge;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.STOnOff;
 
 public abstract class XWPFDocumentVisitor<T, O extends Options, E extends IXWPFMasterPage>
@@ -206,9 +212,10 @@ public abstract class XWPFDocumentVisitor<T, O extends Options, E extends IXWPFM
         List<XWPFRun> runs = paragraph.getRuns();
         if ( runs.isEmpty() )
         {
-            // Test if there is next paragraph/table, in this case a new line must be generated
-            List<IBodyElement> bodyElements = paragraph.getBody().getBodyElements();
-            if ( bodyElements.size() > index + 1 )
+            // a new line must be generated if :
+            // - there is next paragraph/table
+            // - if the body is a cell (with none vMerge) and contains just this paragraph
+            if ( isAddNewLine( paragraph, index ) )
             {
                 visitEmptyRun( paragraphContainer );
             }
@@ -272,6 +279,46 @@ public abstract class XWPFDocumentVisitor<T, O extends Options, E extends IXWPFM
                 }
             }
         }
+    }
+
+    private boolean isAddNewLine( XWPFParagraph paragraph, int index )
+    {
+        // a new line must be generated if :
+        // - there is next paragraph/table
+        // - if the body is a cell (with none vMerge) and contains just this paragraph
+        IBody body = paragraph.getBody();
+        List<IBodyElement> bodyElements = body.getBodyElements();
+        if ( body.getPartType() == BodyType.TABLECELL && bodyElements.size() == 1 )
+        {
+            XWPFTableCell cell = (XWPFTableCell) body;
+            STMerge.Enum vMerge = stylesDocument.getTableCellVMerge( cell );
+            if ( vMerge != null && vMerge.equals( STMerge.CONTINUE ) )
+            {
+                // here a new line must not be generated because the body is a cell (with none vMerge) and contains just
+                // this paragraph
+                return false;
+            }
+            // Loop for each cell of the row : if all cells are empty, new line must be generated otherwise none empty
+            // line must be generated.
+            XWPFTableRow row = cell.getTableRow();
+            List<XWPFTableCell> cells = row.getTableCells();
+            for ( int i = 0; i < cells.size(); i++ ) 
+            {
+                XWPFTableCell c = cells.get( i );
+                if (c.getBodyElements().size() != 1) {
+                    return false;
+                }
+                IBodyElement element = c.getBodyElements().get( 0 );
+                if (element.getElementType() != BodyElementType.PARAGRAPH) {
+                    return false;
+                }
+                return ((XWPFParagraph)element).getRuns().size() == 0;
+            }
+            return true;
+
+        }
+        // here a new line must be generated if there is next paragraph/table
+        return bodyElements.size() > index + 1;
     }
 
     private void visitRuns( XWPFParagraph paragraph, CTP ctp, T paragraphContainer )
@@ -513,14 +560,21 @@ public abstract class XWPFDocumentVisitor<T, O extends Options, E extends IXWPFM
         // Proces Row
         boolean firstRow = false;
         boolean lastRow = false;
+
         List<XWPFTableRow> rows = table.getRows();
-        for ( int i = 0; i < rows.size(); i++ )
+        int rowsSize = rows.size();
+        for ( int i = 0; i < rowsSize; i++ )
         {
             firstRow = ( i == 0 );
-            lastRow = ( i == rows.size() - 1 );
+            lastRow = isLastRow( i, rowsSize );
             XWPFTableRow row = rows.get( i );
-            visitTableRow( row, colWidths, tableContainer, firstRow, lastRow );
+            visitTableRow( row, colWidths, tableContainer, firstRow, lastRow, i, rowsSize );
         }
+    }
+
+    private boolean isLastRow( int rowIndex, int rowsSize )
+    {
+        return rowIndex == rowsSize - 1;
     }
 
     protected abstract T startVisitTable( XWPFTable table, float[] colWidths, T tableContainer )
@@ -530,15 +584,17 @@ public abstract class XWPFDocumentVisitor<T, O extends Options, E extends IXWPFM
         throws Exception;
 
     protected void visitTableRow( XWPFTableRow row, float[] colWidths, T tableContainer, boolean firstRow,
-                                  boolean lastRow )
+                                  boolean lastRowIfNoneVMerge, int rowIndex, int rowsSize )
         throws Exception
     {
-        startVisitTableRow( row, tableContainer, firstRow, lastRow );
+        startVisitTableRow( row, tableContainer, rowIndex );
 
         int nbColumns = colWidths.length;
         // Process cell
         boolean firstCol = true;
         boolean lastCol = false;
+        boolean lastRow = false;
+        List<XWPFTableCell> vMergedCells = null;
         List<XWPFTableCell> cells = row.getTableCells();
         if ( nbColumns > cells.size() )
         {
@@ -552,7 +608,7 @@ public abstract class XWPFDocumentVisitor<T, O extends Options, E extends IXWPFM
             // <w:tc> <= this tc which is a XWPFTableCell is not included in the row.getTableCells();
 
             firstCol = true;
-            int cellIndex = 0;
+            int cellIndex = -1;
             CTRow ctRow = row.getCtRow();
             XmlCursor c = ctRow.newCursor();
             c.selectPath( "./*" );
@@ -565,7 +621,13 @@ public abstract class XWPFDocumentVisitor<T, O extends Options, E extends IXWPFM
                     XWPFTableCell cell = row.getTableCell( tc );
                     cellIndex = getCellIndex( cellIndex, cell );
                     lastCol = ( cellIndex == nbColumns );
-                    visitCell( cell, tableContainer, firstRow, lastRow, firstCol, lastCol );
+                    vMergedCells = getVMergedCells( cell, rowIndex, cellIndex );
+                    if ( vMergedCells == null || vMergedCells.size() > 0 )
+                    {
+                        lastRow = isLastRow( lastRowIfNoneVMerge, rowIndex, rowsSize, vMergedCells );
+                        visitCell( cell, tableContainer, firstRow, lastRow, firstCol, lastCol, rowIndex, cellIndex,
+                                   vMergedCells );
+                    }
                     firstCol = false;
                 }
                 else if ( o instanceof CTSdtCell )
@@ -578,7 +640,13 @@ public abstract class XWPFDocumentVisitor<T, O extends Options, E extends IXWPFM
                         XWPFTableCell cell = new XWPFTableCell( ctTc, row, row.getTable().getBody() );
                         cellIndex = getCellIndex( cellIndex, cell );
                         lastCol = ( cellIndex == nbColumns );
-                        visitCell( cell, tableContainer, firstRow, lastRow, firstCol, lastCol );
+                        vMergedCells = getVMergedCells( cell, rowIndex, cellIndex );
+                        if ( vMergedCells == null || vMergedCells.size() > 0 )
+                        {
+                            lastRow = isLastRow( lastRowIfNoneVMerge, rowIndex, rowsSize, vMergedCells );
+                            visitCell( cell, tableContainer, firstRow, lastRow, firstCol, lastCol, rowIndex, cellIndex,
+                                       vMergedCells );
+                        }
                         firstCol = false;
                     }
                 }
@@ -592,12 +660,26 @@ public abstract class XWPFDocumentVisitor<T, O extends Options, E extends IXWPFM
             {
                 lastCol = ( i == cells.size() - 1 );
                 XWPFTableCell cell = cells.get( i );
-                visitCell( cell, tableContainer, firstRow, lastRow, firstCol, lastCol );
+                vMergedCells = getVMergedCells( cell, rowIndex, i );
+                if ( vMergedCells == null || vMergedCells.size() > 0 )
+                {
+                    lastRow = isLastRow( lastRowIfNoneVMerge, rowIndex, rowsSize, vMergedCells );
+                    visitCell( cell, tableContainer, firstRow, lastRow, firstCol, lastCol, rowIndex, i, vMergedCells );
+                }
                 firstCol = false;
             }
         }
 
         endVisitTableRow( row, tableContainer, firstRow, lastRow );
+    }
+
+    private boolean isLastRow( boolean lastRowIfNoneVMerge, int rowIndex, int rowsSize, List<XWPFTableCell> vMergedCells )
+    {
+        if ( vMergedCells == null )
+        {
+            return lastRowIfNoneVMerge;
+        }
+        return isLastRow( rowIndex - 1 + vMergedCells.size(), rowsSize );
     }
 
     private int getCellIndex( int cellIndex, XWPFTableCell cell )
@@ -614,7 +696,7 @@ public abstract class XWPFDocumentVisitor<T, O extends Options, E extends IXWPFM
         return cellIndex;
     }
 
-    protected void startVisitTableRow( XWPFTableRow row, T tableContainer, boolean firstRow, boolean lastRow )
+    protected void startVisitTableRow( XWPFTableRow row, T tableContainer, int rowIndex )
         throws Exception
     {
 
@@ -627,23 +709,83 @@ public abstract class XWPFDocumentVisitor<T, O extends Options, E extends IXWPFM
     }
 
     protected void visitCell( XWPFTableCell cell, T tableContainer, boolean firstRow, boolean lastRow,
-                              boolean firstCol, boolean lastCol )
+                              boolean firstCol, boolean lastCol, int rowIndex, int cellIndex,
+                              List<XWPFTableCell> vMergedCells )
         throws Exception
     {
-        T tableCellContainer = startVisitTableCell( cell, tableContainer, firstRow, lastRow, firstCol, lastCol );
-        visitTableCellBody( cell, tableCellContainer );
+        T tableCellContainer =
+            startVisitTableCell( cell, tableContainer, firstRow, lastRow, firstCol, lastCol, vMergedCells );
+        visitTableCellBody( cell, vMergedCells, tableCellContainer );
         endVisitTableCell( cell, tableContainer, tableCellContainer );
     }
 
-    protected void visitTableCellBody( XWPFTableCell cell, T tableCellContainer )
+    private List<XWPFTableCell> getVMergedCells( XWPFTableCell cell, int rowIndex, int cellIndex )
+    {
+        List<XWPFTableCell> vMergedCells = null;
+        STMerge.Enum vMerge = stylesDocument.getTableCellVMerge( cell );
+        if ( vMerge != null )
+        {
+            if ( vMerge.equals( STMerge.RESTART ) )
+            {
+                // vMerge="restart"
+                // Loop for each table cell of each row upon vMerge="restart" was found or cell without vMerge
+                // was declared.
+                vMergedCells = new ArrayList<XWPFTableCell>();
+                vMergedCells.add( cell );
+
+                XWPFTableRow row = null;
+                XWPFTableCell c;
+                XWPFTable table = cell.getTableRow().getTable();
+                for ( int i = rowIndex + 1; i < table.getRows().size(); i++ )
+                {
+                    row = table.getRow( i );
+                    c = row.getCell( cellIndex );
+                    if ( c == null )
+                    {
+                        break;
+                    }
+                    vMerge = stylesDocument.getTableCellVMerge( c );
+                    if ( vMerge != null && vMerge.equals( STMerge.CONTINUE ) )
+                    {
+
+                        vMergedCells.add( c );
+                    }
+                    else
+                    {
+                        return vMergedCells;
+                    }
+                }
+            }
+            else
+            {
+                // vMerge="continue", ignore the cell because it was already processed
+                return Collections.emptyList();
+            }
+        }
+        return vMergedCells;
+    }
+
+    protected void visitTableCellBody( XWPFTableCell cell, List<XWPFTableCell> vMergeCells, T tableCellContainer )
         throws Exception
     {
-        List<IBodyElement> bodyElements = cell.getBodyElements();
-        visitBodyElements( bodyElements, tableCellContainer );
+        if ( vMergeCells != null )
+        {
+
+            for ( XWPFTableCell mergedCell : vMergeCells )
+            {
+                List<IBodyElement> bodyElements = mergedCell.getBodyElements();
+                visitBodyElements( bodyElements, tableCellContainer );
+            }
+        }
+        else
+        {
+            List<IBodyElement> bodyElements = cell.getBodyElements();
+            visitBodyElements( bodyElements, tableCellContainer );
+        }
     }
 
     protected abstract T startVisitTableCell( XWPFTableCell cell, T tableContainer, boolean firstRow, boolean lastRow,
-                                              boolean firstCol, boolean lastCol )
+                                              boolean firstCol, boolean lastCol, List<XWPFTableCell> vMergeCells )
         throws Exception;
 
     protected abstract void endVisitTableCell( XWPFTableCell cell, T tableContainer, T tableCellContainer )

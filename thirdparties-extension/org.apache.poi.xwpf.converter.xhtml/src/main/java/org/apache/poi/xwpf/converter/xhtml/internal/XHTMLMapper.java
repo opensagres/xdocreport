@@ -11,6 +11,7 @@ import static org.apache.poi.xwpf.converter.xhtml.internal.XHTMLConstants.HREF_A
 import static org.apache.poi.xwpf.converter.xhtml.internal.XHTMLConstants.HTML_ELEMENT;
 import static org.apache.poi.xwpf.converter.xhtml.internal.XHTMLConstants.IMG_ELEMENT;
 import static org.apache.poi.xwpf.converter.xhtml.internal.XHTMLConstants.P_ELEMENT;
+import static org.apache.poi.xwpf.converter.xhtml.internal.XHTMLConstants.ROWSPAN_ATTR;
 import static org.apache.poi.xwpf.converter.xhtml.internal.XHTMLConstants.SPAN_ELEMENT;
 import static org.apache.poi.xwpf.converter.xhtml.internal.XHTMLConstants.SRC_ATTR;
 import static org.apache.poi.xwpf.converter.xhtml.internal.XHTMLConstants.STYLE_ATTR;
@@ -25,6 +26,7 @@ import static org.apache.poi.xwpf.converter.xhtml.internal.styles.CSSStyleProper
 
 import java.io.IOException;
 import java.math.BigInteger;
+import java.util.List;
 
 import org.apache.poi.xwpf.converter.core.IURIResolver;
 import org.apache.poi.xwpf.converter.core.IXWPFMasterPage;
@@ -304,7 +306,7 @@ public class XHTMLMapper
     }
 
     @Override
-    protected void startVisitTableRow( XWPFTableRow row, Object tableContainer, boolean firstRow, boolean lastRow )
+    protected void startVisitTableRow( XWPFTableRow row, Object tableContainer, int rowIndex )
         throws Exception
     {
 
@@ -327,7 +329,7 @@ public class XHTMLMapper
 
     @Override
     protected Object startVisitTableCell( XWPFTableCell cell, Object tableContainer, boolean firstRow, boolean lastRow,
-                                          boolean firstCell, boolean lastCell )
+                                          boolean firstCell, boolean lastCell, List<XWPFTableCell> vMergeCells )
         throws Exception
     {
         // 1) create attributes
@@ -345,7 +347,12 @@ public class XHTMLMapper
         BigInteger gridSpan = stylesDocument.getTableCellGridSpan( cell );
         if ( gridSpan != null )
         {
-            attributes = SAXHelper.addAttrValue( attributes, COLSPAN_ATTR, String.valueOf( gridSpan.intValue() ) );
+            attributes = SAXHelper.addAttrValue( attributes, COLSPAN_ATTR, gridSpan.intValue() );
+        }
+
+        if ( vMergeCells != null )
+        {
+            attributes = SAXHelper.addAttrValue( attributes, ROWSPAN_ATTR, vMergeCells.size() );
         }
 
         // 2) create element

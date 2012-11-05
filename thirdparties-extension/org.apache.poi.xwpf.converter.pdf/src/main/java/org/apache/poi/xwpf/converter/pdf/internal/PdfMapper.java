@@ -804,8 +804,9 @@ public class PdfMapper
     // ------------------------- Table Cell
 
     @Override
-    protected IITextContainer startVisitTableCell( XWPFTableCell cell, IITextContainer pdfTableContainer,
-                                                   boolean firstRow, boolean lastRow, boolean firstCol, boolean lastCol )
+    protected IITextContainer startVisitTableCell( final XWPFTableCell cell, IITextContainer pdfTableContainer,
+                                                   boolean firstRow, boolean lastRow, boolean firstCol,
+                                                   boolean lastCol, List<XWPFTableCell> vMergeCells )
         throws Exception
     {
         XWPFTableRow row = cell.getTableRow();
@@ -820,6 +821,14 @@ public class PdfMapper
         StylableTableCell pdfPCell = pdfDocument.createTableCell( pdfPTable );
         // pdfPCell.setUseAscender( true );
         // pdfPCell.setUseDescender( true );
+
+        XWPFTableCell lastVMergedCell = null;
+        if ( vMergeCells != null )
+        {
+            pdfPCell.setRowspan( vMergeCells.size() );
+            lastVMergedCell = vMergeCells.get( vMergeCells.size() - 1 );
+            stylesDocument.getTableInfo( table ).addCellInfo( lastVMergedCell, false, lastRow, firstCol, lastCol );
+        }
 
         // border-top
         TableCellBorder borderTop = stylesDocument.getTableCellBorderWithConflicts( cell, BorderSide.TOP );
@@ -836,8 +845,10 @@ public class PdfMapper
         pdfPCell.setBorderTop( borderTop, false );
 
         // border-bottom
-        TableCellBorder borderBottom = stylesDocument.getTableCellBorderWithConflicts( cell, BorderSide.BOTTOM );
-        pdfPCell.setBorderBottom( borderBottom, stylesDocument.isBorderInside( cell, BorderSide.BOTTOM ) );
+
+        XWPFTableCell theCell = lastVMergedCell != null ? lastVMergedCell : cell;
+        TableCellBorder borderBottom = stylesDocument.getTableCellBorderWithConflicts( theCell, BorderSide.BOTTOM );
+        pdfPCell.setBorderBottom( borderBottom, stylesDocument.isBorderInside( theCell, BorderSide.BOTTOM ) );
 
         // border-left
         TableCellBorder borderLeft = stylesDocument.getTableCellBorderWithConflicts( cell, BorderSide.LEFT );

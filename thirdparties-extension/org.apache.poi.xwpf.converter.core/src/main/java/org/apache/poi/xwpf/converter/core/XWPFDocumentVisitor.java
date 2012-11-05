@@ -10,6 +10,7 @@ import org.apache.poi.openxml4j.opc.PackagePart;
 import org.apache.poi.xwpf.converter.core.styles.XWPFStylesDocument;
 import org.apache.poi.xwpf.converter.core.utils.DxaUtil;
 import org.apache.poi.xwpf.converter.core.utils.StringUtils;
+import org.apache.poi.xwpf.converter.core.utils.XWPFRunHelper;
 import org.apache.poi.xwpf.converter.core.utils.XWPFTableUtil;
 import org.apache.poi.xwpf.usermodel.BodyElementType;
 import org.apache.poi.xwpf.usermodel.BodyType;
@@ -63,6 +64,7 @@ import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTText;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.FtrDocument;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.HdrDocument;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.STBrType;
+import org.openxmlformats.schemas.wordprocessingml.x2006.main.STFldCharType;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.STMerge;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.STOnOff;
 
@@ -325,6 +327,10 @@ public abstract class XWPFDocumentVisitor<T, O extends Options, E extends IXWPFM
     private void visitRuns( XWPFParagraph paragraph, CTP ctp, T paragraphContainer )
         throws Exception
     {
+        boolean fldCharTypeBegin = false;
+        boolean pageNumber = false;
+        CTR lastR = null;
+
         XmlCursor c = ctp.newCursor();
         c.selectPath( "child::*" );
         while ( c.toNextSelection() )
@@ -332,10 +338,55 @@ public abstract class XWPFDocumentVisitor<T, O extends Options, E extends IXWPFM
             XmlObject o = c.getObject();
             if ( o instanceof CTR )
             {
-                XWPFRun run = new XWPFRun( (CTR) o, paragraph );
-                visitRun( run, false, paragraphContainer );
+                /*
+                 * Test if it's : <w:r> <w:rPr /> <w:fldChar w:fldCharType="begin" /> </w:r>
+                 */
+                CTR r = (CTR) o;
+                STFldCharType.Enum fldCharType = XWPFRunHelper.getFldCharType( r );
+                if ( fldCharType != null )
+                {
+                    if ( fldCharType.equals( STFldCharType.BEGIN ) )
+                    {
+                        fldCharTypeBegin = true;
+                        lastR = null;
+                    }
+                    else if ( fldCharType.equals( STFldCharType.END ) )
+                    {
+                        if ( pageNumber )
+                        {
+                            XWPFRun run = new XWPFRun( lastR, paragraph );
+                            visitRun( run, true, paragraphContainer );
+                        }
+                        else
+                        {
+                            XWPFRun run = new XWPFRun( lastR, paragraph );
+                            visitRun( run, false, paragraphContainer );
+                        }
+                        fldCharTypeBegin = false;
+                        lastR = null;
+                        pageNumber = false;
+                    }
+                }
+                else
+                {
+                    if ( fldCharTypeBegin )
+                    {
+                        // test if it's <w:r><w:instrText>PAGE</w:instrText></w:r>
+                        String instrText = XWPFRunHelper.getInstrText( r );
+                        if ( instrText != null )
+                        {
+                            pageNumber = instrText.trim().equalsIgnoreCase( "page" );
+                        }
+                    }
+                    else
+                    {
+                        XWPFRun run = new XWPFRun( r, paragraph );
+                        visitRun( run, false, paragraphContainer );
+                    }
+                }
+                lastR = r;
             }
-            if ( o instanceof CTHyperlink )
+            else if ( o instanceof CTHyperlink )
             {
                 CTHyperlink link = (CTHyperlink) o;
                 for ( CTR r : link.getRList() )
@@ -344,7 +395,7 @@ public abstract class XWPFDocumentVisitor<T, O extends Options, E extends IXWPFM
                     visitRun( run, false, paragraphContainer );
                 }
             }
-            if ( o instanceof CTSdtRun )
+            else if ( o instanceof CTSdtRun )
             {
                 CTSdtContentRun run = ( (CTSdtRun) o ).getSdtContent();
                 for ( CTR r : run.getRList() )
@@ -353,7 +404,7 @@ public abstract class XWPFDocumentVisitor<T, O extends Options, E extends IXWPFM
                     visitRun( ru, false, paragraphContainer );
                 }
             }
-            if ( o instanceof CTRunTrackChange )
+            else if ( o instanceof CTRunTrackChange )
             {
                 for ( CTR r : ( (CTRunTrackChange) o ).getRList() )
                 {
@@ -361,7 +412,7 @@ public abstract class XWPFDocumentVisitor<T, O extends Options, E extends IXWPFM
                     visitRun( run, false, paragraphContainer );
                 }
             }
-            if ( o instanceof CTSimpleField )
+            else if ( o instanceof CTSimpleField )
             {
                 CTSimpleField simpleField = (CTSimpleField) o;
                 /*
@@ -369,14 +420,14 @@ public abstract class XWPFDocumentVisitor<T, O extends Options, E extends IXWPFM
                  * </w:rPr> <w:t>- 1 -</w:t> </w:r> </w:fldSimple>
                  */
                 String instr = simpleField.getInstr();
-                boolean pageNumber = instr.toLowerCase().contains( "page" );
+                pageNumber = instr.toLowerCase().contains( "page" );
                 for ( CTR r : simpleField.getRList() )
                 {
                     XWPFRun run = new XWPFRun( r, paragraph );
                     visitRun( run, pageNumber, paragraphContainer );
                 }
             }
-            if ( o instanceof CTSmartTagRun )
+            else if ( o instanceof CTSmartTagRun )
             {
                 // Smart Tags can be nested many times.
                 // This implementation does not preserve the tagging information

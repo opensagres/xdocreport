@@ -18,6 +18,7 @@ import org.apache.poi.xwpf.converter.core.XWPFDocumentVisitor;
 import org.apache.poi.xwpf.converter.core.styles.pargraph.ParagraphIndentationLeftValueProvider;
 import org.apache.poi.xwpf.converter.core.utils.DxaUtil;
 import org.apache.poi.xwpf.converter.pdf.PdfOptions;
+import org.apache.poi.xwpf.converter.pdf.internal.elements.StylableAnchor;
 import org.apache.poi.xwpf.converter.pdf.internal.elements.StylableDocument;
 import org.apache.poi.xwpf.converter.pdf.internal.elements.StylableHeaderFooter;
 import org.apache.poi.xwpf.converter.pdf.internal.elements.StylableMasterPage;
@@ -42,6 +43,7 @@ import org.openxmlformats.schemas.drawingml.x2006.main.CTPositiveSize2D;
 import org.openxmlformats.schemas.drawingml.x2006.picture.CTPicture;
 import org.openxmlformats.schemas.drawingml.x2006.wordprocessingDrawing.STRelFromH;
 import org.openxmlformats.schemas.drawingml.x2006.wordprocessingDrawing.STRelFromV;
+import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTBookmark;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTBorder;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTBr;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTDecimalNumber;
@@ -57,10 +59,10 @@ import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTText;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTTextDirection;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.STTabJc;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.STTabTlc;
+import org.openxmlformats.schemas.wordprocessingml.x2006.main.STTextDirection;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.STVerticalJc;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.STVerticalJc.Enum;
 
-import com.lowagie.text.Anchor;
 import com.lowagie.text.Chunk;
 import com.lowagie.text.DocumentException;
 import com.lowagie.text.Element;
@@ -84,6 +86,8 @@ import fr.opensagres.xdocreport.itext.extension.IITextContainer;
 public class PdfMapper
     extends XWPFDocumentVisitor<IITextContainer, PdfOptions, StylableMasterPage>
 {
+
+    private static final String TAB = "\t";
 
     /**
      * Logger for this class
@@ -161,12 +165,6 @@ public class PdfMapper
                                                         List<IBodyElement> bodyElements )
         throws DocumentException
     {
-        // XWPFTable table = getFirstTable( bodyElements );
-        // if ( table != null )
-        // {
-        // StylableTable pdfTable = createPDFTable( table );
-        // return pdfHeaderFooter.getTableCell( pdfTable );
-        // }
         return pdfHeaderFooter.getTableCell();
     }
 
@@ -294,33 +292,6 @@ public class PdfMapper
         CTPPr ppr = docxParagraph.getCTP().getPPr();
         if ( ppr != null )
         {
-            // CTSpacing spacing = ppr.getSpacing();
-            // if ( spacing != null )
-            // {
-            // BigInteger line = spacing.getLine();
-            // if ( line != null )
-            // {
-            // float leading = -1;
-            // // see http://officeopenxml.com/WPspacing.php
-            // // Note: If the value of the lineRule attribute is atLeast or exactly, then the value of the line
-            // // attribute is interpreted as 240th of a point. If the value of lineRule is auto, then the value of
-            // // line is interpreted as 240th of a line.
-            // LineSpacingRule lineSpacingRule = docxParagraph.getSpacingLineRule();
-            // switch ( lineSpacingRule )
-            // {
-            // case AT_LEAST:
-            // case EXACT:
-            // // FIXME : is that?
-            // leading = line.floatValue() / 240;
-            // break;
-            // case AUTO:
-            // leading = line.floatValue() / 240;
-            // break;
-            // }
-            // pdfParagraph.setMultipliedLeading( leading );
-            // }
-            // }
-
             CTNumPr numPr = ppr.getNumPr();
             if ( numPr != null )
             {
@@ -391,7 +362,7 @@ public class PdfMapper
     }
 
     @Override
-    protected void visitRun( XWPFRun docxRun, boolean pageNumber, IITextContainer pdfParagraphContainer )
+    protected void visitRun( XWPFRun docxRun, boolean pageNumber, String url, IITextContainer pdfParagraphContainer )
         throws Exception
     {
         // Font family
@@ -441,20 +412,26 @@ public class PdfMapper
             this.currentRunBackgroundColor = stylesDocument.getTextHighlighting( docxRun );
         }
 
-        super.visitRun( docxRun, pageNumber, pdfParagraphContainer );
+        IITextContainer container = pdfParagraphContainer;
+        if ( url != null )
+        {
+            // URL is not null, generate a PDF hyperlink.
+            StylableAnchor pdfAnchor = new StylableAnchor();
+            pdfAnchor.setReference( url );
+            pdfAnchor.setITextContainer( container );
+            container = pdfAnchor;
+        }
+        super.visitRun( docxRun, pageNumber, url, container );
+
+        if ( url != null )
+        {
+            // URL is not null, add the PDF hyperlink in the PDF paragraph
+            pdfParagraphContainer.addElement( (StylableAnchor) container );
+        }
 
         this.currentRunFont = null;
         this.currentRunUnderlinePatterns = null;
         this.currentRunBackgroundColor = null;
-    }
-
-    @Override
-    protected void visitHyperlink( CTText ctText, String hrefHyperlink, IITextContainer pdfParagraphContainer )
-        throws Exception
-    {
-        Anchor anchor = new Anchor( createTextChunk( ctText, false ) );
-        anchor.setReference( hrefHyperlink );
-        pdfParagraphContainer.addElement( anchor );
     }
 
     @Override
@@ -529,8 +506,17 @@ public class PdfMapper
     {
         if ( currentRunX == null )
         {
-            currentRunX = ( (Paragraph) pdfParagraphContainer ).getFirstLineIndent();
-            List<Chunk> chunks = ( (Paragraph) pdfParagraphContainer ).getChunks();
+            Paragraph paragraph = null;
+            if ( pdfParagraphContainer instanceof Paragraph )
+            {
+                paragraph = (Paragraph) pdfParagraphContainer;
+            }
+            else
+            {
+                paragraph = (Paragraph) ( (StylableAnchor) pdfParagraphContainer ).getITextContainer();
+            }
+            currentRunX = paragraph.getFirstLineIndent();
+            List<Chunk> chunks = paragraph.getChunks();
             for ( Chunk chunk : chunks )
             {
                 currentRunX += chunk.getWidthPoint();
@@ -732,6 +718,19 @@ public class PdfMapper
         pdfDocument.pageBreak();
     }
 
+    @Override
+    protected void visitBookmark( CTBookmark bookmark, XWPFParagraph paragraph, IITextContainer paragraphContainer )
+        throws Exception
+    {
+        // destination for a local anchor
+        // chunk with empty text does not work as local anchor
+        // so we create chunk with invisible but not empty text content
+        // if bookmark is the last chunk in a paragraph something must be added after or it does not work
+        Chunk chunk = new Chunk( TAB );
+        chunk.setLocalDestination( bookmark.getName() );
+        paragraphContainer.addElement( chunk );
+    }
+
     // ----------------- Table
 
     @Override
@@ -880,10 +879,10 @@ public class PdfMapper
             int dir = direction.getVal().intValue();
             switch ( dir )
             {
-                case org.openxmlformats.schemas.wordprocessingml.x2006.main.STTextDirection.INT_BT_LR:
+                case STTextDirection.INT_BT_LR:
                     pdfPCell.setRotation( 90 );
                     break;
-                case org.openxmlformats.schemas.wordprocessingml.x2006.main.STTextDirection.INT_TB_RL:
+                case STTextDirection.INT_TB_RL:
                     pdfPCell.setRotation( 270 );
                     break;
             }

@@ -68,16 +68,6 @@ public class XWPFUtils
         return null;
     }
 
-    private static String getStringVal( Object val )
-    {
-        if ( val instanceof STShd )
-        {
-            STShd shd = (STShd) val;
-            return shd.getStringValue();
-        }
-        return val.toString();
-    }
-
     public static String toHexString( Color color )
     {
         String hexaWith8Digits = Integer.toHexString( color.getRGB() );

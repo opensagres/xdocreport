@@ -53,7 +53,7 @@ public class XHTMLConverterTestCase
 
         XWPFDocument document = new XWPFDocument( AbstractXWPFPOIConverterTest.class.getResourceAsStream( fileInName ) );
 
-        XHTMLOptions options = null;// XHTMLOptions.create().indent( 4 );
+        XHTMLOptions options = XHTMLOptions.create().indent( 4 );
         OutputStream out = System.out;
         XHTMLConverter.getInstance().convert( document, out, options );
 
@@ -71,7 +71,7 @@ public class XHTMLConverterTestCase
 
         XWPFDocument document = new XWPFDocument( AbstractXWPFPOIConverterTest.class.getResourceAsStream( fileInName ) );
 
-        XHTMLOptions options = XHTMLOptions.create().indent( 4 );
+        XHTMLOptions options = XHTMLOptions.create();// .indent( 4 );
         // Extract image
         File imageFolder = new File( root + "/images/" + fileInName );
         options.setExtractor( new FileImageExtractor( imageFolder ) );

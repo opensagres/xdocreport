@@ -1,3 +1,27 @@
+/**
+ * Copyright (C) 2011 The XDocReport Team <xdocreport@googlegroups.com>
+ *
+ * All rights reserved.
+ *
+ * Permission is hereby granted, free  of charge, to any person obtaining
+ * a  copy  of this  software  and  associated  documentation files  (the
+ * "Software"), to  deal in  the Software without  restriction, including
+ * without limitation  the rights to  use, copy, modify,  merge, publish,
+ * distribute,  sublicense, and/or sell  copies of  the Software,  and to
+ * permit persons to whom the Software  is furnished to do so, subject to
+ * the following conditions:
+ *
+ * The  above  copyright  notice  and  this permission  notice  shall  be
+ * included in all copies or substantial portions of the Software.
+ *
+ * THE  SOFTWARE IS  PROVIDED  "AS  IS", WITHOUT  WARRANTY  OF ANY  KIND,
+ * EXPRESS OR  IMPLIED, INCLUDING  BUT NOT LIMITED  TO THE  WARRANTIES OF
+ * MERCHANTABILITY,    FITNESS    FOR    A   PARTICULAR    PURPOSE    AND
+ * NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE
+ * LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION
+ * OF CONTRACT, TORT OR OTHERWISE,  ARISING FROM, OUT OF OR IN CONNECTION
+ * WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+ */
 package org.apache.poi.xwpf.converter.core;
 
 import java.io.IOException;
@@ -21,6 +45,7 @@ import org.apache.poi.xwpf.usermodel.IBodyElement;
 import org.apache.poi.xwpf.usermodel.XWPFDocument;
 import org.apache.poi.xwpf.usermodel.XWPFFooter;
 import org.apache.poi.xwpf.usermodel.XWPFHeader;
+import org.apache.poi.xwpf.usermodel.XWPFHyperlink;
 import org.apache.poi.xwpf.usermodel.XWPFHyperlinkRun;
 import org.apache.poi.xwpf.usermodel.XWPFParagraph;
 import org.apache.poi.xwpf.usermodel.XWPFPictureData;
@@ -41,6 +66,7 @@ import org.openxmlformats.schemas.drawingml.x2006.wordprocessingDrawing.CTPosH;
 import org.openxmlformats.schemas.drawingml.x2006.wordprocessingDrawing.CTPosV;
 import org.openxmlformats.schemas.drawingml.x2006.wordprocessingDrawing.STRelFromH;
 import org.openxmlformats.schemas.drawingml.x2006.wordprocessingDrawing.STRelFromV;
+import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTBookmark;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTBr;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTDrawing;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTEmpty;
@@ -70,6 +96,13 @@ import org.openxmlformats.schemas.wordprocessingml.x2006.main.STFldCharType;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.STMerge;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.STOnOff;
 
+/**
+ * Visitor to visit elements from entry word/document.xml, word/header*.xml, word/footer*.xml
+ * 
+ * @param <T>
+ * @param <O>
+ * @param <E>
+ */
 public abstract class XWPFDocumentVisitor<T, O extends Options, E extends IXWPFMasterPage>
 {
 
@@ -134,18 +167,29 @@ public abstract class XWPFDocumentVisitor<T, O extends Options, E extends IXWPFM
     public void start()
         throws Exception
     {
+        // start document
         T container = startVisitDocument();
         // Create IText, XHTML element for each XWPF elements from the w:body
         List<IBodyElement> bodyElements = document.getBodyElements();
         visitBodyElements( bodyElements, container );
-
+        // end document
         endVisitDocument();
-
     }
 
+    /**
+     * Start of visit document.
+     * 
+     * @return
+     * @throws Exception
+     */
     protected abstract T startVisitDocument()
         throws Exception;
 
+    /**
+     * End of visit document.
+     * 
+     * @throws Exception
+     */
     protected abstract void endVisitDocument()
         throws Exception;
 
@@ -170,6 +214,14 @@ public abstract class XWPFDocumentVisitor<T, O extends Options, E extends IXWPFM
 
     }
 
+    /**
+     * Visit paragraph and table of the given body element.
+     * 
+     * @param bodyElement
+     * @param index
+     * @param container
+     * @throws Exception
+     */
     protected void visitBodyElement( IBodyElement bodyElement, int index, T container )
         throws Exception
     {
@@ -184,6 +236,14 @@ public abstract class XWPFDocumentVisitor<T, O extends Options, E extends IXWPFM
         }
     }
 
+    /**
+     * Visit the given paragraph.
+     * 
+     * @param paragraph
+     * @param index
+     * @param container
+     * @throws Exception
+     */
     protected void visitParagraph( XWPFParagraph paragraph, int index, T container )
         throws Exception
     {
@@ -256,19 +316,8 @@ public abstract class XWPFDocumentVisitor<T, O extends Options, E extends IXWPFM
         else
         {
             // Loop for each element of <w:r, w:fldSimple
-            // to keep the order of thoses elements.
-            CTP ctp = paragraph.getCTP();
-            visitRuns( paragraph, ctp, paragraphContainer );
-
-            // for ( XWPFRun run : paragraph.getRuns() )
-            // {
-            // Node parent = run.getCTR().getDomNode().getParentNode();
-            // // XmlObject u = (XmlObject)parent;
-            // // parent.getUser() ;
-            //
-            // System.err.println( parent );
-            // visitRun( run, paragraphContainer );
-            // }
+            // to keep the order of those elements.
+            visitRuns( paragraph, paragraphContainer );
         }
 
         // Page Break
@@ -289,6 +338,13 @@ public abstract class XWPFDocumentVisitor<T, O extends Options, E extends IXWPFM
         }
     }
 
+    /**
+     * Returns true if the given paragraph which is empty (none <w:r> run) must generate new line and false otherwise.
+     * 
+     * @param paragraph
+     * @param index
+     * @return
+     */
     private boolean isAddNewLine( XWPFParagraph paragraph, int index )
     {
         // a new line must be generated if :
@@ -330,13 +386,15 @@ public abstract class XWPFDocumentVisitor<T, O extends Options, E extends IXWPFM
         return bodyElements.size() > index + 1;
     }
 
-    private void visitRuns( XWPFParagraph paragraph, CTP ctp, T paragraphContainer )
+    private void visitRuns( XWPFParagraph paragraph, T paragraphContainer )
         throws Exception
     {
-        boolean fldCharTypeBegin = false;
+        boolean fldCharTypeParsing = false;
         boolean pageNumber = false;
-        CTR lastR = null;
+        String url = null;
+        List<XmlObject> rListAfterSeparate = null;
 
+        CTP ctp = paragraph.getCTP();
         XmlCursor c = ctp.newCursor();
         c.selectPath( "child::*" );
         while ( c.toNextSelection() )
@@ -353,116 +411,183 @@ public abstract class XWPFDocumentVisitor<T, O extends Options, E extends IXWPFM
                 {
                     if ( fldCharType.equals( STFldCharType.BEGIN ) )
                     {
-                        fldCharTypeBegin = true;
-                        lastR = null;
+                        process( paragraph, paragraphContainer, pageNumber, url, rListAfterSeparate );
+                        fldCharTypeParsing = true;
+                        rListAfterSeparate = new ArrayList<XmlObject>();
+                        pageNumber = false;
+                        url = null;
                     }
                     else if ( fldCharType.equals( STFldCharType.END ) )
                     {
-                        if ( pageNumber )
-                        {
-                            XWPFRun run = new XWPFRun( lastR, paragraph );
-                            visitRun( run, true, paragraphContainer );
-                        }
-                        else
-                        {
-                            if ( lastR != null )
-                            {
-                                XWPFRun run = new XWPFRun( lastR, paragraph );
-                                visitRun( run, false, paragraphContainer );
-                            }
-                        }
-                        fldCharTypeBegin = false;
-                        lastR = null;
+
+                        process( paragraph, paragraphContainer, pageNumber, url, rListAfterSeparate );
+                        fldCharTypeParsing = false;
+                        rListAfterSeparate = null;
                         pageNumber = false;
+                        url = null;
                     }
                 }
                 else
                 {
-                    if ( fldCharTypeBegin )
+                    if ( fldCharTypeParsing )
                     {
-                        // test if it's <w:r><w:instrText>PAGE</w:instrText></w:r>
                         String instrText = XWPFRunHelper.getInstrText( r );
                         if ( instrText != null )
                         {
-                            pageNumber = instrText.trim().equalsIgnoreCase( "page" );
+                            if ( StringUtils.isNotEmpty( instrText ) )
+                            {
+                                // test if it's <w:r><w:instrText>PAGE</w:instrText></w:r>
+                                boolean instrTextPage = XWPFRunHelper.isInstrTextPage( instrText );
+                                if ( !instrTextPage )
+                                {
+                                    // test if it's <w:instrText>HYPERLINK
+                                    // "http://code.google.com/p/xdocrepor"</w:instrText>
+                                    String instrTextHyperlink = XWPFRunHelper.getInstrTextHyperlink( instrText );
+                                    if ( instrTextHyperlink != null )
+                                    {
+                                        url = instrTextHyperlink;
+                                    }
+                                }
+                                else
+                                {
+                                    pageNumber = true;
+                                }
+                            }
+                        }
+                        else
+                        {
+                            rListAfterSeparate.add( r );
                         }
                     }
                     else
                     {
                         XWPFRun run = new XWPFRun( r, paragraph );
-                        visitRun( run, false, paragraphContainer );
+                        visitRun( run, false, null, paragraphContainer );
                     }
                 }
-                lastR = r;
             }
-            else if ( o instanceof CTHyperlink )
+            else
             {
-                CTHyperlink link = (CTHyperlink) o;
-                for ( CTR r : link.getRList() )
+                if ( fldCharTypeParsing )
                 {
-                    XWPFRun run = new XWPFHyperlinkRun( link, r, paragraph );
-                    visitRun( run, false, paragraphContainer );
+                    rListAfterSeparate.add( o );
                 }
-            }
-            else if ( o instanceof CTSdtRun )
-            {
-                CTSdtContentRun run = ( (CTSdtRun) o ).getSdtContent();
-                for ( CTR r : run.getRList() )
+                else
                 {
-                    XWPFRun ru = new XWPFRun( r, paragraph );
-                    visitRun( ru, false, paragraphContainer );
+                    visitRun( paragraph, o, paragraphContainer );
                 }
-            }
-            else if ( o instanceof CTRunTrackChange )
-            {
-                for ( CTR r : ( (CTRunTrackChange) o ).getRList() )
-                {
-                    XWPFRun run = new XWPFRun( r, paragraph );
-                    visitRun( run, false, paragraphContainer );
-                }
-            }
-            else if ( o instanceof CTSimpleField )
-            {
-                CTSimpleField simpleField = (CTSimpleField) o;
-                /*
-                 * Support page numbering<w:fldSimple w:instr=" PAGE \* MERGEFORMAT "> <w:r> <w:rPr> <w:noProof/>
-                 * </w:rPr> <w:t>- 1 -</w:t> </w:r> </w:fldSimple>
-                 */
-                String instr = simpleField.getInstr();
-                pageNumber = instr.toLowerCase().contains( "page" );
-                for ( CTR r : simpleField.getRList() )
-                {
-                    XWPFRun run = new XWPFRun( r, paragraph );
-                    visitRun( run, pageNumber, paragraphContainer );
-                }
-            }
-            else if ( o instanceof CTSmartTagRun )
-            {
-                // Smart Tags can be nested many times.
-                // This implementation does not preserve the tagging information
-                // buildRunsInOrderFromXml(o);
             }
         }
         c.dispose();
+        process( paragraph, paragraphContainer, pageNumber, url, rListAfterSeparate );
+        fldCharTypeParsing = false;
+        rListAfterSeparate = null;
+        pageNumber = false;
+        url = null;
+    }
+
+    private void process( XWPFParagraph paragraph, T paragraphContainer, boolean pageNumber, String url,
+                          List<XmlObject> rListAfterSeparate )
+        throws Exception
+    {
+        if ( rListAfterSeparate != null )
+        {
+            for ( XmlObject oAfterSeparate : rListAfterSeparate )
+            {
+                if ( oAfterSeparate instanceof CTR )
+                {
+                    CTR ctr = (CTR) oAfterSeparate;
+                    XWPFRun run = new XWPFRun( ctr, paragraph );
+                    visitRun( run, pageNumber, url, paragraphContainer );
+                }
+                else
+                {
+                    visitRun( paragraph, oAfterSeparate, paragraphContainer );
+                }
+            }
+        }
+    }
+
+    private void visitRun( XWPFParagraph paragraph, XmlObject o, T paragraphContainer )
+        throws Exception
+    {
+        if ( o instanceof CTHyperlink )
+        {
+            CTHyperlink link = (CTHyperlink) o;
+            String anchor = link.getAnchor();
+            String href = null;
+            // Test if the is an id for hyperlink
+            String hyperlinkId = link.getId();
+            if ( StringUtils.isNotEmpty( hyperlinkId ) )
+            {
+                XWPFHyperlink hyperlink = document.getHyperlinkByID( hyperlinkId );
+                href = hyperlink.getURL();
+            }
+            for ( CTR r : link.getRList() )
+            {
+                XWPFRun run = new XWPFHyperlinkRun( link, r, paragraph );
+                visitRun( run, false, href != null ? href : "#" + anchor, paragraphContainer );
+            }
+        }
+        else if ( o instanceof CTSdtRun )
+        {
+            CTSdtContentRun run = ( (CTSdtRun) o ).getSdtContent();
+            for ( CTR r : run.getRList() )
+            {
+                XWPFRun ru = new XWPFRun( r, paragraph );
+                visitRun( ru, false, null, paragraphContainer );
+            }
+        }
+        else if ( o instanceof CTRunTrackChange )
+        {
+            for ( CTR r : ( (CTRunTrackChange) o ).getRList() )
+            {
+                XWPFRun run = new XWPFRun( r, paragraph );
+                visitRun( run, false, null, paragraphContainer );
+            }
+        }
+        else if ( o instanceof CTSimpleField )
+        {
+            CTSimpleField simpleField = (CTSimpleField) o;
+            String instr = simpleField.getInstr();
+            // 1) test if it's page number
+            // <w:fldSimple w:instr=" PAGE \* MERGEFORMAT "> <w:r> <w:rPr> <w:noProof/>
+            // </w:rPr> <w:t>- 1 -</w:t> </w:r> </w:fldSimple>
+            boolean fieldPageNumber = XWPFRunHelper.isInstrTextPage( instr );
+            String fieldHref = null;
+            if ( !fieldPageNumber )
+            {
+                // not page number, test if it's hyperlink :
+                // <w:instrText>HYPERLINK "http://code.google.com/p/xdocrepor"</w:instrText>
+                fieldHref = XWPFRunHelper.getInstrTextHyperlink( instr );
+            }
+            for ( CTR r : simpleField.getRList() )
+            {
+                XWPFRun run = new XWPFRun( r, paragraph );
+                visitRun( run, fieldPageNumber, fieldHref, paragraphContainer );
+            }
+        }
+        else if ( o instanceof CTSmartTagRun )
+        {
+            // Smart Tags can be nested many times.
+            // This implementation does not preserve the tagging information
+            // buildRunsInOrderFromXml(o);
+        }
+        else if ( o instanceof CTBookmark )
+        {
+            CTBookmark bookmark = (CTBookmark) o;
+            visitBookmark( bookmark, paragraph, paragraphContainer );
+        }
     }
 
     protected abstract void visitEmptyRun( T paragraphContainer )
         throws Exception;
 
-    protected void visitRun( XWPFRun run, boolean pageNumber, T paragraphContainer )
+    protected void visitRun( XWPFRun run, boolean pageNumber, String url, T paragraphContainer )
         throws Exception
+
     {
         CTR ctr = run.getCTR();
-
-        // <w:lastRenderedPageBreak />
-        // List<CTEmpty> lastRenderedPageBreakList = ctr.getLastRenderedPageBreakList();
-        // if ( lastRenderedPageBreakList != null && lastRenderedPageBreakList.size() > 0 )
-        // {
-        // for ( CTEmpty lastRenderedPageBreak : lastRenderedPageBreakList )
-        // {
-        // pageBreak();
-        // }
-        // }
 
         // Loop for each element of <w:run text, tab, image etc
         // to keep the order of thoses elements.
@@ -485,16 +610,7 @@ public abstract class XWPFDocumentVisitor<T, O extends Options, E extends IXWPFM
                 }
                 else
                 {
-                    // Check if it's hyperlink
-                    String hrefHyperlink = getCurrentHRefHyperLink();
-                    if ( hrefHyperlink != null )
-                    {
-                        visitHyperlink( ctText, hrefHyperlink, paragraphContainer );
-                    }
-                    else
-                    {
-                        visitText( ctText, pageNumber, paragraphContainer );
-                    }
+                    visitText( ctText, pageNumber, paragraphContainer );
                 }
             }
             else if ( o instanceof CTPTab )
@@ -535,34 +651,6 @@ public abstract class XWPFDocumentVisitor<T, O extends Options, E extends IXWPFM
         c.dispose();
     }
 
-    private String getCurrentHRefHyperLink()
-    {
-        if ( StringUtils.isEmpty( currentInstrText ) )
-        {
-            return null;
-        }
-        currentInstrText = currentInstrText.trim();
-        // test if it's <w:instrText>HYPERLINK "http://code.google.com/p/xdocrepor"</w:instrText>
-        if ( currentInstrText.startsWith( "HYPERLINK" ) )
-        {
-            currentInstrText = currentInstrText.substring( "HYPERLINK".length(), currentInstrText.length() );
-            currentInstrText = currentInstrText.trim();
-            if ( currentInstrText.startsWith( "\"" ) )
-            {
-                currentInstrText = currentInstrText.substring( 1, currentInstrText.length() );
-            }
-            if ( currentInstrText.endsWith( "\"" ) )
-            {
-                currentInstrText = currentInstrText.substring( 0, currentInstrText.length() - 1 );
-            }
-            return currentInstrText;
-        }
-        return null;
-    }
-
-    protected abstract void visitHyperlink( CTText ctText, String hrefHyperlink, T paragraphContainer )
-        throws Exception;
-
     protected abstract void visitText( CTText ctText, boolean pageNumber, T paragraphContainer )
         throws Exception;
 
@@ -575,7 +663,7 @@ public abstract class XWPFDocumentVisitor<T, O extends Options, E extends IXWPFM
     protected void visitBR( CTBr br, T paragraphContainer )
         throws Exception
     {
-        org.openxmlformats.schemas.wordprocessingml.x2006.main.STBrType.Enum brType = getBrType( br );
+        STBrType.Enum brType = XWPFRunHelper.getBrType( br );
         if ( brType.equals( STBrType.PAGE ) )
         {
             pageBreakOnNextParagraph = true;
@@ -586,18 +674,8 @@ public abstract class XWPFDocumentVisitor<T, O extends Options, E extends IXWPFM
         }
     }
 
-    private org.openxmlformats.schemas.wordprocessingml.x2006.main.STBrType.Enum getBrType( CTBr br )
-    {
-        if ( br != null )
-        {
-            org.openxmlformats.schemas.wordprocessingml.x2006.main.STBrType.Enum brType = br.getType();
-            if ( brType != null )
-            {
-                return brType;
-            }
-        }
-        return STBrType.TEXT_WRAPPING;
-    }
+    protected abstract void visitBookmark( CTBookmark bookmark, XWPFParagraph paragraph, T paragraphContainer )
+        throws Exception;
 
     protected abstract void addNewLine( CTBr br, T paragraphContainer )
         throws Exception;
@@ -864,9 +942,9 @@ public abstract class XWPFDocumentVisitor<T, O extends Options, E extends IXWPFM
     }
 
     /**
-     * Return true if word/document.xml is parsing and false otherwise.
+     * Returns true if word/document.xml is parsing and false otherwise.
      * 
-     * @return
+     * @return true if word/document.xml is parsing and false otherwise.
      */
     protected boolean isWordDocumentPartParsing()
     {
@@ -897,6 +975,14 @@ public abstract class XWPFDocumentVisitor<T, O extends Options, E extends IXWPFM
     protected abstract void visitFooter( XWPFFooter footer, CTHdrFtrRef footerRef, CTSectPr sectPr, E masterPage )
         throws Exception;
 
+    /**
+     * Returns the {@link XWPFHeader} of the given header reference.
+     * 
+     * @param headerref the header reference.
+     * @return
+     * @throws XmlException
+     * @throws IOException
+     */
     protected XWPFHeader getXWPFHeader( CTHdrFtrRef headerRef )
         throws XmlException, IOException
     {
@@ -906,15 +992,25 @@ public abstract class XWPFDocumentVisitor<T, O extends Options, E extends IXWPFM
         {
             if ( header.getPackagePart().equals( hdrPart ) )
             {
+                // header is aleady loaded, return it.
                 return header;
             }
         }
+        // should never come, but load the header if needed.
         HdrDocument hdrDoc = HdrDocument.Factory.parse( hdrPart.getInputStream() );
         CTHdrFtr hdrFtr = hdrDoc.getHdr();
         XWPFHeader hdr = new XWPFHeader( document, hdrFtr );
         return hdr;
     }
 
+    /**
+     * Returns the {@link XWPFFooter} of the given footer reference.
+     * 
+     * @param footerRef the footer reference.
+     * @return
+     * @throws XmlException
+     * @throws IOException
+     */
     protected XWPFFooter getXWPFFooter( CTHdrFtrRef footerRef )
         throws XmlException, IOException
     {
@@ -924,10 +1020,11 @@ public abstract class XWPFDocumentVisitor<T, O extends Options, E extends IXWPFM
         {
             if ( footer.getPackagePart().equals( hdrPart ) )
             {
+                // footer is aleady loaded, return it.
                 return footer;
             }
         }
-
+        // should never come, but load the footer if needed.
         FtrDocument hdrDoc = FtrDocument.Factory.parse( hdrPart.getInputStream() );
         CTHdrFtr hdrFtr = hdrDoc.getFtr();
         XWPFFooter ftr = new XWPFFooter( document, hdrFtr );

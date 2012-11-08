@@ -10,6 +10,7 @@ import static org.apache.poi.xwpf.converter.xhtml.internal.XHTMLConstants.DIV_EL
 import static org.apache.poi.xwpf.converter.xhtml.internal.XHTMLConstants.HEAD_ELEMENT;
 import static org.apache.poi.xwpf.converter.xhtml.internal.XHTMLConstants.HREF_ATTR;
 import static org.apache.poi.xwpf.converter.xhtml.internal.XHTMLConstants.HTML_ELEMENT;
+import static org.apache.poi.xwpf.converter.xhtml.internal.XHTMLConstants.ID_ATTR;
 import static org.apache.poi.xwpf.converter.xhtml.internal.XHTMLConstants.IMG_ELEMENT;
 import static org.apache.poi.xwpf.converter.xhtml.internal.XHTMLConstants.P_ELEMENT;
 import static org.apache.poi.xwpf.converter.xhtml.internal.XHTMLConstants.ROWSPAN_ATTR;
@@ -55,6 +56,7 @@ import org.apache.xmlbeans.XmlException;
 import org.openxmlformats.schemas.drawingml.x2006.main.CTPositiveSize2D;
 import org.openxmlformats.schemas.drawingml.x2006.picture.CTPicture;
 import org.openxmlformats.schemas.drawingml.x2006.wordprocessingDrawing.STRelFromH.Enum;
+import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTBookmark;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTBr;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTHdrFtrRef;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTPPr;
@@ -173,7 +175,7 @@ public class XHTMLMapper
     }
 
     @Override
-    protected void visitRun( XWPFRun run, boolean pageNumber, Object paragraphContainer )
+    protected void visitRun( XWPFRun run, boolean pageNumber, String url, Object paragraphContainer )
         throws Exception
     {
 
@@ -188,8 +190,23 @@ public class XHTMLMapper
         CSSStyle cssStyle = getStylesDocument().createCSSStyle( rPr );
         this.currentRunAttributes = createStyleAttribute( cssStyle, currentRunAttributes );
 
-        super.visitRun( run, pageNumber, paragraphContainer );
+        if ( url != null )
+        {
+            // url is not null, generate a HTML a.
+            AttributesImpl hyperlinkAttributes = new AttributesImpl();
+            SAXHelper.addAttrValue( hyperlinkAttributes, HREF_ATTR, url );
+            startElement( A_ELEMENT, hyperlinkAttributes );
+        }
 
+        super.visitRun( run, pageNumber, url, paragraphContainer );
+
+        if ( url != null )
+        {
+            // url is not null, close the HTML a.
+            // TODO : for the moment generate space to be ensure that a has some content.
+            characters( " " );
+            endElement( A_ELEMENT );
+        }
         this.currentRunAttributes = null;
     }
 
@@ -226,35 +243,6 @@ public class XHTMLMapper
     }
 
     @Override
-    protected void visitHyperlink( CTText ctText, String hrefHyperlink, Object paragraphContainer )
-        throws Exception
-    {
-        AttributesImpl hyperlinkAttributes = new AttributesImpl();
-        SAXHelper.addAttrValue( hyperlinkAttributes, HREF_ATTR, hrefHyperlink );
-        startElement( A_ELEMENT, hyperlinkAttributes );
-        if ( currentRunAttributes != null )
-        {
-            startElement( SPAN_ELEMENT, currentRunAttributes );
-        }
-        String text = ctText.getStringValue();
-        if ( StringUtils.isNotEmpty( text ) )
-        {
-            // Escape with HTML characters
-            characters( StringEscapeUtils.escapeHtml( text ) );
-        }
-        // else
-        // {
-        // characters( SPACE_ENTITY );
-        // }
-        if ( currentRunAttributes != null )
-        {
-            endElement( SPAN_ELEMENT );
-        }
-        endElement( A_ELEMENT );
-
-    }
-
-    @Override
     protected void visitTab( CTPTab o, Object paragraphContainer )
         throws Exception
     {
@@ -264,8 +252,6 @@ public class XHTMLMapper
     protected void visitTabs( CTTabs tabs, Object paragraphContainer )
         throws Exception
     {
-        // TODO Auto-generated method stub
-
     }
 
     @Override
@@ -280,8 +266,16 @@ public class XHTMLMapper
     protected void pageBreak()
         throws Exception
     {
-        // TODO Auto-generated method stub
+    }
 
+    @Override
+    protected void visitBookmark( CTBookmark bookmark, XWPFParagraph paragraph, Object paragraphContainer )
+        throws Exception
+    {
+        AttributesImpl attributes = new AttributesImpl();
+        SAXHelper.addAttrValue( attributes, ID_ATTR, bookmark.getName() );
+        startElement( SPAN_ELEMENT, attributes );
+        endElement( SPAN_ELEMENT );
     }
 
     @Override

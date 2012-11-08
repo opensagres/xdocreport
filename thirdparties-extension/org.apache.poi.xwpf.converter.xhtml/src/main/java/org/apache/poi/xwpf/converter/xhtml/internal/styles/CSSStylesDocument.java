@@ -50,6 +50,7 @@ import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTTblPrBase;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTTcPr;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTTextDirection;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTTrPr;
+import org.openxmlformats.schemas.wordprocessingml.x2006.main.STTextDirection;
 import org.xml.sax.ContentHandler;
 import org.xml.sax.SAXException;
 
@@ -435,14 +436,14 @@ public class CSSStylesDocument
                 int dir = direction.getVal().intValue();
                 switch ( dir )
                 {
-                    case org.openxmlformats.schemas.wordprocessingml.x2006.main.STTextDirection.INT_BT_LR:
+                    case STTextDirection.INT_BT_LR:
                         style = getOrCreateStyle( style, tagName, className );
                         style.addProperty( "-webkit-transform", "rotate(270deg)" );
                         style.addProperty( "-moz-transform", "rotate(270deg)" );
                         style.addProperty( "-o-transform", "rotate(270deg)" );
                         style.addProperty( "writing-mode", "bt-lr" ); // For IE
                         break;
-                    case org.openxmlformats.schemas.wordprocessingml.x2006.main.STTextDirection.INT_TB_RL:
+                    case STTextDirection.INT_TB_RL:
                         style = getOrCreateStyle( style, tagName, className );
                         style.addProperty( "-webkit-transform", "rotate(90deg)" );
                         style.addProperty( "-moz-transform", "rotate(90deg)" );

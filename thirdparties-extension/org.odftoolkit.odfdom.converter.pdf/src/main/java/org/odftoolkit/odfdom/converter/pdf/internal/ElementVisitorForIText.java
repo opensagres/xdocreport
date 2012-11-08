@@ -128,7 +128,7 @@ public class ElementVisitorForIText
     public ElementVisitorForIText( OdfDocument odfDocument, OutputStream out, Writer writer,
                                    StyleEngineForIText styleEngine, PdfOptions options )
     {
-        super( odfDocument, out, writer );
+        super( odfDocument, options.getExtractor(), out, writer );
         this.styleEngine = styleEngine;
         // this.options = options != null ? options : PDFViaITextOptions.create();
         // Create document
@@ -474,57 +474,56 @@ public class ElementVisitorForIText
     // ---------------------- visit draw:image
 
     @Override
-    public void visit( DrawImageElement ele )
+    protected void visitImage( DrawImageElement ele, String href, byte[] imageStream )
     {
-        String href = ele.getXlinkHrefAttribute();
-        if ( StringUtils.isNotEmpty( href ) )
+        // add image in the pdf.
+        Image imageObj = StylableImage.getImage( imageStream );
+        if ( imageObj != null )
         {
-            byte[] imageStream = odfDocument.getPackage().getBytes( href );
-            if ( imageStream != null )
+            DrawFrameElement frame = null;
+            Float x = null;
+            Float y = null;
+            Float width = null;
+            Float height = null;
+            // set width, height....image
+            Node parentNode = ele.getParentNode();
+            if ( parentNode instanceof DrawFrameElement )
             {
-                Image imageObj = StylableImage.getImage( imageStream );
-                if ( imageObj != null )
+                frame = (DrawFrameElement) parentNode;
+                String svgX = frame.getSvgXAttribute();
+                if ( StringUtils.isNotEmpty( svgX ) )
                 {
-                    DrawFrameElement frame = null;
-                    Float x = null;
-                    Float y = null;
-                    Float width = null;
-                    Float height = null;
-                    // set width, height....image
-                    Node parentNode = ele.getParentNode();
-                    if ( parentNode instanceof DrawFrameElement )
-                    {
-                        frame = (DrawFrameElement) parentNode;
-                        String svgX = frame.getSvgXAttribute();
-                        if ( StringUtils.isNotEmpty( svgX ) )
-                        {
-                            x = ODFUtils.getDimensionAsPoint( svgX );
-                        }
-                        String svgY = frame.getSvgYAttribute();
-                        if ( StringUtils.isNotEmpty( svgY ) )
-                        {
-                            y = ODFUtils.getDimensionAsPoint( svgY );
-                        }
-                        String svgWidth = frame.getSvgWidthAttribute();
-                        if ( StringUtils.isNotEmpty( svgWidth ) )
-                        {
-                            width = ODFUtils.getDimensionAsPoint( svgWidth );
-                        }
-                        String svgHeight = frame.getSvgHeightAttribute();
-                        if ( StringUtils.isNotEmpty( svgHeight ) )
-                        {
-                            height = ODFUtils.getDimensionAsPoint( svgHeight );
-                        }
-                    }
-                    StylableImage image = new StylableImage( document, currentContainer, imageObj, x, y, width, height );
-                    if ( frame != null )
-                    {
-                        applyStyles( frame, image );
-                    }
-                    addITextElement( image );
+                    x = ODFUtils.getDimensionAsPoint( svgX );
+                }
+                String svgY = frame.getSvgYAttribute();
+                if ( StringUtils.isNotEmpty( svgY ) )
+                {
+                    y = ODFUtils.getDimensionAsPoint( svgY );
+                }
+                String svgWidth = frame.getSvgWidthAttribute();
+                if ( StringUtils.isNotEmpty( svgWidth ) )
+                {
+                    width = ODFUtils.getDimensionAsPoint( svgWidth );
+                }
+                String svgHeight = frame.getSvgHeightAttribute();
+                if ( StringUtils.isNotEmpty( svgHeight ) )
+                {
+                    height = ODFUtils.getDimensionAsPoint( svgHeight );
                 }
             }
+            StylableImage image = new StylableImage( document, currentContainer, imageObj, x, y, width, height );
+            if ( frame != null )
+            {
+                applyStyles( frame, image );
+            }
+            addITextElement( image );
         }
+    }
+
+    @Override
+    protected boolean isNeedImageStream()
+    {
+        return true;
     }
 
     // ---------------------- visit //text:soft-page-break

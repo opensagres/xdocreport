@@ -35,6 +35,7 @@ import org.odftoolkit.odfdom.converter.core.ElementVisitorConverter;
 import org.odftoolkit.odfdom.converter.core.IURIResolver;
 import org.odftoolkit.odfdom.converter.core.utils.ODFUtils;
 import org.odftoolkit.odfdom.converter.core.utils.StringUtils;
+import org.odftoolkit.odfdom.converter.xhtml.XHTMLOptions;
 import org.odftoolkit.odfdom.doc.OdfDocument;
 import org.odftoolkit.odfdom.dom.element.OdfStylableElement;
 import org.odftoolkit.odfdom.dom.element.draw.DrawFrameElement;
@@ -89,9 +90,10 @@ public class ElementVisitorForXHTML
 
     private XHTMLPageContentBuffer currentXHTMLContent;
 
-    public ElementVisitorForXHTML( ODFXHTMLPage xhtml, OdfDocument odfDocument, OutputStream out, Writer writer )
+    public ElementVisitorForXHTML( ODFXHTMLPage xhtml, XHTMLOptions options, OdfDocument odfDocument, OutputStream out,
+                                   Writer writer )
     {
-        super( odfDocument, out, writer );
+        super( odfDocument, options != null ? options.getExtractor() : null, out, writer );
         this.xhtml = xhtml;
         this.currentXHTMLContent = null;
     }
@@ -458,7 +460,7 @@ public class ElementVisitorForXHTML
     // ---------------------- visit draw:image
 
     @Override
-    public void visit( DrawImageElement ele )
+    protected void visitImage( DrawImageElement ele, String href, byte[] imageStream )
     {
         Collection<String> attributes = new ArrayList<String>();
 

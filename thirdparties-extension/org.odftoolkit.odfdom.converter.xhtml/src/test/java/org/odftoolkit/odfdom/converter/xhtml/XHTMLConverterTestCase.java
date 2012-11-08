@@ -29,6 +29,7 @@ import java.io.FileOutputStream;
 import java.io.OutputStream;
 
 import org.odftoolkit.odfdom.converter.core.AbstractODFDOMConverterTest;
+import org.odftoolkit.odfdom.converter.core.FileImageExtractor;
 import org.odftoolkit.odfdom.converter.core.FileURIResolver;
 import org.odftoolkit.odfdom.doc.OdfTextDocument;
 
@@ -51,10 +52,8 @@ public class XHTMLConverterTestCase
 
         OdfTextDocument document =
             OdfTextDocument.loadDocument( AbstractODFDOMConverterTest.class.getResourceAsStream( fileInName ) );
-        XHTMLOptions options = XHTMLOptions.create();
-        options.indent( 1 );
+        XHTMLOptions options = XHTMLOptions.create().indent( 4 );
         options.generateCSSComments( true );
-        options.URIResolver( new FileURIResolver( new File( "Pictures" ) ) );
 
         OutputStream out = System.out;
         XHTMLConverter.getInstance().convert( document, out, options );
@@ -76,7 +75,11 @@ public class XHTMLConverterTestCase
         XHTMLOptions options = XHTMLOptions.create();
         options.indent( 1 );
         options.generateCSSComments( true );
-        options.URIResolver( new FileURIResolver( new File( "Pictures" ) ) );
+        // Extract image
+        File imageFolder = new File( root + "/images/" + fileInName );
+        options.setExtractor( new FileImageExtractor( imageFolder ) );
+        // URI resolver
+        options.URIResolver( new FileURIResolver( imageFolder ) );
 
         OutputStream out = new FileOutputStream( new File( fileOutName ) );
         XHTMLConverter.getInstance().convert( document, out, options );

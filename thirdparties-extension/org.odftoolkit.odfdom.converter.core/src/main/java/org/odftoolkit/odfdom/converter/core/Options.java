@@ -27,4 +27,26 @@ package org.odftoolkit.odfdom.converter.core;
 public class Options
 {
 
+    private IImageExtractor extractor;
+
+    /**
+     * Set the image extractor.
+     * 
+     * @param extractor image extractor.
+     */
+    public void setExtractor( IImageExtractor extractor )
+    {
+        this.extractor = extractor;
+    }
+
+    /**
+     * Returns the image extractor.
+     * 
+     * @return the image extractor.
+     */
+    public IImageExtractor getExtractor()
+    {
+        return extractor;
+    }
+
 }

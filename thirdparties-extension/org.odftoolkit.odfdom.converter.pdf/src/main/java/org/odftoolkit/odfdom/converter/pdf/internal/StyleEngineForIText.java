@@ -1650,4 +1650,5 @@ public class StyleEngineForIText
         }
         return newStyle;
     }
+    
 }

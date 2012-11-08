@@ -85,7 +85,8 @@ public class XHTMLConverter
             // content.xml//office:document-content/office:automatic-styles
             contentDom.getAutomaticStyles().accept( styleEngine );
 
-            ElementVisitorForXHTML visitorForXHTML = new ElementVisitorForXHTML( xhtml, odfDocument, out, writer );
+            ElementVisitorForXHTML visitorForXHTML =
+                new ElementVisitorForXHTML( xhtml, options, odfDocument, out, writer );
 
             // 2) Generate XHTML Page
 

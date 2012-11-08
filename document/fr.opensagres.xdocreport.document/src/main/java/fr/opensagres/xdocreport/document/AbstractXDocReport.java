@@ -619,23 +619,23 @@ public abstract class AbstractXDocReport
     }
 
     public void extractFields( FieldsExtractor extractor )
-        throws XDocReportException
+        throws XDocReportException, IOException
     {
         extractFields( extractor, internalGetTemplateEngine() );
     }
 
     public void extractFields( FieldsExtractor extractor, ITemplateEngine templateEngine )
-        throws XDocReportException
+        throws XDocReportException, IOException
     {
         if ( templateEngine == null )
         {
             throw new XDocReportException( "ItemplateEngine cannot be null to extract fields." );
         }
+        // force the preprocessing (see http://code.google.com/p/xdocreport/issues/detail?id=186)
+        doPreprocessorIfNeeded();
+        // Loop for each entries (XML file from the zipped XML
+        // document (odt, docx...) to extract declared fields .
         String[] xmlEntries = internalGetXMLEntries();
-        // 5) Loop for each entries (XML file from the zipped XML
-        // document (odt, docx...)
-        // to merge it with Java model from the context with template
-        // engine (freemarker, velocity).
         String entryName = null;
         for ( int i = 0; i < xmlEntries.length; i++ )
         {

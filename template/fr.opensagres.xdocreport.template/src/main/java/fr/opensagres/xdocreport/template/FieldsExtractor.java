@@ -27,13 +27,40 @@ package fr.opensagres.xdocreport.template;
 import java.util.ArrayList;
 import java.util.List;
 
+import fr.opensagres.xdocreport.core.utils.StringUtils;
+
+/**
+ * Fields extractor used to extract fields declared in the XML entries template.
+ * 
+ * @param <T>
+ */
 public class FieldsExtractor<T extends FieldExtractor>
 {
 
+    private static final String XDOCREPORT_FIELD_SUFFIX = "___";
+
     private List<T> fields = new ArrayList<T>();
+
+    private final boolean ignoreXDocReportField;
+
+    public FieldsExtractor()
+    {
+        this( true );
+    }
+
+    public FieldsExtractor( boolean ignoreXDocReportField )
+    {
+        this.ignoreXDocReportField = ignoreXDocReportField;
+    }
 
     public T addFieldName( String fieldName, boolean list )
     {
+        // test if field is not empty.
+        if ( StringUtils.isEmpty( fieldName ) )
+        {
+            return null;
+        }
+        // test if field is already added.
         for ( T field : fields )
         {
             if ( fieldName.equals( field.getName() ) )
@@ -41,6 +68,12 @@ public class FieldsExtractor<T extends FieldExtractor>
                 return null;
             }
         }
+        // test if it's XDocReport field (ex: ___NoEscapeStylesGenerator.generateAllStyles(___DefaultStyle))
+        if ( ignoreXDocReportField && fieldName.startsWith( XDOCREPORT_FIELD_SUFFIX ) )
+        {
+            return null;
+        }
+        // field name is valid, create field.
         T field = createField( fieldName, list );
         if ( field != null )
         {

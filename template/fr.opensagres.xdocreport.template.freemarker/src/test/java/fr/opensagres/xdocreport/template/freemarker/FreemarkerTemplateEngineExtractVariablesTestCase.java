@@ -91,4 +91,16 @@ public class FreemarkerTemplateEngineExtractVariablesTestCase
         Assert.assertEquals( "user", extractor.getFields().get( 2 ).getName() );
         Assert.assertFalse( extractor.getFields().get( 2 ).isList() );
     }
+    
+    @Test
+    public void testExtractVariablesWithNoParse()
+        throws Exception
+    {
+        Reader reader = new StringReader( "Hello [#noparse]${escaped_name}![/#noparse]${name}" );
+        FieldsExtractor<FieldExtractor> extractor = FieldsExtractor.create();
+        new FreemarkerTemplateEngine().extractFields( reader, "hello", extractor );
+        Assert.assertEquals( 1, extractor.getFields().size() );
+        Assert.assertEquals( "name", extractor.getFields().get( 0 ).getName() );
+    }
+
 }

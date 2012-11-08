@@ -320,11 +320,26 @@ public interface IXDocReport
      */
     <T> T getData( String key );
 
+    /**
+     * Extract declared fields which use syntax of the given template egine of the report.
+     * 
+     * @param extractor the fields extractor.
+     * @param templateEngine the template engine.
+     * @throws XDocReportException
+     * @throws IOException
+     */
     void extractFields( FieldsExtractor extractor, ITemplateEngine templateEngine )
-        throws XDocReportException;
+        throws XDocReportException, IOException;
 
+    /**
+     * Extract declared fields which use syntax of the template egine of the report.
+     * 
+     * @param extractor the fields extractor.
+     * @throws XDocReportException
+     * @throws IOException
+     */
     void extractFields( FieldsExtractor extractor )
-        throws XDocReportException;
+        throws XDocReportException, IOException;
 
     /**
      * Set cache or not for original document archive.

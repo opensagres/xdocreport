@@ -1,5 +1,6 @@
 package org.apache.poi.xwpf.converter.xhtml.internal;
 
+import static org.apache.poi.xwpf.converter.core.utils.DxaUtil.emu2points;
 import static org.apache.poi.xwpf.converter.xhtml.internal.XHTMLConstants.A_ELEMENT;
 import static org.apache.poi.xwpf.converter.xhtml.internal.XHTMLConstants.BODY_ELEMENT;
 import static org.apache.poi.xwpf.converter.xhtml.internal.XHTMLConstants.BR_ELEMENT;
@@ -19,6 +20,7 @@ import static org.apache.poi.xwpf.converter.xhtml.internal.XHTMLConstants.TABLE_
 import static org.apache.poi.xwpf.converter.xhtml.internal.XHTMLConstants.TD_ELEMENT;
 import static org.apache.poi.xwpf.converter.xhtml.internal.XHTMLConstants.TH_ELEMENT;
 import static org.apache.poi.xwpf.converter.xhtml.internal.XHTMLConstants.TR_ELEMENT;
+import static org.apache.poi.xwpf.converter.xhtml.internal.styles.CSSStylePropertyConstants.HEIGHT;
 import static org.apache.poi.xwpf.converter.xhtml.internal.styles.CSSStylePropertyConstants.MARGIN_BOTTOM;
 import static org.apache.poi.xwpf.converter.xhtml.internal.styles.CSSStylePropertyConstants.MARGIN_LEFT;
 import static org.apache.poi.xwpf.converter.xhtml.internal.styles.CSSStylePropertyConstants.MARGIN_RIGHT;
@@ -50,6 +52,7 @@ import org.apache.poi.xwpf.usermodel.XWPFTable;
 import org.apache.poi.xwpf.usermodel.XWPFTableCell;
 import org.apache.poi.xwpf.usermodel.XWPFTableRow;
 import org.apache.xmlbeans.XmlException;
+import org.openxmlformats.schemas.drawingml.x2006.main.CTPositiveSize2D;
 import org.openxmlformats.schemas.drawingml.x2006.picture.CTPicture;
 import org.openxmlformats.schemas.drawingml.x2006.wordprocessingDrawing.STRelFromH.Enum;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTBr;
@@ -410,17 +413,27 @@ public class XHTMLMapper
     {
 
         AttributesImpl attributes = null;
-        String blipId = picture.getBlipFill().getBlip().getEmbed();
         // Src attribute
-        XWPFPictureData pictureData = super.getPictureDataByID( blipId );
+        XWPFPictureData pictureData = super.getPictureData( picture );
         if ( pictureData != null )
         {
+            // img/@src
             String src = pictureData.getFileName();
             if ( StringUtils.isNotEmpty( src ) )
             {
                 src = resolver.resolve( WORD_MEDIA + src );
                 attributes = SAXHelper.addAttrValue( attributes, SRC_ATTR, src );
             }
+
+            CTPositiveSize2D ext = picture.getSpPr().getXfrm().getExt();
+
+            // img/@width
+            float width = emu2points( ext.getCx() );
+            attributes = SAXHelper.addAttrValue( attributes, WIDTH, getStylesDocument().getValueAsPoint( width ) );
+
+            // img/@height
+            float height = emu2points( ext.getCy() );
+            attributes = SAXHelper.addAttrValue( attributes, HEIGHT, getStylesDocument().getValueAsPoint( height ) );
         }
         if ( attributes != null )
         {
@@ -439,7 +452,6 @@ public class XHTMLMapper
             }
             catch ( SAXException e )
             {
-                // TODO Auto-generated catch block
                 e.printStackTrace();
             }
         }

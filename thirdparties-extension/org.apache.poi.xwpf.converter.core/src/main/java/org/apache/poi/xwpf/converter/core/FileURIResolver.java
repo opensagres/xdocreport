@@ -26,6 +26,9 @@ package org.apache.poi.xwpf.converter.core;
 
 import java.io.File;
 
+/**
+ * {@link File} URI resolver implementation.
+ */
 public class FileURIResolver
     extends BasicURIResolver
 {

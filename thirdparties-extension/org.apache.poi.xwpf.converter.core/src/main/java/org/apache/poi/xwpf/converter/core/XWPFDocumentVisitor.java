@@ -5,6 +5,8 @@ import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import org.apache.poi.openxml4j.opc.PackagePart;
 import org.apache.poi.xwpf.converter.core.styles.XWPFStylesDocument;
@@ -70,6 +72,10 @@ import org.openxmlformats.schemas.wordprocessingml.x2006.main.STOnOff;
 
 public abstract class XWPFDocumentVisitor<T, O extends Options, E extends IXWPFMasterPage>
 {
+
+    private static final Logger LOGGER = Logger.getLogger( XWPFDocumentVisitor.class.getName() );
+
+    protected static final String WORD_MEDIA = "word/media/";
 
     protected final XWPFDocument document;
 
@@ -928,6 +934,8 @@ public abstract class XWPFDocumentVisitor<T, O extends Options, E extends IXWPFM
         return ftr;
     }
 
+    // ------------------------ Image --------------
+
     protected void visitDrawing( CTDrawing drawing, T parentContainer )
         throws Exception
     {
@@ -994,7 +1002,27 @@ public abstract class XWPFDocumentVisitor<T, O extends Options, E extends IXWPFM
                     XmlObject o = c.getObject();
                     if ( o instanceof CTPicture )
                     {
-                        visitPicture( (CTPicture) o, offsetX, relativeFromH, offsetY, relativeFromV, parentContainer );
+                        CTPicture picture = (CTPicture) o;
+                        // extract the picture if needed
+                        IImageExtractor extractor = getImageExtractor();
+                        if ( extractor != null )
+                        {
+                            XWPFPictureData pictureData = getPictureData( picture );
+                            if ( pictureData != null )
+                            {
+                                try
+                                {
+                                    extractor.extract( WORD_MEDIA + pictureData.getFileName(), pictureData.getData() );
+                                }
+                                catch ( Throwable e )
+                                {
+                                    LOGGER.log( Level.SEVERE,
+                                                "Error while extracting the image " + pictureData.getFileName(), e );
+                                }
+                            }
+                        }
+                        // visit the picture.
+                        visitPicture( picture, offsetX, relativeFromH, offsetY, relativeFromV, parentContainer );
                     }
                 }
                 c.dispose();
@@ -1002,10 +1030,12 @@ public abstract class XWPFDocumentVisitor<T, O extends Options, E extends IXWPFM
         }
     }
 
-    protected abstract void visitPicture( CTPicture picture, Float offsetX, STRelFromH.Enum relativeFromH,
-                                          Float offsetY, STRelFromV.Enum relativeFromV, T parentContainer )
-        throws Exception;
-
+    /**
+     * Returns the picture data of the given image id.
+     * 
+     * @param blipId
+     * @return
+     */
     protected XWPFPictureData getPictureDataByID( String blipId )
     {
         if ( currentHeader != null )
@@ -1018,6 +1048,34 @@ public abstract class XWPFDocumentVisitor<T, O extends Options, E extends IXWPFM
         }
         return document.getPictureDataByID( blipId );
     }
+
+    /**
+     * Returns the image extractor and null otherwise.
+     * 
+     * @return
+     */
+    protected IImageExtractor getImageExtractor()
+    {
+        return options.getExtractor();
+    }
+
+    /**
+     * Returns the picture data of the given picture.
+     * 
+     * @param picture
+     * @return
+     */
+    public XWPFPictureData getPictureData( CTPicture picture )
+    {
+        String blipId = picture.getBlipFill().getBlip().getEmbed();
+        return getPictureDataByID( blipId );
+    }
+
+    protected abstract void visitPicture( CTPicture picture, Float offsetX, STRelFromH.Enum relativeFromH,
+                                          Float offsetY, STRelFromV.Enum relativeFromV, T parentContainer )
+        throws Exception;
+
+    // ------------------------ Master page --------------
 
     /**
      * Set active master page.

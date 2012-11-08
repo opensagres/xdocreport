@@ -36,6 +36,8 @@ public class XHTMLConstants
     public static final String A_ELEMENT = "a";
 
     // Attributes
+    public static final String ID_ATTR = "id";
+    
     public static final String CLASS_ATTR = "class";
 
     public static final String STYLE_ATTR = "style";

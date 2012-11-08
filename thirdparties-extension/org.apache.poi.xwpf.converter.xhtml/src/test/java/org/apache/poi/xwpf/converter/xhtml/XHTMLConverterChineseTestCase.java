@@ -30,6 +30,8 @@ import java.io.IOException;
 import java.io.OutputStream;
 
 import org.apache.poi.xwpf.converter.core.AbstractXWPFPOIConverterTest;
+import org.apache.poi.xwpf.converter.core.FileImageExtractor;
+import org.apache.poi.xwpf.converter.core.FileURIResolver;
 import org.apache.poi.xwpf.converter.core.XWPFConverterException;
 import org.apache.poi.xwpf.usermodel.XWPFDocument;
 import org.junit.Test;
@@ -43,7 +45,7 @@ public class XHTMLConverterChineseTestCase
     {
         doGenerate( "chinese/TestChineseCharacters.docx" );
     }
-    
+
     protected void doGenerate( String fileInName )
         throws IOException
     {
@@ -59,7 +61,7 @@ public class XHTMLConverterChineseTestCase
 
         XWPFDocument document = new XWPFDocument( AbstractXWPFPOIConverterTest.class.getResourceAsStream( fileInName ) );
 
-        XHTMLOptions options = null;//XHTMLOptions.create().indent( 4 );
+        XHTMLOptions options = null;// XHTMLOptions.create().indent( 4 );
         OutputStream out = System.out;
         XHTMLConverter.getInstance().convert( document, out, options );
 
@@ -78,6 +80,12 @@ public class XHTMLConverterChineseTestCase
         XWPFDocument document = new XWPFDocument( AbstractXWPFPOIConverterTest.class.getResourceAsStream( fileInName ) );
 
         XHTMLOptions options = XHTMLOptions.create().indent( 4 );
+        // Extract image
+        File imageFolder = new File( root + "/images/" + fileInName );
+        options.setExtractor( new FileImageExtractor( imageFolder ) );
+        // URI resolver
+        options.URIResolver( new FileURIResolver( imageFolder ) );
+        
         File outFile = new File( fileOutName );
         outFile.getParentFile().mkdirs();
         OutputStream out = new FileOutputStream( outFile );

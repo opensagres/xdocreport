@@ -24,10 +24,15 @@
  */
 package org.apache.poi.xwpf.converter.core;
 
-
+/**
+ * URI resolver.
+ */
 public interface IURIResolver
 {
 
+    /**
+     * Default URI resolver.
+     */
     public static final IURIResolver DEFAULT = new IURIResolver()
     {
 
@@ -37,6 +42,12 @@ public interface IURIResolver
         }
     };
 
+    /**
+     * Returns the resolved uri.
+     * 
+     * @param uri
+     * @return
+     */
     String resolve( String uri );
 
 }

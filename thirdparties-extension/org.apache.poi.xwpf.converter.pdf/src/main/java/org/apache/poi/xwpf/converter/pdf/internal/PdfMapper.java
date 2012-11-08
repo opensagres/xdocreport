@@ -1019,9 +1019,7 @@ public class PdfMapper
         long x = ext.getCx();
         long y = ext.getCy();
 
-        String blipId = picture.getBlipFill().getBlip().getEmbed();
-
-        XWPFPictureData pictureData = super.getPictureDataByID( blipId );
+        XWPFPictureData pictureData = super.getPictureData( picture );
         if ( pictureData != null )
         {
             try

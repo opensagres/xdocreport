@@ -24,7 +24,9 @@
  */
 package org.apache.poi.xwpf.converter.core;
 
-
+/**
+ * Basic {@link IURIResolver} implementation.
+ */
 public class BasicURIResolver
     implements IURIResolver
 {

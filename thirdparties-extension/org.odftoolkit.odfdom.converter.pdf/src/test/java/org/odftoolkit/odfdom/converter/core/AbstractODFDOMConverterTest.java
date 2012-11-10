@@ -42,21 +42,49 @@ public abstract class AbstractODFDOMConverterTest
     {
         doGenerate( "FormattingTests.odt" );
     }
-    
+
     @Test
     public void HeaderFooterTable()
         throws Exception
     {
         doGenerate( "HeaderFooterTable.odt" );
     }
-    
+
     @Test
     public void Issue175()
         throws Exception
     {
         doGenerate( "Issue175.odt" );
     }
-    
+
+    @Test
+    public void Issue191()
+        throws Exception
+    {
+        doGenerate( "Issue191.odt" );
+    }
+
+    @Test
+    public void Issue192()
+        throws Exception
+    {
+        doGenerate( "Issue192.odt" );
+    }
+
+    @Test
+    public void Issue193()
+        throws Exception
+    {
+        doGenerate( "Issue193.odt" );
+    }
+
+    @Test
+    public void Issue194()
+        throws Exception
+    {
+        doGenerate( "Issue194.odt" );
+    }
+
     @Test
     public void ODTBig()
         throws Exception
@@ -91,7 +119,7 @@ public abstract class AbstractODFDOMConverterTest
     {
         doGenerate( "Taksee.odt" );
     }
-    
+
     @Test
     public void TestColor()
         throws Exception

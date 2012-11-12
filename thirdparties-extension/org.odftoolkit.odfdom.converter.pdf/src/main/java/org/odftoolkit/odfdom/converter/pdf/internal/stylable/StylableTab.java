@@ -38,8 +38,6 @@ import com.lowagie.text.Font;
 import com.lowagie.text.pdf.PdfContentByte;
 import com.lowagie.text.pdf.draw.DrawInterface;
 
-import fr.opensagres.xdocreport.itext.extension.IITextContainer;
-
 public class StylableTab
     implements IStylableElement, DrawInterface
 {
@@ -173,19 +171,5 @@ public class StylableTab
             canvas.endText();
             canvas.restoreState();
         }
-    }
-
-
-    //
-    // probably not used
-    //
-
-    public IITextContainer getITextContainer()
-    {
-        return null;
-    }
-
-    public void setITextContainer( IITextContainer container )
-    {
     }
 }

@@ -26,31 +26,33 @@ package org.odftoolkit.odfdom.converter.pdf.internal.stylable;
 
 import java.util.List;
 
+import com.lowagie.text.Image;
+
 public interface IStylableFactory
 {
-    StylableParagraph createParagraph( IStylableContainer parent );
+    StylableAnchor createAnchor( IStylableContainer parent );
+
+    StylableChunk createChunk( IStylableContainer parent, String textContent );
+
+    StylableDocumentSection createDocumentSection( IStylableContainer parent, boolean inHeaderFooter );
+
+    StylableHeaderFooter createHeaderFooter( boolean header );
 
     StylableHeading createHeading( IStylableContainer parent, List<Integer> headingNumbering );
 
-    StylablePhrase createPhrase( IStylableContainer parent );
-
-    StylableAnchor createAnchor( IStylableContainer parent );
+    StylableImage createImage( IStylableContainer parent, Image image, Float x, Float y, Float width, Float height );
 
     StylableList createList( IStylableContainer parent, int listLevel );
 
     StylableListItem createListItem( IStylableContainer parent );
 
-    StylableDocumentSection createDocumentSection( IStylableContainer parent, boolean inHeaderFooter );
+    StylableParagraph createParagraph( IStylableContainer parent );
+
+    StylablePhrase createPhrase( IStylableContainer parent );
+
+    StylableTab createTab( IStylableContainer parent, boolean inTableOfContent );
 
     StylableTable createTable( IStylableContainer parent, int numColumns );
 
     StylableTableCell createTableCell( IStylableContainer parent );
-
-    StylableChapter createChapter( IStylableContainer parent, StylableParagraph title );
-
-    StylableChunk createChunk( IStylableContainer parent, String textContent );
-
-    StylableSection createSection( IStylableContainer parent, StylableParagraph title, int numberDepth );
-
-    StylableChapter getCurrentChapter();
 }

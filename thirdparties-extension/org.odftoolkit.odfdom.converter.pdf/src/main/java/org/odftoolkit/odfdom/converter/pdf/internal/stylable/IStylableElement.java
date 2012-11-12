@@ -30,7 +30,6 @@ import com.lowagie.text.Element;
 
 public interface IStylableElement
 {
-
     void applyStyles( Style style );
 
     Style getLastStyleApplied();
@@ -38,7 +37,4 @@ public interface IStylableElement
     IStylableContainer getParent();
 
     Element getElement();
-
-    // void setParent(IStylableContainer container);
-
 }

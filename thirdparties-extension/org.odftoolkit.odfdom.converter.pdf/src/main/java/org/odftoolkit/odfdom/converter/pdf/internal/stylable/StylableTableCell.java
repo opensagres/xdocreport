@@ -34,8 +34,6 @@ import org.odftoolkit.odfdom.converter.pdf.internal.styles.StyleTableRowProperti
 import com.lowagie.text.Element;
 import com.lowagie.text.pdf.PdfPCell;
 
-import fr.opensagres.xdocreport.itext.extension.IITextContainer;
-
 /**
  * fixes for pdf conversion by Leszek Piotrowicz <leszekp@safe-mail.net>
  */
@@ -197,14 +195,5 @@ public class StylableTableCell
     {
         // no height limit
         return -1.0f;
-    }
-
-    public IITextContainer getITextContainer()
-    {
-        return parent;
-    }
-
-    public void setITextContainer( IITextContainer container )
-    {
     }
 }

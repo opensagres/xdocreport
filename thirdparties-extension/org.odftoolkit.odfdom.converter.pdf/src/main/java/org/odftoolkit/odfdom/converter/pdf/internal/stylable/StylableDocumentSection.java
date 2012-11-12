@@ -40,8 +40,6 @@ import com.lowagie.text.pdf.PdfPCell;
 import com.lowagie.text.pdf.PdfPRow;
 import com.lowagie.text.pdf.PdfPTable;
 
-import fr.opensagres.xdocreport.itext.extension.IITextContainer;
-
 //
 // this amazing and awesome algorithm
 // which lay out content in columns and do content balancing
@@ -525,18 +523,5 @@ public class StylableDocumentSection
             // we want fixed height to avoid breaking table to a new page
             return getFixedHeight() >= 0.0f ? getFixedHeight() : super.getMaxHeight();
         }
-    }
-
-    //
-    // probably not used
-    //
-
-    public IITextContainer getITextContainer()
-    {
-        return null;
-    }
-
-    public void setITextContainer( IITextContainer container )
-    {
     }
 }

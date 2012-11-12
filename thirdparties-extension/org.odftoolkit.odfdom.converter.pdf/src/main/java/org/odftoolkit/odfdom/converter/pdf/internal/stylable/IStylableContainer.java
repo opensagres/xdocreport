@@ -24,10 +24,10 @@
  */
 package org.odftoolkit.odfdom.converter.pdf.internal.stylable;
 
-import fr.opensagres.xdocreport.itext.extension.IITextContainer;
+import com.lowagie.text.Element;
 
 public interface IStylableContainer
-    extends IStylableElement, IITextContainer
+    extends IStylableElement
 {
-
+    void addElement( Element element );
 }

@@ -31,8 +31,6 @@ import com.lowagie.text.Element;
 import com.lowagie.text.Font;
 import com.lowagie.text.Phrase;
 
-import fr.opensagres.xdocreport.itext.extension.IITextContainer;
-
 public class StylablePhrase
     extends Phrase
     implements IStylableContainer
@@ -85,14 +83,5 @@ public class StylablePhrase
     public Element getElement()
     {
         return this;
-    }
-
-    public IITextContainer getITextContainer()
-    {
-        return parent;
-    }
-
-    public void setITextContainer( IITextContainer container )
-    {
     }
 }

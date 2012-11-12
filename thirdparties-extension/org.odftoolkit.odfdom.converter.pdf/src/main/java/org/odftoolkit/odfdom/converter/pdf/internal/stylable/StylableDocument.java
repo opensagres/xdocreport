@@ -35,7 +35,7 @@ import org.odftoolkit.odfdom.dom.style.OdfStyleFamily;
 
 import com.lowagie.text.DocumentException;
 import com.lowagie.text.Element;
-import com.lowagie.text.Paragraph;
+import com.lowagie.text.Image;
 import com.lowagie.text.Rectangle;
 import com.lowagie.text.pdf.ColumnText;
 import com.lowagie.text.pdf.PdfPCell;
@@ -43,7 +43,6 @@ import com.lowagie.text.pdf.PdfPTable;
 
 import fr.opensagres.xdocreport.itext.extension.ExtendedDocument;
 import fr.opensagres.xdocreport.itext.extension.IMasterPage;
-import fr.opensagres.xdocreport.itext.extension.IParagraphFactory;
 import fr.opensagres.xdocreport.itext.extension.PageOrientation;
 
 /**
@@ -51,15 +50,11 @@ import fr.opensagres.xdocreport.itext.extension.PageOrientation;
  */
 public class StylableDocument
     extends ExtendedDocument
-    implements IStylableContainer, IBoundsLimitContainer, IBreakHandlingContainer, IStylableFactory, IParagraphFactory
+    implements IStylableContainer, IBoundsLimitContainer, IBreakHandlingContainer, IStylableFactory
 {
     private final StyleEngineForIText styleEngine;
 
     private Style lastStyleApplied = null;
-
-    private int titleNumber = 1;
-
-    private StylableChapter currentChapter;
 
     private StylableMasterPage activeMasterPage;
 
@@ -81,22 +76,27 @@ public class StylableDocument
     }
 
     //
-    // IStylableFactory, IParagraphFactory implementation
+    // IStylableFactory implementation
     //
 
-    public StylableParagraph createParagraph( IStylableContainer parent )
+    public StylableAnchor createAnchor( IStylableContainer parent )
     {
-        return new StylableParagraph( this, parent );
+        return new StylableAnchor( this, parent );
     }
 
-    public Paragraph createParagraph()
+    public StylableChunk createChunk( IStylableContainer parent, String textContent )
     {
-        return createParagraph( (IStylableContainer) null );
+        return new StylableChunk( this, parent, textContent );
     }
 
-    public Paragraph createParagraph( Paragraph title )
+    public StylableDocumentSection createDocumentSection( IStylableContainer parent, boolean inHeaderFooter )
     {
-        return new StylableParagraph( this, title, null );
+        return new StylableDocumentSection( this, parent, inHeaderFooter );
+    }
+
+    public StylableHeaderFooter createHeaderFooter( boolean header )
+    {
+        return new StylableHeaderFooter( this, header );
     }
 
     public StylableHeading createHeading( IStylableContainer parent, List<Integer> headingNumbering )
@@ -104,14 +104,10 @@ public class StylableDocument
         return new StylableHeading( this, parent, headingNumbering );
     }
 
-    public StylablePhrase createPhrase( IStylableContainer parent )
+    public StylableImage createImage( IStylableContainer parent, Image image, Float x, Float y, Float width,
+                                      Float height )
     {
-        return new StylablePhrase( this, parent );
-    }
-
-    public StylableAnchor createAnchor( IStylableContainer parent )
-    {
-        return new StylableAnchor( this, parent );
+        return new StylableImage( this, parent, image, x, y, width, height );
     }
 
     public StylableList createList( IStylableContainer parent, int listLevel )
@@ -124,9 +120,19 @@ public class StylableDocument
         return new StylableListItem( this, parent );
     }
 
-    public StylableDocumentSection createDocumentSection( IStylableContainer parent, boolean inHeaderFooter )
+    public StylableParagraph createParagraph( IStylableContainer parent )
     {
-        return new StylableDocumentSection( this, parent, inHeaderFooter );
+        return new StylableParagraph( this, parent );
+    }
+
+    public StylablePhrase createPhrase( IStylableContainer parent )
+    {
+        return new StylablePhrase( this, parent );
+    }
+
+    public StylableTab createTab( IStylableContainer parent, boolean inTableOfContent )
+    {
+        return new StylableTab( this, parent, inTableOfContent );
     }
 
     public StylableTable createTable( IStylableContainer parent, int numColumns )
@@ -137,27 +143,6 @@ public class StylableDocument
     public StylableTableCell createTableCell( IStylableContainer parent )
     {
         return new StylableTableCell( this, parent );
-    }
-
-    public StylableChapter createChapter( IStylableContainer parent, StylableParagraph title )
-    {
-        currentChapter = new StylableChapter( this, parent, title, titleNumber++ );
-        return currentChapter;
-    }
-
-    public StylableChunk createChunk( IStylableContainer parent, String textContent )
-    {
-        return new StylableChunk( this, parent, textContent );
-    }
-
-    public StylableSection createSection( IStylableContainer parent, StylableParagraph title, int numberDepth )
-    {
-        return new StylableSection( this, parent, title, numberDepth );
-    }
-
-    public StylableChapter getCurrentChapter()
-    {
-        return currentChapter;
     }
 
     //

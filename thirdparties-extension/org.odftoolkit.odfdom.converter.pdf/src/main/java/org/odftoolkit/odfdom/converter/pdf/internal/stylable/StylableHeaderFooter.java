@@ -39,7 +39,6 @@ public class StylableHeaderFooter
     extends StylableTable
     implements IMasterPageHeaderFooter
 {
-
     private final StylableDocument ownerDocument;
 
     private final boolean header;

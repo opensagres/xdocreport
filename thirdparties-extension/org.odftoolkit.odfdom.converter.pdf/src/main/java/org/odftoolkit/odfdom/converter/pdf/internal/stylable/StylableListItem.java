@@ -36,8 +36,6 @@ import com.lowagie.text.Font;
 import com.lowagie.text.ListItem;
 import com.lowagie.text.Phrase;
 
-import fr.opensagres.xdocreport.itext.extension.IITextContainer;
-
 /**
  * fixes for pdf conversion by Leszek Piotrowicz <leszekp@safe-mail.net>
  */
@@ -102,14 +100,5 @@ public class StylableListItem
     public Element getElement()
     {
         return this;
-    }
-
-    public IITextContainer getITextContainer()
-    {
-        return parent;
-    }
-
-    public void setITextContainer( IITextContainer container )
-    {
     }
 }

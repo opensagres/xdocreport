@@ -363,5 +363,4 @@ public class StylableParagraph
         }
         return super.getElement();
     }
-
 }

@@ -166,7 +166,7 @@ public class ElementVisitorForIText
     @Override
     public void visit( StyleHeaderElement ele )
     {
-        StylableHeaderFooter header = new StylableHeaderFooter( document, true );
+        StylableHeaderFooter header = document.createHeaderFooter( true );
         Style style = document.getStyleMasterPage( currentMasterPage );
         if ( style != null )
         {
@@ -193,7 +193,7 @@ public class ElementVisitorForIText
     @Override
     public void visit( StyleFooterElement ele )
     {
-        StylableHeaderFooter footer = new StylableHeaderFooter( document, false );
+        StylableHeaderFooter footer = document.createHeaderFooter( false );
         Style style = document.getStyleMasterPage( currentMasterPage );
         if ( style != null )
         {
@@ -511,7 +511,7 @@ public class ElementVisitorForIText
                     height = ODFUtils.getDimensionAsPoint( svgHeight );
                 }
             }
-            StylableImage image = new StylableImage( document, currentContainer, imageObj, x, y, width, height );
+            StylableImage image = document.createImage( currentContainer, imageObj, x, y, width, height );
             if ( frame != null )
             {
                 applyStyles( frame, image );
@@ -538,7 +538,7 @@ public class ElementVisitorForIText
     @Override
     public void visit( TextTabElement ele )
     {
-        StylableTab tab = new StylableTab( document, currentContainer, inTableOfContent );
+        StylableTab tab = document.createTab( currentContainer, inTableOfContent );
         Style style = currentContainer.getLastStyleApplied();
         if ( style != null )
         {

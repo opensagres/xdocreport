@@ -31,8 +31,6 @@ import com.lowagie.text.Anchor;
 import com.lowagie.text.Element;
 import com.lowagie.text.Font;
 
-import fr.opensagres.xdocreport.itext.extension.IITextContainer;
-
 public class StylableAnchor
     extends Anchor
     implements IStylableContainer
@@ -82,14 +80,5 @@ public class StylableAnchor
     public Element getElement()
     {
         return this;
-    }
-
-    public IITextContainer getITextContainer()
-    {
-        return parent;
-    }
-
-    public void setITextContainer( IITextContainer container )
-    {
     }
 }

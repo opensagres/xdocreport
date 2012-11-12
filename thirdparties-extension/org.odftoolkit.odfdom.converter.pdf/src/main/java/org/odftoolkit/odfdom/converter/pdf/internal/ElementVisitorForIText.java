@@ -64,6 +64,7 @@ import org.odftoolkit.odfdom.dom.element.style.StyleFooterLeftElement;
 import org.odftoolkit.odfdom.dom.element.style.StyleHeaderElement;
 import org.odftoolkit.odfdom.dom.element.style.StyleHeaderLeftElement;
 import org.odftoolkit.odfdom.dom.element.style.StyleMasterPageElement;
+import org.odftoolkit.odfdom.dom.element.svg.SvgDescElement;
 import org.odftoolkit.odfdom.dom.element.table.TableTableCellElement;
 import org.odftoolkit.odfdom.dom.element.table.TableTableElement;
 import org.odftoolkit.odfdom.dom.element.table.TableTableHeaderRowsElement;
@@ -524,6 +525,13 @@ public class ElementVisitorForIText
     protected boolean isNeedImageStream()
     {
         return true;
+    }
+
+    @Override
+    public void visit( SvgDescElement ele )
+    {
+        // do not visit child nodes
+        // they may contain unnecessary text
     }
 
     // ---------------------- visit //text:soft-page-break

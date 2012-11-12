@@ -89,16 +89,14 @@ public class ODFUtils
                 try
                 {
                     String columnWidth = null;
-                    OdfStyle style =
-                        odfDocument.getContentDom().getAutomaticStyles().getStyle( styleName,
-                                                                                   OdfStyleFamily.TableColumn );
+                    OdfStyle style = getOdfStyle( odfDocument, styleName, OdfStyleFamily.TableColumn );
                     if ( style != null )
                     {
-                        StyleTableColumnPropertiesElement tableColumnStyle =
+                        StyleTableColumnPropertiesElement tableColumnProperties =
                             getStyleTableColumnPropertiesElement( style );
-                        if ( tableColumnStyle != null )
+                        if ( tableColumnProperties != null )
                         {
-                            columnWidth = tableColumnStyle.getStyleColumnWidthAttribute();
+                            columnWidth = tableColumnProperties.getStyleColumnWidthAttribute();
                         }
                     }
                     if ( StringUtils.isEmpty( columnWidth ) )
@@ -133,6 +131,26 @@ public class ODFUtils
             }
         }
         return colWidths;
+    }
+
+    public static OdfStyle getOdfStyle( OdfDocument odfDocument, String styleName, OdfStyleFamily styleFamily )
+        throws Exception
+    {
+        OdfStyle style = null;
+        if ( odfDocument.getContentDom() != null && odfDocument.getContentDom().getAutomaticStyles() != null )
+        {
+            // try content dom
+            style = odfDocument.getContentDom().getAutomaticStyles().getStyle( styleName, styleFamily );
+        }
+        if ( style == null )
+        {
+            if ( odfDocument.getStylesDom() != null && odfDocument.getStylesDom().getAutomaticStyles() != null )
+            {
+                // try content dom
+                style = odfDocument.getStylesDom().getAutomaticStyles().getStyle( styleName, styleFamily );
+            }
+        }
+        return style;
     }
 
     public static StyleTableColumnPropertiesElement getStyleTableColumnPropertiesElement( OdfStyle style )

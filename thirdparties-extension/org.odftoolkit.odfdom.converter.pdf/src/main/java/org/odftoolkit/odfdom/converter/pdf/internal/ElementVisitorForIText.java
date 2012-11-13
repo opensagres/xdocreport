@@ -407,6 +407,10 @@ public class ElementVisitorForIText
     public void visit( TableTableRowElement ele )
     {
         Style currentRowStyle = getStyle( ele, null );
+        if ( currentRowStyle != null )
+        {
+            currentTable.applyStyles( currentRowStyle );
+        }
         currentTable.beginTableRow( currentRowStyle );
         super.visit( ele );
         currentTable.endTableRow();

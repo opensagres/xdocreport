@@ -44,6 +44,8 @@ public class StyleTableProperties
 
     private Float marginTop;
 
+    private Boolean mayBreakBetweenRows;
+
     private Float width;
 
     public StyleTableProperties()
@@ -87,6 +89,10 @@ public class StyleTableProperties
         if ( tableProperties.getMarginTop() != null )
         {
             marginTop = tableProperties.getMarginTop();
+        }
+        if ( tableProperties.getMayBreakBetweenRows() != null )
+        {
+            mayBreakBetweenRows = tableProperties.getMayBreakBetweenRows();
         }
         if ( tableProperties.getWidth() != null )
         {
@@ -162,6 +168,16 @@ public class StyleTableProperties
     public void setMarginTop( Float marginTop )
     {
         this.marginTop = marginTop;
+    }
+
+    public Boolean getMayBreakBetweenRows()
+    {
+        return mayBreakBetweenRows;
+    }
+
+    public void setMayBreakBetweenRows( Boolean mayBreakBetweenRows )
+    {
+        this.mayBreakBetweenRows = mayBreakBetweenRows;
     }
 
     public Float getWidth()

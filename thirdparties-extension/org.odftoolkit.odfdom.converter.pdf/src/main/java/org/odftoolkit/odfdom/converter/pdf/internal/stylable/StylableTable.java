@@ -26,6 +26,7 @@ package org.odftoolkit.odfdom.converter.pdf.internal.stylable;
 
 import org.odftoolkit.odfdom.converter.pdf.internal.styles.Style;
 import org.odftoolkit.odfdom.converter.pdf.internal.styles.StyleTableProperties;
+import org.odftoolkit.odfdom.converter.pdf.internal.styles.StyleTableRowProperties;
 
 import com.lowagie.text.Element;
 
@@ -53,6 +54,8 @@ public class StylableTable
         // cancel ExtendedPdfPTable settings
         // we raise text in StylableParagraph so extra spacing here is unnecessary
         super.setSpacingBefore( 0.0f );
+        // default is split rows early
+        super.setSplitLate( false );
         this.ownerDocument = ownerDocument;
         this.parent = parent;
     }
@@ -85,6 +88,10 @@ public class StylableTable
         while ( currentRowIdx != 0 )
         {
             StylableTableCell cell = new StylableTableCell( ownerDocument, this );
+            if ( currentRowStyle != null )
+            {
+                cell.applyStyles( currentRowStyle );
+            }
             addElement( cell );
         }
         inTableRow = false;
@@ -114,48 +121,71 @@ public class StylableTable
     {
         this.lastStyleApplied = style;
 
-        // width
         StyleTableProperties tableProperties = style.getTableProperties();
         if ( tableProperties != null )
         {
+            // width
             if ( tableProperties.getWidth() != null )
             {
                 super.setTotalWidth( tableProperties.getWidth() );
             }
-        }
 
-        // alignment
-        int alignment = tableProperties.getAlignment();
-        if ( alignment != Element.ALIGN_UNDEFINED )
-        {
-            super.setHorizontalAlignment( alignment );
-        }
+            // alignment
+            int alignment = tableProperties.getAlignment();
+            if ( alignment != Element.ALIGN_UNDEFINED )
+            {
+                super.setHorizontalAlignment( alignment );
+            }
 
-        // margins
-        Float margin = tableProperties.getMargin();
-        if ( margin != null && margin > 0.0f )
-        {
-            super.setPadding( margin );
+            // margins
+            Float margin = tableProperties.getMargin();
+            if ( margin != null && margin > 0.0f )
+            {
+                super.setPadding( margin );
+            }
+            Float marginLeft = tableProperties.getMarginLeft();
+            if ( marginLeft != null && marginLeft > 0.0f )
+            {
+                super.setPaddingLeft( marginLeft );
+            }
+            Float marginRight = tableProperties.getMarginRight();
+            if ( marginRight != null && marginRight > 0.0f )
+            {
+                super.setPaddingRight( marginRight );
+            }
+            Float marginTop = tableProperties.getMarginTop();
+            if ( marginTop != null && marginTop > 0.0f )
+            {
+                super.setPaddingTop( marginTop );
+            }
+            Float marginBottom = tableProperties.getMarginBottom();
+            if ( marginBottom != null && marginBottom > 0.0f )
+            {
+                super.setPaddingBottom( marginBottom );
+            }
+
+            // table splitting
+            Boolean mayBreakBetweenRows = tableProperties.getMayBreakBetweenRows();
+            if ( mayBreakBetweenRows != null )
+            {
+                super.setKeepTogether( !mayBreakBetweenRows );
+            }
         }
-        Float marginLeft = tableProperties.getMarginLeft();
-        if ( marginLeft != null && marginLeft > 0.0f )
+        StyleTableRowProperties tableRowProperties = style.getTableRowProperties();
+        if ( tableRowProperties != null )
         {
-            super.setPaddingLeft( marginLeft );
-        }
-        Float marginRight = tableProperties.getMarginRight();
-        if ( marginRight != null && marginRight > 0.0f )
-        {
-            super.setPaddingRight( marginRight );
-        }
-        Float marginTop = tableProperties.getMarginTop();
-        if ( marginTop != null && marginTop > 0.0f )
-        {
-            super.setPaddingTop( marginTop );
-        }
-        Float marginBottom = tableProperties.getMarginBottom();
-        if ( marginBottom != null && marginBottom > 0.0f )
-        {
-            super.setPaddingBottom( marginBottom );
+            // keep together
+            Boolean keepTogether = tableRowProperties.getKeepTogether();
+            if ( keepTogether != null )
+            {
+                // keep together is table row property in open office
+                // but it is table property in iText
+                // so we set keep together = true if any of table rows has this property set to true
+                if ( super.isSplitLate() == false && keepTogether == true )
+                {
+                    super.setSplitLate( true );
+                }
+            }
         }
     }
 

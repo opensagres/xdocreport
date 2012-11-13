@@ -75,7 +75,7 @@ public class ExtendedParagraph
     {
         PdfPCell cell = new PdfPCell();
         cell.setBorder( Table.NO_BORDER );
-        // cell.setPadding( 0.0f );
+        cell.setPadding( 0.0f );
         cell.setUseBorderPadding( true );
         cell.getColumn().setAdjustFirstLine( false );
         cell.setUseDescender( true );
@@ -133,7 +133,10 @@ public class ExtendedParagraph
     {
         if ( wrapperCell != null )
         {
-            wrapperTable = createWrapperTable( wrapperCell );
+            if ( wrapperTable == null )
+            {
+                wrapperTable = createWrapperTable( wrapperCell );
+            }
         }
         return wrapperTable != null ? wrapperTable : this;
     }

@@ -57,6 +57,8 @@ public class StylableTableCell
         setBorder( NO_BORDER );
         // make a room for borders
         setUseBorderPadding( true );
+        // set no padding as default
+        setPadding( 0.0f );
     }
 
     public void addElement( Element element )

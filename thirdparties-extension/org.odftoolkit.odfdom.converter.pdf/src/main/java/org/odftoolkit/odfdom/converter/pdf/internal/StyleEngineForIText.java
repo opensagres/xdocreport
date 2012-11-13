@@ -960,6 +960,13 @@ public class StyleEngineForIText
             tableProperties.setMarginTop( ODFUtils.getDimensionAsPoint( marginTop ) );
         }
 
+        // may-break-between-rows
+        Boolean mayBreakBetweenRows = ele.getStyleMayBreakBetweenRowsAttribute();
+        if ( mayBreakBetweenRows != null )
+        {
+            tableProperties.setMayBreakBetweenRows( mayBreakBetweenRows );
+        }
+
         super.visit( ele );
     }
 
@@ -988,6 +995,19 @@ public class StyleEngineForIText
             tableRowProperties.setRowHeight( ODFUtils.getDimensionAsPoint( height ) );
         }
 
+        // keep-together
+        String keepTogether = ele.getFoKeepTogetherAttribute();
+        if ( StringUtils.isNotEmpty( keepTogether ) )
+        {
+            if ( FoKeepTogetherAttribute.Value.ALWAYS.toString().equals( keepTogether ) )
+            {
+                tableRowProperties.setKeepTogether( Boolean.TRUE );
+            }
+            else
+            {
+                tableRowProperties.setKeepTogether( Boolean.FALSE );
+            }
+        }
     }
 
     @Override
@@ -1650,5 +1670,5 @@ public class StyleEngineForIText
         }
         return newStyle;
     }
-    
+
 }

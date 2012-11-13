@@ -26,6 +26,8 @@ package org.odftoolkit.odfdom.converter.pdf.internal.styles;
 
 public class StyleTableRowProperties
 {
+    private Boolean keepTogether;
+
     private Float minRowHeight;
 
     private Float rowHeight;
@@ -44,6 +46,10 @@ public class StyleTableRowProperties
 
     public void merge( StyleTableRowProperties tableRowProperties )
     {
+        if ( tableRowProperties.getKeepTogether() != null )
+        {
+            keepTogether = tableRowProperties.getKeepTogether();
+        }
         if ( tableRowProperties.getMinRowHeight() != null )
         {
             minRowHeight = tableRowProperties.getMinRowHeight();
@@ -52,6 +58,16 @@ public class StyleTableRowProperties
         {
             rowHeight = tableRowProperties.getRowHeight();
         }
+    }
+
+    public Boolean getKeepTogether()
+    {
+        return keepTogether;
+    }
+
+    public void setKeepTogether( Boolean keepTogether )
+    {
+        this.keepTogether = keepTogether;
     }
 
     public Float getMinRowHeight()

@@ -27,7 +27,6 @@ package org.odftoolkit.odfdom.converter.pdf.internal;
 import java.awt.Color;
 import java.io.IOException;
 import java.io.OutputStream;
-import java.io.Writer;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -78,6 +77,7 @@ import org.odftoolkit.odfdom.dom.element.text.TextLineBreakElement;
 import org.odftoolkit.odfdom.dom.element.text.TextListElement;
 import org.odftoolkit.odfdom.dom.element.text.TextListItemElement;
 import org.odftoolkit.odfdom.dom.element.text.TextPElement;
+import org.odftoolkit.odfdom.dom.element.text.TextPageCountElement;
 import org.odftoolkit.odfdom.dom.element.text.TextPageNumberElement;
 import org.odftoolkit.odfdom.dom.element.text.TextSElement;
 import org.odftoolkit.odfdom.dom.element.text.TextSectionElement;
@@ -126,11 +126,16 @@ public class ElementVisitorForIText
 
     private StylableList previousList; // list processing
 
-    public ElementVisitorForIText( OdfDocument odfDocument, OutputStream out, Writer writer,
-                                   StyleEngineForIText styleEngine, PdfOptions options )
+    private Integer forcedPageCount; // page count processing
+
+    private Integer expectedPageCount; // page count processing
+
+    public ElementVisitorForIText( OdfDocument odfDocument, OutputStream out, StyleEngineForIText styleEngine,
+                                   PdfOptions options, Integer forcedPageCount )
     {
-        super( odfDocument, options.getExtractor(), out, writer );
+        super( odfDocument, options.getExtractor(), out, null );
         this.styleEngine = styleEngine;
+        this.forcedPageCount = forcedPageCount;
         // this.options = options != null ? options : PDFViaITextOptions.create();
         // Create document
         try
@@ -140,6 +145,23 @@ public class ElementVisitorForIText
         catch ( DocumentException e )
         {
             throw new ODFConverterException( e );
+        }
+    }
+
+    public Integer getExpectedPageCount()
+    {
+        return expectedPageCount;
+    }
+
+    public int getActualPageCount()
+    {
+        if ( document.isOpen() )
+        {
+            return document.getPageNumber();
+        }
+        else
+        {
+            return document.getPageNumber() - 1;
         }
     }
 
@@ -591,6 +613,37 @@ public class ElementVisitorForIText
     }
 
     @Override
+    public void visit( TextPageCountElement ele )
+    {
+        if ( forcedPageCount != null )
+        {
+            createAndAddChunk( forcedPageCount.toString(), null, false );
+        }
+        else
+        {
+            String textContent = ele.getTextContent();
+            try
+            {
+                int pageCount = Integer.parseInt( textContent );
+                if ( expectedPageCount == null || expectedPageCount == pageCount )
+                {
+                    expectedPageCount = pageCount;
+                }
+                else if ( expectedPageCount != pageCount )
+                {
+                    expectedPageCount = -1;
+                }
+            }
+            catch ( NumberFormatException e )
+            {
+                expectedPageCount = -1;
+            }
+            textContent = expectedPageCount != null & expectedPageCount >= 0 ? expectedPageCount.toString() : "#";
+            createAndAddChunk( textContent, null, false );
+        }
+    }
+
+    @Override
     protected void processTextNode( Text node )
     {
         createAndAddChunk( node.getTextContent(), null, false );
@@ -604,6 +657,7 @@ public class ElementVisitorForIText
         // text:line-break
         // text:s
         // text:page-number
+        // text:page-count
         StylableChunk chunk = document.createChunk( currentContainer, textContent );
         Style style = currentContainer.getLastStyleApplied();
         if ( style != null )

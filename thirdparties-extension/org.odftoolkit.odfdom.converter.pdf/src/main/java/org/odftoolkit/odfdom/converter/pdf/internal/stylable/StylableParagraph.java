@@ -296,7 +296,7 @@ public class StylableParagraph
             }
             if ( empty )
             {
-                super.add( new Chunk( ODFUtils.NON_BREAKING_SPACE_STR ) );
+                super.add( new Chunk( ODFUtils.TAB_STR ) );
             }
 
             // post process bookmarks

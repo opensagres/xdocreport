@@ -24,9 +24,13 @@
  */
 package org.odftoolkit.odfdom.converter.pdf.internal.stylable;
 
+import java.util.ArrayList;
+
+import org.odftoolkit.odfdom.converter.core.utils.ODFUtils;
 import org.odftoolkit.odfdom.converter.pdf.internal.styles.Style;
 import org.odftoolkit.odfdom.converter.pdf.internal.styles.StyleTextProperties;
 
+import com.lowagie.text.Chunk;
 import com.lowagie.text.Element;
 import com.lowagie.text.Font;
 import com.lowagie.text.Phrase;
@@ -80,8 +84,23 @@ public class StylablePhrase
         return parent;
     }
 
+    @SuppressWarnings( "unchecked" )
     public Element getElement()
     {
+        boolean empty = true;
+        ArrayList<Chunk> chunks = getChunks();
+        for ( Chunk chunk : chunks )
+        {
+            if ( chunk.getImage() == null && chunk.getContent() != null && chunk.getContent().length() > 0 )
+            {
+                empty = false;
+                break;
+            }
+        }
+        if ( empty )
+        {
+            super.add( new Chunk( ODFUtils.TAB_STR ) );
+        }
         return this;
     }
 }

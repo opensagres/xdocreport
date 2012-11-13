@@ -78,7 +78,7 @@ public class ExtendedParagraph
         cell.setPadding( 0.0f );
         cell.setUseBorderPadding( true );
         cell.getColumn().setAdjustFirstLine( false );
-        cell.setUseDescender( true );
+        //cell.setUseDescender( true );
         return cell;
     }
 

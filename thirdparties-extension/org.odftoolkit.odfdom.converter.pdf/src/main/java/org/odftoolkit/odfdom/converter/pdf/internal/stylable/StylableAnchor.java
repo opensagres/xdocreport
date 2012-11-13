@@ -24,10 +24,13 @@
  */
 package org.odftoolkit.odfdom.converter.pdf.internal.stylable;
 
+import java.util.ArrayList;
+
 import org.odftoolkit.odfdom.converter.pdf.internal.styles.Style;
 import org.odftoolkit.odfdom.converter.pdf.internal.styles.StyleTextProperties;
 
 import com.lowagie.text.Anchor;
+import com.lowagie.text.Chunk;
 import com.lowagie.text.Element;
 import com.lowagie.text.Font;
 
@@ -62,6 +65,11 @@ public class StylableAnchor
             Font font = textProperties.getFont();
             if ( font != null )
             {
+                if ( !font.isUnderlined() )
+                {
+                    font = new Font( font );
+                    font.setStyle( font.getStyle() | Font.UNDERLINE );
+                }
                 super.setFont( font );
             }
         }
@@ -77,8 +85,21 @@ public class StylableAnchor
         return parent;
     }
 
+    @SuppressWarnings( "unchecked" )
     public Element getElement()
     {
+        // underline font if not explicitly set
+        ArrayList<Chunk> chunks = getChunks();
+        for ( Chunk chunk : chunks )
+        {
+            Font f = chunk.getFont();
+            if ( f != null && !f.isUnderlined() )
+            {
+                f = new Font( f );
+                f.setStyle( f.getStyle() | Font.UNDERLINE );
+                chunk.setFont( f );
+            }
+        }
         return this;
     }
 }

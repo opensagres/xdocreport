@@ -524,6 +524,13 @@ public class StyleEngineForIText
             paragraphProperties.setBorderTop( new StyleBorder( borderTop, BorderType.TOP ) );
         }
 
+        // join-border
+        Boolean joinBorder = ele.getStyleJoinBorderAttribute();
+        if ( joinBorder != null )
+        {
+            paragraphProperties.setJoinBorder( joinBorder );
+        }
+
         // line-height
         String lineHeight = ele.getFoLineHeightAttribute();
         if ( StringUtils.isNotEmpty( lineHeight ) )
@@ -571,35 +578,35 @@ public class StyleEngineForIText
         String padding = ele.getFoPaddingAttribute();
         if ( StringUtils.isNotEmpty( padding ) )
         {
-            // cssStyleSheet.setCSSProperty("padding", padding);
+            paragraphProperties.setPadding( ODFUtils.getDimensionAsPoint( padding ) );
         }
 
         // padding-bottom
         String paddingBottom = ele.getFoPaddingBottomAttribute();
         if ( StringUtils.isNotEmpty( paddingBottom ) )
         {
-            // cssStyleSheet.setCSSProperty("padding-bottom", paddingBottom);
+            paragraphProperties.setPaddingBottom( ODFUtils.getDimensionAsPoint( paddingBottom ) );
         }
 
         // padding-left
         String paddingLeft = ele.getFoPaddingLeftAttribute();
         if ( StringUtils.isNotEmpty( paddingLeft ) )
         {
-            // cssStyleSheet.setCSSProperty("padding-left", paddingLeft);
+            paragraphProperties.setPaddingLeft( ODFUtils.getDimensionAsPoint( paddingLeft ) );
         }
 
-        // padding-bottom
+        // padding-right
         String paddingRight = ele.getFoPaddingRightAttribute();
         if ( StringUtils.isNotEmpty( paddingRight ) )
         {
-            // cssStyleSheet.setCSSProperty("padding-right", paddingRight);
+            paragraphProperties.setPaddingRight( ODFUtils.getDimensionAsPoint( paddingRight ) );
         }
 
         // padding-top
         String paddingTop = ele.getFoPaddingTopAttribute();
         if ( StringUtils.isNotEmpty( paddingTop ) )
         {
-            // cssStyleSheet.setCSSProperty("padding-top", paddingTop);
+            paragraphProperties.setPaddingTop( ODFUtils.getDimensionAsPoint( paddingTop ) );
         }
 
         // text-align

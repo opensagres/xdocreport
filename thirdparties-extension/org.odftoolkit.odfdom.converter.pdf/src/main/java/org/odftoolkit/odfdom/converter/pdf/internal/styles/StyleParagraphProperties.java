@@ -51,6 +51,8 @@ public class StyleParagraphProperties
 
     private StyleBreak breakBefore;
 
+    private Boolean joinBorder;
+
     private Boolean keepTogether;
 
     private StyleLineHeight lineHeight;
@@ -64,6 +66,16 @@ public class StyleParagraphProperties
     private Float marginRight;
 
     private Float marginTop;
+
+    private Float padding;
+
+    private Float paddingBottom;
+
+    private Float paddingLeft;
+
+    private Float paddingRight;
+
+    private Float paddingTop;
 
     private Float textIndent;
 
@@ -117,6 +129,10 @@ public class StyleParagraphProperties
         {
             breakBefore = paragraphProperties.getBreakBefore();
         }
+        if ( paragraphProperties.getJoinBorder() != null )
+        {
+            joinBorder = paragraphProperties.getJoinBorder();
+        }
         if ( paragraphProperties.getKeepTogether() != null )
         {
             keepTogether = paragraphProperties.getKeepTogether();
@@ -144,6 +160,26 @@ public class StyleParagraphProperties
         if ( paragraphProperties.getMarginTop() != null )
         {
             marginTop = paragraphProperties.getMarginTop();
+        }
+        if ( paragraphProperties.getPadding() != null )
+        {
+            padding = paragraphProperties.getPadding();
+        }
+        if ( paragraphProperties.getPaddingBottom() != null )
+        {
+            paddingBottom = paragraphProperties.getPaddingBottom();
+        }
+        if ( paragraphProperties.getPaddingLeft() != null )
+        {
+            paddingLeft = paragraphProperties.getPaddingLeft();
+        }
+        if ( paragraphProperties.getPaddingRight() != null )
+        {
+            paddingRight = paragraphProperties.getPaddingRight();
+        }
+        if ( paragraphProperties.getPaddingTop() != null )
+        {
+            paddingTop = paragraphProperties.getPaddingTop();
         }
         if ( paragraphProperties.getTextIndent() != null )
         {
@@ -241,6 +277,16 @@ public class StyleParagraphProperties
         this.breakBefore = breakBefore;
     }
 
+    public Boolean getJoinBorder()
+    {
+        return joinBorder;
+    }
+
+    public void setJoinBorder( Boolean joinBorder )
+    {
+        this.joinBorder = joinBorder;
+    }
+
     public Boolean getKeepTogether()
     {
         return keepTogether;
@@ -309,6 +355,56 @@ public class StyleParagraphProperties
     public void setMarginTop( Float marginTop )
     {
         this.marginTop = marginTop;
+    }
+
+    public Float getPadding()
+    {
+        return padding;
+    }
+
+    public void setPadding( Float padding )
+    {
+        this.padding = padding;
+    }
+
+    public Float getPaddingBottom()
+    {
+        return paddingBottom;
+    }
+
+    public void setPaddingBottom( Float paddingBottom )
+    {
+        this.paddingBottom = paddingBottom;
+    }
+
+    public Float getPaddingLeft()
+    {
+        return paddingLeft;
+    }
+
+    public void setPaddingLeft( Float paddingLeft )
+    {
+        this.paddingLeft = paddingLeft;
+    }
+
+    public Float getPaddingRight()
+    {
+        return paddingRight;
+    }
+
+    public void setPaddingRight( Float paddingRight )
+    {
+        this.paddingRight = paddingRight;
+    }
+
+    public Float getPaddingTop()
+    {
+        return paddingTop;
+    }
+
+    public void setPaddingTop( Float paddingTop )
+    {
+        this.paddingTop = paddingTop;
     }
 
     public Float getTextIndent()

@@ -132,6 +132,7 @@ public class StylableParagraph
         }
         else
         {
+            // border size
             float size = -1;
             BigInteger borderSize = border.getSz();
             if ( borderSize != null )
@@ -140,8 +141,17 @@ public class StylableParagraph
                 // if w:sz="4" => 1/4 points
                 size = borderSize.floatValue() / 8f;
             }
-
+            // border color
             Color borderColor = ColorHelper.getBorderColor( border );
+
+            // border padding
+            Float space = null;
+            BigInteger borderSpace = border.getSpace();
+            if ( borderSpace != null )
+            {
+                // Specifies the spacing offset. Values are specified in points (1/72nd of an inch).
+                space = borderSpace.floatValue();
+            }
 
             switch ( borderSide )
             {
@@ -155,6 +165,10 @@ public class StylableParagraph
 
                         super.setBorderColorTop( borderColor );
                     }
+                    if ( space != null )
+                    {
+                        super.setBorderPaddingTop( space );
+                    }
                     break;
                 case Rectangle.BOTTOM:
                     if ( size != -1 )
@@ -164,6 +178,10 @@ public class StylableParagraph
                     if ( borderColor != null )
                     {
                         super.setBorderColorBottom( borderColor );
+                    }
+                    if ( space != null )
+                    {
+                        super.setBorderPaddingBottom( space );
                     }
                     break;
                 case Rectangle.LEFT:
@@ -175,6 +193,10 @@ public class StylableParagraph
                     {
                         super.setBorderColorLeft( borderColor );
                     }
+                    if ( space != null )
+                    {
+                        super.setBorderPaddingLeft( space );
+                    }
                     break;
                 case Rectangle.RIGHT:
                     if ( size != -1 )
@@ -184,6 +206,10 @@ public class StylableParagraph
                     if ( borderColor != null )
                     {
                         super.setBorderColorRight( borderColor );
+                    }
+                    if ( space != null )
+                    {
+                        super.setBorderPaddingRight( space );
                     }
                     break;
             }

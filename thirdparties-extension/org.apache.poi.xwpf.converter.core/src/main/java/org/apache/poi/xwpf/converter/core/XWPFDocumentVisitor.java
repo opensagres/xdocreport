@@ -213,39 +213,32 @@ public abstract class XWPFDocumentVisitor<T, O extends Options, E extends IXWPFM
         if ( !masterPageManager.isInitialized() )
         {
             // master page manager which hosts each <:w;sectPr declared in the word/document.xml
-            // must be initialized. The initialisation loop for each
+            // must be initialized. The initialization loop for each
             // <w:p paragraph to compute a list of <w:sectPr which contains information
             // about header/footer declared in the <w:headerReference/<w:footerReference
             masterPageManager.initialize();
         }
+        
+        String previousParagraphStyleName=null;
         for ( int i = 0; i < bodyElements.size(); i++ )
         {
             IBodyElement bodyElement = bodyElements.get( i );
-            visitBodyElement( bodyElement, i, container );
+            switch ( bodyElement.getElementType() )
+            {
+                case PARAGRAPH:                    
+                    XWPFParagraph paragraph = (XWPFParagraph) bodyElement;
+                    String paragraphStyleName = paragraph.getStyleID();
+                    boolean sameStyleBelow = (paragraphStyleName != null && paragraphStyleName.equals( previousParagraphStyleName ));
+                    
+                    visitParagraph( paragraph, i, container );
+                    break;
+                case TABLE:
+                    previousParagraphStyleName = null;
+                    visitTable( (XWPFTable) bodyElement, i, container );
+                    break;
+            }
         }
 
-    }
-
-    /**
-     * Visit paragraph and table of the given body element.
-     * 
-     * @param bodyElement
-     * @param index
-     * @param container
-     * @throws Exception
-     */
-    protected void visitBodyElement( IBodyElement bodyElement, int index, T container )
-        throws Exception
-    {
-        switch ( bodyElement.getElementType() )
-        {
-            case PARAGRAPH:
-                visitParagraph( (XWPFParagraph) bodyElement, index, container );
-                break;
-            case TABLE:
-                visitTable( (XWPFTable) bodyElement, index, container );
-                break;
-        }
     }
 
     /**

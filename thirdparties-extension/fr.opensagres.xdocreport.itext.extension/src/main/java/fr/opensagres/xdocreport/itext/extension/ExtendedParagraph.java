@@ -225,4 +225,55 @@ public class ExtendedParagraph
     {
         getWrapperCell().setBorderColorRight( borderColorRight );
     }
+    
+    /**
+     * Sets the padding of the contents in the cell (space between content and border).
+     *
+     * @param padding
+     */
+    public void setBorderPadding( float padding )
+    {
+        getWrapperCell().setPadding( padding );
+    }
+
+    /**
+     * Setter for property paddingLeft.
+     *
+     * @param paddingLeft New value of property paddingLeft.
+     */
+    public void setBorderPaddingLeft( float paddingLeft )
+    {
+        getWrapperCell().setPaddingLeft( paddingLeft );
+    }
+
+    /**
+     * Setter for property paddingRight.
+     *
+     * @param paddingRight New value of property paddingRight.
+     */
+    public void setBorderPaddingRight( float paddingRight )
+    {
+        getWrapperCell().setPaddingRight( paddingRight );
+    }
+
+    /**
+     * Setter for property paddingBottom.
+     *
+     * @param paddingBottom New value of property paddingBottom.
+     */
+    public void setBorderPaddingBottom( float paddingBottom )
+    {
+        getWrapperCell().setPaddingBottom( paddingBottom );
+    }
+
+    /**
+     * Setter for property paddingTop.
+     *
+     * @param paddingTop New value of property paddingTop.
+     */
+    public void setBorderPaddingTop( float paddingTop )
+    {
+        getWrapperCell().setPaddingTop( paddingTop );
+    }
+
 }

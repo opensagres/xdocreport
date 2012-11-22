@@ -306,6 +306,13 @@ public abstract class AbstractXWPFPOIConverterTest
     }
 
     @Test
+    public void TestParagraphWithBorder()
+        throws IOException
+    {
+        doGenerate( "TestParagraphWithBorder.docx" );
+    }
+
+    @Test
     public void TestTable()
         throws IOException
     {
@@ -334,7 +341,7 @@ public abstract class AbstractXWPFPOIConverterTest
     }
 
     @Test
-    public void TestTestTableCellTextOrientation()
+    public void TestTableCellTextOrientation()
         throws IOException
     {
         doGenerate( "TestTableCellTextOrientation.docx" );

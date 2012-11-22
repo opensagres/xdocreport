@@ -24,7 +24,6 @@
  */
 package org.apache.poi.xwpf.converter.core.utils;
 
-
 /**
  * String Utilities.
  */
@@ -70,6 +69,41 @@ public class StringUtils
     public static boolean isNotEmpty( String str )
     {
         return str != null && str.length() > 0;
+    }
+
+    /**
+     * Replace the oldString by the newString in the line and returns the result.
+     * 
+     * @param line the line to replace.
+     * @param oldString old token to replace.
+     * @param newString new token to replace.
+     * @return
+     */
+    public static final String replaceAll( String line, String oldString, String newString )
+    {
+        int i = 0;
+        if ( ( i = line.indexOf( oldString, i ) ) >= 0 )
+        {
+            char line2[] = line.toCharArray();
+            char newString2[] = newString.toCharArray();
+            int oLength = oldString.length();
+            StringBuilder buf = new StringBuilder( line2.length );
+            buf.append( line2, 0, i ).append( newString2 );
+            i += oLength;
+            int j;
+            for ( j = i; ( i = line.indexOf( oldString, i ) ) > 0; j = i )
+            {
+                buf.append( line2, j, i - j ).append( newString2 );
+                i += oLength;
+            }
+
+            buf.append( line2, j, line2.length - j );
+            return buf.toString();
+        }
+        else
+        {
+            return line;
+        }
     }
 
 }

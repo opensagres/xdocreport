@@ -28,7 +28,9 @@ import java.io.IOException;
 import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -42,11 +44,13 @@ import org.apache.poi.xwpf.usermodel.BodyElementType;
 import org.apache.poi.xwpf.usermodel.BodyType;
 import org.apache.poi.xwpf.usermodel.IBody;
 import org.apache.poi.xwpf.usermodel.IBodyElement;
+import org.apache.poi.xwpf.usermodel.XWPFAbstractNum;
 import org.apache.poi.xwpf.usermodel.XWPFDocument;
 import org.apache.poi.xwpf.usermodel.XWPFFooter;
 import org.apache.poi.xwpf.usermodel.XWPFHeader;
 import org.apache.poi.xwpf.usermodel.XWPFHyperlink;
 import org.apache.poi.xwpf.usermodel.XWPFHyperlinkRun;
+import org.apache.poi.xwpf.usermodel.XWPFNum;
 import org.apache.poi.xwpf.usermodel.XWPFParagraph;
 import org.apache.poi.xwpf.usermodel.XWPFPictureData;
 import org.apache.poi.xwpf.usermodel.XWPFRun;
@@ -68,11 +72,14 @@ import org.openxmlformats.schemas.drawingml.x2006.wordprocessingDrawing.STRelFro
 import org.openxmlformats.schemas.drawingml.x2006.wordprocessingDrawing.STRelFromV;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTBookmark;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTBr;
+import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTDecimalNumber;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTDrawing;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTEmpty;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTHdrFtr;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTHdrFtrRef;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTHyperlink;
+import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTLvl;
+import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTNumPr;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTOnOff;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTP;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTPPr;
@@ -86,6 +93,8 @@ import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTSdtRun;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTSectPr;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTSimpleField;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTSmartTagRun;
+import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTString;
+import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTStyle;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTTabs;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTTc;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTText;
@@ -122,9 +131,12 @@ public abstract class XWPFDocumentVisitor<T, O extends Options, E extends IXWPFM
 
     protected final O options;
 
-    private String currentInstrText;
-
     private boolean pageBreakOnNextParagraph;
+
+    /**
+     * Map of w:numId and ListContext
+     */
+    private Map<Integer, ListContext> listContextMap;
 
     public XWPFDocumentVisitor( XWPFDocument document, O options )
         throws Exception
@@ -255,20 +267,122 @@ public abstract class XWPFDocumentVisitor<T, O extends Options, E extends IXWPFM
             // to update the header/footer declared in the <w:headerReference/<w:footerReference
             masterPageManager.update( paragraph );
         }
-        this.currentInstrText = null;
         if ( pageBreakOnNextParagraph )
         {
             pageBreak();
         }
         this.pageBreakOnNextParagraph = false;
 
-        T paragraphContainer = startVisitParagraph( paragraph, container );
+        ListItemContext itemContext = null;
+        CTNumPr originalNumPr = stylesDocument.getParagraphNumPr( paragraph );
+        CTNumPr numPr = getNumPr( originalNumPr );
+        if ( numPr != null )
+        {
+            // paragraph is a numbered/bullet list
+            // see http://msdn.microsoft.com/en-us/library/office/ee922775%28v=office.14%29.aspx
+            // - <w:p>
+            // - <w:pPr>
+            // <w:pStyle w:val="style0" />
+            // - <w:numPr>
+            // <w:ilvl w:val="0" />
+            // <w:numId w:val="2" />
+            // </w:numPr>
+
+            // get numbering.xml/w:num
+            /**
+             * <w:num w:numId="2"> <w:abstractNumId w:val="1" /> </w:num>
+             */
+            XWPFNum num = getXWPFNum( numPr );
+            if ( num != null )
+            {
+                // get the abstractNum by usisng abstractNumId
+                /**
+                 * <w:abstractNum w:abstractNumId="1"> <w:nsid w:val="3CBA6E67" /> <w:multiLevelType
+                 * w:val="hybridMultilevel" /> <w:tmpl w:val="7416D4FA" /> - <w:lvl w:ilvl="0" w:tplc="040C0001">
+                 * <w:start w:val="1" /> <w:numFmt w:val="bullet" /> <w:lvlText w:val="o" /> <w:lvlJc w:val="left" /> -
+                 * <w:pPr> <w:ind w:left="720" w:hanging="360" /> </w:pPr> - <w:rPr> <w:rFonts w:ascii="Symbol"
+                 * w:hAnsi="Symbol" w:hint="default" /> </w:rPr> </w:lvl>
+                 */
+                XWPFAbstractNum abstractNum = getXWPFAbstractNum( num );
+
+                // get the <w:lvl by using abstractNum and numPr level
+                /**
+                 * <w:num w:numId="2"> <w:abstractNumId w:val="1" /> </w:num>
+                 */
+                CTDecimalNumber ilvl = numPr.getIlvl();
+                int level = ilvl != null ? ilvl.getVal().intValue() : 0;
+
+                CTLvl lvl = abstractNum.getAbstractNum().getLvlArray( level );
+                if ( lvl != null )
+                {
+                    ListContext listContext = getListContext( originalNumPr.getNumId().getVal().intValue() );
+                    itemContext = listContext.addItem( lvl );
+                }
+            }
+
+        }
+        T paragraphContainer = startVisitParagraph( paragraph, itemContext, container );
         visitParagraphBody( paragraph, index, paragraphContainer );
         endVisitParagraph( paragraph, container, paragraphContainer );
-        this.currentInstrText = null;
     }
 
-    protected abstract T startVisitParagraph( XWPFParagraph paragraph, T parentContainer )
+    private CTNumPr getNumPr( CTNumPr numPr )
+    {
+        if ( numPr != null )
+        {
+            XWPFNum num = getXWPFNum( numPr );
+            if ( num != null )
+            {
+                // get the abstractNum by usisng abstractNumId
+                /**
+                 * <w:abstractNum w:abstractNumId="1"> <w:nsid w:val="3CBA6E67" /> <w:multiLevelType
+                 * w:val="hybridMultilevel" /> <w:tmpl w:val="7416D4FA" /> - <w:lvl w:ilvl="0" w:tplc="040C0001">
+                 * <w:start w:val="1" /> <w:numFmt w:val="bullet" /> <w:lvlText w:val="o" /> <w:lvlJc w:val="left" /> -
+                 * <w:pPr> <w:ind w:left="720" w:hanging="360" /> </w:pPr> - <w:rPr> <w:rFonts w:ascii="Symbol"
+                 * w:hAnsi="Symbol" w:hint="default" /> </w:rPr> </w:lvl>
+                 */
+                XWPFAbstractNum abstractNum = getXWPFAbstractNum( num );
+
+                CTString numStyleLink = abstractNum.getAbstractNum().getNumStyleLink();
+                String styleId = numStyleLink != null ? numStyleLink.getVal() : null;
+                if ( styleId != null )
+                {
+
+                    // has w:numStyleLink which reference other style
+                    /*
+                     * <w:abstractNum w:abstractNumId="0"> <w:nsid w:val="03916EF0"/> <w:multiLevelType
+                     * w:val="multilevel"/> <w:tmpl w:val="0409001D"/> <w:numStyleLink w:val="EricsListStyle"/>
+                     * </w:abstractNum>
+                     */
+                    CTStyle style = stylesDocument.getStyle( styleId );
+                    CTPPr ppr = style.getPPr();
+                    if ( ppr == null )
+                    {
+                        return null;
+                    }
+                    return getNumPr( ppr.getNumPr() );
+                }
+            }
+        }
+        return numPr;
+    }
+
+    private ListContext getListContext( int numId )
+    {
+        if ( listContextMap == null )
+        {
+            listContextMap = new HashMap<Integer, ListContext>();
+        }
+        ListContext listContext = listContextMap.get( numId );
+        if ( listContext == null )
+        {
+            listContext = new ListContext();
+            listContextMap.put( numId, listContext );
+        }
+        return listContext;
+    }
+
+    protected abstract T startVisitParagraph( XWPFParagraph paragraph, ListItemContext itemContext, T parentContainer )
         throws Exception;
 
     protected abstract void endVisitParagraph( XWPFParagraph paragraph, T parentContainer, T paragraphContainer )
@@ -336,6 +450,22 @@ public abstract class XWPFDocumentVisitor<T, O extends Options, E extends IXWPFM
                 }
             }
         }
+    }
+
+    // ------------------------ Numbering --------------
+
+    protected XWPFNum getXWPFNum( CTNumPr numPr )
+    {
+        CTDecimalNumber numID = numPr.getNumId();
+        XWPFNum num = document.getNumbering().getNum( numID.getVal() );
+        return num;
+    }
+
+    protected XWPFAbstractNum getXWPFAbstractNum( XWPFNum num )
+    {
+        CTDecimalNumber abstractNumID = num.getCTNum().getAbstractNumId();
+        XWPFAbstractNum abstractNum = document.getNumbering().getAbstractNum( abstractNumID.getVal() );
+        return abstractNum;
     }
 
     /**
@@ -606,7 +736,7 @@ public abstract class XWPFDocumentVisitor<T, O extends Options, E extends IXWPFM
                 // in the normal text output
                 if ( "w:instrText".equals( tagName ) )
                 {
-                    currentInstrText = ctText.getStringValue();
+
                 }
                 else
                 {

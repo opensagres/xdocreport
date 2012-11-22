@@ -1,4 +1,4 @@
-package org.apache.poi.xwpf.converter.core.styles.pargraph;
+package org.apache.poi.xwpf.converter.core.styles.paragraph;
 
 import org.apache.poi.xwpf.converter.core.utils.XWPFUtils;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTPPr;

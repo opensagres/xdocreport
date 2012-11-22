@@ -1,4 +1,4 @@
-package org.apache.poi.xwpf.converter.core.styles.pargraph;
+package org.apache.poi.xwpf.converter.core.styles.paragraph;
 
 import java.awt.Color;
 

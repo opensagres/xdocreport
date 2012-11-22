@@ -50,6 +50,8 @@ public class StylableParagraph
 
     private IITextContainer parent;
 
+    private String listItemText;
+
     public StylableParagraph( StylableDocument ownerDocument, IITextContainer parent )
     {
         super();
@@ -186,5 +188,15 @@ public class StylableParagraph
                     break;
             }
         }
+    }
+
+    public String getListItemText()
+    {
+        return listItemText;
+    }
+
+    public void setListItemText( String listItemText )
+    {
+        this.listItemText = listItemText;
     }
 }

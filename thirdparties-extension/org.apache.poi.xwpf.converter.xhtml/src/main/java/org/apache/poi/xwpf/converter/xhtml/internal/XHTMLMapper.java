@@ -34,6 +34,7 @@ import java.util.List;
 
 import org.apache.poi.xwpf.converter.core.IURIResolver;
 import org.apache.poi.xwpf.converter.core.IXWPFMasterPage;
+import org.apache.poi.xwpf.converter.core.ListItemContext;
 import org.apache.poi.xwpf.converter.core.XWPFDocumentVisitor;
 import org.apache.poi.xwpf.converter.core.styles.XWPFStylesDocument;
 import org.apache.poi.xwpf.converter.core.utils.DxaUtil;
@@ -149,9 +150,9 @@ public class XHTMLMapper
     }
 
     @Override
-    protected Object startVisitParagraph( XWPFParagraph paragraph, Object parentContainer )
+    protected Object startVisitParagraph( XWPFParagraph paragraph, ListItemContext itemContext, Object parentContainer )
         throws Exception
-    {
+    {     
         // 1) create attributes
 
         // 1.1) Create "class" attributes.

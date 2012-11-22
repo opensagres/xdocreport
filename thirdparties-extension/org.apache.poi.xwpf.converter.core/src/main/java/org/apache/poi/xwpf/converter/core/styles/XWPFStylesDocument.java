@@ -15,19 +15,21 @@ import org.apache.poi.xwpf.converter.core.ParagraphLineSpacing;
 import org.apache.poi.xwpf.converter.core.TableCellBorder;
 import org.apache.poi.xwpf.converter.core.TableHeight;
 import org.apache.poi.xwpf.converter.core.TableWidth;
-import org.apache.poi.xwpf.converter.core.styles.pargraph.ParagraphAlignmentValueProvider;
-import org.apache.poi.xwpf.converter.core.styles.pargraph.ParagraphBackgroundColorValueProvider;
-import org.apache.poi.xwpf.converter.core.styles.pargraph.ParagraphBorderBottomValueProvider;
-import org.apache.poi.xwpf.converter.core.styles.pargraph.ParagraphBorderLeftValueProvider;
-import org.apache.poi.xwpf.converter.core.styles.pargraph.ParagraphBorderRightValueProvider;
-import org.apache.poi.xwpf.converter.core.styles.pargraph.ParagraphBorderTopValueProvider;
-import org.apache.poi.xwpf.converter.core.styles.pargraph.ParagraphIndentationFirstLineValueProvider;
-import org.apache.poi.xwpf.converter.core.styles.pargraph.ParagraphIndentationLeftValueProvider;
-import org.apache.poi.xwpf.converter.core.styles.pargraph.ParagraphIndentationRightValueProvider;
-import org.apache.poi.xwpf.converter.core.styles.pargraph.ParagraphLineSpacingValueProvider;
-import org.apache.poi.xwpf.converter.core.styles.pargraph.ParagraphSpacingAfterValueProvider;
-import org.apache.poi.xwpf.converter.core.styles.pargraph.ParagraphSpacingBeforeValueProvider;
-import org.apache.poi.xwpf.converter.core.styles.pargraph.ParagraphTabsValueProvider;
+import org.apache.poi.xwpf.converter.core.styles.paragraph.ParagraphAlignmentValueProvider;
+import org.apache.poi.xwpf.converter.core.styles.paragraph.ParagraphBackgroundColorValueProvider;
+import org.apache.poi.xwpf.converter.core.styles.paragraph.ParagraphBorderBottomValueProvider;
+import org.apache.poi.xwpf.converter.core.styles.paragraph.ParagraphBorderLeftValueProvider;
+import org.apache.poi.xwpf.converter.core.styles.paragraph.ParagraphBorderRightValueProvider;
+import org.apache.poi.xwpf.converter.core.styles.paragraph.ParagraphBorderTopValueProvider;
+import org.apache.poi.xwpf.converter.core.styles.paragraph.ParagraphIndentationFirstLineValueProvider;
+import org.apache.poi.xwpf.converter.core.styles.paragraph.ParagraphIndentationHangingValueProvider;
+import org.apache.poi.xwpf.converter.core.styles.paragraph.ParagraphIndentationLeftValueProvider;
+import org.apache.poi.xwpf.converter.core.styles.paragraph.ParagraphIndentationRightValueProvider;
+import org.apache.poi.xwpf.converter.core.styles.paragraph.ParagraphLineSpacingValueProvider;
+import org.apache.poi.xwpf.converter.core.styles.paragraph.ParagraphNumPrValueProvider;
+import org.apache.poi.xwpf.converter.core.styles.paragraph.ParagraphSpacingAfterValueProvider;
+import org.apache.poi.xwpf.converter.core.styles.paragraph.ParagraphSpacingBeforeValueProvider;
+import org.apache.poi.xwpf.converter.core.styles.paragraph.ParagraphTabsValueProvider;
 import org.apache.poi.xwpf.converter.core.styles.run.RunBackgroundColorValueProvider;
 import org.apache.poi.xwpf.converter.core.styles.run.RunFontColorValueProvider;
 import org.apache.poi.xwpf.converter.core.styles.run.RunFontFamilyValueProvider;
@@ -88,6 +90,7 @@ import org.apache.xmlbeans.XmlException;
 import org.openxmlformats.schemas.drawingml.x2006.main.ThemeDocument;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTBorder;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTDocDefaults;
+import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTNumPr;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTPPr;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTRPr;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTSettings;
@@ -284,6 +287,16 @@ public class XWPFStylesDocument
         return ParagraphIndentationFirstLineValueProvider.INSTANCE.getValue( pPr );
     }
 
+    public Float getIndentationHanging( XWPFParagraph paragraph )
+    {
+        return ParagraphIndentationHangingValueProvider.INSTANCE.getValue( paragraph, this );
+    }
+
+    public Float getIndentationHanging( CTPPr pPr )
+    {
+        return ParagraphIndentationHangingValueProvider.INSTANCE.getValue( pPr );
+    }
+    
     public Color getBackgroundColor( XWPFParagraph paragraph )
     {
         return ParagraphBackgroundColorValueProvider.INSTANCE.getValue( paragraph, this );
@@ -366,6 +379,16 @@ public class XWPFStylesDocument
     public ParagraphLineSpacing getParagraphSpacing( CTPPr pPr )
     {
         return ParagraphLineSpacingValueProvider.INSTANCE.getValue( pPr );
+    }
+
+    public CTNumPr getParagraphNumPr( XWPFParagraph docxParagraph )
+    {
+        return ParagraphNumPrValueProvider.INSTANCE.getValue( docxParagraph, this );
+    }
+
+    public CTNumPr getParagraphNumPr( CTPPr pPr )
+    {
+        return ParagraphNumPrValueProvider.INSTANCE.getValue( pPr );
     }
 
     // -------------------- Run

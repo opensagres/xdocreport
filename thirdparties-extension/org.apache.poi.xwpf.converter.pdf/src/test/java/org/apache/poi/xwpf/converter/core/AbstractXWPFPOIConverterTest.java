@@ -285,6 +285,13 @@ public abstract class AbstractXWPFPOIConverterTest
     }
 
     @Test
+    public void TestList()
+        throws IOException
+    {
+        doGenerate( "TestList.docx" );
+    }
+
+    @Test
     public void TestPageWithBorder()
         throws IOException
     {

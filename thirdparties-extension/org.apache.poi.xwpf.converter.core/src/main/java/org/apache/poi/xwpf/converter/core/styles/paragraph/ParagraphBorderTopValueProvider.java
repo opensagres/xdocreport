@@ -1,16 +1,16 @@
-package org.apache.poi.xwpf.converter.core.styles.pargraph;
+package org.apache.poi.xwpf.converter.core.styles.paragraph;
 
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTBorder;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTPBdr;
 
-public class ParagraphBorderLeftValueProvider
+public class ParagraphBorderTopValueProvider
     extends AbstractParagraphBorderValueProvider
 {
 
-    public static final ParagraphBorderLeftValueProvider INSTANCE = new ParagraphBorderLeftValueProvider();
+    public static final ParagraphBorderTopValueProvider INSTANCE = new ParagraphBorderTopValueProvider();
 
     protected CTBorder getBorder( CTPBdr border )
     {
-        return border.getLeft();
+        return border.getTop();
     }
 }

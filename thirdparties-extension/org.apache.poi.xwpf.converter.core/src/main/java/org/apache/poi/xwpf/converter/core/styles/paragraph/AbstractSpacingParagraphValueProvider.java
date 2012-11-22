@@ -1,33 +1,35 @@
-package org.apache.poi.xwpf.converter.core.styles.pargraph;
+package org.apache.poi.xwpf.converter.core.styles.paragraph;
 
 import org.apache.poi.xwpf.converter.core.styles.XWPFStylesDocument;
 import org.apache.poi.xwpf.usermodel.BodyType;
 import org.apache.poi.xwpf.usermodel.XWPFParagraph;
-import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTInd;
+import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTDocDefaults;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTPPr;
+import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTSpacing;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.STTblStyleOverrideType.Enum;
 
-public abstract class AbstractIndentationParagraphValueProvider<Value>
+public abstract class AbstractSpacingParagraphValueProvider<Value>
     extends AbstractParagraphValueProvider<Value>
 {
+
     @Override
     public Value getValue( CTPPr ppr )
     {
-        CTInd ind = getInd( ppr );
-        if ( ind == null )
+        CTSpacing spacing = getSpacing( ppr );
+        if ( spacing == null )
         {
             return null;
         }
-        return getValue( ind );
+        return getValue( spacing );
     }
 
-    public CTInd getInd( CTPPr pr )
+    public CTSpacing getSpacing( CTPPr ppr )
     {
-        if ( pr == null )
+        if ( ppr == null )
         {
             return null;
         }
-        return pr.getInd() == null ? null : pr.getInd();
+        return ppr.getSpacing();
     }
 
     @Override
@@ -40,7 +42,7 @@ public abstract class AbstractIndentationParagraphValueProvider<Value>
         }
         return super.getKeyBuffer( element, stylesDocument, styleId, type );
     }
-
-    public abstract Value getValue( CTInd ind );
+    
+    protected abstract Value getValue( CTSpacing ind );
 
 }

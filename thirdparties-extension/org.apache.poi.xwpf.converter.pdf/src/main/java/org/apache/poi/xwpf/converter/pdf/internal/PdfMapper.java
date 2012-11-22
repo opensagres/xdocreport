@@ -10,13 +10,15 @@ import java.util.logging.Logger;
 
 import org.apache.poi.xwpf.converter.core.BorderSide;
 import org.apache.poi.xwpf.converter.core.IXWPFMasterPage;
+import org.apache.poi.xwpf.converter.core.ListItemContext;
 import org.apache.poi.xwpf.converter.core.ParagraphLineSpacing;
 import org.apache.poi.xwpf.converter.core.TableCellBorder;
 import org.apache.poi.xwpf.converter.core.TableHeight;
 import org.apache.poi.xwpf.converter.core.TableWidth;
 import org.apache.poi.xwpf.converter.core.XWPFDocumentVisitor;
-import org.apache.poi.xwpf.converter.core.styles.pargraph.ParagraphIndentationLeftValueProvider;
+import org.apache.poi.xwpf.converter.core.styles.paragraph.ParagraphIndentationLeftValueProvider;
 import org.apache.poi.xwpf.converter.core.utils.DxaUtil;
+import org.apache.poi.xwpf.converter.core.utils.StringUtils;
 import org.apache.poi.xwpf.converter.pdf.PdfOptions;
 import org.apache.poi.xwpf.converter.pdf.internal.elements.StylableAnchor;
 import org.apache.poi.xwpf.converter.pdf.internal.elements.StylableDocument;
@@ -28,11 +30,9 @@ import org.apache.poi.xwpf.converter.pdf.internal.elements.StylableTableCell;
 import org.apache.poi.xwpf.usermodel.IBodyElement;
 import org.apache.poi.xwpf.usermodel.ParagraphAlignment;
 import org.apache.poi.xwpf.usermodel.UnderlinePatterns;
-import org.apache.poi.xwpf.usermodel.XWPFAbstractNum;
 import org.apache.poi.xwpf.usermodel.XWPFDocument;
 import org.apache.poi.xwpf.usermodel.XWPFFooter;
 import org.apache.poi.xwpf.usermodel.XWPFHeader;
-import org.apache.poi.xwpf.usermodel.XWPFNum;
 import org.apache.poi.xwpf.usermodel.XWPFParagraph;
 import org.apache.poi.xwpf.usermodel.XWPFPictureData;
 import org.apache.poi.xwpf.usermodel.XWPFRun;
@@ -46,10 +46,8 @@ import org.openxmlformats.schemas.drawingml.x2006.wordprocessingDrawing.STRelFro
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTBookmark;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTBorder;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTBr;
-import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTDecimalNumber;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTHdrFtrRef;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTLvl;
-import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTNumPr;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTPPr;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTPTab;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTSectPr;
@@ -184,12 +182,13 @@ public class PdfMapper
     // ------------------------- Paragraph
 
     @Override
-    protected IITextContainer startVisitParagraph( XWPFParagraph docxParagraph, IITextContainer pdfParentContainer )
+    protected IITextContainer startVisitParagraph( XWPFParagraph docxParagraph, ListItemContext itemContext,
+                                                   IITextContainer pdfParentContainer )
         throws Exception
     {
         this.currentRunX = null;
 
-        // instanciate a pdfParagraph
+        // create PDF paragraph
         StylableParagraph pdfParagraph = pdfDocument.createParagraph( pdfParentContainer );
 
         // indentation left
@@ -209,6 +208,12 @@ public class PdfMapper
         if ( indentationFirstLine != null )
         {
             pdfParagraph.setFirstLineIndent( indentationFirstLine );
+        }
+        // indentation hanging (remove first line)
+        Float indentationHanging = stylesDocument.getIndentationHanging( docxParagraph );
+        if ( indentationHanging != null )
+        {
+            pdfParagraph.setFirstLineIndent( -indentationHanging );
         }
 
         // // spacing before
@@ -289,41 +294,24 @@ public class PdfMapper
         CTBorder borderRight = stylesDocument.getBorderRight( docxParagraph );
         pdfParagraph.setBorder( borderRight, Rectangle.RIGHT );
 
-        CTPPr ppr = docxParagraph.getCTP().getPPr();
-        if ( ppr != null )
+        if ( itemContext != null )
         {
-            CTNumPr numPr = ppr.getNumPr();
-            if ( numPr != null )
+            CTLvl lvl = itemContext.getLvl();
+            CTPPr lvlPPr = lvl.getPPr();
+            if ( lvlPPr != null )
             {
-                // - <w:p>
-                // - <w:pPr>
-                // <w:pStyle w:val="style0" />
-                // - <w:numPr>
-                // <w:ilvl w:val="0" />
-                // <w:numId w:val="2" />
-                // </w:numPr>
-
-                CTDecimalNumber ilvl = numPr.getIlvl();
-
-                CTDecimalNumber numID = numPr.getNumId();
-                XWPFNum num = document.getNumbering().getNum( numID.getVal() );
-                if ( num != null )
+                Float indLeft = ParagraphIndentationLeftValueProvider.INSTANCE.getValue( lvlPPr );
+                if ( indLeft != null )
                 {
-                    CTDecimalNumber abstractNumID = num.getCTNum().getAbstractNumId();
-                    XWPFAbstractNum abstractNum = document.getNumbering().getAbstractNum( abstractNumID.getVal() );
-
-                    CTLvl lvl = abstractNum.getAbstractNum().getLvlArray( ilvl.getVal().intValue() );
-                    CTPPr lvlPPr = lvl.getPPr();
-                    if ( lvlPPr != null )
-                    {
-                        Float indLeft = ParagraphIndentationLeftValueProvider.INSTANCE.getValue( lvlPPr );
-                        if ( indLeft != null )
-                        {
-                            pdfParagraph.setIndentationLeft( indLeft );
-                        }
-                    }
+                    pdfParagraph.setIndentationLeft( indLeft );
+                }
+                Float hanging = stylesDocument.getIndentationHanging( lvlPPr );
+                if ( hanging != null )
+                {
+                    pdfParagraph.setFirstLineIndent( -hanging );
                 }
             }
+            pdfParagraph.setListItemText( itemContext.getText() );
         }
         return pdfParagraph;
     }
@@ -412,6 +400,18 @@ public class PdfMapper
             this.currentRunBackgroundColor = stylesDocument.getTextHighlighting( docxRun );
         }
 
+        // addd symbol list item chunk if needed.
+        StylableParagraph pdfParagraph = (StylableParagraph) pdfParagraphContainer;
+        String listItemText = pdfParagraph.getListItemText();
+        if ( StringUtils.isNotEmpty( listItemText ) )
+        {
+            // FIXME: add some space after the list item
+            listItemText += "    ";
+            Chunk symbol = createTextChunk( listItemText, false );
+            pdfParagraph.add( symbol );
+            pdfParagraph.setListItemText( null );
+        }
+
         IITextContainer container = pdfParagraphContainer;
         if ( url != null )
         {
@@ -445,9 +445,13 @@ public class PdfMapper
     private Chunk createTextChunk( CTText docxText, boolean pageNumber )
     {
 
+        return createTextChunk( docxText.getStringValue(), pageNumber );
+    }
+
+    private Chunk createTextChunk( String text, boolean pageNumber )
+    {
         Chunk textChunk =
-            pageNumber ? new ExtendedChunk( pdfDocument, true, currentRunFont ) : new Chunk( docxText.getStringValue(),
-                                                                                             currentRunFont );
+            pageNumber ? new ExtendedChunk( pdfDocument, true, currentRunFont ) : new Chunk( text, currentRunFont );
 
         if ( currentRunUnderlinePatterns != null )
         {

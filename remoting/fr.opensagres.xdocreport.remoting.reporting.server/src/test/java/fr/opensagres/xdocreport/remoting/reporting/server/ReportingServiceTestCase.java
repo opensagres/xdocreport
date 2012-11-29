@@ -71,7 +71,7 @@ public class ReportingServiceTestCase
         parts[2] = new StringPart( "data", jsonData );        
         
         parts[3] = new StringPart( "dataType", "json" );
-        parts[4] = new StringPart( "outFileName", "report.docx" );
+        parts[4] = new StringPart( "download", "true" );
         post.setRequestEntity( new MultipartRequestEntity( parts, post.getParams() ) );
 
         HttpClient httpclient = new HttpClient();
@@ -80,7 +80,7 @@ public class ReportingServiceTestCase
         {
             int result = httpclient.executeMethod( post );
             Assert.assertEquals( 200, result );
-            Assert.assertEquals( "attachment; filename=\"report.docx\"",
+            Assert.assertEquals( "attachment; filename=\"Out_DocxProjectWithVelocityAndImageList.docx\"",
                                  post.getResponseHeader( "Content-Disposition" ).getValue() );
 
             byte[] convertedDocument = post.getResponseBody();

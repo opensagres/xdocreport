@@ -38,8 +38,6 @@ public class ConverterServiceImpl
     implements ConverterService
 {
 
-    private static final String DOWNLOAD_OPERATION = "download";
-
     private static final Logger LOGGER = LogUtils.getLogger( ConverterServiceImpl.class );
 
     @POST

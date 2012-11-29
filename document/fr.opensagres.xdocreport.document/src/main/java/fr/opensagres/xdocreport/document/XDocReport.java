@@ -367,10 +367,10 @@ public class XDocReport
     {
         if ( sourceStream == null )
         {
-            throw new XDocReportException( "Input stream is null with reportId=" );
+            throw new XDocReportException( "Input stream is null" );
         }
-        IXDocReport report = registry.loadReport( sourceStream, templateEngineKind, false );
-        report.setFieldsMetadata( metadata );
+        IXDocReport report = loadReport( sourceStream, templateEngineKind, metadata, registry );
+        report.process( contextMap, out );
         return report;
     }
 
@@ -415,8 +415,34 @@ public class XDocReport
                                                         Options options, OutputStream out, XDocReportRegistry registry )
         throws IOException, XDocReportException
     {
-        IXDocReport report = generateReport( sourceStream, templateEngineKind, metadata, contextMap, out, registry );
+        IXDocReport report = loadReport( sourceStream, templateEngineKind, metadata, registry );
         report.convert( contextMap, options, out );
+        return report;
+    }
+
+    /**
+     * Load the template report by using the given controller and cache it to the given registry
+     * 
+     * @param reportId the report id used to retrieves from the cache the template report if it is already loaded.
+     * @param controller the controller used to load the template report.
+     * @param registry
+     * @return an instance of the loaded template report.
+     * @throws IOException
+     * @throws XDocReportException
+     */
+    public static IXDocReport loadReport( InputStream sourceStream, String templateEngineKind, FieldsMetadata metadata,
+                                          XDocReportRegistry registry )
+        throws IOException, XDocReportException
+    {
+        // 1) Get sourceStream
+        if ( sourceStream == null )
+        {
+            throw new XDocReportException( "Input stream is null " );
+        }
+        // 2) Load report with template engine kind
+        IXDocReport report = registry.loadReport( sourceStream, null, templateEngineKind, false );
+        // 3) Set FieldsMetaData
+        report.setFieldsMetadata( metadata );
         return report;
     }
 

@@ -9,10 +9,11 @@
 	</parent>
 	<packaging>pom</packaging>
 	<modules>
-
+		<!-- SOAP/REST resources service -->
 		<module>fr.opensagres.xdocreport.remoting.resources</module>
 		<module>fr.opensagres.xdocreport.remoting.resources.services.client</module>
 		<module>fr.opensagres.xdocreport.remoting.resources.services.server</module>
+		<!-- REST converter service -->		
 		<module>fr.opensagres.xdocreport.remoting.converter</module>
 		<module>fr.opensagres.xdocreport.remoting.converter.server</module>
 		<!-- TODO ?
@@ -20,6 +21,9 @@
 			fr.opensagres.xdocreport.remoting.converter.client
 		</module>
 		-->
+		<!-- REST reporting service -->		
+		<module>fr.opensagres.xdocreport.remoting.reporting</module>
+		<module>fr.opensagres.xdocreport.remoting.reporting.server</module>		
 	</modules>
 	<dependencies>
 		<dependency>

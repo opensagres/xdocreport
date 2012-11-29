@@ -1,4 +1,4 @@
-package fr.opensagres.xdocreport.remoting.converter.server;
+package fr.opensagres.xdocreport.remoting.reporting.server;
 
 import java.io.ByteArrayInputStream;
 import java.io.File;
@@ -16,11 +16,9 @@ import org.junit.Assert;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
-import fr.opensagres.xdocreport.converter.ConverterTypeTo;
-import fr.opensagres.xdocreport.converter.ConverterTypeVia;
 import fr.opensagres.xdocreport.core.io.IOUtils;
 
-public class JAXWSResourcesServiceClientTestCase
+public class ReportingServiceTestCase
 {
 
     private static final int PORT = 8082;
@@ -29,64 +27,51 @@ public class JAXWSResourcesServiceClientTestCase
 
     private static final String BASE_ADDRESS = ROOT_ADDRESS;
 
-    private String root = JAXWSResourcesServiceClientTestCase.class.getClassLoader().getResource( "." ).getFile();
+    private String root = ReportingServiceTestCase.class.getClassLoader().getResource( "." ).getFile();
 
     @BeforeClass
     public static void startServer()
         throws Exception
     {
         JAXRSServerFactoryBean sf = new JAXRSServerFactoryBean();
-        sf.setResourceClasses( ConverterServiceImpl.class );
+        sf.setResourceClasses( ReportingServiceImpl.class );
         sf.setAddress( ROOT_ADDRESS );
         Server server = sf.create();
         System.out.println( server.getEndpoint() );
     }
-
-    // @Test
-    // public void convertPDF_OLD() throws Exception {
-    // List<Object> providers = new ArrayList<Object>();
-    // providers.add(new BinaryFileMessageBodyReader());
-    //
-    // ConverterService converterService = JAXRSClientFactory.create(
-    // BASE_ADDRESS, ConverterService.class, providers);
-    //
-    // String fileName = "ODTCV.odt";
-    //
-    // FileInputStream fileInputStream = new FileInputStream(new File(root,
-    // fileName));
-    // Request request = new Request();
-    // request.setFilename(fileName);
-    //
-    // request.setContent(IOUtils.toByteArray(fileInputStream));
-    //
-    // BinaryFile response = converterService.convertPDF(request);
-    // Assert.assertEquals(fileName + ".pdf", response.getFileName());
-    //
-    // FileOutputStream out = new FileOutputStream(new File(root,
-    // response.getFileName()));
-    //
-    // IOUtils.copyLarge(response.getContent(), out);
-    // out.close();
-    // System.out.println(response.getContent().available());
-    // }
 
     @Test
     public void convertPDF()
         throws Exception
     {
 
-        PostMethod post = new PostMethod( "http://localhost:" + PORT + "/convert" );
+        PostMethod post = new PostMethod( "http://localhost:" + PORT + "/report" );
 
         String ct = "multipart/mixed";
         post.setRequestHeader( "Content-Type", ct );
-        Part[] parts = new Part[4];
-        String fileName = "ODTCV.odt";
+        Part[] parts = new Part[5];
+        String fileName = "DocxProjectWithVelocityAndImageList.docx";
 
         parts[0] =
-            new FilePart( "document", new File( root, fileName ), "application/vnd.oasis.opendocument.text", "UTF-8" );
-        parts[1] = new StringPart( "outputFormat", ConverterTypeTo.PDF.name() );
-        parts[2] = new StringPart( "via", ConverterTypeVia.ODFDOM.name() );
-        parts[3] = new StringPart( "download", "true" );
+            new FilePart( "templateDocument", new File( root, fileName ), "application/vnd.oasis.opendocument.text",
+                          "UTF-8" );
+        parts[1] = new StringPart( "templateEngineKind", "Velocity" );
+        
+        // JSON data which must be merged with the docx template
+        String jsonData = 
+                "{" +
+        		  "project:" +
+        		  "{Name:'XDocReport', URL:'http://code.google.com/p/xdocreport'}, " +
+        		  "developers:" +
+        		  "[" +
+        		   "{Name: 'ZERR', Mail: 'angelo.zerr@gmail.com',LastName: 'Angelo'}," +
+        		   "{Name: 'Leclercq', Mail: 'pascal.leclercq@gmail.com',LastName: 'Pascals'}," + 
+        		  "]" +
+        		"}";
+        parts[2] = new StringPart( "data", jsonData );        
+        
+        parts[3] = new StringPart( "dataType", "json" );
+        parts[4] = new StringPart( "outFileName", "report.docx" );
         post.setRequestEntity( new MultipartRequestEntity( parts, post.getParams() ) );
 
         HttpClient httpclient = new HttpClient();
@@ -95,13 +80,13 @@ public class JAXWSResourcesServiceClientTestCase
         {
             int result = httpclient.executeMethod( post );
             Assert.assertEquals( 200, result );
-            Assert.assertEquals( "attachment; filename=\"ODTCV_odt.pdf\"",
+            Assert.assertEquals( "attachment; filename=\"report.docx\"",
                                  post.getResponseHeader( "Content-Disposition" ).getValue() );
 
             byte[] convertedDocument = post.getResponseBody();
             Assert.assertNotNull( convertedDocument );
 
-            File outFile = new File( "target/ODTCV_odt.pdf" );
+            File outFile = new File( "target/report.docx" );
             outFile.getParentFile().mkdirs();
             IOUtils.copy( new ByteArrayInputStream( convertedDocument ), new FileOutputStream( outFile ) );
 

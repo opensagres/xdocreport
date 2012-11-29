@@ -49,8 +49,8 @@ public class ReportingServiceImpl
     final DataSource templateDocument, @Multipart( "data" )
     String data, @Multipart( "dataType" )
     String dataType, @Multipart( "templateEngineKind" )
-    final String templateEngineKind, @Multipart( "outFileName" )
-    final String outFileName )
+    final String templateEngineKind, @Multipart( "download" )
+    final boolean download )
     {
         try
         {
@@ -60,7 +60,7 @@ public class ReportingServiceImpl
             final IXDocReport report =
                 XDocReport.loadReport( templateDocument.getInputStream(), templateEngineKind, metadata,
                                        XDocReportRegistry.getRegistry() );
-            return doReport( report, data, dataType, outFileName );
+            return doReport( report, data, dataType, templateDocument.getName(), download );
         }
         catch ( Exception e )
         {
@@ -75,8 +75,8 @@ public class ReportingServiceImpl
     public Response report2( String reportId, @Multipart( "data" )
     String data, @Multipart( "dataType" )
     String dataType, @Multipart( "templateEngineKind" )
-    final String templateEngineKind, @Multipart( "outFileName" )
-    final String outFileName )
+    final String templateEngineKind, @Multipart( "download" )
+    final boolean download )
     {
         try
         {
@@ -85,7 +85,7 @@ public class ReportingServiceImpl
             // Load report
 
             final IXDocReport report = null;
-            return doReport( report, data, dataType, outFileName );
+            return doReport( report, data, dataType, "TODO",  download );
         }
         catch ( Exception e )
         {
@@ -93,7 +93,7 @@ public class ReportingServiceImpl
         }
     }
 
-    private Response doReport( final IXDocReport report, String data, String dataType, final String outFileName )
+    private Response doReport( final IXDocReport report, String data, String dataType, String inFileName, final boolean download )
         throws Exception
     {
         // Transform string data to Map.
@@ -145,10 +145,12 @@ public class ReportingServiceImpl
         ResponseBuilder responseBuilder =
             Response.ok( output, MediaType.valueOf( report.getMimeMapping().getMimeType() ) );
 
-        if ( StringUtils.isNotEmpty( outFileName ) )
+        if ( download )
         {
             // The generated report document must be downloaded, add the well
             // // content-disposition header.
+            // TODO : manage name of the generated report
+            String outFileName = "Out_" + inFileName;
             responseBuilder.header( HttpHeaderUtils.CONTENT_DISPOSITION_HEADER,
                                     HttpHeaderUtils.getAttachmentFileName( outFileName ) );
         }

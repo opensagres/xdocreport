@@ -5,22 +5,25 @@ import java.util.Set;
 
 import javax.ws.rs.core.Application;
 
+/**
+ * JAX-RS Application to register the {@link ConverterServiceImpl}.
+ */
+public class ConverterApplication
+    extends Application
+{
 
-public class ConverterApplication extends Application {
-
-
-
-	@Override
-    public Set<Class<?>> getClasses() {
+    @Override
+    public Set<Class<?>> getClasses()
+    {
         Set<Class<?>> classes = new HashSet<Class<?>>();
-        classes.add(ConverterResourceImpl.class);
+        classes.add( ConverterServiceImpl.class );
         return classes;
     }
 
-	@Override
-	public Set<Object> getSingletons() {
-		Set<Object> classes = new HashSet<Object>();
-		classes.add(new BinaryFileMessageBodyWriter());
-		return classes;
-	}
+    @Override
+    public Set<Object> getSingletons()
+    {
+        Set<Object> classes = new HashSet<Object>();
+        return classes;
+    }
 }

@@ -1,7 +1,5 @@
 package fr.opensagres.xdocreport.remoting.converter.server;
 
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.util.logging.Level;
@@ -30,73 +28,36 @@ import fr.opensagres.xdocreport.core.io.IOUtils;
 import fr.opensagres.xdocreport.core.logging.LogUtils;
 import fr.opensagres.xdocreport.core.utils.Assert;
 import fr.opensagres.xdocreport.core.utils.HttpHeaderUtils;
-import fr.opensagres.xdocreport.remoting.converter.BinaryFile;
-import fr.opensagres.xdocreport.remoting.converter.ConverterResource;
-import fr.opensagres.xdocreport.remoting.converter.Request;
+import fr.opensagres.xdocreport.remoting.converter.ConverterService;
 
 /**
- * Converter REST Web Service
- *
- * @author pleclercq
+ * Document converter REST Web Service implementation.
  */
 @Path( "/" )
-public class ConverterResourceImpl
-    implements ConverterResource
+public class ConverterServiceImpl
+    implements ConverterService
 {
 
     private static final String DOWNLOAD_OPERATION = "download";
 
-    private static final Logger LOGGER = LogUtils.getLogger( ConverterResourceImpl.class );
-
-    @Deprecated
-    public BinaryFile convertPDF( Request request )
-    {
-        ByteArrayOutputStream out = new ByteArrayOutputStream();
-        // 1) Create options ODT 2 PDF to select well converter form the
-        // registry
-        ConverterTypeTo to = ConverterTypeTo.PDF;
-        Options options = Options.getFrom( DocumentKind.ODT ).to( to );
-
-        // 2) Get the converter from the registry
-        IConverter converter = ConverterRegistry.getRegistry().getConverter( options );
-
-        // 3) Convert ODT 2 PDF
-
-        try
-        {
-
-            converter.convert( new ByteArrayInputStream( request.getContent() ), out, options );
-        }
-        catch ( XDocConverterException e )
-        {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        }
-
-        BinaryFile response = new BinaryFile();
-
-        response.setContent( new ByteArrayInputStream( out.toByteArray() ) );
-        response.setFileName( request.getFilename() + ".pdf" );
-
-        return response;
-    }
+    private static final Logger LOGGER = LogUtils.getLogger( ConverterServiceImpl.class );
 
     @POST
     @Consumes( MediaType.WILDCARD )
     @Produces( MediaType.WILDCARD )
     @Path( "/convert" )
-    public Response convert(
-    		@Multipart( "outputFormat" ) String outputFormat,
-    		@Multipart( "datafile" ) final DataSource content,
-    		@Multipart( "operation" ) String operation,
-    		@Multipart( "via" ) final String via )
+    public Response convert( @Multipart( "document" )
+    final DataSource content, @Multipart( "outputFormat" )
+    String outputFormat, @Multipart( "via" )
+    final String via, @Multipart( "download" )
+    boolean download )
     {
+
         try
         {
-        	Assert.notNull(content.getName(), "file is required");
-        	Assert.notNull(outputFormat, "outputFormat is required");
-        	Assert.notNull(via, "via is required");
-        	Assert.notNull(operation, "operation is required");
+            Assert.notNull( content.getName(), "file is required" );
+            Assert.notNull( outputFormat, "outputFormat is required" );
+            Assert.notNull( via, "via is required" );
             // 1) Get the converter type to use
             ConverterTypeTo to = ConverterTypeTo.valueOf( outputFormat );
             if ( to == null )
@@ -130,7 +91,8 @@ public class ConverterResourceImpl
 
                         if ( LOGGER.isLoggable( Level.INFO ) )
                         {
-                            LOGGER.info( "Time spent to convert "+content.getName() +": "+  ( System.currentTimeMillis() - start ) + " ms using "+via );
+                            LOGGER.info( "Time spent to convert " + content.getName() + ": "
+                                + ( System.currentTimeMillis() - start ) + " ms using " + via );
                         }
                     }
                     catch ( XDocConverterException e )
@@ -141,7 +103,8 @@ public class ConverterResourceImpl
                             LOGGER.log( Level.SEVERE, "Converter error", e );
                         }
                         throw new WebApplicationException( e );
-                    } catch ( RuntimeException e )
+                    }
+                    catch ( RuntimeException e )
                     {
 
                         if ( LOGGER.isLoggable( Level.SEVERE ) )
@@ -159,7 +122,7 @@ public class ConverterResourceImpl
             };
             // 5) Create the JAX-RS response builder.
             ResponseBuilder responseBuilder = Response.ok( output, MediaType.valueOf( to.getMimeType() ) );
-            if ( isDownload( operation ) )
+            if ( download )
             {
                 // The converted document must be downloaded, add teh well content-disposition header.
                 String fileName = content.getName();
@@ -171,24 +134,13 @@ public class ConverterResourceImpl
         }
         catch ( Exception e )
         {
-            throw new RuntimeException( e);
+            throw new RuntimeException( e );
         }
     }
 
     /**
-     * Returns true if operation is download and false otherwise.
-     *
-     * @param operation
-     * @return
-     */
-    private boolean isDownload( String operation )
-    {
-        return DOWNLOAD_OPERATION.equals( operation );
-    }
-
-    /**
      * Returns the output file name.
-     *
+     * 
      * @param filename
      * @param to
      * @return

@@ -41,6 +41,20 @@
 			<scope>test</scope>
 		</dependency>
 
+		<!-- converter -->
+		<dependency>
+			<groupId>fr.opensagres.xdocreport</groupId>
+			<artifactId>fr.opensagres.xdocreport.converter.odt.odfdom</artifactId>
+			<version>1.0.0-SNAPSHOT</version>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>fr.opensagres.xdocreport</groupId>
+			<artifactId>fr.opensagres.xdocreport.converter.docx.xwpf</artifactId>
+			<version>1.0.0-SNAPSHOT</version>
+			<scope>test</scope>			
+		</dependency>
+		
 		<!-- Jetty is extremely convenient for testing REST and WS -->
 		<dependency>
 			<groupId>org.eclipse.jetty</groupId>

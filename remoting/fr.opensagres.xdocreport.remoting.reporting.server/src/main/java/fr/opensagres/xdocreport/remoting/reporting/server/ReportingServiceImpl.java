@@ -21,6 +21,9 @@ import javax.ws.rs.core.StreamingOutput;
 import org.apache.cxf.jaxrs.ext.multipart.Multipart;
 import org.xml.sax.SAXException;
 
+import fr.opensagres.xdocreport.converter.IConverter;
+import fr.opensagres.xdocreport.converter.Options;
+import fr.opensagres.xdocreport.converter.XDocConverterException;
 import fr.opensagres.xdocreport.core.XDocReportException;
 import fr.opensagres.xdocreport.core.io.IOUtils;
 import fr.opensagres.xdocreport.core.logging.LogUtils;
@@ -50,11 +53,13 @@ public class ReportingServiceImpl
     @Path( "/report" )
     public Response report( @Multipart( "templateDocument" )
     DataSource templateDocument, @Multipart( "templateEngineKind" )
-    String templateEngineKind, @Multipart( "metadata" )
+    String templateEngineKind, @Multipart( value = "metadata", required = false )
     String xmlFieldsMetadata, @Multipart( "data" )
-    String data, @Multipart( "dataType" )
+    String data, @Multipart( value = "dataType", required = false )
     String dataType, @Multipart( "outFileName" )
-    String outFileName )
+    String outFileName, @Multipart( value = "outFormat", required = false )
+    String outFormat, @Multipart( value = "outFormatVia", required = false )
+    final String via )
     {
         try
         {
@@ -63,7 +68,7 @@ public class ReportingServiceImpl
             final IXDocReport report =
                 XDocReport.loadReport( templateDocument.getInputStream(), templateEngineKind, metadata,
                                        XDocReportRegistry.getRegistry() );
-            return doReport( report, data, dataType, outFileName );
+            return doReport( report, data, dataType, outFileName, outFormat, via );
         }
         catch ( Exception e )
         {
@@ -87,10 +92,12 @@ public class ReportingServiceImpl
     @Produces( MediaType.WILDCARD )
     @Path( "/report2" )
     public Response report2( String reportId, @Multipart( "data" )
-    String data, @Multipart( "dataType" )
+    String data, @Multipart( value = "dataType", required = false )
     String dataType, @Multipart( "templateEngineKind" )
     final String templateEngineKind, @Multipart( "outFileName" )
-    final String outFileName )
+    final String outFileName, @Multipart( value = "outFormat", required = false )
+    String outFormat, @Multipart( value = "outFormatVia", required = false )
+    final String via )
     {
         try
         {
@@ -99,7 +106,7 @@ public class ReportingServiceImpl
             // Load report
 
             final IXDocReport report = null;
-            return doReport( report, data, dataType, outFileName );
+            return doReport( report, data, dataType, outFileName, outFormat, via );
         }
         catch ( Exception e )
         {
@@ -107,12 +114,14 @@ public class ReportingServiceImpl
         }
     }
 
-    private Response doReport( final IXDocReport report, String data, String dataType, final String outFileName )
+    private Response doReport( final IXDocReport report, String data, String dataType, final String outFileName,
+                               final String outFormat, final String via )
         throws Exception
     {
         // Transform string data to Map.
         final Map contextMap = toMap( data, dataType );
 
+        Options options = getOptions( outFormat, via );
         StreamingOutput output = new StreamingOutput()
         {
             public void write( OutputStream out )
@@ -122,8 +131,15 @@ public class ReportingServiceImpl
                 {
                     long start = System.currentTimeMillis();
 
-                    report.process( contextMap, out );
-
+                    if ( StringUtils.isNotEmpty( outFormat ) )
+                    {
+                        Options options = getOptions( outFormat, via );
+                        report.convert( contextMap, options, out );
+                    }
+                    else
+                    {
+                        report.process( contextMap, out );
+                    }
                     if ( LOGGER.isLoggable( Level.INFO ) )
                     {
                         LOGGER.info( "Time spent to generate report " + report.getId() + ": "
@@ -154,10 +170,12 @@ public class ReportingServiceImpl
                 }
 
             }
+
         };
         // 5) Create the JAX-RS response builder.
-        ResponseBuilder responseBuilder =
-            Response.ok( output, MediaType.valueOf( report.getMimeMapping().getMimeType() ) );
+        MediaType mediaType = getMediaType( report, options );
+
+        ResponseBuilder responseBuilder = Response.ok( output, mediaType );
 
         if ( StringUtils.isNotEmpty( outFileName ) )
         {
@@ -168,6 +186,31 @@ public class ReportingServiceImpl
         }
         return responseBuilder.build();
 
+    }
+
+    private MediaType getMediaType( IXDocReport report, Options options )
+        throws XDocConverterException
+    {
+        if ( options == null )
+        {
+            return MediaType.valueOf( report.getMimeMapping().getMimeType() );
+        }
+        IConverter converter = report.getConverter( options );
+        return MediaType.valueOf( converter.getMimeMapping().getMimeType() );
+    }
+
+    private Options getOptions( final String outFormat, final String via )
+    {
+        if ( StringUtils.isEmpty( outFormat ) )
+        {
+            return null;
+        }
+        Options options = Options.getTo( outFormat );
+        if ( StringUtils.isNotEmpty( via ) )
+        {
+            options.via( via );
+        }
+        return options;
     }
 
     protected Map toMap( String data, String dataType )

@@ -2,6 +2,7 @@ package fr.opensagres.xdocreport.remoting.reporting.server;
 
 import java.io.IOException;
 import java.io.OutputStream;
+import java.io.StringReader;
 import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -18,6 +19,7 @@ import javax.ws.rs.core.Response.ResponseBuilder;
 import javax.ws.rs.core.StreamingOutput;
 
 import org.apache.cxf.jaxrs.ext.multipart.Multipart;
+import org.xml.sax.SAXException;
 
 import fr.opensagres.xdocreport.core.XDocReportException;
 import fr.opensagres.xdocreport.core.io.IOUtils;
@@ -30,6 +32,7 @@ import fr.opensagres.xdocreport.document.registry.XDocReportRegistry;
 import fr.opensagres.xdocreport.remoting.reporting.ReportingService;
 import fr.opensagres.xdocreport.remoting.reporting.json.JSONObject;
 import fr.opensagres.xdocreport.template.formatter.FieldsMetadata;
+import fr.opensagres.xdocreport.template.formatter.FieldsMetadataXMLSerializer;
 
 /**
  * Reporting REST Web Service implementation.
@@ -46,26 +49,37 @@ public class ReportingServiceImpl
     @Produces( MediaType.WILDCARD )
     @Path( "/report" )
     public Response report( @Multipart( "templateDocument" )
-    final DataSource templateDocument, @Multipart( "data" )
+    DataSource templateDocument, @Multipart( "templateEngineKind" )
+    String templateEngineKind, @Multipart( "metadata" )
+    String xmlFieldsMetadata, @Multipart( "data" )
     String data, @Multipart( "dataType" )
-    String dataType, @Multipart( "templateEngineKind" )
-    final String templateEngineKind, @Multipart( "download" )
-    final boolean download )
+    String dataType, @Multipart( "outFileName" )
+    String outFileName )
     {
         try
         {
-            // TODO : manage FieldsMetadata
-            FieldsMetadata metadata = null;
+            FieldsMetadata metadata = getFieldsMetadata( xmlFieldsMetadata );
             // Load report
             final IXDocReport report =
                 XDocReport.loadReport( templateDocument.getInputStream(), templateEngineKind, metadata,
                                        XDocReportRegistry.getRegistry() );
-            return doReport( report, data, dataType, templateDocument.getName(), download );
+            return doReport( report, data, dataType, outFileName );
         }
         catch ( Exception e )
         {
             throw new RuntimeException( e );
         }
+    }
+
+    private FieldsMetadata getFieldsMetadata( String xmlFieldsMetadata )
+        throws SAXException, IOException
+    {
+        FieldsMetadata metadata = null;
+        if ( StringUtils.isNotEmpty( xmlFieldsMetadata ) )
+        {
+            metadata = FieldsMetadataXMLSerializer.getInstance().load( new StringReader( xmlFieldsMetadata ) );
+        }
+        return metadata;
     }
 
     @POST
@@ -75,8 +89,8 @@ public class ReportingServiceImpl
     public Response report2( String reportId, @Multipart( "data" )
     String data, @Multipart( "dataType" )
     String dataType, @Multipart( "templateEngineKind" )
-    final String templateEngineKind, @Multipart( "download" )
-    final boolean download )
+    final String templateEngineKind, @Multipart( "outFileName" )
+    final String outFileName )
     {
         try
         {
@@ -85,7 +99,7 @@ public class ReportingServiceImpl
             // Load report
 
             final IXDocReport report = null;
-            return doReport( report, data, dataType, "TODO",  download );
+            return doReport( report, data, dataType, outFileName );
         }
         catch ( Exception e )
         {
@@ -93,7 +107,7 @@ public class ReportingServiceImpl
         }
     }
 
-    private Response doReport( final IXDocReport report, String data, String dataType, String inFileName, final boolean download )
+    private Response doReport( final IXDocReport report, String data, String dataType, final String outFileName )
         throws Exception
     {
         // Transform string data to Map.
@@ -145,12 +159,10 @@ public class ReportingServiceImpl
         ResponseBuilder responseBuilder =
             Response.ok( output, MediaType.valueOf( report.getMimeMapping().getMimeType() ) );
 
-        if ( download )
+        if ( StringUtils.isNotEmpty( outFileName ) )
         {
             // The generated report document must be downloaded, add the well
             // // content-disposition header.
-            // TODO : manage name of the generated report
-            String outFileName = "Out_" + inFileName;
             responseBuilder.header( HttpHeaderUtils.CONTENT_DISPOSITION_HEADER,
                                     HttpHeaderUtils.getAttachmentFileName( outFileName ) );
         }

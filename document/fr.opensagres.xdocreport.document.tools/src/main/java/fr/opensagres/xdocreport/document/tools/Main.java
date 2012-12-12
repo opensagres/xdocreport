@@ -52,7 +52,6 @@ public class Main
         String out = null;
         String err = null;
         String templateEngineKind = null;
-        String jsonFile = null;
         String metadataFile = null;
         String dataDir = null;
 
@@ -85,12 +84,6 @@ public class Main
                 {
                     templateEngineKind = getValue( args, i );
                     if ( templateEngineKind != null )
-                        i++;
-                }
-                else if ( "-jsonFile".equals( arg ) )
-                {
-                    jsonFile = getValue( args, i );
-                    if ( jsonFile != null )
                         i++;
                 }
                 else if ( "-metadataFile".equals( arg ) )

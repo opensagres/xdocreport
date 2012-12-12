@@ -129,6 +129,8 @@ public class PdfMapper
 
     private Float currentRunX;
 
+    private Float currentPageWidth;
+
     public PdfMapper( XWPFDocument document, OutputStream out, PdfOptions options )
         throws Exception
     {
@@ -164,11 +166,13 @@ public class PdfMapper
         throws Exception
     {
         BigInteger headerY = sectPr.getPgMar() != null ? sectPr.getPgMar().getHeader() : null;
+        this.currentPageWidth = sectPr.getPgMar() != null ? DxaUtil.dxa2points( sectPr.getPgSz().getW()) : null;
         StylableHeaderFooter pdfHeader = new StylableHeaderFooter( pdfDocument, headerY, true );
         List<IBodyElement> bodyElements = header.getBodyElements();
         StylableTableCell tableCell = getHeaderFooterTableCell( pdfHeader, bodyElements );
         visitBodyElements( bodyElements, tableCell );
         masterPage.setHeader( pdfHeader );
+        this.currentPageWidth = null;
     }
 
     @Override
@@ -176,11 +180,13 @@ public class PdfMapper
         throws Exception
     {
         BigInteger footerY = sectPr.getPgMar() != null ? sectPr.getPgMar().getFooter() : null;
+        this.currentPageWidth = sectPr.getPgMar() != null ? DxaUtil.dxa2points( sectPr.getPgSz().getW()) : null;
         StylableHeaderFooter pdfFooter = new StylableHeaderFooter( pdfDocument, footerY, false );
         List<IBodyElement> bodyElements = footer.getBodyElements();
         StylableTableCell tableCell = getHeaderFooterTableCell( pdfFooter, bodyElements );
         visitBodyElements( footer.getBodyElements(), tableCell );
         masterPage.setFooter( pdfFooter );
+        this.currentPageWidth = null;
     }
 
     private StylableTableCell getHeaderFooterTableCell( StylableHeaderFooter pdfHeaderFooter,
@@ -556,7 +562,7 @@ public class PdfMapper
                 currentRunX = 0f;
             }
         }
-        
+
         Float tabPosition = null;
         STTabTlc.Enum tabLeader = null;
         STTabJc.Enum tabVal = null;
@@ -576,7 +582,8 @@ public class PdfMapper
                     tabLeader = tabStop.getLeader();
                     tabVal = tabStop.getVal();
                 }
-                else {
+                else
+                {
                     useDefaultTabStop = true;
                 }
             }
@@ -596,7 +603,7 @@ public class PdfMapper
 
         if ( tabPosition != null )
         {
-            currentRunX = tabPosition; 
+            currentRunX = tabPosition;
             // tab leader : Specifies the character which shall be used to fill in the space created by a tab
             // which
             // ends
@@ -696,17 +703,31 @@ public class PdfMapper
 
             if ( currentRunX < DxaUtil.dxa2points( tabStop.getPos().floatValue() ) )
             {
-
                 return true;
-
             }
         }
         else if ( tabStop.getVal().equals( STTabJc.RIGHT ) )
         {
-            if ( pdfDocument.getWidthLimit() - ( currentRunX + DxaUtil.dxa2points( tabStop.getPos().floatValue() ) ) <= 0 )
+            if ( isWordDocumentPartParsing() )
             {
-                return true;
+                if ( pdfDocument.getWidthLimit() - ( currentRunX + DxaUtil.dxa2points( tabStop.getPos().floatValue() ) ) <= 0 )
+                {
+                    return true;
+                }
             }
+            else
+            {
+                if ( currentPageWidth == null )
+                {
+                    return true;
+                }
+                if ( currentPageWidth.floatValue()
+                    - ( currentRunX + DxaUtil.dxa2points( tabStop.getPos().floatValue() ) ) <= 0 )
+                {
+                    return true;
+                }
+            }
+
         }
         return false;
     }

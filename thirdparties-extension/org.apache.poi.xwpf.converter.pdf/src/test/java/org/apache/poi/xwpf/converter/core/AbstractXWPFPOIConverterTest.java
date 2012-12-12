@@ -81,7 +81,7 @@ public abstract class AbstractXWPFPOIConverterTest
         doGenerate( "DocxBig.docx" );
     }
 
-    // @Test
+    //@Test
     public void DocxBig2()
         throws IOException
     {
@@ -144,7 +144,7 @@ public abstract class AbstractXWPFPOIConverterTest
         doGenerate( "Issue175.docx" );
     }
 
-    //@Test
+    @Test
     public void Issue206()
         throws IOException
     {

@@ -80,7 +80,7 @@ public class ReportingServiceImpl
     String templateEngineKind, @Multipart( value = "metadata", required = false )
     String xmlFieldsMetadata, @Multipart( "data" )
     String data, @Multipart( value = "dataType", required = false )
-    String dataType, @Multipart( "outFileName" )
+    String dataType, @Multipart( value="outFileName", required = false )
     String outFileName, @Multipart( value = "outFormat", required = false )
     String outFormat, @Multipart( value = "outFormatVia", required = false )
     final String via )

@@ -7,7 +7,84 @@
 		<version>1.0.1-SNAPSHOT</version>
 	</parent>
 	<artifactId>fr.opensagres.xdocreport.itext.extension-gae</artifactId>
+	<properties>
+		<workingDir>${project.build.directory}/generated</workingDir>
+	</properties>
+	<build>
+		<plugins>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-dependency-plugin</artifactId>
+				<version>2.6</version>
+				<executions>
+					<execution>
+						<id>unpack</id>
+						<phase>generate-sources</phase>
+						<goals>
+							<goal>unpack</goal>
+						</goals>
+						<configuration>
+							<artifactItems>
+								<artifactItem>
+									<groupId>fr.opensagres.xdocreport</groupId>
+									<artifactId>fr.opensagres.xdocreport.itext.extension</artifactId>
+									<version>${project.version}</version>
+									<type>jar</type>
+									<classifier>sources</classifier>
+									<outputDirectory>${workingDir}</outputDirectory>
+								</artifactItem>
+							</artifactItems>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
+			<plugin>
+				<groupId>org.codehaus.mojo</groupId>
+				<artifactId>build-helper-maven-plugin</artifactId>
+				<version>1.7</version>
+				<executions>
+					<execution>
+						<id>add-source</id>
+						<phase>generate-sources</phase>
+						<goals>
+							<goal>add-source</goal>
+						</goals>
+						<configuration>
+							<sources>
+								<source>${workingDir}</source>
+							</sources>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
+			<plugin>
+				<groupId>com.google.code.maven-replacer-plugin</groupId>
+				<artifactId>replacer</artifactId>
+				<version>1.5.2</version>
+				<executions>
+					<execution>
+						<phase>process-sources</phase>
+						<goals>
+							<goal>replace</goal>
+						</goals>
+					</execution>
+				</executions>
+				<configuration>
+					<baseDir>${workingDir}</baseDir>
+					<includes>
+						<include>**/*.java</include>
+					</includes>
+					<replacements>
+						<replacement>
+							<token>java.awt.Color</token>
+							<value>com.lowagie.text.awt.Color</value>
+						</replacement>
+					</replacements>
+				</configuration>
+			</plugin>
+		</plugins>
 
+	</build>
 	<dependencies>
 		<dependency>
 			<groupId>fr.opensagres.xdocreport</groupId>

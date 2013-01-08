@@ -22,13 +22,13 @@
 		<!-- iText extension for PDF -->
 		<module>fr.opensagres.xdocreport.itext.extension</module>
 		
-		<!-- GAE -->
+		<!-- GAE 
 		<module>itext-gae</module>		
 		<module>fr.opensagres.xdocreport.itext.extension-gae</module>
 		<module>org.odftoolkit.odfdom.converter.pdf-gae</module>
 		<module>org.apache.poi.xwpf.converter.core-gae</module>
 		<module>org.apache.poi.xwpf.converter.pdf-gae</module>
-				
+		-->		
 		<!-- Struts2 support -->		
 		<module>org.apache.struts2.views.xdocreport</module>
 	</modules>

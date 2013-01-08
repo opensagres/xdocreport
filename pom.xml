@@ -251,6 +251,7 @@
 		<module>integrationtests</module>
 		<module>sandbox</module>
 		<module>remoting</module>
+		<module>gae</module>
 	</modules>
 	<dependencies>
 		<dependency>

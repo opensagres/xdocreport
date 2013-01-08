@@ -1,11 +1,12 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 	<parent>
-		<artifactId>thirdparties-extension</artifactId>
 		<groupId>fr.opensagres.xdocreport</groupId>
+		<artifactId>gae</artifactId>
 		<version>1.0.1-SNAPSHOT</version>
 	</parent>
-	<artifactId>org.apache.poi.xwpf.converter.pdf-gae</artifactId>
+	<artifactId>fr.opensagres.xdocreport.itext.extension-gae</artifactId>
 	<properties>
 		<workingDir>${project.build.directory}/generated</workingDir>
 	</properties>
@@ -26,7 +27,7 @@
 							<artifactItems>
 								<artifactItem>
 									<groupId>fr.opensagres.xdocreport</groupId>
-									<artifactId>org.apache.poi.xwpf.converter.pdf</artifactId>
+									<artifactId>fr.opensagres.xdocreport.itext.extension</artifactId>
 									<version>${project.version}</version>
 									<type>jar</type>
 									<classifier>sources</classifier>
@@ -86,12 +87,7 @@
 	<dependencies>
 		<dependency>
 			<groupId>fr.opensagres.xdocreport</groupId>
-			<artifactId>org.apache.poi.xwpf.converter.core-gae</artifactId>
-			<version>1.0.1-SNAPSHOT</version>
-		</dependency>
-		<dependency>
-			<groupId>fr.opensagres.xdocreport</groupId>
-			<artifactId>fr.opensagres.xdocreport.itext.extension-gae</artifactId>
+			<artifactId>itext-gae</artifactId>
 			<version>1.0.1-SNAPSHOT</version>
 		</dependency>
 	</dependencies>

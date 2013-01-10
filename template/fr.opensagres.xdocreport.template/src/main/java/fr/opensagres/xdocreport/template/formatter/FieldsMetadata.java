@@ -85,6 +85,12 @@ public class FieldsMetadata
 
     private boolean useImageSize;
 
+    private List<String> sortedFieldsAsList;
+
+    private List<FieldMetadata> sortedFieldsAsTextStyling;
+
+    private List<FieldMetadata> sortedFieldsAsImage;
+
     public FieldsMetadata()
     {
         this( null );
@@ -104,6 +110,9 @@ public class FieldsMetadata
         this.evaluateEngineOnlyForFields = false;
         this.behaviour = null;
         this.useImageSize = false;
+        this.sortedFieldsAsList = null;
+        this.sortedFieldsAsTextStyling = null;
+        this.sortedFieldsAsImage = null;
     }
 
     /**
@@ -292,7 +301,16 @@ public class FieldsMetadata
      */
     public Collection<String> getFieldsAsList()
     {
-        return Collections.unmodifiableCollection( fieldsAsList.keySet() );
+        if ( sortedFieldsAsList == null )
+        {
+            sortedFieldsAsList = new ArrayList<String>();
+            for ( FieldMetadata field : fieldsAsList.values() )
+            {
+                sortedFieldsAsList.add( field.getFieldName() );
+            }
+            Collections.sort( sortedFieldsAsList, FieldsNameComparator.getInstance() );
+        }
+        return sortedFieldsAsList;
     }
 
     /**
@@ -302,7 +320,12 @@ public class FieldsMetadata
      */
     public Collection<FieldMetadata> getFieldsAsImage()
     {
-        return Collections.unmodifiableCollection( fieldsAsImage.values() );
+        if ( sortedFieldsAsImage == null )
+        {
+            sortedFieldsAsImage = new ArrayList<FieldMetadata>( fieldsAsImage.values() );
+            Collections.sort( sortedFieldsAsImage, FieldsMetadataComparator.getInstance() );
+        }
+        return sortedFieldsAsImage;
     }
 
     /**
@@ -312,7 +335,12 @@ public class FieldsMetadata
      */
     public Collection<FieldMetadata> getFieldsAsTextStyling()
     {
-        return Collections.unmodifiableCollection( fieldsAsTextStyling.values() );
+        if ( sortedFieldsAsTextStyling == null )
+        {
+            sortedFieldsAsTextStyling = new ArrayList<FieldMetadata>( fieldsAsTextStyling.values() );
+            Collections.sort( sortedFieldsAsTextStyling, FieldsMetadataComparator.getInstance() );
+        }
+        return sortedFieldsAsTextStyling;
     }
 
     /**

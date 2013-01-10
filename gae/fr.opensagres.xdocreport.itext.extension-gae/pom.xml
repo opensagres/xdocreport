@@ -86,9 +86,9 @@
 	</build>
 	<dependencies>
 		<dependency>
-			<groupId>fr.opensagres.xdocreport</groupId>
-			<artifactId>itext-gae</artifactId>
-			<version>1.0.1-SNAPSHOT</version>
+				<groupId>fr.opensagres</groupId>
+				<artifactId>com.lowagie.itext-gae</artifactId>
+				<version>2.1.7_1-SNAPSHOT</version>
 		</dependency>
 	</dependencies>
 </project>

@@ -7,4 +7,10 @@
   </parent>
   <artifactId>gae</artifactId>
   <packaging>pom</packaging>
+  <modules>
+  	<module>fr.opensagres.xdocreport.itext.extension-gae</module>
+  	<module>org.apache.poi.xwpf.converter.core-gae</module>
+  	<module>org.apache.poi.xwpf.converter.pdf-gae</module>
+  	<module>org.odftoolkit.odfdom.converter.pdf-gae</module>
+  </modules>
 </project>

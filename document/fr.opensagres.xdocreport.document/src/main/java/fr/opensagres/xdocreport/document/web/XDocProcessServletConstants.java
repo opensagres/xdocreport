@@ -34,6 +34,8 @@ public interface XDocProcessServletConstants
     // HTTP parameters name
     String CONVERTER_ID_HTTP_PARAM = "converter";
 
+    String FONT_ENCODING_HTTP_PARAM = "fontEncoding";
+
     // Dispatch values
     String REMOVE_DISPATCH = "remove";
 

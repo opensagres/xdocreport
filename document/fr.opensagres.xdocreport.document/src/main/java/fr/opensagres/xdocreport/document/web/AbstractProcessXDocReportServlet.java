@@ -33,6 +33,7 @@ import javax.servlet.ServletConfig;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.xml.transform.URIResolver;
 
 import fr.opensagres.xdocreport.converter.ConverterTypeTo;
 import fr.opensagres.xdocreport.converter.IConverter;
@@ -456,6 +457,13 @@ public abstract class AbstractProcessXDocReportServlet
         return (String) request.getParameter( CONVERTER_ID_HTTP_PARAM );
     }
 
+    /**
+     * Returns the options for the converter.
+     * 
+     * @param report the report.
+     * @param request the HTTP request.
+     * @return
+     */
     protected Options getOptionsConverter( IXDocReport report, HttpServletRequest request )
     {
         final String converterId = getConverterId( report, request );
@@ -479,15 +487,38 @@ public abstract class AbstractProcessXDocReportServlet
         return options;
     }
 
+    /**
+     * Initialize converter options with default settings.
+     * 
+     * @param options the options converter.
+     * @param report the report.
+     * @param converterId the converter id.
+     * @param request the HTTP request.
+     */
     protected void prepareOptions( Options options, IXDocReport report, String converterId, HttpServletRequest request )
     {
+        // Set Web URI resolver for FO or XHTML
         if ( ConverterTypeTo.FO.name().equals( options.getTo() )
             || ConverterTypeTo.XHTML.name().equals( options.getTo() ) )
         {
             OptionsHelper.setURIResolver( options, createWEBURIResolver( report, converterId, request ) );
         }
+        // Encoding
+        String fontEncoding = getFontEncoding( report, converterId, request );
+        if (StringUtils.isNotEmpty( fontEncoding )) {
+            OptionsHelper.setFontEncoding( options, fontEncoding );
+        }
+        
     }
-
+    
+    /**
+     * Create the WEB {@link URIResolver} used to manage image with XHTML converter.
+     * 
+     * @param report the report.
+     * @param converterId the converter id.
+     * @param request the HTTP request.
+     * @return
+     */
     public IURIResolver createWEBURIResolver( IXDocReport report, String converterId, HttpServletRequest request )
     {
         WEBURIResolver resolver = report.getData( WEB_URI_RESOLVER_DATA_KEY );
@@ -499,6 +530,17 @@ public abstract class AbstractProcessXDocReportServlet
         return resolver;
     }
 
+    /**
+     * Returns the encoding to use for converter.
+     * 
+     * @param request
+     * @return
+     */
+    protected String getFontEncoding( IXDocReport report, String converterId, HttpServletRequest request )
+    {
+        return (String) request.getParameter( FONT_ENCODING_HTTP_PARAM );
+    }
+    
     @Override
     protected boolean isGenerateContentDisposition( String reportId, MimeMapping mimeMapping, HttpServletRequest request )
     {

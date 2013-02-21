@@ -67,7 +67,7 @@ public class NoteRegistry
             footnotes = new ArrayList<NoteInfo>();
             notesMap.put( id, footnotes );
         }
-        String newId = "" + ( footnotes.size() + 1 );
+        String newId = "" + createNewId();
 
         footnotes.add( new NoteInfo( newId, content != null ? content.toString() : "" ) );
         return newId;
@@ -91,6 +91,22 @@ public class NoteRegistry
             return Collections.emptyList();
         }
         return footnotes;
+    }
+
+    /**
+     * Create a sequencial new id according to current number of notes (resulting of loops included).
+     * @return id according to current element size
+     */
+    private int createNewId()
+    {
+        int result = 1;
+
+        for ( List<NoteInfo> elements : notesMap.values() )
+        {
+            result += elements.size();
+        }
+
+        return result;
     }
 
 }

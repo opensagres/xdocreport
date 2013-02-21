@@ -26,12 +26,14 @@ package fr.opensagres.xdocreport.template.velocity;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.HashMap;
 
 import org.junit.Assert;
 import org.junit.Test;
 
 import fr.opensagres.xdocreport.core.XDocReportException;
 import fr.opensagres.xdocreport.template.formatter.FieldsMetadata;
+import fr.opensagres.xdocreport.template.registry.FieldsMetadataClassSerializerRegistry;
 
 public class VelocityFieldsMetadataClassSerializerTestCase
 {
@@ -114,7 +116,41 @@ public class VelocityFieldsMetadataClassSerializerTestCase
         }
 
     }
-
+	
+	public class ComplexType
+	{
+		private String complexTypeValue;
+		public void setComplexTypeValue(String complexTypeValue){this.complexTypeValue=complexTypeValue;}
+		public String getComplexTypeValue(){return this.complexTypeValue;}
+		}
+		
+	public class Parent
+	{
+		private String fieldA;
+		private String fieldB;
+		private ComplexType complexType;
+		
+		public void setFieldA(String val){this.fieldA=val;}
+		public void setFieldB(String val){this.fieldB=val;}
+		public String getFieldA(){return this.fieldA;}
+		public String getFieldB(){return this.fieldB;}
+		public void setComplexType(ComplexType complexType){this.complexType=complexType;}
+		public ComplexType getComplexType(){return this.complexType;}
+	}
+	public class ChildA extends Parent
+    {
+		private String fieldC;
+		public void setFieldC(String val){this.fieldC=val;}
+		public String getFieldC(){return this.fieldC;}
+	}
+	
+	public class ChildB extends Parent
+    {
+		private String fieldD;
+		public void setFieldD(String val){this.fieldD=val;}
+		public String getFieldD(){return this.fieldD;}
+	}
+	
     @Test
     public void testSimplePOJO()
         throws XDocReportException
@@ -146,6 +182,30 @@ public class VelocityFieldsMetadataClassSerializerTestCase
         Assert.assertTrue( fieldsMetadata.getFields().get( 3 ).isListType() );
     }
 
+	@Test
+	public void testInheritanceWithComplexTypePOJO() throws Exception
+	{		
+			List<Class<?>> pojoClasses=new ArrayList<Class<?>>();
+			pojoClasses.add(Parent.class);
+			pojoClasses.add(ChildA.class);
+			pojoClasses.add(ChildB.class);
+			HashMap<Class<?>,Integer> fieldsCountExpected=new HashMap<Class<?>,Integer>();
+			fieldsCountExpected.put(Parent.class,3);
+			fieldsCountExpected.put(ChildA.class,4);//expect and complex type to be here
+			fieldsCountExpected.put(ChildB.class,4);//expect and complex type to be here
+			for(Class<?> clazz: pojoClasses)
+			{
+				//FieldsMetadataClassSerializerRegistry.getRegistry().dispose();//uncomment this line to pass test
+				FieldsMetadata fieldsMetadata=new FieldsMetadata("Velocity");
+				fieldsMetadata.load("template", clazz);
+				System.out.println("\n======================================\n"); 
+				System.out.println(fieldsMetadata.toString());
+				System.out.println("\n======================================\n");
+				Assert.assertEquals( fieldsCountExpected.get(clazz).intValue(), fieldsMetadata.getFields().size() );
+			}
+			
+		}
+	
     @Test
     public void testSimpleImage()
     {

@@ -93,6 +93,7 @@ public abstract class AbstractFieldsMetadataClassSerializer implements
 			boolean listType) throws XDocReportException {
 		try {
 			process(fieldsMetadata, key, clazz, listType);
+			hasBeenProcessed.clear();
 		} catch (Exception e) {
 			throw new XDocReportException(e);
 		}
@@ -148,7 +149,7 @@ public abstract class AbstractFieldsMetadataClassSerializer implements
 					}
 				}
 			}
-
+			hasBeenProcessed.remove(clazz);
 		}
 	}
 

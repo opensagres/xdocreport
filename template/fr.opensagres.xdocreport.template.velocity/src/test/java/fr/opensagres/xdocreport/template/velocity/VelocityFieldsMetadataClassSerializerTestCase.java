@@ -25,15 +25,14 @@
 package fr.opensagres.xdocreport.template.velocity;
 
 import java.util.ArrayList;
-import java.util.List;
 import java.util.HashMap;
+import java.util.List;
 
 import org.junit.Assert;
 import org.junit.Test;
 
 import fr.opensagres.xdocreport.core.XDocReportException;
 import fr.opensagres.xdocreport.template.formatter.FieldsMetadata;
-import fr.opensagres.xdocreport.template.registry.FieldsMetadataClassSerializerRegistry;
 
 public class VelocityFieldsMetadataClassSerializerTestCase
 {
@@ -118,28 +117,85 @@ public class VelocityFieldsMetadataClassSerializerTestCase
     }
 	
 	public class ComplexType
-	{
+	{//expected 4 fields
 		private String complexTypeValue;
+		private List<String> listOfStrings;
+		private ComplexType me;
+		private transient String transientValue;
+		
 		public void setComplexTypeValue(String complexTypeValue){this.complexTypeValue=complexTypeValue;}
 		public String getComplexTypeValue(){return this.complexTypeValue;}
+		public void setListOfStrings(List<String> listOfStrings) {
+			this.listOfStrings = listOfStrings;
 		}
+		public List<String> getListOfStrings() {
+			return listOfStrings;
+		}
+		public void setMe(ComplexType me) {
+			this.me = me;
+		}
+		public ComplexType getMe() {
+			return me;
+		}
+		public void setTransientValue(String transientValue) {
+			this.transientValue = transientValue;
+		}
+		public String getTransientValue() {
+			return transientValue;
+		}
+	}
 		
 	public class Parent
-	{
-		private String fieldA;
-		private String fieldB;
-		private ComplexType complexType;
+	{//expected 20
+		private String fieldA;//1
+		private String fieldB;//1
+		private ComplexType complexType;//4		
+		private List<ComplexType> listOfComplexTypes;//4
+		private Parent me;//10
+		private transient String transientValue;
+		private int intVal;//should be ignored as is primitive type
+		
 		
 		public void setFieldA(String val){this.fieldA=val;}
 		public void setFieldB(String val){this.fieldB=val;}
 		public String getFieldA(){return this.fieldA;}
 		public String getFieldB(){return this.fieldB;}
-		public void setComplexType(ComplexType complexType){this.complexType=complexType;}
-		public ComplexType getComplexType(){return this.complexType;}
+		
+		public void setTransientValue(String transientValue) {
+			this.transientValue = transientValue;
+		}
+		public String getTransientValue() {
+			return transientValue;
+		}
+		public void setListOfComplexTypes(List<ComplexType> listOfComplexTypes) {
+			this.listOfComplexTypes = listOfComplexTypes;
+		}
+		public List<ComplexType> getListOfComplexTypes() {
+			return listOfComplexTypes;
+		}
+		public void setMe(Parent me) {
+			this.me = me;
+		}
+		public Parent getMe() {
+			return me;
+		}
+		public void setComplexType(ComplexType complexType) {
+			this.complexType = complexType;
+		}
+		public ComplexType getComplexType() {
+			return complexType;
+		}
+		public void setIntVal(int intVal) {
+			this.intVal = intVal;
+		}
+		public int getIntVal() {
+			return intVal;
+		}
+		
 	}
 	public class ChildA extends Parent
     {
-		private String fieldC;
+		private String fieldC;		
 		public void setFieldC(String val){this.fieldC=val;}
 		public String getFieldC(){return this.fieldC;}
 	}
@@ -171,6 +227,10 @@ public class VelocityFieldsMetadataClassSerializerTestCase
         VelocityFieldsMetadataClassSerializer serializer = new VelocityFieldsMetadataClassSerializer();
         serializer.load( fieldsMetadata, "developers", Developer.class, true );
 
+        System.out.println("\n======================================\n"); 
+		System.out.println(fieldsMetadata.toString());
+		System.out.println("\n======================================\n");
+		
         Assert.assertEquals( 4, fieldsMetadata.getFields().size() );
         Assert.assertEquals( "developers.LastName", fieldsMetadata.getFields().get( 0 ).getFieldName() );
         Assert.assertTrue( fieldsMetadata.getFields().get( 0 ).isListType() );
@@ -186,25 +246,36 @@ public class VelocityFieldsMetadataClassSerializerTestCase
 	public void testInheritanceWithComplexTypePOJO() throws Exception
 	{		
 			List<Class<?>> pojoClasses=new ArrayList<Class<?>>();
+			pojoClasses.add(ComplexType.class);
 			pojoClasses.add(Parent.class);
 			pojoClasses.add(ChildA.class);
 			pojoClasses.add(ChildB.class);
 			HashMap<Class<?>,Integer> fieldsCountExpected=new HashMap<Class<?>,Integer>();
-			fieldsCountExpected.put(Parent.class,3);
-			fieldsCountExpected.put(ChildA.class,4);//expect and complex type to be here
-			fieldsCountExpected.put(ChildB.class,4);//expect and complex type to be here
+			fieldsCountExpected.put(ComplexType.class,4);
+			fieldsCountExpected.put(Parent.class,20);
+			fieldsCountExpected.put(ChildA.class,21);//expect and complex type to be here
+			fieldsCountExpected.put(ChildB.class,21);//expect and complex type to be here
 			for(Class<?> clazz: pojoClasses)
 			{
 				//FieldsMetadataClassSerializerRegistry.getRegistry().dispose();//uncomment this line to pass test
 				FieldsMetadata fieldsMetadata=new FieldsMetadata("Velocity");
 				fieldsMetadata.load("template", clazz);
-				System.out.println("\n======================================\n"); 
+				System.out.println("\n==============="+clazz.getSimpleName()+"=======================\n"); 
 				System.out.println(fieldsMetadata.toString());
 				System.out.println("\n======================================\n");
 				Assert.assertEquals( fieldsCountExpected.get(clazz).intValue(), fieldsMetadata.getFields().size() );
 			}
 			
 		}
+	
+	@Test
+	public void testBuildFieldPaths() throws XDocReportException
+	{
+		FieldsMetadata fieldsMetadata=new FieldsMetadata("Velocity");
+		fieldsMetadata.load("template", ChildA.class);
+		System.out.println("=================");
+		fieldsMetadata.load("template1", ChildB.class);
+	}
 	
     @Test
     public void testSimpleImage()

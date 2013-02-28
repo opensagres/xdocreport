@@ -37,6 +37,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import fr.opensagres.xdocreport.core.XDocReportException;
+import fr.opensagres.xdocreport.template.annotations.FieldMetada;
 
 /**
  * Abstract class for Fields metadata serializer.
@@ -188,10 +189,18 @@ public abstract class AbstractFieldsMetadataClassSerializer implements
 		for (FieldMetadata fieldMetadata : fieldsMetadata.getFields())
 			if(fieldMetadata.getFieldName().equals(fieldName.toString())) return;
 		
-		//TODO: This method is prepared to solve issue 180. Solving issue 180, can be a way to solve issue 177
-		fieldsMetadata.addField(fieldName.toString(), isList, null, null, null);
-	}
-
+		Method method = currentField.getReadMethod();		
+		FieldMetada fMetadata = method.getAnnotation(FieldMetada.class);
+		
+		if(fMetadata!=null)
+		{
+			FieldMetadata newField = fieldsMetadata.addField(fieldName.toString(), isList, null, fMetadata.syntaxKind(),fMetadata.syntaxWithDirective());
+			newField.setDescription(fMetadata.description());
+		}else{
+			fieldsMetadata.addField(fieldName.toString(), isList, null, null, null);
+		}
+		
+	}	
 	
 	/**
 	 * This method check if the propertyDescriptor is transient in Class clazz.

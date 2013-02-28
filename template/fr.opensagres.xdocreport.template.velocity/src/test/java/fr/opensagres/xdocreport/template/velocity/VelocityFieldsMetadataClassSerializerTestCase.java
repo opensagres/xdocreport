@@ -32,6 +32,8 @@ import org.junit.Assert;
 import org.junit.Test;
 
 import fr.opensagres.xdocreport.core.XDocReportException;
+import fr.opensagres.xdocreport.template.TemplateEngineKind;
+import fr.opensagres.xdocreport.template.annotations.FieldMetada;
 import fr.opensagres.xdocreport.template.formatter.FieldsMetadata;
 
 public class VelocityFieldsMetadataClassSerializerTestCase
@@ -124,10 +126,15 @@ public class VelocityFieldsMetadataClassSerializerTestCase
 		private transient String transientValue;
 		
 		public void setComplexTypeValue(String complexTypeValue){this.complexTypeValue=complexTypeValue;}
+		
+		@FieldMetada(syntaxWithDirective = true, syntaxKind = "Html",description="Complex Type Value Description")
 		public String getComplexTypeValue(){return this.complexTypeValue;}
+		
 		public void setListOfStrings(List<String> listOfStrings) {
 			this.listOfStrings = listOfStrings;
 		}
+		
+		@FieldMetada(syntaxWithDirective = true, syntaxKind = "Html",description="List of strings description")
 		public List<String> getListOfStrings() {
 			return listOfStrings;
 		}
@@ -258,7 +265,7 @@ public class VelocityFieldsMetadataClassSerializerTestCase
 			for(Class<?> clazz: pojoClasses)
 			{
 				//FieldsMetadataClassSerializerRegistry.getRegistry().dispose();//uncomment this line to pass test
-				FieldsMetadata fieldsMetadata=new FieldsMetadata("Velocity");
+				FieldsMetadata fieldsMetadata=new FieldsMetadata(TemplateEngineKind.Velocity.name());
 				fieldsMetadata.load("template", clazz);
 				System.out.println("\n==============="+clazz.getSimpleName()+"=======================\n"); 
 				System.out.println(fieldsMetadata.toString());
@@ -277,6 +284,14 @@ public class VelocityFieldsMetadataClassSerializerTestCase
 		fieldsMetadata.load("template1", ChildB.class);
 	}
 	
+	 @Test
+	public void testSyntaxAnnotations() throws Exception {
+		FieldsMetadata fieldsMetadata = new FieldsMetadata("Velocity");
+		fieldsMetadata.load("template", Parent.class);
+		System.out.println(fieldsMetadata.toString());
+		Assert.assertEquals(16, fieldsMetadata.getFieldsAsTextStyling().size());		
+	}
+ 
     @Test
     public void testSimpleImage()
     {

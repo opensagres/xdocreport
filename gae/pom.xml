@@ -52,8 +52,8 @@
 					</includes>
 					<replacements>
 						<replacement>
-							<token>java.awt.Color</token>
-							<value>com.google.code.appengine.awt.Color</value>
+							<token>java.awt</token>
+							<value>com.google.code.appengine.awt</value>
 						</replacement>
 					</replacements>
 				</configuration>

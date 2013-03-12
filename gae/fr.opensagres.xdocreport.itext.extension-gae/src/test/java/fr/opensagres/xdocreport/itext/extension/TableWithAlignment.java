@@ -24,14 +24,12 @@
  */
 package fr.opensagres.xdocreport.itext.extension;
 
-import com.lowagie.text.awt.Color;
+
 import java.io.FileOutputStream;
 
 import com.lowagie.text.Chunk;
 import com.lowagie.text.Document;
-import com.lowagie.text.Element;
 import com.lowagie.text.PageSize;
-import com.lowagie.text.Paragraph;
 import com.lowagie.text.pdf.PdfPCell;
 import com.lowagie.text.pdf.PdfPTable;
 import com.lowagie.text.pdf.PdfWriter;

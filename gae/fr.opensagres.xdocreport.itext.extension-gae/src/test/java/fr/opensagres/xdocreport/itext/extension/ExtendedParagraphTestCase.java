@@ -24,7 +24,6 @@
  */
 package fr.opensagres.xdocreport.itext.extension;
 
-import com.lowagie.text.awt.Color;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 
@@ -33,11 +32,8 @@ import junit.framework.TestCase;
 import com.lowagie.text.Chunk;
 import com.lowagie.text.Document;
 import com.lowagie.text.DocumentException;
-import com.lowagie.text.Font;
-import com.lowagie.text.FontFactory;
 import com.lowagie.text.Paragraph;
 import com.lowagie.text.Rectangle;
-import com.lowagie.text.pdf.BaseFont;
 import com.lowagie.text.pdf.PdfContentByte;
 import com.lowagie.text.pdf.PdfPCell;
 import com.lowagie.text.pdf.PdfPCellEvent;

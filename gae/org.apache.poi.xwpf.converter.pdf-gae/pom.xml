@@ -6,9 +6,6 @@
 		<version>1.0.1-SNAPSHOT</version>
 	</parent>
 	<artifactId>org.apache.poi.xwpf.converter.pdf-gae</artifactId>
-	<properties>
-		<workingDir>${project.build.directory}/generated</workingDir>
-	</properties>
 	<build>
 		<plugins>
 			<plugin>
@@ -30,56 +27,12 @@
 									<version>${project.version}</version>
 									<type>jar</type>
 									<classifier>sources</classifier>
-									<outputDirectory>${workingDir}</outputDirectory>
+									<outputDirectory>${unpackDir}</outputDirectory>
 								</artifactItem>
 							</artifactItems>
 						</configuration>
 					</execution>
 				</executions>
-			</plugin>
-			<plugin>
-				<groupId>org.codehaus.mojo</groupId>
-				<artifactId>build-helper-maven-plugin</artifactId>
-				<version>1.7</version>
-				<executions>
-					<execution>
-						<id>add-source</id>
-						<phase>generate-sources</phase>
-						<goals>
-							<goal>add-source</goal>
-						</goals>
-						<configuration>
-							<sources>
-								<source>${workingDir}</source>
-							</sources>
-						</configuration>
-					</execution>
-				</executions>
-			</plugin>
-			<plugin>
-				<groupId>com.google.code.maven-replacer-plugin</groupId>
-				<artifactId>replacer</artifactId>
-				<version>1.5.2</version>
-				<executions>
-					<execution>
-						<phase>process-sources</phase>
-						<goals>
-							<goal>replace</goal>
-						</goals>
-					</execution>
-				</executions>
-				<configuration>
-					<baseDir>${workingDir}</baseDir>
-					<includes>
-						<include>**/*.java</include>
-					</includes>
-					<replacements>
-						<replacement>
-							<token>java.awt.Color</token>
-							<value>com.lowagie.text.awt.Color</value>
-						</replacement>
-					</replacements>
-				</configuration>
 			</plugin>
 		</plugins>
 	</build>

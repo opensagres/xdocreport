@@ -51,7 +51,7 @@ import static org.apache.poi.xwpf.converter.xhtml.internal.styles.CSSStyleProper
 import static org.apache.poi.xwpf.converter.xhtml.internal.styles.CSSStylePropertyConstants.TEXT_INDENT;
 import static org.apache.poi.xwpf.converter.xhtml.internal.styles.CSSStylePropertyConstants.WIDTH;
 
-import java.awt.Color;
+import com.lowagie.text.awt.Color;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;

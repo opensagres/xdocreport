@@ -24,7 +24,7 @@
  */
 package org.odftoolkit.odfdom.converter.pdf;
 
-import com.lowagie.text.awt.Color;
+import com.google.code.appengine.awt.Color;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.OutputStream;

@@ -24,7 +24,6 @@
  */
 package org.apache.poi.xwpf.converter.core.styles;
 
-import com.lowagie.text.awt.Color;
 import java.util.List;
 
 import org.apache.poi.xwpf.converter.core.utils.ColorHelper;
@@ -35,6 +34,8 @@ import org.apache.poi.xwpf.usermodel.XWPFParagraph;
 import org.apache.poi.xwpf.usermodel.XWPFRun;
 import org.junit.Assert;
 import org.junit.Test;
+
+import com.google.code.appengine.awt.Color;
 
 public class FontStylesBasedOnTestCase
 {

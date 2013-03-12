@@ -24,7 +24,6 @@
  */
 package fr.opensagres.xdocreport.itext.extension;
 
-import com.lowagie.text.awt.Color;
 import java.io.FileOutputStream;
 
 import com.lowagie.text.Chunk;

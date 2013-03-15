@@ -131,4 +131,25 @@ public class XDocArchiveTestCase
         contentWriter.write( "bla bla bla2" );
         contentWriter.close();
     }
+
+    /**
+     * docx with entry name with '\'.
+     * 
+     * @see https://code.google.com/p/xdocreport/issues/detail?id=234
+     * @throws IOException
+     */
+    public void testReadDocxWithNotSlashEntryName()
+        throws IOException
+    {
+
+        InputStream input = XDocArchiveTestCase.class.getResourceAsStream( "Issue234.docx" );
+        XDocArchive archive = XDocArchive.readZip( input );
+
+        assertNotNull( "null archive", archive );
+        Set<String> entryNames = archive.getEntryNames();
+        assertFalse( "no entries", entryNames.isEmpty() );
+
+        String document = IOUtils.toString( archive.getEntryReader( "word/document.xml" ) );
+        assertNotNull( document );
+    }
 }

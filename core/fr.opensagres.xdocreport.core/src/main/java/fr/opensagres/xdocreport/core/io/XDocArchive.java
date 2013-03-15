@@ -45,6 +45,7 @@ import java.util.zip.ZipOutputStream;
 import fr.opensagres.xdocreport.core.EncodingConstants;
 import fr.opensagres.xdocreport.core.io.internal.OutputStream2InputStream;
 import fr.opensagres.xdocreport.core.io.internal.OutputStreamWriterCancelable;
+import fr.opensagres.xdocreport.core.utils.StringUtils;
 
 /**
  * {@link XDocArchive} is used to load zipped XML document archive (docx, odt...) {@link XDocArchive} cache each entry
@@ -336,6 +337,11 @@ public class XDocArchive
     public static void setEntry( XDocArchive archive, String entryName, InputStream input )
         throws IOException
     {
+        // entry name must uses '/' (see https://code.google.com/p/xdocreport/issues/detail?id=234) 
+        if ( entryName.indexOf( "\\" ) != -1 )
+        {
+            entryName = StringUtils.replaceAll( entryName, "\\", "/" );
+        }
         // 1) Create empty output stream and register it with the entry
         // name
         OutputStream output = archive.getEntryOutputStream( entryName );

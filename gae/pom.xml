@@ -68,7 +68,7 @@
 	</modules>
 	<dependencies>
 		<dependency>
-				<groupId>com.github.itext-gae</groupId>
+				<groupId>fr.opensagres.xdocreport.itext-gae</groupId>
 				<artifactId>itext-gae</artifactId>
 				<version>0.0.1-SNAPSHOT</version>
 		</dependency>

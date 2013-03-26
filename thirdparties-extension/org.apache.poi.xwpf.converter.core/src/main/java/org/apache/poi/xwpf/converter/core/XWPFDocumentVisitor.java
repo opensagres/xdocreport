@@ -450,6 +450,11 @@ public abstract class XWPFDocumentVisitor<T, O extends Options, E extends IXWPFM
     protected XWPFNum getXWPFNum( CTNumPr numPr )
     {
         CTDecimalNumber numID = numPr.getNumId();
+        if (numID == null) {
+            // numID can be null, ignore the numbering
+            // see https://code.google.com/p/xdocreport/issues/detail?id=239
+            return null;
+        }
         XWPFNum num = document.getNumbering().getNum( numID.getVal() );
         return num;
     }

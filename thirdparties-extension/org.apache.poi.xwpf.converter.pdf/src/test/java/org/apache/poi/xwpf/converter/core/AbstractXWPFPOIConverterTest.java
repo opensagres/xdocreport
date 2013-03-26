@@ -159,6 +159,13 @@ public abstract class AbstractXWPFPOIConverterTest
     }
 
     @Test
+    public void Issue222()
+        throws IOException
+    {
+        doGenerate( "Issue222.docx" );
+    }
+    
+    @Test
     public void Issue239()
         throws IOException
     {
@@ -394,13 +401,6 @@ public abstract class AbstractXWPFPOIConverterTest
         throws IOException
     {
         doGenerate( "TestTitle.docx" );
-    }
-
-    @Test
-    public void TempTest()
-        throws IOException
-    {
-        doGenerate( "TempTest.docx" );
     }
     
     protected abstract void doGenerate( String fileName )

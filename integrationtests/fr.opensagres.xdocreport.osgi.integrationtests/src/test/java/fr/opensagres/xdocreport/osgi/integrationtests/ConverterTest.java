@@ -40,7 +40,7 @@ import org.ops4j.pax.exam.Option;
 import org.ops4j.pax.exam.junit.Configuration;
 import org.ops4j.pax.exam.junit.ExamReactorStrategy;
 import org.ops4j.pax.exam.junit.JUnit4TestRunner;
-import org.ops4j.pax.exam.spi.reactors.EagerSingleStagedReactorFactory;
+import org.ops4j.pax.exam.spi.reactors.AllConfinedStagedReactorFactory;
 
 import fr.opensagres.xdocreport.converter.ConverterRegistry;
 import fr.opensagres.xdocreport.converter.ConverterTypeTo;
@@ -50,7 +50,7 @@ import fr.opensagres.xdocreport.converter.Options;
 import fr.opensagres.xdocreport.core.document.DocumentKind;
 
 @RunWith( JUnit4TestRunner.class )
-@ExamReactorStrategy(EagerSingleStagedReactorFactory.class)
+@ExamReactorStrategy(AllConfinedStagedReactorFactory.class)
 public class ConverterTest
 {
 
@@ -70,8 +70,9 @@ public class ConverterTest
         return options(
 
                         // uncomment for "remote debugging"
-                        // PaxRunnerOptions.vmOption("-Xrunjdwp:transport=dt_socket,server=y,suspend=y,address=5006"),
+        		//CoreOptions.vmOption("-Xrunjdwp:transport=dt_socket,server=y,suspend=y,address=5006"),
                         // equinox(),
+        		
         				CoreOptions.junitBundles(),
                         systemProperty( "org.ops4j.pax.logging.DefaultServiceLog.level" ).value( "DEBUG" ),
 
@@ -100,17 +101,18 @@ public class ConverterTest
                         wrappedBundle( mavenBundle( "org.apache.servicemix.bundles", "org.apache.servicemix.bundles.xmlbeans", "2.4.0_5" ) ),
                         wrappedBundle( mavenBundle( "org.apache.poi", "ooxml-schemas", "1.1" ) ),
                         wrappedBundle( mavenBundle( "org.odftoolkit", "odfdom-java", "0.8.7" ) ),
-                        wrappedBundle( mavenBundle( "com.lowagie", "itext", "2.1.7" ) ),
+                        wrappedBundle( mavenBundle( "com.lowagie", "itext", "2.1.7" ) )
 
-                        new Customizer()
-                        {
-
-                            @Override
-                            public void customizeEnvironment( File workingFolder )
-                            {
-                                System.out.println( "Hello World: " + workingFolder.getAbsolutePath() );
-                            }
-                        } );
+//                        new Customizer()
+//                        {
+//
+//                            @Override
+//                            public void customizeEnvironment( File workingFolder )
+//                            {
+//                                System.out.println( "Hello World: " + workingFolder.getAbsolutePath() );
+//                            }
+//                        }
+        		);
     }
 
     @Test

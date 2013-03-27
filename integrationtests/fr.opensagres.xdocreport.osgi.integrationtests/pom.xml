@@ -1,4 +1,5 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 	<parent>
 		<artifactId>integrationtests</artifactId>
@@ -8,7 +9,6 @@
 	<artifactId>fr.opensagres.xdocreport.osgi.integrationtests</artifactId>
 
 	<properties>
-		<compiler.plugin.version>2.0.2</compiler.plugin.version>
 		<osgi.version>4.2.0</osgi.version>
 		<paxrunnerversion>1.7.5</paxrunnerversion>
 		<paxexamversion>2.4.0</paxexamversion>
@@ -26,51 +26,9 @@
 							<goal>generate-depends-file</goal>
 						</goals>
 					</execution>
-					<!-- <execution> <id>generate-config</id> <goals> <goal>generate-config</goal> 
-						</goals> </execution> -->
 				</executions>
 			</plugin>
-
 		</plugins>
-		<pluginManagement>
-			<plugins>
-				<!--This plugin's configuration is used to store Eclipse m2e settings 
-					only. It has no influence on the Maven build itself. -->
-				<plugin>
-					<groupId>org.eclipse.m2e</groupId>
-					<artifactId>lifecycle-mapping</artifactId>
-					<version>1.0.0</version>
-					<configuration>
-						<lifecycleMappingMetadata>
-							<pluginExecutions>
-								<pluginExecution>
-									<pluginExecutionFilter>
-										<groupId>
-											org.ops4j.pax.exam
-										</groupId>
-										<artifactId>
-											maven-paxexam-plugin
-										</artifactId>
-										<versionRange>
-											[1.2.1,)
-										</versionRange>
-										<goals>
-											<goal>generate-config</goal>
-											<goal>
-												generate-depends-file
-											</goal>
-										</goals>
-									</pluginExecutionFilter>
-									<action>
-										<ignore />
-									</action>
-								</pluginExecution>
-							</pluginExecutions>
-						</lifecycleMappingMetadata>
-					</configuration>
-				</plugin>
-			</plugins>
-		</pluginManagement>
 	</build>
 	<dependencies>
 		<!-- Pax Exam Dependencies -->
@@ -153,7 +111,7 @@
 			<groupId>fr.opensagres.xdocreport</groupId>
 			<artifactId>fr.opensagres.xdocreport.converter.odt.odfdom</artifactId>
 			<version>1.0.1-SNAPSHOT</version>
-		</dependency>		
+		</dependency>
 		<dependency>
 			<groupId>fr.opensagres.xdocreport</groupId>
 			<artifactId>fr.opensagres.xdocreport.converter.docx.xwpf</artifactId>
@@ -201,9 +159,7 @@
 		</dependency>
 		<dependency>
 			<groupId>org.apache.cxf.dosgi</groupId>
-			<artifactId>
-				cxf-dosgi-ri-multibundle-distribution
-			</artifactId>
+			<artifactId>cxf-dosgi-ri-multibundle-distribution</artifactId>
 			<version>1.3.1</version>
 			<exclusions>
 				<exclusion>
@@ -224,13 +180,13 @@
 		</dependency>
 		<dependency>
 			<groupId>fr.opensagres.xdocreport</groupId>
-  		  	<version>1.0.1-SNAPSHOT</version>
+			<version>1.0.1-SNAPSHOT</version>
 			<artifactId>fr.opensagres.xdocreport.remoting.resources.services.server</artifactId>
 		</dependency>
 		<dependency>
-			<groupId>org.slf4j</groupId>
-			<artifactId>slf4j-simple</artifactId>
-			<version>1.6.1</version>
+			<groupId>ch.qos.logback</groupId>
+			<artifactId>logback-classic</artifactId>
+			<version>0.9.30</version>
 		</dependency>
 	</dependencies>
 </project>

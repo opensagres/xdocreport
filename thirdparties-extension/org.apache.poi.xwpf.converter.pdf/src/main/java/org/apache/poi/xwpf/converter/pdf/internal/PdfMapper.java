@@ -40,6 +40,7 @@ import org.apache.poi.xwpf.converter.core.TableCellBorder;
 import org.apache.poi.xwpf.converter.core.TableHeight;
 import org.apache.poi.xwpf.converter.core.TableWidth;
 import org.apache.poi.xwpf.converter.core.XWPFDocumentVisitor;
+import org.apache.poi.xwpf.converter.core.styles.paragraph.ParagraphIndentationHangingValueProvider;
 import org.apache.poi.xwpf.converter.core.styles.paragraph.ParagraphIndentationLeftValueProvider;
 import org.apache.poi.xwpf.converter.core.utils.DxaUtil;
 import org.apache.poi.xwpf.converter.core.utils.StringUtils;
@@ -166,7 +167,7 @@ public class PdfMapper
         throws Exception
     {
         BigInteger headerY = sectPr.getPgMar() != null ? sectPr.getPgMar().getHeader() : null;
-        this.currentPageWidth = sectPr.getPgMar() != null ? DxaUtil.dxa2points( sectPr.getPgSz().getW()) : null;
+        this.currentPageWidth = sectPr.getPgMar() != null ? DxaUtil.dxa2points( sectPr.getPgSz().getW() ) : null;
         StylableHeaderFooter pdfHeader = new StylableHeaderFooter( pdfDocument, headerY, true );
         List<IBodyElement> bodyElements = header.getBodyElements();
         StylableTableCell tableCell = getHeaderFooterTableCell( pdfHeader, bodyElements );
@@ -180,7 +181,7 @@ public class PdfMapper
         throws Exception
     {
         BigInteger footerY = sectPr.getPgMar() != null ? sectPr.getPgMar().getFooter() : null;
-        this.currentPageWidth = sectPr.getPgMar() != null ? DxaUtil.dxa2points( sectPr.getPgSz().getW()) : null;
+        this.currentPageWidth = sectPr.getPgMar() != null ? DxaUtil.dxa2points( sectPr.getPgSz().getW() ) : null;
         StylableHeaderFooter pdfFooter = new StylableHeaderFooter( pdfDocument, footerY, false );
         List<IBodyElement> bodyElements = footer.getBodyElements();
         StylableTableCell tableCell = getHeaderFooterTableCell( pdfFooter, bodyElements );
@@ -330,15 +331,26 @@ public class PdfMapper
             CTPPr lvlPPr = lvl.getPPr();
             if ( lvlPPr != null )
             {
-                Float indLeft = ParagraphIndentationLeftValueProvider.INSTANCE.getValue( lvlPPr );
-                if ( indLeft != null )
+                if ( ParagraphIndentationLeftValueProvider.INSTANCE.getValue( docxParagraph.getCTP().getPPr() ) == null )
                 {
-                    pdfParagraph.setIndentationLeft( indLeft );
+
+                    // search the indentation from the level properties only if paragraph has not override it
+                    // see https://code.google.com/p/xdocreport/issues/detail?id=239
+                    Float indLeft = ParagraphIndentationLeftValueProvider.INSTANCE.getValue( lvlPPr );
+                    if ( indLeft != null )
+                    {
+                        pdfParagraph.setIndentationLeft( indLeft );
+                    }
                 }
-                Float hanging = stylesDocument.getIndentationHanging( lvlPPr );
-                if ( hanging != null )
+                if ( ParagraphIndentationHangingValueProvider.INSTANCE.getValue( docxParagraph.getCTP().getPPr() ) == null )
                 {
-                    pdfParagraph.setFirstLineIndent( -hanging );
+                    // search the hanging from the level properties only if paragraph has not override it
+                    // see https://code.google.com/p/xdocreport/issues/detail?id=239
+                    Float hanging = stylesDocument.getIndentationHanging( lvlPPr );
+                    if ( hanging != null )
+                    {
+                        pdfParagraph.setFirstLineIndent( -hanging );
+                    }
                 }
             }
             pdfParagraph.setListItemText( itemContext.getText() );

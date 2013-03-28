@@ -28,8 +28,6 @@ import static org.apache.poi.xwpf.converter.core.utils.DxaUtil.dxa2points;
 
 import java.io.OutputStream;
 
-import javax.swing.text.Style;
-
 import org.apache.poi.xwpf.converter.core.MasterPageManager;
 import org.apache.poi.xwpf.converter.core.PageOrientation;
 import org.apache.poi.xwpf.converter.core.XWPFConverterException;
@@ -299,7 +297,7 @@ public class StylableDocument
         }
         activeMasterPage = masterPage;
         // step 3 - initialize column layout, it needs page dimensions which may be lowered by header/footer in step 2
-        layoutTable = StylableDocumentSection.createLayoutTable( getPageWidth(), getAdjustedPageHeight(), (Style) null );
+        layoutTable = StylableDocumentSection.createLayoutTable( getPageWidth(), getAdjustedPageHeight() );
         text = StylableDocumentSection.createColumnText();
         setColIdx( 0 );
     }
@@ -383,9 +381,19 @@ public class StylableDocument
                 Float footerY = ( (StylableHeaderFooter) footer ).getY();
                 if ( footerY != null )
                 {
-                    return document.getOriginMarginBottom() + footerY;
+                    return ( (StylableHeaderFooter) footer ).getTotalHeight();
                 }
                 return super.getFooterY( footer );
+            }
+
+            @Override
+            protected float adjustMargin( float margin, IMasterPageHeaderFooter headerFooter )
+            {
+                if ( headerFooter.getTotalHeight() > margin )
+                {
+                    return headerFooter.getTotalHeight();
+                }
+                return margin;
             }
         };
     }

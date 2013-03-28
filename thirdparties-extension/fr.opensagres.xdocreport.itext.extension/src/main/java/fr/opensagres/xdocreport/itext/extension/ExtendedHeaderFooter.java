@@ -105,16 +105,20 @@ public class ExtendedHeaderFooter
         float marginTop = document.getOriginMarginTop();
         if ( header != null )
         {
-            marginTop += header.getTotalHeight();
+            marginTop = adjustMargin(marginTop, header);
         }
         float marginBottom = document.getOriginMarginBottom();
         if ( footer != null )
         {
-            marginBottom += footer.getTotalHeight();
+            marginBottom = adjustMargin(marginBottom, footer);
         }
         document.setMargins( marginLeft, marginRight, marginTop, marginBottom );
 
         this.masterPage = masterPage;
+    }
+    
+    protected float adjustMargin(float margin, IMasterPageHeaderFooter headerFooter) {
+        return margin + headerFooter.getTotalHeight();
     }
 
     public IMasterPage getMasterPage()

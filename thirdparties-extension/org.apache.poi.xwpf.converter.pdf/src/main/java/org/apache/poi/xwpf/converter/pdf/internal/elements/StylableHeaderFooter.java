@@ -51,6 +51,8 @@ public class StylableHeaderFooter
 
     private final Float y;
 
+    private Float totalHeight;
+
     public StylableHeaderFooter( StylableDocument ownerDocument, BigInteger dxaY, boolean header )
     {
         super( ownerDocument, null, 1 );
@@ -59,8 +61,9 @@ public class StylableHeaderFooter
         tableCell = ownerDocument.createTableCell( this );
         tableCell.setBorder( Table.NO_BORDER );
         // set padding to zero for proper alignment
-        tableCell.setPadding( 0.0f );
+        //tableCell.setPadding( 0.0f );
         this.y = dxaY != null ? DxaUtil.dxa2points( dxaY ) : null;
+        this.totalHeight = null;
     }
 
     public StylableTableCell getTableCell()
@@ -80,8 +83,22 @@ public class StylableHeaderFooter
 
     public float getTotalHeight()
     {
+        if ( totalHeight == null )
+        {
+            totalHeight = computeTotalHeight();
+        }
+        return totalHeight;
+    }
+
+    private float computeTotalHeight()
+    {
         setWidthIfNecessary();
-        return super.getRowHeight( 0 );
+        float height = super.getRowHeight( 0 );
+        if ( y != null )
+        {
+            return height + y;
+        }
+        return height;
     }
 
     public void flush()

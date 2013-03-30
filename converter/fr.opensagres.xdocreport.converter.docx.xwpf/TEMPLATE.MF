@@ -4,4 +4,5 @@ Import-Package: org.apache.poi.xwpf.converter.core,
  org.apache.poi.xwpf.converter.xhtml,
  org.apache.poi.xwpf.usermodel,
  fr.opensagres.xdocreport.core.utils
+DynamicImport-Package: *
 

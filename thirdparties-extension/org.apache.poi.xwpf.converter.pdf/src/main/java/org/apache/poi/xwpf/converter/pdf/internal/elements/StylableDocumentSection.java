@@ -27,8 +27,6 @@ package org.apache.poi.xwpf.converter.pdf.internal.elements;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.swing.text.Style;
-
 import org.apache.poi.xwpf.converter.core.XWPFConverterException;
 
 import com.lowagie.text.DocumentException;
@@ -54,8 +52,6 @@ public class StylableDocumentSection
     private IBoundsLimitContainer sectionParent;
 
     private IBreakHandlingContainer breakHandlingParent;
-
-    private Style lastStyleApplied = null;
 
     private PdfPTable layoutTable;
 
@@ -90,34 +86,29 @@ public class StylableDocumentSection
         this.breakHandlingParent = getIBreakHandlingContainer( parent );
     }
 
-//    public void applyStyles( Style style )
-//    {
-//        this.lastStyleApplied = style;
-//
-//        StyleSectionProperties sectionProperties = style.getSectionProperties();
-//        if ( sectionProperties != null )
-//        {
-//            Boolean dontBalanceTextColumns = sectionProperties.getDontBalanceTextColumns();
-//            if ( Boolean.TRUE.equals( dontBalanceTextColumns ) )
-//            {
-//                balanceText = false;
-//            }
-//        }
-//
-//        // initialize layout table
-//        float width = sectionParent.getWidthLimit();
-//        float height = sectionParent.getHeightLimit();
-//        layoutTable = createLayoutTable( width, height, style );
-//
-//        // initialize simulated text
-//        texts = new ArrayList<ColumnText>();
-//        setColIdx( 0 );
-//    }
-
-    public Style getLastStyleApplied()
-    {
-        return lastStyleApplied;
-    }
+    // public void applyStyles( Style style )
+    // {
+    // this.lastStyleApplied = style;
+    //
+    // StyleSectionProperties sectionProperties = style.getSectionProperties();
+    // if ( sectionProperties != null )
+    // {
+    // Boolean dontBalanceTextColumns = sectionProperties.getDontBalanceTextColumns();
+    // if ( Boolean.TRUE.equals( dontBalanceTextColumns ) )
+    // {
+    // balanceText = false;
+    // }
+    // }
+    //
+    // // initialize layout table
+    // float width = sectionParent.getWidthLimit();
+    // float height = sectionParent.getHeightLimit();
+    // layoutTable = createLayoutTable( width, height, style );
+    //
+    // // initialize simulated text
+    // texts = new ArrayList<ColumnText>();
+    // setColIdx( 0 );
+    // }
 
     public IITextContainer getParent()
     {
@@ -354,55 +345,55 @@ public class StylableDocumentSection
 
     public static IBreakHandlingContainer getIBreakHandlingContainer( IITextContainer c )
     {
-//        while ( c != null )
-//        {
-//            if ( c instanceof IBreakHandlingContainer )
-//            {
-//                return (IBreakHandlingContainer) c;
-//            }
-//            c = c.getParent();
-//        }
+        // while ( c != null )
+        // {
+        // if ( c instanceof IBreakHandlingContainer )
+        // {
+        // return (IBreakHandlingContainer) c;
+        // }
+        // c = c.getParent();
+        // }
         return null;
     }
 
-    public static SectionPdfPTable createLayoutTable( float width, float height, Style style )
+    public static SectionPdfPTable createLayoutTable( float width, float height )
     {
         // create one row table which will layout section text
-//        if ( style != null )
-//        {
-//            List<StyleColumnProperties> columnPropertiesList = style.getColumnPropertiesList();
-//            StyleColumnsProperties columnsProperties = style.getColumnsProperties();
-//            if ( columnPropertiesList != null && !columnPropertiesList.isEmpty() )
-//            {
-//                // explicit column list
-//                return createLayoutTable( width, height, columnPropertiesList );
-//            }
-//            else if ( columnsProperties != null )
-//            {
-//                // we have columns properties
-//                // make table with columns of equal width
-//                columnPropertiesList = new ArrayList<StyleColumnProperties>();
-//
-//                Integer columnCount = columnsProperties.getColumnCount();
-//                int colCount = columnCount != null ? columnCount : 1;
-//
-//                Float columnGap = columnsProperties.getColumnGap();
-//                float halfGap = columnGap != null ? columnGap / 2.0f : 0.0f;
-//
-//                for ( int i = 0; i < colCount; i++ )
-//                {
-//                    StyleColumnProperties columnProperties = new StyleColumnProperties();
-//                    columnProperties.setRelWidth( 100 );
-//                    if ( halfGap > 0.0f )
-//                    {
-//                        columnProperties.setStartIndent( i == 0 ? null : halfGap );
-//                        columnProperties.setEndIndent( i == colCount - 1 ? null : halfGap );
-//                    }
-//                    columnPropertiesList.add( columnProperties );
-//                }
-//                return createLayoutTable( width, height, columnPropertiesList );
-//            }
-//        }
+        // if ( style != null )
+        // {
+        // List<StyleColumnProperties> columnPropertiesList = style.getColumnPropertiesList();
+        // StyleColumnsProperties columnsProperties = style.getColumnsProperties();
+        // if ( columnPropertiesList != null && !columnPropertiesList.isEmpty() )
+        // {
+        // // explicit column list
+        // return createLayoutTable( width, height, columnPropertiesList );
+        // }
+        // else if ( columnsProperties != null )
+        // {
+        // // we have columns properties
+        // // make table with columns of equal width
+        // columnPropertiesList = new ArrayList<StyleColumnProperties>();
+        //
+        // Integer columnCount = columnsProperties.getColumnCount();
+        // int colCount = columnCount != null ? columnCount : 1;
+        //
+        // Float columnGap = columnsProperties.getColumnGap();
+        // float halfGap = columnGap != null ? columnGap / 2.0f : 0.0f;
+        //
+        // for ( int i = 0; i < colCount; i++ )
+        // {
+        // StyleColumnProperties columnProperties = new StyleColumnProperties();
+        // columnProperties.setRelWidth( 100 );
+        // if ( halfGap > 0.0f )
+        // {
+        // columnProperties.setStartIndent( i == 0 ? null : halfGap );
+        // columnProperties.setEndIndent( i == colCount - 1 ? null : halfGap );
+        // }
+        // columnPropertiesList.add( columnProperties );
+        // }
+        // return createLayoutTable( width, height, columnPropertiesList );
+        // }
+        // }
         // default is one column and no gap
         List<StyleColumnProperties> columnPropertiesList = new ArrayList<StyleColumnProperties>();
         StyleColumnProperties columnProperties = new StyleColumnProperties();

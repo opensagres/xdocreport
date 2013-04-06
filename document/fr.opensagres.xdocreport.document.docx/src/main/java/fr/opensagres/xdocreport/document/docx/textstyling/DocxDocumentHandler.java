@@ -209,31 +209,42 @@ public class DocxDocumentHandler
         {
             startParagraphIfNeeded();
             super.write( "<w:r>" );
-            if ( bolding || italicsing || underlining || striking )
-            {
-                super.write( "<w:rPr>" );
-                if ( bolding )
-                {
-                    super.write( "<w:b />" );
-                }
-                if ( italicsing )
-                {
-                    super.write( "<w:i />" );
-                }
-                if ( underlining )
-                {
-                    super.write( "<w:u w:val=\"single\" />" );
-                }
-                if ( striking )
-                {
-                    super.write( "<w:strike />" );
-                }
-                super.write( "</w:rPr>" );
-            }
+            processRunProperties( false, bolding, italicsing, underlining, striking );
             super.write( "<w:t xml:space=\"preserve\" >" );
             super.write( content );
             super.write( "</w:t>" );
             super.write( "</w:r>" );
+        }
+    }
+
+    private void processRunProperties( boolean isInsidePPr, boolean bold, boolean italics, boolean underline,
+                                       boolean strike )
+        throws IOException
+    {
+        if ( bold || italics || underline || strike )
+        {
+            if ( isInsidePPr )
+            {
+                startPPrIfNeeded();
+            }
+            super.write( "<w:rPr>" );
+            if ( bold )
+            {
+                super.write( "<w:b />" );
+            }
+            if ( italics )
+            {
+                super.write( "<w:i />" );
+            }
+            if ( underline )
+            {
+                super.write( "<w:u w:val=\"single\" />" );
+            }
+            if ( strike )
+            {
+                super.write( "<w:strike />" );
+            }
+            super.write( "</w:rPr>" );
         }
     }
 
@@ -363,6 +374,7 @@ public class DocxDocumentHandler
         //
         if ( properties != null )
         {
+            // w:jc
             TextAlignment textAlignment = properties.getTextAlignment();
             if ( textAlignment != null )
             {
@@ -386,7 +398,11 @@ public class DocxDocumentHandler
                         break;
                 }
             }
+            // rPPr
+            processRunProperties( true, properties.isBold(), properties.isItalic(), properties.isUnderline(),
+                                  properties.isStrike() );
         }
+
         endPPrIfNeeded();
     }
 

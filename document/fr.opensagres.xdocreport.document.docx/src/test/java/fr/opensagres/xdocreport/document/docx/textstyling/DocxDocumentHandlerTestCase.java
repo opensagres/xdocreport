@@ -127,6 +127,22 @@ public class DocxDocumentHandlerTestCase
     }
 
     @Test
+    public void testBoldWithStyle()
+        throws Exception
+    {
+        IContext context = new MockContext();
+        BufferedElement parent = null;
+
+        ITextStylingTransformer formatter = HTMLTextStylingTransformer.INSTANCE;
+        IDocumentHandler handler = new DocxDocumentHandler( parent, context, "word/document.xml" );
+        formatter.transform( "<p style=\"font-weight:bold;\">text</p>", handler );
+
+        Assert.assertEquals( "", handler.getTextBefore() );
+        Assert.assertEquals( "", handler.getTextBody() );
+        Assert.assertEquals( "", handler.getTextEnd() );
+    }
+    
+    @Test
     public void testItalicWithI()
         throws Exception
     {

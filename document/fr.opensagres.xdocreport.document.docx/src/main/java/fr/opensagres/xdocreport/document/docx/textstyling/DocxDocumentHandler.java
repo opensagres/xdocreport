@@ -361,27 +361,30 @@ public class DocxDocumentHandler
             super.write( "</w:numPr>" );
         }
         //
-        TextAlignment textAlignment = properties.getTextAlignment();
-        if ( textAlignment != null )
+        if ( properties != null )
         {
-            switch ( textAlignment )
+            TextAlignment textAlignment = properties.getTextAlignment();
+            if ( textAlignment != null )
             {
-                case Left:
-                    startPPrIfNeeded();
-                    super.write( "<w:jc w:val=\"left\"/>" );
-                    break;
-                case Center:
-                    startPPrIfNeeded();
-                    super.write( "<w:jc w:val=\"center\"/>" );
-                    break;
-                case Right:
-                    startPPrIfNeeded();
-                    super.write( "<w:jc w:val=\"right\"/>" );
-                    break;
-                case Justify:
-                    startPPrIfNeeded();
-                    super.write( "<w:jc w:val=\"both\"/>" );
-                    break;
+                switch ( textAlignment )
+                {
+                    case Left:
+                        startPPrIfNeeded();
+                        super.write( "<w:jc w:val=\"left\"/>" );
+                        break;
+                    case Center:
+                        startPPrIfNeeded();
+                        super.write( "<w:jc w:val=\"center\"/>" );
+                        break;
+                    case Right:
+                        startPPrIfNeeded();
+                        super.write( "<w:jc w:val=\"right\"/>" );
+                        break;
+                    case Justify:
+                        startPPrIfNeeded();
+                        super.write( "<w:jc w:val=\"both\"/>" );
+                        break;
+                }
             }
         }
         endPPrIfNeeded();

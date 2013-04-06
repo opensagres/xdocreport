@@ -40,6 +40,7 @@ import fr.opensagres.xdocreport.document.textstyling.properties.HeaderProperties
 import fr.opensagres.xdocreport.document.textstyling.properties.ListItemProperties;
 import fr.opensagres.xdocreport.document.textstyling.properties.ListProperties;
 import fr.opensagres.xdocreport.document.textstyling.properties.ParagraphProperties;
+import fr.opensagres.xdocreport.document.textstyling.properties.TextAlignment;
 import fr.opensagres.xdocreport.template.IContext;
 
 /**
@@ -57,7 +58,7 @@ public class DocxDocumentHandler
 
     private boolean striking;
 
-    private Stack<ParagraphProperties> paragraphsStack;
+    private Stack<ContainerProperties> paragraphsStack;
 
     private HyperlinkRegistry hyperlinkRegistry;
 
@@ -72,6 +73,8 @@ public class DocxDocumentHandler
     private boolean paragraphWasInserted;
 
     private int currentNumId;
+
+    private boolean haspPr;
 
     public DocxDocumentHandler( BufferedElement parent, IContext context, String entryName )
     {
@@ -89,7 +92,7 @@ public class DocxDocumentHandler
         this.italicsing = false;
         this.underlining = false;
         this.striking = false;
-        this.paragraphsStack = new Stack<ParagraphProperties>();
+        this.paragraphsStack = new Stack<ContainerProperties>();
     }
 
     public void endDocument()
@@ -244,13 +247,20 @@ public class DocxDocumentHandler
         }
     }
 
-    private void internalStartParagraph( ParagraphProperties properties )
+    private void internalStartParagraph( ContainerProperties properties, String pStyle, boolean isList )
         throws IOException
     {
         paragraphWasInserted = true;
         super.setTextLocation( TextLocation.End );
         super.write( "<w:p>" );
+        processParagraphProperties( properties, pStyle, isList );
         paragraphsStack.push( properties );
+    }
+
+    private void internalStartParagraph( ContainerProperties properties )
+        throws IOException
+    {
+        internalStartParagraph( properties, null, false );
     }
 
     public void startParagraph( ParagraphProperties properties )
@@ -309,27 +319,91 @@ public class DocxDocumentHandler
     {
         // Close current paragraph
         closeCurrentParagraph();
-        internalStartParagraph( null );
+        internalStartParagraph( properties, null, true );
+    }
 
-        super.write( "<w:pPr>" );
-        // super.write( "<w:pStyle w:val=\"Paragraphedeliste\" />" );
-        super.write( "<w:numPr>" );
+    /**
+     * Generate wpPr docx element.
+     * 
+     * @param properties
+     * @param pStyle
+     * @param isList
+     * @throws IOException
+     */
+    private void processParagraphProperties( ContainerProperties properties, String pStyle, boolean isList )
+        throws IOException
+    {
+        haspPr = false;
+        if ( pStyle != null )
+        {
+            startPPrIfNeeded();
+            super.write( "<w:pStyle w:val=\"" );
+            super.write( pStyle );
+            super.write( "\" />" );
+        }
+        if ( isList )
+        {
+            startPPrIfNeeded();
+            super.write( "<w:numPr>" );
 
-        // <w:ilvl w:val="0" />
-        int ilvlVal = super.getCurrentListIndex();
-        super.write( "<w:ilvl w:val=\"" );
-        super.write( String.valueOf( ilvlVal ) );
-        super.write( "\" />" );
+            // <w:ilvl w:val="0" />
+            int ilvlVal = super.getCurrentListIndex();
+            super.write( "<w:ilvl w:val=\"" );
+            super.write( String.valueOf( ilvlVal ) );
+            super.write( "\" />" );
 
-        // "<w:numId w:val="1" />"
-        int numIdVal = getCurrentNumId();
-        super.write( "<w:numId w:val=\"" );
-        super.write( String.valueOf( numIdVal ) );
-        super.write( "\" />" );
+            // "<w:numId w:val="1" />"
+            int numIdVal = getCurrentNumId();
+            super.write( "<w:numId w:val=\"" );
+            super.write( String.valueOf( numIdVal ) );
+            super.write( "\" />" );
 
-        super.write( "</w:numPr>" );
-        super.write( "</w:pPr>" );
+            super.write( "</w:numPr>" );
+        }
+        //
+        TextAlignment textAlignment = properties.getTextAlignment();
+        if ( textAlignment != null )
+        {
+            switch ( textAlignment )
+            {
+                case Left:
+                    startPPrIfNeeded();
+                    super.write( "<w:jc w:val=\"left\"/>" );
+                    break;
+                case Center:
+                    startPPrIfNeeded();
+                    super.write( "<w:jc w:val=\"center\"/>" );
+                    break;
+                case Right:
+                    startPPrIfNeeded();
+                    super.write( "<w:jc w:val=\"right\"/>" );
+                    break;
+                case Justify:
+                    startPPrIfNeeded();
+                    super.write( "<w:jc w:val=\"both\"/>" );
+                    break;
+            }
+        }
+        endPPrIfNeeded();
+    }
 
+    private void startPPrIfNeeded()
+        throws IOException
+    {
+        if ( !haspPr )
+        {
+            super.write( "<w:pPr>" );
+        }
+        haspPr = true;
+    }
+
+    private void endPPrIfNeeded()
+        throws IOException
+    {
+        if ( haspPr )
+        {
+            super.write( "</w:pPr>" );
+        }
     }
 
     public void endListItem()
@@ -343,7 +417,6 @@ public class DocxDocumentHandler
     {
         // Close current paragraph
         closeCurrentParagraph();
-        internalStartParagraph( null );
 
         // In docx, title is a paragraph with a style.
 
@@ -352,10 +425,8 @@ public class DocxDocumentHandler
          * </w:pPr> <w:r> <w:t>Titre1</w:t> </w:r> </w:p>
          */
         String headingStyleName = styleGen.getHeaderStyleId( level, defaultStyle );
-        super.write( "<w:pPr>" );
-        super.write( "<w:pStyle w:val=\"" );
-        super.write( headingStyleName );
-        super.write( "\" /></w:pPr><w:r><w:t>" );
+        internalStartParagraph( properties, headingStyleName, false );
+        super.write( "<w:r><w:t>" );
         insideHeader = true;
     }
 
@@ -547,4 +618,5 @@ public class DocxDocumentHandler
         super.write( "</w:t>" );
         super.write( "</w:r>" );
     }
+
 }

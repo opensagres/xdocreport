@@ -622,6 +622,27 @@ public class DocxDocumentHandlerTestCase
     }
 
     @Test
+    public void testTextAlignment()
+        throws Exception
+    {
+        IContext context = new MockContext();
+        BufferedElement parent = null;
+
+        ITextStylingTransformer formatter = HTMLTextStylingTransformer.INSTANCE;
+        IDocumentHandler handler = new DocxDocumentHandler( parent, context, "word/document.xml" );
+        formatter.transform( "<p style=\"text-align:left\" >left</p><p style=\"text-align:right\" >right</p><p style=\"text-align:center\" >center</p><p style=\"text-align:justify\" >justify</p>",
+                             handler );
+
+        Assert.assertEquals( "", handler.getTextBefore() );
+        Assert.assertEquals( "", handler.getTextBody() );
+        Assert.assertEquals( "<w:p><w:pPr><w:jc w:val=\"left\"/></w:pPr><w:r><w:t xml:space=\"preserve\" >left</w:t></w:r></w:p>"
+                                 + "<w:p><w:pPr><w:jc w:val=\"right\"/></w:pPr><w:r><w:t xml:space=\"preserve\" >right</w:t></w:r></w:p>"
+                                 + "<w:p><w:pPr><w:jc w:val=\"center\"/></w:pPr><w:r><w:t xml:space=\"preserve\" >center</w:t></w:r></w:p>"
+                                 + "<w:p><w:pPr><w:jc w:val=\"both\"/></w:pPr><w:r><w:t xml:space=\"preserve\" >justify</w:t></w:r></w:p>",
+                             handler.getTextEnd() );
+    }
+
+    @Test
     public void testAll()
         throws Exception
     {

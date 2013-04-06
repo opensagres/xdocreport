@@ -29,22 +29,23 @@ package fr.opensagres.xdocreport.document.textstyling.properties;
  */
 public class ContainerProperties
 {
-
     private boolean pageBreakBefore;
 
     private boolean pageBreakAfter;
 
     private boolean bold;
 
-	private boolean italic;
+    private boolean italic;
 
     private boolean underline;
 
-    private boolean	strike;
+    private boolean strike;
 
     private boolean subscript;
 
     private boolean superscript;
+
+    private TextAlignment textAlignment;
 
     public boolean isPageBreakBefore()
     {
@@ -66,51 +67,73 @@ public class ContainerProperties
         this.pageBreakAfter = pageBreakAfter;
     }
 
-    public boolean isBold() {
-		return bold;
-	}
+    public boolean isBold()
+    {
+        return bold;
+    }
 
-	public void setBold(boolean bold) {
-		this.bold = bold;
-	}
+    public void setBold( boolean bold )
+    {
+        this.bold = bold;
+    }
 
-	public boolean isItalic() {
-		return italic;
-	}
+    public boolean isItalic()
+    {
+        return italic;
+    }
 
-	public void setItalic(boolean italic) {
-		this.italic = italic;
-	}
+    public void setItalic( boolean italic )
+    {
+        this.italic = italic;
+    }
 
-	public boolean isUnderline() {
-		return underline;
-	}
+    public boolean isUnderline()
+    {
+        return underline;
+    }
 
-	public void setUnderline(boolean underline) {
-		this.underline = underline;
-	}
+    public void setUnderline( boolean underline )
+    {
+        this.underline = underline;
+    }
 
-	public boolean isStrike() {
-		return strike;
-	}
+    public boolean isStrike()
+    {
+        return strike;
+    }
 
-	public void setStrike(boolean strike) {
-		this.strike = strike;
-	}
+    public void setStrike( boolean strike )
+    {
+        this.strike = strike;
+    }
 
-	public boolean isSubscript() {
-		return subscript;
-	}
+    public boolean isSubscript()
+    {
+        return subscript;
+    }
 
-	public void setSubscript(boolean subscript) {
-		this.subscript = subscript;
-	}
+    public void setSubscript( boolean subscript )
+    {
+        this.subscript = subscript;
+    }
 
-	public boolean isSuperscript() {
-		return superscript;
-	}
+    public boolean isSuperscript()
+    {
+        return superscript;
+    }
 
-	public void setSuperscript(boolean superscript) {
-		this.superscript = superscript;
-	}
+    public void setSuperscript( boolean superscript )
+    {
+        this.superscript = superscript;
+    }
+
+    public TextAlignment getTextAlignment()
+    {
+        return textAlignment;
+    }
+
+    public void setTextAlignment( TextAlignment textAlignment )
+    {
+        this.textAlignment = textAlignment;
+    }
 }

@@ -34,6 +34,7 @@ import fr.opensagres.xdocreport.document.textstyling.properties.HeaderProperties
 import fr.opensagres.xdocreport.document.textstyling.properties.ListItemProperties;
 import fr.opensagres.xdocreport.document.textstyling.properties.ListProperties;
 import fr.opensagres.xdocreport.document.textstyling.properties.ParagraphProperties;
+import fr.opensagres.xdocreport.document.textstyling.properties.TextAlignment;
 
 public class StylesHelper
 {
@@ -68,7 +69,7 @@ public class StylesHelper
 
     /**
      * Create {@link ParagraphProperties} from inline style.
-     *
+     * 
      * @param style
      * @return
      */
@@ -86,7 +87,7 @@ public class StylesHelper
 
     /**
      * Create {@link HeaderProperties} from inline style.
-     *
+     * 
      * @param style
      * @return
      */
@@ -104,7 +105,7 @@ public class StylesHelper
 
     /**
      * Create {@link ListItemProperties} from inline style.
-     *
+     * 
      * @param style
      * @return
      */
@@ -122,7 +123,7 @@ public class StylesHelper
 
     /**
      * Create {@link ListProperties} from inline style.
-     *
+     * 
      * @param style
      * @return
      */
@@ -140,7 +141,7 @@ public class StylesHelper
 
     /**
      * Create {@link SpanProperties} from inline style.
-     *
+     * 
      * @param style
      * @return
      */
@@ -149,7 +150,7 @@ public class StylesHelper
         Map<String, String> stylesMap = StylesHelper.parse( style );
         if ( !stylesMap.isEmpty() )
         {
-        	ContainerProperties properties = new ContainerProperties();
+            ContainerProperties properties = new ContainerProperties();
             processContainerproperties( properties, stylesMap );
             return properties;
         }
@@ -158,64 +159,100 @@ public class StylesHelper
 
     private static void processContainerproperties( ContainerProperties properties, Map<String, String> stylesMap )
     {
+        // page-break-before
         properties.setPageBreakBefore( false );
         if ( "always".equals( stylesMap.get( "page-break-before" ) ) )
         {
             properties.setPageBreakBefore( true );
         }
+
+        // page-break-after
         properties.setPageBreakAfter( false );
         if ( "always".equals( stylesMap.get( "page-break-after" ) ) )
         {
             properties.setPageBreakAfter( true );
         }
 
-		properties.setBold( false );
-    	if( stylesMap.get( "font-weight" ) != null )
-    	{
-    		if( "bold".equals( stylesMap.get( "font-weight" ) )
-    		 || "700".equals( stylesMap.get( "font-weight" ) )
-    	    )
-    		{
-    			properties.setBold( true );
-    		}
-    	}
+        // font-weight
+        String fontWeight = stylesMap.get( "font-weight" );
+        properties.setBold( false );
+        if ( fontWeight != null )
+        {
+            if ( "bold".equals( fontWeight ) || "700".equals( fontWeight ) )
+            {
+                properties.setBold( true );
+            }
+        }
 
-		properties.setItalic( false );
-    	if( stylesMap.get( "font-style" ) != null )
-    	{
-    		if( "italic".equals( stylesMap.get( "font-style" ) ) )
-    		{
-    			properties.setItalic( true );
-    		}
-    	}
+        // font-style
+        String fontStyle = stylesMap.get( "font-style" );
+        properties.setItalic( false );
+        if ( fontStyle != null )
+        {
+            if ( "italic".equals( fontStyle ) )
+            {
+                properties.setItalic( true );
+            }
+        }
 
-		properties.setStrike( false );
-		properties.setUnderline( false );
-    	if( stylesMap.get( "text-decoration" ) != null )
-    	{
-    		if( stylesMap.get( "text-decoration" ).contains( "underline" ) )
-    		{
-    			properties.setUnderline( true );
-    		}
+        // text-decoration
+        String textDecoration = stylesMap.get( "text-decoration" );
+        properties.setStrike( false );
+        properties.setUnderline( false );
+        if ( textDecoration != null )
+        {
+            if ( textDecoration.contains( "underline" ) )
+            {
+                properties.setUnderline( true );
+            }
 
-    		if( stylesMap.get( "text-decoration" ).contains( "line-through" ) )
-    		{
-    			properties.setStrike( true );
-    		}
-    	}
+            if ( textDecoration.contains( "line-through" ) )
+            {
+                properties.setStrike( true );
+            }
+        }
 
-		properties.setSuperscript( false );
-		properties.setSubscript( false );
-    	if( stylesMap.get( "vertical-align" ) != null )
-    	{
-    		if( "sub".equals( stylesMap.get( "vertical-align" ) ) )
-    		{
-    			properties.setSubscript( true );
-    		}
-    		else if( "super".equals( stylesMap.get( "vertical-align" ) ) )
-    		{
-    			properties.setSuperscript( true );
-    		}
-    	}
+        // vertical-align
+        String verticalAlign = stylesMap.get( "vertical-align" );
+        properties.setSuperscript( false );
+        properties.setSubscript( false );
+        if ( verticalAlign != null )
+        {
+            if ( "sub".equals( verticalAlign ) )
+            {
+                properties.setSubscript( true );
+            }
+            else if ( "super".equals( verticalAlign ) )
+            {
+                properties.setSuperscript( true );
+            }
+        }
+
+        // text-align
+        String textAlignment = stylesMap.get( "text-align" );
+        if ( textAlignment != null )
+        {
+            if ( "left".equals( textAlignment ) )
+            {
+                properties.setTextAlignment( TextAlignment.Left );
+            }
+            else if ( "center".equals( textAlignment ) )
+            {
+                properties.setTextAlignment( TextAlignment.Center );
+            }
+            else if ( "right".equals( textAlignment ) )
+            {
+                properties.setTextAlignment( TextAlignment.Right );
+            }
+            else if ( "justify".equals( textAlignment ) )
+            {
+                properties.setTextAlignment( TextAlignment.Justify );
+            }
+            else if ( "inherit".equals( textAlignment ) )
+            {
+                properties.setTextAlignment( TextAlignment.Inherit );
+            }
+
+        }
     }
 }

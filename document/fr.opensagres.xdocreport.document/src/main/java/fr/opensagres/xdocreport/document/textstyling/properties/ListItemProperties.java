@@ -31,4 +31,8 @@ public class ListItemProperties
     extends ContainerProperties
 {
 
+    public ListItemProperties()
+    {
+        super( ContainerType.LIST_ITEM );
+    }
 }

@@ -180,13 +180,13 @@ public class ODTDocumentHandlerTestCase
         // styles.xml
         IODTStylesGenerator styleGen = ODTContextHelper.getStylesGenerator( context );
         Assert.assertNotNull( styleGen );
-        Assert.assertEquals( "<style:style style:name=\"XDocReport_T0\" style:family=\"text\"><style:text-properties fo:font-weight=\"bold\" /></style:style>",
+        Assert.assertEquals( "<style:style style:name=\"XDocReport_P0\" style:family=\"paragraph\"><style:text-properties fo:font-weight=\"bold\" /></style:style>",
                              styleGen.getDynamicStyles() );
 
         // content.xml
         Assert.assertEquals( "", handler.getTextBefore() );
         Assert.assertEquals( "", handler.getTextBody() );
-        Assert.assertEquals( "<text:p><text:span text:style-name=\"XDocReport_T0\" >text</text:span></text:p>",
+        Assert.assertEquals( "<text:p text:style-name=\"XDocReport_P0\"><text:span>text</text:span></text:p>",
                              handler.getTextEnd() );
     }
 
@@ -1028,6 +1028,30 @@ public class ODTDocumentHandlerTestCase
         Assert.assertEquals( "", handler.getTextBefore() );
         Assert.assertEquals( "", handler.getTextBody() );
         Assert.assertEquals( "<text:p><text:span>Before </text:span><text:span text:style-name=\"XDocReport_T0\" >Underline <text:span text:style-name=\"XDocReport_T1\" >and bold <text:span text:style-name=\"XDocReport_T2\" >and italic</text:span> No italics</text:span> No bold</text:span><text:span> No Underline</text:span></text:p>",
+                             handler.getTextEnd() );
+    }
+
+    @Test
+    public void testSpansInP()
+        throws Exception
+    {
+        IContext context = new MockContext();
+        BufferedElement parent = null;
+
+        ITextStylingTransformer formatter = HTMLTextStylingTransformer.INSTANCE;
+        IDocumentHandler handler = new ODTDocumentHandler( parent, context, "content.xml" );
+        formatter.transform( "<p style=\"font-weight:bold;font-style:italic;\" >AAA<span>BBB</span></p>", handler );
+
+        // styles.xml
+        IODTStylesGenerator styleGen = ODTContextHelper.getStylesGenerator( context );
+        Assert.assertNotNull( styleGen );
+        Assert.assertEquals( "<style:style style:name=\"XDocReport_P0\" style:family=\"paragraph\"><style:text-properties fo:font-weight=\"bold\" fo:font-style=\"italic\" /></style:style>",
+                             styleGen.getDynamicStyles() );
+
+        // content.xml
+        Assert.assertEquals( "", handler.getTextBefore() );
+        Assert.assertEquals( "", handler.getTextBody() );
+        Assert.assertEquals( "<text:p text:style-name=\"XDocReport_P0\"><text:span>AAA</text:span><text:span>BBB</text:span></text:p>",
                              handler.getTextEnd() );
     }
 

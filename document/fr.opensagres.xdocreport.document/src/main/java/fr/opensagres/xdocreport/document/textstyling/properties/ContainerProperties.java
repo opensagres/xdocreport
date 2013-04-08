@@ -27,8 +27,14 @@ package fr.opensagres.xdocreport.document.textstyling.properties;
 /**
  * Container properties.
  */
-public class ContainerProperties
+public abstract class ContainerProperties
 {
+
+    public enum ContainerType
+    {
+        SPAN, PARAGRAPH, LIST, LIST_ITEM, HEADER
+    }
+
     private boolean pageBreakBefore;
 
     private boolean pageBreakAfter;
@@ -46,6 +52,18 @@ public class ContainerProperties
     private boolean superscript;
 
     private TextAlignment textAlignment;
+
+    private final ContainerType type;
+
+    public ContainerProperties( ContainerType type )
+    {
+        this.type = type;
+    }
+
+    public ContainerType getType()
+    {
+        return type;
+    }
 
     public boolean isPageBreakBefore()
     {

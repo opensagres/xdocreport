@@ -40,6 +40,7 @@ import fr.opensagres.xdocreport.document.textstyling.properties.HeaderProperties
 import fr.opensagres.xdocreport.document.textstyling.properties.ListItemProperties;
 import fr.opensagres.xdocreport.document.textstyling.properties.ListProperties;
 import fr.opensagres.xdocreport.document.textstyling.properties.ParagraphProperties;
+import fr.opensagres.xdocreport.document.textstyling.properties.SpanProperties;
 import fr.opensagres.xdocreport.document.textstyling.properties.TextAlignment;
 import fr.opensagres.xdocreport.template.IContext;
 
@@ -457,7 +458,7 @@ public class DocxDocumentHandler
         insideHeader = false;
     }
 
-    public void startSpan( ContainerProperties properties )
+    public void startSpan( SpanProperties properties )
         throws IOException
     {
         // TODO

@@ -31,4 +31,8 @@ public class HeaderProperties
     extends ContainerProperties
 {
 
+    public HeaderProperties()
+    {
+        super( ContainerType.HEADER );
+    }
 }

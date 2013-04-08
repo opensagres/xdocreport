@@ -28,6 +28,7 @@ import java.text.DecimalFormat;
 import java.text.DecimalFormatSymbols;
 
 import fr.opensagres.xdocreport.document.textstyling.properties.ContainerProperties;
+import fr.opensagres.xdocreport.document.textstyling.properties.ContainerProperties.ContainerType;
 import fr.opensagres.xdocreport.document.textstyling.properties.TextAlignment;
 
 /**
@@ -69,11 +70,22 @@ public class ODTDefaultStylesGenerator
     // font size for the default OOo Headers
     protected static String[] TITLE_FONT_SIZE = { "115%", "14pt", "14pt", "85%", "85%", "75%" };
 
-    private long dynamicStylesNb = 0;
+    private long dynamicParagraphStylesNb = 0;
+
+    private long dynamicTextStylesNb = 0;
 
     private final StringBuilder dynamicStyles;
 
     private String styleName = null;
+
+    private ODTStyleProperties propertiesKind;
+
+    private boolean hasPropertiesKind;
+
+    private enum ODTStyleProperties
+    {
+        TEXT, PARAGRAPH
+    }
 
     /**
      * protected static String[] HEADING_STYLES = new String[] {
@@ -95,7 +107,8 @@ public class ODTDefaultStylesGenerator
 
     public ODTDefaultStylesGenerator()
     {
-        this.dynamicStylesNb = 0;
+        this.dynamicParagraphStylesNb = 0;
+        this.dynamicTextStylesNb = 0;
         this.dynamicStyles = new StringBuilder();
     }
 
@@ -382,20 +395,26 @@ public class ODTDefaultStylesGenerator
     @Override
     public String getTextStyleName( ContainerProperties properties )
     {
+        if (properties == null) {
+            return null;
+        }
         this.styleName = null;
+        
+        // <style:text-properties
+        setPropertiesKind( ODTStyleProperties.TEXT );
         if ( properties.isBold() )
         {
-            startStyleIfNeeded();
+            startStyleIfNeeded( properties.getType() );
             dynamicStyles.append( "fo:font-weight=\"bold\" " );
         }
         if ( properties.isItalic() )
         {
-            startStyleIfNeeded();
+            startStyleIfNeeded( properties.getType() );
             dynamicStyles.append( "fo:font-style=\"italic\" " );
         }
         if ( properties.isUnderline() )
         {
-            startStyleIfNeeded();
+            startStyleIfNeeded( properties.getType() );
             dynamicStyles.append( "style:text-underline-style=\"solid\" style:text-underline-width=\"auto\" style:text-underline-color=\"font-color\" " );
             if ( properties.isStrike() )
             {
@@ -406,54 +425,95 @@ public class ODTDefaultStylesGenerator
         {
             if ( properties.isStrike() )
             {
-                startStyleIfNeeded();
+                startStyleIfNeeded( properties.getType() );
                 dynamicStyles.append( "style:text-underline-style=\"none\" style:text-line-through-style=\"solid\" " );
             }
         }
         if ( properties.isSubscript() )
         {
-            startStyleIfNeeded();
+            startStyleIfNeeded( properties.getType() );
             dynamicStyles.append( "style:text-position=\"sub\" " );
         }
         if ( properties.isSuperscript() )
         {
-            startStyleIfNeeded();
+            startStyleIfNeeded( properties.getType() );
             dynamicStyles.append( "style:text-position=\"super\" " );
         }
+
+        // <style:paragraph-properties fo:text-align="center" style:justify-single-word="false" />
+        setPropertiesKind( ODTStyleProperties.PARAGRAPH );
         TextAlignment textAlignment = properties.getTextAlignment();
-       /* if ( textAlignment != null )
+        if ( textAlignment != null )
         {
             switch ( textAlignment )
             {
                 case Center:
-                    dynamicStyles.append( "fo:text-align=\"center\" " );
+                    startStyleIfNeeded( properties.getType() );
+                    dynamicStyles.append( "fo:text-align=\"center\" style:justify-single-word=\"false\" " );
                     break;
                 case Justify:
+                    startStyleIfNeeded( properties.getType() );
                     dynamicStyles.append( "fo:text-align=\"justify\" " );
                     break;
                 case Left:
+                    startStyleIfNeeded( properties.getType() );
                     dynamicStyles.append( "fo:text-align=\"left\" " );
                     break;
                 case Right:
+                    startStyleIfNeeded( properties.getType() );
                     dynamicStyles.append( "fo:text-align=\"right\" " );
                     break;
             }
-        }*/
+        }
         endStyleIfNeeded();
         return styleName;
     }
 
-    private void startStyleIfNeeded()
+    private void setPropertiesKind( ODTStyleProperties propertiesKind )
     {
-        if ( this.styleName != null )
+        this.propertiesKind = propertiesKind;
+        this.hasPropertiesKind = false;
+    }
+
+    private void startStyleIfNeeded( ContainerType type )
+    {
+        if ( this.styleName == null )
         {
-            return;
+
+            if ( ContainerType.PARAGRAPH.equals( type ) )
+            {
+                this.styleName = "XDocReport_P" + dynamicParagraphStylesNb++;
+            }
+            else
+            {
+                this.styleName = "XDocReport_T" + dynamicTextStylesNb++;
+            }
+            dynamicStyles.append( "<style:style style:name=\"" );
+            dynamicStyles.append( styleName );
+            if ( ContainerType.PARAGRAPH.equals( type ) )
+            {
+                dynamicStyles.append( "\" style:family=\"paragraph\">" );
+            }
+            else
+            {
+                dynamicStyles.append( "\" style:family=\"text\">" );
+            }
         }
-        this.styleName = "XDocReport_T" + dynamicStylesNb++;
-        dynamicStyles.append( "<style:style style:name=\"" );
-        dynamicStyles.append( styleName );
-        dynamicStyles.append( "\" style:family=\"text\">" );
-        dynamicStyles.append( "<style:text-properties " );
+        if ( !this.hasPropertiesKind )
+        {
+            switch ( propertiesKind )
+            {
+                case TEXT:
+                    dynamicStyles.append( "<style:text-properties " );
+                    break;
+                case PARAGRAPH:
+                    dynamicStyles.append( "/><style:paragraph-properties " );
+                    break;
+                default:
+                    break;
+            }
+            this.hasPropertiesKind = true;
+        }
     }
 
     private void endStyleIfNeeded()

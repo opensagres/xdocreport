@@ -34,6 +34,7 @@ import fr.opensagres.xdocreport.document.textstyling.properties.HeaderProperties
 import fr.opensagres.xdocreport.document.textstyling.properties.ListItemProperties;
 import fr.opensagres.xdocreport.document.textstyling.properties.ListProperties;
 import fr.opensagres.xdocreport.document.textstyling.properties.ParagraphProperties;
+import fr.opensagres.xdocreport.document.textstyling.properties.SpanProperties;
 import fr.opensagres.xdocreport.document.textstyling.properties.TextAlignment;
 
 public class StylesHelper
@@ -145,12 +146,12 @@ public class StylesHelper
      * @param style
      * @return
      */
-    public static ContainerProperties createSpanProperties( String style )
+    public static SpanProperties createSpanProperties( String style )
     {
         Map<String, String> stylesMap = StylesHelper.parse( style );
         if ( !stylesMap.isEmpty() )
         {
-            ContainerProperties properties = new ContainerProperties();
+            SpanProperties properties = new SpanProperties();
             processContainerproperties( properties, stylesMap );
             return properties;
         }

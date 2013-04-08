@@ -27,11 +27,11 @@ package fr.opensagres.xdocreport.document.textstyling.wiki.gwiki;
 import java.io.IOException;
 
 import fr.opensagres.xdocreport.document.textstyling.AbstractDocumentHandler;
-import fr.opensagres.xdocreport.document.textstyling.properties.ContainerProperties;
 import fr.opensagres.xdocreport.document.textstyling.properties.HeaderProperties;
 import fr.opensagres.xdocreport.document.textstyling.properties.ListItemProperties;
 import fr.opensagres.xdocreport.document.textstyling.properties.ListProperties;
 import fr.opensagres.xdocreport.document.textstyling.properties.ParagraphProperties;
+import fr.opensagres.xdocreport.document.textstyling.properties.SpanProperties;
 
 /**
  * Basic Document handler implementation to build html fragment content.
@@ -185,7 +185,7 @@ public class HTMLDocumentHandler
         super.write( "</p>" );
     }
 
-    public void startSpan( ContainerProperties properties )
+    public void startSpan( SpanProperties properties )
         throws IOException
     {
         super.write( "<span>" );

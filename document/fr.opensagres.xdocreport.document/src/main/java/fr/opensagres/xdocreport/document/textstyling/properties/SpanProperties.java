@@ -25,14 +25,14 @@
 package fr.opensagres.xdocreport.document.textstyling.properties;
 
 /**
- * Paragraph properties.
+ * Span properties.
  */
-public class ParagraphProperties
+public class SpanProperties
     extends ContainerProperties
 {
 
-    public ParagraphProperties()
+    public SpanProperties()
     {
-        super( ContainerType.PARAGRAPH );
+        super( ContainerType.SPAN );
     }
 }

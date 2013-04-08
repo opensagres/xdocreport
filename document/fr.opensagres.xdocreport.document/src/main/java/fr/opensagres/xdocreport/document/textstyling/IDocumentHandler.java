@@ -26,11 +26,11 @@ package fr.opensagres.xdocreport.document.textstyling;
 
 import java.io.IOException;
 
-import fr.opensagres.xdocreport.document.textstyling.properties.ContainerProperties;
 import fr.opensagres.xdocreport.document.textstyling.properties.HeaderProperties;
 import fr.opensagres.xdocreport.document.textstyling.properties.ListItemProperties;
 import fr.opensagres.xdocreport.document.textstyling.properties.ListProperties;
 import fr.opensagres.xdocreport.document.textstyling.properties.ParagraphProperties;
+import fr.opensagres.xdocreport.document.textstyling.properties.SpanProperties;
 
 /**
  * Handler to build a document.
@@ -142,7 +142,7 @@ public interface IDocumentHandler
 
     /**
      * Start ordered list.
-     *
+     * 
      * @param properties
      */
     void startOrderedList( ListProperties properties )
@@ -156,7 +156,7 @@ public interface IDocumentHandler
 
     /**
      * Start unordered list.
-     *
+     * 
      * @param properties
      */
     void startUnorderedList( ListProperties properties )
@@ -183,7 +183,7 @@ public interface IDocumentHandler
     /**
      * Start span item.
      */
-    void startSpan( ContainerProperties properties )
+    void startSpan( SpanProperties properties )
         throws IOException;
 
     /**
@@ -194,7 +194,7 @@ public interface IDocumentHandler
 
     /**
      * Text content.
-     *
+     * 
      * @param s
      */
     void handleString( String s )
@@ -202,7 +202,7 @@ public interface IDocumentHandler
 
     /**
      * Start heading.
-     *
+     * 
      * @param level
      * @throws IOException
      */
@@ -211,7 +211,7 @@ public interface IDocumentHandler
 
     /**
      * End heading.
-     *
+     * 
      * @param level
      * @throws IOException
      */
@@ -220,7 +220,7 @@ public interface IDocumentHandler
 
     /**
      * Handle image.
-     *
+     * 
      * @param ref
      * @param label
      * @throws IOException
@@ -230,7 +230,7 @@ public interface IDocumentHandler
 
     /**
      * Handle reference.
-     *
+     * 
      * @param ref
      * @param label
      * @throws IOException

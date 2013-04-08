@@ -31,11 +31,11 @@ import org.xml.sax.SAXException;
 import org.xml.sax.helpers.DefaultHandler;
 
 import fr.opensagres.xdocreport.document.textstyling.IDocumentHandler;
-import fr.opensagres.xdocreport.document.textstyling.properties.ContainerProperties;
 import fr.opensagres.xdocreport.document.textstyling.properties.HeaderProperties;
 import fr.opensagres.xdocreport.document.textstyling.properties.ListItemProperties;
 import fr.opensagres.xdocreport.document.textstyling.properties.ListProperties;
 import fr.opensagres.xdocreport.document.textstyling.properties.ParagraphProperties;
+import fr.opensagres.xdocreport.document.textstyling.properties.SpanProperties;
 
 /**
  * SAX content handler used to parse HTML content and call the right method of {@link IDocumentHandler} according the
@@ -266,8 +266,8 @@ public class HTMLTextStylingContentHandler
             }
             else if ( SPAN_ELT.equals( name ) )
             {
-            	ContainerProperties properties = StylesHelper.createSpanProperties( attributes.getValue( STYLE_ATTR ) );
-            	documentHandler.startSpan( properties );
+                SpanProperties properties = StylesHelper.createSpanProperties( attributes.getValue( STYLE_ATTR ) );
+                documentHandler.startSpan( properties );
             }
         }
         catch ( IOException e )
@@ -379,8 +379,8 @@ public class HTMLTextStylingContentHandler
             }
             else if ( SPAN_ELT.equals( name ) )
             {
-            	// </span>
-            	documentHandler.endSpan();
+                // </span>
+                documentHandler.endSpan();
             }
         }
         catch ( IOException e )

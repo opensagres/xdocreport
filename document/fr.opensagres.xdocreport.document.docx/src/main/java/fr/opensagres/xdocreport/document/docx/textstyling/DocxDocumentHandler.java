@@ -515,20 +515,16 @@ public class DocxDocumentHandler
     protected void doEndUnorderedList()
         throws IOException
     {
-        // if ( !numbersStack.isEmpty() )
-        // {
-        // numbersStack.pop();
-        // }
+        // Close current paragraph
+        closeCurrentParagraph();
     }
 
     @Override
     protected void doEndOrderedList()
         throws IOException
     {
-        // if ( !numbersStack.isEmpty() )
-        // {
-        // numbersStack.pop();
-        // }
+        // Close current paragraph
+        closeCurrentParagraph();
     }
 
     private int getCurrentNumId()

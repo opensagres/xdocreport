@@ -183,7 +183,8 @@ public class VelocityDocumentFormatter
         return ITEM_TOKEN_OPEN_BRACKET;
     }
 
-    public String getFunctionDirective( boolean encloseInDirective, String key, String methodName, String... parameters )
+    public String getFunctionDirective( boolean noescape, boolean encloseInDirective, String key, String methodName,
+                                        String... parameters )
     {
         StringBuilder directive = new StringBuilder();
         if ( encloseInDirective )

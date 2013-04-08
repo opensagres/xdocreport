@@ -160,16 +160,21 @@ public abstract class AbstractDocumentFormatter
         return formatAsSimpleField( false, encloseInDirective, fields );
     }
 
+    public String getFunctionDirective( boolean encloseInDirective, String key, String methodName, String... parameters )
+    {
+        return getFunctionDirective( false, encloseInDirective, key, methodName, parameters );
+    }
+
     public String getFunctionDirective( String key, String methodName, String... parameters )
     {
         return getFunctionDirective( true, key, methodName, parameters );
     }
-    
+
     public String getSetDirective( String name, String value )
     {
         return getSetDirective( name, value, true );
     }
-    
+
     public String getStartIfDirective( String fieldName )
     {
         return getStartIfDirective( fieldName, true );

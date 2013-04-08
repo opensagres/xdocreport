@@ -42,7 +42,6 @@ public class FreemarkerDocumentFormatter
     extends AbstractDocumentFormatter
 {
 
-
     private static final String START_ASSIGN_DIRECTIVE = "[#assign ";
 
     private static final String CLOSE_ASSIGN_DIRECTIVE = "]";
@@ -199,9 +198,18 @@ public class FreemarkerDocumentFormatter
 
     }
 
-    public String getFunctionDirective( boolean encloseInDirective, String key, String methodName, String... parameters )
+    public String getFunctionDirective( boolean noescape, boolean encloseInDirective, String key, String methodName,
+                                        String... parameters )
     {
-        StringBuilder directive = new StringBuilder( encloseInDirective ? DOLLAR_TOTKEN : "" );
+        StringBuilder directive = new StringBuilder();
+        if ( noescape )
+        {
+            directive.append( START_NOESCAPE );
+        }
+        if ( encloseInDirective )
+        {
+            directive.append( DOLLAR_TOTKEN );
+        }
         directive.append( key );
         directive.append( '.' );
         directive.append( methodName );
@@ -221,6 +229,10 @@ public class FreemarkerDocumentFormatter
         if ( encloseInDirective )
         {
             directive.append( '}' );
+        }
+        if ( noescape )
+        {
+            directive.append( END_NOESCAPE );
         }
         return directive.toString();
     }

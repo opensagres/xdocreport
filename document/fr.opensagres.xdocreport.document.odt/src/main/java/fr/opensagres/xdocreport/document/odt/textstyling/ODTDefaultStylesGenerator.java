@@ -27,6 +27,9 @@ package fr.opensagres.xdocreport.document.odt.textstyling;
 import java.text.DecimalFormat;
 import java.text.DecimalFormatSymbols;
 
+import fr.opensagres.xdocreport.document.textstyling.properties.ContainerProperties;
+import fr.opensagres.xdocreport.document.textstyling.properties.TextAlignment;
+
 /**
  * Default implementation : - uses OOo default styles for headers - uses default but renamed styles for others
  * 
@@ -66,6 +69,12 @@ public class ODTDefaultStylesGenerator
     // font size for the default OOo Headers
     protected static String[] TITLE_FONT_SIZE = { "115%", "14pt", "14pt", "85%", "85%", "75%" };
 
+    private long dynamicStylesNb = 0;
+
+    private final StringBuilder dynamicStyles;
+
+    private String styleName = null;
+
     /**
      * protected static String[] HEADING_STYLES = new String[] {
      * "<style:style style:name=\"Heading_20_1\" style:display-name=\"Heading 1\" style:family=\"paragraph\" style:parent-style-name=\"Heading\" style:next-style-name=\"Text_20_body\" style:default-outline-level=\"1\" style:class=\"text\"><style:text-properties "
@@ -83,6 +92,12 @@ public class ODTDefaultStylesGenerator
      * "<style:style style:name=\"Heading_20_6\" style:display-name=\"Heading 6\" style:family=\"paragraph\" style:parent-style-name=\"Heading\" style:next-style-name=\"Text_20_body\" style:default-outline-level=\"6\" style:class=\"text\"><style:text-properties fo:font-size=\"75%\" fo:font-weight=\"bold\" style:font-size-asian=\"75%\" style:font-weight-asian=\"bold\" style:font-size-complex=\"75%\" style:font-weight-complex=\"bold\"/></style:style>"
      * };
      */
+
+    public ODTDefaultStylesGenerator()
+    {
+        this.dynamicStylesNb = 0;
+        this.dynamicStyles = new StringBuilder();
+    }
 
     protected String getBulletChar( int level )
     {
@@ -120,8 +135,10 @@ public class ODTDefaultStylesGenerator
         StringBuilder region = new StringBuilder();
         region.append( generateStyle( BOLD_STYLE_NAME, "fo:font-weight=\"bold\"" ) );
         region.append( generateStyle( ITALIC_STYLE_NAME, "fo:font-style=\"italic\"" ) );
-        region.append( generateStyle( UNDERLINE_STYLE_NAME, "style:text-underline-style=\"solid\" style:text-underline-width=\"auto\" style:text-underline-color=\"font-color\"" ) );
-        region.append( generateStyle( STRIKE_STYLE_NAME, "style:text-line-through-style=\"solid\" style:text-underline-style=\"none\"" ) );
+        region.append( generateStyle( UNDERLINE_STYLE_NAME,
+                                      "style:text-underline-style=\"solid\" style:text-underline-width=\"auto\" style:text-underline-color=\"font-color\"" ) );
+        region.append( generateStyle( STRIKE_STYLE_NAME,
+                                      "style:text-line-through-style=\"solid\" style:text-underline-style=\"none\"" ) );
         region.append( generateStyle( SUBSCRIPT_STYLE_NAME, "style:text-position=\"sub\"" ) );
         region.append( generateStyle( SUPERSCRIPT_STYLE_NAME, "style:text-position=\"super\"" ) );
         return region.toString();
@@ -286,6 +303,7 @@ public class ODTDefaultStylesGenerator
     {
         return ITALIC_STYLE_NAME;
     }
+
     @Override
     public String getUnderlineStyleName()
     {
@@ -340,5 +358,109 @@ public class ODTDefaultStylesGenerator
         style.append( " />" );
         style.append( "</style:style>" );
         return style.toString();
+    }
+
+    @Override
+    public String generateAllStyles( ODTDefaultStyle defaultStyle )
+    {
+        StringBuilder styles = new StringBuilder();
+        // Add bold, italic, bold+italic styles for text styling.
+        styles.append( generateTextStyles() );
+        // Add paragraph styles for text styling.
+        styles.append( generateParagraphStyles() );
+        // Add styles for lists
+        styles.append( generateListStyle() );
+        styles.append( getDynamicStyles() );
+        return styles.toString();
+    }
+
+    public String getDynamicStyles()
+    {
+        return dynamicStyles.toString();
+    }
+
+    @Override
+    public String getTextStyleName( ContainerProperties properties )
+    {
+        this.styleName = null;
+        if ( properties.isBold() )
+        {
+            startStyleIfNeeded();
+            dynamicStyles.append( "fo:font-weight=\"bold\" " );
+        }
+        if ( properties.isItalic() )
+        {
+            startStyleIfNeeded();
+            dynamicStyles.append( "fo:font-style=\"italic\" " );
+        }
+        if ( properties.isUnderline() )
+        {
+            startStyleIfNeeded();
+            dynamicStyles.append( "style:text-underline-style=\"solid\" style:text-underline-width=\"auto\" style:text-underline-color=\"font-color\" " );
+            if ( properties.isStrike() )
+            {
+                dynamicStyles.append( "style:text-line-through-style=\"solid\" " );
+            }
+        }
+        else
+        {
+            if ( properties.isStrike() )
+            {
+                startStyleIfNeeded();
+                dynamicStyles.append( "style:text-underline-style=\"none\" style:text-line-through-style=\"solid\" " );
+            }
+        }
+        if ( properties.isSubscript() )
+        {
+            startStyleIfNeeded();
+            dynamicStyles.append( "style:text-position=\"sub\" " );
+        }
+        if ( properties.isSuperscript() )
+        {
+            startStyleIfNeeded();
+            dynamicStyles.append( "style:text-position=\"super\" " );
+        }
+        TextAlignment textAlignment = properties.getTextAlignment();
+       /* if ( textAlignment != null )
+        {
+            switch ( textAlignment )
+            {
+                case Center:
+                    dynamicStyles.append( "fo:text-align=\"center\" " );
+                    break;
+                case Justify:
+                    dynamicStyles.append( "fo:text-align=\"justify\" " );
+                    break;
+                case Left:
+                    dynamicStyles.append( "fo:text-align=\"left\" " );
+                    break;
+                case Right:
+                    dynamicStyles.append( "fo:text-align=\"right\" " );
+                    break;
+            }
+        }*/
+        endStyleIfNeeded();
+        return styleName;
+    }
+
+    private void startStyleIfNeeded()
+    {
+        if ( this.styleName != null )
+        {
+            return;
+        }
+        this.styleName = "XDocReport_T" + dynamicStylesNb++;
+        dynamicStyles.append( "<style:style style:name=\"" );
+        dynamicStyles.append( styleName );
+        dynamicStyles.append( "\" style:family=\"text\">" );
+        dynamicStyles.append( "<style:text-properties " );
+    }
+
+    private void endStyleIfNeeded()
+    {
+        if ( this.styleName != null )
+        {
+            dynamicStyles.append( "/></style:style>" );
+        }
     }
 }

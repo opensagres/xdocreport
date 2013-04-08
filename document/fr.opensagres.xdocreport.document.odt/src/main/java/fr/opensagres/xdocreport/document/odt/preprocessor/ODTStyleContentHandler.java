@@ -31,8 +31,9 @@ import java.util.Map;
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
 
+import fr.opensagres.xdocreport.document.odt.template.ODTContextHelper;
 import fr.opensagres.xdocreport.document.odt.textstyling.IODTStylesGenerator;
-import fr.opensagres.xdocreport.document.odt.textstyling.ODTStylesGeneratorProvider;
+import fr.opensagres.xdocreport.document.odt.textstyling.ODTDefaultStylesGenerator;
 import fr.opensagres.xdocreport.document.preprocessor.sax.IBufferedRegion;
 import fr.opensagres.xdocreport.template.formatter.FieldsMetadata;
 import fr.opensagres.xdocreport.template.formatter.IDocumentFormatter;
@@ -52,13 +53,14 @@ public class ODTStyleContentHandler
 
     protected List<Integer> existingStyles = new ArrayList<Integer>();
 
-    protected final IODTStylesGenerator styleGen;
+    // FIXME : manage header style with styles generator comming from IContext (see ODTContextHelper).
+    private final static IODTStylesGenerator styleGen = new ODTDefaultStylesGenerator();
 
     public ODTStyleContentHandler( String entryName, FieldsMetadata fieldsMetadata, IDocumentFormatter formatter,
                                    Map<String, Object> sharedContext )
     {
+
         super( entryName, fieldsMetadata, formatter, sharedContext );
-        styleGen = ODTStylesGeneratorProvider.getStyleGenerator();
     }
 
     @Override
@@ -95,6 +97,14 @@ public class ODTStyleContentHandler
                 {
                     generateHeaderStyle( i );
                 }
+            }
+            IDocumentFormatter formatter = super.getFormatter();
+            if ( formatter != null )
+            {
+                IBufferedRegion region = getCurrentElement();
+                region.append( formatter.getFunctionDirective( true, true, ODTContextHelper.STYLES_GENERATOR_KEY,
+                                                               IODTStylesGenerator.generateAllStyles,
+                                                               ODTContextHelper.DEFAULT_STYLE_KEY ) );
             }
         }
         super.doEndElement( uri, localName, name );

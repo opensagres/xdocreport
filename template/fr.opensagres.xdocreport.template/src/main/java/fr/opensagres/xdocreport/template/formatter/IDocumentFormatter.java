@@ -63,6 +63,9 @@ public interface IDocumentFormatter
 
     int getIndexOfScript( String fieldName );
 
+    String getFunctionDirective( boolean noescape, boolean encloseInDirective, String key, String methodName,
+                                 String... parameters );
+    
     String getFunctionDirective( boolean encloseInDirective, String key, String methodName, String... parameters );
 
     String getFunctionDirective( String key, String methodName, String... parameters );

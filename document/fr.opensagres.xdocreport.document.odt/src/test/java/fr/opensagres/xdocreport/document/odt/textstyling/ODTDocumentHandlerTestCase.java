@@ -28,6 +28,7 @@ import junit.framework.Assert;
 
 import org.junit.Test;
 
+import fr.opensagres.xdocreport.document.odt.template.ODTContextHelper;
 import fr.opensagres.xdocreport.document.preprocessor.sax.BufferedElement;
 import fr.opensagres.xdocreport.document.textstyling.IDocumentHandler;
 import fr.opensagres.xdocreport.document.textstyling.ITextStylingTransformer;
@@ -129,9 +130,17 @@ public class ODTDocumentHandlerTestCase
         IDocumentHandler handler = new ODTDocumentHandler( parent, context, "content.xml" );
         formatter.transform( "<span style=\"font-weight: bold\">text</span>", handler );
 
+        // styles.xml
+        IODTStylesGenerator styleGen = ODTContextHelper.getStylesGenerator( context );
+        Assert.assertNotNull( styleGen );
+        Assert.assertEquals( "<style:style style:name=\"XDocReport_T0\" style:family=\"text\"><style:text-properties fo:font-weight=\"bold\" /></style:style>",
+                             styleGen.getDynamicStyles() );
+
+        // content.xml
         Assert.assertEquals( "", handler.getTextBefore() );
-        Assert.assertEquals( "<text:span text:style-name=\"XDocReport_Bold\" >text</text:span>", handler.getTextBody() );
+        Assert.assertEquals( "<text:span text:style-name=\"XDocReport_T0\" >text</text:span>", handler.getTextBody() );
         Assert.assertEquals( "", handler.getTextEnd() );
+
     }
 
     @Test
@@ -145,8 +154,15 @@ public class ODTDocumentHandlerTestCase
         IDocumentHandler handler = new ODTDocumentHandler( parent, context, "content.xml" );
         formatter.transform( "<span style=\"font-weight: 700\">text</span>", handler );
 
+        // styles.xml
+        IODTStylesGenerator styleGen = ODTContextHelper.getStylesGenerator( context );
+        Assert.assertNotNull( styleGen );
+        Assert.assertEquals( "<style:style style:name=\"XDocReport_T0\" style:family=\"text\"><style:text-properties fo:font-weight=\"bold\" /></style:style>",
+                             styleGen.getDynamicStyles() );
+
+        // content.xml
         Assert.assertEquals( "", handler.getTextBefore() );
-        Assert.assertEquals( "<text:span text:style-name=\"XDocReport_Bold\" >text</text:span>", handler.getTextBody() );
+        Assert.assertEquals( "<text:span text:style-name=\"XDocReport_T0\" >text</text:span>", handler.getTextBody() );
         Assert.assertEquals( "", handler.getTextEnd() );
     }
 
@@ -161,9 +177,16 @@ public class ODTDocumentHandlerTestCase
         IDocumentHandler handler = new ODTDocumentHandler( parent, context, "content.xml" );
         formatter.transform( "<p style=\"font-weight: bold\">text</p>", handler );
 
+        // styles.xml
+        IODTStylesGenerator styleGen = ODTContextHelper.getStylesGenerator( context );
+        Assert.assertNotNull( styleGen );
+        Assert.assertEquals( "<style:style style:name=\"XDocReport_T0\" style:family=\"text\"><style:text-properties fo:font-weight=\"bold\" /></style:style>",
+                             styleGen.getDynamicStyles() );
+
+        // content.xml
         Assert.assertEquals( "", handler.getTextBefore() );
         Assert.assertEquals( "", handler.getTextBody() );
-        Assert.assertEquals( "<text:p><text:span text:style-name=\"XDocReport_Bold\" >text</text:span></text:p>",
+        Assert.assertEquals( "<text:p><text:span text:style-name=\"XDocReport_T0\" >text</text:span></text:p>",
                              handler.getTextEnd() );
     }
 
@@ -177,10 +200,16 @@ public class ODTDocumentHandlerTestCase
         ITextStylingTransformer formatter = HTMLTextStylingTransformer.INSTANCE;
         IDocumentHandler handler = new ODTDocumentHandler( parent, context, "content.xml" );
         formatter.transform( "<p style=\"font-weight: 700\">text</p>", handler );
+        // styles.xml
+        IODTStylesGenerator styleGen = ODTContextHelper.getStylesGenerator( context );
+        Assert.assertNotNull( styleGen );
+        Assert.assertEquals( "<style:style style:name=\"XDocReport_T0\" style:family=\"text\"><style:text-properties fo:font-weight=\"bold\" /></style:style>",
+                             styleGen.getDynamicStyles() );
 
+        // content.xml
         Assert.assertEquals( "", handler.getTextBefore() );
         Assert.assertEquals( "", handler.getTextBody() );
-        Assert.assertEquals( "<text:p><text:span text:style-name=\"XDocReport_Bold\" >text</text:span></text:p>",
+        Assert.assertEquals( "<text:p><text:span text:style-name=\"XDocReport_T0\" >text</text:span></text:p>",
                              handler.getTextEnd() );
     }
 
@@ -229,9 +258,15 @@ public class ODTDocumentHandlerTestCase
         IDocumentHandler handler = new ODTDocumentHandler( parent, context, "content.xml" );
         formatter.transform( "<span style=\"font-style: italic\">text</span>", handler );
 
+        // styles.xml
+        IODTStylesGenerator styleGen = ODTContextHelper.getStylesGenerator( context );
+        Assert.assertNotNull( styleGen );
+        Assert.assertEquals( "<style:style style:name=\"XDocReport_T0\" style:family=\"text\"><style:text-properties fo:font-style=\"italic\" /></style:style>",
+                             styleGen.getDynamicStyles() );
+
+        // content.xml
         Assert.assertEquals( "", handler.getTextBefore() );
-        Assert.assertEquals( "<text:span text:style-name=\"XDocReport_Italic\" >text</text:span>",
-                             handler.getTextBody() );
+        Assert.assertEquals( "<text:span text:style-name=\"XDocReport_T0\" >text</text:span>", handler.getTextBody() );
         Assert.assertEquals( "", handler.getTextEnd() );
     }
 
@@ -246,9 +281,16 @@ public class ODTDocumentHandlerTestCase
         IDocumentHandler handler = new ODTDocumentHandler( parent, context, "content.xml" );
         formatter.transform( "<p style=\"font-style: italic\">text</p>", handler );
 
+        // styles.xml
+        IODTStylesGenerator styleGen = ODTContextHelper.getStylesGenerator( context );
+        Assert.assertNotNull( styleGen );
+        Assert.assertEquals( "<style:style style:name=\"XDocReport_T0\" style:family=\"text\"><style:text-properties fo:font-style=\"italic\" /></style:style>",
+                             styleGen.getDynamicStyles() );
+
+        // content.xml
         Assert.assertEquals( "", handler.getTextBefore() );
         Assert.assertEquals( "", handler.getTextBody() );
-        Assert.assertEquals( "<text:p><text:span text:style-name=\"XDocReport_Italic\" >text</text:span></text:p>",
+        Assert.assertEquals( "<text:p><text:span text:style-name=\"XDocReport_T0\" >text</text:span></text:p>",
                              handler.getTextEnd() );
     }
 
@@ -280,9 +322,15 @@ public class ODTDocumentHandlerTestCase
         IDocumentHandler handler = new ODTDocumentHandler( parent, context, "content.xml" );
         formatter.transform( "<span style=\"text-decoration: underline\">text</span>", handler );
 
+        // styles.xml
+        IODTStylesGenerator styleGen = ODTContextHelper.getStylesGenerator( context );
+        Assert.assertNotNull( styleGen );
+        Assert.assertEquals( "<style:style style:name=\"XDocReport_T0\" style:family=\"text\"><style:text-properties style:text-underline-style=\"solid\" style:text-underline-width=\"auto\" style:text-underline-color=\"font-color\" /></style:style>",
+                             styleGen.getDynamicStyles() );
+
+        // content.xml
         Assert.assertEquals( "", handler.getTextBefore() );
-        Assert.assertEquals( "<text:span text:style-name=\"XDocReport_Underline\" >text</text:span>",
-                             handler.getTextBody() );
+        Assert.assertEquals( "<text:span text:style-name=\"XDocReport_T0\" >text</text:span>", handler.getTextBody() );
         Assert.assertEquals( "", handler.getTextEnd() );
     }
 
@@ -297,9 +345,16 @@ public class ODTDocumentHandlerTestCase
         IDocumentHandler handler = new ODTDocumentHandler( parent, context, "content.xml" );
         formatter.transform( "<p style=\"text-decoration: underline\">text</p>", handler );
 
+        // styles.xml
+        IODTStylesGenerator styleGen = ODTContextHelper.getStylesGenerator( context );
+        Assert.assertNotNull( styleGen );
+        Assert.assertEquals( "<style:style style:name=\"XDocReport_T0\" style:family=\"text\"><style:text-properties style:text-underline-style=\"solid\" style:text-underline-width=\"auto\" style:text-underline-color=\"font-color\" /></style:style>",
+                             styleGen.getDynamicStyles() );
+
+        // content.xml
         Assert.assertEquals( "", handler.getTextBefore() );
         Assert.assertEquals( "", handler.getTextBody() );
-        Assert.assertEquals( "<text:p><text:span text:style-name=\"XDocReport_Underline\" >text</text:span></text:p>",
+        Assert.assertEquals( "<text:p><text:span text:style-name=\"XDocReport_T0\" >text</text:span></text:p>",
                              handler.getTextEnd() );
     }
 
@@ -348,9 +403,15 @@ public class ODTDocumentHandlerTestCase
         IDocumentHandler handler = new ODTDocumentHandler( parent, context, "content.xml" );
         formatter.transform( "<span style=\"text-decoration: line-through\">text</span>", handler );
 
+        // styles.xml
+        IODTStylesGenerator styleGen = ODTContextHelper.getStylesGenerator( context );
+        Assert.assertNotNull( styleGen );
+        Assert.assertEquals( "<style:style style:name=\"XDocReport_T0\" style:family=\"text\"><style:text-properties style:text-underline-style=\"none\" style:text-line-through-style=\"solid\" /></style:style>",
+                             styleGen.getDynamicStyles() );
+
+        // content.xml
         Assert.assertEquals( "", handler.getTextBefore() );
-        Assert.assertEquals( "<text:span text:style-name=\"XDocReport_Strike\" >text</text:span>",
-                             handler.getTextBody() );
+        Assert.assertEquals( "<text:span text:style-name=\"XDocReport_T0\" >text</text:span>", handler.getTextBody() );
         Assert.assertEquals( "", handler.getTextEnd() );
     }
 
@@ -365,9 +426,16 @@ public class ODTDocumentHandlerTestCase
         IDocumentHandler handler = new ODTDocumentHandler( parent, context, "content.xml" );
         formatter.transform( "<p style=\"text-decoration: line-through\">text</p>", handler );
 
+        // styles.xml
+        IODTStylesGenerator styleGen = ODTContextHelper.getStylesGenerator( context );
+        Assert.assertNotNull( styleGen );
+        Assert.assertEquals( "<style:style style:name=\"XDocReport_T0\" style:family=\"text\"><style:text-properties style:text-underline-style=\"none\" style:text-line-through-style=\"solid\" /></style:style>",
+                             styleGen.getDynamicStyles() );
+
+        // content.xml
         Assert.assertEquals( "", handler.getTextBefore() );
         Assert.assertEquals( "", handler.getTextBody() );
-        Assert.assertEquals( "<text:p><text:span text:style-name=\"XDocReport_Strike\" >text</text:span></text:p>",
+        Assert.assertEquals( "<text:p><text:span text:style-name=\"XDocReport_T0\" >text</text:span></text:p>",
                              handler.getTextEnd() );
     }
 
@@ -382,9 +450,15 @@ public class ODTDocumentHandlerTestCase
         IDocumentHandler handler = new ODTDocumentHandler( parent, context, "content.xml" );
         formatter.transform( "<span style=\"text-decoration: underline line-through\">text</span>", handler );
 
+        // styles.xml
+        IODTStylesGenerator styleGen = ODTContextHelper.getStylesGenerator( context );
+        Assert.assertNotNull( styleGen );
+        Assert.assertEquals( "<style:style style:name=\"XDocReport_T0\" style:family=\"text\"><style:text-properties style:text-underline-style=\"solid\" style:text-underline-width=\"auto\" style:text-underline-color=\"font-color\" style:text-line-through-style=\"solid\" /></style:style>",
+                             styleGen.getDynamicStyles() );
+
+        // content.xml
         Assert.assertEquals( "", handler.getTextBefore() );
-        Assert.assertEquals( "<text:span text:style-name=\"XDocReport_Underline\" ><text:span text:style-name=\"XDocReport_Strike\" >text</text:span></text:span>",
-                             handler.getTextBody() );
+        Assert.assertEquals( "<text:span text:style-name=\"XDocReport_T0\" >text</text:span>", handler.getTextBody() );
         Assert.assertEquals( "", handler.getTextEnd() );
     }
 
@@ -399,9 +473,16 @@ public class ODTDocumentHandlerTestCase
         IDocumentHandler handler = new ODTDocumentHandler( parent, context, "content.xml" );
         formatter.transform( "<p style=\"text-decoration: underline line-through\">text</p>", handler );
 
+        // styles.xml
+        IODTStylesGenerator styleGen = ODTContextHelper.getStylesGenerator( context );
+        Assert.assertNotNull( styleGen );
+        Assert.assertEquals( "<style:style style:name=\"XDocReport_T0\" style:family=\"text\"><style:text-properties style:text-underline-style=\"solid\" style:text-underline-width=\"auto\" style:text-underline-color=\"font-color\" style:text-line-through-style=\"solid\" /></style:style>",
+                             styleGen.getDynamicStyles() );
+
+        // content.xml
         Assert.assertEquals( "", handler.getTextBefore() );
         Assert.assertEquals( "", handler.getTextBody() );
-        Assert.assertEquals( "<text:p><text:span text:style-name=\"XDocReport_Underline\" ><text:span text:style-name=\"XDocReport_Strike\" >text</text:span></text:span></text:p>",
+        Assert.assertEquals( "<text:p><text:span text:style-name=\"XDocReport_T0\" >text</text:span></text:p>",
                              handler.getTextEnd() );
     }
 
@@ -433,9 +514,15 @@ public class ODTDocumentHandlerTestCase
         IDocumentHandler handler = new ODTDocumentHandler( parent, context, "content.xml" );
         formatter.transform( "<span style=\"vertical-align: sub\">text</span>", handler );
 
+        // styles.xml
+        IODTStylesGenerator styleGen = ODTContextHelper.getStylesGenerator( context );
+        Assert.assertNotNull( styleGen );
+        Assert.assertEquals( "<style:style style:name=\"XDocReport_T0\" style:family=\"text\"><style:text-properties style:text-position=\"sub\" /></style:style>",
+                             styleGen.getDynamicStyles() );
+
+        // content.xml
         Assert.assertEquals( "", handler.getTextBefore() );
-        Assert.assertEquals( "<text:span text:style-name=\"XDocReport_Subscript\" >text</text:span>",
-                             handler.getTextBody() );
+        Assert.assertEquals( "<text:span text:style-name=\"XDocReport_T0\" >text</text:span>", handler.getTextBody() );
         Assert.assertEquals( "", handler.getTextEnd() );
     }
 
@@ -449,10 +536,16 @@ public class ODTDocumentHandlerTestCase
         ITextStylingTransformer formatter = HTMLTextStylingTransformer.INSTANCE;
         IDocumentHandler handler = new ODTDocumentHandler( parent, context, "content.xml" );
         formatter.transform( "<p style=\"vertical-align: sub\">text</p>", handler );
+        // styles.xml
+        IODTStylesGenerator styleGen = ODTContextHelper.getStylesGenerator( context );
+        Assert.assertNotNull( styleGen );
+        Assert.assertEquals( "<style:style style:name=\"XDocReport_T0\" style:family=\"text\"><style:text-properties style:text-position=\"sub\" /></style:style>",
+                             styleGen.getDynamicStyles() );
 
+        // content.xml
         Assert.assertEquals( "", handler.getTextBefore() );
         Assert.assertEquals( "", handler.getTextBody() );
-        Assert.assertEquals( "<text:p><text:span text:style-name=\"XDocReport_Subscript\" >text</text:span></text:p>",
+        Assert.assertEquals( "<text:p><text:span text:style-name=\"XDocReport_T0\" >text</text:span></text:p>",
                              handler.getTextEnd() );
     }
 
@@ -484,9 +577,15 @@ public class ODTDocumentHandlerTestCase
         IDocumentHandler handler = new ODTDocumentHandler( parent, context, "content.xml" );
         formatter.transform( "<span style=\"vertical-align: super\">text</span>", handler );
 
+        // styles.xml
+        IODTStylesGenerator styleGen = ODTContextHelper.getStylesGenerator( context );
+        Assert.assertNotNull( styleGen );
+        Assert.assertEquals( "<style:style style:name=\"XDocReport_T0\" style:family=\"text\"><style:text-properties style:text-position=\"super\" /></style:style>",
+                             styleGen.getDynamicStyles() );
+
+        // content.xml
         Assert.assertEquals( "", handler.getTextBefore() );
-        Assert.assertEquals( "<text:span text:style-name=\"XDocReport_Superscript\" >text</text:span>",
-                             handler.getTextBody() );
+        Assert.assertEquals( "<text:span text:style-name=\"XDocReport_T0\" >text</text:span>", handler.getTextBody() );
         Assert.assertEquals( "", handler.getTextEnd() );
     }
 
@@ -501,9 +600,16 @@ public class ODTDocumentHandlerTestCase
         IDocumentHandler handler = new ODTDocumentHandler( parent, context, "content.xml" );
         formatter.transform( "<p style=\"vertical-align: super\">text</p>", handler );
 
+        // styles.xml
+        IODTStylesGenerator styleGen = ODTContextHelper.getStylesGenerator( context );
+        Assert.assertNotNull( styleGen );
+        Assert.assertEquals( "<style:style style:name=\"XDocReport_T0\" style:family=\"text\"><style:text-properties style:text-position=\"super\" /></style:style>",
+                             styleGen.getDynamicStyles() );
+
+        // content.xml
         Assert.assertEquals( "", handler.getTextBefore() );
         Assert.assertEquals( "", handler.getTextBody() );
-        Assert.assertEquals( "<text:p><text:span text:style-name=\"XDocReport_Superscript\" >text</text:span></text:p>",
+        Assert.assertEquals( "<text:p><text:span text:style-name=\"XDocReport_T0\" >text</text:span></text:p>",
                              handler.getTextEnd() );
     }
 
@@ -912,9 +1018,16 @@ public class ODTDocumentHandlerTestCase
         formatter.transform( "<p>Before <span style=\"text-decoration: underline;\">Underline <span style=\"font-weight: bold;\">and bold <span style=\"font-style: italic;\">and italic</span>"
                                  + " No italics</span> No bold</span> No Underline</p>", handler );
 
+        // styles.xml
+        IODTStylesGenerator styleGen = ODTContextHelper.getStylesGenerator( context );
+        Assert.assertNotNull( styleGen );
+        Assert.assertEquals( "<style:style style:name=\"XDocReport_T0\" style:family=\"text\"><style:text-properties style:text-underline-style=\"solid\" style:text-underline-width=\"auto\" style:text-underline-color=\"font-color\" /></style:style><style:style style:name=\"XDocReport_T1\" style:family=\"text\"><style:text-properties fo:font-weight=\"bold\" /></style:style><style:style style:name=\"XDocReport_T2\" style:family=\"text\"><style:text-properties fo:font-style=\"italic\" /></style:style>",
+                             styleGen.getDynamicStyles() );
+
+        // content.xml
         Assert.assertEquals( "", handler.getTextBefore() );
         Assert.assertEquals( "", handler.getTextBody() );
-        Assert.assertEquals( "<text:p><text:span>Before </text:span><text:span text:style-name=\"XDocReport_Underline\" >Underline <text:span text:style-name=\"XDocReport_Bold\" >and bold <text:span text:style-name=\"XDocReport_Italic\" >and italic</text:span> No italics</text:span> No bold</text:span><text:span> No Underline</text:span></text:p>",
+        Assert.assertEquals( "<text:p><text:span>Before </text:span><text:span text:style-name=\"XDocReport_T0\" >Underline <text:span text:style-name=\"XDocReport_T1\" >and bold <text:span text:style-name=\"XDocReport_T2\" >and italic</text:span> No italics</text:span> No bold</text:span><text:span> No Underline</text:span></text:p>",
                              handler.getTextEnd() );
     }
 

@@ -28,17 +28,25 @@ import static fr.opensagres.xdocreport.document.odt.ODTConstants.CONTENT_XML_ENT
 import static fr.opensagres.xdocreport.document.odt.ODTConstants.METAINF_MANIFEST_XML_ENTRY;
 import static fr.opensagres.xdocreport.document.odt.ODTConstants.MIME_MAPPING;
 import static fr.opensagres.xdocreport.document.odt.ODTConstants.STYLES_XML_ENTRY;
+
+import java.util.Map;
+
 import fr.opensagres.xdocreport.converter.MimeMapping;
+import fr.opensagres.xdocreport.core.XDocReportException;
 import fr.opensagres.xdocreport.core.document.DocumentKind;
 import fr.opensagres.xdocreport.core.io.IEntryOutputStreamProvider;
 import fr.opensagres.xdocreport.core.io.IEntryReaderProvider;
 import fr.opensagres.xdocreport.core.io.IEntryWriterProvider;
+import fr.opensagres.xdocreport.core.io.XDocArchive;
 import fr.opensagres.xdocreport.document.AbstractXDocReport;
 import fr.opensagres.xdocreport.document.images.IImageRegistry;
 import fr.opensagres.xdocreport.document.odt.images.ODTImageRegistry;
 import fr.opensagres.xdocreport.document.odt.preprocessor.ODTManifestXMLProcessor;
 import fr.opensagres.xdocreport.document.odt.preprocessor.ODTPreprocessor;
 import fr.opensagres.xdocreport.document.odt.preprocessor.ODTStylesPreprocessor;
+import fr.opensagres.xdocreport.document.odt.template.ODTContextHelper;
+import fr.opensagres.xdocreport.document.odt.textstyling.ODTDefaultStyle;
+import fr.opensagres.xdocreport.template.IContext;
 
 /**
  * Open Office ODT report. For mime mapping please see {@see
@@ -52,6 +60,13 @@ public class ODTReport
 
     private static final String[] DEFAULT_XML_ENTRIES = { CONTENT_XML_ENTRY, STYLES_XML_ENTRY,
         METAINF_MANIFEST_XML_ENTRY };
+
+    private ODTDefaultStyle defaultStyle;
+
+    public ODTReport()
+    {
+        this.defaultStyle = new ODTDefaultStyle();
+    }
 
     /*
      * (non-Javadoc)
@@ -80,6 +95,28 @@ public class ODTReport
         super.addPreprocessor( METAINF_MANIFEST_XML_ENTRY, ODTManifestXMLProcessor.INSTANCE );
         // processor to modify global styles
         super.addPreprocessor( STYLES_XML_ENTRY, ODTStylesPreprocessor.INSTANCE );
+    }
+
+    @Override
+    protected void onBeforePreprocessing( Map<String, Object> sharedContext, XDocArchive preprocessedArchive )
+        throws XDocReportException
+    {
+        super.onBeforePreprocessing( sharedContext, preprocessedArchive );
+        // Default style
+        sharedContext.put( ODTContextHelper.DEFAULT_STYLE_KEY, defaultStyle );
+    }
+
+    @Override
+    protected void onBeforeProcessTemplateEngine( IContext context, XDocArchive outputArchive )
+        throws XDocReportException
+    {
+        // 1) Register commons Java model in the context
+        super.onBeforeProcessTemplateEngine( context, outputArchive );
+        // 2) Register default style instance
+        ODTContextHelper.putDefaultStyle( context, defaultStyle );
+        // 3) Register styles generator if not exists.
+        ODTContextHelper.getStylesGenerator( context ); 
+
     }
 
     @Override

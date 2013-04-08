@@ -24,12 +24,16 @@
  */
 package fr.opensagres.xdocreport.document.odt.textstyling;
 
+import fr.opensagres.xdocreport.document.textstyling.IStylesGenerator;
+import fr.opensagres.xdocreport.document.textstyling.properties.ContainerProperties;
+
 /**
  * Interface for ODT Style generator
  * 
  * @author <a href="mailto:tdelprat@nuxeo.com">Tiry</a>
  */
 public interface IODTStylesGenerator
+    extends IStylesGenerator<ODTDefaultStyle>
 {
     /**
      * @param styleName
@@ -120,4 +124,7 @@ public interface IODTStylesGenerator
      */
     String generateParagraphStyles();
 
+    String getTextStyleName( ContainerProperties properties );
+
+    String getDynamicStyles();
 }

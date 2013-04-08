@@ -30,6 +30,7 @@ import java.util.List;
 import java.util.Stack;
 
 import fr.opensagres.xdocreport.core.utils.StringUtils;
+import fr.opensagres.xdocreport.document.odt.template.ODTContextHelper;
 import fr.opensagres.xdocreport.document.preprocessor.sax.BufferedElement;
 import fr.opensagres.xdocreport.document.textstyling.AbstractDocumentHandler;
 import fr.opensagres.xdocreport.document.textstyling.properties.ContainerProperties;
@@ -61,7 +62,7 @@ public class ODTDocumentHandler
     public ODTDocumentHandler( BufferedElement parent, IContext context, String entryName )
     {
         super( parent, context, entryName );
-        styleGen = ODTStylesGeneratorProvider.getStyleGenerator();
+        styleGen = ODTContextHelper.getStylesGenerator(context);
         this.paragraphWasInserted = false;
         this.closeHeader = false;
     }
@@ -463,40 +464,39 @@ public class ODTDocumentHandler
     public void startSpan( ContainerProperties properties )
         throws IOException
     {
-        Integer depth = 0;
+        internalStartSpan(styleGen.getTextStyleName(properties), false);
+//        if( properties.isBold() )
+//        {
+//       		internalStartSpan( styleGen.getBoldStyleName(), false );
+//        	depth++;
+//        }
+//    	if ( properties.isItalic() )
+//    	{
+//    		internalStartSpan( styleGen.getItalicStyleName(), false );
+//        	depth++;
+//        }
+//    	if ( properties.isUnderline() )
+//    	{
+//    		internalStartSpan( styleGen.getUnderlineStyleName(), false );
+//        	depth++;
+//        }
+//    	if ( properties.isStrike() )
+//    	{
+//    		internalStartSpan( styleGen.getStrikeStyleName(), false );
+//        	depth++;
+//        }
+//    	if ( properties.isSubscript() )
+//    	{
+//    		internalStartSpan( styleGen.getSubscriptStyleName(), false );
+//        	depth++;
+//        }
+//    	if ( properties.isSuperscript() )
+//    	{
+//    		internalStartSpan( styleGen.getSuperscriptStyleName(), false );
+//        	depth++;
+//        }
 
-        if( properties.isBold() )
-        {
-       		internalStartSpan( styleGen.getBoldStyleName(), false );
-        	depth++;
-        }
-    	if ( properties.isItalic() )
-    	{
-    		internalStartSpan( styleGen.getItalicStyleName(), false );
-        	depth++;
-        }
-    	if ( properties.isUnderline() )
-    	{
-    		internalStartSpan( styleGen.getUnderlineStyleName(), false );
-        	depth++;
-        }
-    	if ( properties.isStrike() )
-    	{
-    		internalStartSpan( styleGen.getStrikeStyleName(), false );
-        	depth++;
-        }
-    	if ( properties.isSubscript() )
-    	{
-    		internalStartSpan( styleGen.getSubscriptStyleName(), false );
-        	depth++;
-        }
-    	if ( properties.isSuperscript() )
-    	{
-    		internalStartSpan( styleGen.getSuperscriptStyleName(), false );
-        	depth++;
-        }
-
-        spanStack.push( depth );
+        spanStack.push( 1 );
     }
 
     public void endSpan()

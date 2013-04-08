@@ -48,8 +48,8 @@ import fr.opensagres.xdocreport.core.utils.StringUtils;
 import fr.opensagres.xdocreport.document.images.AbstractImageRegistry;
 import fr.opensagres.xdocreport.document.images.IImageRegistry;
 import fr.opensagres.xdocreport.document.images.ImageProviderInfo;
+import fr.opensagres.xdocreport.document.odt.template.ODTContextHelper;
 import fr.opensagres.xdocreport.document.odt.textstyling.IODTStylesGenerator;
-import fr.opensagres.xdocreport.document.odt.textstyling.ODTStylesGeneratorProvider;
 import fr.opensagres.xdocreport.document.preprocessor.sax.BufferedElement;
 import fr.opensagres.xdocreport.document.preprocessor.sax.IBufferedRegion;
 import fr.opensagres.xdocreport.document.preprocessor.sax.TransformedBufferedDocumentContentHandler;
@@ -72,13 +72,10 @@ public class ODTBufferedDocumentContentHandler
 
     private boolean textInputParsing = false;
 
-    protected final IODTStylesGenerator styleGen;
-
     public ODTBufferedDocumentContentHandler( String entryName, FieldsMetadata fieldsMetadata,
                                               IDocumentFormatter formatter, Map<String, Object> sharedContext )
     {
         super( entryName, fieldsMetadata, formatter, sharedContext );
-        styleGen = ODTStylesGeneratorProvider.getStyleGenerator();
     }
 
     @Override
@@ -259,13 +256,20 @@ public class ODTBufferedDocumentContentHandler
             }
             else if ( isOfficeAutomaticStyles( uri, localName, name ) && needToProcessAutomaticStyles() )
             {
-                IBufferedRegion region = getCurrentElement();
-                // Add bold, italic, bold+italic styles for text styling.
-                region.append( styleGen.generateTextStyles() );
-                // Add paragraph styles for text styling.
-                region.append( styleGen.generateParagraphStyles() );
-                // Add styles for lists
-                region.append( styleGen.generateListStyle() );
+//                IDocumentFormatter formatter = super.getFormatter();
+//                if ( formatter != null )
+//                {
+//                    IBufferedRegion region = getCurrentElement();
+//                    region.append( formatter.getFunctionDirective( true, true, ODTContextHelper.STYLES_GENERATOR_KEY,
+//                                                                   IODTStylesGenerator.generateAllStyles,
+//                                                                   ODTContextHelper.DEFAULT_STYLE_KEY ) );
+//                }
+                /*
+                 * IBufferedRegion region = getCurrentElement(); // Add bold, italic, bold+italic styles for text
+                 * styling. region.append( styleGen.generateTextStyles() ); // Add paragraph styles for text styling.
+                 * region.append( styleGen.generateParagraphStyles() ); // Add styles for lists region.append(
+                 * styleGen.generateListStyle() );
+                 */
             }
             super.doEndElement( uri, localName, name );
         }

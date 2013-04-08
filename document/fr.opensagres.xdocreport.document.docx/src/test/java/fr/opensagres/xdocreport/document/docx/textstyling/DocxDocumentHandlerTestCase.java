@@ -139,7 +139,7 @@ public class DocxDocumentHandlerTestCase
 
         Assert.assertEquals( "", handler.getTextBefore() );
         Assert.assertEquals( "", handler.getTextBody() );
-        Assert.assertEquals( "", handler.getTextEnd() );
+        Assert.assertEquals( "<w:p><w:pPr><w:rPr><w:b /></w:rPr></w:pPr><w:r><w:t xml:space=\"preserve\" >text</w:t></w:r></w:p>", handler.getTextEnd() );
     }
     
     @Test

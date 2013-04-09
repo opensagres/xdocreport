@@ -61,6 +61,8 @@ public class DocxDocumentHandler
 
     private Stack<ContainerProperties> paragraphsStack;
 
+    private Stack<SpanProperties> spansStack;
+
     private HyperlinkRegistry hyperlinkRegistry;
 
     protected final IDocxStylesGenerator styleGen;
@@ -76,6 +78,8 @@ public class DocxDocumentHandler
     private int currentNumId;
 
     private boolean haspPr;
+
+    private int addLineBreak;
 
     public DocxDocumentHandler( BufferedElement parent, IContext context, String entryName )
     {
@@ -94,12 +98,15 @@ public class DocxDocumentHandler
         this.underlining = false;
         this.striking = false;
         this.paragraphsStack = new Stack<ContainerProperties>();
+        this.spansStack = new Stack<SpanProperties>();
+        this.addLineBreak = 0;
     }
 
     public void endDocument()
         throws IOException
     {
         endParagraphIfNeeded();
+        this.spansStack.clear();
     }
 
     private void endParagraphIfNeeded()
@@ -209,8 +216,41 @@ public class DocxDocumentHandler
         else
         {
             startParagraphIfNeeded();
+            boolean bold = bolding;
+            boolean italic = italicsing;
+            boolean underline = underlining;
+            boolean strike = striking;
+            SpanProperties properties = getCurrentSpanProperties();
+            if ( properties != null )
+            {
+                // ovveride properties declared in the span.
+                if ( !bold )
+                {
+                    bold = properties.isBold();
+                }
+                if ( !italic )
+                {
+                    italic = properties.isItalic();
+                }
+                if ( !underline )
+                {
+                    underline = properties.isUnderline();
+                }
+                if ( !strike )
+                {
+                    strike = properties.isStrike();
+                }
+            }
             super.write( "<w:r>" );
-            processRunProperties( false, bolding, italicsing, underlining, striking );
+            // w:RP
+            processRunProperties( false, bold, italic, underline, strike );
+            // w:br
+            for ( int i = 0; i < addLineBreak; i++ )
+            {
+                super.write( "<w:br/>" );
+            }
+            addLineBreak = 0;
+            // w:t
             super.write( "<w:t xml:space=\"preserve\" >" );
             super.write( content );
             super.write( "</w:t>" );
@@ -461,13 +501,30 @@ public class DocxDocumentHandler
     public void startSpan( SpanProperties properties )
         throws IOException
     {
-        // TODO
+        spansStack.push( properties );
+        // startParagraphIfNeeded();
+        // super.write( "<w:r>" );
+        // processRunProperties( false, properties.isBold(), properties.isItalic(), properties.isUnderline(),
+        // properties.isStrike() );
+        // super.write( "<w:t xml:space=\"preserve\" >" );
+        // super.write( content );
+        // super.write( "</w:t>" );
+        // super.write( "</w:r>" );
+    }
+
+    private SpanProperties getCurrentSpanProperties()
+    {
+        if ( !spansStack.isEmpty() )
+        {
+            return spansStack.peek();
+        }
+        return null;
     }
 
     public void endSpan()
         throws IOException
     {
-        // TODO
+        spansStack.pop();
     }
 
     @Override
@@ -627,12 +684,7 @@ public class DocxDocumentHandler
         throws IOException
     {
         // <w:br />
-        startParagraphIfNeeded();
-        super.write( "<w:r>" );
-        super.write( "<w:t>" );
-        super.write( "<w:br/>" );
-        super.write( "</w:t>" );
-        super.write( "</w:r>" );
+        this.addLineBreak++;
     }
 
 }

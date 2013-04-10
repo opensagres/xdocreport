@@ -658,8 +658,11 @@ public class DocxDocumentHandlerTestCase
         formatter.transform( "a<br/>b", handler );
 
         Assert.assertEquals( "", handler.getTextBefore() );
-        Assert.assertEquals( "<w:r><w:t xml:space=\"preserve\" >a</w:t></w:r><w:r><w:t><w:br/></w:t></w:r><w:r><w:t xml:space=\"preserve\" >b</w:t></w:r>",
-                             handler.getTextBody() );
+        
+        Assert.assertEquals( "<w:r><w:t xml:space=\"preserve\" >a</w:t></w:r><w:r><w:br/><w:t xml:space=\"preserve\" >b</w:t></w:r>",
+                handler.getTextBody() );
+//was:        Assert.assertEquals( "<w:r><w:t xml:space=\"preserve\" >a</w:t></w:r><w:r><w:t><w:br/></w:t></w:r><w:r><w:t xml:space=\"preserve\" >b</w:t></w:r>",
+//                             handler.getTextBody() );
         Assert.assertEquals( "", handler.getTextEnd() );
     }
 

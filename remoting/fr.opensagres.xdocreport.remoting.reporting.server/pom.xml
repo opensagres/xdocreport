@@ -3,7 +3,7 @@
 	<parent>
 		<groupId>fr.opensagres.xdocreport</groupId>
 		<artifactId>remoting</artifactId>
-		<version>1.0.1-SNAPSHOT</version>
+		<version>1.0.1</version>
 	</parent>
 	<artifactId>fr.opensagres.xdocreport.remoting.reporting.server</artifactId>
 	<dependencies>
@@ -17,26 +17,26 @@
 		<dependency>
 			<groupId>fr.opensagres.xdocreport</groupId>
 			<artifactId>fr.opensagres.xdocreport.remoting.reporting</artifactId>
-			<version>1.0.1-SNAPSHOT</version>
+			<version>1.0.1</version>
 		</dependency>
 
 		<dependency>
 			<groupId>fr.opensagres.xdocreport</groupId>
 			<artifactId>fr.opensagres.xdocreport.document</artifactId>
-			<version>1.0.1-SNAPSHOT</version>
+			<version>1.0.1</version>
 		</dependency>
 
 		<dependency>
 			<groupId>fr.opensagres.xdocreport</groupId>
 			<artifactId>fr.opensagres.xdocreport.document.docx</artifactId>
-			<version>1.0.1-SNAPSHOT</version>
+			<version>1.0.1</version>
 			<scope>test</scope>
 		</dependency>
 
 		<dependency>
 			<groupId>fr.opensagres.xdocreport</groupId>
 			<artifactId>fr.opensagres.xdocreport.template.velocity</artifactId>
-			<version>1.0.1-SNAPSHOT</version>
+			<version>1.0.1</version>
 			<scope>test</scope>
 		</dependency>
 
@@ -44,13 +44,13 @@
 		<dependency>
 			<groupId>fr.opensagres.xdocreport</groupId>
 			<artifactId>fr.opensagres.xdocreport.converter.odt.odfdom</artifactId>
-			<version>1.0.1-SNAPSHOT</version>
+			<version>1.0.1</version>
 			<scope>test</scope>
 		</dependency>
 		<dependency>
 			<groupId>fr.opensagres.xdocreport</groupId>
 			<artifactId>fr.opensagres.xdocreport.converter.docx.xwpf</artifactId>
-			<version>1.0.1-SNAPSHOT</version>
+			<version>1.0.1</version>
 			<scope>test</scope>			
 		</dependency>
 		

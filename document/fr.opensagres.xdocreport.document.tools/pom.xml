@@ -3,7 +3,7 @@
 	<parent>
 		<groupId>fr.opensagres.xdocreport</groupId>
 		<artifactId>document</artifactId>
-		<version>1.0.1-SNAPSHOT</version>
+		<version>1.0.1</version>
 	</parent>
 
 	<artifactId>fr.opensagres.xdocreport.document.tools</artifactId>
@@ -34,45 +34,45 @@
 		<dependency>
 			<groupId>fr.opensagres.xdocreport</groupId>
 			<artifactId>fr.opensagres.xdocreport.document</artifactId>
-			<version>1.0.1-SNAPSHOT</version>
+			<version>1.0.1</version>
 		</dependency>
 		<dependency>
 			<groupId>fr.opensagres.xdocreport</groupId>
 			<artifactId>fr.opensagres.xdocreport.document.docx</artifactId>
-			<version>1.0.1-SNAPSHOT</version>
+			<version>1.0.1</version>
 		</dependency>
 		<dependency>
 			<groupId>fr.opensagres.xdocreport</groupId>
 			<artifactId>fr.opensagres.xdocreport.document.odt</artifactId>
-			<version>1.0.1-SNAPSHOT</version>
+			<version>1.0.1</version>
 		</dependency>
 		<dependency>
 			<groupId>fr.opensagres.xdocreport</groupId>
 			<artifactId>fr.opensagres.xdocreport.template.freemarker</artifactId>
-			<version>1.0.1-SNAPSHOT</version>
+			<version>1.0.1</version>
 		</dependency>
 		<dependency>
 			<groupId>fr.opensagres.xdocreport</groupId>
 			<artifactId>fr.opensagres.xdocreport.template.velocity</artifactId>
-			<version>1.0.1-SNAPSHOT</version>
+			<version>1.0.1</version>
 		</dependency>
 
 		<dependency>
 			<groupId>fr.opensagres.xdocreport</groupId>
 			<artifactId>fr.opensagres.xdocreport.remoting.resources.services.client</artifactId>
-			<version>1.0.1-SNAPSHOT</version>
+			<version>1.0.1</version>
 		</dependency>
 		<dependency>
 			<groupId>fr.opensagres.xdocreport</groupId>
 			<artifactId>fr.opensagres.xdocreport.remoting.resources.services.server</artifactId>
-			<version>1.0.1-SNAPSHOT</version>
+			<version>1.0.1</version>
 			<scope>test</scope>
 		</dependency>
 		<dependency>
 			<groupId>fr.opensagres.xdocreport</groupId>
 			<artifactId>fr.opensagres.xdocreport.openoffice.macro</artifactId>
             <type>oxt</type>
-			<version>1.0.1-SNAPSHOT</version>
+			<version>1.0.1</version>
 		</dependency>
 
 		<!-- Use JAX-WS CXF implementation  -->

@@ -3,14 +3,14 @@
 	<parent>
 		<artifactId>thirdparties-extension</artifactId>
 		<groupId>fr.opensagres.xdocreport</groupId>
-		<version>1.0.1-SNAPSHOT</version>
+		<version>1.0.1</version>
 	</parent>
 	<artifactId>org.apache.poi.xwpf.converter.xhtml</artifactId>
 	<dependencies>
 		<dependency>
 			<groupId>fr.opensagres.xdocreport</groupId>
 			<artifactId>org.apache.poi.xwpf.converter.core</artifactId>
-			<version>1.0.1-SNAPSHOT</version>
+			<version>1.0.1</version>
 		</dependency>
 	</dependencies>
 </project>

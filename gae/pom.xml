@@ -70,7 +70,7 @@
 		<dependency>
 				<groupId>fr.opensagres.xdocreport.itext-gae</groupId>
 				<artifactId>itext-gae</artifactId>
-				<version>0.0.1-SNAPSHOT</version>
+				<version>4.2.0-1</version>
 		</dependency>
 	</dependencies>
 </project>

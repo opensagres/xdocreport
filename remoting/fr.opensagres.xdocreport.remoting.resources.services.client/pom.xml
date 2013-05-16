@@ -3,7 +3,7 @@
   <parent>
     <artifactId>remoting</artifactId>
     <groupId>fr.opensagres.xdocreport</groupId>
-    <version>1.0.2</version>
+    <version>1.0.3-SNAPSHOT</version>
   </parent>
   <artifactId>fr.opensagres.xdocreport.remoting.resources.services.client</artifactId>
   <dependencies>
@@ -12,13 +12,13 @@
 	<dependency>
     	<groupId>fr.opensagres.xdocreport</groupId>
     	<artifactId>fr.opensagres.xdocreport.remoting.resources</artifactId>
-    	<version>1.0.2</version>
+    	<version>1.0.3-SNAPSHOT</version>
     </dependency>
     
     <dependency>
       <groupId>fr.opensagres.xdocreport</groupId>
       <artifactId>fr.opensagres.xdocreport.core</artifactId>
-      <version>1.0.2</version>
+      <version>1.0.3-SNAPSHOT</version>
     </dependency>
  
     <dependency>
@@ -37,7 +37,7 @@
 	<dependency>
   		<groupId>fr.opensagres.xdocreport</groupId>
   		<artifactId>fr.opensagres.xdocreport.remoting.resources.services.server</artifactId>
-  		<version>1.0.2</version>
+  		<version>1.0.3-SNAPSHOT</version>
   		<scope>test</scope>
 	</dependency>
 	

@@ -4,8 +4,9 @@
 	<name>XDocReport Integration Tests</name>
 	<parent>
 		<groupId>fr.opensagres.xdocreport</groupId>
-		<artifactId>xdocreport</artifactId>
+		<artifactId>xdocreport-parent</artifactId>
 		<version>1.0.3-SNAPSHOT</version>
+		<relativePath>..</relativePath>
 	</parent>
 	<packaging>pom</packaging>
 	<build>

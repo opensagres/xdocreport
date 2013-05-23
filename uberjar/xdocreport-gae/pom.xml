@@ -33,25 +33,7 @@
 					</execution>
 				</executions>
 			</plugin>
-			<plugin>
-				<groupId>org.apache.felix</groupId>
-				<artifactId>maven-bundle-plugin</artifactId>
-				<extensions>true</extensions>
-				<executions>
-					<execution>
-						<id>bundle-manifest</id>
-						<phase>process-classes</phase>
-						<goals>
-							<goal>manifest</goal>
-						</goals>
-					</execution>
-				</executions>
-				<configuration>
-					<instructions>
-						<Embed-Dependency>*;scope=compile|runtime</Embed-Dependency>
-					</instructions>
-				</configuration>
-			</plugin>
+			
 		</plugins>
 	</build>
 	<dependencies>

@@ -1,43 +1,15 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
-  <modelVersion>4.0.0</modelVersion>
-  <parent>
-    <groupId>fr.opensagres.xdocreport</groupId>
-    <artifactId>uberjar</artifactId>
-    <version>1.0.3-SNAPSHOT</version>
-    <relativePath>..</relativePath>
-  </parent>
-  <artifactId>xdocreport-gae</artifactId>
-  <build>
-		<plugins>
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-shade-plugin</artifactId>
-				<version>2.1</version>
-				<executions>
-					<execution>
-						<phase>package</phase>
-						<goals>
-							<goal>shade</goal>
-						</goals>
-						<configuration>
-							<artifactSet>
-								<includes>
-									<include>fr.opensagres.xdocreport:*</include>
-								</includes>
-							</artifactSet>
-							<transformers>
-								<transformer
-									implementation="org.apache.maven.plugins.shade.resource.ServicesResourceTransformer" />
-							</transformers>
-						</configuration>
-					</execution>
-				</executions>
-			</plugin>
-			
-		</plugins>
-	</build>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<parent>
+		<groupId>fr.opensagres.xdocreport</groupId>
+		<artifactId>uberjar</artifactId>
+		<version>1.0.3-SNAPSHOT</version>
+		<relativePath>..</relativePath>
+	</parent>
+	<artifactId>xdocreport-gae</artifactId>
 	<dependencies>
-	<!-- Document ODT -->
+		<!-- Document ODT -->
 		<dependency>
 			<groupId>fr.opensagres.xdocreport</groupId>
 			<artifactId>fr.opensagres.xdocreport.document.odt</artifactId>

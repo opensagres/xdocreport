@@ -8,6 +8,55 @@
   </parent>
   <artifactId>uberjar</artifactId>
   <packaging>pom</packaging>
+  <build>
+		<plugins>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-shade-plugin</artifactId>
+				<version>2.1</version>
+				<executions>
+					<execution>
+						<phase>package</phase>
+						<goals>
+							<goal>shade</goal>
+						</goals>
+						<configuration>
+							<artifactSet>
+								<includes>
+									<include>fr.opensagres.xdocreport:*</include>
+								</includes>
+							</artifactSet>
+							<transformers>
+								<transformer
+									implementation="org.apache.maven.plugins.shade.resource.ServicesResourceTransformer" />
+							</transformers>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
+			  <plugin>
+                <groupId>org.apache.felix</groupId>
+                <artifactId>maven-bundle-plugin</artifactId>
+                <extensions>true</extensions>
+                <executions>
+					<execution>
+						<id>bundle-manifest</id>
+						<phase>process-classes</phase>
+						<goals>
+							<goal>bundle</goal>
+						</goals>
+					</execution>
+				</executions>
+                <configuration>
+                <instructions>
+                	<!-- Need to fine tune OSGi Header -->
+                    <Embed-Dependency>*;scope=compile|runtime;groupId=fr.opensagres.xdocreport</Embed-Dependency>
+                    <Embed-Transitive>true</Embed-Transitive>
+                   </instructions> 
+                </configuration>
+            </plugin>
+		</plugins>
+	</build>
   <modules>
   	<module>xdocreport</module>
   	<module>xdocreport-gae</module>

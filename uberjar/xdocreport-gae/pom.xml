@@ -48,8 +48,7 @@
 				</executions>
 				<configuration>
 					<instructions>
-						<_nobundles>true</_nobundles>
-						<_failok>true</_failok>
+						<Embed-Dependency>*;scope=compile|runtime</Embed-Dependency>
 					</instructions>
 				</configuration>
 			</plugin>

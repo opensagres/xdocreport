@@ -2,14 +2,8 @@
   <modelVersion>4.0.0</modelVersion>
   <parent>
     <groupId>fr.opensagres.xdocreport</groupId>
-    <artifactId>xdocreport-parent</artifactId>
+    <artifactId>uberjar</artifactId>
     <version>1.0.3-SNAPSHOT</version>
-    <relativePath>..</relativePath>
   </parent>
-  <artifactId>uberjar</artifactId>
-  <packaging>pom</packaging>
-  <modules>
-  	<module>xdocreport</module>
-  	<module>xdocreport-gae</module>
-  </modules>
+  <artifactId>xdocreport</artifactId>
 </project>

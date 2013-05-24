@@ -52,6 +52,13 @@
                 	<!-- Need to fine tune OSGi Header -->
                     <Embed-Dependency>*;scope=compile|runtime;groupId=fr.opensagres.xdocreport</Embed-Dependency>
                     <Embed-Transitive>true</Embed-Transitive>
+                    <_snapshot>${osgi-version-qualifier}</_snapshot>
+					<_nouses>true</_nouses>
+					<!-- xdocreport is suppose to work without any depdencies
+					though some are required for some functionalities -->
+					<Import-Package>*;resolution:=optional</Import-Package>
+					<Export-Package>!*.internal.*,fr.opensagres.xdocreport.*,org.apache.poi.xwpf.converter.*,org.apache.poi.xwpf.converter.core.*,org.apache.poi.xwpf.converter.pdf.*,org.apache.poi.xwpf.converter.xhtml.*</Export-Package>
+					<_removeheaders>Bundle-ClassPath,Embed-Dependency,Embed-Transitive,Embedded-Artifacts,Include-Resource</_removeheaders>
                    </instructions> 
                 </configuration>
             </plugin>

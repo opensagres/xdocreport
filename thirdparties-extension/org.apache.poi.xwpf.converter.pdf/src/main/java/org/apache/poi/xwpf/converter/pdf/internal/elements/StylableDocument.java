@@ -389,11 +389,16 @@ public class StylableDocument
             @Override
             protected float adjustMargin( float margin, IMasterPageHeaderFooter headerFooter )
             {
-                if ( headerFooter.getTotalHeight() > margin )
+                if ( ( (StylableHeaderFooter) headerFooter ).getY() != null )
                 {
-                    return headerFooter.getTotalHeight();
+                    // has page margin defined (PgMar)
+                    if ( headerFooter.getTotalHeight() > margin )
+                    {
+                        return headerFooter.getTotalHeight();
+                    }
+                    return margin;
                 }
-                return margin;
+                return super.adjustMargin( margin, headerFooter );
             }
         };
     }

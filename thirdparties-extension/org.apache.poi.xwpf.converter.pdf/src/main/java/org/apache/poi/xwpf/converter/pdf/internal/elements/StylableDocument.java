@@ -57,8 +57,6 @@ public class StylableDocument
     extends ExtendedDocument
 {
 
-    private int titleNumber = 1;
-
     private StylableMasterPage activeMasterPage;
 
     private boolean masterPageJustChanged;

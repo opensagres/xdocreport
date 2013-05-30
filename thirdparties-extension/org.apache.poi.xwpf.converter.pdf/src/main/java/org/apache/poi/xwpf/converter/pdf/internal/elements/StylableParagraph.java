@@ -31,8 +31,10 @@ import org.apache.poi.xwpf.converter.core.utils.ColorHelper;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTBorder;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.STBorder;
 
+import com.lowagie.text.Font;
 import com.lowagie.text.Paragraph;
 import com.lowagie.text.Rectangle;
+import com.lowagie.text.pdf.BaseFont;
 
 import fr.opensagres.xdocreport.itext.extension.ExtendedParagraph;
 import fr.opensagres.xdocreport.itext.extension.IITextContainer;
@@ -52,12 +54,15 @@ public class StylableParagraph
 
     private String listItemText;
 
+    private Float originMultipliedLeading;
+
     public StylableParagraph( StylableDocument ownerDocument, IITextContainer parent )
     {
         super();
         this.ownerDocument = ownerDocument;
         this.parent = parent;
-        super.setMultipliedLeading( DEFAULT_LINE_HEIGHT );
+        // super.setMultipliedLeading( DEFAULT_LINE_HEIGHT );
+        this.originMultipliedLeading = null;
     }
 
     public StylableParagraph( StylableDocument ownerDocument, Paragraph title, IITextContainer parent )
@@ -66,45 +71,6 @@ public class StylableParagraph
         this.ownerDocument = ownerDocument;
         this.parent = parent;
     }
-
-    // public void applyStyles( XWPFParagraph p, Style style )
-    // {
-    //
-    // if ( style != null )
-    // {
-    // // first process values from "style"
-    // // will be overridden by in-line values if available...
-    // StyleParagraphProperties paragraphProperties = style.getParagraphProperties();
-    //
-    // if ( paragraphProperties != null )
-    // {
-    // FontInfos fontInfos = paragraphProperties.getFontInfos();
-    // if ( fontInfos != null )
-    // {
-    // Font font =
-    // XWPFFontRegistry.getRegistry().getFont( fontInfos.getFontFamily(), fontInfos.getFontEncoding(),
-    // fontInfos.getFontSize(), fontInfos.getFontStyle(),
-    // fontInfos.getFontColor() );
-    // setFont( font );
-    // }
-    // // Alignment
-    // int alignment = paragraphProperties.getAlignment();
-    // if ( alignment != Element.ALIGN_UNDEFINED )
-    // {
-    // setAlignment( alignment );
-    // }
-    //
-    // Float lineHeight = paragraphProperties.getLineHeight();
-    // if ( lineHeight != null )
-    // {
-    // // super.getPdfPCell().setMinimumHeight(lineHeight);
-    // // FIXME : Is it correct???
-    // setLeading( lineHeight * super.getTotalLeading() );
-    // }
-    // }
-    //
-    // }
-    // }
 
     // FIXME check with Angelo the purpose of this method....
     public IITextContainer getParent()
@@ -224,5 +190,43 @@ public class StylableParagraph
     public void setListItemText( String listItemText )
     {
         this.listItemText = listItemText;
+    }
+
+    @Override
+    public void setLeading( float fixedLeading, float multipliedLeading )
+    {
+        super.setLeading( fixedLeading, multipliedLeading );
+        this.originMultipliedLeading = multipliedLeading;
+    }
+
+    @Override
+    public void setMultipliedLeading( float multipliedLeading )
+    {
+        super.setMultipliedLeading( multipliedLeading );
+        this.originMultipliedLeading = multipliedLeading;
+    }
+
+    /**
+     * Adjust iText multiplied leading according the given font.
+     * 
+     * @param font
+     */
+    public void adjustMultipliedLeading( Font font )
+    {
+        if ( originMultipliedLeading != null && font != null && font.getBaseFont() != null )
+        {
+            // iText and open office computes proportional line height differently
+            // [iText] line height = coefficient * font size
+            // [MS Word] line height = coefficient * (font ascender + font descender + font extra margin)
+            // we have to increase paragraph line height to generate pdf similar to OOXML docx document
+            // this algorithm may be inaccurate if fonts with different multipliers are used in this paragraph
+            float size = font.getSize();
+            float ascender = font.getBaseFont().getFontDescriptor( BaseFont.AWT_ASCENT, size );
+            float descender = -font.getBaseFont().getFontDescriptor( BaseFont.AWT_DESCENT, size ); // negative value
+            float margin = font.getBaseFont().getFontDescriptor( BaseFont.AWT_LEADING, size );
+            float multiplier = ( ascender + descender + margin ) / size;
+            super.setMultipliedLeading( originMultipliedLeading * multiplier );
+        }
+
     }
 }

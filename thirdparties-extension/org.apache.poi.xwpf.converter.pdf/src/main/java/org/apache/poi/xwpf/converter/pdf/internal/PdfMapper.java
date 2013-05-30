@@ -399,7 +399,7 @@ public class PdfMapper
         // Add new PDF line
         pdfParagraphContainer.addElement( Chunk.NEWLINE );
     }
-    
+
     @Override
     protected void visitRun( XWPFRun docxRun, boolean pageNumber, String url, IITextContainer pdfParagraphContainer )
         throws Exception
@@ -439,24 +439,6 @@ public class PdfMapper
         this.currentRunFont =
             options.getFontProvider().getFont( fontFamily, options.getFontEncoding(), fontSize, fontStyle, fontColor );
 
-        
-        /*Font font = currentRunFont;
-        if (font != null && font.getBaseFont() !=null) {        
-        Paragraph p =(Paragraph)pdfParagraphContainer;
-        if (!plist.contains( p )) {
-            
-            float size = font.getSize();
-            float ascender = font.getBaseFont().getFontDescriptor( BaseFont.AWT_ASCENT, size );
-            float descender = -font.getBaseFont().getFontDescriptor( BaseFont.AWT_DESCENT, size ); // negative value
-            float margin = font.getBaseFont().getFontDescriptor( BaseFont.AWT_LEADING, size );
-            float multiplier = ( ascender + descender + margin ) / size;
-            
-            p.setMultipliedLeading( p.getMultipliedLeading() * multiplier );
-            plist.add( p );
-        }
-        }*/
-        
-        
         // Underline patterns
         this.currentRunUnderlinePatterns = stylesDocument.getUnderline( docxRun );
 
@@ -469,8 +451,10 @@ public class PdfMapper
             this.currentRunBackgroundColor = stylesDocument.getTextHighlighting( docxRun );
         }
 
-        // addd symbol list item chunk if needed.
         StylableParagraph pdfParagraph = (StylableParagraph) pdfParagraphContainer;
+        pdfParagraph.adjustMultipliedLeading(currentRunFont);
+        
+        // addd symbol list item chunk if needed.
         String listItemText = pdfParagraph.getListItemText();
         if ( StringUtils.isNotEmpty( listItemText ) )
         {
@@ -1175,36 +1159,16 @@ public class PdfMapper
                         Chunk chunk = new Chunk( extImg, chunkOffsetX, chunkOffsetY, false );
                         pdfParentContainer.addElement( chunk );
                     }
-                    /*float chunkOffsetY = 0;
-                    if ( wrapText != null )
-                    {
-
-                        chunkOffsetY = -img.getScaledHeight();
-                    }
-                    boolean useExtendedImage = offsetY != null;
-                    // if ( STRelFromV.PARAGRAPH.equals( relativeFromV ) )
-                    // {
-                    // useExtendedImage = true;
-                    // }
-                    //
-                    if ( useExtendedImage )
-                    {
-                        float imgY = -offsetY;
-                        if ( pdfHeader != null )
-                        {
-                            float headerY = pdfHeader.getY() != null ? pdfHeader.getY() : 0;
-                            imgY += - img.getScaledHeight() + headerY;
-                        }
-                        ExtendedImage extImg = new ExtendedImage( img, imgY );
-
-                        // if ( STRelFromV.PARAGRAPH.equals( relativeFromV ) )
-                        // {
-                        // chunkOffsetY = -extImg.getScaledHeight();
-                        // }
-
-                        Chunk chunk = new Chunk( extImg, chunkOffsetX, chunkOffsetY, false );
-                        pdfParentContainer.addElement( chunk );
-                    }*/
+                    /*
+                     * float chunkOffsetY = 0; if ( wrapText != null ) { chunkOffsetY = -img.getScaledHeight(); }
+                     * boolean useExtendedImage = offsetY != null; // if ( STRelFromV.PARAGRAPH.equals( relativeFromV )
+                     * ) // { // useExtendedImage = true; // } // if ( useExtendedImage ) { float imgY = -offsetY; if (
+                     * pdfHeader != null ) { float headerY = pdfHeader.getY() != null ? pdfHeader.getY() : 0; imgY += -
+                     * img.getScaledHeight() + headerY; } ExtendedImage extImg = new ExtendedImage( img, imgY ); // if (
+                     * STRelFromV.PARAGRAPH.equals( relativeFromV ) ) // { // chunkOffsetY = -extImg.getScaledHeight();
+                     * // } Chunk chunk = new Chunk( extImg, chunkOffsetX, chunkOffsetY, false );
+                     * pdfParentContainer.addElement( chunk ); }
+                     */
                     else
                     {
                         if ( pdfParentContainer instanceof Paragraph )

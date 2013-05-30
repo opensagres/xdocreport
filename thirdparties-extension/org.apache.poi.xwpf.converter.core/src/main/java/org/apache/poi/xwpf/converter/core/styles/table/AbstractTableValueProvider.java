@@ -54,20 +54,20 @@ public abstract class AbstractTableValueProvider<Value>
     }
 
     @Override
-    public Value getValueFromElement( XWPFTable table )
+    public Value getValueFromElement( XWPFTable table, XWPFStylesDocument stylesDocument )
     {
         return getValue( getTblPr( table ) );
     }
 
     @Override
-    protected Value getValueFromStyle( CTStyle style )
+    protected Value getValueFromStyle( CTStyle style, XWPFStylesDocument stylesDocument )
     {
         return getValue( getTblPr( style ) );
     }
-    
+
     @Override
-    protected Value getValueFromTableStyle( CTTblStylePr tblStylePr )
-    {     
+    protected Value getValueFromTableStyle( CTTblStylePr tblStylePr, XWPFStylesDocument stylesDocument )
+    {
         return null;
     }
 
@@ -92,10 +92,10 @@ public abstract class AbstractTableValueProvider<Value>
     {
         return stylesDocument.getDefaultTableStyle();
     }
-    
+
     @Override
     protected XWPFTableCell getParentTableCell( XWPFTable element )
-    {     
+    {
         return null;
     }
 }

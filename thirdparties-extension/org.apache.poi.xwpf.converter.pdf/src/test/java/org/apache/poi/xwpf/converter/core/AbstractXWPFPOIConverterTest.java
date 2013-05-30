@@ -30,7 +30,7 @@ import org.junit.Test;
 
 public abstract class AbstractXWPFPOIConverterTest
 {
-
+    
     @Test
     public void AdvancedTable()
         throws IOException
@@ -81,7 +81,7 @@ public abstract class AbstractXWPFPOIConverterTest
         doGenerate( "DocxBig.docx" );
     }
 
-    //@Test
+    @Test
     public void DocxBig2()
         throws IOException
     {
@@ -94,7 +94,14 @@ public abstract class AbstractXWPFPOIConverterTest
     {
         doGenerate( "DocxLettreRelance.docx" );
     }
-
+    
+    @Test
+    public void DocXperT_Output_4_3()
+        throws IOException
+    {
+        doGenerate( "DocXperT_Output_4_3.docx" );
+    }
+    
     @Test
     public void DocxStructures()
         throws IOException
@@ -310,6 +317,13 @@ public abstract class AbstractXWPFPOIConverterTest
         throws IOException
     {
         doGenerate( "TestLandscapeFormat.docx" );
+    }
+    
+    @Test
+    public void TestLineSpacing()
+        throws IOException
+    {
+        doGenerate( "TestLineSpacing.docx" );
     }
 
     @Test

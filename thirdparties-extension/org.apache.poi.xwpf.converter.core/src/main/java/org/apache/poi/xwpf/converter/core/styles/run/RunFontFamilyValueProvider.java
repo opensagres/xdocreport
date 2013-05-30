@@ -43,12 +43,12 @@ public class RunFontFamilyValueProvider
     public static RunFontFamilyValueProvider INSTANCE = new RunFontFamilyValueProvider();
 
     @Override
-    public String getValue( CTRPr ppr )
+    public String getValue( CTRPr ppr, XWPFStylesDocument stylesDocument )
     {
         CTFonts fonts = getRFonts( ppr );
         if ( fonts != null )
         {
-            return fonts.getAscii();
+            return getFontFamily( stylesDocument, fonts );
         }
         return null;
     }

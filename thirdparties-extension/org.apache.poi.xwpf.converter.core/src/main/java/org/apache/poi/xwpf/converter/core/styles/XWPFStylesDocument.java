@@ -428,7 +428,7 @@ public class XWPFStylesDocument
 
     public String getFontFamily( CTRPr rPr )
     {
-        return RunFontFamilyValueProvider.INSTANCE.getValue( rPr );
+        return RunFontFamilyValueProvider.INSTANCE.getValue( rPr, this );
     }
 
     public Float getFontSize( XWPFRun run )
@@ -438,7 +438,7 @@ public class XWPFStylesDocument
 
     public Float getFontSize( CTRPr rPr )
     {
-        return RunFontSizeValueProvider.INSTANCE.getValue( rPr );
+        return RunFontSizeValueProvider.INSTANCE.getValue( rPr, this );
     }
 
     public Boolean getFontStyleBold( XWPFRun run )
@@ -448,7 +448,7 @@ public class XWPFStylesDocument
 
     public Boolean getFontStyleBold( CTRPr rPr )
     {
-        return RunFontStyleBoldValueProvider.INSTANCE.getValue( rPr );
+        return RunFontStyleBoldValueProvider.INSTANCE.getValue( rPr, this );
     }
 
     public Boolean getFontStyleItalic( XWPFRun run )
@@ -458,7 +458,7 @@ public class XWPFStylesDocument
 
     public Boolean getFontStyleItalic( CTRPr rPr )
     {
-        return RunFontStyleItalicValueProvider.INSTANCE.getValue( rPr );
+        return RunFontStyleItalicValueProvider.INSTANCE.getValue( rPr, this );
     }
 
     public Boolean getFontStyleStrike( XWPFRun run )
@@ -468,7 +468,7 @@ public class XWPFStylesDocument
 
     public Boolean getFontStyleStrike( CTRPr rPr )
     {
-        return RunFontStyleStrikeValueProvider.INSTANCE.getValue( rPr );
+        return RunFontStyleStrikeValueProvider.INSTANCE.getValue( rPr, this );
     }
 
     public Color getFontColor( XWPFRun run )
@@ -478,12 +478,12 @@ public class XWPFStylesDocument
 
     public Color getFontColor( CTRPr rPr )
     {
-        return RunFontColorValueProvider.INSTANCE.getValue( rPr );
+        return RunFontColorValueProvider.INSTANCE.getValue( rPr, this );
     }
 
     public UnderlinePatterns getUnderline( CTRPr rPr )
     {
-        return RunUnderlineValueProvider.INSTANCE.getValue( rPr );
+        return RunUnderlineValueProvider.INSTANCE.getValue( rPr, this );
     }
 
     public UnderlinePatterns getUnderline( XWPFRun run )
@@ -498,7 +498,7 @@ public class XWPFStylesDocument
 
     public Color getBackgroundColor( CTRPr rPr )
     {
-        return RunBackgroundColorValueProvider.INSTANCE.getValue( rPr );
+        return RunBackgroundColorValueProvider.INSTANCE.getValue( rPr, this );
     }
 
     public Color getTextHighlighting( XWPFRun run )
@@ -508,7 +508,7 @@ public class XWPFStylesDocument
 
     public Color getTextHighlighting( CTRPr rPr )
     {
-        return RunTextHighlightingValueProvider.INSTANCE.getValue( rPr );
+        return RunTextHighlightingValueProvider.INSTANCE.getValue( rPr, this );
     }
 
     // ------------------------ Table

@@ -26,6 +26,7 @@ package org.apache.poi.xwpf.converter.core.styles.run;
 
 import java.awt.Color;
 
+import org.apache.poi.xwpf.converter.core.styles.XWPFStylesDocument;
 import org.apache.poi.xwpf.converter.core.utils.ColorHelper;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTRPr;
 
@@ -36,7 +37,7 @@ public class RunFontColorValueProvider
     public static RunFontColorValueProvider INSTANCE = new RunFontColorValueProvider();
 
     @Override
-    public Color getValue( CTRPr rPr )
+    public Color getValue( CTRPr rPr, XWPFStylesDocument stylesDocument )
     {
         return ColorHelper.getColor( rPr );
     }

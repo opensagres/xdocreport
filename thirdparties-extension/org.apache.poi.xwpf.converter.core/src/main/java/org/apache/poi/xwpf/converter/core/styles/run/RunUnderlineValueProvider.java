@@ -24,6 +24,7 @@
  */
 package org.apache.poi.xwpf.converter.core.styles.run;
 
+import org.apache.poi.xwpf.converter.core.styles.XWPFStylesDocument;
 import org.apache.poi.xwpf.usermodel.UnderlinePatterns;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTRPr;
 
@@ -34,7 +35,7 @@ public class RunUnderlineValueProvider
     public static final RunUnderlineValueProvider INSTANCE = new RunUnderlineValueProvider();
 
     @Override
-    public UnderlinePatterns getValue( CTRPr rPr )
+    public UnderlinePatterns getValue( CTRPr rPr, XWPFStylesDocument stylesDocument)
     {
         return ( rPr != null && rPr.isSetU() ) ? UnderlinePatterns.valueOf( rPr.getU().getVal().intValue() )
                         : null;

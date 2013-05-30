@@ -29,6 +29,7 @@ import static org.apache.poi.xwpf.converter.core.utils.DxaUtil.emu2points;
 import java.awt.Color;
 import java.io.OutputStream;
 import java.math.BigInteger;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Logger;
 
@@ -68,6 +69,7 @@ import org.openxmlformats.schemas.drawingml.x2006.main.CTPositiveSize2D;
 import org.openxmlformats.schemas.drawingml.x2006.picture.CTPicture;
 import org.openxmlformats.schemas.drawingml.x2006.wordprocessingDrawing.STRelFromH;
 import org.openxmlformats.schemas.drawingml.x2006.wordprocessingDrawing.STRelFromV;
+import org.openxmlformats.schemas.drawingml.x2006.wordprocessingDrawing.STWrapText;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTBookmark;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTBorder;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTBr;
@@ -93,6 +95,7 @@ import com.lowagie.text.Font;
 import com.lowagie.text.Image;
 import com.lowagie.text.Paragraph;
 import com.lowagie.text.Rectangle;
+import com.lowagie.text.pdf.BaseFont;
 import com.lowagie.text.pdf.PdfPCell;
 import com.lowagie.text.pdf.PdfPTable;
 import com.lowagie.text.pdf.draw.DottedLineSeparator;
@@ -132,6 +135,10 @@ public class PdfMapper
 
     private Float currentPageWidth;
 
+    private StylableHeaderFooter pdfHeader;
+
+    private StylableHeaderFooter pdfFooter;
+
     public PdfMapper( XWPFDocument document, OutputStream out, PdfOptions options )
         throws Exception
     {
@@ -168,12 +175,13 @@ public class PdfMapper
     {
         BigInteger headerY = sectPr.getPgMar() != null ? sectPr.getPgMar().getHeader() : null;
         this.currentPageWidth = sectPr.getPgMar() != null ? DxaUtil.dxa2points( sectPr.getPgSz().getW() ) : null;
-        StylableHeaderFooter pdfHeader = new StylableHeaderFooter( pdfDocument, headerY, true );
+        this.pdfHeader = new StylableHeaderFooter( pdfDocument, headerY, true );
         List<IBodyElement> bodyElements = header.getBodyElements();
         StylableTableCell tableCell = getHeaderFooterTableCell( pdfHeader, bodyElements );
         visitBodyElements( bodyElements, tableCell );
         masterPage.setHeader( pdfHeader );
         this.currentPageWidth = null;
+        this.pdfHeader = null;
     }
 
     @Override
@@ -182,12 +190,13 @@ public class PdfMapper
     {
         BigInteger footerY = sectPr.getPgMar() != null ? sectPr.getPgMar().getFooter() : null;
         this.currentPageWidth = sectPr.getPgMar() != null ? DxaUtil.dxa2points( sectPr.getPgSz().getW() ) : null;
-        StylableHeaderFooter pdfFooter = new StylableHeaderFooter( pdfDocument, footerY, false );
+        this.pdfFooter = new StylableHeaderFooter( pdfDocument, footerY, false );
         List<IBodyElement> bodyElements = footer.getBodyElements();
         StylableTableCell tableCell = getHeaderFooterTableCell( pdfFooter, bodyElements );
         visitBodyElements( footer.getBodyElements(), tableCell );
         masterPage.setFooter( pdfFooter );
         this.currentPageWidth = null;
+        this.pdfFooter = null;
     }
 
     private StylableTableCell getHeaderFooterTableCell( StylableHeaderFooter pdfHeaderFooter,
@@ -390,7 +399,7 @@ public class PdfMapper
         // Add new PDF line
         pdfParagraphContainer.addElement( Chunk.NEWLINE );
     }
-
+    
     @Override
     protected void visitRun( XWPFRun docxRun, boolean pageNumber, String url, IITextContainer pdfParagraphContainer )
         throws Exception
@@ -430,6 +439,24 @@ public class PdfMapper
         this.currentRunFont =
             options.getFontProvider().getFont( fontFamily, options.getFontEncoding(), fontSize, fontStyle, fontColor );
 
+        
+        /*Font font = currentRunFont;
+        if (font != null && font.getBaseFont() !=null) {        
+        Paragraph p =(Paragraph)pdfParagraphContainer;
+        if (!plist.contains( p )) {
+            
+            float size = font.getSize();
+            float ascender = font.getBaseFont().getFontDescriptor( BaseFont.AWT_ASCENT, size );
+            float descender = -font.getBaseFont().getFontDescriptor( BaseFont.AWT_DESCENT, size ); // negative value
+            float margin = font.getBaseFont().getFontDescriptor( BaseFont.AWT_LEADING, size );
+            float multiplier = ( ascender + descender + margin ) / size;
+            
+            p.setMultipliedLeading( p.getMultipliedLeading() * multiplier );
+            plist.add( p );
+        }
+        }*/
+        
+        
         // Underline patterns
         this.currentRunUnderlinePatterns = stylesDocument.getUnderline( docxRun );
 
@@ -1073,7 +1100,7 @@ public class PdfMapper
                                  org.openxmlformats.schemas.drawingml.x2006.wordprocessingDrawing.STRelFromH.Enum relativeFromH,
                                  Float offsetY,
                                  org.openxmlformats.schemas.drawingml.x2006.wordprocessingDrawing.STRelFromV.Enum relativeFromV,
-                                 IITextContainer pdfParentContainer )
+                                 STWrapText.Enum wrapText, IITextContainer pdfParentContainer )
         throws Exception
     {
 
@@ -1117,7 +1144,7 @@ public class PdfMapper
                         }
                         else if ( STRelFromH.MARGIN.equals( relativeFromH ) )
                         {
-                            chunkOffsetX = offsetX;
+                            chunkOffsetX = pdfDocument.left() + offsetX;
                         }
                         else if ( STRelFromH.OUTSIDE_MARGIN.equals( relativeFromH ) )
                         {
@@ -1127,7 +1154,6 @@ public class PdfMapper
                         {
                             chunkOffsetX = offsetX - pdfDocument.left();
                         }
-
                     }
 
                     float chunkOffsetY = 0;
@@ -1149,6 +1175,36 @@ public class PdfMapper
                         Chunk chunk = new Chunk( extImg, chunkOffsetX, chunkOffsetY, false );
                         pdfParentContainer.addElement( chunk );
                     }
+                    /*float chunkOffsetY = 0;
+                    if ( wrapText != null )
+                    {
+
+                        chunkOffsetY = -img.getScaledHeight();
+                    }
+                    boolean useExtendedImage = offsetY != null;
+                    // if ( STRelFromV.PARAGRAPH.equals( relativeFromV ) )
+                    // {
+                    // useExtendedImage = true;
+                    // }
+                    //
+                    if ( useExtendedImage )
+                    {
+                        float imgY = -offsetY;
+                        if ( pdfHeader != null )
+                        {
+                            float headerY = pdfHeader.getY() != null ? pdfHeader.getY() : 0;
+                            imgY += - img.getScaledHeight() + headerY;
+                        }
+                        ExtendedImage extImg = new ExtendedImage( img, imgY );
+
+                        // if ( STRelFromV.PARAGRAPH.equals( relativeFromV ) )
+                        // {
+                        // chunkOffsetY = -extImg.getScaledHeight();
+                        // }
+
+                        Chunk chunk = new Chunk( extImg, chunkOffsetX, chunkOffsetY, false );
+                        pdfParentContainer.addElement( chunk );
+                    }*/
                     else
                     {
                         if ( pdfParentContainer instanceof Paragraph )
@@ -1170,4 +1226,5 @@ public class PdfMapper
 
         }
     }
+
 }

@@ -64,19 +64,19 @@ public abstract class AbstractParagraphRunValueProvider<Value>
     }
 
     @Override
-    public Value getValueFromElement( XWPFParagraph paragraph )
+    public Value getValueFromElement( XWPFParagraph paragraph, XWPFStylesDocument stylesDocument )
     {
         return getValue( getCTParaRPr( paragraph ) );
     }
 
     @Override
-    protected Value getValueFromStyle( CTStyle style )
+    protected Value getValueFromStyle( CTStyle style, XWPFStylesDocument stylesDocument )
     {
         return getValue( getRPr( style ) );
     }
 
     @Override
-    protected Value getValueFromDocDefaultsStyle( CTDocDefaults docDefaults, XWPFStylesDocument stylesDocument)
+    protected Value getValueFromDocDefaultsStyle( CTDocDefaults docDefaults, XWPFStylesDocument stylesDocument )
     {
         return getValue( getRPr( docDefaults ) );
     }

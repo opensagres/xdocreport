@@ -427,9 +427,11 @@ public class XHTMLMapper
                                  Enum relativeFromH,
                                  Float offsetY,
                                  org.openxmlformats.schemas.drawingml.x2006.wordprocessingDrawing.STRelFromV.Enum relativeFromV,
+                                 org.openxmlformats.schemas.drawingml.x2006.wordprocessingDrawing.STWrapText.Enum wrapText,
                                  Object parentContainer )
         throws Exception
     {
+     
 
         AttributesImpl attributes = null;
         // Src attribute

@@ -26,6 +26,7 @@ package org.apache.poi.xwpf.converter.core.styles.run;
 
 import java.awt.Color;
 
+import org.apache.poi.xwpf.converter.core.styles.XWPFStylesDocument;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTHighlight;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTRPr;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.STHighlightColor;
@@ -63,7 +64,7 @@ public class RunTextHighlightingValueProvider
     private static final Color DARK_RED = new Color(139, 0, 0);
 
     @Override
-    public Color getValue( CTRPr rPr )
+    public Color getValue( CTRPr rPr, XWPFStylesDocument stylesDocument )
     {
         if ( rPr == null )
         {

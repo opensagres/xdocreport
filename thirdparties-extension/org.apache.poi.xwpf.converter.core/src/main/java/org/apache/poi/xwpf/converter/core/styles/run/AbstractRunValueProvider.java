@@ -71,30 +71,30 @@ public abstract class AbstractRunValueProvider<Value>
     }
 
     @Override
-    public Value getValueFromElement( XWPFRun run )
+    public Value getValueFromElement( XWPFRun run, XWPFStylesDocument stylesDocument )
     {
-        return getValue( getRPr( run ) );
+        return getValue( getRPr( run ), stylesDocument );
     }
 
     @Override
-    protected Value getValueFromStyle( CTStyle style )
+    protected Value getValueFromStyle( CTStyle style, XWPFStylesDocument stylesDocument )
     {
-        return getValue( getRPr( style ) );
+        return getValue( getRPr( style ), stylesDocument );
     }
 
     @Override
-    protected Value getValueFromTableStyle( CTTblStylePr tblStylePr )
+    protected Value getValueFromTableStyle( CTTblStylePr tblStylePr, XWPFStylesDocument stylesDocument )
     {
-        return getValue( getRPr( tblStylePr ) );
+        return getValue( getRPr( tblStylePr ), stylesDocument );
     }
 
     @Override
     protected Value getValueFromDocDefaultsStyle( CTDocDefaults docDefaults, XWPFStylesDocument stylesDocument )
     {
-        return getValue( getRPr( docDefaults ) );
+        return getValue( getRPr( docDefaults ), stylesDocument );
     }
 
-    public abstract Value getValue( CTRPr ppr );
+    public abstract Value getValue( CTRPr ppr, XWPFStylesDocument stylesDocument );
 
     @Override
     protected String[] getStyleID( XWPFRun run )

@@ -47,7 +47,7 @@ public abstract class AbstractValueProvider<Value, XWPFElement>
     public Value internalGetValue( XWPFElement element, XWPFStylesDocument stylesDocument )
     {
         // 1) Inline style : search value retrieved from the XWPF element (XWPFParagraph, XWPFTable etc)
-        Value value = getValueFromElement( element );
+        Value value = getValueFromElement( element, stylesDocument );
         if ( value != null )
         {
             // Value declared in the inline style, return it.
@@ -240,7 +240,7 @@ public abstract class AbstractValueProvider<Value, XWPFElement>
         CTTblStylePr tblStylePr = stylesDocument.getTableStyle( tableStyleID, type );
         if ( tblStylePr != null )
         {
-            value = getValueFromTableStyle( tblStylePr );
+            value = getValueFromTableStyle( tblStylePr, stylesDocument );
             if ( value != null )
             {
                 // Value is computed, cache it and return it.
@@ -280,7 +280,7 @@ public abstract class AbstractValueProvider<Value, XWPFElement>
         return null;
     }
 
-    public abstract Value getValueFromElement( XWPFElement element );
+    public abstract Value getValueFromElement( XWPFElement element, XWPFStylesDocument stylesDocument );
 
     protected Value getDefaultValue( XWPFElement element, XWPFStylesDocument stylesDocument )
     {
@@ -331,7 +331,7 @@ public abstract class AbstractValueProvider<Value, XWPFElement>
         }
 
         // try to compute value
-        Object value = getValueFromStyle( style );
+        Object value = getValueFromStyle( style, stylesDocument );
         if ( value != null )
         {
             // Value is computed, cache it and return it.
@@ -393,9 +393,9 @@ public abstract class AbstractValueProvider<Value, XWPFElement>
 
     protected abstract String[] getStyleID( XWPFElement element );
 
-    protected abstract Value getValueFromStyle( CTStyle style );
+    protected abstract Value getValueFromStyle( CTStyle style, XWPFStylesDocument stylesDocument );
 
-    protected abstract Value getValueFromTableStyle( CTTblStylePr tblStylePr );
+    protected abstract Value getValueFromTableStyle( CTTblStylePr tblStylePr, XWPFStylesDocument stylesDocument );
 
     protected Value getValueFromDefaultStyle( XWPFElement element, XWPFStylesDocument stylesDocument )
     {
@@ -403,7 +403,7 @@ public abstract class AbstractValueProvider<Value, XWPFElement>
         CTStyle style = getDefaultStyle( element, stylesDocument );
         if ( style != null )
         {
-            value = getValueFromStyle( style );
+            value = getValueFromStyle( style, stylesDocument );
         }
         return value;
     }

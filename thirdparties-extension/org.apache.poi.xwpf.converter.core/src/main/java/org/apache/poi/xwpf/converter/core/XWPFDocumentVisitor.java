@@ -68,8 +68,10 @@ import org.openxmlformats.schemas.drawingml.x2006.wordprocessingDrawing.CTAnchor
 import org.openxmlformats.schemas.drawingml.x2006.wordprocessingDrawing.CTInline;
 import org.openxmlformats.schemas.drawingml.x2006.wordprocessingDrawing.CTPosH;
 import org.openxmlformats.schemas.drawingml.x2006.wordprocessingDrawing.CTPosV;
+import org.openxmlformats.schemas.drawingml.x2006.wordprocessingDrawing.CTWrapSquare;
 import org.openxmlformats.schemas.drawingml.x2006.wordprocessingDrawing.STRelFromH;
 import org.openxmlformats.schemas.drawingml.x2006.wordprocessingDrawing.STRelFromV;
+import org.openxmlformats.schemas.drawingml.x2006.wordprocessingDrawing.STWrapText;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTBookmark;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTBr;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTDecimalNumber;
@@ -218,18 +220,19 @@ public abstract class XWPFDocumentVisitor<T, O extends Options, E extends IXWPFM
             // about header/footer declared in the <w:headerReference/<w:footerReference
             masterPageManager.initialize();
         }
-        
-        String previousParagraphStyleName=null;
+
+        String previousParagraphStyleName = null;
         for ( int i = 0; i < bodyElements.size(); i++ )
         {
             IBodyElement bodyElement = bodyElements.get( i );
             switch ( bodyElement.getElementType() )
             {
-                case PARAGRAPH:                    
+                case PARAGRAPH:
                     XWPFParagraph paragraph = (XWPFParagraph) bodyElement;
                     String paragraphStyleName = paragraph.getStyleID();
-                    boolean sameStyleBelow = (paragraphStyleName != null && paragraphStyleName.equals( previousParagraphStyleName ));
-                    
+                    boolean sameStyleBelow =
+                        ( paragraphStyleName != null && paragraphStyleName.equals( previousParagraphStyleName ) );
+
                     visitParagraph( paragraph, i, container );
                     break;
                 case TABLE:
@@ -450,7 +453,8 @@ public abstract class XWPFDocumentVisitor<T, O extends Options, E extends IXWPFM
     protected XWPFNum getXWPFNum( CTNumPr numPr )
     {
         CTDecimalNumber numID = numPr.getNumId();
-        if (numID == null) {
+        if ( numID == null )
+        {
             // numID can be null, ignore the numbering
             // see https://code.google.com/p/xdocreport/issues/detail?id=239
             return null;
@@ -1201,18 +1205,27 @@ public abstract class XWPFDocumentVisitor<T, O extends Options, E extends IXWPFM
             relativeFromV = positionV.getRelativeFrom();
             offsetY = DxaUtil.emu2points( positionV.getPosOffset() );
         }
-        visitGraphicalObject( parentContainer, graphic, offsetX, relativeFromH, offsetY, relativeFromV );
+
+        STWrapText.Enum wrapText = null;
+        CTWrapSquare wrapSquare = anchor.getWrapSquare();
+        if ( wrapSquare != null )
+        {
+            wrapText = wrapSquare.getWrapText();
+        }
+
+        visitGraphicalObject( parentContainer, graphic, offsetX, relativeFromH, offsetY, relativeFromV, wrapText );
     }
 
     protected void visitInline( CTInline inline, T parentContainer )
         throws Exception
     {
         CTGraphicalObject graphic = inline.getGraphic();
-        visitGraphicalObject( parentContainer, graphic, null, null, null, null );
+        visitGraphicalObject( parentContainer, graphic, null, null, null, null, null );
     }
 
     private void visitGraphicalObject( T parentContainer, CTGraphicalObject graphic, Float offsetX,
-                                       STRelFromH.Enum relativeFromH, Float offsetY, STRelFromV.Enum relativeFromV )
+                                       STRelFromH.Enum relativeFromH, Float offsetY, STRelFromV.Enum relativeFromV,
+                                       STWrapText.Enum wrapText )
         throws Exception
     {
         if ( graphic != null )
@@ -1247,7 +1260,7 @@ public abstract class XWPFDocumentVisitor<T, O extends Options, E extends IXWPFM
                             }
                         }
                         // visit the picture.
-                        visitPicture( picture, offsetX, relativeFromH, offsetY, relativeFromV, parentContainer );
+                        visitPicture( picture, offsetX, relativeFromH, offsetY, relativeFromV, wrapText, parentContainer );
                     }
                 }
                 c.dispose();
@@ -1297,7 +1310,7 @@ public abstract class XWPFDocumentVisitor<T, O extends Options, E extends IXWPFM
     }
 
     protected abstract void visitPicture( CTPicture picture, Float offsetX, STRelFromH.Enum relativeFromH,
-                                          Float offsetY, STRelFromV.Enum relativeFromV, T parentContainer )
+                                          Float offsetY, STRelFromV.Enum relativeFromV, STWrapText.Enum wrapText, T parentContainer )
         throws Exception;
 
     // ------------------------ Master page --------------

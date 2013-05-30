@@ -63,19 +63,19 @@ public abstract class AbstractTableCellValueProvider<Value>
     }
 
     @Override
-    public Value getValueFromElement( XWPFTableCell cell )
+    public Value getValueFromElement( XWPFTableCell cell, XWPFStylesDocument stylesDocument )
     {
         return getValue( getTcPr( cell ) );
     }
 
     @Override
-    protected Value getValueFromStyle( CTStyle style )
+    protected Value getValueFromStyle( CTStyle style, XWPFStylesDocument stylesDocument )
     {
         return getValue( getTcPr( style ) );
     }
 
     @Override
-    protected Value getValueFromTableStyle( CTTblStylePr tblStylePr )
+    protected Value getValueFromTableStyle( CTTblStylePr tblStylePr, XWPFStylesDocument stylesDocument )
     {
         return getValue( getTcPr( tblStylePr ) );
     }

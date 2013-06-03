@@ -38,6 +38,8 @@ public class ExtendedParagraph
 {
     private static final long serialVersionUID = 664309269352903329L;
 
+    public static final Color TRANSPARENT_COLOR = Color.WHITE;
+
     private IITextContainer container;
 
     protected PdfPCell wrapperCell;
@@ -78,7 +80,6 @@ public class ExtendedParagraph
         cell.setPadding( 0.0f );
         cell.setUseBorderPadding( true );
         cell.getColumn().setAdjustFirstLine( false );
-        //cell.setUseDescender( true );
         return cell;
     }
 
@@ -100,28 +101,34 @@ public class ExtendedParagraph
         return wrapperCell;
     }
 
-    protected PdfPTable createWrapperTable( PdfPCell wrapperCell )
+    protected PdfPTable createWrapperTable( PdfPCell wrapperCell, boolean addParagraph )
     {
         PdfPTable wrapperTable = null;
         // wrap this paragraph into a table if necessary
         if ( wrapperCell != null )
         {
             // background color or borders were set
-            wrapperCell.addElement( this );
-            wrapperTable = createTable( wrapperCell );
-            if ( getIndentationLeft() > 0.0f || getIndentationRight() > 0.0f || getSpacingBefore() > 0.0f
-                || getSpacingAfter() > 0.0f )
+            if ( addParagraph )
             {
-                // margins were set, have to wrap the cell again
+                wrapperCell.addElement( this );
+            }
+            wrapperTable = createTable( wrapperCell );
+            if ( getSpacingBefore() > 0.0f || getSpacingAfter() > 0.0f )
+            {
+                // top or bottom margin was set, promote it to enclosing table
+                wrapperTable.setSpacingBefore( getSpacingBefore() );
+                setSpacingBefore( 0.0f );
+                wrapperTable.setSpacingAfter( getSpacingAfter() );
+                setSpacingAfter( 0.0f );
+            }
+            if ( getIndentationLeft() > 0.0f || getIndentationRight() > 0.0f )
+            {
+                // left or right margin was set, have to wrap the cell again
                 PdfPCell outerCell = createCell();
                 outerCell.setPaddingLeft( getIndentationLeft() );
                 setIndentationLeft( 0.0f );
                 outerCell.setPaddingRight( getIndentationRight() );
                 setIndentationRight( 0.0f );
-                outerCell.setPaddingTop( getSpacingBefore() );
-                setSpacingBefore( 0.0f );
-                outerCell.setPaddingBottom( getSpacingAfter() );
-                setSpacingAfter( 0.0f );
                 outerCell.addElement( wrapperTable );
                 wrapperTable = createTable( outerCell );
             }
@@ -135,10 +142,37 @@ public class ExtendedParagraph
         {
             if ( wrapperTable == null )
             {
-                wrapperTable = createWrapperTable( wrapperCell );
+                wrapperTable = createWrapperTable( wrapperCell, true );
             }
         }
         return wrapperTable != null ? wrapperTable : this;
+    }
+
+    public boolean hasBorders()
+    {
+        return wrapperCell != null && wrapperCell.hasBorders();
+    }
+
+    public boolean hasBackgroundColor()
+    {
+        return wrapperCell != null && wrapperCell.getBackgroundColor() != null
+            && !TRANSPARENT_COLOR.equals( wrapperCell.getBackgroundColor() );
+    }
+
+    public void setSpacingBefore( Paragraph paragraph )
+    {
+        setSpacingBefore( paragraph.getSpacingBefore() );
+    }
+
+    public void setSpacingAfter( Paragraph paragraph )
+    {
+        setSpacingAfter( paragraph.getSpacingAfter() );
+    }
+
+    public void setIndentation( Paragraph paragraph )
+    {
+        setIndentationLeft( paragraph.getIndentationLeft() );
+        setIndentationRight( paragraph.getIndentationRight() );
     }
 
     public void setBackgroundColor( Color backgroundColor )
@@ -225,7 +259,7 @@ public class ExtendedParagraph
     {
         getWrapperCell().setBorderColorRight( borderColorRight );
     }
-    
+
     /**
      * Sets the padding of the contents in the cell (space between content and border).
      *

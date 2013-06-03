@@ -775,14 +775,14 @@ public class StyleEngineForIText
         String fontFamily = ele.getFoFontFamilyAttribute();
         if ( StringUtils.isNotEmpty( fontFamily ) )
         {
-            textProperties.setFontName( fontFamily );
+            textProperties.setFontName( ODFUtils.stripTrailingDigits( fontFamily ) );
         }
 
         // font-name
         String fontName = ele.getStyleFontNameAttribute();
         if ( StringUtils.isNotEmpty( fontName ) )
         {
-            textProperties.setFontName( fontName );
+            textProperties.setFontName( ODFUtils.stripTrailingDigits( fontName ) );
         }
 
         // font-size

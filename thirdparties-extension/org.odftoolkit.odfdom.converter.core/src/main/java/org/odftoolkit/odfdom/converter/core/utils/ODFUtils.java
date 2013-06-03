@@ -277,4 +277,13 @@ public class ODFUtils
         }
         return ( getDimensionAsPoint( s ) / 0.75f ) + "px";
     }
+
+    public static String stripTrailingDigits( String fontName )
+    {
+        while ( fontName.length() > 0 && Character.isDigit( fontName.charAt( fontName.length() - 1 ) ) )
+        {
+            fontName = fontName.substring( 0, fontName.length() - 1 );
+        }
+        return fontName;
+    }
 }

@@ -24,12 +24,10 @@
  */
 package org.odftoolkit.odfdom.converter.pdf.internal.stylable;
 
-import java.awt.Color;
 import java.util.ArrayList;
 
 import org.odftoolkit.odfdom.converter.core.utils.ODFUtils;
 import org.odftoolkit.odfdom.converter.pdf.internal.styles.Style;
-import org.odftoolkit.odfdom.converter.pdf.internal.styles.StyleBorder;
 import org.odftoolkit.odfdom.converter.pdf.internal.styles.StyleBreak;
 import org.odftoolkit.odfdom.converter.pdf.internal.styles.StyleLineHeight;
 import org.odftoolkit.odfdom.converter.pdf.internal.styles.StyleParagraphProperties;
@@ -85,7 +83,7 @@ public class StylableParagraph
         StyleTextProperties textProperties = style.getTextProperties();
         if ( textProperties != null )
         {
-            // Font
+            // font
             Font font = textProperties.getFont();
             if ( font != null )
             {
@@ -108,36 +106,6 @@ public class StylableParagraph
             if ( alignment != Element.ALIGN_UNDEFINED )
             {
                 super.setAlignment( alignment );
-            }
-
-            // paragraph indentation
-            Float margin = paragraphProperties.getMargin();
-            if ( margin != null )
-            {
-                super.setIndentationLeft( margin );
-                super.setIndentationRight( margin );
-                super.setSpacingBefore( margin );
-                super.setSpacingAfter( margin );
-            }
-            Float marginLeft = paragraphProperties.getMarginLeft();
-            if ( marginLeft != null )
-            {
-                super.setIndentationLeft( marginLeft );
-            }
-            Float marginRight = paragraphProperties.getMarginRight();
-            if ( marginRight != null )
-            {
-                super.setIndentationRight( marginRight );
-            }
-            Float marginTop = paragraphProperties.getMarginTop();
-            if ( marginTop != null )
-            {
-                super.setSpacingBefore( marginTop );
-            }
-            Float marginBottom = paragraphProperties.getMarginBottom();
-            if ( marginBottom != null )
-            {
-                super.setSpacingAfter( marginBottom );
             }
 
             // first line indentation
@@ -175,48 +143,6 @@ public class StylableParagraph
             if ( keepTogether != null )
             {
                 super.setKeepTogether( keepTogether );
-            }
-
-            // background color
-            Color backgroundColor = paragraphProperties.getBackgroundColor();
-            if ( backgroundColor != null && !Color.WHITE.equals( backgroundColor ) )
-            {
-                super.setBackgroundColor( backgroundColor );
-            }
-
-            // border
-            StyleBorder border = paragraphProperties.getBorder();
-            if ( border != null && !border.isNoBorder() )
-            {
-                StyleUtils.applyStyles( border, getWrapperCell() );
-            }
-
-            // border-left
-            StyleBorder borderLeft = paragraphProperties.getBorderLeft();
-            if ( borderLeft != null && !borderLeft.isNoBorder() )
-            {
-                StyleUtils.applyStyles( borderLeft, getWrapperCell() );
-            }
-
-            // border-right
-            StyleBorder borderRight = paragraphProperties.getBorderRight();
-            if ( borderRight != null && !borderRight.isNoBorder() )
-            {
-                StyleUtils.applyStyles( borderRight, getWrapperCell() );
-            }
-
-            // border-top
-            StyleBorder borderTop = paragraphProperties.getBorderTop();
-            if ( borderTop != null && !borderTop.isNoBorder() )
-            {
-                StyleUtils.applyStyles( borderTop, getWrapperCell() );
-            }
-
-            // border-bottom
-            StyleBorder borderBottom = paragraphProperties.getBorderBottom();
-            if ( borderBottom != null && !borderBottom.isNoBorder() )
-            {
-                StyleUtils.applyStyles( borderBottom, getWrapperCell() );
             }
         }
     }

@@ -47,6 +47,7 @@ import org.odftoolkit.odfdom.converter.pdf.internal.stylable.StylableList;
 import org.odftoolkit.odfdom.converter.pdf.internal.stylable.StylableListItem;
 import org.odftoolkit.odfdom.converter.pdf.internal.stylable.StylableMasterPage;
 import org.odftoolkit.odfdom.converter.pdf.internal.stylable.StylableParagraph;
+import org.odftoolkit.odfdom.converter.pdf.internal.stylable.StylableParagraphWrapper;
 import org.odftoolkit.odfdom.converter.pdf.internal.stylable.StylablePhrase;
 import org.odftoolkit.odfdom.converter.pdf.internal.stylable.StylableTab;
 import org.odftoolkit.odfdom.converter.pdf.internal.stylable.StylableTable;
@@ -79,6 +80,7 @@ import org.odftoolkit.odfdom.dom.element.text.TextListItemElement;
 import org.odftoolkit.odfdom.dom.element.text.TextPElement;
 import org.odftoolkit.odfdom.dom.element.text.TextPageCountElement;
 import org.odftoolkit.odfdom.dom.element.text.TextPageNumberElement;
+import org.odftoolkit.odfdom.dom.element.text.TextParagraphElementBase;
 import org.odftoolkit.odfdom.dom.element.text.TextSElement;
 import org.odftoolkit.odfdom.dom.element.text.TextSectionElement;
 import org.odftoolkit.odfdom.dom.element.text.TextSoftPageBreakElement;
@@ -304,10 +306,7 @@ public class ElementVisitorForIText
                                                                    currentHeadingNumbering.size() + 1 ) );
         }
 
-        StylableHeading heading =
-            document.createHeading( currentContainer, new ArrayList<Integer>( currentHeadingNumbering ) );
-        applyStyles( ele, heading );
-        addITextContainer( ele, heading );
+        processParagraphOrHeading( ele, new ArrayList<Integer>( currentHeadingNumbering ) );
     }
 
     // ---------------------- visit //text:p
@@ -315,10 +314,103 @@ public class ElementVisitorForIText
     @Override
     public void visit( TextPElement ele )
     {
-        StylableParagraph paragraph = document.createParagraph( currentContainer );
-        applyStyles( ele, paragraph );
-        addITextContainer( ele, paragraph );
+        processParagraphOrHeading( ele, null );
+    }
 
+    private void processParagraphOrHeading( TextParagraphElementBase ele, List<Integer> headingNumbering )
+    {
+        StylableParagraphWrapper paragraphWrapper = createParagraphWrapperAndApplyStyles( ele );
+        if ( paragraphWrapper.hasBorders() || paragraphWrapper.hasBackgroundColor() )
+        {
+            // paragraph has borders or background
+            // have to wrap it in a table
+            boolean joinWithPrevious = joinParagraphWith( paragraphWrapper, ele.getPreviousSibling() );
+            boolean joinWithNext = joinParagraphWith( paragraphWrapper, ele.getNextSibling() );
+            // start paragraph wrapper
+            if ( joinWithPrevious )
+            {
+                // add this paragraph to existing wrapper
+            }
+            else
+            {
+                // start a new wrapper
+                currentContainer = paragraphWrapper;
+            }
+            // process paragraph
+            StylableParagraph paragraph =
+                headingNumbering != null ? document.createHeading( currentContainer, headingNumbering )
+                                : document.createParagraph( currentContainer );
+            applyStyles( ele, paragraph );
+            // apply top or bottom margin if necessary
+            if ( joinWithNext )
+            {
+                paragraph.setSpacingAfter( paragraphWrapper );
+            }
+            if ( joinWithPrevious )
+            {
+                paragraph.setSpacingBefore( paragraphWrapper );
+            }
+            addITextContainer( ele, paragraph );
+            // end paragraph wrapper
+            if ( joinWithNext )
+            {
+                // some paragraph will be added to current wrapper, do nothing
+            }
+            else
+            {
+                // end current wrapper
+                IStylableContainer oldContainer = currentContainer.getParent();
+                oldContainer.addElement( currentContainer.getElement() );
+                currentContainer = oldContainer;
+            }
+        }
+        else
+        {
+            // paragraph has no border and no background
+            // don't have to wrap it in a table
+            StylableParagraph paragraph =
+                headingNumbering != null ? document.createHeading( currentContainer, headingNumbering )
+                                : document.createParagraph( currentContainer );
+            applyStyles( ele, paragraph );
+            // apply margin (left, right, top, bottom) values
+            paragraph.setIndentation( paragraphWrapper );
+            paragraph.setSpacingBefore( paragraphWrapper );
+            paragraph.setSpacingAfter( paragraphWrapper );
+            addITextContainer( ele, paragraph );
+        }
+    }
+
+    private StylableParagraphWrapper createParagraphWrapperAndApplyStyles( TextParagraphElementBase ele )
+    {
+        StylableParagraphWrapper paragraphWrapper = new StylableParagraphWrapper( document, currentContainer );
+        applyStyles( ele, paragraphWrapper );
+        return paragraphWrapper;
+    }
+
+    private boolean joinParagraphWith( StylableParagraphWrapper paragraphWrapper1, Node node )
+    {
+        if ( node instanceof TextParagraphElementBase )
+        {
+            TextParagraphElementBase ele = (TextParagraphElementBase) node;
+            StylableParagraphWrapper paragraphWrapper2 = createParagraphWrapperAndApplyStyles( ele );
+            Style style1 = paragraphWrapper1.getLastStyleApplied();
+            Style style2 = paragraphWrapper2.getLastStyleApplied();
+            if ( style1 != null && style2 != null )
+            {
+                String styleName1 = style1.getStyleName();
+                String styleName2 = style2.getStyleName();
+                if ( styleName1 != null && styleName1.equals( styleName2 ) )
+                {
+                    boolean hasBorders = paragraphWrapper1.hasBorders();
+                    boolean joinBorder = paragraphWrapper1.joinBorder();
+                    if ( hasBorders && joinBorder )
+                    {
+                        return true;
+                    }
+                }
+            }
+        }
+        return false;
     }
 
     // ---------------------- visit //text:span

@@ -51,7 +51,7 @@ public class StyleParagraphProperties
 
     private StyleBreak breakBefore;
 
-    private Boolean joinBorder;
+    private Boolean joinBorder = Boolean.TRUE;
 
     private Boolean keepTogether;
 

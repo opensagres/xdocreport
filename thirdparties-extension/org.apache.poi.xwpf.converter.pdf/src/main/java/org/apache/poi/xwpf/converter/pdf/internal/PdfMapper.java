@@ -175,7 +175,8 @@ public class PdfMapper
         BigInteger headerY = sectPr.getPgMar() != null ? sectPr.getPgMar().getHeader() : null;
         this.currentPageWidth = sectPr.getPgMar() != null ? DxaUtil.dxa2points( sectPr.getPgSz().getW() ) : null;
         this.pdfHeader = new StylableHeaderFooter( pdfDocument, headerY, true );
-        List<IBodyElement> bodyElements = header.getBodyElements();
+        // List<IBodyElement> bodyElements = header.getBodyElements();
+        List<IBodyElement> bodyElements = super.getBodyElements( header );
         StylableTableCell tableCell = getHeaderFooterTableCell( pdfHeader, bodyElements );
         visitBodyElements( bodyElements, tableCell );
         masterPage.setHeader( pdfHeader );
@@ -190,9 +191,9 @@ public class PdfMapper
         BigInteger footerY = sectPr.getPgMar() != null ? sectPr.getPgMar().getFooter() : null;
         this.currentPageWidth = sectPr.getPgMar() != null ? DxaUtil.dxa2points( sectPr.getPgSz().getW() ) : null;
         this.pdfFooter = new StylableHeaderFooter( pdfDocument, footerY, false );
-        List<IBodyElement> bodyElements = footer.getBodyElements();
+        List<IBodyElement> bodyElements = super.getBodyElements( footer );
         StylableTableCell tableCell = getHeaderFooterTableCell( pdfFooter, bodyElements );
-        visitBodyElements( footer.getBodyElements(), tableCell );
+        visitBodyElements( bodyElements, tableCell );
         masterPage.setFooter( pdfFooter );
         this.currentPageWidth = null;
         this.pdfFooter = null;
@@ -369,7 +370,7 @@ public class PdfMapper
 
                 // Get font size
                 Float listItemFontSize = stylesDocument.getFontSize( lvlRPr );
-                
+
                 // Get font style
                 int listItemFontStyle = Font.NORMAL;
                 Boolean bold = stylesDocument.getFontStyleBold( lvlRPr );
@@ -533,35 +534,6 @@ public class PdfMapper
         this.currentRunFont = null;
         this.currentRunUnderlinePatterns = null;
         this.currentRunBackgroundColor = null;
-    }
-
-    private static String escapeNonAscii( String str )
-    {
-
-        StringBuilder retStr = new StringBuilder();
-        for ( int i = 0; i < str.length(); i++ )
-        {
-            int cp = Character.codePointAt( str, i );
-            int charCount = Character.charCount( cp );
-            if ( charCount > 1 )
-            {
-                i += charCount - 1; // 2.
-                if ( i >= str.length() )
-                {
-                    throw new IllegalArgumentException( "truncated unexpectedly" );
-                }
-            }
-
-            if ( cp < 128 )
-            {
-                retStr.appendCodePoint( cp );
-            }
-            else
-            {
-                retStr.append( String.format( "\\u%x", cp ) );
-            }
-        }
-        return retStr.toString();
     }
 
     @Override
@@ -835,6 +807,9 @@ public class PdfMapper
                 }
             }
 
+        } else if ( tabStop.getVal().equals( STTabJc.CENTER ) )
+        {
+            
         }
         return false;
     }

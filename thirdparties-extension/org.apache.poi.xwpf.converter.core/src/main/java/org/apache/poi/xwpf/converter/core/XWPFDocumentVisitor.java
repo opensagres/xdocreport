@@ -48,6 +48,7 @@ import org.apache.poi.xwpf.usermodel.XWPFAbstractNum;
 import org.apache.poi.xwpf.usermodel.XWPFDocument;
 import org.apache.poi.xwpf.usermodel.XWPFFooter;
 import org.apache.poi.xwpf.usermodel.XWPFHeader;
+import org.apache.poi.xwpf.usermodel.XWPFHeaderFooter;
 import org.apache.poi.xwpf.usermodel.XWPFHyperlink;
 import org.apache.poi.xwpf.usermodel.XWPFHyperlinkRun;
 import org.apache.poi.xwpf.usermodel.XWPFNum;
@@ -61,6 +62,7 @@ import org.apache.poi.xwpf.usermodel.XWPFTableRow;
 import org.apache.xmlbeans.XmlCursor;
 import org.apache.xmlbeans.XmlException;
 import org.apache.xmlbeans.XmlObject;
+import org.apache.xmlbeans.XmlTokenSource;
 import org.openxmlformats.schemas.drawingml.x2006.main.CTGraphicalObject;
 import org.openxmlformats.schemas.drawingml.x2006.main.CTGraphicalObjectData;
 import org.openxmlformats.schemas.drawingml.x2006.picture.CTPicture;
@@ -89,7 +91,9 @@ import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTPTab;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTR;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTRow;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTRunTrackChange;
+import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTSdtBlock;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTSdtCell;
+import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTSdtContentBlock;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTSdtContentRun;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTSdtRun;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTSectPr;
@@ -98,6 +102,7 @@ import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTSmartTagRun;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTString;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTStyle;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTTabs;
+import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTTbl;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTTc;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTText;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.FtrDocument;
@@ -1108,6 +1113,63 @@ public abstract class XWPFDocumentVisitor<T, O extends Options, E extends IXWPFM
         throws Exception;
 
     /**
+     * Returns the list of {@link IBodyElement} of the given header/footer. We do that because
+     * {@link XWPFHeaderFooter#getBodyElements()} doesn't contains the // <w:sdt><w:sdtContent>
+     * <p
+     * (see JUnit Docx4j_GettingStarted, DocXperT_Output_4_3, Issue222 which defines page number in the <w:sdt. ...
+     * 
+     * @param part
+     * @return
+     */
+    protected List<IBodyElement> getBodyElements( XWPFHeaderFooter part )
+    {
+        List<IBodyElement> bodyElements = new ArrayList<IBodyElement>();
+        XmlTokenSource headerFooter = part._getHdrFtr();
+        addBodyElements( headerFooter, part, bodyElements );
+        return bodyElements;
+    }
+
+    /**
+     * Add body elements from the given token source.
+     * 
+     * @param source
+     * @param part
+     * @param bodyElements
+     */
+    private void addBodyElements( XmlTokenSource source, IBody part, List<IBodyElement> bodyElements )
+    {
+        // parse the document with cursor and add
+        // the XmlObject to its lists
+        XmlCursor cursor = source.newCursor();
+        cursor.selectPath( "./*" );
+        while ( cursor.toNextSelection() )
+        {
+            XmlObject o = cursor.getObject();
+            if ( o instanceof CTSdtBlock )
+            {
+                // <w:sdt><w:sdtContent><p...
+                CTSdtBlock block = (CTSdtBlock) o;
+                CTSdtContentBlock contentBlock = block.getSdtContent();
+                if ( contentBlock != null )
+                {
+                    addBodyElements( contentBlock, part, bodyElements );
+                }
+            }
+            else if ( o instanceof CTP )
+            {
+                XWPFParagraph p = new XWPFParagraph( (CTP) o, part );
+                bodyElements.add( p );
+            }
+            else if ( o instanceof CTTbl )
+            {
+                XWPFTable t = new XWPFTable( (CTTbl) o, part );
+                bodyElements.add( t );
+            }
+        }
+        cursor.dispose();
+    }
+
+    /**
      * Returns the {@link XWPFHeader} of the given header reference.
      * 
      * @param headerref the header reference.
@@ -1260,7 +1322,8 @@ public abstract class XWPFDocumentVisitor<T, O extends Options, E extends IXWPFM
                             }
                         }
                         // visit the picture.
-                        visitPicture( picture, offsetX, relativeFromH, offsetY, relativeFromV, wrapText, parentContainer );
+                        visitPicture( picture, offsetX, relativeFromH, offsetY, relativeFromV, wrapText,
+                                      parentContainer );
                     }
                 }
                 c.dispose();
@@ -1310,7 +1373,8 @@ public abstract class XWPFDocumentVisitor<T, O extends Options, E extends IXWPFM
     }
 
     protected abstract void visitPicture( CTPicture picture, Float offsetX, STRelFromH.Enum relativeFromH,
-                                          Float offsetY, STRelFromV.Enum relativeFromV, STWrapText.Enum wrapText, T parentContainer )
+                                          Float offsetY, STRelFromV.Enum relativeFromV, STWrapText.Enum wrapText,
+                                          T parentContainer )
         throws Exception;
 
     // ------------------------ Master page --------------

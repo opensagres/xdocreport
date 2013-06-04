@@ -29,6 +29,7 @@ import org.odftoolkit.odfdom.converter.core.Options;
 import com.lowagie.text.pdf.BaseFont;
 
 import fr.opensagres.xdocreport.itext.extension.font.IFontProvider;
+import fr.opensagres.xdocreport.itext.extension.font.ITextFontRegistry;
 
 /**
  * Pdf options to customize the ODT->PDF converter.

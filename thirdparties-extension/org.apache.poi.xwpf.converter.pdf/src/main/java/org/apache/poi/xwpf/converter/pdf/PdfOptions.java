@@ -27,6 +27,7 @@ package org.apache.poi.xwpf.converter.pdf;
 import org.apache.poi.xwpf.converter.core.Options;
 
 import fr.opensagres.xdocreport.itext.extension.font.IFontProvider;
+import fr.opensagres.xdocreport.itext.extension.font.ITextFontRegistry;
 
 /**
  * Pdf options to customize the DOCX->PDF converter.

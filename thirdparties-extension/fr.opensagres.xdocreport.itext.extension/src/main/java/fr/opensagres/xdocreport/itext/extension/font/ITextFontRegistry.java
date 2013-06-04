@@ -22,17 +22,16 @@
  * OF CONTRACT, TORT OR OTHERWISE,  ARISING FROM, OUT OF OR IN CONNECTION
  * WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
-package org.odftoolkit.odfdom.converter.pdf;
+package fr.opensagres.xdocreport.itext.extension.font;
 
-import fr.opensagres.xdocreport.itext.extension.font.AbstractFontRegistry;
 
 public class ITextFontRegistry
     extends AbstractFontRegistry
 {
 
-    //private static final String TIMES_NEW_ROMAN_FONT_FAMILY_NAME = "Times New Roman";
-
-    //private static final String COURRIER_NEW_FONT_FAMILY_NAME = "Courier New";
+//    private static final String TIMES_NEW_ROMAN_FONT_FAMILY_NAME = "Times New Roman";
+//
+//    private static final String COURRIER_NEW_FONT_FAMILY_NAME = "Courier New";
 
     private static final ITextFontRegistry INSTANCE = new ITextFontRegistry();
 
@@ -86,5 +85,4 @@ public class ITextFontRegistry
 
         return familyName;
     }
-
 }

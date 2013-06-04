@@ -29,7 +29,6 @@ import static org.apache.poi.xwpf.converter.core.utils.DxaUtil.emu2points;
 import java.awt.Color;
 import java.io.OutputStream;
 import java.math.BigInteger;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Logger;
 
@@ -77,6 +76,7 @@ import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTHdrFtrRef;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTLvl;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTPPr;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTPTab;
+import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTRPr;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTSectPr;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTTabStop;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTTabs;
@@ -95,7 +95,6 @@ import com.lowagie.text.Font;
 import com.lowagie.text.Image;
 import com.lowagie.text.Paragraph;
 import com.lowagie.text.Rectangle;
-import com.lowagie.text.pdf.BaseFont;
 import com.lowagie.text.pdf.PdfPCell;
 import com.lowagie.text.pdf.PdfPTable;
 import com.lowagie.text.pdf.draw.DottedLineSeparator;
@@ -362,6 +361,42 @@ public class PdfMapper
                     }
                 }
             }
+            CTRPr lvlRPr = lvl.getRPr();
+            if ( lvlRPr != null )
+            {
+                // Font family
+                String listItemFontFamily = stylesDocument.getFontFamily( lvlRPr );
+
+                // Get font size
+                Float listItemFontSize = stylesDocument.getFontSize( lvlRPr );
+                
+                // Get font style
+                int listItemFontStyle = Font.NORMAL;
+                Boolean bold = stylesDocument.getFontStyleBold( lvlRPr );
+                if ( bold != null && bold )
+                {
+                    listItemFontStyle |= Font.BOLD;
+                }
+                Boolean italic = stylesDocument.getFontStyleItalic( lvlRPr );
+                if ( italic != null && italic )
+                {
+                    listItemFontStyle |= Font.ITALIC;
+                }
+                Boolean strike = stylesDocument.getFontStyleStrike( lvlRPr );
+                if ( strike != null && strike )
+                {
+                    listItemFontStyle |= Font.STRIKETHRU;
+                }
+
+                // Font color
+                Color listItemFontColor = stylesDocument.getFontColor( lvlRPr );
+
+                pdfParagraph.setListItemFontFamily( listItemFontFamily );
+                pdfParagraph.setListItemFontSize( listItemFontSize );
+                pdfParagraph.setListItemFontStyle( listItemFontStyle );
+                pdfParagraph.setListItemFontColor( listItemFontColor );
+
+            }
             pdfParagraph.setListItemText( itemContext.getText() );
         }
         return pdfParagraph;
@@ -452,15 +487,28 @@ public class PdfMapper
         }
 
         StylableParagraph pdfParagraph = (StylableParagraph) pdfParagraphContainer;
-        pdfParagraph.adjustMultipliedLeading(currentRunFont);
-        
+        pdfParagraph.adjustMultipliedLeading( currentRunFont );
+
         // addd symbol list item chunk if needed.
         String listItemText = pdfParagraph.getListItemText();
         if ( StringUtils.isNotEmpty( listItemText ) )
         {
             // FIXME: add some space after the list item
             listItemText += "    ";
-            Chunk symbol = createTextChunk( listItemText, false );
+
+            String listItemFontFamily = pdfParagraph.getListItemFontFamily();
+            Float listItemFontSize = pdfParagraph.getListItemFontSize();
+            int listItemFontStyle = pdfParagraph.getListItemFontStyle();
+            Color listItemFontColor = pdfParagraph.getListItemFontColor();
+            Font listItemFont =
+                options.getFontProvider().getFont( listItemFontFamily != null ? listItemFontFamily : fontFamily,
+                                                   options.getFontEncoding(),
+                                                   listItemFontSize != null ? listItemFontSize : fontSize,
+                                                   listItemFontStyle != Font.NORMAL ? listItemFontStyle : fontStyle,
+                                                   listItemFontColor != null ? listItemFontColor : fontColor );
+            Chunk symbol =
+                createTextChunk( listItemText, false, listItemFont, currentRunUnderlinePatterns,
+                                 currentRunBackgroundColor );
             pdfParagraph.add( symbol );
             pdfParagraph.setListItemText( null );
         }
@@ -487,6 +535,35 @@ public class PdfMapper
         this.currentRunBackgroundColor = null;
     }
 
+    private static String escapeNonAscii( String str )
+    {
+
+        StringBuilder retStr = new StringBuilder();
+        for ( int i = 0; i < str.length(); i++ )
+        {
+            int cp = Character.codePointAt( str, i );
+            int charCount = Character.charCount( cp );
+            if ( charCount > 1 )
+            {
+                i += charCount - 1; // 2.
+                if ( i >= str.length() )
+                {
+                    throw new IllegalArgumentException( "truncated unexpectedly" );
+                }
+            }
+
+            if ( cp < 128 )
+            {
+                retStr.appendCodePoint( cp );
+            }
+            else
+            {
+                retStr.append( String.format( "\\u%x", cp ) );
+            }
+        }
+        return retStr.toString();
+    }
+
     @Override
     protected void visitText( CTText docxText, boolean pageNumber, IITextContainer pdfParagraphContainer )
         throws Exception
@@ -502,6 +579,13 @@ public class PdfMapper
     }
 
     private Chunk createTextChunk( String text, boolean pageNumber )
+    {
+        return createTextChunk( text, pageNumber, currentRunFont, currentRunUnderlinePatterns,
+                                currentRunBackgroundColor );
+    }
+
+    private Chunk createTextChunk( String text, boolean pageNumber, Font currentRunFont,
+                                   UnderlinePatterns currentRunUnderlinePatterns2, Color currentRunBackgroundColor2 )
     {
         Chunk textChunk =
             pageNumber ? new ExtendedChunk( pdfDocument, true, currentRunFont ) : new Chunk( text, currentRunFont );

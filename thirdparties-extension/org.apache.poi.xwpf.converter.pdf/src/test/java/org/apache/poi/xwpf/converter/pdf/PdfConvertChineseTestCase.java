@@ -39,6 +39,7 @@ import com.lowagie.text.Font;
 import com.lowagie.text.pdf.BaseFont;
 
 import fr.opensagres.xdocreport.itext.extension.font.IFontProvider;
+import fr.opensagres.xdocreport.itext.extension.font.ITextFontRegistry;
 
 public class PdfConvertChineseTestCase
 {

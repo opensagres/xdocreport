@@ -46,8 +46,6 @@ public class StylableParagraph
 
     private static final long serialVersionUID = 664309269352903329L;
 
-    private static final float DEFAULT_LINE_HEIGHT = 1.0f;
-
     private final StylableDocument ownerDocument;
 
     private IITextContainer parent;
@@ -56,12 +54,19 @@ public class StylableParagraph
 
     private Float originMultipliedLeading;
 
+    private String listItemFontFamily;
+
+    private Float listItemFontSize;
+
+    private int listItemFontStyle = -1;
+
+    private Color listItemFontColor;
+
     public StylableParagraph( StylableDocument ownerDocument, IITextContainer parent )
     {
         super();
         this.ownerDocument = ownerDocument;
         this.parent = parent;
-        // super.setMultipliedLeading( DEFAULT_LINE_HEIGHT );
         this.originMultipliedLeading = null;
     }
 
@@ -192,6 +197,46 @@ public class StylableParagraph
         this.listItemText = listItemText;
     }
 
+    public String getListItemFontFamily()
+    {
+        return listItemFontFamily;
+    }
+
+    public void setListItemFontFamily( String listItemFontFamily )
+    {
+        this.listItemFontFamily = listItemFontFamily;
+    }
+
+    public Float getListItemFontSize()
+    {
+        return listItemFontSize;
+    }
+
+    public void setListItemFontSize( Float listItemFontSize )
+    {
+        this.listItemFontSize = listItemFontSize;
+    }
+
+    public int getListItemFontStyle()
+    {
+        return listItemFontStyle;
+    }
+
+    public void setListItemFontStyle( int listItemFontStyle )
+    {
+        this.listItemFontStyle = listItemFontStyle;
+    }
+
+    public Color getListItemFontColor()
+    {
+        return listItemFontColor;
+    }
+
+    public void setListItemFontColor( Color listItemFontColor )
+    {
+        this.listItemFontColor = listItemFontColor;
+    }
+
     @Override
     public void setLeading( float fixedLeading, float multipliedLeading )
     {
@@ -227,6 +272,6 @@ public class StylableParagraph
             float multiplier = ( ascender + descender + margin ) / size;
             super.setMultipliedLeading( originMultipliedLeading * multiplier );
         }
-
     }
+
 }

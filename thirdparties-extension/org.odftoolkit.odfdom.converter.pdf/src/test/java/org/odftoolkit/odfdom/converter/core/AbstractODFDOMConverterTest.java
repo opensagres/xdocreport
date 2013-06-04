@@ -85,16 +85,16 @@ public abstract class AbstractODFDOMConverterTest
     {
         doGenerate( "Issue194.odt" );
     }
-    
-    @Ignore("Caused by: java.lang.ClassCastException: Insertion of illegal Element: 12")
+
+    @Ignore( "Caused by: java.lang.ClassCastException: Insertion of illegal Element: 12" )
     @Test
     public void Issue203()
         throws Exception
     {
         doGenerate( "Issue203.odt" );
     }
-    
-    @Ignore("Caused by: com.lowagie.text.DocumentException: ExceptionConverter: com.lowagie.text.DocumentException: java.lang.NullPointerException")
+
+    @Ignore( "Caused by: com.lowagie.text.DocumentException: ExceptionConverter: com.lowagie.text.DocumentException: java.lang.NullPointerException" )
     @Test
     public void Issue247()
         throws Exception
@@ -102,15 +102,15 @@ public abstract class AbstractODFDOMConverterTest
         doGenerate( "Issue247.odt" );
     }
 
-    
-    @Ignore("Caused by: ExceptionConverter: java.io.UnsupportedEncodingException: Identity-H")
+    // @Ignore("Caused by: ExceptionConverter: java.io.UnsupportedEncodingException: Identity-H")
+    // Using ITextFontRegistry2.getRegistry() seems resolve uses of Symbol Font.
     @Test
     public void Issue271()
         throws Exception
     {
         doGenerate( "Issue271.odt" );
     }
-    
+
     @Test
     public void ODTBig()
         throws Exception

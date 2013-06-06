@@ -31,8 +31,6 @@ import java.io.OutputStream;
 import org.odftoolkit.odfdom.converter.core.AbstractODFDOMConverterTest;
 import org.odftoolkit.odfdom.doc.OdfTextDocument;
 
-import fr.opensagres.xdocreport.itext.extension.font.ITextFontRegistry2;
-
 public class PdfConverterTestCase
     extends AbstractODFDOMConverterTest
 {
@@ -51,7 +49,7 @@ public class PdfConverterTestCase
             OdfTextDocument.loadDocument( AbstractODFDOMConverterTest.class.getResourceAsStream( fileInName ) );
 
         OutputStream out = new FileOutputStream( new File( fileOutName ) );
-        PdfOptions options = PdfOptions.create().fontProvider( ITextFontRegistry2.getRegistry() );
+        PdfOptions options = PdfOptions.create();
         PdfConverter.getInstance().convert( document, out, options );
 
         System.out.println( "Generated " + fileOutName + " in " + ( System.currentTimeMillis() - startTime ) + " ms." );

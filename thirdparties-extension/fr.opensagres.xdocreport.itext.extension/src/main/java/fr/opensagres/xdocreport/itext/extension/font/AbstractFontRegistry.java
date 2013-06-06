@@ -28,47 +28,63 @@ import java.awt.Color;
 
 import com.lowagie.text.Font;
 import com.lowagie.text.FontFactory;
+import com.lowagie.text.pdf.PdfName;
+import com.lowagie.text.pdf.Type3Font;
 
-public abstract class AbstractFontRegistry implements IFontProvider
+public abstract class AbstractFontRegistry
+    implements IFontProvider
 {
-
-    private boolean systemEncodingDeterminated;
+    private boolean systemEncodingDetermined;
 
     private String systemEncoding;
 
-    private static boolean registerFontDirectories = false;
-
-    /*
-     * public Font getFont(String familyName, float size, int style, Color color) { return getFont(familyName,
-     * FontFactory.defaultEncoding, size, style, color); }
-     */
+    private static boolean fontRegistryInitialized = false;
 
     public Font getFont( String familyName, String encoding, float size, int style, Color color )
     {
-        registerFontDirectoriesIfNeeded();
+        initFontRegistryIfNeeded();
         if ( familyName != null )
         {
             familyName = resolveFamilyName( familyName, style );
         }
-
         return FontFactory.getFont( familyName, encoding, size, style, color );
     }
 
-    /**
-     * Register fonts from files (ex : for windows, load files from C:\WINDOWS\Fonts).
-     */
-    private void registerFontDirectoriesIfNeeded()
+    private void initFontRegistryIfNeeded()
     {
-        if ( !registerFontDirectories )
+        if ( !fontRegistryInitialized )
         {
+            // clear built-in fonts which may clash with document fonts
+            ExtendedBaseFont.clearBuiltinFonts();
+            // register fonts from files (ex : for windows, load files from C:\WINDOWS\Fonts)
             FontFactory.registerDirectories();
-            registerFontDirectories = true;
+            fontRegistryInitialized = true;
+        }
+    }
+
+    public static class ExtendedBaseFont
+        extends Type3Font
+    {
+        public ExtendedBaseFont()
+        {
+            super( null, false );
+        }
+
+        @SuppressWarnings( "unchecked" )
+        public static void clearBuiltinFonts()
+        {
+            BuiltinFonts14.clear();
+            // keep default font - used if some font cannot be found
+            BuiltinFonts14.put(HELVETICA, PdfName.HELVETICA);
+            BuiltinFonts14.put(HELVETICA_BOLD, PdfName.HELVETICA_BOLD);
+            BuiltinFonts14.put(HELVETICA_BOLDOBLIQUE, PdfName.HELVETICA_BOLDOBLIQUE);
+            BuiltinFonts14.put(HELVETICA_OBLIQUE, PdfName.HELVETICA_OBLIQUE);
         }
     }
 
     /**
      * checks if this font is Bold.
-     * 
+     *
      * @return a <CODE>boolean</CODE>
      */
     public boolean isBold( int style )
@@ -82,7 +98,7 @@ public abstract class AbstractFontRegistry implements IFontProvider
 
     /**
      * checks if this font is Bold.
-     * 
+     *
      * @return a <CODE>boolean</CODE>
      */
     public boolean isItalic( int style )
@@ -96,7 +112,7 @@ public abstract class AbstractFontRegistry implements IFontProvider
 
     /**
      * checks if this font is underlined.
-     * 
+     *
      * @return a <CODE>boolean</CODE>
      */
     public boolean isUnderlined( int style )
@@ -110,7 +126,7 @@ public abstract class AbstractFontRegistry implements IFontProvider
 
     /**
      * checks if the style of this font is STRIKETHRU.
-     * 
+     *
      * @return a <CODE>boolean</CODE>
      */
     public boolean isStrikethru( int style )
@@ -124,7 +140,7 @@ public abstract class AbstractFontRegistry implements IFontProvider
 
     public String getSystemEncoding()
     {
-        if ( systemEncodingDeterminated )
+        if ( systemEncodingDetermined )
         {
             return systemEncoding;
         }
@@ -133,17 +149,17 @@ public abstract class AbstractFontRegistry implements IFontProvider
         systemEncoding = System.getProperty( "sun.jnu.encoding" );
         if ( systemEncoding != null && systemEncoding.length() > 0 )
         {
-            systemEncodingDeterminated = true;
+            systemEncodingDetermined = true;
             return systemEncoding;
         }
         systemEncoding = System.getProperty( "ibm.system.encoding" );
         if ( systemEncoding != null && systemEncoding.length() > 0 )
         {
-            systemEncodingDeterminated = true;
+            systemEncodingDetermined = true;
             return systemEncoding;
         }
         systemEncoding = FontFactory.defaultEncoding;
-        systemEncodingDeterminated = true;
+        systemEncodingDetermined = true;
         return systemEncoding;
     }
 

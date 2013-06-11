@@ -50,7 +50,7 @@ public class ExtendedPdfContentByte
         if ( image instanceof ExtendedImage )
         {
             ExtendedImage extImg = (ExtendedImage) image;
-            super.addImage( image, a, b, c, d, e, f + extImg.getOffsetY(), inlineImage );
+            super.addImage( extImg.getImage(), a, b, c, d, e, f + extImg.getOffsetY(), inlineImage );
         }
         else
         {

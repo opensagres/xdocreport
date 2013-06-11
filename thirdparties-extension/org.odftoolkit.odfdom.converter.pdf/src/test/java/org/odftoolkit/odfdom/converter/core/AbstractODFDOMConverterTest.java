@@ -29,7 +29,6 @@ import org.junit.Test;
 
 public abstract class AbstractODFDOMConverterTest
 {
-
     @Test
     public void CV()
         throws Exception
@@ -94,7 +93,7 @@ public abstract class AbstractODFDOMConverterTest
         doGenerate( "Issue203.odt" );
     }
 
-    @Ignore( "Caused by: com.lowagie.text.DocumentException: ExceptionConverter: com.lowagie.text.DocumentException: java.lang.NullPointerException" )
+    //@Ignore( "Caused by: com.lowagie.text.DocumentException: ExceptionConverter: com.lowagie.text.DocumentException: java.lang.NullPointerException" )
     @Test
     public void Issue247()
         throws Exception
@@ -102,8 +101,13 @@ public abstract class AbstractODFDOMConverterTest
         doGenerate( "Issue247.odt" );
     }
 
-    // @Ignore("Caused by: ExceptionConverter: java.io.UnsupportedEncodingException: Identity-H")
-    // Using ITextFontRegistry2.getRegistry() seems resolve uses of Symbol Font.
+    @Test
+    public void Issue251()
+        throws Exception
+    {
+        doGenerate( "Issue251.odt" );
+    }
+
     @Test
     public void Issue271()
         throws Exception

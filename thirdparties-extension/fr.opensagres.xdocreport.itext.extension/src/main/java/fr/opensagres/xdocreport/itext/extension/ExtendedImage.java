@@ -29,11 +29,14 @@ import com.lowagie.text.Image;
 public class ExtendedImage
     extends Image
 {
+    private Image image;
+
     private float offsetY;
 
     public ExtendedImage( Image image, float offsetY )
     {
         super( image );
+        this.image = Image.getInstance( image );
         this.offsetY = offsetY;
     }
 
@@ -43,8 +46,14 @@ public class ExtendedImage
         if ( image instanceof ExtendedImage )
         {
             ExtendedImage extImg = (ExtendedImage) image;
+            this.image = extImg.image;
             this.offsetY = extImg.offsetY;
         }
+    }
+
+    public Image getImage()
+    {
+        return image;
     }
 
     public float getOffsetY()

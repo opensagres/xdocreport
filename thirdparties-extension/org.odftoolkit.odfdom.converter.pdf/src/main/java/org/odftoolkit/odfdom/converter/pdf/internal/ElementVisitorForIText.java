@@ -65,6 +65,7 @@ import org.odftoolkit.odfdom.dom.element.style.StyleHeaderElement;
 import org.odftoolkit.odfdom.dom.element.style.StyleHeaderLeftElement;
 import org.odftoolkit.odfdom.dom.element.style.StyleMasterPageElement;
 import org.odftoolkit.odfdom.dom.element.svg.SvgDescElement;
+import org.odftoolkit.odfdom.dom.element.svg.SvgTitleElement;
 import org.odftoolkit.odfdom.dom.element.table.TableTableCellElement;
 import org.odftoolkit.odfdom.dom.element.table.TableTableElement;
 import org.odftoolkit.odfdom.dom.element.table.TableTableHeaderRowsElement;
@@ -93,7 +94,6 @@ import org.odftoolkit.odfdom.pkg.OdfElement;
 import org.w3c.dom.Node;
 import org.w3c.dom.Text;
 
-import com.lowagie.text.Chunk;
 import com.lowagie.text.DocumentException;
 import com.lowagie.text.Font;
 import com.lowagie.text.Image;
@@ -646,6 +646,13 @@ public class ElementVisitorForIText
     }
 
     @Override
+    public void visit( SvgTitleElement ele )
+    {
+        // do not visit child nodes
+        // they may contain unnecessary text
+    }
+
+    @Override
     public void visit( SvgDescElement ele )
     {
         // do not visit child nodes
@@ -741,7 +748,7 @@ public class ElementVisitorForIText
         createAndAddChunk( node.getTextContent(), null, false );
     }
 
-    private Chunk createAndAddChunk( String textContent, String localDestinationName, boolean pageNumberChunk )
+    private void createAndAddChunk( String textContent, String localDestinationName, boolean pageNumberChunk )
     {
         // StylableChunk can replace several ODT elements
         // plain text
@@ -750,22 +757,24 @@ public class ElementVisitorForIText
         // text:s
         // text:page-number
         // text:page-count
-        StylableChunk chunk = document.createChunk( currentContainer, textContent );
-        Style style = currentContainer.getLastStyleApplied();
-        if ( style != null )
+        List<StylableChunk> chunks = StylableChunk.createChunks( document, currentContainer, textContent );
+        for ( StylableChunk chunk : chunks )
         {
-            chunk.applyStyles( style );
+            Style style = currentContainer.getLastStyleApplied();
+            if ( style != null )
+            {
+                chunk.applyStyles( style );
+            }
+            if ( localDestinationName != null )
+            {
+                chunk.setLocalDestination( localDestinationName );
+            }
+            if ( pageNumberChunk )
+            {
+                chunk.setPageNumberChunk( pageNumberChunk );
+            }
+            addITextElement( chunk );
         }
-        if ( localDestinationName != null )
-        {
-            chunk.setLocalDestination( localDestinationName );
-        }
-        if ( pageNumberChunk )
-        {
-            chunk.setPageNumberChunk( pageNumberChunk );
-        }
-        addITextElement( chunk );
-        return chunk;
     }
 
     @Override

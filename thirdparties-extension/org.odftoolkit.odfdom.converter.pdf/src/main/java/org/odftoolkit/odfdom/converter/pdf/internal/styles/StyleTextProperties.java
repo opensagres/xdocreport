@@ -32,10 +32,13 @@ import fr.opensagres.xdocreport.itext.extension.font.IFontProvider;
 
 public class StyleTextProperties
 {
-
     private Color backgroundColor;
 
     private Boolean fontBold;
+
+    private Boolean fontBoldAsian;
+
+    private Boolean fontBoldComplex;
 
     private Color fontColor;
 
@@ -43,9 +46,21 @@ public class StyleTextProperties
 
     private Boolean fontItalic;
 
+    private Boolean fontItalicAsian;
+
+    private Boolean fontItalicComplex;
+
     private String fontName;
 
+    private String fontNameAsian;
+
+    private String fontNameComplex;
+
     private float fontSize = Font.UNDEFINED;
+
+    private float fontSizeAsian = Font.UNDEFINED;
+
+    private float fontSizeComplex = Font.UNDEFINED;
 
     private Boolean fontStrikeThru;
 
@@ -93,6 +108,14 @@ public class StyleTextProperties
         {
             fontBold = textProperties.getFontBold();
         }
+        if ( textProperties.getFontBoldAsian() != null )
+        {
+            fontBoldAsian = textProperties.getFontBoldAsian();
+        }
+        if ( textProperties.getFontBoldComplex() != null )
+        {
+            fontBoldComplex = textProperties.getFontBoldComplex();
+        }
         if ( textProperties.getFontColor() != null )
         {
             fontColor = textProperties.getFontColor();
@@ -105,13 +128,37 @@ public class StyleTextProperties
         {
             fontItalic = textProperties.getFontItalic();
         }
+        if ( textProperties.getFontItalicAsian() != null )
+        {
+            fontItalicAsian = textProperties.getFontItalicAsian();
+        }
+        if ( textProperties.getFontItalicComplex() != null )
+        {
+            fontItalicComplex = textProperties.getFontItalicComplex();
+        }
         if ( textProperties.getFontName() != null )
         {
             fontName = textProperties.getFontName();
         }
+        if ( textProperties.getFontNameAsian() != null )
+        {
+            fontNameAsian = textProperties.getFontNameAsian();
+        }
+        if ( textProperties.getFontNameComplex() != null )
+        {
+            fontNameComplex = textProperties.getFontNameComplex();
+        }
         if ( textProperties.getFontSize() != Font.UNDEFINED )
         {
             fontSize = textProperties.getFontSize();
+        }
+        if ( textProperties.getFontSizeAsian() != Font.UNDEFINED )
+        {
+            fontSizeAsian = textProperties.getFontSizeAsian();
+        }
+        if ( textProperties.getFontSizeComplex() != Font.UNDEFINED )
+        {
+            fontSizeComplex = textProperties.getFontSizeComplex();
         }
         if ( textProperties.getFontStrikeThru() != null )
         {
@@ -149,10 +196,66 @@ public class StyleTextProperties
         return style;
     }
 
+    public int getStyleFlagAsian()
+    {
+        int style = Font.NORMAL;
+        if ( Boolean.TRUE.equals( fontItalicAsian ) )
+        {
+            style |= Font.ITALIC;
+        }
+        if ( Boolean.TRUE.equals( fontBoldAsian ) )
+        {
+            style |= Font.BOLD;
+        }
+        if ( Boolean.TRUE.equals( fontUnderline ) )
+        {
+            style |= Font.UNDERLINE;
+        }
+        if ( Boolean.TRUE.equals( fontStrikeThru ) )
+        {
+            style |= Font.STRIKETHRU;
+        }
+        return style;
+    }
+
+    public int getStyleFlagComplex()
+    {
+        int style = Font.NORMAL;
+        if ( Boolean.TRUE.equals( fontItalicComplex ) )
+        {
+            style |= Font.ITALIC;
+        }
+        if ( Boolean.TRUE.equals( fontBoldComplex ) )
+        {
+            style |= Font.BOLD;
+        }
+        if ( Boolean.TRUE.equals( fontUnderline ) )
+        {
+            style |= Font.UNDERLINE;
+        }
+        if ( Boolean.TRUE.equals( fontStrikeThru ) )
+        {
+            style |= Font.STRIKETHRU;
+        }
+        return style;
+    }
+
     public boolean hasFontProperties()
     {
         return fontName != null || fontSize != Font.UNDEFINED || fontItalic != null || fontBold != null
             || fontUnderline != null || fontStrikeThru != null || fontColor != null;
+    }
+
+    public boolean hasFontPropertiesAsian()
+    {
+        return fontNameAsian != null || fontSizeAsian != Font.UNDEFINED || fontItalicAsian != null
+            || fontBoldAsian != null || fontUnderline != null || fontStrikeThru != null || fontColor != null;
+    }
+
+    public boolean hasFontPropertiesComplex()
+    {
+        return fontNameComplex != null || fontSizeComplex != Font.UNDEFINED || fontItalicComplex != null
+            || fontBoldComplex != null || fontUnderline != null || fontStrikeThru != null || fontColor != null;
     }
 
     public Font getFont()
@@ -170,6 +273,51 @@ public class StyleTextProperties
             }
 
             return fontProvider.getFont( fontName, fontEncoding, adjustedFontSize, getStyleFlag(), fontColor );
+        }
+        else
+        {
+            return null;
+        }
+    }
+
+    public Font getFontAsian()
+    {
+        Float adjustedFontSize;
+
+        if ( hasFontPropertiesAsian() )
+        {
+            adjustedFontSize = fontSizeAsian;
+
+            // Shrink font size if sub or super scripted
+            if ( textPosition != null )
+            {
+                adjustedFontSize *= 0.63f;
+            }
+
+            return fontProvider.getFont( fontNameAsian, fontEncoding, adjustedFontSize, getStyleFlagAsian(), fontColor );
+        }
+        else
+        {
+            return null;
+        }
+    }
+
+    public Font getFontComplex()
+    {
+        Float adjustedFontSize;
+
+        if ( hasFontPropertiesComplex() )
+        {
+            adjustedFontSize = fontSizeComplex;
+
+            // Shrink font size if sub or super scripted
+            if ( textPosition != null )
+            {
+                adjustedFontSize *= 0.63f;
+            }
+
+            return fontProvider.getFont( fontNameComplex, fontEncoding, adjustedFontSize, getStyleFlagComplex(),
+                                         fontColor );
         }
         else
         {
@@ -195,6 +343,26 @@ public class StyleTextProperties
     public void setFontBold( Boolean fontBold )
     {
         this.fontBold = fontBold;
+    }
+
+    public Boolean getFontBoldAsian()
+    {
+        return fontBoldAsian;
+    }
+
+    public void setFontBoldAsian( Boolean fontBoldAsian )
+    {
+        this.fontBoldAsian = fontBoldAsian;
+    }
+
+    public Boolean getFontBoldComplex()
+    {
+        return fontBoldComplex;
+    }
+
+    public void setFontBoldComplex( Boolean fontBoldComplex )
+    {
+        this.fontBoldComplex = fontBoldComplex;
     }
 
     public Color getFontColor()
@@ -227,6 +395,26 @@ public class StyleTextProperties
         this.fontItalic = fontItalic;
     }
 
+    public Boolean getFontItalicAsian()
+    {
+        return fontItalicAsian;
+    }
+
+    public void setFontItalicAsian( Boolean fontItalicAsian )
+    {
+        this.fontItalicAsian = fontItalicAsian;
+    }
+
+    public Boolean getFontItalicComplex()
+    {
+        return fontItalicComplex;
+    }
+
+    public void setFontItalicComplex( Boolean fontItalicComplex )
+    {
+        this.fontItalicComplex = fontItalicComplex;
+    }
+
     public String getFontName()
     {
         return fontName;
@@ -237,6 +425,26 @@ public class StyleTextProperties
         this.fontName = fontName;
     }
 
+    public String getFontNameAsian()
+    {
+        return fontNameAsian;
+    }
+
+    public void setFontNameAsian( String fontNameAsian )
+    {
+        this.fontNameAsian = fontNameAsian;
+    }
+
+    public String getFontNameComplex()
+    {
+        return fontNameComplex;
+    }
+
+    public void setFontNameComplex( String fontNameComplex )
+    {
+        this.fontNameComplex = fontNameComplex;
+    }
+
     public float getFontSize()
     {
         return fontSize;
@@ -245,6 +453,26 @@ public class StyleTextProperties
     public void setFontSize( float fontSize )
     {
         this.fontSize = fontSize;
+    }
+
+    public float getFontSizeAsian()
+    {
+        return fontSizeAsian;
+    }
+
+    public void setFontSizeAsian( float fontSizeAsian )
+    {
+        this.fontSizeAsian = fontSizeAsian;
+    }
+
+    public float getFontSizeComplex()
+    {
+        return fontSizeComplex;
+    }
+
+    public void setFontSizeComplex( float fontSizeComplex )
+    {
+        this.fontSizeComplex = fontSizeComplex;
     }
 
     public Boolean getFontStrikeThru()

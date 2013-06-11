@@ -44,6 +44,7 @@ import com.lowagie.text.pdf.PdfPTable;
 import fr.opensagres.xdocreport.itext.extension.ExtendedDocument;
 import fr.opensagres.xdocreport.itext.extension.IMasterPage;
 import fr.opensagres.xdocreport.itext.extension.PageOrientation;
+import fr.opensagres.xdocreport.itext.extension.font.FontGroup;
 
 /**
  * fixes for pdf conversion by Leszek Piotrowicz <leszekp@safe-mail.net>
@@ -84,9 +85,9 @@ public class StylableDocument
         return new StylableAnchor( this, parent );
     }
 
-    public StylableChunk createChunk( IStylableContainer parent, String textContent )
+    public StylableChunk createChunk( IStylableContainer parent, String textContent, FontGroup fontGroup )
     {
-        return new StylableChunk( this, parent, textContent );
+        return new StylableChunk( this, parent, textContent, fontGroup );
     }
 
     public StylableDocumentSection createDocumentSection( IStylableContainer parent, boolean inHeaderFooter )

@@ -56,6 +56,10 @@ import org.odftoolkit.odfdom.dom.attribute.fo.FoFontStyleAttribute;
 import org.odftoolkit.odfdom.dom.attribute.fo.FoFontWeightAttribute;
 import org.odftoolkit.odfdom.dom.attribute.fo.FoKeepTogetherAttribute;
 import org.odftoolkit.odfdom.dom.attribute.fo.FoTextAlignAttribute;
+import org.odftoolkit.odfdom.dom.attribute.style.StyleFontStyleAsianAttribute;
+import org.odftoolkit.odfdom.dom.attribute.style.StyleFontStyleComplexAttribute;
+import org.odftoolkit.odfdom.dom.attribute.style.StyleFontWeightAsianAttribute;
+import org.odftoolkit.odfdom.dom.attribute.style.StyleFontWeightComplexAttribute;
 import org.odftoolkit.odfdom.dom.attribute.style.StyleNumFormatAttribute;
 import org.odftoolkit.odfdom.dom.attribute.style.StylePrintOrientationAttribute;
 import org.odftoolkit.odfdom.dom.attribute.style.StyleTextLineThroughStyleAttribute;
@@ -777,12 +781,32 @@ public class StyleEngineForIText
         {
             textProperties.setFontName( ODFUtils.stripTrailingDigits( fontFamily ) );
         }
+        String fontFamilyAsian = ele.getStyleFontFamilyAsianAttribute();
+        if ( StringUtils.isNotEmpty( fontFamilyAsian ) )
+        {
+            textProperties.setFontNameAsian( ODFUtils.stripTrailingDigits( fontFamilyAsian ) );
+        }
+        String fontFamilyComplex = ele.getStyleFontFamilyComplexAttribute();
+        if ( StringUtils.isNotEmpty( fontFamilyComplex ) )
+        {
+            textProperties.setFontNameComplex( ODFUtils.stripTrailingDigits( fontFamilyComplex ) );
+        }
 
         // font-name
         String fontName = ele.getStyleFontNameAttribute();
         if ( StringUtils.isNotEmpty( fontName ) )
         {
             textProperties.setFontName( ODFUtils.stripTrailingDigits( fontName ) );
+        }
+        String fontNameAsian = ele.getStyleFontNameAsianAttribute();
+        if ( StringUtils.isNotEmpty( fontNameAsian ) )
+        {
+            textProperties.setFontNameAsian( ODFUtils.stripTrailingDigits( fontNameAsian ) );
+        }
+        String fontNameComplex = ele.getStyleFontNameComplexAttribute();
+        if ( StringUtils.isNotEmpty( fontNameComplex ) )
+        {
+            textProperties.setFontNameComplex( ODFUtils.stripTrailingDigits( fontNameComplex ) );
         }
 
         // font-size
@@ -803,6 +827,42 @@ public class StyleEngineForIText
                 textProperties.setFontSize( ODFUtils.getDimensionAsPoint( fontSize ) );
             }
         }
+        String fontSizeAsian = ele.getStyleFontSizeAsianAttribute();
+        if ( StringUtils.isNotEmpty( fontSizeAsian ) )
+        {
+            if ( ODFUtils.hasPercentUnit( fontSizeAsian ) )
+            {
+                // relative
+                if ( textProperties.getFontSizeAsian() != Font.UNDEFINED )
+                {
+                    textProperties.setFontSizeAsian( textProperties.getFontSizeAsian()
+                        * ODFUtils.getDimensionAsPoint( fontSizeAsian ) );
+                }
+            }
+            else
+            {
+                // absolute
+                textProperties.setFontSizeAsian( ODFUtils.getDimensionAsPoint( fontSizeAsian ) );
+            }
+        }
+        String fontSizeComplex = ele.getStyleFontSizeComplexAttribute();
+        if ( StringUtils.isNotEmpty( fontSizeComplex ) )
+        {
+            if ( ODFUtils.hasPercentUnit( fontSizeComplex ) )
+            {
+                // relative
+                if ( textProperties.getFontSizeComplex() != Font.UNDEFINED )
+                {
+                    textProperties.setFontSizeComplex( textProperties.getFontSizeComplex()
+                        * ODFUtils.getDimensionAsPoint( fontSizeComplex ) );
+                }
+            }
+            else
+            {
+                // absolute
+                textProperties.setFontSizeComplex( ODFUtils.getDimensionAsPoint( fontSizeComplex ) );
+            }
+        }
 
         // font-style
         String fontStyle = ele.getFoFontStyleAttribute();
@@ -816,6 +876,32 @@ public class StyleEngineForIText
             {
                 // interpret other values as italic
                 textProperties.setFontItalic( Boolean.TRUE );
+            }
+        }
+        String fontStyleAsian = ele.getStyleFontStyleAsianAttribute();
+        if ( StringUtils.isNotEmpty( fontStyleAsian ) )
+        {
+            if ( StyleFontStyleAsianAttribute.Value.NORMAL.toString().equals( fontStyleAsian ) )
+            {
+                textProperties.setFontItalicAsian( Boolean.FALSE );
+            }
+            else
+            {
+                // interpret other values as italic
+                textProperties.setFontItalicAsian( Boolean.TRUE );
+            }
+        }
+        String fontStyleComplex = ele.getStyleFontStyleComplexAttribute();
+        if ( StringUtils.isNotEmpty( fontStyleComplex ) )
+        {
+            if ( StyleFontStyleComplexAttribute.Value.NORMAL.toString().equals( fontStyleComplex ) )
+            {
+                textProperties.setFontItalicComplex( Boolean.FALSE );
+            }
+            else
+            {
+                // interpret other values as italic
+                textProperties.setFontItalicComplex( Boolean.TRUE );
             }
         }
 
@@ -837,6 +923,32 @@ public class StyleEngineForIText
             {
                 // interpret other values as bold
                 textProperties.setFontBold( Boolean.TRUE );
+            }
+        }
+        String fontWeightAsian = ele.getStyleFontWeightAsianAttribute();
+        if ( StringUtils.isNotEmpty( fontWeightAsian ) )
+        {
+            if ( StyleFontWeightAsianAttribute.Value.NORMAL.toString().equals( fontWeightAsian ) )
+            {
+                textProperties.setFontBoldAsian( Boolean.FALSE );
+            }
+            else
+            {
+                // interpret other values as bold
+                textProperties.setFontBoldAsian( Boolean.TRUE );
+            }
+        }
+        String fontWeightComplex = ele.getStyleFontWeightComplexAttribute();
+        if ( StringUtils.isNotEmpty( fontWeightComplex ) )
+        {
+            if ( StyleFontWeightComplexAttribute.Value.NORMAL.toString().equals( fontWeightComplex ) )
+            {
+                textProperties.setFontBoldComplex( Boolean.FALSE );
+            }
+            else
+            {
+                // interpret other values as bold
+                textProperties.setFontBoldComplex( Boolean.TRUE );
             }
         }
 
@@ -876,6 +988,7 @@ public class StyleEngineForIText
             }
         }
 
+        // text-position
         String textPositionStyle = ele.getStyleTextPositionAttribute();
         if ( StringUtils.isNotEmpty( textPositionStyle ) )
         {

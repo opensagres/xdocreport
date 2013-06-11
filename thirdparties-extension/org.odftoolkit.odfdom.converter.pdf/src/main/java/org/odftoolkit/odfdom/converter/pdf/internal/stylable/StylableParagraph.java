@@ -25,6 +25,8 @@
 package org.odftoolkit.odfdom.converter.pdf.internal.stylable;
 
 import java.util.ArrayList;
+import java.util.LinkedHashMap;
+import java.util.Map;
 
 import org.odftoolkit.odfdom.converter.core.utils.ODFUtils;
 import org.odftoolkit.odfdom.converter.pdf.internal.styles.Style;
@@ -200,93 +202,164 @@ public class StylableParagraph
         return (Chunk) p.getChunks().get( 0 );
     }
 
-    @SuppressWarnings( "unchecked" )
     @Override
     public Element getElement()
     {
         if ( !elementPostProcessed )
         {
             elementPostProcessed = true;
+            postProcessEmptyParagraph();
+            postProcessBookmarks();
+            postProcessLineHeightAndBaseline();
+        }
+        return super.getElement();
+    }
 
-            // add space if this paragraph is empty
-            // otherwise it's height will be zero
-            boolean empty = true;
+    @SuppressWarnings( "unchecked" )
+    private void postProcessEmptyParagraph()
+    {
+        // add space if this paragraph is empty
+        // otherwise its height will be zero
+        boolean empty = true;
+        ArrayList<Chunk> chunks = getChunks();
+        for ( Chunk chunk : chunks )
+        {
+            if ( chunk.getImage() == null && chunk.getContent() != null && chunk.getContent().length() > 0 )
+            {
+                empty = false;
+                break;
+            }
+        }
+        if ( empty )
+        {
+            super.add( new Chunk( ODFUtils.TAB_STR ) );
+        }
+    }
+
+    @SuppressWarnings( "unchecked" )
+    private void postProcessBookmarks()
+    {
+        // add space if last chunk is a bookmark
+        // otherwise the bookmark will disappear from pdf
+        ArrayList<Chunk> chunks = getChunks();
+        if ( chunks.size() > 0 )
+        {
+            Chunk lastChunk = chunks.get( chunks.size() - 1 );
+            String localDestination = null;
+            if ( lastChunk.getAttributes() != null )
+            {
+                localDestination = (String) lastChunk.getAttributes().get( Chunk.LOCALDESTINATION );
+            }
+            if ( localDestination != null )
+            {
+                super.add( new Chunk( ODFUtils.NON_BREAKING_SPACE_STR ) );
+            }
+        }
+    }
+
+    @SuppressWarnings( "unchecked" )
+    private void postProcessLineHeightAndBaseline()
+    {
+        // adjust line height and baseline
+        Font font = getMostOftenUsedFont();
+        if ( font == null || font.getBaseFont() == null )
+        {
+            font = this.font;
+        }
+        if ( font != null && font.getBaseFont() != null )
+        {
+            // iText and open office computes proportional line height differently
+            // [iText] line height = coefficient * font size
+            // [open office] line height = coefficient * (font ascender + font descender + font extra margin)
+            // we have to increase paragraph line height to generate pdf similar to open office document
+            // this algorithm may be inaccurate if fonts with different multipliers are used in this paragraph
+            float size = font.getSize();
+            float ascender = font.getBaseFont().getFontDescriptor( BaseFont.AWT_ASCENT, size );
+            float descender = -font.getBaseFont().getFontDescriptor( BaseFont.AWT_DESCENT, size ); // negative value
+            float margin = font.getBaseFont().getFontDescriptor( BaseFont.AWT_LEADING, size );
+            float multiplier = ( ascender + descender + margin ) / size;
+            if ( multipliedLeading > 0.0f )
+            {
+                setMultipliedLeading( getMultipliedLeading() * multiplier );
+            }
+
+            // iText seems to output text with baseline lower than open office
+            // we raise all paragraph text by some amount
+            // again this may be inaccurate if fonts with different size are used in this paragraph
+            float itextdescender = -font.getBaseFont().getFontDescriptor( BaseFont.DESCENT, size ); // negative
+            float textRise = itextdescender + getTotalLeading() - font.getSize() * multiplier;
             ArrayList<Chunk> chunks = getChunks();
             for ( Chunk chunk : chunks )
             {
-                if ( chunk.getImage() == null && chunk.getContent() != null && chunk.getContent().length() > 0 )
+                Font f = chunk.getFont();
+                if ( f != null )
                 {
-                    empty = false;
-                    break;
-                }
-            }
-            if ( empty )
-            {
-                super.add( new Chunk( ODFUtils.TAB_STR ) );
-            }
-
-            // post process bookmarks
-            chunks = getChunks();
-            if ( chunks.size() > 0 )
-            {
-                Chunk lastChunk = chunks.get( chunks.size() - 1 );
-                String localDestination = null;
-                if ( lastChunk.getAttributes() != null )
-                {
-                    localDestination = (String) lastChunk.getAttributes().get( Chunk.LOCALDESTINATION );
-                }
-                if ( localDestination != null )
-                {
-                    super.add( new Chunk( ODFUtils.NON_BREAKING_SPACE_STR ) );
-                }
-            }
-
-            // adjust line height and baseline
-            if ( font != null && font.getBaseFont() != null )
-            {
-                // iText and open office computes proportional line height differently
-                // [iText] line height = coefficient * font size
-                // [open office] line height = coefficient * (font ascender + font descender + font extra margin)
-                // we have to increase paragraph line height to generate pdf similar to open office document
-                // this algorithm may be inaccurate if fonts with different multipliers are used in this paragraph
-                float size = font.getSize();
-                float ascender = font.getBaseFont().getFontDescriptor( BaseFont.AWT_ASCENT, size );
-                float descender = -font.getBaseFont().getFontDescriptor( BaseFont.AWT_DESCENT, size ); // negative value
-                float margin = font.getBaseFont().getFontDescriptor( BaseFont.AWT_LEADING, size );
-                float multiplier = ( ascender + descender + margin ) / size;
-                if ( multipliedLeading > 0.0f )
-                {
-                    setMultipliedLeading( getMultipliedLeading() * multiplier );
-                }
-
-                // iText seems to output text with baseline lower than open office
-                // we raise all paragraph text by some amount
-                // again this may be inaccurate if fonts with different size are used in this paragraph
-                float itextdescender = -font.getBaseFont().getFontDescriptor( BaseFont.DESCENT, size ); // negative
-                float textRise = itextdescender + getTotalLeading() - font.getSize() * multiplier;
-                chunks = getChunks();
-                for ( Chunk chunk : chunks )
-                {
-                    Font f = chunk.getFont();
-                    if ( f != null )
+                    // have to raise underline and strikethru as well
+                    float s = f.getSize();
+                    if ( f.isUnderlined() )
                     {
-                        // have to raise underline and strikethru as well
-                        float s = f.getSize();
-                        if ( f.isUnderlined() )
-                        {
-                            f.setStyle( f.getStyle() & ~Font.UNDERLINE );
-                            chunk.setUnderline( s * 1 / 17, s * -1 / 7 + textRise );
-                        }
-                        if ( f.isStrikethru() )
-                        {
-                            f.setStyle( f.getStyle() & ~Font.STRIKETHRU );
-                            chunk.setUnderline( s * 1 / 17, s * 1 / 4 + textRise );
-                        }
+                        f.setStyle( f.getStyle() & ~Font.UNDERLINE );
+                        chunk.setUnderline( s * 1 / 17, s * -1 / 7 + textRise );
                     }
-                    chunk.setTextRise( chunk.getTextRise() + textRise );
+                    if ( f.isStrikethru() )
+                    {
+                        f.setStyle( f.getStyle() & ~Font.STRIKETHRU );
+                        chunk.setUnderline( s * 1 / 17, s * 1 / 4 + textRise );
+                    }
+                }
+                chunk.setTextRise( chunk.getTextRise() + textRise );
+            }
+        }
+    }
+
+    @SuppressWarnings( "unchecked" )
+    private Font getMostOftenUsedFont()
+    {
+        // determine font most often used in this paragraph
+        // font with the highest count of non-whitespace characters
+        // is considered to be most often used
+        Map<String, Font> fontMap = new LinkedHashMap<String, Font>();
+        Map<String, Integer> countMap = new LinkedHashMap<String, Integer>();
+        Font mostUsedFont = null;
+        int mostUsedCount = -1;
+        ArrayList<Chunk> chunks = getChunks();
+        for ( Chunk chunk : chunks )
+        {
+            Font font = chunk.getFont();
+            int count = 0;
+            String text = chunk.getContent();
+            if ( text != null )
+            {
+                // count non-whitespace characters in a chunk
+                for ( int i = 0; i < text.length(); i++ )
+                {
+                    char ch = text.charAt( i );
+                    if ( !Character.isWhitespace( ch ) )
+                    {
+                        count++;
+                    }
+                }
+            }
+            if ( font != null )
+            {
+                // update font and its count
+                String fontKey = font.getFamilyname() + "_" + (int) font.getSize();
+                Font fontTmp = fontMap.get( fontKey );
+                if ( fontTmp == null )
+                {
+                    fontMap.put( fontKey, font );
+                }
+                Integer countTmp = countMap.get( fontKey );
+                int totalCount = countTmp == null ? count : countTmp + count;
+                countMap.put( fontKey, totalCount );
+                // update most used font
+                if ( totalCount > mostUsedCount )
+                {
+                    mostUsedCount = totalCount;
+                    mostUsedFont = font;
                 }
             }
         }
-        return super.getElement();
+        return mostUsedFont;
     }
 }

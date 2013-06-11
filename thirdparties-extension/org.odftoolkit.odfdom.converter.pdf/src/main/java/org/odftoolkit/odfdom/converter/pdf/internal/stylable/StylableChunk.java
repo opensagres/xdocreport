@@ -25,6 +25,8 @@
 package org.odftoolkit.odfdom.converter.pdf.internal.stylable;
 
 import java.awt.Color;
+import java.util.ArrayList;
+import java.util.List;
 
 import org.odftoolkit.odfdom.converter.pdf.internal.styles.Style;
 import org.odftoolkit.odfdom.converter.pdf.internal.styles.StyleTextProperties;
@@ -33,6 +35,7 @@ import com.lowagie.text.Element;
 import com.lowagie.text.Font;
 
 import fr.opensagres.xdocreport.itext.extension.ExtendedChunk;
+import fr.opensagres.xdocreport.itext.extension.font.FontGroup;
 
 public class StylableChunk
     extends ExtendedChunk
@@ -40,12 +43,16 @@ public class StylableChunk
 {
     private final IStylableContainer parent;
 
+    private final FontGroup fontGroup;
+
     private Style lastStyleApplied = null;
 
-    public StylableChunk( StylableDocument ownerDocument, IStylableContainer parent, String textContent )
+    public StylableChunk( StylableDocument ownerDocument, IStylableContainer parent, String textContent,
+                          FontGroup fontGroup )
     {
         super( ownerDocument, textContent );
         this.parent = parent;
+        this.fontGroup = fontGroup;
     }
 
     public void applyStyles( Style style )
@@ -56,7 +63,19 @@ public class StylableChunk
         if ( textProperties != null )
         {
             // font
-            Font font = textProperties.getFont();
+            Font font = null;
+            if ( FontGroup.WESTERN.equals( fontGroup ) )
+            {
+                font = textProperties.getFont();
+            }
+            else if ( FontGroup.ASIAN.equals( fontGroup ) )
+            {
+                font = textProperties.getFontAsian();
+            }
+            else if ( FontGroup.COMPLEX.equals( fontGroup ) )
+            {
+                font = textProperties.getFontComplex();
+            }
             if ( font != null )
             {
                 super.setFont( font );
@@ -91,5 +110,50 @@ public class StylableChunk
     public Element getElement()
     {
         return this;
+    }
+
+    public static List<StylableChunk> createChunks( StylableDocument ownerDocument, IStylableContainer parent,
+                                                    String textContent )
+    {
+        List<StylableChunk> list = new ArrayList<StylableChunk>();
+        StringBuilder sbuf = new StringBuilder();
+        Font font = null;
+        Font fontAsian = null;
+        Font fontComplex = null;
+        if ( parent != null && parent.getLastStyleApplied() != null )
+        {
+            StyleTextProperties textProperties = parent.getLastStyleApplied().getTextProperties();
+            if ( textProperties != null )
+            {
+                font = textProperties.getFont();
+                fontAsian = textProperties.getFontAsian();
+                fontComplex = textProperties.getFontComplex();
+            }
+        }
+        FontGroup currentGroup = FontGroup.WESTERN;
+        for ( int i = 0; i < textContent.length(); i++ )
+        {
+            char ch = textContent.charAt( i );
+            FontGroup group = FontGroup.getUnicodeGroup( ch, font, fontAsian, fontComplex );
+            if ( sbuf.length() == 0 || currentGroup.equals( group ) )
+            {
+                // continue current chunk
+                sbuf.append( ch );
+            }
+            else
+            {
+                // end chunk
+                StylableChunk chunk = ownerDocument.createChunk( parent, sbuf.toString(), currentGroup );
+                list.add( chunk );
+                // start new chunk
+                sbuf.setLength( 0 );
+                sbuf.append( ch );
+            }
+            currentGroup = group;
+        }
+        // end chunk
+        StylableChunk chunk = ownerDocument.createChunk( parent, sbuf.toString(), currentGroup );
+        list.add( chunk );
+        return list;
     }
 }

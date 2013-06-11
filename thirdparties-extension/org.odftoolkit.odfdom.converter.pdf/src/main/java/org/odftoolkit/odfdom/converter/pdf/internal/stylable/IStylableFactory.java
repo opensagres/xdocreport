@@ -28,11 +28,13 @@ import java.util.List;
 
 import com.lowagie.text.Image;
 
+import fr.opensagres.xdocreport.itext.extension.font.FontGroup;
+
 public interface IStylableFactory
 {
     StylableAnchor createAnchor( IStylableContainer parent );
 
-    StylableChunk createChunk( IStylableContainer parent, String textContent );
+    StylableChunk createChunk( IStylableContainer parent, String textContent, FontGroup fontGroup );
 
     StylableDocumentSection createDocumentSection( IStylableContainer parent, boolean inHeaderFooter );
 

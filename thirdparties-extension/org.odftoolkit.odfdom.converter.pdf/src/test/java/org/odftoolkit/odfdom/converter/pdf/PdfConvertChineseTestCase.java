@@ -24,7 +24,6 @@
  */
 package org.odftoolkit.odfdom.converter.pdf;
 
-import java.awt.Color;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.OutputStream;
@@ -32,12 +31,6 @@ import java.io.OutputStream;
 import org.junit.Test;
 import org.odftoolkit.odfdom.converter.core.AbstractODFDOMConverterTest;
 import org.odftoolkit.odfdom.doc.OdfTextDocument;
-
-import com.lowagie.text.Font;
-import com.lowagie.text.pdf.BaseFont;
-
-import fr.opensagres.xdocreport.itext.extension.font.IFontProvider;
-import fr.opensagres.xdocreport.itext.extension.font.ITextFontRegistry;
 
 public class PdfConvertChineseTestCase
 {
@@ -57,7 +50,7 @@ public class PdfConvertChineseTestCase
         // Customize Font provider for Chinese characters
         // This code is not optimized (font are not cached and it works only for windows)
         // Chinese people could you explain us how odt manage chinese characters?
-        options.fontProvider( new IFontProvider()
+        /*options.fontProvider( new IFontProvider()
         {
 
             public Font getFont( String familyName, String encoding, float size, int style, Color color )
@@ -78,11 +71,10 @@ public class PdfConvertChineseTestCase
                     return ITextFontRegistry.getRegistry().getFont( familyName, encoding, size, style, color );
                 }
             }
-        } );
+        } );*/
         PdfConverter.getInstance().convert( document, out, options );
     }
 
-    // Uncomment that once the problem with StackOverflow will be fixed.
     @Test
     public void TestChineseCharactersWithFloatImage()
         throws Exception
@@ -98,7 +90,7 @@ public class PdfConvertChineseTestCase
         // Customize Font provider for Chinese characters
         // This code is not optimized (font are not cached and it works only for windows)
         // Chinese people could you explain us how odt manage chinese characters?
-        options.fontProvider( new IFontProvider()
+        /*options.fontProvider( new IFontProvider()
         {
 
             public Font getFont( String familyName, String encoding, float size, int style, Color color )
@@ -119,7 +111,7 @@ public class PdfConvertChineseTestCase
                     return ITextFontRegistry.getRegistry().getFont( familyName, encoding, size, style, color );
                 }
             }
-        } );
+        } );*/
         PdfConverter.getInstance().convert( document, out, options );
     }
 }

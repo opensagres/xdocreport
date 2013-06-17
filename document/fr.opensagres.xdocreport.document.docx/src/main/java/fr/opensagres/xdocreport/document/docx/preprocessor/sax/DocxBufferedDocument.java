@@ -358,6 +358,7 @@ public class DocxBufferedDocument
             {
                 hyperlink.process();
             }
+            currentHyperlink = null;
             return;
         }
 

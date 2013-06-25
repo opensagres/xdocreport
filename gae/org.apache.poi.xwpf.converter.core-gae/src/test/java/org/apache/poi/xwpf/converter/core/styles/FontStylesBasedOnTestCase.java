@@ -120,7 +120,7 @@ public class FontStylesBasedOnTestCase
         XWPFRun run = runs.get( 0 );
 
         // family = Calibri (Corps)
-        String fontFamily = stylesDocument.getFontFamily( run );
+        String fontFamily = stylesDocument.getFontFamilyAscii( run );
         // should be "Calibri (Corps)" but is null
         // Assert.assertEquals( "Magneto", fontFamily );
 
@@ -181,7 +181,7 @@ public class FontStylesBasedOnTestCase
         XWPFRun run = runs.get( 0 );
 
         // family = Calibri (Corps)
-        String fontFamily = stylesDocument.getFontFamily( run );
+        String fontFamily = stylesDocument.getFontFamilyAscii( run );
         // should be "Calibri (Corps)" but is null
         // Assert.assertEquals( "Magneto", fontFamily );
 
@@ -244,7 +244,7 @@ public class FontStylesBasedOnTestCase
         XWPFRun run = runs.get( 0 );
 
         // family = Magneto
-        String fontFamily = stylesDocument.getFontFamily( run );
+        String fontFamily = stylesDocument.getFontFamilyAscii( run );
         Assert.assertEquals( "Magneto", fontFamily );
 
         // size= 20
@@ -306,7 +306,7 @@ public class FontStylesBasedOnTestCase
         XWPFRun run = runs.get( 0 );
 
         // family = Chiller
-        String fontFamily = stylesDocument.getFontFamily( run );
+        String fontFamily = stylesDocument.getFontFamilyAscii( run );
         Assert.assertEquals( "Chiller", fontFamily );
 
         // size= 20

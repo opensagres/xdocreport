@@ -124,7 +124,7 @@ public class A
         XWPFRun run = runs.get( 0 );
 
         // family = Times New Roman
-        String fontFamily = stylesDocument.getFontFamily( run );
+        String fontFamily = stylesDocument.getFontFamilyAscii( run );
         Assert.assertEquals( "Times New Roman", fontFamily );
 
         // size= 12

@@ -59,7 +59,7 @@ public class PdfConvertChineseTestCase
         // Customize Font provider for Chinese characters
         // This code is not optimized (font are not cached and it works only for windows)
         // Chinese people could you explain us how docx manage chinese characters?
-        options.fontProvider( new IFontProvider()
+        /*options.fontProvider( new IFontProvider()
         {
 
             public Font getFont( String familyName, String encoding, float size, int style, Color color )
@@ -80,7 +80,7 @@ public class PdfConvertChineseTestCase
                     return ITextFontRegistry.getRegistry().getFont( familyName, encoding, size, style, color );
                 }
             }
-        } );
+        } );*/
         PdfConverter.getInstance().convert( document, out, options );
     }
 }

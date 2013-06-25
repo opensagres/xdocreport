@@ -257,7 +257,7 @@ public class CSSStylesDocument
             CSSStyle style = ignoreStylesIfUnused ? null : getOrCreateStyle( null, tagName, className );
 
             // Font family
-            String fontFamily = super.getFontFamily( rPr );
+            String fontFamily = super.getFontFamilyAscii( rPr );
             if ( StringUtils.isNotEmpty( fontFamily ) )
             {
                 fontFamily = new StringBuilder( "'" ).append( fontFamily ).append( "'" ).toString();

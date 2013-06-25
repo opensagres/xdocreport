@@ -36,11 +36,9 @@ import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTRPr;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.STTheme;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.STTheme.Enum;
 
-public class RunFontFamilyValueProvider
+public abstract class RunFontFamilyValueProvider
     extends AbstractRunValueProvider<String>
 {
-
-    public static RunFontFamilyValueProvider INSTANCE = new RunFontFamilyValueProvider();
 
     @Override
     public String getValue( CTRPr ppr, XWPFStylesDocument stylesDocument )
@@ -75,7 +73,7 @@ public class RunFontFamilyValueProvider
 
     private String getFontFamily( XWPFStylesDocument stylesDocument, CTFonts fonts )
     {
-        org.openxmlformats.schemas.wordprocessingml.x2006.main.STTheme.Enum asciiTheme = fonts.getAsciiTheme();
+        org.openxmlformats.schemas.wordprocessingml.x2006.main.STTheme.Enum asciiTheme = getTheme( fonts );
         if ( asciiTheme != null )
         {
             try
@@ -97,11 +95,10 @@ public class RunFontFamilyValueProvider
             }
             catch ( Exception e )
             {
-                // TODO Auto-generated catch block
                 e.printStackTrace();
             }
         }
-        return fonts.getAscii();
+        return getFamily(fonts);
     }
 
     private String getDefaultFontFamily( Enum asciiTheme )
@@ -129,6 +126,10 @@ public class RunFontFamilyValueProvider
         }
         return null;
     }
+
+    protected abstract STTheme.Enum getTheme( CTFonts fonts );
+
+    protected abstract String getFamily( CTFonts fonts );
 
     // /**
     // * Returns default document font, by attempting to look at styles/docDefaults/rPrDefault/rPr/rFonts.

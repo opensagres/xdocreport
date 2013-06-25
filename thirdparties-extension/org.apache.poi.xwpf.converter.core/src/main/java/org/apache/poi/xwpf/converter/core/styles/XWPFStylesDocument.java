@@ -56,7 +56,9 @@ import org.apache.poi.xwpf.converter.core.styles.paragraph.ParagraphSpacingBefor
 import org.apache.poi.xwpf.converter.core.styles.paragraph.ParagraphTabsValueProvider;
 import org.apache.poi.xwpf.converter.core.styles.run.RunBackgroundColorValueProvider;
 import org.apache.poi.xwpf.converter.core.styles.run.RunFontColorValueProvider;
-import org.apache.poi.xwpf.converter.core.styles.run.RunFontFamilyValueProvider;
+import org.apache.poi.xwpf.converter.core.styles.run.RunFontFamilyAsciiValueProvider;
+import org.apache.poi.xwpf.converter.core.styles.run.RunFontFamilyEastAsiaValueProvider;
+import org.apache.poi.xwpf.converter.core.styles.run.RunFontFamilyHAnsiValueProvider;
 import org.apache.poi.xwpf.converter.core.styles.run.RunFontSizeValueProvider;
 import org.apache.poi.xwpf.converter.core.styles.run.RunFontStyleBoldValueProvider;
 import org.apache.poi.xwpf.converter.core.styles.run.RunFontStyleItalicValueProvider;
@@ -100,6 +102,7 @@ import org.apache.poi.xwpf.converter.core.styles.table.row.TableRowMarginLeftVal
 import org.apache.poi.xwpf.converter.core.styles.table.row.TableRowMarginRightValueProvider;
 import org.apache.poi.xwpf.converter.core.styles.table.row.TableRowMarginTopValueProvider;
 import org.apache.poi.xwpf.converter.core.utils.DxaUtil;
+import org.apache.poi.xwpf.converter.core.utils.StringUtils;
 import org.apache.poi.xwpf.usermodel.ParagraphAlignment;
 import org.apache.poi.xwpf.usermodel.UnderlinePatterns;
 import org.apache.poi.xwpf.usermodel.XWPFDocument;
@@ -114,6 +117,7 @@ import org.apache.xmlbeans.XmlException;
 import org.openxmlformats.schemas.drawingml.x2006.main.ThemeDocument;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTBorder;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTDocDefaults;
+import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTFont;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTNumPr;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTPPr;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTRPr;
@@ -129,6 +133,7 @@ import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTTcPr;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTTextDirection;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTTrPr;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTTwipsMeasure;
+import org.openxmlformats.schemas.wordprocessingml.x2006.main.FontsDocument;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.STMerge;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.STVerticalJc.Enum;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.SettingsDocument;
@@ -164,6 +169,12 @@ public class XWPFStylesDocument
 
     private List<ThemeDocument> themeDocuments;
 
+    private List<FontsDocument> fontsDocuments;
+
+    private final Map<String, List<String>> fontsAltName;
+
+    private final Map<String, String> fontsToUse;
+
     public XWPFStylesDocument( XWPFDocument document )
         throws XmlException, IOException
     {
@@ -176,6 +187,8 @@ public class XWPFStylesDocument
         this.document = document;
         this.stylesByStyleId = new HashMap<String, CTStyle>();
         this.values = new HashMap<String, Object>();
+        this.fontsAltName = new HashMap<String, List<String>>();
+        this.fontsToUse = new HashMap<String, String>();
         if ( lazyInitialization )
         {
             initialize();
@@ -320,7 +333,7 @@ public class XWPFStylesDocument
     {
         return ParagraphIndentationHangingValueProvider.INSTANCE.getValue( pPr );
     }
-    
+
     public Color getBackgroundColor( XWPFParagraph paragraph )
     {
         return ParagraphBackgroundColorValueProvider.INSTANCE.getValue( paragraph, this );
@@ -421,14 +434,34 @@ public class XWPFStylesDocument
      * @param run
      * @return
      */
-    public String getFontFamily( XWPFRun run )
+    public String getFontFamilyAscii( XWPFRun run )
     {
-        return RunFontFamilyValueProvider.INSTANCE.getValue( run, this );
+        return RunFontFamilyAsciiValueProvider.INSTANCE.getValue( run, this );
     }
 
-    public String getFontFamily( CTRPr rPr )
+    public String getFontFamilyAscii( CTRPr rPr )
     {
-        return RunFontFamilyValueProvider.INSTANCE.getValue( rPr, this );
+        return RunFontFamilyAsciiValueProvider.INSTANCE.getValue( rPr, this );
+    }
+
+    public String getFontFamilyEastAsia( XWPFRun run )
+    {
+        return RunFontFamilyEastAsiaValueProvider.INSTANCE.getValue( run, this );
+    }
+
+    public String getFontFamilyEastAsia( CTRPr rPr )
+    {
+        return RunFontFamilyAsciiValueProvider.INSTANCE.getValue( rPr, this );
+    }
+
+    public String getFontFamilyHAnsi( XWPFRun run )
+    {
+        return RunFontFamilyHAnsiValueProvider.INSTANCE.getValue( run, this );
+    }
+
+    public String getFontFamilyHAnsi( CTRPr rPr )
+    {
+        return RunFontFamilyHAnsiValueProvider.INSTANCE.getValue( rPr, this );
     }
 
     public Float getFontSize( XWPFRun run )
@@ -756,7 +789,7 @@ public class XWPFStylesDocument
     {
         return TableRowHeaderValueProvider.INSTANCE.getValue( row, this );
     }
-    
+
     // ------------------------ Table cell
 
     /**
@@ -1200,7 +1233,7 @@ public class XWPFStylesDocument
             for ( POIXMLDocumentPart p : document.getRelations() )
             {
                 String relationshipType = p.getPackageRelationship().getRelationshipType();
-                if ( relationshipType.equals( "http://schemas.openxmlformats.org/officeDocument/2006/relationships/theme" ) )
+                if ( "http://schemas.openxmlformats.org/officeDocument/2006/relationships/theme".equals( relationshipType ) )
                 {
                     InputStream inputStream = p.getPackagePart().getInputStream();
                     ThemeDocument theme = ThemeDocument.Factory.parse( inputStream );
@@ -1212,4 +1245,73 @@ public class XWPFStylesDocument
         return themeDocuments;
     }
 
+    public List<FontsDocument> getFontsDocument()
+        throws Exception
+    {
+        if ( fontsDocuments == null )
+        {
+            fontsDocuments = new ArrayList<FontsDocument>();
+
+            for ( POIXMLDocumentPart p : document.getRelations() )
+            {
+                String relationshipType = p.getPackageRelationship().getRelationshipType();
+                // "http://schemas.openxmlformats.org/officeDocument/2006/relationships/fontTable"
+                if ( XWPFRelation.FONT_TABLE.getRelation().equals( relationshipType ) )
+                {
+                    InputStream inputStream = p.getPackagePart().getInputStream();
+                    FontsDocument fontsDocument = FontsDocument.Factory.parse( inputStream );
+                    fontsDocuments.add( fontsDocument );
+
+                    // Compute fonts alt name
+                    // see spec 17.8.3.1 altName (Alternate Names for Font)
+
+                    CTString altName = null;
+                    List<CTFont> fonts = fontsDocument.getFonts().getFontList();
+                    for ( CTFont font : fonts )
+                    {
+                        altName = font.getAltName();
+                        if ( altName != null && StringUtils.isNotEmpty( altName.getVal() ) )
+                        {
+                            List<String> altNames = new ArrayList<String>();
+                            // This element specifies a set of alternative names which can be used to locate the font
+                            // specified by the parent
+                            // element. This set of alternative names is stored in a comma-delimited list, with all
+                            // adjacent commas ignored (i.e.
+                            // a value of Name A, Name B is equivalent to Name A,,,,,,,,, Name B).
+                            String[] names = altName.getVal().split( "," );
+                            String name = null;
+                            for ( int i = 0; i < names.length; i++ )
+                            {
+                                name = names[i];
+                                if ( StringUtils.isNotEmpty( name ) )
+                                {
+                                    altNames.add( name );
+                                }
+                            }
+                            fontsAltName.put( font.getName(), altNames );
+                        }
+                    }
+
+                }
+            }
+        }
+        return fontsDocuments;
+    }
+
+    public List<String> getFontsAltName( String fontName )
+        throws Exception
+    {
+        getFontsDocument();
+        return fontsAltName.get( fontName );
+    }
+
+    public String getFontNameToUse( String fontName )
+    {
+        return fontsToUse.get( fontName );
+    }
+
+    public void setFontNameToUse( String fontName, String altFfontName )
+    {
+        fontsToUse.put( fontName, altFfontName );
+    }
 }

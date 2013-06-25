@@ -107,6 +107,7 @@ import fr.opensagres.xdocreport.itext.extension.ExtendedParagraph;
 import fr.opensagres.xdocreport.itext.extension.ExtendedPdfPCell;
 import fr.opensagres.xdocreport.itext.extension.ExtendedPdfPTable;
 import fr.opensagres.xdocreport.itext.extension.IITextContainer;
+import fr.opensagres.xdocreport.itext.extension.font.FontGroup;
 
 public class PdfMapper
     extends XWPFDocumentVisitor<IITextContainer, PdfOptions, StylableMasterPage>
@@ -124,7 +125,11 @@ public class PdfMapper
     // Instance of PDF document
     private StylableDocument pdfDocument;
 
-    private Font currentRunFont;
+    private Font currentRunFontAscii;
+
+    private Font currentRunFontEastAsia;
+
+    private Font currentRunFontHAnsi;
 
     private UnderlinePatterns currentRunUnderlinePatterns;
 
@@ -366,7 +371,7 @@ public class PdfMapper
             if ( lvlRPr != null )
             {
                 // Font family
-                String listItemFontFamily = stylesDocument.getFontFamily( lvlRPr );
+                String listItemFontFamily = stylesDocument.getFontFamilyAscii( lvlRPr );
 
                 // Get font size
                 Float listItemFontSize = stylesDocument.getFontSize( lvlRPr );
@@ -441,7 +446,9 @@ public class PdfMapper
         throws Exception
     {
         // Font family
-        String fontFamily = stylesDocument.getFontFamily( docxRun );
+        String fontFamilyAscii = stylesDocument.getFontFamilyAscii( docxRun );
+        String fontFamilyEastAsia = stylesDocument.getFontFamilyEastAsia( docxRun );
+        String fontFamilyHAnsi = stylesDocument.getFontFamilyHAnsi( docxRun );
 
         // Get font size
         Float fontSize = stylesDocument.getFontSize( docxRun );
@@ -472,8 +479,9 @@ public class PdfMapper
         Color fontColor = stylesDocument.getFontColor( docxRun );
 
         // Font
-        this.currentRunFont =
-            options.getFontProvider().getFont( fontFamily, options.getFontEncoding(), fontSize, fontStyle, fontColor );
+        this.currentRunFontAscii = getFont( fontFamilyAscii, fontSize, fontStyle, fontColor );
+        this.currentRunFontEastAsia = getFont( fontFamilyEastAsia, fontSize, fontStyle, fontColor );
+        this.currentRunFontHAnsi = getFont( fontFamilyHAnsi, fontSize, fontStyle, fontColor );
 
         // Underline patterns
         this.currentRunUnderlinePatterns = stylesDocument.getUnderline( docxRun );
@@ -488,7 +496,7 @@ public class PdfMapper
         }
 
         StylableParagraph pdfParagraph = (StylableParagraph) pdfParagraphContainer;
-        pdfParagraph.adjustMultipliedLeading( currentRunFont );
+        pdfParagraph.adjustMultipliedLeading( currentRunFontAscii );
 
         // addd symbol list item chunk if needed.
         String listItemText = pdfParagraph.getListItemText();
@@ -502,7 +510,7 @@ public class PdfMapper
             int listItemFontStyle = pdfParagraph.getListItemFontStyle();
             Color listItemFontColor = pdfParagraph.getListItemFontColor();
             Font listItemFont =
-                options.getFontProvider().getFont( listItemFontFamily != null ? listItemFontFamily : fontFamily,
+                options.getFontProvider().getFont( listItemFontFamily != null ? listItemFontFamily : fontFamilyAscii,
                                                    options.getFontEncoding(),
                                                    listItemFontSize != null ? listItemFontSize : fontSize,
                                                    listItemFontStyle != Font.NORMAL ? listItemFontStyle : fontStyle,
@@ -531,33 +539,77 @@ public class PdfMapper
             pdfParagraphContainer.addElement( (StylableAnchor) container );
         }
 
-        this.currentRunFont = null;
+        this.currentRunFontAscii = null;
+        this.currentRunFontEastAsia = null;
+        this.currentRunFontHAnsi = null;
         this.currentRunUnderlinePatterns = null;
         this.currentRunBackgroundColor = null;
+    }
+
+    private Font getFont( String fontFamily, Float fontSize, int fontStyle, Color fontColor )
+    {
+
+        String fontToUse = stylesDocument.getFontNameToUse( fontFamily );
+        if ( StringUtils.isNotEmpty( fontToUse ) )
+        {
+            return options.getFontProvider().getFont( fontToUse, options.getFontEncoding(), fontSize, fontStyle,
+                                                      fontColor );
+        }
+        Font font =
+            options.getFontProvider().getFont( fontFamily, options.getFontEncoding(), fontSize, fontStyle, fontColor );
+        if ( !isFontExists( font ) )
+        {
+            // font is not found
+            try
+            {
+                List<String> altNames = stylesDocument.getFontsAltName( fontFamily );
+                if ( altNames != null )
+                {
+                    // Loop for each alternative names font (from the fontTable.xml) to find the well font.
+                    for ( String altName : altNames )
+                    {
+                        font = getFont( altName, fontSize, fontStyle, fontColor );
+                        if ( isFontExists( font ) )
+                        {
+                            stylesDocument.setFontNameToUse( fontFamily, altName );
+                            return font;
+                        }
+                    }
+                }
+            }
+            catch ( Exception e )
+            {
+                LOGGER.severe( e.getMessage() );
+            }
+        }
+        return font;
+    }
+
+    /**
+     * Returns true if the iText font exists and false otherwise.
+     * 
+     * @param font
+     * @return
+     */
+    private boolean isFontExists( Font font )
+    {
+        // FIXME : is it like this to test that font exists?
+        return font != null && font.getBaseFont() != null;
     }
 
     @Override
     protected void visitText( CTText docxText, boolean pageNumber, IITextContainer pdfParagraphContainer )
         throws Exception
     {
-        Chunk textChunk = createTextChunk( docxText, pageNumber );
-        pdfParagraphContainer.addElement( textChunk );
-    }
-
-    private Chunk createTextChunk( CTText docxText, boolean pageNumber )
-    {
-
-        return createTextChunk( docxText.getStringValue(), pageNumber );
-    }
-
-    private Chunk createTextChunk( String text, boolean pageNumber )
-    {
-        return createTextChunk( text, pageNumber, currentRunFont, currentRunUnderlinePatterns,
-                                currentRunBackgroundColor );
+        Font font = currentRunFontAscii;
+        Font fontAsian = currentRunFontEastAsia;
+        Font fontComplex = currentRunFontHAnsi;
+        createAndAddChunks( pdfParagraphContainer, docxText.getStringValue(), currentRunUnderlinePatterns,
+                            currentRunBackgroundColor, pageNumber, font, fontAsian, fontComplex );
     }
 
     private Chunk createTextChunk( String text, boolean pageNumber, Font currentRunFont,
-                                   UnderlinePatterns currentRunUnderlinePatterns2, Color currentRunBackgroundColor2 )
+                                   UnderlinePatterns currentRunUnderlinePatterns, Color currentRunBackgroundColor )
     {
         Chunk textChunk =
             pageNumber ? new ExtendedChunk( pdfDocument, true, currentRunFont ) : new Chunk( text, currentRunFont );
@@ -591,6 +643,54 @@ public class PdfMapper
             this.currentRunX += textChunk.getWidthPoint();
         }
         return textChunk;
+    }
+
+    private void createAndAddChunks( IITextContainer parent, String textContent, UnderlinePatterns underlinePatterns,
+                                     Color backgroundColor, boolean pageNumber, Font font, Font fontAsian,
+                                     Font fontComplex )
+    {
+        StringBuilder sbuf = new StringBuilder();
+        FontGroup currentGroup = FontGroup.WESTERN;
+        for ( int i = 0; i < textContent.length(); i++ )
+        {
+            char ch = textContent.charAt( i );
+            FontGroup group = FontGroup.getUnicodeGroup( ch, font, fontAsian, fontComplex );
+            if ( sbuf.length() == 0 || currentGroup.equals( group ) )
+            {
+                // continue current chunk
+                sbuf.append( ch );
+            }
+            else
+            {
+                // end chunk
+                Font chunkFont = getFont( font, fontAsian, fontComplex, currentGroup );
+                Chunk chunk =
+                    createTextChunk( sbuf.toString(), pageNumber, chunkFont, underlinePatterns, backgroundColor );
+                parent.addElement( chunk );
+                // start new chunk
+                sbuf.setLength( 0 );
+                sbuf.append( ch );
+            }
+            currentGroup = group;
+        }
+        // end chunk
+        Font chunkFont = getFont( font, fontAsian, fontComplex, currentGroup );
+        Chunk chunk = createTextChunk( sbuf.toString(), pageNumber, chunkFont, underlinePatterns, backgroundColor );
+        parent.addElement( chunk );
+    }
+
+    private Font getFont( Font font, Font fontAsian, Font fontComplex, FontGroup group )
+    {
+        switch ( group )
+        {
+            case WESTERN:
+                return font;
+            case ASIAN:
+                return fontAsian;
+            case COMPLEX:
+                return fontComplex;
+        }
+        return font;
     }
 
     @Override
@@ -807,9 +907,10 @@ public class PdfMapper
                 }
             }
 
-        } else if ( tabStop.getVal().equals( STTabJc.CENTER ) )
+        }
+        else if ( tabStop.getVal().equals( STTabJc.CENTER ) )
         {
-            
+
         }
         return false;
     }

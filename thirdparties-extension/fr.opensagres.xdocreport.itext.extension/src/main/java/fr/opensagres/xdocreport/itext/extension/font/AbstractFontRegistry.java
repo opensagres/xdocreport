@@ -26,6 +26,7 @@ package fr.opensagres.xdocreport.itext.extension.font;
 
 import java.awt.Color;
 
+import com.lowagie.text.ExceptionConverter;
 import com.lowagie.text.Font;
 import com.lowagie.text.FontFactory;
 import com.lowagie.text.pdf.PdfName;
@@ -47,7 +48,15 @@ public abstract class AbstractFontRegistry
         {
             familyName = resolveFamilyName( familyName, style );
         }
-        return FontFactory.getFont( familyName, encoding, size, style, color );
+        try
+        {
+            return FontFactory.getFont( familyName, encoding, size, style, color );
+        }
+        catch ( ExceptionConverter e )
+        {
+            // TODO manage options of font not found + add some logs
+            return new Font( Font.UNDEFINED, size, style, color );
+        }
     }
 
     private void initFontRegistryIfNeeded()
@@ -75,16 +84,16 @@ public abstract class AbstractFontRegistry
         {
             BuiltinFonts14.clear();
             // keep default font - used if some font cannot be found
-            BuiltinFonts14.put(HELVETICA, PdfName.HELVETICA);
-            BuiltinFonts14.put(HELVETICA_BOLD, PdfName.HELVETICA_BOLD);
-            BuiltinFonts14.put(HELVETICA_BOLDOBLIQUE, PdfName.HELVETICA_BOLDOBLIQUE);
-            BuiltinFonts14.put(HELVETICA_OBLIQUE, PdfName.HELVETICA_OBLIQUE);
+            BuiltinFonts14.put( HELVETICA, PdfName.HELVETICA );
+            BuiltinFonts14.put( HELVETICA_BOLD, PdfName.HELVETICA_BOLD );
+            BuiltinFonts14.put( HELVETICA_BOLDOBLIQUE, PdfName.HELVETICA_BOLDOBLIQUE );
+            BuiltinFonts14.put( HELVETICA_OBLIQUE, PdfName.HELVETICA_OBLIQUE );
         }
     }
 
     /**
      * checks if this font is Bold.
-     *
+     * 
      * @return a <CODE>boolean</CODE>
      */
     public boolean isBold( int style )
@@ -98,7 +107,7 @@ public abstract class AbstractFontRegistry
 
     /**
      * checks if this font is Bold.
-     *
+     * 
      * @return a <CODE>boolean</CODE>
      */
     public boolean isItalic( int style )
@@ -112,7 +121,7 @@ public abstract class AbstractFontRegistry
 
     /**
      * checks if this font is underlined.
-     *
+     * 
      * @return a <CODE>boolean</CODE>
      */
     public boolean isUnderlined( int style )
@@ -126,7 +135,7 @@ public abstract class AbstractFontRegistry
 
     /**
      * checks if the style of this font is STRIKETHRU.
-     *
+     * 
      * @return a <CODE>boolean</CODE>
      */
     public boolean isStrikethru( int style )

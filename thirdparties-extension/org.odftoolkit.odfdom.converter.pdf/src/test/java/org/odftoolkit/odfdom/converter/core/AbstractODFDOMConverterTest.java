@@ -24,7 +24,6 @@
  */
 package org.odftoolkit.odfdom.converter.core;
 
-import org.junit.Ignore;
 import org.junit.Test;
 
 public abstract class AbstractODFDOMConverterTest
@@ -85,7 +84,6 @@ public abstract class AbstractODFDOMConverterTest
         doGenerate( "Issue194.odt" );
     }
 
-    @Ignore( "Caused by: java.lang.ClassCastException: Insertion of illegal Element: 12" )
     @Test
     public void Issue203()
         throws Exception
@@ -93,7 +91,6 @@ public abstract class AbstractODFDOMConverterTest
         doGenerate( "Issue203.odt" );
     }
 
-    //@Ignore( "Caused by: com.lowagie.text.DocumentException: ExceptionConverter: com.lowagie.text.DocumentException: java.lang.NullPointerException" )
     @Test
     public void Issue247()
         throws Exception

@@ -56,6 +56,7 @@ import org.odftoolkit.odfdom.converter.pdf.internal.styles.Style;
 import org.odftoolkit.odfdom.converter.pdf.internal.styles.StyleTextProperties;
 import org.odftoolkit.odfdom.doc.OdfDocument;
 import org.odftoolkit.odfdom.dom.element.OdfStylableElement;
+import org.odftoolkit.odfdom.dom.element.draw.DrawCustomShapeElement;
 import org.odftoolkit.odfdom.dom.element.draw.DrawFrameElement;
 import org.odftoolkit.odfdom.dom.element.draw.DrawImageElement;
 import org.odftoolkit.odfdom.dom.element.draw.DrawLineElement;
@@ -656,6 +657,13 @@ public class ElementVisitorForIText
 
     @Override
     public void visit( DrawLineElement ele )
+    {
+        // do not visit child nodes
+        // they may contain unnecessary text
+    }
+
+    @Override
+    public void visit( DrawCustomShapeElement ele )
     {
         // do not visit child nodes
         // they may contain unnecessary text

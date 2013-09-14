@@ -33,7 +33,7 @@ import org.junit.Test;
 
 import fr.opensagres.xdocreport.core.XDocReportException;
 import fr.opensagres.xdocreport.template.TemplateEngineKind;
-import fr.opensagres.xdocreport.template.annotations.FieldMetada;
+import fr.opensagres.xdocreport.template.annotations.FieldMetadata;
 import fr.opensagres.xdocreport.template.formatter.FieldsMetadata;
 
 public class VelocityFieldsMetadataClassSerializerTestCase
@@ -127,14 +127,14 @@ public class VelocityFieldsMetadataClassSerializerTestCase
 		
 		public void setComplexTypeValue(String complexTypeValue){this.complexTypeValue=complexTypeValue;}
 		
-		@FieldMetada(syntaxWithDirective = true, syntaxKind = "Html",description="Complex Type Value Description")
+		@FieldMetadata(syntaxWithDirective = true, syntaxKind = "Html",description="Complex Type Value Description")
 		public String getComplexTypeValue(){return this.complexTypeValue;}
 		
 		public void setListOfStrings(List<String> listOfStrings) {
 			this.listOfStrings = listOfStrings;
 		}
 		
-		@FieldMetada(syntaxWithDirective = true, syntaxKind = "Html",description="List of strings description")
+		@FieldMetadata(syntaxWithDirective = true, syntaxKind = "Html",description="List of strings description")
 		public List<String> getListOfStrings() {
 			return listOfStrings;
 		}

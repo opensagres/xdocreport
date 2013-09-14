@@ -37,7 +37,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import fr.opensagres.xdocreport.core.XDocReportException;
-import fr.opensagres.xdocreport.template.annotations.FieldMetada;
+import fr.opensagres.xdocreport.template.annotations.FieldMetadata;
 
 /**
  * Abstract class for Fields metadata serializer.
@@ -186,15 +186,15 @@ public abstract class AbstractFieldsMetadataClassSerializer implements
 		fieldName.append(getFieldName("", currentField.getName()));
 		
 		//check if field is already there
-		for (FieldMetadata fieldMetadata : fieldsMetadata.getFields())
+		for (fr.opensagres.xdocreport.template.formatter.FieldMetadata fieldMetadata : fieldsMetadata.getFields())
 			if(fieldMetadata.getFieldName().equals(fieldName.toString())) return;
 		
 		Method method = currentField.getReadMethod();		
-		FieldMetada fMetadata = method.getAnnotation(FieldMetada.class);
+		FieldMetadata fMetadata = method.getAnnotation(FieldMetadata.class);
 		
 		if(fMetadata!=null)
 		{
-			FieldMetadata newField = fieldsMetadata.addField(fieldName.toString(), isList, null, fMetadata.syntaxKind(),fMetadata.syntaxWithDirective());
+			fr.opensagres.xdocreport.template.formatter.FieldMetadata newField = fieldsMetadata.addField(fieldName.toString(), isList, null, fMetadata.syntaxKind(),fMetadata.syntaxWithDirective());
 			newField.setDescription(fMetadata.description());
 		}else{
 			fieldsMetadata.addField(fieldName.toString(), isList, null, null, null);

@@ -16,7 +16,7 @@ import java.lang.annotation.Target;
  */
 @Target(value={ElementType.METHOD})
 @Retention(value = RetentionPolicy.RUNTIME)
-public @interface FieldMetada {
+public @interface FieldMetadata {
 	public String syntaxKind();
 	public boolean syntaxWithDirective() default false;
 	public String description() default "";

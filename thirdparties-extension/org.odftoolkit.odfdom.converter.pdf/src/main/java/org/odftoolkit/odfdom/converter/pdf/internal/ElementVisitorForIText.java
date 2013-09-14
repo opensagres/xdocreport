@@ -56,8 +56,11 @@ import org.odftoolkit.odfdom.converter.pdf.internal.styles.Style;
 import org.odftoolkit.odfdom.converter.pdf.internal.styles.StyleTextProperties;
 import org.odftoolkit.odfdom.doc.OdfDocument;
 import org.odftoolkit.odfdom.dom.element.OdfStylableElement;
+import org.odftoolkit.odfdom.dom.element.draw.DrawCustomShapeElement;
 import org.odftoolkit.odfdom.dom.element.draw.DrawFrameElement;
 import org.odftoolkit.odfdom.dom.element.draw.DrawImageElement;
+import org.odftoolkit.odfdom.dom.element.draw.DrawLineElement;
+import org.odftoolkit.odfdom.dom.element.draw.DrawTextBoxElement;
 import org.odftoolkit.odfdom.dom.element.office.OfficeTextElement;
 import org.odftoolkit.odfdom.dom.element.style.StyleFooterElement;
 import org.odftoolkit.odfdom.dom.element.style.StyleFooterLeftElement;
@@ -643,6 +646,27 @@ public class ElementVisitorForIText
     protected boolean isNeedImageStream()
     {
         return true;
+    }
+
+    @Override
+    public void visit( DrawTextBoxElement ele )
+    {
+        // do not visit child nodes
+        // they may contain unnecessary text
+    }
+
+    @Override
+    public void visit( DrawLineElement ele )
+    {
+        // do not visit child nodes
+        // they may contain unnecessary text
+    }
+
+    @Override
+    public void visit( DrawCustomShapeElement ele )
+    {
+        // do not visit child nodes
+        // they may contain unnecessary text
     }
 
     @Override

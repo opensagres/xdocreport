@@ -1055,4 +1055,30 @@ public class ODTDocumentHandlerTestCase
                              handler.getTextEnd() );
     }
 
+    @Test
+    public void testTable()
+        throws Exception
+    {
+        IContext context = new MockContext();
+        BufferedElement parent = null;
+
+        ITextStylingTransformer formatter = HTMLTextStylingTransformer.INSTANCE;
+        IDocumentHandler handler = new ODTDocumentHandler( parent, context, "content.xml" );
+        formatter.transform( "<table><tbody>"
+            + "<tr><td>A</td><td>B</td></tr>"
+            + "<tr><td>C</td><td>D</td></tr>"
+            + "<tr><td>E</td><td>F</td></tr>"
+            + "</tbody></table>",
+                             handler );
+
+        Assert.assertEquals( "", handler.getTextBefore() );
+        Assert.assertEquals( "", handler.getTextBody() );
+        Assert.assertEquals( "<table:table>"
+            + "<table:table-column table:number-columns-repeated=\"2\" ></table:table-column>"
+            + "<table:table-row><table:table-cell><text:p><text:span>A</text:span></text:p></table:table-cell><table:table-cell><text:p><text:span>B</text:span></text:p></table:table-cell></table:table-row>"
+            + "<table:table-row><table:table-cell><text:p><text:span>C</text:span></text:p></table:table-cell><table:table-cell><text:p><text:span>D</text:span></text:p></table:table-cell></table:table-row>"
+            + "<table:table-row><table:table-cell><text:p><text:span>E</text:span></text:p></table:table-cell><table:table-cell><text:p><text:span>F</text:span></text:p></table:table-cell></table:table-row>"
+            + "</table:table>",
+                             handler.getTextEnd() );
+    }
 }

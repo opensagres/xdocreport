@@ -28,6 +28,8 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.xml.sax.Attributes;
+
 import fr.opensagres.xdocreport.core.utils.StringUtils;
 import fr.opensagres.xdocreport.document.textstyling.properties.ContainerProperties;
 import fr.opensagres.xdocreport.document.textstyling.properties.HeaderProperties;
@@ -35,8 +37,14 @@ import fr.opensagres.xdocreport.document.textstyling.properties.ListItemProperti
 import fr.opensagres.xdocreport.document.textstyling.properties.ListProperties;
 import fr.opensagres.xdocreport.document.textstyling.properties.ParagraphProperties;
 import fr.opensagres.xdocreport.document.textstyling.properties.SpanProperties;
+import fr.opensagres.xdocreport.document.textstyling.properties.TableCellProperties;
+import fr.opensagres.xdocreport.document.textstyling.properties.TableProperties;
+import fr.opensagres.xdocreport.document.textstyling.properties.TableRowProperties;
 import fr.opensagres.xdocreport.document.textstyling.properties.TextAlignment;
 
+/**
+ * Styles Helper.
+ */
 public class StylesHelper
 {
 
@@ -255,5 +263,23 @@ public class StylesHelper
             }
 
         }
+    }
+
+    public static TableProperties createTableProperties( Attributes attributes )
+    {
+        TableProperties properties = new TableProperties();
+        return properties;
+    }
+
+    public static TableRowProperties createTableRowProperties( Attributes attributes )
+    {
+        TableRowProperties properties = new TableRowProperties();
+        return properties;
+    }
+
+    public static TableCellProperties createTableCellProperties( Attributes attributes )
+    {
+        TableCellProperties properties = new TableCellProperties();
+        return properties;
     }
 }

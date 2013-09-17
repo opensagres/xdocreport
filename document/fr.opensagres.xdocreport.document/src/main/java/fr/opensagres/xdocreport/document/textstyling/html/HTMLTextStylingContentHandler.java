@@ -36,6 +36,9 @@ import fr.opensagres.xdocreport.document.textstyling.properties.ListItemProperti
 import fr.opensagres.xdocreport.document.textstyling.properties.ListProperties;
 import fr.opensagres.xdocreport.document.textstyling.properties.ParagraphProperties;
 import fr.opensagres.xdocreport.document.textstyling.properties.SpanProperties;
+import fr.opensagres.xdocreport.document.textstyling.properties.TableCellProperties;
+import fr.opensagres.xdocreport.document.textstyling.properties.TableProperties;
+import fr.opensagres.xdocreport.document.textstyling.properties.TableRowProperties;
 
 /**
  * SAX content handler used to parse HTML content and call the right method of {@link IDocumentHandler} according the
@@ -106,6 +109,13 @@ public class HTMLTextStylingContentHandler
 
     // HTML elements for span
     private static final String SPAN_ELT = "span";
+
+    // HTML elements for table
+    private static final String TABLE_ELT = "table";
+
+    private static final String TR_ELT = "tr";
+
+    private static final String TD_ELT = "td";
 
     private final IDocumentHandler documentHandler;
 
@@ -266,8 +276,27 @@ public class HTMLTextStylingContentHandler
             }
             else if ( SPAN_ELT.equals( name ) )
             {
+                // <span>
                 SpanProperties properties = StylesHelper.createSpanProperties( attributes.getValue( STYLE_ATTR ) );
                 documentHandler.startSpan( properties );
+            }
+            else if ( TABLE_ELT.equals( name ) )
+            {
+                // <table>
+                TableProperties properties = StylesHelper.createTableProperties( attributes );
+                documentHandler.startTable( properties );
+            }
+            else if ( TR_ELT.equals( name ) )
+            {
+                // <tr>
+                TableRowProperties properties = StylesHelper.createTableRowProperties( attributes );
+                documentHandler.startTableRow( properties );
+            }
+            else if ( TD_ELT.equals( name ) )
+            {
+                // <td>
+                TableCellProperties properties = StylesHelper.createTableCellProperties( attributes );
+                documentHandler.startTableCell( properties );
             }
         }
         catch ( IOException e )
@@ -381,6 +410,21 @@ public class HTMLTextStylingContentHandler
             {
                 // </span>
                 documentHandler.endSpan();
+            }
+            else if ( TABLE_ELT.equals( name ) )
+            {
+                // </table>
+                documentHandler.endTable();
+            }
+            else if ( TR_ELT.equals( name ) )
+            {
+                // </tr>
+                documentHandler.endTableRow();
+            }
+            else if ( TD_ELT.equals( name ) )
+            {
+                // </td>
+                documentHandler.endTableCell();
             }
         }
         catch ( IOException e )

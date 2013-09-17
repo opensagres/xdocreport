@@ -33,11 +33,15 @@ import fr.opensagres.xdocreport.core.utils.StringUtils;
 import fr.opensagres.xdocreport.document.odt.template.ODTContextHelper;
 import fr.opensagres.xdocreport.document.preprocessor.sax.BufferedElement;
 import fr.opensagres.xdocreport.document.textstyling.AbstractDocumentHandler;
+import fr.opensagres.xdocreport.document.textstyling.IDocumentHandler.TextLocation;
 import fr.opensagres.xdocreport.document.textstyling.properties.HeaderProperties;
 import fr.opensagres.xdocreport.document.textstyling.properties.ListItemProperties;
 import fr.opensagres.xdocreport.document.textstyling.properties.ListProperties;
 import fr.opensagres.xdocreport.document.textstyling.properties.ParagraphProperties;
 import fr.opensagres.xdocreport.document.textstyling.properties.SpanProperties;
+import fr.opensagres.xdocreport.document.textstyling.properties.TableCellProperties;
+import fr.opensagres.xdocreport.document.textstyling.properties.TableProperties;
+import fr.opensagres.xdocreport.document.textstyling.properties.TableRowProperties;
 import fr.opensagres.xdocreport.template.IContext;
 
 public class ODTDocumentHandler
@@ -301,14 +305,14 @@ public class ODTDocumentHandler
         }
         internalStartParagraph( containerIsList, styleName );
 
-//        if ( properties != null )
-//        {
-//            // Remove "span" added by internalStartParagraph
-//            // spanStack.pop();
-//
-//            // Process properties
-//            // startSpan( properties );
-//        }
+        // if ( properties != null )
+        // {
+        // // Remove "span" added by internalStartParagraph
+        // // spanStack.pop();
+        //
+        // // Process properties
+        // // startSpan( properties );
+        // }
     }
 
     private void internalStartParagraph( boolean containerIsList, String styleName )
@@ -501,5 +505,56 @@ public class ODTDocumentHandler
         throws IOException
     {
         super.write( "<text:line-break />" );
+    }
+
+    protected void doStartTable( TableProperties properties )
+        throws IOException
+    {
+        endParagraphIfNeeded();
+        // odf table cannot be generated now, because here we don't know the table column count required to generate
+        // table:table-column
+        // that's here temp writer is used.
+        pushTempWriter();
+    }
+
+    public void doEndTable( TableProperties properties )
+        throws IOException
+    {
+        super.setTextLocation( TextLocation.End );
+        StringBuilder startTable = new StringBuilder( "<table:table>" );
+        startTable.append( "<table:table-column " );
+        int count = properties.getColumnCount();
+        startTable.append( "table:number-columns-repeated=\"" );
+        startTable.append( count );
+        startTable.append( "\" >" );
+        startTable.append( "</table:table-column>" );
+        popTempWriter( startTable.toString() );
+        super.write( "</table:table>" );
+    }
+
+    protected void doStartTableRow( TableRowProperties properties )
+        throws IOException
+    {
+        super.write( "<table:table-row>" );
+    }
+
+    protected void doEndTableRow()
+        throws IOException
+    {
+        super.write( "</table:table-row>" );
+    }
+
+    protected void doStartTableCell( TableCellProperties properties )
+        throws IOException
+    {
+        super.write( "<table:table-cell>" );
+        internalStartParagraph( false, (String) null );
+    }
+
+    public void doEndTableCell()
+        throws IOException
+    {
+        endParagraph();
+        super.write( "</table:table-cell>" );
     }
 }

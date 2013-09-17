@@ -31,6 +31,9 @@ import java.util.Stack;
 
 import fr.opensagres.xdocreport.document.preprocessor.sax.BufferedElement;
 import fr.opensagres.xdocreport.document.textstyling.properties.ListProperties;
+import fr.opensagres.xdocreport.document.textstyling.properties.TableCellProperties;
+import fr.opensagres.xdocreport.document.textstyling.properties.TableProperties;
+import fr.opensagres.xdocreport.document.textstyling.properties.TableRowProperties;
 import fr.opensagres.xdocreport.template.IContext;
 
 /**
@@ -57,6 +60,10 @@ public abstract class AbstractDocumentHandler
 
     private final String entryName;
 
+    private Stack<TableProperties> tablesStack;
+
+    private Stack<Writer> tempWriterStack;
+
     public AbstractDocumentHandler( BufferedElement parent, IContext context, String entryName )
     {
         this.parent = parent;
@@ -64,6 +71,7 @@ public abstract class AbstractDocumentHandler
         // Stack of boolean (ordered or not) for the ordered/unordered list
         this.listStack = new Stack<Boolean>();
         this.entryName = entryName;
+        this.tablesStack = null;
     }
 
     public void handleString( String s )
@@ -116,6 +124,53 @@ public abstract class AbstractDocumentHandler
             return 0;
         }
         return listStack.size() - 1;
+    }
+
+    public final void startTable( TableProperties properties )
+        throws IOException
+    {
+        if ( tablesStack == null )
+        {
+            tablesStack = new Stack<TableProperties>();
+        }
+        this.tablesStack.push( properties );
+        doStartTable( properties );
+    }
+
+    public final void endTable()
+        throws IOException
+    {
+        TableProperties properties = this.tablesStack.pop();
+        doEndTable( properties );
+    }
+
+    public final void startTableRow( TableRowProperties properties )
+        throws IOException
+    {
+        TableProperties tableProperties = this.tablesStack.peek();
+        tableProperties.setRowCount( tableProperties.getRowCount() + 1 );
+        tableProperties.setColumnCount( 0 );
+        doStartTableRow( properties );
+    }
+
+    public final void endTableRow()
+        throws IOException
+    {
+        doEndTableRow();
+    }
+
+    public final void startTableCell( TableCellProperties properties )
+        throws IOException
+    {
+        TableProperties tableProperties = this.tablesStack.peek();
+        tableProperties.setColumnCount( tableProperties.getColumnCount() + 1 );
+        doStartTableCell( properties );
+    }
+
+    public final void endTableCell()
+        throws IOException
+    {
+        doEndTableCell();
     }
 
     public BufferedElement getParent()
@@ -183,6 +238,23 @@ public abstract class AbstractDocumentHandler
         }
     }
 
+    public void pushTempWriter()
+    {
+        if ( tempWriterStack == null )
+        {
+            tempWriterStack = new Stack<Writer>();
+        }
+        tempWriterStack.push( new StringWriter() );
+    }
+
+    public void popTempWriter( String before )
+        throws IOException
+    {
+        Writer writer = tempWriterStack.pop();
+        getCurrentWriter().append( before );
+        getCurrentWriter().append( writer.toString() );
+    }
+
     @Override
     public void close()
         throws IOException
@@ -206,6 +278,10 @@ public abstract class AbstractDocumentHandler
 
     public Writer getCurrentWriter()
     {
+        if ( tempWriterStack != null && !tempWriterStack.isEmpty() )
+        {
+            return tempWriterStack.peek();
+        }
         if ( currentWriter == null )
         {
             setTextLocation( TextLocation.Body );
@@ -240,5 +316,23 @@ public abstract class AbstractDocumentHandler
         throws IOException;
 
     protected abstract void doEndOrderedList()
+        throws IOException;
+
+    protected abstract void doStartTable( TableProperties properties )
+        throws IOException;
+
+    protected abstract void doEndTable( TableProperties properties )
+        throws IOException;
+
+    protected abstract void doStartTableRow( TableRowProperties properties )
+        throws IOException;
+
+    protected abstract void doEndTableRow()
+        throws IOException;
+
+    protected abstract void doStartTableCell( TableCellProperties properties )
+        throws IOException;
+
+    protected abstract void doEndTableCell()
         throws IOException;
 }

@@ -32,6 +32,9 @@ import fr.opensagres.xdocreport.document.textstyling.properties.ListItemProperti
 import fr.opensagres.xdocreport.document.textstyling.properties.ListProperties;
 import fr.opensagres.xdocreport.document.textstyling.properties.ParagraphProperties;
 import fr.opensagres.xdocreport.document.textstyling.properties.SpanProperties;
+import fr.opensagres.xdocreport.document.textstyling.properties.TableCellProperties;
+import fr.opensagres.xdocreport.document.textstyling.properties.TableProperties;
+import fr.opensagres.xdocreport.document.textstyling.properties.TableRowProperties;
 
 /**
  * Basic Document handler implementation to build html fragment content.
@@ -238,5 +241,41 @@ public class HTMLDocumentHandler
         throws IOException
     {
         super.write( "<br />" );
+    }
+
+    public void doStartTable( TableProperties properties )
+        throws IOException
+    {
+        super.write( "<table>" );
+    }
+
+    public void doEndTable(TableProperties properties)
+        throws IOException
+    {
+        super.write( "</table>" );
+    }
+
+    protected void doStartTableRow( TableRowProperties properties )
+        throws IOException
+    {
+        super.write( "<tr>" );
+    }
+
+    public void doEndTableRow()
+        throws IOException
+    {
+        super.write( "</tr>" );
+    }
+
+    protected void doStartTableCell( TableCellProperties properties )
+        throws IOException
+    {
+        super.write( "<td>" );
+    }
+
+    public void doEndTableCell()
+        throws IOException
+    {
+        super.write( "</td>" );
     }
 }

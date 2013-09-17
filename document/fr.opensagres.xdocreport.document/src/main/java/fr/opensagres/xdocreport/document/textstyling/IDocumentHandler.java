@@ -31,6 +31,9 @@ import fr.opensagres.xdocreport.document.textstyling.properties.ListItemProperti
 import fr.opensagres.xdocreport.document.textstyling.properties.ListProperties;
 import fr.opensagres.xdocreport.document.textstyling.properties.ParagraphProperties;
 import fr.opensagres.xdocreport.document.textstyling.properties.SpanProperties;
+import fr.opensagres.xdocreport.document.textstyling.properties.TableCellProperties;
+import fr.opensagres.xdocreport.document.textstyling.properties.TableProperties;
+import fr.opensagres.xdocreport.document.textstyling.properties.TableRowProperties;
 
 /**
  * Handler to build a document.
@@ -216,6 +219,56 @@ public interface IDocumentHandler
      * @throws IOException
      */
     void endHeading( int level )
+        throws IOException;
+
+    /**
+     * Start table.
+     * 
+     * @throws IOException
+     */
+    void startTable( TableProperties properties )
+        throws IOException;
+
+    /**
+     * End table.
+     * 
+     * @throws IOException
+     */
+    void endTable()
+        throws IOException;
+
+    /**
+     * Start table row.
+     * 
+     * @param properties  table row properties.
+       @throws IOException
+     */
+    void startTableRow (TableRowProperties properties )
+        throws IOException;
+
+    /**
+     * End table row.
+     * 
+     * @throws IOException
+     */
+    void endTableRow()
+        throws IOException;
+
+    /**
+     * Start table cell.
+     * 
+     * @param properties table cell propertie.
+     * @throws IOException
+     */
+    void startTableCell( TableCellProperties properties )
+        throws IOException;
+
+    /**
+     * End table cell.
+     * 
+     * @throws IOException
+     */
+    void endTableCell()
         throws IOException;
 
     /**

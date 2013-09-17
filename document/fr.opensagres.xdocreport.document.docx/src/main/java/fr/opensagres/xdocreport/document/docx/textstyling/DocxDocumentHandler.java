@@ -41,6 +41,9 @@ import fr.opensagres.xdocreport.document.textstyling.properties.ListItemProperti
 import fr.opensagres.xdocreport.document.textstyling.properties.ListProperties;
 import fr.opensagres.xdocreport.document.textstyling.properties.ParagraphProperties;
 import fr.opensagres.xdocreport.document.textstyling.properties.SpanProperties;
+import fr.opensagres.xdocreport.document.textstyling.properties.TableCellProperties;
+import fr.opensagres.xdocreport.document.textstyling.properties.TableProperties;
+import fr.opensagres.xdocreport.document.textstyling.properties.TableRowProperties;
 import fr.opensagres.xdocreport.document.textstyling.properties.TextAlignment;
 import fr.opensagres.xdocreport.template.IContext;
 
@@ -685,6 +688,63 @@ public class DocxDocumentHandler
     {
         // <w:br />
         this.addLineBreak++;
+    }
+
+    protected void doStartTable( TableProperties properties )
+        throws IOException
+    {
+        closeCurrentParagraph();
+        // ooxml table cannot be generated now, because here we don't know the table column count required to generate
+        // w:tblGrid
+        // that's here temp writer is used.
+        pushTempWriter();
+    }
+
+    public void doEndTable( TableProperties properties )
+        throws IOException
+    {
+        StringBuilder startTable = new StringBuilder( "<w:tbl>" );
+        startTable.append( "<w:tblGrid>" );
+        int count = properties.getColumnCount();
+        for ( int i = 0; i < count; i++ )
+        {
+            startTable.append( "<w:gridCol w:w=\"2994\" />" );
+        }
+        startTable.append( "</w:tblGrid>" );
+        popTempWriter( startTable.toString() );
+        super.write( "</w:tbl>" );
+        // if table is inside a table cell, a paragraph is required.
+        super.write( "<w:p/>" );
+    }
+
+    public void doStartTableRow( TableRowProperties properties )
+        throws IOException
+    {
+        super.write( "<w:tr>" );
+    }
+
+    public void doEndTableRow()
+        throws IOException
+    {
+        super.write( "</w:tr>" );
+    }
+
+    public void doStartTableCell( TableCellProperties properties )
+        throws IOException
+    {
+        super.write( "<w:tc>" );
+        /*
+         * super.write( "<w:tcPr>" ); super.write( "<w:tcW w:w=\"0\" w:type=\"auto\" />" ); super.write( "</w:tcPr>" );
+         */
+        internalStartParagraph( null );
+
+    }
+
+    public void doEndTableCell()
+        throws IOException
+    {
+        endParagraph();
+        super.write( "</w:tc>" );
     }
 
 }

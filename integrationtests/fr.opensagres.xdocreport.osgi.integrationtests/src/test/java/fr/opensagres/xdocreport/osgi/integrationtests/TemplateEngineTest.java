@@ -52,7 +52,7 @@ import fr.opensagres.xdocreport.template.registry.TemplateEngineRegistry;
 
 @RunWith( JUnit4TestRunner.class )
 @ExamReactorStrategy(EagerSingleStagedReactorFactory.class)
-public class TemplateTest
+public class TemplateEngineTest
 {
 
     @Inject
@@ -79,7 +79,7 @@ public class TemplateTest
                         // template fragments
                         mavenBundle( "fr.opensagres.xdocreport", "fr.opensagres.xdocreport.template.freemarker" ).versionAsInProject().noStart(),
                         mavenBundle( "fr.opensagres.xdocreport", "fr.opensagres.xdocreport.template.velocity" ).versionAsInProject().noStart(),
-                        wrappedBundle( mavenBundle( "org.freemarker", "freemarker", "2.3.16" ) ),
+                        mavenBundle( "org.freemarker", "freemarker", "2.3.20" ) ,
                         mavenBundle( "commons-collections", "commons-collections", "3.2.1" ),
                         mavenBundle( "commons-lang", "commons-lang", "2.4" ),
                         mavenBundle( "org.apache.velocity", "velocity", "1.7" ),

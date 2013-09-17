@@ -38,6 +38,7 @@ import java.util.Map;
 import fr.opensagres.xdocreport.core.XDocReportException;
 import fr.opensagres.xdocreport.core.document.SyntaxKind;
 import fr.opensagres.xdocreport.core.utils.StringUtils;
+import fr.opensagres.xdocreport.template.TemplateEngineKind;
 import fr.opensagres.xdocreport.template.registry.FieldsMetadataClassSerializerRegistry;
 
 /**
@@ -93,7 +94,12 @@ public class FieldsMetadata
 
     public FieldsMetadata()
     {
-        this( null );
+        this( (String) null );
+    }
+
+    public FieldsMetadata( TemplateEngineKind templateEngineKind )
+    {
+        this( templateEngineKind.name() );
     }
 
     public FieldsMetadata( String templateEngineKind )

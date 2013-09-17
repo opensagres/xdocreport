@@ -35,6 +35,7 @@ import org.junit.Test;
 import fr.opensagres.xdocreport.core.XDocReportException;
 import fr.opensagres.xdocreport.template.TemplateEngineKind;
 import fr.opensagres.xdocreport.template.annotations.FieldMetadata;
+import fr.opensagres.xdocreport.template.annotations.ImageMetadata;
 import fr.opensagres.xdocreport.template.formatter.FieldsMetadata;
 
 public class FreemarkerFieldsMetadataClassSerializerTestCase
@@ -307,7 +308,7 @@ public class FreemarkerFieldsMetadataClassSerializerTestCase
             return name;
         }
 
-        @FieldMetadata( imageName = "logo" )
+        @FieldMetadata( images = { @ImageMetadata( name = "logo" ) } )
         public InputStream getLogo()
         {
             return null;
@@ -365,7 +366,7 @@ public class FreemarkerFieldsMetadataClassSerializerTestCase
         {
             // FieldsMetadataClassSerializerRegistry.getRegistry().dispose();//uncomment
             // this line to pass test
-            FieldsMetadata fieldsMetadata = new FieldsMetadata( TemplateEngineKind.Freemarker.name() );
+            FieldsMetadata fieldsMetadata = new FieldsMetadata( TemplateEngineKind.Freemarker );
             fieldsMetadata.load( "template", clazz );
             System.out.println( "\n===============" + clazz.getSimpleName() + "=======================\n" );
             System.out.println( fieldsMetadata.toString() );
@@ -378,7 +379,7 @@ public class FreemarkerFieldsMetadataClassSerializerTestCase
     public void testBuildFieldPaths()
         throws XDocReportException
     {
-        FieldsMetadata fieldsMetadata = new FieldsMetadata( TemplateEngineKind.Freemarker.name() );
+        FieldsMetadata fieldsMetadata = new FieldsMetadata( TemplateEngineKind.Freemarker );
         fieldsMetadata.load( "template", ChildA.class );
         System.out.println( "=================" );
         fieldsMetadata.load( "template1", ChildB.class );
@@ -388,7 +389,7 @@ public class FreemarkerFieldsMetadataClassSerializerTestCase
     public void testSyntaxAnnotations()
         throws Exception
     {
-        FieldsMetadata fieldsMetadata = new FieldsMetadata( TemplateEngineKind.Freemarker.name() );
+        FieldsMetadata fieldsMetadata = new FieldsMetadata( TemplateEngineKind.Freemarker );
         fieldsMetadata.load( "template", Parent.class );
         System.out.println( fieldsMetadata.toString() );
         Assert.assertEquals( 16, fieldsMetadata.getFieldsAsTextStyling().size() );
@@ -398,9 +399,8 @@ public class FreemarkerFieldsMetadataClassSerializerTestCase
     public void testImageAnnotations()
         throws Exception
     {
-        FieldsMetadata fieldsMetadata = new FieldsMetadata( TemplateEngineKind.Freemarker.name() );
+        FieldsMetadata fieldsMetadata = new FieldsMetadata( TemplateEngineKind.Freemarker );
         fieldsMetadata.load( "project", ProjectWithImage.class );
-        System.out.println( fieldsMetadata.toString() );
         Assert.assertEquals( 1, fieldsMetadata.getFieldsAsImage().size() );
     }
 

@@ -35,6 +35,7 @@ import org.junit.Test;
 import fr.opensagres.xdocreport.core.XDocReportException;
 import fr.opensagres.xdocreport.template.TemplateEngineKind;
 import fr.opensagres.xdocreport.template.annotations.FieldMetadata;
+import fr.opensagres.xdocreport.template.annotations.ImageMetadata;
 import fr.opensagres.xdocreport.template.formatter.FieldsMetadata;
 
 public class VelocityFieldsMetadataClassSerializerTestCase
@@ -307,7 +308,7 @@ public class VelocityFieldsMetadataClassSerializerTestCase
             return name;
         }
 
-        @FieldMetadata( imageName = "logo" )
+        @FieldMetadata( images = { @ImageMetadata( name = "logo" ) } )
         public InputStream getLogo()
         {
             return null;
@@ -366,7 +367,7 @@ public class VelocityFieldsMetadataClassSerializerTestCase
         for ( Class<?> clazz : pojoClasses )
         {
             // FieldsMetadataClassSerializerRegistry.getRegistry().dispose();//uncomment this line to pass test
-            FieldsMetadata fieldsMetadata = new FieldsMetadata( TemplateEngineKind.Velocity.name() );
+            FieldsMetadata fieldsMetadata = new FieldsMetadata( TemplateEngineKind.Velocity );
             fieldsMetadata.load( "template", clazz );
             System.out.println( "\n===============" + clazz.getSimpleName() + "=======================\n" );
             System.out.println( fieldsMetadata.toString() );
@@ -380,7 +381,7 @@ public class VelocityFieldsMetadataClassSerializerTestCase
     public void testBuildFieldPaths()
         throws XDocReportException
     {
-        FieldsMetadata fieldsMetadata = new FieldsMetadata( TemplateEngineKind.Velocity.name() );
+        FieldsMetadata fieldsMetadata = new FieldsMetadata( TemplateEngineKind.Velocity );
         fieldsMetadata.load( "template", ChildA.class );
         System.out.println( "=================" );
         fieldsMetadata.load( "template1", ChildB.class );
@@ -390,7 +391,7 @@ public class VelocityFieldsMetadataClassSerializerTestCase
     public void testSyntaxAnnotations()
         throws Exception
     {
-        FieldsMetadata fieldsMetadata = new FieldsMetadata( TemplateEngineKind.Velocity.name() );
+        FieldsMetadata fieldsMetadata = new FieldsMetadata( TemplateEngineKind.Velocity );
         fieldsMetadata.load( "template", Parent.class );
         System.out.println( fieldsMetadata.toString() );
         Assert.assertEquals( 16, fieldsMetadata.getFieldsAsTextStyling().size() );
@@ -400,7 +401,7 @@ public class VelocityFieldsMetadataClassSerializerTestCase
     public void testImageAnnotations()
         throws Exception
     {
-        FieldsMetadata fieldsMetadata = new FieldsMetadata( TemplateEngineKind.Velocity.name() );
+        FieldsMetadata fieldsMetadata = new FieldsMetadata( TemplateEngineKind.Velocity );
         fieldsMetadata.load( "project", ProjectWithImage.class );
         System.out.println( fieldsMetadata.toString() );
         Assert.assertEquals( 1, fieldsMetadata.getFieldsAsImage().size() );

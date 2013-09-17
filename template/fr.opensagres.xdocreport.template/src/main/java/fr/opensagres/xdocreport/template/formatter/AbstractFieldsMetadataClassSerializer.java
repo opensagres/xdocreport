@@ -28,6 +28,8 @@ import java.beans.BeanInfo;
 import java.beans.IntrospectionException;
 import java.beans.Introspector;
 import java.beans.PropertyDescriptor;
+import java.io.File;
+import java.io.InputStream;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
@@ -38,6 +40,7 @@ import java.util.List;
 
 import fr.opensagres.xdocreport.core.XDocReportException;
 import fr.opensagres.xdocreport.template.annotations.FieldMetadata;
+import fr.opensagres.xdocreport.template.annotations.ImageMetadata;
 
 /**
  * Abstract class for Fields metadata serializer.
@@ -45,6 +48,19 @@ import fr.opensagres.xdocreport.template.annotations.FieldMetadata;
 public abstract class AbstractFieldsMetadataClassSerializer
     implements IFieldsMetadataClassSerializer
 {
+
+    private static Class IIMAGEPROVIDER_CLASS = null;
+    static
+    {
+        try
+        {
+            IIMAGEPROVIDER_CLASS = Class.forName( "fr.opensagres.xdocreport.document.images.IImageProvider" );
+        }
+        catch ( ClassNotFoundException e )
+        {
+            e.printStackTrace();
+        }
+    }
 
     private final String id;
 
@@ -144,9 +160,13 @@ public abstract class AbstractFieldsMetadataClassSerializer
                     if ( types.length == 1 )
                     {
                         Class<?> itemClazz = (Class<?>) types[0];
-                        if ( String.class.isAssignableFrom( itemClazz ) || isClassToExclude( itemClazz ) )
-                        {// add field as is
-                            addField( key, fieldsMetadata, path, propertyDescriptor, true );
+                        if ( isImageField( itemClazz ) )
+                        {// add image field as is
+                            addField( key, fieldsMetadata, path, propertyDescriptor, true, true );
+                        }
+                        else if ( isTextField( itemClazz ) )
+                        {// add text field as is
+                            addField( key, fieldsMetadata, path, propertyDescriptor, true, false );
                         }
                         else
                         {// continue building with this class
@@ -157,9 +177,13 @@ public abstract class AbstractFieldsMetadataClassSerializer
                     }
                 }
             }
-            else if ( String.class.isAssignableFrom( returnTypeClass ) || isClassToExclude( returnTypeClass ) )
-            {// add field
-                addField( key, fieldsMetadata, path, propertyDescriptor, isList );
+            else if ( isImageField( returnTypeClass ) )
+            {// add image field
+                addField( key, fieldsMetadata, path, propertyDescriptor, isList, true );
+            }
+            else if ( isTextField( returnTypeClass ) )
+            {// add text field
+                addField( key, fieldsMetadata, path, propertyDescriptor, isList, false );
             }
             else
             {// continue building with this class
@@ -170,30 +194,35 @@ public abstract class AbstractFieldsMetadataClassSerializer
         }
     }
 
+    private boolean isTextField( Class<?> returnTypeClass )
+    {
+        return String.class.isAssignableFrom( returnTypeClass ) || isClassToExclude( returnTypeClass );
+    }
+
+    private boolean isImageField( Class<?> returnTypeClass )
+    {
+        return InputStream.class.isAssignableFrom( returnTypeClass ) || byte[].class.isAssignableFrom( returnTypeClass )
+            || File.class.isAssignableFrom( returnTypeClass )
+            || ( IIMAGEPROVIDER_CLASS != null && IIMAGEPROVIDER_CLASS.isAssignableFrom( returnTypeClass ) );
+    }
+
     /**
      * @param key - it is constant for whole process, this key is defined by user
      * @param fieldsMetadata - destination for fields
      * @param path - list of fields which should be accessed to read current field
      * @param currentField - field to be added to fieldsMetadata
      * @param proDesc - Property Descriptor. Used to retrieve getter annotations to be able to manage styles
-     * @param isList
+     * @param isList true if field is list and false otherwise.
+     * @param isImage true if field is an image and false otherwise.
      */
-
     private void addField( String key, FieldsMetadata fieldsMetadata, List<PropertyDescriptor> path,
-                           PropertyDescriptor currentField, Boolean isList )
+                           PropertyDescriptor currentField, Boolean isList, boolean isImage )
     {
-        StringBuffer fieldName = new StringBuffer( key );
-        for ( PropertyDescriptor fieldFromPath : path )
-        {
-            fieldName.append( getFieldName( "", fieldFromPath.getName() ) );
-        }
-
-        // generate field path
-        fieldName.append( getFieldName( "", currentField.getName() ) );
+        String fieldName = createFieldName( key, path, currentField );
 
         // check if field is already there
         for ( fr.opensagres.xdocreport.template.formatter.FieldMetadata fieldMetadata : fieldsMetadata.getFields() )
-            if ( fieldMetadata.getFieldName().equals( fieldName.toString() ) )
+            if ( fieldMetadata.getFieldName().equals( fieldName ) )
                 return;
 
         Method method = currentField.getReadMethod();
@@ -201,16 +230,58 @@ public abstract class AbstractFieldsMetadataClassSerializer
 
         if ( fMetadata != null )
         {
-            fr.opensagres.xdocreport.template.formatter.FieldMetadata newField =
-                fieldsMetadata.addField( fieldName.toString(), isList, fMetadata.imageName(), fMetadata.syntaxKind(),
-                                         fMetadata.syntaxWithDirective() );
-            newField.setDescription( fMetadata.description() );
+            //
+            ImageMetadata[] images = fMetadata.images();
+            if ( images.length < 1 )
+            {
+                addFieldAndUpdateWithAnnotation( fieldsMetadata, isList, fieldName, null, fMetadata );
+            }
+            else
+            {
+                for ( int i = 0; i < images.length; i++ )
+                {
+                    addFieldAndUpdateWithAnnotation( fieldsMetadata, isList, fieldName, images[i], fMetadata );
+                }
+            }
         }
         else
         {
-            fieldsMetadata.addField( fieldName.toString(), isList, null, null, null );
+            String imageName = isImage ? fieldName : null;
+            fieldsMetadata.addField( fieldName, isList, imageName, null, null );
         }
 
+    }
+
+    private String createFieldName( String key, List<PropertyDescriptor> path, PropertyDescriptor currentField )
+    {
+        StringBuilder fieldName = new StringBuilder( key );
+        for ( PropertyDescriptor fieldFromPath : path )
+        {
+            fieldName.append( getFieldName( "", fieldFromPath.getName() ) );
+        }
+
+        // generate field path
+        fieldName.append( getFieldName( "", currentField.getName() ) );
+        return fieldName.toString();
+    }
+
+    private void addFieldAndUpdateWithAnnotation( FieldsMetadata fieldsMetadata, Boolean isList, String fieldName,
+                                                  ImageMetadata imageData, FieldMetadata fMetadata )
+    {
+        String imageName = null;
+        if ( imageData != null )
+        {
+            imageName = imageData.name();
+        }
+        fr.opensagres.xdocreport.template.formatter.FieldMetadata newField =
+            fieldsMetadata.addField( fieldName.toString(), isList, imageName, fMetadata.syntaxKind(),
+                                     fMetadata.syntaxWithDirective() );
+        // description from annotation
+        newField.setDescription( fMetadata.description() );
+        if ( imageData != null )
+        {
+            newField.setBehaviour( imageData.behaviour() );
+        }
     }
 
     /**
@@ -243,7 +314,7 @@ public abstract class AbstractFieldsMetadataClassSerializer
         {// if we have no access because of
          // security, we will mark it as
          // transient, as from
-            // template engine we also will not be able to access it
+         // template engine we also will not be able to access it
             return true;
         }
         catch ( NoSuchFieldException e )

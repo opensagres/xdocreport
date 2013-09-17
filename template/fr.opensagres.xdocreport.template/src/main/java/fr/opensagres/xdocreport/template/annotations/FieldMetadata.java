@@ -8,6 +8,8 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
+import fr.opensagres.xdocreport.template.formatter.NullImageBehaviour;
+
 /**
  * This annotation should be attached to getter method which is called from Velocity or Freemarker Otherwise it will
  * have no effect
@@ -45,5 +47,14 @@ public @interface FieldMetadata
      * 
      * @return the image name if field must use mapping name with image and empty otherwise.
      */
-    public String imageName() default "";
+    //public String imageName() default "";
+
+    public ImageMetadata[] images() default {};
+    
+    /**
+     * Returns the null image behaviour {@link NullImageBehaviour}.
+     * 
+     * @return the null image behaviour {@link NullImageBehaviour}.
+     */
+    //public NullImageBehaviour imageBehaviour() default NullImageBehaviour.ThrowsError;
 }

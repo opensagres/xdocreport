@@ -358,6 +358,10 @@ public abstract class TransformedBufferedDocumentContentHandler<Document extends
             {
                 beforeElementName = getTableCellName();
             }
+            else if ( beforeElementName.startsWith( BEFORE_TOKEN ) )
+            {
+                beforeElementName = beforeElementName.substring( BEFORE_TOKEN.length(), beforeElementName.length() );
+            }
             BufferedElement elementInfo = super.findParentElementInfo( beforeElementName );
             if ( elementInfo == null )
             {
@@ -436,6 +440,10 @@ public abstract class TransformedBufferedDocumentContentHandler<Document extends
             else if ( afterElementName.equals( getAfterTableCellToken() ) )
             {
                 afterElementName = getTableCellName();
+            }
+            else if ( afterElementName.startsWith( AFTER_TOKEN ) )
+            {
+                afterElementName = afterElementName.substring( AFTER_TOKEN.length(), afterElementName.length() );
             }
             BufferedElement elementInfo = super.findParentElementInfo( afterElementName );
             if ( elementInfo == null )

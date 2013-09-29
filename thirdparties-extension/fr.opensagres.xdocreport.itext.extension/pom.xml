@@ -1,4 +1,5 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 	<parent>
 		<groupId>fr.opensagres.xdocreport</groupId>
@@ -24,7 +25,31 @@
 					<artifactId>bctsp-jdk14</artifactId>
 					<groupId>org.bouncycastle</groupId>
 				</exclusion>
+				<exclusion>
+					<groupId>bouncycastle</groupId>
+					<artifactId>bcprov-jdk14</artifactId>
+				</exclusion>
+				<exclusion>
+					<groupId>bouncycastle</groupId>
+					<artifactId>bctsp-jdk14</artifactId>
+				</exclusion>
+				<exclusion>
+					<groupId>bouncycastle</groupId>
+					<artifactId>bcmail-jdk14</artifactId>
+				</exclusion>
 			</exclusions>
+		</dependency>
+		<dependency>
+			<artifactId>bcmail-jdk14</artifactId>
+			<groupId>org.bouncycastle</groupId>
+			<version>1.38</version>
+			<optional>true</optional>
+		</dependency>
+		<dependency>
+			<artifactId>bcprov-jdk14</artifactId>
+			<groupId>org.bouncycastle</groupId>
+			<version>1.38</version>
+			<optional>true</optional>
 		</dependency>
 	</dependencies>
 

@@ -61,7 +61,8 @@ public abstract class AbstractRegistry<Discovery extends IBaseDiscovery>
             onStartInitialization();
             // getClass().getClassLoader() to work under OSGi context
 
-            Iterator<Discovery> discoveries = JDKServiceLoader.lookupProviders( registryType, getClass().getClassLoader() );
+            Iterator<Discovery> discoveries =
+                JDKServiceLoader.lookupProviders( registryType, getClass().getClassLoader() );
             if ( LOGGER.isLoggable( Level.FINE ) )
             {
                 LOGGER.fine( "discoveries found ? " + discoveries.hasNext() );
@@ -70,10 +71,17 @@ public abstract class AbstractRegistry<Discovery extends IBaseDiscovery>
             while ( discoveries.hasNext() )
             {
                 Discovery instance = discoveries.next();
-                boolean result = registerInstance( instance );
-                if ( LOGGER.isLoggable( Level.FINE ) )
+                try
                 {
-                    LOGGER.fine( "Registered Discovery instance  " + instance + " " + result );
+                    boolean result = registerInstance( instance );
+                    if ( LOGGER.isLoggable( Level.FINE ) )
+                    {
+                        LOGGER.fine( "Registered Discovery instance  " + instance + " " + result );
+                    }
+                }
+                catch ( Throwable e )
+                {
+                    LOGGER.log( Level.SEVERE, "Error while registration of Discovery instance  " + instance, e );
                 }
             }
             onEndInitialization();

@@ -1,5 +1,6 @@
 /.settings
 /META-INF
 /target
+/dist
 /.classpath
 /.project

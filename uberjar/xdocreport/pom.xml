@@ -8,14 +8,7 @@
 		<relativePath>..</relativePath>
 	</parent>
 	<artifactId>xdocreport</artifactId>
-	
-
-
-
-
 	<dependencies>
-
-
 		<!-- Document ODT -->
 		<dependency>
 			<groupId>fr.opensagres.xdocreport</groupId>
@@ -51,5 +44,11 @@
 			<version>1.0.3-SNAPSHOT</version>
 		</dependency>
 
+		<!-- Freemarker Template -->
+		<dependency>
+			<groupId>fr.opensagres.xdocreport</groupId>
+			<artifactId>fr.opensagres.xdocreport.template.freemarker</artifactId>
+			<version>1.0.3-SNAPSHOT</version>
+		</dependency>
 	</dependencies>
 </project>

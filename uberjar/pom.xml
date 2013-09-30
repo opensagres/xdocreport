@@ -21,7 +21,7 @@
 							<goal>shade</goal>
 						</goals>
 						<configuration>
-							<promoteTransitiveDependencies>true</promoteTransitiveDependencies>
+							<!-- <promoteTransitiveDependencies>true</promoteTransitiveDependencies> -->
 							<artifactSet>
 								<includes>
 									<include>fr.opensagres.xdocreport:*</include>

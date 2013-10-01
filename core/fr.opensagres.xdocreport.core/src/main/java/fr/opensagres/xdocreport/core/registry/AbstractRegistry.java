@@ -81,7 +81,7 @@ public abstract class AbstractRegistry<Discovery extends IBaseDiscovery>
                 }
                 catch ( Throwable e )
                 {
-                    LOGGER.log( Level.SEVERE, "Error while registration of Discovery instance  " + instance, e );
+                    LOGGER.log( Level.WARNING, "Error while registration of Discovery instance  " + instance, e );
                 }
             }
             onEndInitialization();

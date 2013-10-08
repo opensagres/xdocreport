@@ -28,6 +28,9 @@ import java.io.InputStream;
 import java.io.StringWriter;
 import java.util.HashMap;
 
+import org.junit.Assert;
+import org.junit.Test;
+
 import junit.framework.TestCase;
 import fr.opensagres.xdocreport.core.document.SyntaxKind;
 import fr.opensagres.xdocreport.core.io.IOUtils;
@@ -37,9 +40,9 @@ import fr.opensagres.xdocreport.template.formatter.IDocumentFormatter;
 import fr.opensagres.xdocreport.template.freemarker.FreemarkerDocumentFormatter;
 
 public class DocxPreprocessorTextStylingWithFreemarker
-    extends TestCase
 {
 
+    @Test
     public void test2InstrText()
         throws Exception
     {
@@ -98,9 +101,9 @@ public class DocxPreprocessorTextStylingWithFreemarker
         metadata.addFieldAsTextStyling( "htmlText", SyntaxKind.Html );
         IDocumentFormatter formatter = new FreemarkerDocumentFormatter();
  
-        preprocessor.preprocess( "test", stream, writer, metadata, formatter, new HashMap<String, Object>() );
+        preprocessor.preprocess( "word/document.xml", stream, writer, metadata, formatter, new HashMap<String, Object>() );
 
-        assertEquals( "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>" + "<w:document "
+        Assert.assertEquals( "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>" + "<w:document "
             + "xmlns:ve=\"http://schemas.openxmlformats.org/markup-compatibility/2006\" "
             + "xmlns:o=\"urn:schemas-microsoft-com:office:office\" "
             + "xmlns:r=\"http://schemas.openxmlformats.org/officeDocument/2006/relationships\" "
@@ -111,7 +114,7 @@ public class DocxPreprocessorTextStylingWithFreemarker
             + "xmlns:w=\"http://schemas.openxmlformats.org/wordprocessingml/2006/main\" "
             + "xmlns:wne=\"http://schemas.microsoft.com/office/word/2006/wordml\">"
  
-            + "[#assign ___NoEscape0=___TextStylingRegistry.transform(htmlText,\"Html\",false,\"DOCX\",\"0_elementId\",___context,\"test\")] [#noescape]${___NoEscape0.textBefore}[/#noescape]"
+            + "[#assign ___NoEscape0=___TextStylingRegistry.transform(htmlText,\"Html\",false,\"DOCX\",\"0_elementId\",___context,\"word/document.xml\")] [#noescape]${___NoEscape0.textBefore}[/#noescape]"
              
              + "<w:p w:rsidR=\"008E751F\" w:rsidRPr=\"00C20656\" w:rsidRDefault=\"00E4086C\" w:rsidP=\"00AA3AE5\">"
              + "<w:pPr>"
@@ -151,4 +154,207 @@ public class DocxPreprocessorTextStylingWithFreemarker
              + "[#noescape]${___NoEscape0.textEnd}[/#noescape]"
              + "</w:document>", writer.toString() );
     }
+    
+    @Test
+    public void textStylingWithSimpleField()
+        throws Exception
+    {
+        DocxPreprocessor preprocessor = new DocxPreprocessor();
+        InputStream stream =
+                        IOUtils.toInputStream( "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>" + "<w:document "
+                                        + "xmlns:ve=\"http://schemas.openxmlformats.org/markup-compatibility/2006\" "
+                                        + "xmlns:o=\"urn:schemas-microsoft-com:office:office\" "
+                                        + "xmlns:r=\"http://schemas.openxmlformats.org/officeDocument/2006/relationships\" "
+                                        + "xmlns:m=\"http://schemas.openxmlformats.org/officeDocument/2006/math\" "
+                                        + "xmlns:v=\"urn:schemas-microsoft-com:vml\" "
+                                        + "xmlns:wp=\"http://schemas.openxmlformats.org/drawingml/2006/wordprocessingDrawing\" "
+                                        + "xmlns:w10=\"urn:schemas-microsoft-com:office:word\" "
+                                        + "xmlns:w=\"http://schemas.openxmlformats.org/wordprocessingml/2006/main\" "
+                                        + "xmlns:wne=\"http://schemas.microsoft.com/office/word/2006/wordml\">"
+                                        
+                                        +"<w:tbl>"
+                                            +"<w:tblPr>"
+                                                +"<w:tblStyle w:val=\"Grilledutableau\"/>"
+                                                +"<w:tblW w:w=\"0\" w:type=\"auto\"/>"
+                                                +"<w:tblLook w:val=\"04A0\" w:firstRow=\"1\" w:lastRow=\"0\" w:firstColumn=\"1\" w:lastColumn=\"0\" w:noHBand=\"0\" w:noVBand=\"1\"/>"
+                                            +"</w:tblPr>"
+                                            +"<w:tblGrid>"
+                                                +"<w:gridCol w:w=\"3070\"/>"
+                                            +"</w:tblGrid>"
+                                            +"<w:tr w:rsidR=\"00916516\" w:rsidTr=\"005D6D71\">"
+                                                +"<w:tc>"
+                                                    +"<w:tcPr>"
+                                                        +"<w:tcW w:w=\"3070\" w:type=\"dxa\"/>"
+                                                    +"</w:tcPr>"
+                                                    +"<w:p w:rsidR=\"00916516\" w:rsidRPr=\"005D6D71\" w:rsidRDefault=\"00916516\">"
+                                                        +"<w:fldSimple w:instr=\" MERGEFIELD  ${row.html}  \\* MERGEFORMAT \">"
+                                                            +"<w:r>"
+                                                                +"<w:rPr>"
+                                                                    +"<w:noProof/>"
+                                                                +"</w:rPr>"
+                                                                +"<w:t>«${row.html}»</w:t>"
+                                                            +"</w:r>"
+                                                        +"</w:fldSimple>"
+                                                    +"</w:p>"
+                                                +"</w:tc>"
+                                            +"</w:tr>"
+                                        +"</w:tbl>"
+                                        
+                                        + "</w:document>", "UTF-8"  );
+
+        StringWriter writer = new StringWriter();
+
+        IDocumentFormatter formatter = new FreemarkerDocumentFormatter();
+        FieldsMetadata metadata = new FieldsMetadata();        
+        metadata.addFieldAsTextStyling( "row.html", SyntaxKind.Html );
+ 
+        preprocessor.preprocess( "word/document.xml", stream, writer, metadata, formatter, new HashMap<String, Object>() );
+
+        Assert.assertEquals( "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>" + "<w:document "
+            + "xmlns:ve=\"http://schemas.openxmlformats.org/markup-compatibility/2006\" "
+            + "xmlns:o=\"urn:schemas-microsoft-com:office:office\" "
+            + "xmlns:r=\"http://schemas.openxmlformats.org/officeDocument/2006/relationships\" "
+            + "xmlns:m=\"http://schemas.openxmlformats.org/officeDocument/2006/math\" "
+            + "xmlns:v=\"urn:schemas-microsoft-com:vml\" "
+            + "xmlns:wp=\"http://schemas.openxmlformats.org/drawingml/2006/wordprocessingDrawing\" "
+            + "xmlns:w10=\"urn:schemas-microsoft-com:office:word\" "
+            + "xmlns:w=\"http://schemas.openxmlformats.org/wordprocessingml/2006/main\" "
+            + "xmlns:wne=\"http://schemas.microsoft.com/office/word/2006/wordml\">"
+ 
+            +"<w:tbl>"
+            +"<w:tblPr>"
+                +"<w:tblStyle w:val=\"Grilledutableau\"/>"
+                +"<w:tblW w:w=\"0\" w:type=\"auto\"/>"
+                +"<w:tblLook w:val=\"04A0\" w:firstRow=\"1\" w:lastRow=\"0\" w:firstColumn=\"1\" w:lastColumn=\"0\" w:noHBand=\"0\" w:noVBand=\"1\"/>"
+            +"</w:tblPr>"
+            +"<w:tblGrid>"
+                +"<w:gridCol w:w=\"3070\"/>"
+            +"</w:tblGrid>"
+            +"<w:tr w:rsidR=\"00916516\" w:rsidTr=\"005D6D71\">"
+                +"<w:tc>"
+                    +"<w:tcPr>"
+                        +"<w:tcW w:w=\"3070\" w:type=\"dxa\"/>"
+                    +"</w:tcPr>"
+                    +"[#assign ___NoEscape0=___TextStylingRegistry.transform(row.html,\"Html\",false,\"DOCX\",\"0_elementId\",___context,\"word/document.xml\")] [#noescape]${___NoEscape0.textBefore}[/#noescape]"
+                    +"<w:p w:rsidR=\"00916516\" w:rsidRPr=\"005D6D71\" w:rsidRDefault=\"00916516\">"
+                        //+"<w:fldSimple w:instr=\" MERGEFIELD  ${row.html}  \\* MERGEFORMAT \">"
+                            +"<w:r>"
+                                +"<w:rPr>"
+                                    +"<w:noProof/>"
+                                +"</w:rPr>"
+                                //+"<w:t>«${row.html}»</w:t>"
+                                +"<w:t>[#noescape]${___NoEscape0.textBody}[/#noescape]</w:t>"
+                            +"</w:r>"
+                        //+"</w:fldSimple>"*/
+                    +"</w:p>"
+                    +"[#noescape]${___NoEscape0.textEnd}[/#noescape]"
+                +"</w:tc>"
+            +"</w:tr>"
+        +"</w:tbl>"
+        + "</w:document>", writer.toString() );
+    }
+    
+    @Test
+    public void textStylingInsideTableRow()
+        throws Exception
+    {
+        DocxPreprocessor preprocessor = new DocxPreprocessor();
+        InputStream stream =
+                        IOUtils.toInputStream( "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>" + "<w:document "
+                                        + "xmlns:ve=\"http://schemas.openxmlformats.org/markup-compatibility/2006\" "
+                                        + "xmlns:o=\"urn:schemas-microsoft-com:office:office\" "
+                                        + "xmlns:r=\"http://schemas.openxmlformats.org/officeDocument/2006/relationships\" "
+                                        + "xmlns:m=\"http://schemas.openxmlformats.org/officeDocument/2006/math\" "
+                                        + "xmlns:v=\"urn:schemas-microsoft-com:vml\" "
+                                        + "xmlns:wp=\"http://schemas.openxmlformats.org/drawingml/2006/wordprocessingDrawing\" "
+                                        + "xmlns:w10=\"urn:schemas-microsoft-com:office:word\" "
+                                        + "xmlns:w=\"http://schemas.openxmlformats.org/wordprocessingml/2006/main\" "
+                                        + "xmlns:wne=\"http://schemas.microsoft.com/office/word/2006/wordml\">"
+                                        
+                                        +"<w:tbl>"
+                                            +"<w:tblPr>"
+                                                +"<w:tblStyle w:val=\"Grilledutableau\"/>"
+                                                +"<w:tblW w:w=\"0\" w:type=\"auto\"/>"
+                                                +"<w:tblLook w:val=\"04A0\" w:firstRow=\"1\" w:lastRow=\"0\" w:firstColumn=\"1\" w:lastColumn=\"0\" w:noHBand=\"0\" w:noVBand=\"1\"/>"
+                                            +"</w:tblPr>"
+                                            +"<w:tblGrid>"
+                                                +"<w:gridCol w:w=\"3070\"/>"
+                                            +"</w:tblGrid>"
+                                            +"<w:tr w:rsidR=\"00916516\" w:rsidTr=\"005D6D71\">"
+                                                +"<w:tc>"
+                                                    +"<w:tcPr>"
+                                                        +"<w:tcW w:w=\"3070\" w:type=\"dxa\"/>"
+                                                    +"</w:tcPr>"
+                                                    +"<w:p w:rsidR=\"00916516\" w:rsidRPr=\"005D6D71\" w:rsidRDefault=\"00916516\">"
+                                                        +"<w:fldSimple w:instr=\" MERGEFIELD  ${row.html}  \\* MERGEFORMAT \">"
+                                                            +"<w:r>"
+                                                                +"<w:rPr>"
+                                                                    +"<w:noProof/>"
+                                                                +"</w:rPr>"
+                                                                +"<w:t>«${row.html}»</w:t>"
+                                                            +"</w:r>"
+                                                        +"</w:fldSimple>"
+                                                    +"</w:p>"
+                                                +"</w:tc>"
+                                            +"</w:tr>"
+                                        +"</w:tbl>"
+                                        
+                                        + "</w:document>", "UTF-8"  );
+
+        StringWriter writer = new StringWriter();
+
+        IDocumentFormatter formatter = new FreemarkerDocumentFormatter();
+        FieldsMetadata metadata = new FieldsMetadata();        
+        metadata.addFieldAsTextStyling( "row.html", SyntaxKind.Html );
+        metadata.addFieldAsList( "row.html" );
+ 
+        preprocessor.preprocess( "word/document.xml", stream, writer, metadata, formatter, new HashMap<String, Object>() );
+
+        Assert.assertEquals( "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>" + "<w:document "
+            + "xmlns:ve=\"http://schemas.openxmlformats.org/markup-compatibility/2006\" "
+            + "xmlns:o=\"urn:schemas-microsoft-com:office:office\" "
+            + "xmlns:r=\"http://schemas.openxmlformats.org/officeDocument/2006/relationships\" "
+            + "xmlns:m=\"http://schemas.openxmlformats.org/officeDocument/2006/math\" "
+            + "xmlns:v=\"urn:schemas-microsoft-com:vml\" "
+            + "xmlns:wp=\"http://schemas.openxmlformats.org/drawingml/2006/wordprocessingDrawing\" "
+            + "xmlns:w10=\"urn:schemas-microsoft-com:office:word\" "
+            + "xmlns:w=\"http://schemas.openxmlformats.org/wordprocessingml/2006/main\" "
+            + "xmlns:wne=\"http://schemas.microsoft.com/office/word/2006/wordml\">"
+ 
+            +"<w:tbl>"
+            +"<w:tblPr>"
+                +"<w:tblStyle w:val=\"Grilledutableau\"/>"
+                +"<w:tblW w:w=\"0\" w:type=\"auto\"/>"
+                +"<w:tblLook w:val=\"04A0\" w:firstRow=\"1\" w:lastRow=\"0\" w:firstColumn=\"1\" w:lastColumn=\"0\" w:noHBand=\"0\" w:noVBand=\"1\"/>"
+            +"</w:tblPr>"
+            +"<w:tblGrid>"
+                +"<w:gridCol w:w=\"3070\"/>"
+            +"</w:tblGrid>"
+
+            +"[#list row as item_row]"
+            +"<w:tr w:rsidR=\"00916516\" w:rsidTr=\"005D6D71\">"
+                +"<w:tc>"
+                    +"<w:tcPr>"
+                        +"<w:tcW w:w=\"3070\" w:type=\"dxa\"/>"
+                    +"</w:tcPr>"
+                    +"[#assign ___NoEscape0=___TextStylingRegistry.transform(item_row.html,\"Html\",false,\"DOCX\",\"0_elementId\",___context,\"word/document.xml\")] [#noescape]${___NoEscape0.textBefore}[/#noescape]"
+                    +"<w:p w:rsidR=\"00916516\" w:rsidRPr=\"005D6D71\" w:rsidRDefault=\"00916516\">"
+                        //+"<w:fldSimple w:instr=\" MERGEFIELD  ${row.html}  \\* MERGEFORMAT \">"
+                            +"<w:r>"
+                                +"<w:rPr>"
+                                    +"<w:noProof/>"
+                                +"</w:rPr>"
+                                //+"<w:t>«${row.html}»</w:t>"
+                                +"<w:t>[#noescape]${___NoEscape0.textBody}[/#noescape]</w:t>"
+                            +"</w:r>"
+                        //+"</w:fldSimple>"*/
+                    +"</w:p>"
+                    +"[#noescape]${___NoEscape0.textEnd}[/#noescape]"
+                +"</w:tc>"
+            +"</w:tr>"
+            +"[/#list]"
+            
+        +"</w:tbl>"
+        + "</w:document>", writer.toString() );
+    }  
 }

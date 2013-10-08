@@ -256,14 +256,14 @@ public class ODTBufferedDocumentContentHandler
             }
             else if ( isOfficeAutomaticStyles( uri, localName, name ) && needToProcessAutomaticStyles() )
             {
-//                IDocumentFormatter formatter = super.getFormatter();
-//                if ( formatter != null )
-//                {
-//                    IBufferedRegion region = getCurrentElement();
-//                    region.append( formatter.getFunctionDirective( true, true, ODTContextHelper.STYLES_GENERATOR_KEY,
-//                                                                   IODTStylesGenerator.generateAllStyles,
-//                                                                   ODTContextHelper.DEFAULT_STYLE_KEY ) );
-//                }
+                // IDocumentFormatter formatter = super.getFormatter();
+                // if ( formatter != null )
+                // {
+                // IBufferedRegion region = getCurrentElement();
+                // region.append( formatter.getFunctionDirective( true, true, ODTContextHelper.STYLES_GENERATOR_KEY,
+                // IODTStylesGenerator.generateAllStyles,
+                // ODTContextHelper.DEFAULT_STYLE_KEY ) );
+                // }
                 /*
                  * IBufferedRegion region = getCurrentElement(); // Add bold, italic, bold+italic styles for text
                  * styling. region.append( styleGen.generateTextStyles() ); // Add paragraph styles for text styling.
@@ -327,10 +327,18 @@ public class ODTBufferedDocumentContentHandler
                     }
                     String elementId = registerBufferedElement( variableIndex, textPElement );
 
+                    // Transform field name if it is inside a table row.
+                    // See https://code.google.com/p/xdocreport/issues/detail?id=313
+                    String newFieldName = super.processRowIfNeeded( fieldName );
+                    if ( StringUtils.isEmpty( newFieldName ) )
+                    {
+                        newFieldName = fieldName;
+                    }
+
                     // [#assign
                     // 1327511861250_id=___TextStylingRegistry.transform(comments_odt,"NoEscape","ODT","1327511861250_id",___context)]
                     String setVariableDirective =
-                        getFormatter().formatAsCallTextStyling( variableIndex, fieldName, DocumentKind.ODT.name(),
+                        getFormatter().formatAsCallTextStyling( variableIndex, newFieldName, DocumentKind.ODT.name(),
                                                                 fieldAsTextStyling.getSyntaxKind(),
                                                                 fieldAsTextStyling.isSyntaxWithDirective(), elementId,
                                                                 super.getEntryName() );

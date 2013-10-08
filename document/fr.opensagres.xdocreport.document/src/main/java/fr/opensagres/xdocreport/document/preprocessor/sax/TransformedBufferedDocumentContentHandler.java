@@ -168,7 +168,7 @@ public abstract class TransformedBufferedDocumentContentHandler<Document extends
     public ProcessRowResult getProcessRowResult( String content, boolean forceAsField )
     {
         RowBufferedRegion currentRow = bufferedDocument.getCurrentTableRow();
-        if ( currentRow != null && formatter != null )
+        if ( currentRow != null && formatter != null && fieldsMetadata != null)
         {
             // characters parsing belong to a row
             // search if it contains fields list from metadata

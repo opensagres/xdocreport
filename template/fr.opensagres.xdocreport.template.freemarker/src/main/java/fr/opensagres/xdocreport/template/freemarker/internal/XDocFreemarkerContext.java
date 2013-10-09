@@ -72,4 +72,9 @@ public class XDocFreemarkerContext
         map.putAll( contextMap );
     }
 
+	@Override
+	public Map<String, Object> getContextMap() {
+		return map;
+	}
+
 }

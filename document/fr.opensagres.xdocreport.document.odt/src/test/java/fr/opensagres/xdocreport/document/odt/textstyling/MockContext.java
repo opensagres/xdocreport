@@ -46,4 +46,9 @@ public class MockContext
 
     }
 
+	@Override
+	public Map<String, Object> getContextMap() {
+		return this;
+	}
+
 }

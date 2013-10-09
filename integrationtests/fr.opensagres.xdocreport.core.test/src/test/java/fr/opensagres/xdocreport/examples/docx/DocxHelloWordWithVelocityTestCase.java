@@ -156,23 +156,21 @@ public class DocxHelloWordWithVelocityTestCase
     }
 
     @Test
-    public void cannotRegisterTwoTimeSameId()
+    public void cannotRegisterTwoTimeSameId() throws IOException
     {
         String fileName = "DocxHelloWordWithVelocity.docx";
 
-        IXDocReport report = null;
         try
         {
 
-            report =
-                XDocReportRegistry.getRegistry().loadReport( DocxHelloWordWithVelocityTestCase.class.getResourceAsStream( fileName ),
+            XDocReportRegistry.getRegistry().loadReport( DocxHelloWordWithVelocityTestCase.class.getResourceAsStream( fileName ),
                                                              "id", TemplateEngineKind.Velocity );
 
             XDocReportRegistry.getRegistry().loadReport( DocxHelloWordWithVelocityTestCase.class.getResourceAsStream( fileName ),
                                                          "id", TemplateEngineKind.Velocity );
             fail( "cannot register 2 reports with the same id" );
         }
-        catch ( Exception e )
+        catch ( XDocReportException e )
         {
             // success
         }

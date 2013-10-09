@@ -56,4 +56,6 @@ public interface IContext
      */
     void putMap( Map<String, Object> contextMap );
 
+    
+    Map<String, Object> getContextMap();
 }

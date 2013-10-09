@@ -17,6 +17,7 @@ import fr.opensagres.xdocreport.core.io.XDocArchive;
 import fr.opensagres.xdocreport.core.utils.Base64Utility;
 import fr.opensagres.xdocreport.core.utils.StringUtils;
 import fr.opensagres.xdocreport.document.IXDocReport;
+import fr.opensagres.xdocreport.document.json.JSONObject;
 import fr.opensagres.xdocreport.document.registry.XDocReportRegistry;
 import fr.opensagres.xdocreport.template.IContext;
 import fr.opensagres.xdocreport.template.ITemplateEngine;
@@ -137,21 +138,7 @@ public class DumperWithFreemarker
 
     private static String getJSON( IContext context )
     {
-        // TODO : transform IContext to JSON
-        return "{"
-            +"\\\"project\\\": {\\\"name\\\": \\\"XDocReport\\\"},"
-            +"\\\"developers\\\": ["
-            +"{"
-            +"\\\"name\\\": \\\"ZERR\\\","
-            +"\\\"mail\\\": \\\"angelo.zerr@gmail.com\\\","
-            +"\\\"lastName\\\": \\\"Angelo\\\""
-            +"},"
-             +"{"
-             +"\\\"name\\\": \\\"Leclercq\\\","
-             +"\\\"mail\\\": \\\"pascal.leclercq@gmail.com\\\","
-             +"\\\"lastName\\\": \\\"Pascal\\\""
-             +"}"
-             +"]"
-             +"}";
+    	JSONObject json =new JSONObject(context.getContextMap()); 
+    	return json.toString();
     }
 }

@@ -32,6 +32,7 @@ import java.util.Map;
 
 import fr.opensagres.xdocreport.core.registry.AbstractRegistry;
 import fr.opensagres.xdocreport.template.ITemplateEngine;
+import fr.opensagres.xdocreport.template.TemplateEngineKind;
 import fr.opensagres.xdocreport.template.discovery.ITemplateEngineDiscovery;
 
 /**
@@ -132,4 +133,13 @@ public class TemplateEngineRegistry
         this.templateEngineKinds.clear();
     }
 
+    public ITemplateEngine getTemplateEngine( TemplateEngineKind kind )
+    {
+        return getTemplateEngine( kind.name() );
+    }
+
+    public ITemplateEngine getTemplateEngine( String kind )
+    {
+        return templateEnginesCache.get( kind );
+    }
 }

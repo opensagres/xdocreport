@@ -28,7 +28,10 @@ import fr.opensagres.xdocreport.template.registry.TemplateEngineRegistry;
 public class DumperWithFreemarker
 {
 
-    public static void main( String[] args )
+    private static final String ESCAPED_DOUBLE_QUOTE = "\\\"";
+	private static final String DOUBLE_QUOTE = "\"";
+
+	public static void main( String[] args )
     {
         try
         {
@@ -106,7 +109,7 @@ public class DumperWithFreemarker
             StringWriter xmlFieldsWriter = new StringWriter();
             metadata.saveXML( xmlFieldsWriter );
             xmlFields = xmlFieldsWriter.toString();
-            xmlFields = StringUtils.replaceAll( xmlFields, "\"", "\\\"" );
+            xmlFields = StringUtils.replaceAll( xmlFields, DOUBLE_QUOTE, ESCAPED_DOUBLE_QUOTE );
         }
         dumpContext.put( "xmlFields", xmlFields );
 
@@ -139,6 +142,7 @@ public class DumperWithFreemarker
     private static String getJSON( IContext context )
     {
     	JSONObject json =new JSONObject(context.getContextMap()); 
-    	return json.toString();
+    	String jsonString = json.toString();
+    	return jsonString.replace(DOUBLE_QUOTE, ESCAPED_DOUBLE_QUOTE);
     }
 }

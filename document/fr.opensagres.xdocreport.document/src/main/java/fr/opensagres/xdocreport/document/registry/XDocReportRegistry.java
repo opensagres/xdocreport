@@ -32,12 +32,12 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
-import java.util.HashMap;
-import java.util.Map;
 import java.util.logging.Logger;
 
 import fr.opensagres.xdocreport.converter.MimeMapping;
 import fr.opensagres.xdocreport.core.XDocReportException;
+import fr.opensagres.xdocreport.core.cache.CacheStorageRegistry;
+import fr.opensagres.xdocreport.core.cache.ICacheStorage;
 import fr.opensagres.xdocreport.core.io.IEntryInfo;
 import fr.opensagres.xdocreport.core.io.XDocArchive;
 import fr.opensagres.xdocreport.core.logging.LogUtils;
@@ -78,11 +78,25 @@ public class XDocReportRegistry
     private final Collection<IXDocReportFactoryDiscovery> reportFactoryDiscoveries =
         new ArrayList<IXDocReportFactoryDiscovery>();
 
-    private final Map<String, IXDocReport> cachedReports = new HashMap<String, IXDocReport>();
+    /**
+     * IXDocReport cache.
+     */
+    private final ICacheStorage<String, IXDocReport> cachedReports;
 
     public XDocReportRegistry()
     {
         super( IXDocReportFactoryDiscovery.class );
+        this.cachedReports = createCache();
+    }
+
+    /**
+     * Create the storage cache to store instances of IXDocReport.
+     * 
+     * @return
+     */
+    protected ICacheStorage<String, IXDocReport> createCache()
+    {
+        return CacheStorageRegistry.getRegistry().createCache();
     }
 
     public static XDocReportRegistry getRegistry()

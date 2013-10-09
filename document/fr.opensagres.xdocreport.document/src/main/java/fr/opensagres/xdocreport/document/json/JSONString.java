@@ -22,39 +22,20 @@
  * OF CONTRACT, TORT OR OTHERWISE,  ARISING FROM, OUT OF OR IN CONNECTION
  * WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
-package fr.opensagres.xdocreport.remoting.reporting.json;
+package fr.opensagres.xdocreport.document.json;
 
 /**
- * The JSONException is thrown by the JSON.org classes when things are amiss.
- * 
- * @author JSON.org
- * @version 2010-12-24
+ * The <code>JSONString</code> interface allows a <code>toJSONString()</code> method so that a class can change the
+ * behavior of <code>JSONObject.toString()</code>, <code>JSONArray.toString()</code>, and <code>JSONWriter.value(</code>
+ * Object<code>)</code>. The <code>toJSONString</code> method will be used instead of the default behavior of using the
+ * Object's <code>toString()</code> method and quoting the result.
  */
-public class JSONException
-    extends RuntimeException
+public interface JSONString
 {
-    private static final long serialVersionUID = 0;
-
-    private Throwable cause;
-
     /**
-     * Constructs a JSONException with an explanatory message.
+     * The <code>toJSONString</code> method allows a class to produce its own JSON serialization.
      * 
-     * @param message Detail about the reason for the exception.
+     * @return A strictly syntactically correct JSON text.
      */
-    public JSONException( String message )
-    {
-        super( message );
-    }
-
-    public JSONException( Throwable cause )
-    {
-        super( cause.getMessage() );
-        this.cause = cause;
-    }
-
-    public Throwable getCause()
-    {
-        return this.cause;
-    }
+    public String toJSONString();
 }

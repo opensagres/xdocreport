@@ -55,9 +55,9 @@ import fr.opensagres.xdocreport.core.utils.HttpHeaderUtils;
 import fr.opensagres.xdocreport.core.utils.StringUtils;
 import fr.opensagres.xdocreport.document.IXDocReport;
 import fr.opensagres.xdocreport.document.XDocReport;
+import fr.opensagres.xdocreport.document.json.JSONObject;
 import fr.opensagres.xdocreport.document.registry.XDocReportRegistry;
 import fr.opensagres.xdocreport.remoting.reporting.ReportingService;
-import fr.opensagres.xdocreport.remoting.reporting.json.JSONObject;
 import fr.opensagres.xdocreport.template.formatter.FieldsMetadata;
 import fr.opensagres.xdocreport.template.formatter.FieldsMetadataXMLSerializer;
 

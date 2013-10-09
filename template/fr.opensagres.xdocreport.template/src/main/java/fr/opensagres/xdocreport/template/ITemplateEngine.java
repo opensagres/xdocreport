@@ -121,4 +121,18 @@ public interface ITemplateEngine
 
     IDocumentFormatter getDocumentFormatter();
 
+    /**
+     * Merge Java model coming from the given context with the given template name and register the merge result in the
+     * given writer.
+     * 
+     * @param templateName template name
+     * @param context Java model context
+     * @param reader template reader to merge
+     * @param writer merge result writer
+     * @throws IOException
+     * @throws XDocReportException
+     */
+    void process( String templateName, IContext context, Writer writer )
+        throws IOException, XDocReportException;
+
 }

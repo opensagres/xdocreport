@@ -25,6 +25,7 @@
 package fr.opensagres.xdocreport.template.velocity.internal;
 
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.io.Reader;
 import java.io.Writer;
 import java.util.Map;
@@ -36,6 +37,7 @@ import org.apache.velocity.app.VelocityEngine;
 
 import fr.opensagres.xdocreport.core.EncodingConstants;
 import fr.opensagres.xdocreport.core.XDocReportException;
+import fr.opensagres.xdocreport.core.io.IOUtils;
 import fr.opensagres.xdocreport.template.AbstractTemplateEngine;
 import fr.opensagres.xdocreport.template.FieldsExtractor;
 import fr.opensagres.xdocreport.template.IContext;
@@ -158,5 +160,31 @@ public class VelocityTemplateEngine
         throws XDocReportException
     {
         VelocityFieldsExtractor.getInstance().extractFields( reader, entryName, extractor );
+    }
+
+    public void process( String templateName, IContext context, Writer writer )
+        throws IOException, XDocReportException
+    {
+        // TODO : Improve it, cache the JavaMainDump.vm
+        templateName = templateName + ".vm";
+        Reader reader = new InputStreamReader( VelocityTemplateEngine.class.getResourceAsStream( templateName ) );
+
+        try
+        {
+            VelocityEngine velocityEngine = getVelocityEngine();
+            velocityEngine.evaluate( (VelocityContext) context, writer, "", reader );
+        }
+        finally
+        {
+            if ( reader != null )
+            {
+                IOUtils.closeQuietly( reader );
+            }
+            if ( writer != null )
+            {
+                IOUtils.closeQuietly( writer );
+            }
+        }
+
     }
 }

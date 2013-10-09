@@ -25,6 +25,7 @@
 package fr.opensagres.xdocreport.template.freemarker;
 
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.io.Reader;
 import java.io.StringReader;
 import java.io.Writer;
@@ -269,5 +270,32 @@ public class FreemarkerTemplateEngine
     public boolean isForceModifyReader()
     {
         return forceModifyReader;
+    }
+
+    public void process( String templateName, IContext context, Writer writer )
+        throws IOException, XDocReportException
+    {
+        // TODO : Improve it, cache the JavaMainDump.ftl
+        templateName = templateName + ".ftl";
+        Reader reader = new InputStreamReader( FreemarkerTemplateEngine.class.getResourceAsStream( templateName ) );
+
+        try
+        {
+            // Create a new template.
+            Template template = new Template( templateName, reader, getFreemarkerConfiguration() );
+            // Merge template with Java model
+            process( context, writer, template );
+        }
+        finally
+        {
+            if ( reader != null )
+            {
+                IOUtils.closeQuietly( reader );
+            }
+            if ( writer != null )
+            {
+                IOUtils.closeQuietly( writer );
+            }
+        }
     }
 }

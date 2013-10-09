@@ -28,6 +28,8 @@ public class XMLFieldsConstants
 {
 
     public static final String XML_DECLARATION = "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>";
+    
+    public static final String XML_DECLARATION_AS_JAVA_STRING = "<?xml version=\\\"1.0\\\" encoding=\\\"UTF-8\\\" standalone=\\\"yes\\\"?>";
 
     // Attributes
     public static final String NAME_ATTR = "name";

@@ -29,7 +29,7 @@ public class ${className}
             [#if  xmlFields ?? ]
             
             // Set FieldsMetadata
-            StringReader reader = new StringReader( "${xmlFields}" );
+            StringReader reader = new StringReader(${xmlFields});
             FieldsMetadata metadata = FieldsMetadataXMLSerializer.getInstance().load( reader );
             report.setFieldsMetadata( metadata );            
             [/#if]

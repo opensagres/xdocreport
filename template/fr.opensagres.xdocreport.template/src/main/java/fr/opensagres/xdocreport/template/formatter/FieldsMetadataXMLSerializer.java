@@ -72,8 +72,7 @@ public class FieldsMetadataXMLSerializer
      * </fields>
      * </pre>
      * 
-     * @param fieldsMetadata
-     * @param reader
+     * @param inputStream the reader of the XML fields.
      * @throws SAXException
      * @throws IOException
      */
@@ -98,8 +97,7 @@ public class FieldsMetadataXMLSerializer
      * </fields>
      * </pre>
      * 
-     * @param fieldsMetadata
-     * @param inputStream
+     * @param inputStream the input stream of the XML fields.
      * @throws SAXException
      * @throws IOException
      */
@@ -119,21 +117,65 @@ public class FieldsMetadataXMLSerializer
      * 
      * <pre>
      * <fields>
-     * 	<field name="project.Name" imageName="" listType="false" />
-     * 	<field name="developers.Name" imageName="" listType="true" />
+     *  <field name="project.Name" imageName="" listType="false" />
+     *  <field name="developers.Name" imageName="" listType="true" />
      * <field name="project.Logo" imageName="Logo" listType="false" />
      * </fields>
      * </pre>
      * 
-     * @param fieldsMetadata
-     * @param writer
+     * @param fieldsMetadata the metadata to serialize to XML.
+     * @param writer the writer.
+     * @throws IOException
+     */
+    public void save( FieldsMetadata fieldsMetadata, Writer writer )
+        throws IOException
+    {
+        save( fieldsMetadata, writer, null, false, false );
+    }
+
+    /**
+     * Serialize as XML the given {@link FieldsMetadata} to the given XML writer. Here a sample of XML writer :
+     * 
+     * <pre>
+     * <fields>
+     *  <field name="project.Name" imageName="" listType="false" />
+     *  <field name="developers.Name" imageName="" listType="true" />
+     * <field name="project.Logo" imageName="Logo" listType="false" />
+     * </fields>
+     * </pre>
+     * 
+     * @param fieldsMetadata the metadata to serialize to XML.
+     * @param writer the writer.
      * @param indent true if indent must be managed and false otherwise.
      * @throws IOException
      */
     public void save( FieldsMetadata fieldsMetadata, Writer writer, boolean indent )
         throws IOException
     {
-        save( fieldsMetadata, writer, null, indent );
+        save( fieldsMetadata, writer, null, indent, false );
+    }
+
+    /**
+     * Serialize as XML the given {@link FieldsMetadata} to the given XML writer. Here a sample of XML writer :
+     * 
+     * <pre>
+     * <fields>
+     * 	<field name="project.Name" imageName="" listType="false" />
+     * 	<field name="developers.Name" imageName="" listType="true" />
+     * <field name="project.Logo" imageName="Logo" listType="false" />
+     * </fields>
+     * </pre>
+     * 
+     * @param fieldsMetadata the metadata to serialize to XML.
+     * @param writer the writer.
+     * @param indent true if indent must be managed and false otherwise.
+     * @param formatAsJavaString true if format as Java String to be done and false otherwise.
+     * @throws IOException
+     */
+    public void save( FieldsMetadata fieldsMetadata, Writer writer, boolean indent, boolean formatAsJavaString )
+        throws IOException
+    {
+        save( fieldsMetadata, writer, null, indent, formatAsJavaString );
     }
 
     /**
@@ -147,23 +189,49 @@ public class FieldsMetadataXMLSerializer
      * </fields>
      * </pre>
      * 
-     * @param fieldsMetadata
-     * @param writer
+     * @param fieldsMetadata the metadata to serialize to XML.
+     * @param outputstream the output steam.
      * @param indent true if indent must be managed and false otherwise.
-     * @throws IOException
+     * @param formatAsJavaString true if format as Java String to be done and false otherwise. * @throws IOException
      */
-    public void save( FieldsMetadata fieldsMetadata, OutputStream out, boolean indent )
+    public void save( FieldsMetadata fieldsMetadata, OutputStream out, boolean indent, boolean formatAsJavaString )
         throws IOException
     {
-        save( fieldsMetadata, null, out, indent );
+        save( fieldsMetadata, null, out, indent, formatAsJavaString );
     }
 
-    private void save( FieldsMetadata fieldsMetadata, Writer writer, OutputStream out, boolean indent )
+    /**
+     * Serialize as XML the given {@link FieldsMetadata} to the given XML output stream. Here a sample of XML writer :
+     * 
+     * <pre>
+     * <fields>
+     *  <field name="project.Name" imageName="" listType="false" />
+     *  <field name="developers.Name" imageName="" listType="true" />
+     * <field name="project.Logo" imageName="Logo" listType="false" />
+     * </fields>
+     * </pre>
+     * 
+     * @param fieldsMetadata the metadata to serialize to XML.
+     * @param writer the writer (null if outputstream is not null).
+     * @param outputstream the output steam (null if writer is not null).
+     * @param indent true if indent must be managed and false otherwise.
+     * @param formatAsJavaString true if format as Java String to be done and false otherwise. * @throws IOException
+     */
+    private void save( FieldsMetadata fieldsMetadata, Writer writer, OutputStream out, boolean indent,
+                       boolean formatAsJavaString )
         throws IOException
     {
         Collection<FieldMetadata> fields = fieldsMetadata.getFields();
         // <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-        write( XMLFieldsConstants.XML_DECLARATION, writer, out );
+        if ( formatAsJavaString )
+        {
+            write( "\"", writer, out );
+            write( XMLFieldsConstants.XML_DECLARATION_AS_JAVA_STRING, writer, out );
+        }
+        else
+        {
+            write( XMLFieldsConstants.XML_DECLARATION, writer, out );
+        }
         if ( indent )
         {
             write( LF, writer, out );
@@ -171,7 +239,8 @@ public class FieldsMetadataXMLSerializer
         // <fields>
         write( XMLFieldsConstants.FIELDS_TAG_START_ELT, writer, out );
         // <fields/@templateEngineKind
-        writeAttr( XMLFieldsConstants.TEMPLATE_ENGINE_KIND_ATTR, fieldsMetadata.getTemplateEngineKind(), writer, out );
+        writeAttr( XMLFieldsConstants.TEMPLATE_ENGINE_KIND_ATTR, fieldsMetadata.getTemplateEngineKind(),
+                   formatAsJavaString, writer, out );
         write( " >", writer, out );
         if ( indent )
         {
@@ -191,7 +260,7 @@ public class FieldsMetadataXMLSerializer
         // list of <field>
         for ( FieldMetadata field : fields )
         {
-            save( field, writer, out, indent );
+            save( field, writer, out, indent, formatAsJavaString );
         }
         if ( indent )
         {
@@ -199,9 +268,13 @@ public class FieldsMetadataXMLSerializer
         }
         // </fields>
         write( XMLFieldsConstants.FIELDS_END_ELT, writer, out );
+        if ( formatAsJavaString )
+        {
+            write( "\"", writer, out );
+        }
     }
 
-    private void save( FieldMetadata field, Writer writer, OutputStream out, boolean indent )
+    private void save( FieldMetadata field, Writer writer, OutputStream out, boolean indent, boolean formatAsJavaString )
         throws IOException
     {
         if ( indent )
@@ -210,10 +283,10 @@ public class FieldsMetadataXMLSerializer
             write( TAB, writer, out );
         }
         write( XMLFieldsConstants.FIELD_TAG_START_ELT, writer, out );
-        writeAttr( XMLFieldsConstants.NAME_ATTR, field.getFieldName(), writer, out );
-        writeAttr( XMLFieldsConstants.LIST_ATTR, field.isListType(), writer, out );
-        writeAttr( XMLFieldsConstants.IMAGE_NAME_ATTR, field.getImageName(), writer, out );
-        writeAttr( XMLFieldsConstants.SYNTAX_KIND_ATTR, field.getSyntaxKind(), writer, out );
+        writeAttr( XMLFieldsConstants.NAME_ATTR, field.getFieldName(), formatAsJavaString, writer, out );
+        writeAttr( XMLFieldsConstants.LIST_ATTR, field.isListType(), formatAsJavaString, writer, out );
+        writeAttr( XMLFieldsConstants.IMAGE_NAME_ATTR, field.getImageName(), formatAsJavaString, writer, out );
+        writeAttr( XMLFieldsConstants.SYNTAX_KIND_ATTR, field.getSyntaxKind(), formatAsJavaString, writer, out );
         write( ">", writer, out );
         if ( indent )
         {
@@ -251,24 +324,35 @@ public class FieldsMetadataXMLSerializer
         }
     }
 
-    private void writeAttr( String attrName, String attrValue, Writer writer, OutputStream out )
+    private void writeAttr( String attrName, String attrValue, boolean formatAsJavaString, Writer writer,
+                            OutputStream out )
         throws IOException
     {
         write( " ", writer, out );
         write( attrName, writer, out );
-        write( "=\"", writer, out );
+        if ( formatAsJavaString )
+        {
+            write( "=\\\"", writer, out );
+        }
+        else
+        {
+            write( "=\"", writer, out );
+        }
         write( attrValue != null ? attrValue : "", writer, out );
-        write( "\"", writer, out );
+        if ( formatAsJavaString )
+        {
+            write( "\\\"", writer, out );
+        }
+        else
+        {
+            write( "\"", writer, out );
+        }
     }
 
-    private void writeAttr( String attrName, boolean attrValue, Writer writer, OutputStream out )
+    private void writeAttr( String attrName, boolean attrValue, boolean formatAsJavaString, Writer writer,
+                            OutputStream out )
         throws IOException
     {
-        write( " ", writer, out );
-        write( attrName, writer, out );
-        write( "=\"", writer, out );
-        write( attrValue ? StringUtils.TRUE : StringUtils.FALSE, writer, out );
-        write( "\"", writer, out );
-
+        writeAttr( attrName, attrValue ? StringUtils.TRUE : StringUtils.FALSE, formatAsJavaString, writer, out );
     }
 }

@@ -389,7 +389,7 @@ public class JSONArray extends ArrayList
         throws JSONException
     {
         int len = this.length();
-        StringBuffer sb = new StringBuffer();
+        StringBuilder sb = new StringBuilder();
 
         for ( int i = 0; i < len; i += 1 )
         {
@@ -906,7 +906,7 @@ public class JSONArray extends ArrayList
             return "[]";
         }
         int i;
-        StringBuffer sb = new StringBuffer( "[" );
+        StringBuilder sb = new StringBuilder( "[" );
         if ( len == 1 )
         {
             sb.append( JSONObject.valueToString( super.get( 0 ), indentFactor, indent ) );

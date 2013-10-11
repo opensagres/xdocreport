@@ -3,7 +3,6 @@ package fr.opensagres.xdocreport.document.dump;
 import java.io.IOException;
 import java.io.InputStream;
 
-import fr.opensagres.xdocreport.core.io.IOUtils;
 import fr.opensagres.xdocreport.core.io.XDocArchive;
 import fr.opensagres.xdocreport.core.utils.Base64Utility;
 import fr.opensagres.xdocreport.core.utils.StringUtils;
@@ -23,15 +22,7 @@ public class DumpHelper
         throws IOException
     {
         InputStream in = XDocArchive.getInputStream( report.getOriginalDocumentArchive() );
-        return toDocumentAsBinary64( in );
-    }
-
-    public static String toDocumentAsBinary64( InputStream in )
-        throws IOException
-    {
-        byte[] bytes = IOUtils.toByteArray( in );
-        String encoded = Base64Utility.encode( bytes );
-        return encoded;
+        return Base64Utility.encode( in );
     }
 
     public static String getClassName( IXDocReport report )
@@ -61,21 +52,21 @@ public class DumpHelper
         throws IOException
     {
         IContext dumpContext = templateEngine.createContext();
-        
+
         String packageName = "dump";
         dumpContext.put( "packageName", packageName );
-        
+
         String className = DumpHelper.getClassName( report );
         dumpContext.put( "className", className );
 
         String documentAsBinaryB4 = DumpHelper.toDocumentAsBinary64( report );
         dumpContext.put( "document", documentAsBinaryB4 );
-        
+
         dumpContext.put( "templateEngineKind", templateEngine.getKind() );
-        
+
         String outFileName = report.getId() + "." + report.getKind().toLowerCase();
         dumpContext.put( "outFileName", outFileName );
-        
+
         return dumpContext;
     }
 }

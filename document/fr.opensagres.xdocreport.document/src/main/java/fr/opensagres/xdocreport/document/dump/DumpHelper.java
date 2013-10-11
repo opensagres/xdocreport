@@ -21,8 +21,15 @@ public class DumpHelper
     public static String toDocumentAsBinary64( IXDocReport report )
         throws IOException
     {
-        InputStream in = XDocArchive.getInputStream( report.getOriginalDocumentArchive() );
+        InputStream in = getDocument( report );
         return Base64Utility.encode( in );
+    }
+
+    public static InputStream getDocument( IXDocReport report )
+        throws IOException
+    {
+        InputStream in = XDocArchive.getInputStream( report.getOriginalDocumentArchive() );
+        return in;
     }
 
     public static String getClassName( IXDocReport report )
@@ -53,20 +60,17 @@ public class DumpHelper
     {
         IContext dumpContext = templateEngine.createContext();
 
-        String packageName = "dump";
+        String packageName = option.getPackageName();
         dumpContext.put( "packageName", packageName );
 
         String className = DumpHelper.getClassName( report );
         dumpContext.put( "className", className );
 
-        String documentAsBinaryB4 = DumpHelper.toDocumentAsBinary64( report );
-        dumpContext.put( "document", documentAsBinaryB4 );
-
         dumpContext.put( "templateEngineKind", templateEngine.getKind() );
-
-        String outFileName = report.getId() + "." + report.getKind().toLowerCase();
+        
+        String outFileName = report.getId() + " _Out"+ "." + report.getKind().toLowerCase();
         dumpContext.put( "outFileName", outFileName );
-
+        
         return dumpContext;
     }
 }

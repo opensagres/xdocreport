@@ -1,5 +1,6 @@
 package fr.opensagres.xdocreport.document.dump;
 
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
@@ -46,6 +47,7 @@ public class EclipseProjectDumperWithFreemarker
             // TODO : implement eclipse project dump.
             // dump.
             EclipseProjectDumperOption option = new EclipseProjectDumperOption();
+            option.setBaseDir( new File( "target/eclipse-dump" ) );
             
             EclipseProjectDumper.getInstance().dump( report, context, option, null );
 

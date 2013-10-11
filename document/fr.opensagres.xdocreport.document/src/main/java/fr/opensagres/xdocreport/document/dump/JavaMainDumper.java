@@ -35,6 +35,9 @@ public class JavaMainDumper
 
         IContext dumpContext = DumpHelper.createDumpContext( report, templateEngine, option );
 
+        String documentAsBinaryB4 = DumpHelper.toDocumentAsBinary64( report );
+        dumpContext.put( "document", documentAsBinaryB4 );
+
         String xmlFields = null;
         FieldsMetadata metadata = report.getFieldsMetadata();
         if ( metadata != null )

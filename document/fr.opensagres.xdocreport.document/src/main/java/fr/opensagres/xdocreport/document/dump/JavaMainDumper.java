@@ -1,6 +1,7 @@
 package fr.opensagres.xdocreport.document.dump;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.io.StringWriter;
@@ -28,16 +29,18 @@ public class JavaMainDumper
     }
 
     @Override
-    protected void doDump( IXDocReport report, IContext context, DumperOption option, ITemplateEngine templateEngine,
-                           OutputStream out )
+    protected void doDump( IXDocReport report, InputStream documentIn, IContext context, DumperOption option,
+                           ITemplateEngine templateEngine, OutputStream out )
         throws IOException, XDocReportException
     {
 
         IContext dumpContext = DumpHelper.createDumpContext( report, templateEngine, option );
 
+        // document (docx, odt).
         String documentAsBinaryB4 = DumpHelper.toDocumentAsBinary64( report );
         dumpContext.put( "document", documentAsBinaryB4 );
 
+        // XML fields
         String xmlFields = null;
         FieldsMetadata metadata = report.getFieldsMetadata();
         if ( metadata != null )
@@ -48,14 +51,13 @@ public class JavaMainDumper
         }
         dumpContext.put( "xmlFields", xmlFields );
 
+        // JSON as data
         String json = DumpHelper.toJSON( context, true );
         dumpContext.put( "json", json );
 
+        // Java Main
         OutputStreamWriter writer = new OutputStreamWriter( out );
-        // Reader reader = new InputStreamReader( DumperWithFreemarker.class.getResourceAsStream( "JavaMainDump.ftl" )
-        // );
-        // templateEngine.process( "dump", dumpContext, reader, writer );
-        templateEngine.process( JAVA_MAIN_DUMP_TEMPLATE, dumpContext, writer );
+        templateEngine.process( DumpHelper.JAVA_MAIN_DUMP_TEMPLATE, dumpContext, writer );
     }
 
 }

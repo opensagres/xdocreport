@@ -292,10 +292,6 @@ public class FreemarkerTemplateEngine
             {
                 IOUtils.closeQuietly( reader );
             }
-            if ( writer != null )
-            {
-                IOUtils.closeQuietly( writer );
-            }
         }
     }
 }

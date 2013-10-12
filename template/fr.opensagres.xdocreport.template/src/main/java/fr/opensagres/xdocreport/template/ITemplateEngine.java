@@ -129,6 +129,7 @@ public interface ITemplateEngine
      * @param context Java model context
      * @param reader template reader to merge
      * @param writer merge result writer
+     * @param closeWriter true if writer must be closed and false otherwise.
      * @throws IOException
      * @throws XDocReportException
      */

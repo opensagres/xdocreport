@@ -1,6 +1,5 @@
 package fr.opensagres.xdocreport.document.dump;
 
-import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.ArrayList;
@@ -8,7 +7,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import fr.opensagres.xdocreport.core.XDocReportException;
 import fr.opensagres.xdocreport.document.IXDocReport;
 import fr.opensagres.xdocreport.document.registry.XDocReportRegistry;
 import fr.opensagres.xdocreport.template.IContext;
@@ -25,7 +23,8 @@ public class JavaMainDumperWithFreemarker
             // 1) Load Docx file by filling Freemarker template engine and cache
             // it to the registry
             String reportId = "DumTest";
-            InputStream in = JavaMainDumperWithFreemarker.class.getResourceAsStream( "DocxProjectWithFreemarkerList.docx" );
+            InputStream in =
+                JavaMainDumperWithFreemarker.class.getResourceAsStream( "DocxProjectWithFreemarkerList.docx" );
             IXDocReport report =
                 XDocReportRegistry.getRegistry().loadReport( in, reportId, TemplateEngineKind.Freemarker );
 
@@ -48,15 +47,10 @@ public class JavaMainDumperWithFreemarker
             JavaMainDumper.getInstance().dump( report, context, null, out );
 
         }
-        catch ( IOException e )
+        catch ( Throwable e )
         {
             e.printStackTrace();
         }
-        catch ( XDocReportException e )
-        {
-            e.printStackTrace();
-        }
-
     }
 
     private static void populateWithPojo( IContext context )

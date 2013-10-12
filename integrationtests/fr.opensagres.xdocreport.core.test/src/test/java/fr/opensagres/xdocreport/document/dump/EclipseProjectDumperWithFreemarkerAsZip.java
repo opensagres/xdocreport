@@ -1,6 +1,7 @@
 package fr.opensagres.xdocreport.document.dump;
 
 import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
@@ -16,7 +17,7 @@ import fr.opensagres.xdocreport.template.IContext;
 import fr.opensagres.xdocreport.template.TemplateEngineKind;
 import fr.opensagres.xdocreport.template.formatter.FieldsMetadata;
 
-public class EclipseProjectDumperWithFreemarker
+public class EclipseProjectDumperWithFreemarkerAsZip
 {
 
     public static void main( String[] args )
@@ -27,7 +28,7 @@ public class EclipseProjectDumperWithFreemarker
             // it to the registry
             String reportId = "DumTest";
             InputStream in =
-                EclipseProjectDumperWithFreemarker.class.getResourceAsStream( "DocxProjectWithFreemarkerList.docx" );
+                EclipseProjectDumperWithFreemarkerAsZip.class.getResourceAsStream( "DocxProjectWithFreemarkerList.docx" );
             IXDocReport report =
                 XDocReportRegistry.getRegistry().loadReport( in, reportId, TemplateEngineKind.Freemarker );
 
@@ -44,22 +45,19 @@ public class EclipseProjectDumperWithFreemarker
             // populateWithMap( context );
             populateWithPojo( context );
 
-            // Eclipse project dump as folder.
+            // Eclipse project dump as zip.
             EclipseProjectDumperOption option = new EclipseProjectDumperOption();
-            option.setBaseDir( new File( "target/eclipse-dump" ) );
+            // option.setBaseDir( new File( "target/eclipse-dump" ) );
 
-            EclipseProjectDumper.getInstance().dump( report, context, option, null );
+            File zipFile = new File( "target/eclipse-dump.zip" );
+            FileOutputStream out = new FileOutputStream( zipFile );
+            EclipseProjectDumper.getInstance().dump( report, context, option, out );
 
         }
-        catch ( IOException e )
+        catch ( Throwable e )
         {
             e.printStackTrace();
         }
-        catch ( XDocReportException e )
-        {
-            e.printStackTrace();
-        }
-
     }
 
     private static void populateWithPojo( IContext context )

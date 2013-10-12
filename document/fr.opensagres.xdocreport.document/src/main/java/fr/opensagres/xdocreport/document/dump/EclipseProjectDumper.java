@@ -1,24 +1,24 @@
 package fr.opensagres.xdocreport.document.dump;
 
 import java.io.File;
-import java.io.FileOutputStream;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.Writer;
+import java.util.zip.ZipOutputStream;
 
 import fr.opensagres.xdocreport.core.XDocReportException;
 import fr.opensagres.xdocreport.core.io.IOUtils;
 import fr.opensagres.xdocreport.document.IXDocReport;
-import fr.opensagres.xdocreport.document.json.JSONObject;
 import fr.opensagres.xdocreport.template.IContext;
 import fr.opensagres.xdocreport.template.ITemplateEngine;
-import fr.opensagres.xdocreport.template.formatter.FieldsMetadata;
 
 public class EclipseProjectDumper
     extends AbstractDumper
 {
+
+    private static final String SRC_FOLDER = "src";
 
     private static final IDumper INSTANCE = new EclipseProjectDumper();
 
@@ -47,8 +47,8 @@ public class EclipseProjectDumper
     }
 
     @Override
-    protected void doDump( IXDocReport report, IContext context, DumperOption option, ITemplateEngine templateEngine,
-                           OutputStream out )
+    protected void doDump( IXDocReport report, InputStream documentIn, IContext context, DumperOption option,
+                           ITemplateEngine templateEngine, OutputStream out )
         throws IOException, XDocReportException
     {
         IContext dumpContext = DumpHelper.createDumpContext( report, templateEngine, option );
@@ -67,95 +67,20 @@ public class EclipseProjectDumper
             projectName = baseDir.getName();
 
             // src
-            File srcDir = new File( baseDir, "src" );
+            File srcDir = new File( baseDir, SRC_FOLDER );
             srcDir.mkdirs();
 
             // Document (docx, odt)
-            String documentFileName = report.getId() + "." + report.getKind().toLowerCase();
-            dumpContext.put( "documentFile", documentFileName );
-
-            File documentFile = new File( srcDir, documentFileName );
-            InputStream documentIn = null;
-            OutputStream documentOut = null;
-            try
-            {
-                documentIn = DumpHelper.getDocument( report );
-                documentOut = new FileOutputStream( documentFile );
-                IOUtils.copy( documentIn, documentOut );
-            }
-            finally
-            {
-                if ( documentIn != null )
-                {
-                    IOUtils.closeQuietly( documentIn );
-                }
-                if ( documentOut != null )
-                {
-                    IOUtils.closeQuietly( documentOut );
-                }
-            }
+            DumpHelper.generateDocumentFile( report, documentIn, dumpContext, srcDir );
 
             // JSON
-            String jsonFileName = "data.json";
-            dumpContext.put( "jsonFile", jsonFileName );
-
-            JSONObject jsonObject = new JSONObject( context.getContextMap() );
-
-            File jsonFile = new File( srcDir, jsonFileName );
-            Writer jsonWriter = null;
-            try
-            {
-                jsonWriter = new FileWriter( jsonFile );
-                String json = jsonObject.toString( 1 );
-                IOUtils.write( json, jsonWriter );
-            }
-            finally
-            {
-                if ( jsonWriter != null )
-                {
-                    IOUtils.closeQuietly( jsonWriter );
-                }
-            }
+            DumpHelper.generateJSONFile( report, context, dumpContext, srcDir );
 
             // XML Fields
-            FieldsMetadata metadata = report.getFieldsMetadata();
-            if ( metadata != null )
-            {
-
-                String xmlFieldsFileName = "fields.xml";
-                dumpContext.put( "xmlFieldsFile", xmlFieldsFileName );
-
-                File xmlFieldsFile = new File( srcDir, xmlFieldsFileName );
-                Writer xmlFieldsWriter = null;
-                try
-                {
-                    xmlFieldsWriter = new FileWriter( xmlFieldsFile );
-                    metadata.saveXML( xmlFieldsWriter, true, false );
-                }
-                finally
-                {
-                    if ( xmlFieldsWriter != null )
-                    {
-                        IOUtils.closeQuietly( xmlFieldsWriter );
-                    }
-                }
-            }
+            DumpHelper.generateFieldsMetadataFile( report, dumpContext, srcDir );
 
             // Java
-            File javaFile = new File( srcDir, (String) dumpContext.get( "className" ) + ".java" );
-            Writer javaWriter = null;
-            try
-            {
-                javaWriter = new FileWriter( javaFile );
-                templateEngine.process( JAVA_MAIN_DUMP_TEMPLATE, dumpContext, javaWriter );
-            }
-            finally
-            {
-                if ( javaWriter != null )
-                {
-                    IOUtils.closeQuietly( javaWriter );
-                }
-            }
+            DumpHelper.generateJavaMainFile( templateEngine, dumpContext, srcDir );
 
             // .project
             dumpContext.put( "projectName", projectName );
@@ -173,7 +98,7 @@ public class EclipseProjectDumper
                     IOUtils.closeQuietly( projectWriter );
                 }
             }
-            
+
             // .classpath
             File classpathFile = new File( baseDir, ".classpath" );
             Writer classpathWriter = null;
@@ -190,6 +115,42 @@ public class EclipseProjectDumper
                 }
             }
 
+        }
+        else
+        {
+            ZipOutputStream zipOutputStream = null;
+            try
+            {
+                zipOutputStream = new ZipOutputStream( out );
+
+                // Document (docx, odt)
+                DumpHelper.generateDocumentZipEntry( report, documentIn, dumpContext, zipOutputStream, SRC_FOLDER );
+
+                // JSON data
+                DumpHelper.generateJSONZipEntry( report, context, dumpContext, zipOutputStream, SRC_FOLDER );
+
+                // XML Fields
+                DumpHelper.generateFieldsMetadataZipEntry( report, dumpContext, zipOutputStream, SRC_FOLDER );
+
+                // Java
+                DumpHelper.generateJavaMainZipEntry( report, templateEngine, dumpContext, zipOutputStream, SRC_FOLDER );
+
+                // .project
+                projectName = report.getId();
+                dumpContext.put( "projectName", projectName );
+                DumpHelper.generateZipEntry( templateEngine, "project", dumpContext, ".project", zipOutputStream );
+
+                // .classpath
+                DumpHelper.generateZipEntry( templateEngine, "classpath", dumpContext, ".classpath", zipOutputStream );
+
+            }
+            finally
+            {
+                if ( zipOutputStream != null )
+                {
+                    IOUtils.closeQuietly( zipOutputStream );
+                }
+            }
         }
     }
 

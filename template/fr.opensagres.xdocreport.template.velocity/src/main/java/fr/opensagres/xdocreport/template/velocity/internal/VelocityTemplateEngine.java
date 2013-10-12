@@ -180,10 +180,6 @@ public class VelocityTemplateEngine
             {
                 IOUtils.closeQuietly( reader );
             }
-            if ( writer != null )
-            {
-                IOUtils.closeQuietly( writer );
-            }
         }
 
     }

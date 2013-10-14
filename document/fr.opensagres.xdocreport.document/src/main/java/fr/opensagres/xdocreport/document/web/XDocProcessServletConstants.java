@@ -36,6 +36,8 @@ public interface XDocProcessServletConstants
 
     String FONT_ENCODING_HTTP_PARAM = "fontEncoding";
 
+    String DUMPER_KIND_HTTP_PARAM = "dumper";
+    
     // Dispatch values
     String REMOVE_DISPATCH = "remove";
 

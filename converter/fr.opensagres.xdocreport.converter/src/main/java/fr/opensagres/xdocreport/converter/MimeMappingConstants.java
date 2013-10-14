@@ -34,8 +34,6 @@ public interface MimeMappingConstants
 
     String XML_MIME_TYPE = "application/xml";
 
-    String PDF_MIME_TYPE = "application/pdf";
-
     // FO Mime mapping
     String FO_EXTENSION = "fo";
 
@@ -44,11 +42,20 @@ public interface MimeMappingConstants
     // PDF Mime mapping
     String PDF_EXTENSION = "pdf";
 
+    String PDF_MIME_TYPE = "application/pdf";
+
     MimeMapping PDF_MIME_MAPPING = new MimeMapping( PDF_EXTENSION, PDF_MIME_TYPE );
 
     // XHTML Mime mapping
     String XHTML_EXTENSION = "html";
 
     MimeMapping XHTML_MIME_MAPPING = new MimeMapping( XHTML_EXTENSION, XHTML_MIME_TYPE );
+
+    // Zip Mime mapping
+
+    String ZIP_MIME_TYPE = "application/zip ";
+    String ZIP_EXTENSION = "zip";
+
+    MimeMapping ZIP_MIME_MAPPING = new MimeMapping( ZIP_EXTENSION, ZIP_MIME_TYPE );
 
 }

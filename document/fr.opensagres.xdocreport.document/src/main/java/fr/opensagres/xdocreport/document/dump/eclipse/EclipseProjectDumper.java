@@ -6,6 +6,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.zip.ZipOutputStream;
 
+import fr.opensagres.xdocreport.converter.MimeMapping;
 import fr.opensagres.xdocreport.core.XDocReportException;
 import fr.opensagres.xdocreport.document.IXDocReport;
 import fr.opensagres.xdocreport.document.dump.AbstractProjectDumper;
@@ -87,4 +88,5 @@ public class EclipseProjectDumper
     {
         return getJavaSrcPath();
     }
+    
 }

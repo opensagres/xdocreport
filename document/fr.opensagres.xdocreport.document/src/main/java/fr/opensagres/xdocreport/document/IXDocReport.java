@@ -37,6 +37,7 @@ import fr.opensagres.xdocreport.converter.XDocConverterException;
 import fr.opensagres.xdocreport.core.XDocReportException;
 import fr.opensagres.xdocreport.core.io.XDocArchive;
 import fr.opensagres.xdocreport.document.dump.DumperOptions;
+import fr.opensagres.xdocreport.document.dump.IDumper;
 import fr.opensagres.xdocreport.document.preprocessor.IXDocPreprocessor;
 import fr.opensagres.xdocreport.document.registry.XDocReportRegistry;
 import fr.opensagres.xdocreport.template.FieldsExtractor;
@@ -405,6 +406,15 @@ public interface IXDocReport
      */
     void preprocess()
         throws XDocReportException, IOException;
+
+    /**
+     * Returns the dumper for the given options.
+     * 
+     * @param options
+     * @return
+     */
+    IDumper getDumper( DumperOptions options )
+        throws XDocReportException;
 
     /**
      * Dump

@@ -52,6 +52,7 @@ import fr.opensagres.xdocreport.core.logging.LogUtils;
 import fr.opensagres.xdocreport.core.utils.StringUtils;
 import fr.opensagres.xdocreport.document.dump.DumperOptions;
 import fr.opensagres.xdocreport.document.dump.DumperRegistry;
+import fr.opensagres.xdocreport.document.dump.IDumper;
 import fr.opensagres.xdocreport.document.images.DefaultImageHandler;
 import fr.opensagres.xdocreport.document.images.IImageRegistry;
 import fr.opensagres.xdocreport.document.preprocessor.IXDocPreprocessor;
@@ -1044,7 +1045,13 @@ public abstract class AbstractXDocReport
         {
             throw new XDocConverterException( "Dump cannot be done. Dump fo the report input stream cannot be null." );
         }
-        DumperRegistry.getRegistry().findDumper( options.getKind() ).dump( this, documentIn, context, options, out );
+        getDumper( options ).dump( this, documentIn, context, options, out );
 
+    }
+
+    public IDumper getDumper( DumperOptions options )
+        throws XDocReportException
+    {
+        return DumperRegistry.getRegistry().findDumper( options.getKind() );
     }
 }

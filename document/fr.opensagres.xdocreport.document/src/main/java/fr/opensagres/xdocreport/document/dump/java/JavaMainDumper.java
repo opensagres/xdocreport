@@ -29,6 +29,7 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.StringWriter;
 
+import fr.opensagres.xdocreport.converter.MimeMapping;
 import fr.opensagres.xdocreport.core.XDocReportException;
 import fr.opensagres.xdocreport.document.IXDocReport;
 import fr.opensagres.xdocreport.document.dump.AbstractDumper;
@@ -101,4 +102,9 @@ public class JavaMainDumper
         DumpHelper.generate( templateEngine, DumpHelper.JAVA_MAIN_DUMP_TEMPLATE, dumpContext, out );
     }
 
+    @Override
+    public MimeMapping getMimeMapping()
+    {
+        return null;
+    }
 }

@@ -31,6 +31,8 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.zip.ZipOutputStream;
 
+import fr.opensagres.xdocreport.converter.MimeMapping;
+import fr.opensagres.xdocreport.converter.MimeMappingConstants;
 import fr.opensagres.xdocreport.core.XDocReportException;
 import fr.opensagres.xdocreport.core.io.IOUtils;
 import fr.opensagres.xdocreport.document.IXDocReport;
@@ -147,6 +149,11 @@ public abstract class AbstractProjectDumper
         // Java path
         String javaSrcPath = getJavaSrcPath();
         DumpHelper.generateJavaMainZipEntry( report, templateEngine, dumpContext, zipOutputStream, javaSrcPath );
+    }
+
+    public MimeMapping getMimeMapping()
+    {
+        return MimeMappingConstants.ZIP_MIME_MAPPING;
     }
 
     protected abstract String getJavaSrcPath();

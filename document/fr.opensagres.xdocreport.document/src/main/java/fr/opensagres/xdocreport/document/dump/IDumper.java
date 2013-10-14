@@ -28,6 +28,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 
+import fr.opensagres.xdocreport.converter.MimeMapping;
 import fr.opensagres.xdocreport.core.XDocReportException;
 import fr.opensagres.xdocreport.document.IXDocReport;
 import fr.opensagres.xdocreport.template.IContext;
@@ -76,4 +77,10 @@ public interface IDumper
     void dump( IXDocReport report, InputStream documentIn, IContext context, DumperOptions option, OutputStream out )
         throws IOException, XDocReportException;
 
+    /**
+     * Returns mime mapping switch the kind of the dumper.
+     * 
+     * @return
+     */
+    MimeMapping getMimeMapping();
 }

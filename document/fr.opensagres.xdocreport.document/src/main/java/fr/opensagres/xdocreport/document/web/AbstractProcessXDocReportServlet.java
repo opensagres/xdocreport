@@ -230,23 +230,39 @@ public abstract class AbstractProcessXDocReportServlet
         throws ServletException, IOException
     {
 
+        IXDocReport report = null;
+        IContext context = null;
+        DumperOptions dumperOptions = null;
         try
         {
             // 1) Get XDoc report
-            IXDocReport report = getReport( request );
+            report = getReport( request );
             if ( report == null )
             {
                 throw new XDocReportException( "Cannot get XDoc Report for the HTTP request" );
             }
+
             Options options = getOptionsConverter( report, request );
-            DumperOptions dumperOptions = getOptionsDumper( report, request );
+            dumperOptions = getOptionsDumper( report, request );
             if ( options == null )
             {
-                doProcessReport( report, entryName, dumperOptions, request, response );
+                // 2) Prepare Java model context
+                context = report.createContext();
+                populateContext( context, report.getId(), request );
+                // 3) Generate report
+                doProcessReport( report, context, entryName, dumperOptions, request, response );
             }
             else
             {
-                doProcessReportWithConverter( report, options, dumperOptions, request, response );
+                ITemplateEngine templateEngine = report.getTemplateEngine();
+                if ( templateEngine != null )
+                {
+                    // 2) Prepare Java model context
+                    context = report.createContext();
+                    populateContext( context, report.getId(), request );
+                }
+                // Generate and convert report.
+                doProcessReportWithConverter( report, context, options, dumperOptions, request, response );
             }
             return true;
         }
@@ -255,7 +271,7 @@ public abstract class AbstractProcessXDocReportServlet
             /*
              * call the error handler to let the derived class do something useful with this failure.
              */
-            error( request, response, e );
+            error( report, context, dumperOptions, request, response, e );
             return false;
         }
     }
@@ -271,14 +287,10 @@ public abstract class AbstractProcessXDocReportServlet
      * @throws XDocReportException
      * @throws IOException
      */
-    private void doProcessReport( IXDocReport report, String entryName, DumperOptions dumperOptions,
+    private void doProcessReport( IXDocReport report, IContext context, String entryName, DumperOptions dumperOptions,
                                   HttpServletRequest request, HttpServletResponse response )
         throws XDocReportException, IOException
     {
-        // 1) Prepare Java model context
-        IContext context = report.createContext();
-        populateContext( context, report.getId(), request );
-
         if ( StringUtils.isEmpty( entryName ) )
         {
             if ( dumperOptions != null )
@@ -320,22 +332,19 @@ public abstract class AbstractProcessXDocReportServlet
      * @throws IOException
      * @throws XDocConverterException
      */
-    private void doProcessReportWithConverter( IXDocReport report, Options options, DumperOptions dumperOptions,
-                                               HttpServletRequest request, HttpServletResponse response )
+    private void doProcessReportWithConverter( IXDocReport report, IContext context, Options options,
+                                               DumperOptions dumperOptions, HttpServletRequest request,
+                                               HttpServletResponse response )
         throws XDocReportException, IOException, XDocConverterException
     {
-        IContext context = null;
-        ITemplateEngine templateEngine = report.getTemplateEngine();
-        if ( templateEngine != null )
-        {
-            // 1) Prepare Java model context
-            context = report.createContext();
-            populateContext( context, report.getId(), request );
-        }
 
         if ( dumperOptions != null )
         {
-            // dump must be done
+            // 2) Get dumper
+            IDumper dumper = report.getDumper( dumperOptions );
+            // 3) Prepare HTTP response content type
+            prepareHTTPResponse( report.getId(), dumper.getMimeMapping(), request, response );
+            // 4) Generate dump
             report.dump( context, dumperOptions, response.getOutputStream() );
         }
         else
@@ -436,11 +445,15 @@ public abstract class AbstractProcessXDocReportServlet
      * <br>
      * Default will send a simple HTML response indicating there was a problem.
      * 
+     * @param dumperOptions
+     * @param context
+     * @param report
      * @param request original HttpServletRequest from servlet container.
      * @param response HttpServletResponse object from servlet container.
      * @param cause Exception that was thrown by some other part of process.
      */
-    protected void error( HttpServletRequest request, HttpServletResponse response, Exception cause )
+    protected void error( IXDocReport report, IContext context, DumperOptions dumperOptions,
+                          HttpServletRequest request, HttpServletResponse response, Exception cause )
         throws ServletException, IOException
     {
         if ( response.isCommitted() )

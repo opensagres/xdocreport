@@ -1,3 +1,27 @@
+/**
+ * Copyright (C) 2011-2013 The XDocReport Team <xdocreport@googlegroups.com>
+ *
+ * All rights reserved.
+ *
+ * Permission is hereby granted, free  of charge, to any person obtaining
+ * a  copy  of this  software  and  associated  documentation files  (the
+ * "Software"), to  deal in  the Software without  restriction, including
+ * without limitation  the rights to  use, copy, modify,  merge, publish,
+ * distribute,  sublicense, and/or sell  copies of  the Software,  and to
+ * permit persons to whom the Software  is furnished to do so, subject to
+ * the following conditions:
+ *
+ * The  above  copyright  notice  and  this permission  notice  shall  be
+ * included in all copies or substantial portions of the Software.
+ *
+ * THE  SOFTWARE IS  PROVIDED  "AS  IS", WITHOUT  WARRANTY  OF ANY  KIND,
+ * EXPRESS OR  IMPLIED, INCLUDING  BUT NOT LIMITED  TO THE  WARRANTIES OF
+ * MERCHANTABILITY,    FITNESS    FOR    A   PARTICULAR    PURPOSE    AND
+ * NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE
+ * LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION
+ * OF CONTRACT, TORT OR OTHERWISE,  ARISING FROM, OUT OF OR IN CONNECTION
+ * WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+ */
 package fr.opensagres.xdocreport.document.dump;
 
 import java.io.File;
@@ -23,6 +47,9 @@ import fr.opensagres.xdocreport.template.IContext;
 import fr.opensagres.xdocreport.template.ITemplateEngine;
 import fr.opensagres.xdocreport.template.formatter.FieldsMetadata;
 
+/**
+ * Dump helper.
+ */
 public class DumpHelper
 {
 
@@ -115,19 +142,7 @@ public class DumpHelper
         throws IOException, XDocReportException
     {
         File javaFile = new File( srcDir, getClassNameFile( dumpContext ) );
-        Writer javaWriter = null;
-        try
-        {
-            javaWriter = new FileWriter( javaFile );
-            templateEngine.process( JAVA_MAIN_DUMP_TEMPLATE, dumpContext, javaWriter );
-        }
-        finally
-        {
-            if ( javaWriter != null )
-            {
-                IOUtils.closeQuietly( javaWriter );
-            }
-        }
+        generateFile( templateEngine, JAVA_MAIN_DUMP_TEMPLATE, dumpContext, javaFile );
     }
 
     public static void generateJavaMainZipEntry( IXDocReport report, ITemplateEngine templateEngine,
@@ -286,7 +301,7 @@ public class DumpHelper
         return xmlFieldsFileName;
     }
 
-    public static IContext createDumpContext( IXDocReport report, ITemplateEngine templateEngine, DumperOption option )
+    public static IContext createDumpContext( IXDocReport report, ITemplateEngine templateEngine, DumperOptions option )
         throws IOException
     {
         IContext dumpContext = templateEngine.createContext();
@@ -301,10 +316,48 @@ public class DumpHelper
 
         dumpContext.put( "templateEngineKind", templateEngine.getKind() );
 
-        String outFileName = report.getId() + " _Out" + "." + report.getKind().toLowerCase();
+        String outFileName = report.getId() + "_Out" + "." + report.getKind().toLowerCase();
         dumpContext.put( "outFileName", outFileName );
 
         return dumpContext;
+    }
+
+    public static void generate( ITemplateEngine templateEngine, String templateName, IContext dumpContext,
+                                 OutputStream out )
+        throws IOException, XDocReportException
+    {
+        Writer javaWriter = null;
+        try
+        {
+            javaWriter = new OutputStreamWriter( out );
+            templateEngine.process( templateName, dumpContext, javaWriter );
+        }
+        finally
+        {
+            if ( javaWriter != null )
+            {
+                IOUtils.closeQuietly( javaWriter );
+            }
+        }
+    }
+
+    public static void generateFile( ITemplateEngine templateEngine, String templateName, IContext dumpContext,
+                                     File javaFile )
+        throws IOException, XDocReportException
+    {
+        Writer javaWriter = null;
+        try
+        {
+            javaWriter = new FileWriter( javaFile );
+            templateEngine.process( templateName, dumpContext, javaWriter );
+        }
+        finally
+        {
+            if ( javaWriter != null )
+            {
+                IOUtils.closeQuietly( javaWriter );
+            }
+        }
     }
 
     public static void generateZipEntry( ITemplateEngine templateEngine, String templateName, IContext dumpContext,
@@ -329,4 +382,5 @@ public class DumpHelper
             out.closeEntry();
         }
     }
+
 }

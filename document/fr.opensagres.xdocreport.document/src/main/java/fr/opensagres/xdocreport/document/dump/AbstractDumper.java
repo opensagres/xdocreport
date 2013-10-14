@@ -15,14 +15,14 @@ public abstract class AbstractDumper
     implements IDumper
 {
 
-    public void dump( IXDocReport report, IContext context, DumperOption option, OutputStream out )
+    public void dump( IXDocReport report, IContext context, DumperOptions option, OutputStream out )
         throws IOException, XDocReportException
     {
         dump( report, null, context, option, out );
 
     }
 
-    public final void dump( IXDocReport report, InputStream documentIn, IContext context, DumperOption option,
+    public final void dump( IXDocReport report, InputStream documentIn, IContext context, DumperOptions option,
                             OutputStream out )
         throws IOException, XDocReportException
     {
@@ -49,7 +49,7 @@ public abstract class AbstractDumper
         }
     }
 
-    protected abstract void doDump( IXDocReport report, InputStream documentIn, IContext context, DumperOption option,
+    protected abstract void doDump( IXDocReport report, InputStream documentIn, IContext context, DumperOptions option,
                                     ITemplateEngine templateEngine, OutputStream out )
         throws IOException, XDocReportException;
 }

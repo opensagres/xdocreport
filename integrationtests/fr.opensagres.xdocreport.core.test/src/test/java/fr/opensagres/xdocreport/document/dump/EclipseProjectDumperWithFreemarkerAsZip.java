@@ -11,7 +11,8 @@ import java.util.Map;
 
 import fr.opensagres.xdocreport.core.XDocReportException;
 import fr.opensagres.xdocreport.document.IXDocReport;
-import fr.opensagres.xdocreport.document.dump.EclipseProjectDumper.EclipseProjectDumperOption;
+import fr.opensagres.xdocreport.document.dump.eclipse.EclipseProjectDumper;
+import fr.opensagres.xdocreport.document.dump.eclipse.EclipseProjectDumper.EclipseProjectDumperOptions;
 import fr.opensagres.xdocreport.document.registry.XDocReportRegistry;
 import fr.opensagres.xdocreport.template.IContext;
 import fr.opensagres.xdocreport.template.TemplateEngineKind;
@@ -46,7 +47,7 @@ public class EclipseProjectDumperWithFreemarkerAsZip
             populateWithPojo( context );
 
             // Eclipse project dump as zip.
-            EclipseProjectDumperOption option = new EclipseProjectDumperOption();
+            EclipseProjectDumperOptions option = new EclipseProjectDumperOptions();
             // option.setBaseDir( new File( "target/eclipse-dump" ) );
 
             File zipFile = new File( "target/eclipse-dump.zip" );

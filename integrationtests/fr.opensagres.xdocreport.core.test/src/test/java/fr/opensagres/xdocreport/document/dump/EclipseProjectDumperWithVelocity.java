@@ -1,8 +1,8 @@
 package fr.opensagres.xdocreport.document.dump;
 
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -10,13 +10,14 @@ import java.util.Map;
 
 import fr.opensagres.xdocreport.core.XDocReportException;
 import fr.opensagres.xdocreport.document.IXDocReport;
-import fr.opensagres.xdocreport.document.dump.java.JavaMainDumper.JavaMainDumperOptions;
+import fr.opensagres.xdocreport.document.dump.eclipse.EclipseProjectDumper;
+import fr.opensagres.xdocreport.document.dump.eclipse.EclipseProjectDumper.EclipseProjectDumperOptions;
 import fr.opensagres.xdocreport.document.registry.XDocReportRegistry;
 import fr.opensagres.xdocreport.template.IContext;
 import fr.opensagres.xdocreport.template.TemplateEngineKind;
 import fr.opensagres.xdocreport.template.formatter.FieldsMetadata;
 
-public class JavaMainDumperWithVelocity
+public class EclipseProjectDumperWithVelocity
 {
 
     public static void main( String[] args )
@@ -26,7 +27,8 @@ public class JavaMainDumperWithVelocity
             // 1) Load Docx file by filling Velocity template engine and cache
             // it to the registry
             String reportId = "DumTest";
-            InputStream in = JavaMainDumperWithVelocity.class.getResourceAsStream( "DocxProjectWithVelocityList.docx" );
+            InputStream in =
+                EclipseProjectDumperWithVelocity.class.getResourceAsStream( "DocxProjectWithVelocityList.docx" );
             IXDocReport report =
                 XDocReportRegistry.getRegistry().loadReport( in, reportId, TemplateEngineKind.Velocity );
 
@@ -34,20 +36,20 @@ public class JavaMainDumperWithVelocity
             report.setCacheOriginalDocument( true );
 
             FieldsMetadata metadata = report.createFieldsMetadata();
-            metadata.addFieldAsList( "developers.Name" );
-            metadata.addFieldAsList( "developers.LastName" );
-            metadata.addFieldAsList( "developers.Mail" );
+            metadata.addFieldAsList( "developers.name" );
+            metadata.addFieldAsList( "developers.lastName" );
+            metadata.addFieldAsList( "developers.mail" );
 
             // 2) Create context Java model
             IContext context = report.createContext();
             // populateWithMap( context );
             populateWithPojo( context );
 
-            OutputStream out = System.err;
+            // Eclipse project dump as folder.
+            EclipseProjectDumperOptions option = new EclipseProjectDumperOptions();
+            option.setBaseDir( new File( "target/eclipse-dump-vm" ) );
 
-            // JavaMainDumper.getInstance().dump( report, context, null, out );
-            JavaMainDumperOptions options = new JavaMainDumperOptions();
-            report.dump( context, options, out );
+            EclipseProjectDumper.getInstance().dump( report, context, option, null );
 
         }
         catch ( IOException e )

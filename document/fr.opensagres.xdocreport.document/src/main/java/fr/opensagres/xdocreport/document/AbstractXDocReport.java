@@ -50,6 +50,8 @@ import fr.opensagres.xdocreport.core.io.IEntryWriterProvider;
 import fr.opensagres.xdocreport.core.io.XDocArchive;
 import fr.opensagres.xdocreport.core.logging.LogUtils;
 import fr.opensagres.xdocreport.core.utils.StringUtils;
+import fr.opensagres.xdocreport.document.dump.DumperOptions;
+import fr.opensagres.xdocreport.document.dump.DumperRegistry;
 import fr.opensagres.xdocreport.document.images.DefaultImageHandler;
 import fr.opensagres.xdocreport.document.images.IImageRegistry;
 import fr.opensagres.xdocreport.document.preprocessor.IXDocPreprocessor;
@@ -1023,4 +1025,26 @@ public abstract class AbstractXDocReport
                                                            IEntryWriterProvider writerProvider,
                                                            IEntryOutputStreamProvider outputStreamProvider );
 
+    public void dump( IContext context, DumperOptions options, OutputStream out )
+        throws IOException, XDocReportException
+    {
+        XDocArchive archive = getOriginalDocumentArchive();
+        if ( archive == null )
+        {
+            throw new XDocReportException(
+                                           "Dump cannot be done. IXDocReport#getOriginalDocumentArchive is null. Please call IXDocReport#setCacheOriginalDocument(true) after the loads of the report." );
+        }
+        dump( context, XDocArchive.getInputStream( archive ), options, out );
+    }
+
+    public void dump( IContext context, InputStream documentIn, DumperOptions options, OutputStream out )
+        throws IOException, XDocReportException
+    {
+        if ( documentIn == null )
+        {
+            throw new XDocConverterException( "Dump cannot be done. Dump fo the report input stream cannot be null." );
+        }
+        DumperRegistry.getRegistry().findDumper( options.getKind() ).dump( this, documentIn, context, options, out );
+
+    }
 }

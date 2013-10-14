@@ -10,7 +10,8 @@ import java.util.Map;
 
 import fr.opensagres.xdocreport.core.XDocReportException;
 import fr.opensagres.xdocreport.document.IXDocReport;
-import fr.opensagres.xdocreport.document.dump.EclipseProjectDumper.EclipseProjectDumperOption;
+import fr.opensagres.xdocreport.document.dump.eclipse.EclipseProjectDumper;
+import fr.opensagres.xdocreport.document.dump.eclipse.EclipseProjectDumper.EclipseProjectDumperOptions;
 import fr.opensagres.xdocreport.document.registry.XDocReportRegistry;
 import fr.opensagres.xdocreport.template.IContext;
 import fr.opensagres.xdocreport.template.TemplateEngineKind;
@@ -45,11 +46,11 @@ public class EclipseProjectDumperWithFreemarker
             populateWithPojo( context );
 
             // Eclipse project dump as folder.
-            EclipseProjectDumperOption option = new EclipseProjectDumperOption();
-            option.setBaseDir( new File( "target/eclipse-dump" ) );
+            EclipseProjectDumperOptions options = new EclipseProjectDumperOptions();
+            options.setBaseDir( new File( "target/eclipse-dump-ftl" ) );
 
-            EclipseProjectDumper.getInstance().dump( report, context, option, null );
-
+            //EclipseProjectDumper.getInstance().dump( report, context, option, null );
+            report.dump( context, options, null );
         }
         catch ( IOException e )
         {

@@ -8,6 +8,7 @@ import java.util.List;
 import java.util.Map;
 
 import fr.opensagres.xdocreport.document.IXDocReport;
+import fr.opensagres.xdocreport.document.dump.java.JavaMainDumper.JavaMainDumperOptions;
 import fr.opensagres.xdocreport.document.registry.XDocReportRegistry;
 import fr.opensagres.xdocreport.template.IContext;
 import fr.opensagres.xdocreport.template.TemplateEngineKind;
@@ -44,7 +45,9 @@ public class JavaMainDumperWithFreemarker
             OutputStream out = System.err;
 
             // dump.
-            JavaMainDumper.getInstance().dump( report, context, null, out );
+            // JavaMainDumper.getInstance().dump( report, context, null, out );
+            JavaMainDumperOptions options = new JavaMainDumperOptions();
+            report.dump( context, options, out );
 
         }
         catch ( Throwable e )

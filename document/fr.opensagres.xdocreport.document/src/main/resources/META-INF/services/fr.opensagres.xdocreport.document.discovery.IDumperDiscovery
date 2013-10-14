@@ -1,0 +1,3 @@
+fr.opensagres.xdocreport.document.dump.java.JavaMainDumperDiscovery
+fr.opensagres.xdocreport.document.dump.eclipse.EclipseProjectDumperDiscovery
+fr.opensagres.xdocreport.document.dump.maven.MavenProjectDumperDiscovery

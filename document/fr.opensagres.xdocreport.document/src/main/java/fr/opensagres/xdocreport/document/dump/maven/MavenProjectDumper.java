@@ -9,9 +9,9 @@ import java.util.zip.ZipOutputStream;
 import fr.opensagres.xdocreport.core.XDocReportException;
 import fr.opensagres.xdocreport.document.IXDocReport;
 import fr.opensagres.xdocreport.document.dump.AbstractProjectDumper;
+import fr.opensagres.xdocreport.document.dump.DumpHelper;
 import fr.opensagres.xdocreport.document.dump.DumperKind;
 import fr.opensagres.xdocreport.document.dump.IDumper;
-import fr.opensagres.xdocreport.document.dump.AbstractProjectDumper.ProjectDumperOption;
 import fr.opensagres.xdocreport.template.IContext;
 import fr.opensagres.xdocreport.template.ITemplateEngine;
 
@@ -30,11 +30,11 @@ public class MavenProjectDumper
         return INSTANCE;
     }
 
-    public static class MavenProjectDumperOption
+    public static class MavenProjectDumperOptions
         extends ProjectDumperOption
     {
 
-        public MavenProjectDumperOption()
+        public MavenProjectDumperOptions()
         {
             super( DumperKind.MavenProject );
         }
@@ -47,7 +47,23 @@ public class MavenProjectDumper
     {
         super.dumpToFile( report, documentIn, context, templateEngine, dumpContext, baseDir );
 
-        // TODO : pom.xml
+        // Generate pom.xml
+        String artifactId = baseDir.getName();
+        dumpContext.put( "artifactId", artifactId );
+
+        // TODO : retrieve version from 
+        //String version = getClass().getPackage().getImplementationVersion();
+        String version = "1.0.3-SNAPSHOT";
+        dumpContext.put( "version", version );
+
+        dumpContext.put( "documentExtension", report.getKind().toLowerCase() );
+
+        dumpContext.put( "templateExtension", templateEngine.getKind().toLowerCase() );
+
+        dumpContext.put( "isSnapshot", version.endsWith( "-SNAPSHOT" ) );
+
+        File projectFile = new File( baseDir, "pom.xml" );
+        DumpHelper.generateFile( templateEngine, "pom.xml", dumpContext, projectFile );
     }
 
     @Override

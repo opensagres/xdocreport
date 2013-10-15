@@ -470,7 +470,28 @@ public class FieldsMetadata
     public void saveXML( Writer writer, boolean indent )
         throws IOException
     {
-        FieldsMetadataXMLSerializer.getInstance().save( this, writer, indent );
+        FieldsMetadataXMLSerializer.getInstance().save( this, writer, indent, false );
+    }
+
+    /**
+     * Serialize as XML the fields metadata to the given XML writer. Here a sample of XML writer :
+     * 
+     * <pre>
+     * <fields>
+     *  <field name="project.Name" imageName="" list="false" />
+     *  <field name="developers.Name" imageName="" list="true" />
+     * <field name="project.Logo" imageName="Logo" list="false" />
+     * </fields>
+     * </pre>
+     * 
+     * @param writer XML writer.
+     * @param indent true if indent must be managed and false otherwise.
+     * @throws IOException
+     */
+    public void saveXML( Writer writer, boolean indent, boolean formatAsJavaString )
+        throws IOException
+    {
+        FieldsMetadataXMLSerializer.getInstance().save( this, writer, indent, formatAsJavaString );
     }
 
     /**
@@ -512,7 +533,7 @@ public class FieldsMetadata
     public void saveXML( OutputStream out, boolean indent )
         throws IOException
     {
-        FieldsMetadataXMLSerializer.getInstance().save( this, out, indent );
+        FieldsMetadataXMLSerializer.getInstance().save( this, out, indent, false );
     }
 
     /**

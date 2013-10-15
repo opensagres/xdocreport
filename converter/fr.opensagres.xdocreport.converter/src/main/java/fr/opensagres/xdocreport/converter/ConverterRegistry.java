@@ -46,7 +46,7 @@ public class ConverterRegistry
     /**
      * Logger for this class
      */
-    private static final Logger LOGGER = LogUtils.getLogger( AbstractRegistry.class.getName() );
+    private static final Logger LOGGER = LogUtils.getLogger( ConverterRegistry.class.getName() );
 
     private Map<String /* from */, ConverterFrom> converters = new HashMap<String, ConverterFrom>();
 

@@ -49,17 +49,24 @@ package fr.opensagres.xdocreport.document.json;
  */
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.Writer;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 import java.util.Collection;
+import java.util.Date;
 import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Locale;
 import java.util.Map;
 import java.util.ResourceBundle;
+
+import fr.opensagres.xdocreport.core.utils.Base64Utility;
+import fr.opensagres.xdocreport.core.utils.DatatypeUtils;
+import fr.opensagres.xdocreport.document.images.ByteArrayImageProvider;
+import fr.opensagres.xdocreport.document.images.IImageProvider;
 
 /**
  * Code modified for XDocReport (see "added by XDocReport" comment) :
@@ -110,6 +117,14 @@ import java.util.ResourceBundle;
 public class JSONObject
     /* added by XDocReport */extends HashMap
 {
+
+    private static final String DATE_TYPE = "$date";
+
+    private static final String IMAGE_TYPE = "$img";
+
+    private boolean isDate;
+
+    private boolean isImage;
 
     /**
      * JSONObject.NULL is equivalent to the value that JavaScript calls null, whilst Java's null is equivalent to the
@@ -283,6 +298,19 @@ public class JSONObject
                 }
             }
         }
+    }
+
+    public JSONObject( Date date )
+    {
+        this.isDate = true;
+        super.put( DATE_TYPE, DatatypeUtils.formatAsXSDateTime( date ) );
+    }
+
+    public JSONObject( InputStream in )
+        throws IOException
+    {
+        this.isImage = true;
+        super.put( IMAGE_TYPE, Base64Utility.encode( in ) );
     }
 
     /**
@@ -498,7 +526,66 @@ public class JSONObject
         {
             throw new JSONException( "JSONObject[" + quote( key ) + "] not found." );
         }
+        if ( object instanceof JSONObject )
+        {
+            JSONObject json = ( (JSONObject) object );
+            if ( json.isDate() )
+            {
+                return getDate( key, object );
+            }
+            else if ( json.isImage() )
+            {
+                return getImage( key, object );
+            }
+        }
         return object;
+    }
+
+    private IImageProvider getImage( String key, Object object )
+    {
+        try
+        {
+            String imageAsString = "";
+            if ( object instanceof String )
+            {
+                imageAsString = (String) object;
+            }
+            else
+            {
+                imageAsString = (String) ( (JSONObject) object ).get( IMAGE_TYPE );
+            }
+            return new ByteArrayImageProvider( Base64Utility.decode( imageAsString ) );
+        }
+        catch ( Exception e )
+        {
+            throw new JSONException( "JSONObject[" + quote( key ) + "] is not an Image." );
+        }
+    }
+
+    private Date getDate( String key, Object object )
+    {
+        try
+        {
+            if ( object instanceof Date )
+            {
+                return (Date) object;
+            }
+            String dateAsString = "";
+            if ( object instanceof String )
+            {
+                dateAsString = (String) object;
+            }
+            else
+            {
+                dateAsString = (String) ( (JSONObject) object ).get( DATE_TYPE );
+            }
+            return (Date) DatatypeUtils.parseXSDateTime( dateAsString );
+        }
+        catch ( Exception e )
+        {
+            throw new JSONException( "JSONObject[" + quote( key ) + "] is not a Date." );
+        }
+
     }
 
     /**
@@ -566,6 +653,12 @@ public class JSONObject
         {
             throw new JSONException( "JSONObject[" + quote( key ) + "] is not an int." );
         }
+    }
+
+    public Date getDate( String key )
+    {
+        Object object = this.get( key );
+        return getDate( key, object );
     }
 
     /**
@@ -1179,8 +1272,17 @@ public class JSONObject
         {
             throw new JSONException( "Null key." );
         }
+
         if ( value != null )
         {
+            if ( DATE_TYPE.equals( key ) )
+            {
+                this.isDate = true;
+            }
+            else if ( IMAGE_TYPE.equals( key ) )
+            {
+                this.isImage = true;
+            }
             testValidity( value );
             super.put( key, value );
         }
@@ -1253,7 +1355,7 @@ public class JSONObject
         String hhhh;
         int i;
         int len = string.length();
-        StringBuffer sb = new StringBuffer( len + 4 );
+        StringBuilder sb = new StringBuilder( len + 4 );
 
         sb.append( '"' );
         for ( i = 0; i < len; i += 1 )
@@ -1447,7 +1549,7 @@ public class JSONObject
         try
         {
             Iterator keys = this.keys();
-            StringBuffer sb = new StringBuffer( "{" );
+            StringBuilder sb = new StringBuilder( "{" );
 
             while ( keys.hasNext() )
             {
@@ -1509,7 +1611,7 @@ public class JSONObject
         Iterator keys = this.keys();
         int newindent = indent + indentFactor;
         Object object;
-        StringBuffer sb = new StringBuffer( "{" );
+        StringBuilder sb = new StringBuilder( "{" );
         if ( length == 1 )
         {
             object = keys.next();
@@ -1594,6 +1696,10 @@ public class JSONObject
         {
             return numberToString( (Number) value );
         }
+        if ( value instanceof Date )
+        {
+            return dateToString( (Date) value );
+        }
         if ( value instanceof Boolean || value instanceof JSONObject || value instanceof JSONArray )
         {
             return value.toString();
@@ -1611,6 +1717,11 @@ public class JSONObject
             return new JSONArray( value ).toString();
         }
         return quote( value.toString() );
+    }
+
+    private static String dateToString( Date value )
+    {
+        return quote( DatatypeUtils.formatAsXSDateTime( value ) );
     }
 
     /**
@@ -1649,6 +1760,10 @@ public class JSONObject
         if ( value instanceof Number )
         {
             return numberToString( (Number) value );
+        }
+        if ( value instanceof Date )
+        {
+            return dateToString( (Date) value );
         }
         if ( value instanceof Boolean )
         {
@@ -1715,6 +1830,14 @@ public class JSONObject
             {
                 return new JSONObject( (Map) object );
             }
+            if ( object instanceof Date )
+            {
+                return new JSONObject( (Date) object );
+            }
+            if ( object instanceof InputStream )
+            {
+                return new JSONObject( (InputStream) object );
+            }
             Package objectPackage = object.getClass().getPackage();
             String objectPackageName = objectPackage != null ? objectPackage.getName() : "";
             if ( objectPackageName.startsWith( "java." ) || objectPackageName.startsWith( "javax." )
@@ -1778,5 +1901,15 @@ public class JSONObject
         {
             throw new JSONException( exception );
         }
+    }
+
+    public boolean isDate()
+    {
+        return isDate;
+    }
+
+    public boolean isImage()
+    {
+        return isImage;
     }
 }

@@ -34,10 +34,12 @@ package fr.opensagres.xdocreport.core.utils;
 
 // Java imports
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.Writer;
 import java.util.logging.Logger;
 
+import fr.opensagres.xdocreport.core.io.IOUtils;
 import fr.opensagres.xdocreport.core.logging.LogUtils;
 
 /**
@@ -212,6 +214,14 @@ public final class Base64Utility
             LOG.warning( "Invalid base64 encoded string : " + id );
             throw new Base64Exception( "Runtime exception in Base64Utility.decode() during output", e );
         }
+    }
+
+    public static String encode( InputStream in )
+        throws IOException
+    {
+        byte[] bytes = IOUtils.toByteArray( in );
+        String encoded = Base64Utility.encode( bytes );
+        return encoded;
     }
 
     // Returns base64 representation of specified byte array.

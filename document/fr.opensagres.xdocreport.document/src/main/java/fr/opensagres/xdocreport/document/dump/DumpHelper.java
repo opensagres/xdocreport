@@ -87,6 +87,20 @@ public class DumpHelper
         return documentFileName;
     }
 
+    public static void generateDocumentEntry( IXDocReport report, InputStream documentIn, IContext dumpContext,
+                                              String src, File baseDir, ZipOutputStream out )
+        throws IOException
+    {
+        if ( out != null )
+        {
+            generateDocumentZipEntry( report, documentIn, dumpContext, out, src );
+        }
+        else
+        {
+            generateDocumentFile( report, documentIn, dumpContext, new File( baseDir, src ) );
+        }
+    }
+
     public static void generateDocumentFile( IXDocReport report, InputStream documentIn, IContext dumpContext,
                                              File srcDir )
         throws FileNotFoundException, IOException
@@ -94,6 +108,7 @@ public class DumpHelper
         String documentFileName = getDocumentFileName( report, dumpContext );
 
         File documentFile = new File( srcDir, documentFileName );
+        documentFile.getParentFile().mkdirs();
         OutputStream documentOut = null;
 
         try
@@ -112,7 +127,7 @@ public class DumpHelper
 
     public static void generateDocumentZipEntry( IXDocReport report, InputStream documentIn, IContext dumpContext,
                                                  ZipOutputStream out, String src )
-        throws FileNotFoundException, IOException
+        throws IOException
     {
         String documentFileName = getDocumentFileName( report, dumpContext );
 
@@ -138,23 +153,7 @@ public class DumpHelper
         return className.substring( 0, 1 ).toUpperCase() + className.substring( 1, className.length() );
     }
 
-    public static void generateJavaMainFile( ITemplateEngine templateEngine, IContext dumpContext, File srcDir )
-        throws IOException, XDocReportException
-    {
-        File javaFile = new File( srcDir, getClassNameFile( dumpContext ) );
-        generateFile( templateEngine, JAVA_MAIN_DUMP_TEMPLATE, dumpContext, javaFile );
-    }
-
-    public static void generateJavaMainZipEntry( IXDocReport report, ITemplateEngine templateEngine,
-                                                 IContext dumpContext, ZipOutputStream out, String src )
-        throws IOException, XDocReportException
-    {
-
-        String classNameFile = getClassNameFile( dumpContext );
-        generateZipEntry( templateEngine, JAVA_MAIN_DUMP_TEMPLATE, dumpContext, src + "/" + classNameFile, out );
-    }
-
-    private static String getClassNameFile( IContext dumpContext )
+    public static String getClassNameFile( IContext dumpContext )
     {
         return (String) dumpContext.get( "className" ) + ".java";
     }
@@ -177,6 +176,21 @@ public class DumpHelper
         return jsonString.replace( DOUBLE_QUOTE, ESCAPED_DOUBLE_QUOTE );
     }
 
+    public static void generateJSONEntry( IXDocReport report, IContext context, IContext dumpContext,
+                                          String resourcesSrcPath, File baseDir, ZipOutputStream out )
+        throws IOException
+    {
+        if ( out != null )
+        {
+            generateJSONZipEntry( report, context, dumpContext, out, resourcesSrcPath );
+        }
+        else
+        {
+            generateJSONFile( report, context, dumpContext, new File( baseDir, resourcesSrcPath ) );
+        }
+
+    }
+
     public static void generateJSONFile( IXDocReport report, IContext context, IContext dumpContext, File srcDir )
         throws IOException
     {
@@ -185,6 +199,7 @@ public class DumpHelper
         JSONObject jsonObject = new JSONObject( context.getContextMap() );
 
         File jsonFile = new File( srcDir, jsonFileName );
+        jsonFile.getParentFile().mkdirs();
         Writer jsonWriter = null;
         try
         {
@@ -238,6 +253,20 @@ public class DumpHelper
 
     // XML fields available.
 
+    public static void generateFieldsMetadataEntry( IXDocReport report, IContext dumpContext, String resourcesSrcPath,
+                                                    File baseDir, ZipOutputStream out )
+        throws IOException
+    {
+        if ( out != null )
+        {
+            generateFieldsMetadataZipEntry( report, dumpContext, out, resourcesSrcPath );
+        }
+        else
+        {
+            generateFieldsMetadataFile( report, dumpContext, new File( baseDir, resourcesSrcPath ) );
+        }
+    }
+
     public static void generateFieldsMetadataFile( IXDocReport report, IContext dumpContext, File srcDir )
         throws IOException
     {
@@ -248,6 +277,7 @@ public class DumpHelper
             String xmlFieldsFileName = getXMLFieldsFileName( report, dumpContext );
 
             File xmlFieldsFile = new File( srcDir, xmlFieldsFileName );
+            xmlFieldsFile.getParentFile().mkdirs();
             Writer xmlFieldsWriter = null;
             try
             {
@@ -348,6 +378,7 @@ public class DumpHelper
         Writer javaWriter = null;
         try
         {
+            javaFile.getParentFile().mkdirs();
             javaWriter = new FileWriter( javaFile );
             templateEngine.process( templateName, dumpContext, javaWriter );
         }
@@ -380,6 +411,23 @@ public class DumpHelper
                 javaWriter.flush();
             }
             out.closeEntry();
+        }
+    }
+
+    public static void generateEntry( ITemplateEngine templateEngine, String templateName, IContext dumpContext,
+                                      String entryName, File baseDir, ZipOutputStream out )
+        throws IOException, XDocReportException
+    {
+        if ( out != null )
+        {
+            // Zip
+            generateZipEntry( templateEngine, templateName, dumpContext, entryName, out );
+        }
+        else
+        {
+            // File
+            File file = new File( baseDir, entryName );
+            generateFile( templateEngine, templateName, dumpContext, file );
         }
     }
 

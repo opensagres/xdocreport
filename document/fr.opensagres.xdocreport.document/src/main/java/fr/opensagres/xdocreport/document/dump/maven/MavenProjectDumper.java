@@ -6,6 +6,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.zip.ZipOutputStream;
 
+import fr.opensagres.xdocreport.core.Platform;
 import fr.opensagres.xdocreport.core.XDocReportException;
 import fr.opensagres.xdocreport.document.IXDocReport;
 import fr.opensagres.xdocreport.document.dump.AbstractProjectDumper;
@@ -41,19 +42,17 @@ public class MavenProjectDumper
     }
 
     @Override
-    protected void dumpToFile( IXDocReport report, InputStream documentIn, IContext context,
-                               ITemplateEngine templateEngine, IContext dumpContext, File baseDir )
-        throws FileNotFoundException, IOException, XDocReportException
+    protected void doDump( IXDocReport report, InputStream documentIn, IContext context,
+                           ITemplateEngine templateEngine, IContext dumpContext, File baseDir, ZipOutputStream out )
+        throws IOException, XDocReportException
     {
-        super.dumpToFile( report, documentIn, context, templateEngine, dumpContext, baseDir );
+        super.doDump( report, documentIn, context, templateEngine, dumpContext, baseDir, out );
 
         // Generate pom.xml
         String artifactId = baseDir.getName();
         dumpContext.put( "artifactId", artifactId );
 
-        // TODO : retrieve version from 
-        //String version = getClass().getPackage().getImplementationVersion();
-        String version = "1.0.3-SNAPSHOT";
+        String version = Platform.getVersion();
         dumpContext.put( "version", version );
 
         dumpContext.put( "documentExtension", report.getKind().toLowerCase() );
@@ -62,18 +61,7 @@ public class MavenProjectDumper
 
         dumpContext.put( "isSnapshot", version.endsWith( "-SNAPSHOT" ) );
 
-        File projectFile = new File( baseDir, "pom.xml" );
-        DumpHelper.generateFile( templateEngine, "pom.xml", dumpContext, projectFile );
-    }
-
-    @Override
-    protected void dumpToZip( IXDocReport report, InputStream documentIn, IContext context,
-                              ITemplateEngine templateEngine, IContext dumpContext, ZipOutputStream zipOutputStream )
-        throws FileNotFoundException, IOException, XDocReportException
-    {
-        super.dumpToZip( report, documentIn, context, templateEngine, dumpContext, zipOutputStream );
-
-        // TODO : pom.xml
+        DumpHelper.generateEntry( templateEngine, "pom.xml", dumpContext, "pom.xml", baseDir, out );
     }
 
     @Override

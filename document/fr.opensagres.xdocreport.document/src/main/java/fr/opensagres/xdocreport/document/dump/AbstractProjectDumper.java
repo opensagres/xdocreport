@@ -84,8 +84,7 @@ public abstract class AbstractProjectDumper
         if ( baseDir != null )
         {
             baseDir.mkdirs();
-            dumpToFile( report, documentIn, context, templateEngine, dumpContext, baseDir );
-
+            doDump( report, documentIn, context, templateEngine, dumpContext, baseDir, null );
         }
         else
         {
@@ -93,7 +92,7 @@ public abstract class AbstractProjectDumper
             try
             {
                 zipOutputStream = new ZipOutputStream( out );
-                dumpToZip( report, documentIn, context, templateEngine, dumpContext, zipOutputStream );
+                doDump( report, documentIn, context, templateEngine, dumpContext, null, zipOutputStream );
 
             }
             finally
@@ -106,49 +105,29 @@ public abstract class AbstractProjectDumper
         }
     }
 
-    protected void dumpToFile( IXDocReport report, InputStream documentIn, IContext context,
-                               ITemplateEngine templateEngine, IContext dumpContext, File baseDir )
-        throws FileNotFoundException, IOException, XDocReportException
-    {
-
-        // Resources folder
-        File resourcesSrcFolder = new File( baseDir, getResourcesSrcPath() );
-        resourcesSrcFolder.mkdirs();
-
-        // Document (docx, odt)
-        DumpHelper.generateDocumentFile( report, documentIn, dumpContext, resourcesSrcFolder );
-
-        // JSON
-        DumpHelper.generateJSONFile( report, context, dumpContext, resourcesSrcFolder );
-
-        // XML Fields
-        DumpHelper.generateFieldsMetadataFile( report, dumpContext, resourcesSrcFolder );
-
-        // Java folder
-        File javaSrcFolder = new File( baseDir, getJavaSrcPath() );
-        javaSrcFolder.mkdirs();
-        DumpHelper.generateJavaMainFile( templateEngine, dumpContext, javaSrcFolder );
-    }
-
-    protected void dumpToZip( IXDocReport report, InputStream documentIn, IContext context,
-                              ITemplateEngine templateEngine, IContext dumpContext, ZipOutputStream zipOutputStream )
-        throws FileNotFoundException, IOException, XDocReportException
+    protected void doDump( IXDocReport report, InputStream documentIn, IContext context,
+                           ITemplateEngine templateEngine, IContext dumpContext, File baseDir, ZipOutputStream out )
+        throws IOException, XDocReportException
     {
         // Resources path
         String resourcesSrcPath = getResourcesSrcPath();
 
         // Document (docx, odt)
-        DumpHelper.generateDocumentZipEntry( report, documentIn, dumpContext, zipOutputStream, resourcesSrcPath );
+        DumpHelper.generateDocumentEntry( report, documentIn, dumpContext, resourcesSrcPath, baseDir, out );
 
         // JSON data
-        DumpHelper.generateJSONZipEntry( report, context, dumpContext, zipOutputStream, resourcesSrcPath );
+        DumpHelper.generateJSONEntry( report, context, dumpContext, resourcesSrcPath, baseDir, out );
 
         // XML Fields
-        DumpHelper.generateFieldsMetadataZipEntry( report, dumpContext, zipOutputStream, resourcesSrcPath );
+        DumpHelper.generateFieldsMetadataEntry( report, dumpContext, resourcesSrcPath, baseDir, out );
 
         // Java path
         String javaSrcPath = getJavaSrcPath();
-        DumpHelper.generateJavaMainZipEntry( report, templateEngine, dumpContext, zipOutputStream, javaSrcPath );
+        String classNameFile = DumpHelper.getClassNameFile( dumpContext );
+        String javaPath = javaSrcPath + "/" + classNameFile;
+        DumpHelper.generateEntry( templateEngine, DumpHelper.JAVA_MAIN_DUMP_TEMPLATE, dumpContext, javaPath, baseDir,
+                                  out );
+
     }
 
     public MimeMapping getMimeMapping()

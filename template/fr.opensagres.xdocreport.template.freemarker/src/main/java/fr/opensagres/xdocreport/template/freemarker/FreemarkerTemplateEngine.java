@@ -294,4 +294,10 @@ public class FreemarkerTemplateEngine
             }
         }
     }
+    
+    @Override
+    public boolean isFieldNameStartsWithUpperCase()
+    {
+        return true;
+    }
 }

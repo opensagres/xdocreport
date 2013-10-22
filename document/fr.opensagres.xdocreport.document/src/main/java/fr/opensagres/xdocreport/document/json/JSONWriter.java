@@ -386,6 +386,6 @@ public class JSONWriter
     public JSONWriter value( Object object )
         throws JSONException
     {
-        return this.append( JSONObject.valueToString( object ) );
+        return this.append( JSONObject.valueToString( object, null ) );
     }
 }

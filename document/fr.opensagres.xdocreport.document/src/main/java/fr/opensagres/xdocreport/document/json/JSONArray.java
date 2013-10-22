@@ -89,20 +89,19 @@ import java.util.Map;
  * @author JSON.org
  * @version 2011-12-19
  */
-public class JSONArray extends ArrayList
+public class JSONArray
+    extends ArrayList
+    implements IJSONNode
 {
 
-//    /**
-//     * The arrayList where the JSONArray's properties are kept.
-//     */
-//    private final ArrayList myArrayList;
+    private boolean upperCaseFirstChar = JSONObject.DEFAULT_UPPER_CASE;
 
     /**
      * Construct an empty JSONArray.
      */
     public JSONArray()
     {
-//        super = new ArrayList();
+        // super = new ArrayList();
     }
 
     /**
@@ -171,14 +170,15 @@ public class JSONArray extends ArrayList
      * 
      * @param collection A Collection.
      */
-    public JSONArray( Collection collection )
+    public JSONArray( Collection collection, boolean upperCaseFirstChar )
     {
+        this.upperCaseFirstChar = upperCaseFirstChar;
         if ( collection != null )
         {
             Iterator iter = collection.iterator();
             while ( iter.hasNext() )
             {
-                super.add( JSONObject.wrap( iter.next() ) );
+                super.add( JSONObject.wrap( iter.next(), this ) );
             }
         }
     }
@@ -188,16 +188,19 @@ public class JSONArray extends ArrayList
      * 
      * @throws JSONException If not an array.
      */
-    public JSONArray( Object array )
+    public JSONArray( Object array, boolean upperCaseFirstChar )
+
         throws JSONException
     {
         this();
+        this.upperCaseFirstChar = upperCaseFirstChar;
+
         if ( array.getClass().isArray() )
         {
             int length = Array.getLength( array );
             for ( int i = 0; i < length; i += 1 )
             {
-                this.put( JSONObject.wrap( Array.get( array, i ) ) );
+                this.put( JSONObject.wrap( Array.get( array, i ), this ) );
             }
         }
         else
@@ -215,7 +218,7 @@ public class JSONArray extends ArrayList
      */
     @Override
     public Object get( int index )
-        /*throws JSONException*/
+    /* throws JSONException */
     {
         Object object = this.opt( index );
         if ( object == null )
@@ -397,7 +400,7 @@ public class JSONArray extends ArrayList
             {
                 sb.append( separator );
             }
-            sb.append( JSONObject.valueToString( super.get( i ) ) );
+            sb.append( JSONObject.valueToString( super.get( i ), this ) );
         }
         return sb.toString();
     }
@@ -621,7 +624,7 @@ public class JSONArray extends ArrayList
      */
     public JSONArray put( Collection value )
     {
-        this.put( new JSONArray( value ) );
+        this.put( new JSONArray( value, this.isUpperCaseFirstChar() ) );
         return this;
     }
 
@@ -673,7 +676,7 @@ public class JSONArray extends ArrayList
      */
     public JSONArray put( Map value )
     {
-        this.put( new JSONObject( value ) );
+        this.put( new JSONObject( value, this.isUpperCaseFirstChar() ) );
         return this;
     }
 
@@ -717,7 +720,7 @@ public class JSONArray extends ArrayList
     public JSONArray put( int index, Collection value )
         throws JSONException
     {
-        this.put( index, new JSONArray( value ) );
+        this.put( index, new JSONArray( value, this.isUpperCaseFirstChar() ) );
         return this;
     }
 
@@ -780,7 +783,7 @@ public class JSONArray extends ArrayList
     public JSONArray put( int index, Map value )
         throws JSONException
     {
-        this.put( index, new JSONObject( value ) );
+        this.put( index, new JSONObject( value, this.isUpperCaseFirstChar() ) );
         return this;
     }
 
@@ -909,7 +912,7 @@ public class JSONArray extends ArrayList
         StringBuilder sb = new StringBuilder( "[" );
         if ( len == 1 )
         {
-            sb.append( JSONObject.valueToString( super.get( 0 ), indentFactor, indent ) );
+            sb.append( JSONObject.valueToString( super.get( 0 ), this, indentFactor, indent ) );
         }
         else
         {
@@ -925,7 +928,7 @@ public class JSONArray extends ArrayList
                 {
                     sb.append( ' ' );
                 }
-                sb.append( JSONObject.valueToString( super.get( i ), indentFactor, newindent ) );
+                sb.append( JSONObject.valueToString( super.get( i ), this, indentFactor, newindent ) );
             }
             sb.append( '\n' );
             for ( i = 0; i < indent; i += 1 )
@@ -972,7 +975,7 @@ public class JSONArray extends ArrayList
                 }
                 else
                 {
-                    writer.write( JSONObject.valueToString( v ) );
+                    writer.write( JSONObject.valueToString( v, this ) );
                 }
                 b = true;
             }
@@ -983,5 +986,10 @@ public class JSONArray extends ArrayList
         {
             throw new JSONException( e );
         }
+    }
+
+    public boolean isUpperCaseFirstChar()
+    {
+        return upperCaseFirstChar;
     }
 }

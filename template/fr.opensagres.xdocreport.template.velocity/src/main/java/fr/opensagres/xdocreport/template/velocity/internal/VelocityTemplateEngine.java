@@ -183,4 +183,10 @@ public class VelocityTemplateEngine
         }
 
     }
+
+    @Override
+    public boolean isFieldNameStartsWithUpperCase()
+    {
+        return false;
+    }
 }

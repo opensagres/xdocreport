@@ -116,7 +116,8 @@ public abstract class AbstractProjectDumper
         DumpHelper.generateDocumentEntry( report, documentIn, dumpContext, resourcesSrcPath, baseDir, out );
 
         // JSON data
-        DumpHelper.generateJSONEntry( report, context, dumpContext, resourcesSrcPath, baseDir, out );
+        boolean upperCaseFirstChar = templateEngine.isFieldNameStartsWithUpperCase();
+        DumpHelper.generateJSONEntry( report, context, upperCaseFirstChar, dumpContext, resourcesSrcPath, baseDir, out );
 
         // XML Fields
         DumpHelper.generateFieldsMetadataEntry( report, dumpContext, resourcesSrcPath, baseDir, out );

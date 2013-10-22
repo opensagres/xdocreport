@@ -116,7 +116,10 @@ import fr.opensagres.xdocreport.document.images.IImageProvider;
  */
 public class JSONObject
     /* added by XDocReport */extends HashMap
+    implements IJSONNode
 {
+
+    protected static final boolean DEFAULT_UPPER_CASE = true;
 
     private static final String DATE_TYPE = "$date";
 
@@ -125,6 +128,8 @@ public class JSONObject
     private boolean isDate;
 
     private boolean isImage;
+
+    private boolean upperCaseFirstChar = DEFAULT_UPPER_CASE;
 
     /**
      * JSONObject.NULL is equivalent to the value that JavaScript calls null, whilst Java's null is equivalent to the
@@ -282,9 +287,9 @@ public class JSONObject
      * @param map A map object that can be used to initialize the contents of the JSONObject.
      * @throws JSONException
      */
-    public JSONObject( Map map )
+    public JSONObject( Map map, boolean upperCaseFirstChar )
     {
-        // super = new HashMap();
+        this.upperCaseFirstChar = upperCaseFirstChar;
         if ( map != null )
         {
             Iterator i = map.entrySet().iterator();
@@ -294,7 +299,7 @@ public class JSONObject
                 Object value = e.getValue();
                 if ( value != null )
                 {
-                    super.put( e.getKey(), wrap( value ) );
+                    super.put( e.getKey(), wrap( value, this ) );
                 }
             }
         }
@@ -325,9 +330,10 @@ public class JSONObject
      * 
      * @param bean An object that has getter methods that should be used to make a JSONObject.
      */
-    public JSONObject( Object bean )
+    public JSONObject( Object bean, boolean upperCaseFirstChar )
     {
         this();
+        this.upperCaseFirstChar = upperCaseFirstChar;
         this.populateMap( bean );
     }
 
@@ -1142,19 +1148,21 @@ public class JSONObject
                     if ( key.length() > 0 && Character.isUpperCase( key.charAt( 0 ) )
                         && method.getParameterTypes().length == 0 )
                     {
-                        if ( key.length() == 1 )
+                        if ( upperCaseFirstChar )
                         {
-                            key = key.toLowerCase();
+                            if ( key.length() == 1 )
+                            {
+                                key = key.toLowerCase();
+                            }
+                            else if ( !Character.isUpperCase( key.charAt( 1 ) ) )
+                            {
+                                key = key.substring( 0, 1 ).toLowerCase() + key.substring( 1 );
+                            }
                         }
-                        else if ( !Character.isUpperCase( key.charAt( 1 ) ) )
-                        {
-                            key = key.substring( 0, 1 ).toLowerCase() + key.substring( 1 );
-                        }
-
                         Object result = method.invoke( bean, (Object[]) null );
                         if ( result != null )
                         {
-                            super.put( key, wrap( result ) );
+                            super.put( key, wrap( result, this ) );
                         }
                     }
                 }
@@ -1191,7 +1199,7 @@ public class JSONObject
     public JSONObject put( String key, Collection value )
         throws JSONException
     {
-        this.put( key, new JSONArray( value ) );
+        this.put( key, new JSONArray( value, this.isUpperCaseFirstChar() ) );
         return this;
     }
 
@@ -1251,7 +1259,7 @@ public class JSONObject
     public JSONObject put( String key, Map value )
         throws JSONException
     {
-        this.put( key, new JSONObject( value ) );
+        this.put( key, new JSONObject( value, this.isUpperCaseFirstChar() ) );
         return this;
     }
 
@@ -1560,7 +1568,7 @@ public class JSONObject
                 Object o = keys.next();
                 sb.append( quote( o.toString() ) );
                 sb.append( ':' );
-                sb.append( valueToString( super.get( o ) ) );
+                sb.append( valueToString( super.get( o ), this ) );
             }
             sb.append( '}' );
             return sb.toString();
@@ -1617,7 +1625,7 @@ public class JSONObject
             object = keys.next();
             sb.append( quote( object.toString() ) );
             sb.append( ": " );
-            sb.append( valueToString( super.get( object ), indentFactor, indent ) );
+            sb.append( valueToString( super.get( object ), this, indentFactor, indent ) );
         }
         else
         {
@@ -1638,7 +1646,7 @@ public class JSONObject
                 }
                 sb.append( quote( object.toString() ) );
                 sb.append( ": " );
-                sb.append( valueToString( super.get( object ), indentFactor, newindent ) );
+                sb.append( valueToString( super.get( object ), this, indentFactor, newindent ) );
             }
             if ( sb.length() > 1 )
             {
@@ -1668,7 +1676,7 @@ public class JSONObject
      *         &nbsp;<small>(left brace)</small> and ending with <code>}</code>&nbsp;<small>(right brace)</small>.
      * @throws JSONException If the value is or contains an invalid number.
      */
-    public static String valueToString( Object value )
+    public static String valueToString( Object value, IJSONNode node )
         throws JSONException
     {
         if ( value == null || value.equals( null ) )
@@ -1704,17 +1712,18 @@ public class JSONObject
         {
             return value.toString();
         }
+        boolean isUpperCaseFirstChar = node != null ? node.isUpperCaseFirstChar() : DEFAULT_UPPER_CASE;
         if ( value instanceof Map )
         {
-            return new JSONObject( (Map) value ).toString();
+            return new JSONObject( (Map) value, isUpperCaseFirstChar ).toString();
         }
         if ( value instanceof Collection )
         {
-            return new JSONArray( (Collection) value ).toString();
+            return new JSONArray( (Collection) value, isUpperCaseFirstChar ).toString();
         }
         if ( value.getClass().isArray() )
         {
-            return new JSONArray( value ).toString();
+            return new JSONArray( value, isUpperCaseFirstChar ).toString();
         }
         return quote( value.toString() );
     }
@@ -1736,7 +1745,7 @@ public class JSONObject
      *         &nbsp;<small>(left brace)</small> and ending with <code>}</code>&nbsp;<small>(right brace)</small>.
      * @throws JSONException If the object contains an invalid number.
      */
-    static String valueToString( Object value, int indentFactor, int indent )
+    static String valueToString( Object value, IJSONNode node, int indentFactor, int indent )
         throws JSONException
     {
         if ( value == null || value.equals( null ) )
@@ -1777,17 +1786,18 @@ public class JSONObject
         {
             return ( (JSONArray) value ).toString( indentFactor, indent );
         }
+        boolean isUpperCaseFirstChar = node != null ? node.isUpperCaseFirstChar() : DEFAULT_UPPER_CASE;
         if ( value instanceof Map )
         {
-            return new JSONObject( (Map) value ).toString( indentFactor, indent );
+            return new JSONObject( (Map) value, isUpperCaseFirstChar ).toString( indentFactor, indent );
         }
         if ( value instanceof Collection )
         {
-            return new JSONArray( (Collection) value ).toString( indentFactor, indent );
+            return new JSONArray( (Collection) value, isUpperCaseFirstChar ).toString( indentFactor, indent );
         }
         if ( value.getClass().isArray() )
         {
-            return new JSONArray( value ).toString( indentFactor, indent );
+            return new JSONArray( value, isUpperCaseFirstChar ).toString( indentFactor, indent );
         }
         return quote( value.toString() );
     }
@@ -1801,7 +1811,7 @@ public class JSONObject
      * @param object The object to wrap
      * @return The wrapped value
      */
-    public static Object wrap( Object object )
+    public static Object wrap( Object object, IJSONNode node )
     {
         try
         {
@@ -1817,18 +1827,18 @@ public class JSONObject
             {
                 return object;
             }
-
+            boolean isUpperCaseFirstChar = node != null ? node.isUpperCaseFirstChar() : DEFAULT_UPPER_CASE;
             if ( object instanceof Collection )
             {
-                return new JSONArray( (Collection) object );
+                return new JSONArray( (Collection) object, isUpperCaseFirstChar );
             }
             if ( object.getClass().isArray() )
             {
-                return new JSONArray( object );
+                return new JSONArray( object, isUpperCaseFirstChar );
             }
             if ( object instanceof Map )
             {
-                return new JSONObject( (Map) object );
+                return new JSONObject( (Map) object, isUpperCaseFirstChar );
             }
             if ( object instanceof Date )
             {
@@ -1845,7 +1855,7 @@ public class JSONObject
             {
                 return object.toString();
             }
-            return new JSONObject( object );
+            return new JSONObject( object, isUpperCaseFirstChar );
         }
         catch ( Exception exception )
         {
@@ -1890,7 +1900,7 @@ public class JSONObject
                 }
                 else
                 {
-                    writer.write( valueToString( value ) );
+                    writer.write( valueToString( value, this ) );
                 }
                 commanate = true;
             }
@@ -1911,5 +1921,10 @@ public class JSONObject
     public boolean isImage()
     {
         return isImage;
+    }
+
+    public boolean isUpperCaseFirstChar()
+    {
+        return upperCaseFirstChar;
     }
 }

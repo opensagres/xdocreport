@@ -136,4 +136,6 @@ public interface ITemplateEngine
     void process( String templateName, IContext context, Writer writer )
         throws IOException, XDocReportException;
 
+    boolean isFieldNameStartsWithUpperCase();
+
 }

@@ -95,7 +95,8 @@ public class JavaMainDumper
         dumpContext.put( "xmlFields", xmlFields );
 
         // JSON as data
-        String json = DumpHelper.toJSON( context, true );
+        boolean upperCaseFirstChar = templateEngine.isFieldNameStartsWithUpperCase();
+        String json = DumpHelper.toJSON( context, upperCaseFirstChar, true );
         dumpContext.put( "json", json );
 
         // Java Main

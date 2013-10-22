@@ -160,14 +160,14 @@ public class DumpHelper
 
     // ---------------- JSON as data
 
-    public static String toJSON( IContext context )
+    public static String toJSON( IContext context, boolean upperCaseFirstChar )
     {
-        return toJSON( context, false );
+        return toJSON( context, upperCaseFirstChar, false );
     }
 
-    public static String toJSON( IContext context, boolean formatAsJavaString )
+    public static String toJSON( IContext context, boolean upperCaseFirstChar, boolean formatAsJavaString )
     {
-        JSONObject json = new JSONObject( context.getContextMap() );
+        JSONObject json = new JSONObject( context.getContextMap(), upperCaseFirstChar );
         String jsonString = json.toString();
         if ( !formatAsJavaString )
         {
@@ -176,27 +176,29 @@ public class DumpHelper
         return jsonString.replace( DOUBLE_QUOTE, ESCAPED_DOUBLE_QUOTE );
     }
 
-    public static void generateJSONEntry( IXDocReport report, IContext context, IContext dumpContext,
-                                          String resourcesSrcPath, File baseDir, ZipOutputStream out )
+    public static void generateJSONEntry( IXDocReport report, IContext context, boolean upperCaseFirstChar,
+                                          IContext dumpContext, String resourcesSrcPath, File baseDir,
+                                          ZipOutputStream out )
         throws IOException
     {
         if ( out != null )
         {
-            generateJSONZipEntry( report, context, dumpContext, out, resourcesSrcPath );
+            generateJSONZipEntry( report, context, upperCaseFirstChar, dumpContext, out, resourcesSrcPath );
         }
         else
         {
-            generateJSONFile( report, context, dumpContext, new File( baseDir, resourcesSrcPath ) );
+            generateJSONFile( report, context, upperCaseFirstChar, dumpContext, new File( baseDir, resourcesSrcPath ) );
         }
 
     }
 
-    public static void generateJSONFile( IXDocReport report, IContext context, IContext dumpContext, File srcDir )
+    public static void generateJSONFile( IXDocReport report, IContext context, boolean upperCaseFirstChar,
+                                         IContext dumpContext, File srcDir )
         throws IOException
     {
         String jsonFileName = getJSONFileName( report, dumpContext );
 
-        JSONObject jsonObject = new JSONObject( context.getContextMap() );
+        JSONObject jsonObject = new JSONObject( context.getContextMap(), upperCaseFirstChar );
 
         File jsonFile = new File( srcDir, jsonFileName );
         jsonFile.getParentFile().mkdirs();
@@ -216,13 +218,13 @@ public class DumpHelper
         }
     }
 
-    public static void generateJSONZipEntry( IXDocReport report, IContext context, IContext dumpContext,
-                                             ZipOutputStream out, String src )
+    public static void generateJSONZipEntry( IXDocReport report, IContext context, boolean upperCaseFirstChar,
+                                             IContext dumpContext, ZipOutputStream out, String src )
         throws IOException
     {
         String jsonFileName = getJSONFileName( report, dumpContext );
 
-        JSONObject jsonObject = new JSONObject( context.getContextMap() );
+        JSONObject jsonObject = new JSONObject( context.getContextMap(), upperCaseFirstChar );
 
         ZipEntry zipEntry = new ZipEntry( src + "/" + jsonFileName );
         out.putNextEntry( zipEntry );

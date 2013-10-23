@@ -27,6 +27,7 @@ package org.apache.poi.xwpf.converter.core.styles.table;
 import java.math.BigInteger;
 
 import org.apache.poi.xwpf.converter.core.utils.DxaUtil;
+import org.apache.poi.xwpf.converter.core.utils.XWPFTableUtil;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTTblPr;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTTblPrBase;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTTblWidth;
@@ -64,7 +65,7 @@ public class TableIndentationValueProvider
             {
 
             }
-            BigInteger width = tblWidth.getW();
+            Float width = XWPFTableUtil.getTblWidthW( tblWidth );
             if ( width != null )
             {
                 return DxaUtil.dxa2points( width );

@@ -96,7 +96,7 @@ public class XWPFTableUtil
 
         // Compare nbCols computed with number of grid colList
         CTTblGrid grid = table.getCTTbl().getTblGrid();
-        List<CTTblGridCol> cols = grid.getGridColList();
+        List<CTTblGridCol> cols = getGridColList( grid );
         if ( nbCols > cols.size() )
         {
             Collection<Float> maxColWidths = null;
@@ -149,6 +149,29 @@ public class XWPFTableUtil
             }
         }
         return colWidths;
+    }
+
+    /**
+     * <w:gridCol list should be filtered to ignore negative value.
+     * <p>
+     * Ex : <w:gridCol w:w="-54" /> should be ignored. See https://code.google.com/p/xdocreport/issues/detail?id=315
+     * </p>
+     * 
+     * @param grid
+     * @return
+     */
+    private static List<CTTblGridCol> getGridColList( CTTblGrid grid )
+    {
+        List<CTTblGridCol> newCols = new ArrayList<CTTblGridCol>();
+        List<CTTblGridCol> cols = grid.getGridColList();
+        for ( CTTblGridCol col : cols )
+        {
+            if ( col.getW().floatValue() >= 0 )
+            {
+                newCols.add( col );
+            }
+        }
+        return newCols;
     }
 
     private static int getNbColumnsToIgnore( XWPFTableRow row, boolean before )
@@ -294,7 +317,15 @@ public class XWPFTableUtil
 
     public static TableWidth getTableWidth( CTTblWidth tblWidth )
     {
-        float width = tblWidth.getW().intValue();
+        if ( tblWidth == null )
+        {
+            return null;
+        }
+        Float width = getTblWidthW( tblWidth );
+        if ( width == null )
+        {
+            return null;
+        }
         boolean percentUnit = ( STTblWidth.INT_PCT == tblWidth.getType().intValue() );
         if ( percentUnit )
         {
@@ -305,6 +336,33 @@ public class XWPFTableUtil
             width = dxa2points( width );
         }
         return new TableWidth( width, percentUnit );
+    }
+
+    /**
+     * Returns the float value of <w:tblW w:w="9288.0" w:type="dxa" />
+     * 
+     * @param tblWidth
+     * @return
+     */
+    public static Float getTblWidthW( CTTblWidth tblWidth )
+    {
+        try
+        {
+            return tblWidth.getW().floatValue();
+        }
+        catch ( Throwable e )
+        {
+            // Sometimes w:w is a float value.Ex : <w:tblW w:w="9288.0" w:type="dxa" />
+            // see https://code.google.com/p/xdocreport/issues/detail?id=315
+            Attr attr =
+                (Attr) tblWidth.getDomNode().getAttributes().getNamedItemNS( "http://schemas.openxmlformats.org/wordprocessingml/2006/main",
+                                                                             "w" );
+            if ( attr != null )
+            {
+                return Float.valueOf( attr.getValue() );
+            }
+        }
+        return null;
     }
 
     public static CTTblPr getTblPr( XWPFTable table )

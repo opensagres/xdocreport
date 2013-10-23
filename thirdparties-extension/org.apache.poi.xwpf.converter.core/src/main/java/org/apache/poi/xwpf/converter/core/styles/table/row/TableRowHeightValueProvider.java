@@ -84,22 +84,4 @@ public class TableRowHeightValueProvider
         return new TableHeight( height, minimum );
     }
 
-    public TableWidth getTableWidth( CTTblWidth tblWidth )
-    {
-        if ( tblWidth == null )
-        {
-            return null;
-        }
-        float width = tblWidth.getW().intValue();
-        boolean percentUnit = ( STTblWidth.INT_PCT == tblWidth.getType().intValue() );
-        if ( percentUnit )
-        {
-            width = width / 100f;
-        }
-        else
-        {
-            width = dxa2points( width );
-        }
-        return new TableWidth( width, percentUnit );
-    }
 }

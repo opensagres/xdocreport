@@ -106,6 +106,10 @@ public class XWPFUtils
             return true;
         if ( onoff.getVal() == STOnOff.TRUE )
             return true;
+        if ( onoff.getVal() == STOnOff.X_1 )
+            // sometimes bold, italic are with w="1". Ex : <w:i w:val="1" />
+            // see https://code.google.com/p/xdocreport/issues/detail?id=315
+            return true;
         return false;
     }
 }

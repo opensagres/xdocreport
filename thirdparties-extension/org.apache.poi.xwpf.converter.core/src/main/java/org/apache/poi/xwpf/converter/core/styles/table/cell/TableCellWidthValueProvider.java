@@ -27,6 +27,7 @@ package org.apache.poi.xwpf.converter.core.styles.table.cell;
 import static org.apache.poi.xwpf.converter.core.utils.DxaUtil.dxa2points;
 
 import org.apache.poi.xwpf.converter.core.TableWidth;
+import org.apache.poi.xwpf.converter.core.utils.XWPFTableUtil;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTTblWidth;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTTcPr;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.STTblWidth;
@@ -54,7 +55,7 @@ public class TableCellWidthValueProvider
         {
             return null;
         }
-        float width = tblWidth.getW().intValue();
+        float width = XWPFTableUtil.getTblWidthW( tblWidth );
         boolean percentUnit = ( STTblWidth.INT_PCT == tblWidth.getType().intValue() );
         if ( percentUnit )
         {

@@ -25,6 +25,7 @@
 package org.apache.poi.xwpf.converter.core.styles.table.cell;
 
 import org.apache.poi.xwpf.converter.core.utils.DxaUtil;
+import org.apache.poi.xwpf.converter.core.utils.XWPFTableUtil;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTTblWidth;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTTcMar;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTTcPr;
@@ -58,7 +59,7 @@ public abstract class AbstractTableCellMarginValueProvider
             {
                 return 0f;
             }
-            return DxaUtil.dxa2points( tblWidth.getW() );
+            return DxaUtil.dxa2points( XWPFTableUtil.getTblWidthW( tblWidth ) );
         }
         return null;
     }

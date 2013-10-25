@@ -150,8 +150,8 @@ public abstract class XWPFDocumentVisitor<T, O extends Options, E extends IXWPFM
     {
         this.document = document;
         this.options = options;
-        this.masterPageManager = new MasterPageManager( document, this );
         this.stylesDocument = createStylesDocument( document );
+        this.masterPageManager = new MasterPageManager( document, this );
     }
 
     protected XWPFStylesDocument createStylesDocument( XWPFDocument document )

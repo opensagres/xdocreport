@@ -24,20 +24,27 @@
  */
 package org.apache.poi.xwpf.converter.core;
 
+import java.io.InputStream;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.Map;
 
+import org.apache.poi.POIXMLDocumentPart;
+import org.apache.poi.xwpf.converter.core.styles.XWPFStylesDocument;
 import org.apache.poi.xwpf.converter.core.utils.XWPFUtils;
 import org.apache.poi.xwpf.usermodel.BodyElementType;
 import org.apache.poi.xwpf.usermodel.IBodyElement;
 import org.apache.poi.xwpf.usermodel.XWPFDocument;
 import org.apache.poi.xwpf.usermodel.XWPFParagraph;
+import org.apache.poi.xwpf.usermodel.XWPFRelation;
+import org.apache.poi.xwpf.usermodel.XWPFSettings;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTHdrFtrRef;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTPPr;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTSectPr;
+import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTSettings;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.STHdrFtr;
+import org.openxmlformats.schemas.wordprocessingml.x2006.main.SettingsDocument;
 
 /**
  * See http://officeopenxml.com/WPsection.php
@@ -64,6 +71,8 @@ public class MasterPageManager
 
     private IXWPFMasterPage currentMasterPage;
 
+    private final boolean evenAndOddHeaders;
+
     public MasterPageManager( XWPFDocument document, XWPFDocumentVisitor visitor )
         throws Exception
     {
@@ -74,6 +83,9 @@ public class MasterPageManager
         this.initialized = false;
         this.changeSection = false;
         this.nbPages = 0;
+
+        // get event
+        this.evenAndOddHeaders = isEventAndOddHeaders( visitor.getStylesDocument() );
     }
 
     public void initialize()
@@ -149,7 +161,7 @@ public class MasterPageManager
     private void fireSectionChanged( CTSectPr sectPr )
     {
         currentMasterPage = getMasterPage( sectPr );
-        documentHandler.setActiveMasterPage( currentMasterPage ); 
+        documentHandler.setActiveMasterPage( currentMasterPage );
     }
 
     private void addSection( CTSectPr sectPr, boolean pushIt )
@@ -174,12 +186,14 @@ public class MasterPageManager
         throws Exception
     {
         // see titlePg at http://officeopenxml.com/WPsection.php i
-        // Specifies whether the section should have a different header and footer
+        // Specifies whether the section should have a different header and
+        // footer
         // for its first page.
         // If the element is set to true (e.g., <w:titlePg/>),
         // then the section will use a first page header;
         // if it is false (e.g., <w:titlePg w:val="false"/>)
-        // (the default value), then the first page uses the odd page header. If the element is set to true but the
+        // (the default value), then the first page uses the odd page header. If
+        // the element is set to true but the
         // first page header type is omitted, then a blank header is created.
         boolean ignoreFirstHeaderFooter = !XWPFUtils.isCTOnOff( sectPr.getTitlePg() );
 
@@ -232,21 +246,42 @@ public class MasterPageManager
         return initialized;
     }
 
+    // edited
     public void onNewPage()
     {
-
         if ( currentMasterPage != null )
         {
             int oldType = currentMasterPage.getType();
             int newType = STHdrFtr.INT_DEFAULT;
-            if ( nbPages % 2 == 0 )
+            if ( evenAndOddHeaders )
             {
-                newType = STHdrFtr.INT_EVEN;
+                if ( nbPages % 2 == 0 )
+                {
+                    newType = STHdrFtr.INT_EVEN;
+                }
+                nbPages++;
             }
             if ( oldType != newType )
             {
                 currentMasterPage.setType( newType );
             }
+
         }
+    }
+
+    /**
+     * Returns true if <w:evenAndOddHeaders /> is defined in the word/settings.xml entry and false otherwise.
+     * 
+     * @param stylesDocument
+     * @return
+     */
+    private boolean isEventAndOddHeaders( XWPFStylesDocument stylesDocument )
+    {
+        CTSettings settings = stylesDocument.getCTSettings();
+        if ( settings == null )
+        {
+            return false;
+        }
+        return XWPFUtils.isCTOnOff( settings.getEvenAndOddHeaders() );
     }
 }

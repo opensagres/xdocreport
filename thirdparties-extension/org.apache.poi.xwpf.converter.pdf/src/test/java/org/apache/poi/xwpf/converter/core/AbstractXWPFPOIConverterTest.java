@@ -39,6 +39,13 @@ public abstract class AbstractXWPFPOIConverterTest
     }
 
     @Test
+    public void AdvancedTable2()
+        throws IOException
+    {
+        doGenerate( "AdvancedTable2.docx" );
+    }
+    
+    @Test
     public void AvanceSurFrais()
         throws IOException
     {

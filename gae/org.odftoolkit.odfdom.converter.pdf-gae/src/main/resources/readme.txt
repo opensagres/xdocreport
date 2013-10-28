@@ -1,0 +1,1 @@
+https://issues.sonatype.org/browse/OSSRH-3723

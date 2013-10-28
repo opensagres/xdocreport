@@ -3,7 +3,7 @@
   <parent>
     <artifactId>tools</artifactId>
     <groupId>fr.opensagres.xdocreport</groupId>
-    <version>1.0.3</version>
+    <version>1.0.3-SNAPSHOT</version>
   </parent>
   <artifactId>fr.opensagres.xdocreport.openoffice.tools</artifactId>
   <build>
@@ -60,7 +60,7 @@
     <dependency>
       <groupId>org.swinglabs</groupId>
       <artifactId>swing-layout</artifactId>
-      <version>1.0.3</version>
+      <version>1.0.3-SNAPSHOT</version>
     </dependency>
     <dependency>
       <groupId>junit</groupId>
@@ -71,7 +71,7 @@
     <dependency>
       <groupId>fr.opensagres.xdocreport</groupId>
       <artifactId>fr.opensagres.xdocreport.remoting.javaclient</artifactId>
-      <version>1.0.3</version>
+      <version>1.0.3-SNAPSHOT</version>
 
     </dependency>
   </dependencies>

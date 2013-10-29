@@ -30,6 +30,7 @@
 							<transformers>
 								<transformer implementation="org.apache.maven.plugins.shade.resource.ServicesResourceTransformer" />
 							</transformers>
+							<createSourcesJar>true</createSourcesJar>
 						</configuration>
 					</execution>
 				</executions>

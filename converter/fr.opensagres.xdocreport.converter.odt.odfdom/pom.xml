@@ -6,24 +6,24 @@
 	<parent>
 		<groupId>fr.opensagres.xdocreport</groupId>
 		<artifactId>converter</artifactId>
-		<version>1.0.3</version>
+		<version>1.0.3-SNAPSHOT</version>
 	</parent>
 
 	<dependencies>
 		<dependency>
 			<groupId>fr.opensagres.xdocreport</groupId>
 			<artifactId>fr.opensagres.xdocreport.converter</artifactId>
-			<version>1.0.3</version>
+			<version>1.0.3-SNAPSHOT</version>
 		</dependency>
 		<dependency>
 			<groupId>fr.opensagres.xdocreport</groupId>
 			<artifactId>org.odftoolkit.odfdom.converter.pdf</artifactId>
-			<version>1.0.3</version>
+			<version>1.0.3-SNAPSHOT</version>
 		</dependency>
 		<dependency>
 			<groupId>fr.opensagres.xdocreport</groupId>
 			<artifactId>org.odftoolkit.odfdom.converter.xhtml</artifactId>
-			<version>1.0.3</version>
+			<version>1.0.3-SNAPSHOT</version>
 		</dependency>		
 	</dependencies>
 </project>

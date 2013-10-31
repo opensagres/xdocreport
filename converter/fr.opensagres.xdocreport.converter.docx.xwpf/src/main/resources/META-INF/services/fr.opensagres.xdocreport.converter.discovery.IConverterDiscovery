@@ -24,4 +24,5 @@
 #
 
 fr.opensagres.xdocreport.converter.docx.poi.itext.discovery.XWPF2PDFViaITextConverterDiscovery
+fr.opensagres.xdocreport.converter.docx.poi.itext.discovery.OpenXMLFormats2PDFViaITextConverterDiscovery
 fr.opensagres.xdocreport.converter.docx.poi.xhtml.discovery.XWPF2XHTMLConverterDiscovery

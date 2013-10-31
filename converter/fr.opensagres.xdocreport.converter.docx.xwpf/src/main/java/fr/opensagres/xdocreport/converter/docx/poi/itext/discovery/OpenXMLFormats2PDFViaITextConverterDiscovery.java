@@ -22,13 +22,47 @@
  * OF CONTRACT, TORT OR OTHERWISE,  ARISING FROM, OUT OF OR IN CONNECTION
  * WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
-package fr.opensagres.xdocreport.converter;
+package fr.opensagres.xdocreport.converter.docx.poi.itext.discovery;
 
-/**
- * XDocReport available converter via which explains how converter is done.
- */
-public enum ConverterTypeVia
+import fr.opensagres.xdocreport.converter.ConverterTypeTo;
+import fr.opensagres.xdocreport.converter.ConverterTypeVia;
+import fr.opensagres.xdocreport.converter.IConverter;
+import fr.opensagres.xdocreport.converter.discovery.IConverterDiscovery;
+import fr.opensagres.xdocreport.converter.docx.poi.itext.OpenXMLFormats2PDFViaITextConverter;
+import fr.opensagres.xdocreport.core.document.DocumentKind;
+
+public class OpenXMLFormats2PDFViaITextConverterDiscovery
+    implements IConverterDiscovery
 {
 
-    FOP, XSL, ODFDOM, XWPF, DOCX4J, OpenXMLFormats
+    public String getId()
+    {
+        return "OpenXMLFormats2PDFViaIText";
+    }
+
+    public String getDescription()
+    {
+        return "Convert Docx (OpenXMLFormats) 2 PDF via IText";
+    }
+
+    public String getFrom()
+    {
+        return DocumentKind.DOCX.name();
+    }
+
+    public String getTo()
+    {
+        return ConverterTypeTo.PDF.name();
+    }
+
+    public String getVia()
+    {
+        return ConverterTypeVia.OpenXMLFormats.name();
+    }
+
+    public IConverter getConverter()
+    {
+        return OpenXMLFormats2PDFViaITextConverter.getInstance();
+    }
+
 }

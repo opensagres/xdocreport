@@ -22,13 +22,18 @@
  * OF CONTRACT, TORT OR OTHERWISE,  ARISING FROM, OUT OF OR IN CONNECTION
  * WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
-package fr.opensagres.xdocreport.converter;
+package org.apache.poi.xwpf.converter.core.openxmlformats;
 
-/**
- * XDocReport available converter via which explains how converter is done.
- */
-public enum ConverterTypeVia
+import java.io.IOException;
+import java.io.OutputStream;
+
+import org.apache.poi.xwpf.converter.core.Options;
+import org.apache.poi.xwpf.converter.core.XWPFConverterException;
+
+public interface IOpenXMlFormatsConverter<T extends Options>
 {
 
-    FOP, XSL, ODFDOM, XWPF, DOCX4J, OpenXMLFormats
+    void convert( IOpenXMLFormatsPartProvider provider, OutputStream out, T options )
+        throws XWPFConverterException, IOException;
+
 }

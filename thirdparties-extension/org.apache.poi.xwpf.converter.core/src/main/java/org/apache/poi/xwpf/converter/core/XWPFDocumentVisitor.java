@@ -120,6 +120,7 @@ import org.openxmlformats.schemas.wordprocessingml.x2006.main.STOnOff;
  * @param <E>
  */
 public abstract class XWPFDocumentVisitor<T, O extends Options, E extends IXWPFMasterPage>
+    implements IMasterPageHandler<E>
 {
 
     private static final Logger LOGGER = Logger.getLogger( XWPFDocumentVisitor.class.getName() );
@@ -151,7 +152,7 @@ public abstract class XWPFDocumentVisitor<T, O extends Options, E extends IXWPFM
         this.document = document;
         this.options = options;
         this.stylesDocument = createStylesDocument( document );
-        this.masterPageManager = new MasterPageManager( document, this );
+        this.masterPageManager = new MasterPageManager( document.getDocument(), this );
     }
 
     protected XWPFStylesDocument createStylesDocument( XWPFDocument document )
@@ -266,7 +267,7 @@ public abstract class XWPFDocumentVisitor<T, O extends Options, E extends IXWPFM
             // It's the word/document.xml which is parsing
             // test if the current paragraph define a <w:sectPr
             // to update the header/footer declared in the <w:headerReference/<w:footerReference
-            masterPageManager.update( paragraph );
+            masterPageManager.update( paragraph.getCTP() );
         }
         if ( pageBreakOnNextParagraph )
         {
@@ -1090,7 +1091,7 @@ public abstract class XWPFDocumentVisitor<T, O extends Options, E extends IXWPFM
 
     // ------------------------------ Header/Footer visitor -----------
 
-    protected void visitHeaderRef( CTHdrFtrRef headerRef, CTSectPr sectPr, E masterPage )
+    public void visitHeaderRef( CTHdrFtrRef headerRef, CTSectPr sectPr, E masterPage )
         throws Exception
     {
         this.currentHeader = getXWPFHeader( headerRef );
@@ -1101,7 +1102,7 @@ public abstract class XWPFDocumentVisitor<T, O extends Options, E extends IXWPFM
     protected abstract void visitHeader( XWPFHeader header, CTHdrFtrRef headerRef, CTSectPr sectPr, E masterPage )
         throws Exception;
 
-    protected void visitFooterRef( CTHdrFtrRef footerRef, CTSectPr sectPr, E masterPage )
+    public void visitFooterRef( CTHdrFtrRef footerRef, CTSectPr sectPr, E masterPage )
         throws Exception
     {
         this.currentFooter = getXWPFFooter( footerRef );
@@ -1376,22 +1377,5 @@ public abstract class XWPFDocumentVisitor<T, O extends Options, E extends IXWPFM
                                           Float offsetY, STRelFromV.Enum relativeFromV, STWrapText.Enum wrapText,
                                           T parentContainer )
         throws Exception;
-
-    // ------------------------ Master page --------------
-
-    /**
-     * Set active master page.
-     * 
-     * @param masterPage
-     */
-    protected abstract void setActiveMasterPage( E masterPage );
-
-    /**
-     * Create an instance of master page.
-     * 
-     * @param sectPr
-     * @return
-     */
-    protected abstract IXWPFMasterPage createMasterPage( CTSectPr sectPr );
 
 }

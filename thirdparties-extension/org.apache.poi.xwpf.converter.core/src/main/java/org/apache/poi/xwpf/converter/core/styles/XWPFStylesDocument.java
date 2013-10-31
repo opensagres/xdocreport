@@ -39,6 +39,7 @@ import org.apache.poi.xwpf.converter.core.ParagraphLineSpacing;
 import org.apache.poi.xwpf.converter.core.TableCellBorder;
 import org.apache.poi.xwpf.converter.core.TableHeight;
 import org.apache.poi.xwpf.converter.core.TableWidth;
+import org.apache.poi.xwpf.converter.core.openxmlformats.IOpenXMLFormatsPartProvider;
 import org.apache.poi.xwpf.converter.core.styles.paragraph.ParagraphAlignmentValueProvider;
 import org.apache.poi.xwpf.converter.core.styles.paragraph.ParagraphBackgroundColorValueProvider;
 import org.apache.poi.xwpf.converter.core.styles.paragraph.ParagraphBorderBottomValueProvider;
@@ -119,11 +120,14 @@ import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTBorder;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTDocDefaults;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTFont;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTNumPr;
+import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTP;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTPPr;
+import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTR;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTRPr;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTSettings;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTString;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTStyle;
+import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTStyles;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTTabs;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTTblPr;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTTblPrBase;
@@ -145,8 +149,6 @@ public class XWPFStylesDocument
 
     private static final float DEFAULT_TAB_STOP_POINT = DxaUtil.dxa2points( 720f );
 
-    private final XWPFDocument document;
-
     private final Map<String, CTStyle> stylesByStyleId;
 
     private CTStyle defaultParagraphStyle;
@@ -163,17 +165,15 @@ public class XWPFStylesDocument
 
     private Float defaultTabStop;
 
-    private XWPFSettings settings;
-
     private CTSettings ctSettings;
 
     private List<ThemeDocument> themeDocuments;
 
-    private List<FontsDocument> fontsDocuments;
-
     private final Map<String, List<String>> fontsAltName;
 
     private final Map<String, String> fontsToUse;
+
+    private CTStyles styles;
 
     public XWPFStylesDocument( XWPFDocument document )
         throws XmlException, IOException
@@ -184,22 +184,82 @@ public class XWPFStylesDocument
     public XWPFStylesDocument( XWPFDocument document, boolean lazyInitialization )
         throws XmlException, IOException
     {
-        this.document = document;
+        this( document.getStyle(), getFontsDocument( document ), getThemeDocuments( document ),
+              getCTSettings( document ), lazyInitialization );
+    }
+
+    public XWPFStylesDocument( IOpenXMLFormatsPartProvider provider )
+        throws Exception
+    {
+        this( provider, true );
+    }
+
+    public XWPFStylesDocument( IOpenXMLFormatsPartProvider provider, boolean lazyInitialization )
+        throws Exception
+    {
+        this( provider.getStyle(), provider.getFontsDocument(), provider.getThemeDocuments(), provider.getSettings(),
+              lazyInitialization );
+    }
+
+    public XWPFStylesDocument( CTStyles styles, List<FontsDocument> fontsDocuments, List<ThemeDocument> themeDocuments,
+                               CTSettings ctSettings, boolean lazyInitialization )
+        throws XmlException, IOException
+    {
+        this.styles = styles;
         this.stylesByStyleId = new HashMap<String, CTStyle>();
         this.values = new HashMap<String, Object>();
-        this.fontsAltName = new HashMap<String, List<String>>();
+        this.fontsAltName = updateFonts( fontsDocuments );
         this.fontsToUse = new HashMap<String, String>();
+        this.themeDocuments = themeDocuments;
+        this.ctSettings = ctSettings;
         if ( lazyInitialization )
         {
             initialize();
         }
     }
 
+    private Map<String, List<String>> updateFonts( List<FontsDocument> fontsDocuments )
+    {
+        Map<String, List<String>> fontsAltName = new HashMap<String, List<String>>();
+        // Compute fonts alt name
+        // see spec 17.8.3.1 altName (Alternate Names for Font)
+        for ( FontsDocument fontsDocument : fontsDocuments )
+        {
+            CTString altName = null;
+            List<CTFont> fonts = fontsDocument.getFonts().getFontList();
+            for ( CTFont font : fonts )
+            {
+                altName = font.getAltName();
+                if ( altName != null && StringUtils.isNotEmpty( altName.getVal() ) )
+                {
+                    List<String> altNames = new ArrayList<String>();
+                    // This element specifies a set of alternative names which can be used to locate the font
+                    // specified by the parent
+                    // element. This set of alternative names is stored in a comma-delimited list, with all
+                    // adjacent commas ignored (i.e.
+                    // a value of Name A, Name B is equivalent to Name A,,,,,,,,, Name B).
+                    String[] names = altName.getVal().split( "," );
+                    String name = null;
+                    for ( int i = 0; i < names.length; i++ )
+                    {
+                        name = names[i];
+                        if ( StringUtils.isNotEmpty( name ) )
+                        {
+                            altNames.add( name );
+                        }
+                    }
+                    fontsAltName.put( font.getName(), altNames );
+                }
+            }
+        }
+        return fontsAltName;
+    }
+
     protected void initialize()
         throws XmlException, IOException
     {
-        List<CTStyle> styles = document.getStyle().getStyleList();
-        for ( CTStyle style : styles )
+        List<CTStyle> s = styles.getStyleList();
+        for ( CTStyle style : s )
         {
             org.openxmlformats.schemas.wordprocessingml.x2006.main.STOnOff.Enum isDefault = style.getDefault();
             org.openxmlformats.schemas.wordprocessingml.x2006.main.STStyleType.Enum type = style.getType();
@@ -253,19 +313,12 @@ public class XWPFStylesDocument
     {
         try
         {
-            return document.getStyle().getDocDefaults();
+            return styles.getDocDefaults();
         }
-        catch ( XmlException e )
+        catch ( Exception e )
         {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
+            return null;
         }
-        catch ( IOException e )
-        {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        }
-        return null;
     }
 
     // -------------------- Paragraph
@@ -304,6 +357,11 @@ public class XWPFStylesDocument
         return ParagraphIndentationLeftValueProvider.INSTANCE.getValue( pPr );
     }
 
+    public Float getIndentationLeft( CTP paragraph )
+    {
+        return org.apache.poi.xwpf.converter.core.openxmlformats.styles.paragraph.ParagraphIndentationLeftValueProvider.INSTANCE.getValue( paragraph,                                                                                                                                           this );
+    }
+
     public Float getIndentationRight( XWPFParagraph paragraph )
     {
         return ParagraphIndentationRightValueProvider.INSTANCE.getValue( paragraph, this );
@@ -312,6 +370,11 @@ public class XWPFStylesDocument
     public Float getIndentationRight( CTPPr pPr )
     {
         return ParagraphIndentationRightValueProvider.INSTANCE.getValue( pPr );
+    }
+
+    public Float getIndentationRight( CTP paragraph )
+    {
+        return org.apache.poi.xwpf.converter.core.openxmlformats.styles.paragraph.ParagraphIndentationRightValueProvider.INSTANCE.getValue( paragraph,                                                                                                                                           this );
     }
 
     public Float getIndentationFirstLine( XWPFParagraph paragraph )
@@ -324,6 +387,10 @@ public class XWPFStylesDocument
         return ParagraphIndentationFirstLineValueProvider.INSTANCE.getValue( pPr );
     }
 
+    public Float getIndentationFirstLine( CTP paragraph )
+    {
+        return org.apache.poi.xwpf.converter.core.openxmlformats.styles.paragraph.ParagraphIndentationFirstLineValueProvider.INSTANCE.getValue( paragraph,                                                                                                                                           this );
+    }
     public Float getIndentationHanging( XWPFParagraph paragraph )
     {
         return ParagraphIndentationHangingValueProvider.INSTANCE.getValue( paragraph, this );
@@ -467,6 +534,13 @@ public class XWPFStylesDocument
     public Float getFontSize( XWPFRun run )
     {
         return RunFontSizeValueProvider.INSTANCE.getValue( run, this );
+    }
+
+    public Float getFontSize( CTR run, CTP paragraph )
+    {
+        return org.apache.poi.xwpf.converter.core.openxmlformats.styles.run.RunFontSizeValueProvider.INSTANCE.getValue( run,
+                                                                                                                        paragraph,
+                                                                                                                        this );
     }
 
     public Float getFontSize( CTRPr rPr )
@@ -1183,116 +1257,95 @@ public class XWPFStylesDocument
         return defaultTabStop;
     }
 
-    public XWPFSettings getSettings()
-    {
-        if ( settings != null )
-        {
-            return settings;
-        }
-        for ( POIXMLDocumentPart p : document.getRelations() )
-        {
-            String relationshipType = p.getPackageRelationship().getRelationshipType();
-            if ( relationshipType.equals( XWPFRelation.SETTINGS.getRelation() ) )
-            {
-                settings = (XWPFSettings) p;
-                return settings;
-            }
-        }
-        return null;
-    }
-
     public CTSettings getCTSettings()
     {
-        if ( ctSettings != null )
-        {
-            return ctSettings;
-        }
-        XWPFSettings settings = getSettings();
+        return ctSettings;
+    }
+
+    private static CTSettings getCTSettings( XWPFDocument document )
+    {
+
+        XWPFSettings settings = getSettings( document );
         if ( settings != null )
         {
             try
             {
                 InputStream inputStream = settings.getPackagePart().getInputStream();
-                ctSettings = SettingsDocument.Factory.parse( inputStream ).getSettings();
+                return SettingsDocument.Factory.parse( inputStream ).getSettings();
             }
             catch ( Exception e )
             {
 
             }
         }
-        return ctSettings;
+        return null;
+    }
+
+    private static XWPFSettings getSettings( XWPFDocument document )
+    {
+        for ( POIXMLDocumentPart p : document.getRelations() )
+        {
+            String relationshipType = p.getPackageRelationship().getRelationshipType();
+            if ( relationshipType.equals( XWPFRelation.SETTINGS.getRelation() ) )
+            {
+                return (XWPFSettings) p;
+            }
+        }
+        return null;
     }
 
     public List<ThemeDocument> getThemeDocuments()
-        throws Exception
     {
-        if ( themeDocuments == null )
-        {
-            themeDocuments = new ArrayList<ThemeDocument>();
+        return themeDocuments;
+    }
 
-            for ( POIXMLDocumentPart p : document.getRelations() )
+    private static List<ThemeDocument> getThemeDocuments( XWPFDocument document )
+    {
+        List<ThemeDocument> themeDocuments = new ArrayList<ThemeDocument>();
+
+        for ( POIXMLDocumentPart p : document.getRelations() )
+        {
+            String relationshipType = p.getPackageRelationship().getRelationshipType();
+            if ( "http://schemas.openxmlformats.org/officeDocument/2006/relationships/theme".equals( relationshipType ) )
             {
-                String relationshipType = p.getPackageRelationship().getRelationshipType();
-                if ( "http://schemas.openxmlformats.org/officeDocument/2006/relationships/theme".equals( relationshipType ) )
+                try
                 {
                     InputStream inputStream = p.getPackagePart().getInputStream();
                     ThemeDocument theme = ThemeDocument.Factory.parse( inputStream );
                     themeDocuments.add( theme );
                 }
+                catch ( Throwable e )
+                {
+                    e.printStackTrace();
+                }
             }
-
         }
+
         return themeDocuments;
     }
 
-    public List<FontsDocument> getFontsDocument()
-        throws Exception
+    private static List<FontsDocument> getFontsDocument( XWPFDocument document )
     {
-        if ( fontsDocuments == null )
-        {
-            fontsDocuments = new ArrayList<FontsDocument>();
 
-            for ( POIXMLDocumentPart p : document.getRelations() )
+        List<FontsDocument> fontsDocuments = new ArrayList<FontsDocument>();
+
+        for ( POIXMLDocumentPart p : document.getRelations() )
+        {
+            String relationshipType = p.getPackageRelationship().getRelationshipType();
+            // "http://schemas.openxmlformats.org/officeDocument/2006/relationships/fontTable"
+            if ( XWPFRelation.FONT_TABLE.getRelation().equals( relationshipType ) )
             {
-                String relationshipType = p.getPackageRelationship().getRelationshipType();
-                // "http://schemas.openxmlformats.org/officeDocument/2006/relationships/fontTable"
-                if ( XWPFRelation.FONT_TABLE.getRelation().equals( relationshipType ) )
+                try
                 {
                     InputStream inputStream = p.getPackagePart().getInputStream();
                     FontsDocument fontsDocument = FontsDocument.Factory.parse( inputStream );
                     fontsDocuments.add( fontsDocument );
-
-                    // Compute fonts alt name
-                    // see spec 17.8.3.1 altName (Alternate Names for Font)
-
-                    CTString altName = null;
-                    List<CTFont> fonts = fontsDocument.getFonts().getFontList();
-                    for ( CTFont font : fonts )
-                    {
-                        altName = font.getAltName();
-                        if ( altName != null && StringUtils.isNotEmpty( altName.getVal() ) )
-                        {
-                            List<String> altNames = new ArrayList<String>();
-                            // This element specifies a set of alternative names which can be used to locate the font
-                            // specified by the parent
-                            // element. This set of alternative names is stored in a comma-delimited list, with all
-                            // adjacent commas ignored (i.e.
-                            // a value of Name A, Name B is equivalent to Name A,,,,,,,,, Name B).
-                            String[] names = altName.getVal().split( "," );
-                            String name = null;
-                            for ( int i = 0; i < names.length; i++ )
-                            {
-                                name = names[i];
-                                if ( StringUtils.isNotEmpty( name ) )
-                                {
-                                    altNames.add( name );
-                                }
-                            }
-                            fontsAltName.put( font.getName(), altNames );
-                        }
-                    }
-
                 }
+                catch ( Exception e )
+                {
+                    e.printStackTrace();
+                }
+
             }
         }
         return fontsDocuments;
@@ -1301,7 +1354,6 @@ public class XWPFStylesDocument
     public List<String> getFontsAltName( String fontName )
         throws Exception
     {
-        getFontsDocument();
         return fontsAltName.get( fontName );
     }
 
@@ -1314,4 +1366,5 @@ public class XWPFStylesDocument
     {
         fontsToUse.put( fontName, altFfontName );
     }
+
 }

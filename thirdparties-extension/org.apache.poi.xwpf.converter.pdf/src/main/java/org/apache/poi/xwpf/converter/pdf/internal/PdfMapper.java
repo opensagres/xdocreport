@@ -212,14 +212,14 @@ public class PdfMapper
     }
 
     @Override
-    protected void setActiveMasterPage( StylableMasterPage masterPage )
+    public void setActiveMasterPage( StylableMasterPage masterPage )
     {
         pdfDocument.setActiveMasterPage( masterPage );
 
     }
 
     @Override
-    protected IXWPFMasterPage createMasterPage( CTSectPr sectPr )
+    public StylableMasterPage createMasterPage( CTSectPr sectPr )
     {
         return new StylableMasterPage( sectPr );
     }

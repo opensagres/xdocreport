@@ -22,13 +22,37 @@
  * OF CONTRACT, TORT OR OTHERWISE,  ARISING FROM, OUT OF OR IN CONNECTION
  * WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
-package fr.opensagres.xdocreport.converter;
+package org.apache.poi.xwpf.converter.pdf;
 
-/**
- * XDocReport available converter via which explains how converter is done.
- */
-public enum ConverterTypeVia
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.OutputStream;
+
+import org.apache.poi.xwpf.converter.core.AbstractXWPFPOIConverterTest;
+import org.apache.poi.xwpf.converter.core.openxmlformats.ZipArchive;
+
+public class FastPdfConverterTestCase
+    extends AbstractXWPFPOIConverterTest
 {
 
-    FOP, XSL, ODFDOM, XWPF, DOCX4J, OpenXMLFormats
+    protected void doGenerate( String fileInName )
+        throws IOException
+    {
+        String root = "target/fast";
+        String fileOutName = root + "/" + fileInName + ".pdf";
+
+        long startTime = System.currentTimeMillis();
+
+        ZipArchive document = ZipArchive.readZip( AbstractXWPFPOIConverterTest.class.getResourceAsStream( fileInName ) );
+
+        File file = new File( fileOutName );
+        file.getParentFile().mkdirs();
+        OutputStream out = new FileOutputStream( file );
+        PdfOptions options = PdfOptions.create();
+
+        FastPdfConverter.getInstance().convert( document, out, options );
+
+        System.out.println( "Generate " + fileOutName + " with " + ( System.currentTimeMillis() - startTime ) + " ms." );
+    }
 }

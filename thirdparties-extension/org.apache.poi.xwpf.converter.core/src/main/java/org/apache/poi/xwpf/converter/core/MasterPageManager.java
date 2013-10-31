@@ -24,27 +24,22 @@
  */
 package org.apache.poi.xwpf.converter.core;
 
-import java.io.InputStream;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.Map;
 
-import org.apache.poi.POIXMLDocumentPart;
 import org.apache.poi.xwpf.converter.core.styles.XWPFStylesDocument;
 import org.apache.poi.xwpf.converter.core.utils.XWPFUtils;
-import org.apache.poi.xwpf.usermodel.BodyElementType;
-import org.apache.poi.xwpf.usermodel.IBodyElement;
-import org.apache.poi.xwpf.usermodel.XWPFDocument;
-import org.apache.poi.xwpf.usermodel.XWPFParagraph;
-import org.apache.poi.xwpf.usermodel.XWPFRelation;
-import org.apache.poi.xwpf.usermodel.XWPFSettings;
+import org.apache.xmlbeans.XmlCursor;
+import org.apache.xmlbeans.XmlObject;
+import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTDocument1;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTHdrFtrRef;
+import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTP;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTPPr;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTSectPr;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTSettings;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.STHdrFtr;
-import org.openxmlformats.schemas.wordprocessingml.x2006.main.SettingsDocument;
 
 /**
  * See http://officeopenxml.com/WPsection.php
@@ -53,9 +48,9 @@ public class MasterPageManager
     extends LinkedList<CTSectPr>
 {
 
-    private final XWPFDocument document;
+    private final CTDocument1 document;
 
-    private final XWPFDocumentVisitor documentHandler;
+    private final IMasterPageHandler documentHandler;
 
     private final CTSectPr bodySectPr;
 
@@ -73,12 +68,12 @@ public class MasterPageManager
 
     private final boolean evenAndOddHeaders;
 
-    public MasterPageManager( XWPFDocument document, XWPFDocumentVisitor visitor )
+    public MasterPageManager( CTDocument1 document, IMasterPageHandler visitor )
         throws Exception
     {
         this.document = document;
         this.documentHandler = visitor;
-        this.bodySectPr = document.getDocument().getBody().getSectPr();
+        this.bodySectPr = document.getBody().getSectPr();
         this.masterPages = new HashMap<CTSectPr, IXWPFMasterPage>();
         this.initialized = false;
         this.changeSection = false;
@@ -106,15 +101,17 @@ public class MasterPageManager
         }
     }
 
-    private void compute( XWPFDocument document )
+    private void compute( CTDocument1 document )
         throws Exception
     {
-        for ( IBodyElement bodyElement : document.getBodyElements() )
+        XmlCursor cursor = document.getBody().newCursor();
+        cursor.selectPath( "./*" );
+        while ( cursor.toNextSelection() )
         {
-            if ( bodyElement.getElementType() == BodyElementType.PARAGRAPH )
+            XmlObject o = cursor.getObject();
+            if ( o instanceof CTP )
             {
-                XWPFParagraph paragraph = (XWPFParagraph) bodyElement;
-
+                CTP paragraph = (CTP) o;
                 CTSectPr sectPr = getSectPr( paragraph );
                 if ( sectPr != null )
                 {
@@ -122,6 +119,11 @@ public class MasterPageManager
                 }
             }
         }
+        /*
+         * for ( IBodyElement bodyElement : document.getBodyElements() ) { if ( bodyElement.getElementType() ==
+         * BodyElementType.PARAGRAPH ) { XWPFParagraph paragraph = (XWPFParagraph) bodyElement; CTSectPr sectPr =
+         * getSectPr( paragraph ); if ( sectPr != null ) { addSection( sectPr, true ); } } }
+         */
         addSection( bodySectPr, false );
     }
 
@@ -130,7 +132,7 @@ public class MasterPageManager
         return bodySectPr;
     }
 
-    public void update( XWPFParagraph paragraph )
+    public void update( CTP paragraph )
     {
         if ( changeSection )
         {
@@ -226,9 +228,9 @@ public class MasterPageManager
 
     }
 
-    private CTSectPr getSectPr( XWPFParagraph paragraph )
+    private CTSectPr getSectPr( CTP paragraph )
     {
-        CTPPr ppr = paragraph.getCTP().getPPr();
+        CTPPr ppr = paragraph.getPPr();
         if ( ppr != null )
         {
             return ppr.getSectPr();
@@ -277,6 +279,10 @@ public class MasterPageManager
      */
     private boolean isEventAndOddHeaders( XWPFStylesDocument stylesDocument )
     {
+        if ( stylesDocument == null )
+        {
+            return false;
+        }
         CTSettings settings = stylesDocument.getCTSettings();
         if ( settings == null )
         {

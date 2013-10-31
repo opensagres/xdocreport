@@ -30,7 +30,7 @@ import org.junit.Test;
 
 public abstract class AbstractXWPFPOIConverterTest
 {
-    
+
     @Test
     public void AdvancedTable()
         throws IOException
@@ -44,7 +44,7 @@ public abstract class AbstractXWPFPOIConverterTest
     {
         doGenerate( "AdvancedTable2.docx" );
     }
-    
+
     @Test
     public void AvanceSurFrais()
         throws IOException
@@ -52,7 +52,6 @@ public abstract class AbstractXWPFPOIConverterTest
         doGenerate( "AvanceSurFrais.docx" );
     }
 
-    
     @Test
     public void CV()
         throws IOException
@@ -101,14 +100,14 @@ public abstract class AbstractXWPFPOIConverterTest
     {
         doGenerate( "DocxLettreRelance.docx" );
     }
-    
+
     @Test
     public void DocXperT_Output_4_3()
         throws IOException
     {
         doGenerate( "DocXperT_Output_4_3.docx" );
     }
-    
+
     @Test
     public void DocxStructures()
         throws IOException
@@ -164,7 +163,7 @@ public abstract class AbstractXWPFPOIConverterTest
     {
         doGenerate( "Issue206.docx" );
     }
-    
+
     @Test
     public void Issue207()
         throws IOException
@@ -178,7 +177,7 @@ public abstract class AbstractXWPFPOIConverterTest
     {
         doGenerate( "Issue222.docx" );
     }
-    
+
     @Test
     public void Issue239()
         throws IOException
@@ -192,7 +191,6 @@ public abstract class AbstractXWPFPOIConverterTest
     {
         doGenerate( "Issue240.docx" );
     }
-    
 
     @Test
     public void Issue315()
@@ -207,15 +205,28 @@ public abstract class AbstractXWPFPOIConverterTest
     {
         doGenerate( "Issue316.docx" );
     }
-    
+
     @Test
-    public void Issue315_saved
-    ()
+    public void Issue315_saved()
         throws IOException
     {
         doGenerate( "Issue315_saved.docx" );
     }
-    
+
+    @Test
+    public void Issue317()
+        throws IOException
+    {
+        doGenerate( "Issue317.docx" );
+    }
+
+    @Test
+    public void Issue318()
+        throws IOException
+    {
+        doGenerate( "Issue318.docx" );
+    }
+
     @Test
     public void Issue52()
         throws IOException
@@ -264,7 +275,7 @@ public abstract class AbstractXWPFPOIConverterTest
     {
         doGenerate( "Taksee.docx" );
     }
-    
+
     @Test
     public void TemplateGeneral()
         throws IOException
@@ -348,7 +359,7 @@ public abstract class AbstractXWPFPOIConverterTest
     {
         doGenerate( "TestLandscapeFormat.docx" );
     }
-    
+
     @Test
     public void TestLineSpacing()
         throws IOException
@@ -376,7 +387,7 @@ public abstract class AbstractXWPFPOIConverterTest
     {
         doGenerate( "TestPageWithBorder.docx" );
     }
-    
+
     @Test
     public void TestParagraphAlignment()
         throws IOException
@@ -453,7 +464,7 @@ public abstract class AbstractXWPFPOIConverterTest
     {
         doGenerate( "TestTitle.docx" );
     }
-    
+
     protected abstract void doGenerate( String fileName )
         throws IOException;
 

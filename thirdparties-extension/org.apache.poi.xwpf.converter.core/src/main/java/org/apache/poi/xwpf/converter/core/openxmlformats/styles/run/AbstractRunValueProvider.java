@@ -44,7 +44,7 @@ public abstract class AbstractRunValueProvider<Value>
         if ( rPr != null )
         {
             // from run inline
-            value = getValue( rPr );
+            value = getValue( rPr, document );
             if ( value != null )
             {
                 return value;
@@ -61,7 +61,7 @@ public abstract class AbstractRunValueProvider<Value>
         if ( pPr != null )
         {
             // from paragraph inline
-            value = getValue( pPr.getRPr() );
+            value = getValue( pPr.getRPr(), document );
             if ( value != null )
             {
                 return value;
@@ -83,13 +83,13 @@ public abstract class AbstractRunValueProvider<Value>
         CTStyle style = document.getStyle( styleId );
         if ( style != null )
         {
-            return getValue( style.getRPr() );
+            return getValue( style.getRPr(), document );
         }
         return null;
     }
 
-    public abstract Value getValue( CTRPr rPr );
+    public abstract Value getValue( CTRPr rPr, XWPFStylesDocument stylesDocument );
 
-    public abstract Value getValue( CTParaRPr rPr );
+    public abstract Value getValue( CTParaRPr rPr, XWPFStylesDocument stylesDocument );
 
 }

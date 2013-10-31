@@ -29,6 +29,7 @@ import java.awt.Color;
 import org.apache.poi.xwpf.converter.core.registry.ColorRegistry;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTBorder;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTColor;
+import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTParaRPr;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTRPr;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTShd;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.STHexColor;
@@ -68,6 +69,21 @@ public class ColorHelper
             // {
             // return ColorHelper.getColor( rPr.getShd() );
             // }
+        }
+        return null;
+    }
+
+    public static Color getColor( CTParaRPr rPr )
+    {
+        if ( rPr != null )
+        {
+            CTColor ctColor = rPr.getColor();
+            if ( ctColor != null )
+            {
+                STHexColor color = ctColor.xgetVal();
+                Object val = ctColor.getVal();
+                return ColorHelper.getColor( color, val, false );
+            }
         }
         return null;
     }
@@ -178,4 +194,5 @@ public class ColorHelper
         }
         return null;
     }
+
 }

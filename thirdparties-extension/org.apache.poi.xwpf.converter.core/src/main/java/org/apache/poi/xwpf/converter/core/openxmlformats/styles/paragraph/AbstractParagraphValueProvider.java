@@ -19,7 +19,7 @@ public abstract class AbstractParagraphValueProvider<Value>
         if ( pPr != null )
         {
             // from paragraph inline
-            value = getValue( pPr );
+            value = getValue( pPr, document );
             if ( value != null )
             {
                 return value;
@@ -41,10 +41,10 @@ public abstract class AbstractParagraphValueProvider<Value>
         CTStyle style = document.getStyle( styleId );
         if ( style != null )
         {
-            return getValue( style.getPPr() );
+            return getValue( style.getPPr(), document );
         }
         return null;
     }
 
-    public abstract Value getValue( CTPPr pPr );
+    public abstract Value getValue( CTPPr pPr, XWPFStylesDocument document );
 }

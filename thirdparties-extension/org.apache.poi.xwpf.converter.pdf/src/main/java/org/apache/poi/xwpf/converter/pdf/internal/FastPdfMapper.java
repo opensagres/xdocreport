@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.logging.Logger;
 
 import org.apache.poi.xwpf.converter.core.ListItemContext;
+import org.apache.poi.xwpf.converter.core.ParagraphLineSpacing;
 import org.apache.poi.xwpf.converter.core.openxmlformats.IOpenXMLFormatsPartProvider;
 import org.apache.poi.xwpf.converter.core.openxmlformats.OpenXMlFormatsVisitor;
 import org.apache.poi.xwpf.converter.core.styles.XWPFStylesDocument;
@@ -20,6 +21,7 @@ import org.apache.poi.xwpf.converter.pdf.internal.elements.StylableMasterPage;
 import org.apache.poi.xwpf.converter.pdf.internal.elements.StylableParagraph;
 import org.apache.poi.xwpf.converter.pdf.internal.elements.StylableTableCell;
 import org.apache.poi.xwpf.usermodel.IBodyElement;
+import org.apache.poi.xwpf.usermodel.ParagraphAlignment;
 import org.apache.poi.xwpf.usermodel.UnderlinePatterns;
 import org.apache.poi.xwpf.usermodel.XWPFFooter;
 import org.apache.poi.xwpf.usermodel.XWPFHeader;
@@ -36,6 +38,7 @@ import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTTabs;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTText;
 
 import com.lowagie.text.Chunk;
+import com.lowagie.text.Element;
 import com.lowagie.text.Font;
 
 import fr.opensagres.xdocreport.itext.extension.ExtendedChunk;
@@ -146,7 +149,70 @@ public class FastPdfMapper
         {
             pdfParagraph.setFirstLineIndent( indentationFirstLine );
         }
+        // indentation hanging (remove first line)
+        Float indentationHanging = stylesDocument.getIndentationHanging( paragraph );
+        if ( indentationHanging != null )
+        {
+            pdfParagraph.setFirstLineIndent( -indentationHanging );
+        }
 
+        // // spacing before
+        Float spacingBefore = stylesDocument.getSpacingBefore( paragraph );
+        if ( spacingBefore != null )
+        {
+            pdfParagraph.setSpacingBefore( spacingBefore );
+        }
+
+        // spacing after
+        Float spacingAfter = stylesDocument.getSpacingAfter( paragraph );
+        if ( spacingAfter != null )
+        {
+            pdfParagraph.setSpacingAfter( spacingAfter );
+        }
+
+        ParagraphLineSpacing lineSpacing = stylesDocument.getParagraphSpacing( paragraph );
+        if ( lineSpacing != null )
+        {
+            if ( lineSpacing.getLeading() != null && lineSpacing.getMultipleLeading() != null )
+            {
+                pdfParagraph.setLeading( lineSpacing.getLeading(), lineSpacing.getMultipleLeading() );
+            }
+            else
+            {
+                if ( lineSpacing.getLeading() != null )
+                {
+                    pdfParagraph.setLeading( lineSpacing.getLeading() );
+                }
+                if ( lineSpacing.getMultipleLeading() != null )
+                {
+                    pdfParagraph.setMultipliedLeading( lineSpacing.getMultipleLeading() );
+                }
+            }
+
+        }
+
+        // text-align
+        ParagraphAlignment alignment = stylesDocument.getParagraphAlignment( paragraph );
+        if ( alignment != null )
+        {
+            switch ( alignment )
+            {
+                case LEFT:
+                    pdfParagraph.setAlignment( Element.ALIGN_LEFT );
+                    break;
+                case RIGHT:
+                    pdfParagraph.setAlignment( Element.ALIGN_RIGHT );
+                    break;
+                case CENTER:
+                    pdfParagraph.setAlignment( Element.ALIGN_CENTER );
+                    break;
+                case BOTH:
+                    pdfParagraph.setAlignment( Element.ALIGN_JUSTIFIED );
+                    break;
+                default:
+                    break;
+            }
+        }
         return pdfParagraph;
     }
 
@@ -166,9 +232,9 @@ public class FastPdfMapper
         throws Exception
     {
         // Font family
-        String fontFamilyAscii = stylesDocument.getFontFamilyAscii( run.getRPr() );
-        String fontFamilyEastAsia = stylesDocument.getFontFamilyEastAsia( run.getRPr() );
-        String fontFamilyHAnsi = stylesDocument.getFontFamilyHAnsi( run.getRPr() );
+        String fontFamilyAscii = stylesDocument.getFontFamilyAscii( run, paragraph );
+        String fontFamilyEastAsia = stylesDocument.getFontFamilyEastAsia( run, paragraph );
+        String fontFamilyHAnsi = stylesDocument.getFontFamilyHAnsi( run, paragraph );
 
         // Get font size
         Float fontSize = stylesDocument.getFontSize( run, paragraph );
@@ -196,7 +262,7 @@ public class FastPdfMapper
         }
 
         // Font color
-        Color fontColor = stylesDocument.getFontColor( run.getRPr() );
+        Color fontColor = stylesDocument.getFontColor( run, paragraph );
 
         // Font
         this.currentRunFontAscii = getFont( fontFamilyAscii, fontSize, fontStyle, fontColor );

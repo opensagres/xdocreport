@@ -8,6 +8,7 @@ import java.util.logging.Logger;
 
 import org.apache.poi.xwpf.converter.core.ListItemContext;
 import org.apache.poi.xwpf.converter.core.ParagraphLineSpacing;
+import org.apache.poi.xwpf.converter.core.TableWidth;
 import org.apache.poi.xwpf.converter.core.openxmlformats.IOpenXMLFormatsPartProvider;
 import org.apache.poi.xwpf.converter.core.openxmlformats.OpenXMlFormatsVisitor;
 import org.apache.poi.xwpf.converter.core.styles.XWPFStylesDocument;
@@ -19,6 +20,7 @@ import org.apache.poi.xwpf.converter.pdf.internal.elements.StylableDocument;
 import org.apache.poi.xwpf.converter.pdf.internal.elements.StylableHeaderFooter;
 import org.apache.poi.xwpf.converter.pdf.internal.elements.StylableMasterPage;
 import org.apache.poi.xwpf.converter.pdf.internal.elements.StylableParagraph;
+import org.apache.poi.xwpf.converter.pdf.internal.elements.StylableTable;
 import org.apache.poi.xwpf.converter.pdf.internal.elements.StylableTableCell;
 import org.apache.poi.xwpf.usermodel.IBodyElement;
 import org.apache.poi.xwpf.usermodel.ParagraphAlignment;
@@ -26,6 +28,8 @@ import org.apache.poi.xwpf.usermodel.UnderlinePatterns;
 import org.apache.poi.xwpf.usermodel.XWPFFooter;
 import org.apache.poi.xwpf.usermodel.XWPFHeader;
 import org.apache.poi.xwpf.usermodel.XWPFRun;
+import org.apache.poi.xwpf.usermodel.XWPFTable;
+import org.apache.poi.xwpf.usermodel.XWPFTableRow;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTBookmark;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTBr;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTHdrFtr;
@@ -33,16 +37,23 @@ import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTHdrFtrRef;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTP;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTPTab;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTR;
+import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTRow;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTSectPr;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTTabs;
+import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTTbl;
+import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTTc;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTText;
 
 import com.lowagie.text.Chunk;
+import com.lowagie.text.DocumentException;
 import com.lowagie.text.Element;
 import com.lowagie.text.Font;
+import com.lowagie.text.pdf.PdfPTable;
 
 import fr.opensagres.xdocreport.itext.extension.ExtendedChunk;
 import fr.opensagres.xdocreport.itext.extension.ExtendedParagraph;
+import fr.opensagres.xdocreport.itext.extension.ExtendedPdfPCell;
+import fr.opensagres.xdocreport.itext.extension.ExtendedPdfPTable;
 import fr.opensagres.xdocreport.itext.extension.IITextContainer;
 import fr.opensagres.xdocreport.itext.extension.font.FontGroup;
 
@@ -540,4 +551,105 @@ public class FastPdfMapper
 
     }
 
+    // ----------------- Table
+
+    @Override
+    protected IITextContainer startVisitTable( CTTbl table, float[] colWidths, IITextContainer pdfParentContainer )
+        throws Exception
+    {
+        StylableTable pdfPTable = createPDFTable( table, colWidths, pdfParentContainer );
+        return pdfPTable;
+    }
+
+    private StylableTable createPDFTable( CTTbl table, float[] colWidths, IITextContainer pdfParentContainer )
+        throws DocumentException
+    {
+        // 2) Compute tableWith
+        TableWidth tableWidth = stylesDocument.getTableWidth( table );
+        StylableTable pdfPTable = pdfDocument.createTable( pdfParentContainer, colWidths.length );
+        pdfPTable.setTotalWidth( colWidths );
+        if ( tableWidth != null && tableWidth.width > 0 )
+        {
+            if ( tableWidth.percentUnit )
+            {
+                pdfPTable.setWidthPercentage( tableWidth.width );
+            }
+            else
+            {
+                pdfPTable.setTotalWidth( tableWidth.width );
+            }
+        }
+        pdfPTable.setLockedWidth( true );
+
+        // Table alignment
+        ParagraphAlignment alignment = stylesDocument.getTableAlignment( table );
+        if ( alignment != null )
+        {
+            switch ( alignment )
+            {
+                case LEFT:
+                    pdfPTable.setHorizontalAlignment( Element.ALIGN_LEFT );
+                    break;
+                case RIGHT:
+                    pdfPTable.setHorizontalAlignment( Element.ALIGN_RIGHT );
+                    break;
+                case CENTER:
+                    pdfPTable.setHorizontalAlignment( Element.ALIGN_CENTER );
+                    break;
+                case BOTH:
+                    pdfPTable.setHorizontalAlignment( Element.ALIGN_JUSTIFIED );
+                    break;
+                default:
+                    break;
+            }
+        }
+
+        // Table indentation
+        Float indentation = stylesDocument.getTableIndentation( table );
+        if ( indentation != null )
+        {
+            pdfPTable.setPaddingLeft( indentation );
+        }
+        return pdfPTable;
+    }
+
+    @Override
+    protected void endVisitTable( CTTbl table, IITextContainer parentContainer, IITextContainer tableContainer )
+        throws Exception
+    {
+
+        parentContainer.addElement( ( (ExtendedPdfPTable) tableContainer ).getElement() );
+
+    }
+
+    // ------------------------- Table Row
+    @Override
+    protected void startVisitTableRow( CTRow row, IITextContainer tableContainer, boolean headerRow )
+        throws Exception
+    {
+        if ( headerRow )
+        {
+            PdfPTable table = (PdfPTable) tableContainer;
+            table.setHeaderRows( table.getHeaderRows() + 1 );
+        }
+    }
+
+    @Override
+    protected IITextContainer startVisitTableCell( CTTc cell, IITextContainer tableContainer )
+        throws Exception
+    {
+        StylableTable pdfPTable = (StylableTable) tableContainer;
+        StylableTableCell pdfPCell = pdfDocument.createTableCell( pdfPTable );
+
+        return pdfPCell;
+    }
+
+    @Override
+    protected void endVisitTableCell( CTTc cell, IITextContainer tableContainer, IITextContainer tableCellContainer )
+        throws Exception
+    {
+        ExtendedPdfPTable pdfPTable = (ExtendedPdfPTable) tableContainer;
+        ExtendedPdfPCell pdfPCell = (ExtendedPdfPCell) tableCellContainer;
+        pdfPTable.addCell( pdfPCell );
+    }
 }

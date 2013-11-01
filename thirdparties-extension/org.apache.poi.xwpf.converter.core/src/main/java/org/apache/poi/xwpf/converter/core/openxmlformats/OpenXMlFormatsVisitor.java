@@ -13,8 +13,11 @@ import org.apache.poi.xwpf.converter.core.styles.XWPFStylesDocument;
 import org.apache.poi.xwpf.converter.core.utils.DxaUtil;
 import org.apache.poi.xwpf.converter.core.utils.StringUtils;
 import org.apache.poi.xwpf.converter.core.utils.XWPFRunHelper;
+import org.apache.poi.xwpf.converter.core.utils.XWPFTableUtil;
 import org.apache.poi.xwpf.usermodel.XWPFFooter;
 import org.apache.poi.xwpf.usermodel.XWPFHeader;
+import org.apache.poi.xwpf.usermodel.XWPFTable;
+import org.apache.poi.xwpf.usermodel.XWPFTableRow;
 import org.apache.xmlbeans.XmlCursor;
 import org.apache.xmlbeans.XmlObject;
 import org.apache.xmlbeans.XmlTokenSource;
@@ -40,8 +43,10 @@ import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTHyperlink;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTP;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTPTab;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTR;
+import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTRow;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTRunTrackChange;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTSdtBlock;
+import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTSdtCell;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTSdtContentBlock;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTSdtContentRun;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTSdtRun;
@@ -50,6 +55,7 @@ import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTSimpleField;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTSmartTagRun;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTTabs;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTTbl;
+import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTTc;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTText;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.FtrDocument;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.HdrDocument;
@@ -180,7 +186,7 @@ public abstract class OpenXMlFormatsVisitor<T, O extends Options, E extends IXWP
                 }
                 else if ( o instanceof CTTbl )
                 {
-                    visitTable( (CTTbl) o );
+                    visitTable( (CTTbl) o, i, container );
                     i++;
                 }
                 else if ( o instanceof CTSdtBlock )
@@ -429,12 +435,6 @@ public abstract class OpenXMlFormatsVisitor<T, O extends Options, E extends IXWP
     protected abstract void pageBreak()
         throws Exception;
 
-    private void visitTable( CTTbl o )
-    {
-        // TODO Auto-generated method stub
-
-    }
-
     protected void visitRun( CTR run, CTP paragraph, boolean pageNumber, String url, T paragraphContainer )
         throws Exception
 
@@ -529,6 +529,115 @@ public abstract class OpenXMlFormatsVisitor<T, O extends Options, E extends IXWP
         throws Exception;
 
     protected abstract void addNewLine( CTBr br, T paragraphContainer )
+        throws Exception;
+
+    // --------------------- Table
+
+    protected void visitTable( CTTbl table, int i, T container )
+        throws Exception
+    {
+        float[] colWidths = XWPFTableUtil.computeColWidths( table );
+        T tableContainer = startVisitTable( table, colWidths, container );
+        visitTableBody( table, colWidths, tableContainer );
+        endVisitTable( table, container, tableContainer );
+    }
+
+    protected abstract T startVisitTable( CTTbl table, float[] colWidths, T tableContainer )
+        throws Exception;
+
+    protected abstract void endVisitTable( CTTbl table, T parentContainer, T tableContainer )
+        throws Exception;
+
+    protected void visitTableBody( CTTbl table, float[] colWidths, T tableContainer )
+        throws Exception
+    {
+        XmlCursor cursor = null;
+        try
+        {
+            cursor = table.newCursor();
+            cursor.selectPath( "./*" );
+            while ( cursor.toNextSelection() )
+            {
+                XmlObject o = cursor.getObject();
+                if ( o instanceof CTRow )
+                {
+                    visitTableRow( (CTRow) o, tableContainer );
+                }
+            }
+        }
+        finally
+        {
+            if ( cursor != null )
+            {
+                cursor.dispose();
+            }
+        }
+    }
+
+    protected void visitTableRow( CTRow row, T tableContainer )
+        throws Exception
+    {
+        boolean headerRow = stylesDocument.isTableRowHeader( row );
+        startVisitTableRow( row, tableContainer, headerRow );
+
+        XmlCursor cursor = null;
+        try
+        {
+            cursor = row.newCursor();
+            cursor.selectPath( "./*" );
+            while ( cursor.toNextSelection() )
+            {
+                XmlObject o = cursor.getObject();
+                if ( o instanceof CTTc )
+                {
+                    if ( o instanceof CTTc )
+                    {
+                        CTTc cell = (CTTc) o;
+                        visitCell( cell, tableContainer );
+                    }
+                    else if ( o instanceof CTSdtCell )
+                    {
+                        CTSdtCell sdtCell = (CTSdtCell) o;
+                        List<CTTc> tcList = sdtCell.getSdtContent().getTcList();
+                        for ( CTTc cell : tcList )
+                        {
+                            visitCell( cell, tableContainer );
+                        }
+                    }
+                }
+            }
+        }
+        finally
+        {
+            if ( cursor != null )
+            {
+                cursor.dispose();
+            }
+        }
+
+    }
+
+    protected abstract void startVisitTableRow( CTRow row, T tableContainer, boolean headerRow )
+        throws Exception;
+
+    protected void visitCell( CTTc cell, T tableContainer )
+        throws Exception
+    {
+        T tableCellContainer = startVisitTableCell( cell, tableContainer );
+        visitTableCellBody( cell, tableCellContainer );
+        endVisitTableCell( cell, tableContainer, tableCellContainer );
+    }
+
+    protected abstract T startVisitTableCell( CTTc cell, T tableContainer )
+        throws Exception;
+
+    protected void visitTableCellBody( CTTc cell, T tableCellContainer )
+        throws Exception
+    {
+        visitBodyElements( cell, tableCellContainer );
+    }
+
+    protected abstract void endVisitTableCell( CTTc cell, T tableContainer, T tableCellContainer )
         throws Exception;
 
     // ------------------------ Image --------------

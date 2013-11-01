@@ -125,11 +125,13 @@ import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTP;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTPPr;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTR;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTRPr;
+import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTRow;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTSettings;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTString;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTStyle;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTStyles;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTTabs;
+import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTTbl;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTTblPr;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTTblPrBase;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTTblPrEx;
@@ -341,9 +343,9 @@ public class XWPFStylesDocument
     public Float getSpacingBefore( CTP paragraph )
     {
         return org.apache.poi.xwpf.converter.core.openxmlformats.styles.paragraph.ParagraphSpacingBeforeValueProvider.INSTANCE.getValue( paragraph,
-                                                                                                                                                this );
+                                                                                                                                         this );
     }
-    
+
     public Float getSpacingAfter( XWPFParagraph docxParagraph )
     {
         return ParagraphSpacingAfterValueProvider.INSTANCE.getValue( docxParagraph, this );
@@ -357,9 +359,9 @@ public class XWPFStylesDocument
     public Float getSpacingAfter( CTP paragraph )
     {
         return org.apache.poi.xwpf.converter.core.openxmlformats.styles.paragraph.ParagraphSpacingAfterValueProvider.INSTANCE.getValue( paragraph,
-                                                                                                                                                this );
+                                                                                                                                        this );
     }
-    
+
     public Float getIndentationLeft( XWPFParagraph paragraph )
     {
         return ParagraphIndentationLeftValueProvider.INSTANCE.getValue( paragraph, this );
@@ -421,9 +423,9 @@ public class XWPFStylesDocument
     public Float getIndentationHanging( CTP paragraph )
     {
         return org.apache.poi.xwpf.converter.core.openxmlformats.styles.paragraph.ParagraphIndentationHangingValueProvider.INSTANCE.getValue( paragraph,
-                                                                                                                                                this );
+                                                                                                                                              this );
     }
-    
+
     public Color getBackgroundColor( XWPFParagraph paragraph )
     {
         return ParagraphBackgroundColorValueProvider.INSTANCE.getValue( paragraph, this );
@@ -451,7 +453,7 @@ public class XWPFStylesDocument
     public ParagraphAlignment getParagraphAlignment( CTP paragraph )
     {
         return org.apache.poi.xwpf.converter.core.openxmlformats.styles.paragraph.ParagraphAlignmentValueProvider.INSTANCE.getValue( paragraph,
-                                                                                                                                                this );
+                                                                                                                                     this );
     }
 
     public CTBorder getBorderTop( XWPFParagraph docxParagraph )
@@ -517,9 +519,8 @@ public class XWPFStylesDocument
     public ParagraphLineSpacing getParagraphSpacing( CTP paragraph )
     {
         return org.apache.poi.xwpf.converter.core.openxmlformats.styles.paragraph.ParagraphLineSpacingValueProvider.INSTANCE.getValue( paragraph,
-                                                                                                                                                this );
+                                                                                                                                       this );
     }
-    
 
     public CTNumPr getParagraphNumPr( XWPFParagraph docxParagraph )
     {
@@ -547,14 +548,13 @@ public class XWPFStylesDocument
         return RunFontFamilyAsciiValueProvider.INSTANCE.getValue( rPr, this );
     }
 
-
     public String getFontFamilyAscii( CTR run, CTP paragraph )
     {
         return org.apache.poi.xwpf.converter.core.openxmlformats.styles.run.RunFontFamilyAsciiValueProvider.INSTANCE.getValue( run,
-                                                                                                                         paragraph,
-                                                                                                                         this );
+                                                                                                                               paragraph,
+                                                                                                                               this );
     }
-    
+
     public String getFontFamilyEastAsia( XWPFRun run )
     {
         return RunFontFamilyEastAsiaValueProvider.INSTANCE.getValue( run, this );
@@ -568,10 +568,10 @@ public class XWPFStylesDocument
     public String getFontFamilyEastAsia( CTR run, CTP paragraph )
     {
         return org.apache.poi.xwpf.converter.core.openxmlformats.styles.run.RunFontFamilyEastAsiaValueProvider.INSTANCE.getValue( run,
-                                                                                                                         paragraph,
-                                                                                                                         this );
+                                                                                                                                  paragraph,
+                                                                                                                                  this );
     }
-    
+
     public String getFontFamilyHAnsi( XWPFRun run )
     {
         return RunFontFamilyHAnsiValueProvider.INSTANCE.getValue( run, this );
@@ -585,10 +585,10 @@ public class XWPFStylesDocument
     public String getFontFamilyHAnsi( CTR run, CTP paragraph )
     {
         return org.apache.poi.xwpf.converter.core.openxmlformats.styles.run.RunFontFamilyHAnsiValueProvider.INSTANCE.getValue( run,
-                                                                                                                         paragraph,
-                                                                                                                         this );
+                                                                                                                               paragraph,
+                                                                                                                               this );
     }
-    
+
     public Float getFontSize( XWPFRun run )
     {
         return RunFontSizeValueProvider.INSTANCE.getValue( run, this );
@@ -704,6 +704,12 @@ public class XWPFStylesDocument
         return TableWidthValueProvider.INSTANCE.getValue( tblPr );
     }
 
+    public TableWidth getTableWidth( CTTbl table )
+    {
+        return org.apache.poi.xwpf.converter.core.openxmlformats.styles.table.TableWidthValueProvider.INSTANCE.getValue( table,
+                                                                                                                         this );
+    }
+
     public ParagraphAlignment getTableAlignment( XWPFTable table )
     {
         return TableAlignmentValueProvider.INSTANCE.getValue( table, this );
@@ -717,6 +723,12 @@ public class XWPFStylesDocument
     public ParagraphAlignment getTableAlignment( CTTblPrBase tblPr )
     {
         return TableAlignmentValueProvider.INSTANCE.getValue( tblPr );
+    }
+
+    public ParagraphAlignment getTableAlignment( CTTbl table )
+    {
+        return org.apache.poi.xwpf.converter.core.openxmlformats.styles.table.TableAlignmentValueProvider.INSTANCE.getValue( table,
+                                                                                                                         this );
     }
 
     public Float getTableIndentation( XWPFTable table )
@@ -734,6 +746,11 @@ public class XWPFStylesDocument
         return TableIndentationValueProvider.INSTANCE.getValue( tblPr );
     }
 
+    public Float getTableIndentation( CTTbl table )
+    {
+        return org.apache.poi.xwpf.converter.core.openxmlformats.styles.table.TableIndentationValueProvider.INSTANCE.getValue( table,
+                                                                                                                         this );
+    }
     public TableCellBorder getTableBorderTop( XWPFTable table )
     {
         return TableBorderTopValueProvider.INSTANCE.getValue( table, this );
@@ -929,6 +946,11 @@ public class XWPFStylesDocument
         return TableRowHeaderValueProvider.INSTANCE.getValue( row, this );
     }
 
+    public boolean isTableRowHeader( CTRow row )
+    {
+        return org.apache.poi.xwpf.converter.core.openxmlformats.styles.table.row.TableRowHeaderValueProvider.INSTANCE.getValue( row, this );
+    }
+    
     // ------------------------ Table cell
 
     /**
@@ -1431,5 +1453,7 @@ public class XWPFStylesDocument
     {
         fontsToUse.put( fontName, altFfontName );
     }
+
+
 
 }

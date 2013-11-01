@@ -176,7 +176,7 @@ public class XHTMLMapper
     @Override
     protected Object startVisitParagraph( XWPFParagraph paragraph, ListItemContext itemContext, Object parentContainer )
         throws Exception
-    {     
+    {
         // 1) create attributes
 
         // 1.1) Create "class" attributes.
@@ -431,7 +431,6 @@ public class XHTMLMapper
                                  Object parentContainer )
         throws Exception
     {
-     
 
         AttributesImpl attributes = null;
         // Src attribute
@@ -463,7 +462,7 @@ public class XHTMLMapper
     }
 
     @Override
-    protected void setActiveMasterPage( XHTMLMasterPage masterPage )
+    public void setActiveMasterPage( XHTMLMasterPage masterPage )
     {
         if ( pageDiv )
         {
@@ -542,7 +541,7 @@ public class XHTMLMapper
     }
 
     @Override
-    protected IXWPFMasterPage createMasterPage( CTSectPr sectPr )
+    public XHTMLMasterPage createMasterPage( CTSectPr sectPr )
     {
         return new XHTMLMasterPage( sectPr );
     }

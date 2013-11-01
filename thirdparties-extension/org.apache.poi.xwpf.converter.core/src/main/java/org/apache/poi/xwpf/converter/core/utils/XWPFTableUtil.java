@@ -79,6 +79,23 @@ public class XWPFTableUtil
     public static final int DO_NOT_APPLY_COLUMN_BANDING_CONDITIONNAL_FORMATTING = 0x0400; // Do not apply column banding
                                                                                           // conditional formatting
 
+    public static float[] computeColWidths( CTTbl table )
+    {
+        CTTblGrid grid = table.getTblGrid();
+        List<CTTblGridCol> cols = getGridColList( grid );
+        int nbColumns = cols.size();
+        float[] colWidths = new float[nbColumns];
+        float colWidth = -1;
+        int nbColumnsToIgnoreBefore = 0;
+        for ( int i = nbColumnsToIgnoreBefore; i < colWidths.length; i++ )
+        {
+            CTTblGridCol tblGridCol = cols.get( i );
+            colWidth = tblGridCol.getW().floatValue();
+            colWidths[i] = dxa2points( colWidth );
+        }
+        return colWidths;
+    }
+
     /**
      * Compute column widths of the XWPF table.
      * 
@@ -493,4 +510,5 @@ public class XWPFTableUtil
         int mask = APPLY_LAST_COLUMN_CONDITIONNAL_FORMATTING;
         return ( tblLookVal & mask ) == mask;
     }
+
 }

@@ -1,5 +1,6 @@
 package org.apache.poi.xwpf.converter.core.openxmlformats;
 
+import java.io.InputStream;
 import java.util.List;
 
 import org.openxmlformats.schemas.drawingml.x2006.main.ThemeDocument;
@@ -34,4 +35,6 @@ public interface IOpenXMLFormatsPartProvider
     FtrDocument getFtrDocumentByPartId( String relId )
         throws Exception;
 
+    InputStream getInputStreamByRelId( String partName, String relId )
+        throws Exception;
 }

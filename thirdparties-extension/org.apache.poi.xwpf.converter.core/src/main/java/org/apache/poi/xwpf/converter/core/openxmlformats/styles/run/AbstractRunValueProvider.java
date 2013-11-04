@@ -25,11 +25,13 @@
 package org.apache.poi.xwpf.converter.core.openxmlformats.styles.run;
 
 import org.apache.poi.xwpf.converter.core.styles.XWPFStylesDocument;
+import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTDocDefaults;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTP;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTPPr;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTParaRPr;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTR;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTRPr;
+import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTRPrDefault;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTString;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTStyle;
 
@@ -55,6 +57,12 @@ public abstract class AbstractRunValueProvider<Value>
             {
                 return value;
             }
+            // from run default style
+            value = getValueFromStyle( document.getDefaultCharacterStyle(), document );
+            if ( value != null )
+            {
+                return value;
+            }
         }
         // from paragraph
         CTPPr pPr = paragraph.getPPr();
@@ -72,7 +80,23 @@ public abstract class AbstractRunValueProvider<Value>
             {
                 return value;
             }
-
+            // from paragraph default style
+            value = getValueFromStyle( document.getDefaultParagraphStyle(), document );
+            if ( value != null )
+            {
+                return value;
+            }
+        }
+        // from defaults docs paragraph
+        CTDocDefaults docDefaults = document.getDocDefaults();
+        if ( docDefaults == null )
+        {
+            return null;
+        }
+        value = getValueFromDocDefaultsStyle( docDefaults, document );
+        if ( value != null )
+        {
+            return value;
         }
         return null;
     }
@@ -81,11 +105,36 @@ public abstract class AbstractRunValueProvider<Value>
     {
         // Get the style
         CTStyle style = document.getStyle( styleId );
+        return getValueFromStyle( style, document );
+    }
+
+    private Value getValueFromStyle( CTStyle style, XWPFStylesDocument document )
+    {
         if ( style != null )
         {
-            return getValue( style.getRPr(), document );
+            Value value = getValue( style.getRPr(), document );
+            if ( value != null )
+            {
+                return value;
+            }
+            return getValueFromStyle( style.getBasedOn(), document );
         }
         return null;
+    }
+
+    private Value getValueFromDocDefaultsStyle( CTDocDefaults docDefaults, XWPFStylesDocument document )
+    {
+        return getValue( getCTRPr( docDefaults ), document );
+    }
+
+    public CTRPr getCTRPr( CTDocDefaults docDefaults )
+    {
+        CTRPrDefault prDefault = docDefaults.getRPrDefault();
+        if ( prDefault == null )
+        {
+            return null;
+        }
+        return prDefault.getRPr();
     }
 
     public abstract Value getValue( CTRPr rPr, XWPFStylesDocument stylesDocument );

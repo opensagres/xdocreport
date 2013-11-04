@@ -102,6 +102,13 @@ public abstract class AbstractXWPFPOIConverterTest
     }
 
     @Test
+    public void DocxLettreRelance2()
+        throws IOException
+    {
+        doGenerate( "DocxLettreRelance2.docx" );
+    }
+    
+    @Test
     public void DocXperT_Output_4_3()
         throws IOException
     {

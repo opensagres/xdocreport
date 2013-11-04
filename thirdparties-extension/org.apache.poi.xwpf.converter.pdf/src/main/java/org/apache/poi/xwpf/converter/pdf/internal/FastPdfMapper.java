@@ -1,6 +1,9 @@
 package org.apache.poi.xwpf.converter.pdf.internal;
 
+import static org.apache.poi.xwpf.converter.core.utils.DxaUtil.emu2points;
+
 import java.awt.Color;
+import java.io.InputStream;
 import java.io.OutputStream;
 import java.math.BigInteger;
 import java.util.List;
@@ -27,9 +30,15 @@ import org.apache.poi.xwpf.usermodel.ParagraphAlignment;
 import org.apache.poi.xwpf.usermodel.UnderlinePatterns;
 import org.apache.poi.xwpf.usermodel.XWPFFooter;
 import org.apache.poi.xwpf.usermodel.XWPFHeader;
+import org.apache.poi.xwpf.usermodel.XWPFPictureData;
 import org.apache.poi.xwpf.usermodel.XWPFRun;
 import org.apache.poi.xwpf.usermodel.XWPFTable;
 import org.apache.poi.xwpf.usermodel.XWPFTableRow;
+import org.openxmlformats.schemas.drawingml.x2006.main.CTPositiveSize2D;
+import org.openxmlformats.schemas.drawingml.x2006.picture.CTPicture;
+import org.openxmlformats.schemas.drawingml.x2006.wordprocessingDrawing.STRelFromH;
+import org.openxmlformats.schemas.drawingml.x2006.wordprocessingDrawing.STRelFromV;
+import org.openxmlformats.schemas.drawingml.x2006.wordprocessingDrawing.STWrapText;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTBookmark;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTBr;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTHdrFtr;
@@ -48,9 +57,13 @@ import com.lowagie.text.Chunk;
 import com.lowagie.text.DocumentException;
 import com.lowagie.text.Element;
 import com.lowagie.text.Font;
+import com.lowagie.text.Image;
+import com.lowagie.text.Paragraph;
+import com.lowagie.text.pdf.PdfPCell;
 import com.lowagie.text.pdf.PdfPTable;
 
 import fr.opensagres.xdocreport.itext.extension.ExtendedChunk;
+import fr.opensagres.xdocreport.itext.extension.ExtendedImage;
 import fr.opensagres.xdocreport.itext.extension.ExtendedParagraph;
 import fr.opensagres.xdocreport.itext.extension.ExtendedPdfPCell;
 import fr.opensagres.xdocreport.itext.extension.ExtendedPdfPTable;
@@ -142,46 +155,48 @@ public class FastPdfMapper
         // create PDF paragraph
         StylableParagraph pdfParagraph = pdfDocument.createParagraph( pdfParentContainer );
 
+        CTTbl parentTable = super.getParentTable();
         // indentation left
-        Float indentationLeft = stylesDocument.getIndentationLeft( paragraph );
+        Float indentationLeft = stylesDocument.getIndentationLeft( paragraph, parentTable );
         if ( indentationLeft != null )
         {
             pdfParagraph.setIndentationLeft( indentationLeft );
         }
         // indentation right
-        Float indentationRight = stylesDocument.getIndentationRight( paragraph );
+        Float indentationRight = stylesDocument.getIndentationRight( paragraph, parentTable );
         if ( indentationRight != null )
         {
             pdfParagraph.setIndentationRight( indentationRight );
         }
         // indentation first line
-        Float indentationFirstLine = stylesDocument.getIndentationFirstLine( paragraph );
+        Float indentationFirstLine = stylesDocument.getIndentationFirstLine( paragraph, parentTable );
         if ( indentationFirstLine != null )
         {
             pdfParagraph.setFirstLineIndent( indentationFirstLine );
         }
         // indentation hanging (remove first line)
-        Float indentationHanging = stylesDocument.getIndentationHanging( paragraph );
+        Float indentationHanging = stylesDocument.getIndentationHanging( paragraph, parentTable );
         if ( indentationHanging != null )
         {
             pdfParagraph.setFirstLineIndent( -indentationHanging );
         }
 
         // // spacing before
-        Float spacingBefore = stylesDocument.getSpacingBefore( paragraph );
+        Float spacingBefore = stylesDocument.getSpacingBefore( paragraph, parentTable );
         if ( spacingBefore != null )
         {
             pdfParagraph.setSpacingBefore( spacingBefore );
         }
 
         // spacing after
-        Float spacingAfter = stylesDocument.getSpacingAfter( paragraph );
+        // one more pargraph, spacing after should be applied.
+        Float spacingAfter = stylesDocument.getSpacingAfter( paragraph, parentTable );
         if ( spacingAfter != null )
         {
             pdfParagraph.setSpacingAfter( spacingAfter );
         }
 
-        ParagraphLineSpacing lineSpacing = stylesDocument.getParagraphSpacing( paragraph );
+        ParagraphLineSpacing lineSpacing = stylesDocument.getParagraphSpacing( paragraph, parentTable );
         if ( lineSpacing != null )
         {
             if ( lineSpacing.getLeading() != null && lineSpacing.getMultipleLeading() != null )
@@ -203,7 +218,7 @@ public class FastPdfMapper
         }
 
         // text-align
-        ParagraphAlignment alignment = stylesDocument.getParagraphAlignment( paragraph );
+        ParagraphAlignment alignment = stylesDocument.getParagraphAlignment( paragraph, parentTable );
         if ( alignment != null )
         {
             switch ( alignment )
@@ -256,17 +271,17 @@ public class FastPdfMapper
 
         // Get font style
         int fontStyle = Font.NORMAL;
-        Boolean bold = stylesDocument.getFontStyleBold( run.getRPr() );
+        Boolean bold = stylesDocument.getFontStyleBold( run, paragraph );
         if ( bold != null && bold )
         {
             fontStyle |= Font.BOLD;
         }
-        Boolean italic = stylesDocument.getFontStyleItalic( run.getRPr() );
+        Boolean italic = stylesDocument.getFontStyleItalic( run, paragraph );
         if ( italic != null && italic )
         {
             fontStyle |= Font.ITALIC;
         }
-        Boolean strike = stylesDocument.getFontStyleStrike( run.getRPr() );
+        Boolean strike = stylesDocument.getFontStyleStrike( run, paragraph );
         if ( strike != null && strike )
         {
             fontStyle |= Font.STRIKETHRU;
@@ -281,15 +296,15 @@ public class FastPdfMapper
         this.currentRunFontHAnsi = getFont( fontFamilyHAnsi, fontSize, fontStyle, fontColor );
 
         // Underline patterns
-        this.currentRunUnderlinePatterns = stylesDocument.getUnderline( run.getRPr() );
+        this.currentRunUnderlinePatterns = stylesDocument.getUnderline( run, paragraph );
 
         // background color
-        this.currentRunBackgroundColor = stylesDocument.getBackgroundColor( run.getRPr() );
+        this.currentRunBackgroundColor = stylesDocument.getBackgroundColor( run, paragraph );
 
         // highlight
         if ( currentRunBackgroundColor == null )
         {
-            this.currentRunBackgroundColor = stylesDocument.getTextHighlighting( run.getRPr() );
+            this.currentRunBackgroundColor = stylesDocument.getTextHighlighting( run, paragraph );
         }
 
         StylableParagraph pdfParagraph = (StylableParagraph) pdfParagraphContainer;
@@ -518,8 +533,7 @@ public class FastPdfMapper
     protected void addNewLine( CTBr br, IITextContainer paragraphContainer )
         throws Exception
     {
-        // TODO Auto-generated method stub
-
+        paragraphContainer.addElement( Chunk.NEWLINE );
     }
 
     @Override
@@ -623,6 +637,7 @@ public class FastPdfMapper
     }
 
     // ------------------------- Table Row
+
     @Override
     protected void startVisitTableRow( CTRow row, IITextContainer tableContainer, boolean headerRow )
         throws Exception
@@ -641,6 +656,13 @@ public class FastPdfMapper
         StylableTable pdfPTable = (StylableTable) tableContainer;
         StylableTableCell pdfPCell = pdfDocument.createTableCell( pdfPTable );
 
+        // Background Color
+        Color backgroundColor = stylesDocument.getTableCellBackgroundColor( cell );
+        if ( backgroundColor != null )
+        {
+            pdfPCell.setBackgroundColor( backgroundColor );
+        }
+
         return pdfPCell;
     }
 
@@ -651,5 +673,120 @@ public class FastPdfMapper
         ExtendedPdfPTable pdfPTable = (ExtendedPdfPTable) tableContainer;
         ExtendedPdfPCell pdfPCell = (ExtendedPdfPCell) tableCellContainer;
         pdfPTable.addCell( pdfPCell );
+    }
+
+    // ------------------------- Image
+
+    @Override
+    protected void visitPicture( CTPicture picture,
+                                 Float offsetX,
+                                 org.openxmlformats.schemas.drawingml.x2006.wordprocessingDrawing.STRelFromH.Enum relativeFromH,
+                                 Float offsetY,
+                                 org.openxmlformats.schemas.drawingml.x2006.wordprocessingDrawing.STRelFromV.Enum relativeFromV,
+                                 STWrapText.Enum wrapText, IITextContainer pdfParentContainer )
+        throws Exception
+    {
+
+        CTPositiveSize2D ext = picture.getSpPr().getXfrm().getExt();
+        long x = ext.getCx();
+        long y = ext.getCy();
+
+        byte[] pictureData = super.getPictureBytes( picture );
+        if ( pictureData != null )
+        {
+            try
+            {
+                Image img = Image.getInstance( pictureData );
+                img.scaleAbsolute( emu2points( x ), emu2points( y ) );
+
+                IITextContainer parentOfParentContainer = pdfParentContainer.getITextContainer();
+                if ( parentOfParentContainer != null && parentOfParentContainer instanceof PdfPCell )
+                {
+                    parentOfParentContainer.addElement( img );
+                }
+                else
+                {
+                    float chunkOffsetX = 0;
+                    if ( offsetX != null )
+                    {
+                        if ( STRelFromH.CHARACTER.equals( relativeFromH ) )
+                        {
+                            chunkOffsetX = offsetX;
+                        }
+                        else if ( STRelFromH.COLUMN.equals( relativeFromH ) )
+                        {
+                            chunkOffsetX = offsetX;
+                        }
+                        else if ( STRelFromH.INSIDE_MARGIN.equals( relativeFromH ) )
+                        {
+                            chunkOffsetX = offsetX;
+                        }
+                        else if ( STRelFromH.LEFT_MARGIN.equals( relativeFromH ) )
+                        {
+                            chunkOffsetX = offsetX;
+                        }
+                        else if ( STRelFromH.MARGIN.equals( relativeFromH ) )
+                        {
+                            chunkOffsetX = pdfDocument.left() + offsetX;
+                        }
+                        else if ( STRelFromH.OUTSIDE_MARGIN.equals( relativeFromH ) )
+                        {
+                            chunkOffsetX = offsetX;
+                        }
+                        else if ( STRelFromH.PAGE.equals( relativeFromH ) )
+                        {
+                            chunkOffsetX = offsetX - pdfDocument.left();
+                        }
+                    }
+
+                    float chunkOffsetY = 0;
+                    boolean useExtendedImage = false;
+                    if ( STRelFromV.PARAGRAPH.equals( relativeFromV ) )
+                    {
+                        useExtendedImage = true;
+                    }
+
+                    if ( useExtendedImage )
+                    {
+                        ExtendedImage extImg = new ExtendedImage( img, -offsetY );
+
+                        if ( STRelFromV.PARAGRAPH.equals( relativeFromV ) )
+                        {
+                            chunkOffsetY = -extImg.getScaledHeight();
+                        }
+
+                        Chunk chunk = new Chunk( extImg, chunkOffsetX, chunkOffsetY, false );
+                        pdfParentContainer.addElement( chunk );
+                    }
+                    /*
+                     * float chunkOffsetY = 0; if ( wrapText != null ) { chunkOffsetY = -img.getScaledHeight(); }
+                     * boolean useExtendedImage = offsetY != null; // if ( STRelFromV.PARAGRAPH.equals( relativeFromV )
+                     * ) // { // useExtendedImage = true; // } // if ( useExtendedImage ) { float imgY = -offsetY; if (
+                     * pdfHeader != null ) { float headerY = pdfHeader.getY() != null ? pdfHeader.getY() : 0; imgY += -
+                     * img.getScaledHeight() + headerY; } ExtendedImage extImg = new ExtendedImage( img, imgY ); // if (
+                     * STRelFromV.PARAGRAPH.equals( relativeFromV ) ) // { // chunkOffsetY = -extImg.getScaledHeight();
+                     * // } Chunk chunk = new Chunk( extImg, chunkOffsetX, chunkOffsetY, false );
+                     * pdfParentContainer.addElement( chunk ); }
+                     */
+                    else
+                    {
+                        if ( pdfParentContainer instanceof Paragraph )
+                        {
+                            // I don't know why but we need add some spacing before in the paragraph
+                            // otherwise the image cut the text of the below paragraph (see FormattingTests JUnit)?
+                            Paragraph paragraph = (Paragraph) pdfParentContainer;
+                            paragraph.setSpacingBefore( paragraph.getSpacingBefore() + 5f );
+                        }
+                        pdfParentContainer.addElement( new Chunk( img, chunkOffsetX, chunkOffsetY, false ) );
+                    }
+                }
+
+            }
+            catch ( Exception e )
+            {
+                LOGGER.severe( e.getMessage() );
+            }
+
+        }
     }
 }

@@ -17,7 +17,7 @@ public abstract class AbstractTableValueProvider<Value>
     public Value getValue( CTTbl table, XWPFStylesDocument document )
     {
         Value value = null;
-        // from paragraph
+        // from table
         CTTblPr tblPr = table.getTblPr();
         if ( tblPr != null )
         {
@@ -42,9 +42,19 @@ public abstract class AbstractTableValueProvider<Value>
     {
         // Get the style
         CTStyle style = document.getStyle( styleId );
+        return getValueFromStyle( style, document );
+    }
+
+    private Value getValueFromStyle( CTStyle style, XWPFStylesDocument document )
+    {
         if ( style != null )
         {
-            return getValue( style.getTblPr(), document );
+            Value value = getValue( style.getTblPr(), document );
+            if ( value != null )
+            {
+                return value;
+            }
+            return getValueFromStyle( style.getBasedOn(), document );
         }
         return null;
     }

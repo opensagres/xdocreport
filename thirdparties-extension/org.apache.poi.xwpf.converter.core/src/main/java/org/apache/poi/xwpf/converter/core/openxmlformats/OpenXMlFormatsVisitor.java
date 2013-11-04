@@ -1,8 +1,12 @@
 package org.apache.poi.xwpf.converter.core.openxmlformats;
 
+import java.io.ByteArrayInputStream;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Stack;
 
+import org.apache.poi.util.IOUtils;
 import org.apache.poi.xwpf.converter.core.IImageExtractor;
 import org.apache.poi.xwpf.converter.core.IMasterPageHandler;
 import org.apache.poi.xwpf.converter.core.IXWPFMasterPage;
@@ -14,13 +18,10 @@ import org.apache.poi.xwpf.converter.core.utils.DxaUtil;
 import org.apache.poi.xwpf.converter.core.utils.StringUtils;
 import org.apache.poi.xwpf.converter.core.utils.XWPFRunHelper;
 import org.apache.poi.xwpf.converter.core.utils.XWPFTableUtil;
-import org.apache.poi.xwpf.usermodel.XWPFFooter;
-import org.apache.poi.xwpf.usermodel.XWPFHeader;
-import org.apache.poi.xwpf.usermodel.XWPFTable;
-import org.apache.poi.xwpf.usermodel.XWPFTableRow;
 import org.apache.xmlbeans.XmlCursor;
 import org.apache.xmlbeans.XmlObject;
 import org.apache.xmlbeans.XmlTokenSource;
+import org.openxmlformats.schemas.drawingml.x2006.main.CTBlipFillProperties;
 import org.openxmlformats.schemas.drawingml.x2006.main.CTGraphicalObject;
 import org.openxmlformats.schemas.drawingml.x2006.main.CTGraphicalObjectData;
 import org.openxmlformats.schemas.drawingml.x2006.picture.CTPicture;
@@ -76,17 +77,24 @@ public abstract class OpenXMlFormatsVisitor<T, O extends Options, E extends IXWP
 
     private CTHdrFtr currentHeader;
 
+    private CTHdrFtrRef currentHeaderRef;
+
     private CTHdrFtr currentFooter;
+
+    private CTHdrFtrRef currentFooterRef;
 
     private boolean pageBreakOnNextParagraph;
 
     protected final XWPFStylesDocument stylesDocument;
+
+    private final Stack<CTTbl> tables;
 
     public OpenXMlFormatsVisitor( IOpenXMLFormatsPartProvider provider, O options )
         throws Exception
     {
         this.provider = provider;
         this.options = options;
+        this.tables = new Stack<CTTbl>();
 
         this.document = provider.getDocument();
         this.stylesDocument = createStylesDocument( provider );
@@ -536,10 +544,12 @@ public abstract class OpenXMlFormatsVisitor<T, O extends Options, E extends IXWP
     protected void visitTable( CTTbl table, int i, T container )
         throws Exception
     {
+        tables.push( table );
         float[] colWidths = XWPFTableUtil.computeColWidths( table );
         T tableContainer = startVisitTable( table, colWidths, container );
         visitTableBody( table, colWidths, tableContainer );
         endVisitTable( table, container, tableContainer );
+        tables.pop();
     }
 
     protected abstract T startVisitTable( CTTbl table, float[] colWidths, T tableContainer )
@@ -730,10 +740,9 @@ public abstract class OpenXMlFormatsVisitor<T, O extends Options, E extends IXWP
                              */
                         }
                         // visit the picture.
-                        /*
-                         * visitPicture( picture, offsetX, relativeFromH, offsetY, relativeFromV, wrapText,
-                         * parentContainer );
-                         */
+
+                        visitPicture( picture, offsetX, relativeFromH, offsetY, relativeFromV, wrapText,
+                                      parentContainer );
                     }
                 }
                 c.dispose();
@@ -741,14 +750,24 @@ public abstract class OpenXMlFormatsVisitor<T, O extends Options, E extends IXWP
         }
     }
 
+    protected abstract void visitPicture( CTPicture picture,
+                                          Float offsetX,
+                                          org.openxmlformats.schemas.drawingml.x2006.wordprocessingDrawing.STRelFromH.Enum relativeFromH,
+                                          Float offsetY,
+                                          org.openxmlformats.schemas.drawingml.x2006.wordprocessingDrawing.STRelFromV.Enum relativeFromV,
+                                          STWrapText.Enum wrapText, T parentContainer )
+        throws Exception;
+
     // ------------------------------ Header/Footer visitor -----------
 
     public void visitHeaderRef( CTHdrFtrRef headerRef, CTSectPr sectPr, E masterPage )
         throws Exception
     {
+        this.currentHeaderRef = headerRef;
         this.currentHeader = getHeader( headerRef );
         visitHeader( currentHeader, headerRef, sectPr, masterPage );
         this.currentHeader = null;
+        this.currentHeaderRef = null;
     }
 
     protected abstract void visitHeader( CTHdrFtr currentHeader, CTHdrFtrRef headerRef, CTSectPr sectPr, E masterPage )
@@ -766,9 +785,11 @@ public abstract class OpenXMlFormatsVisitor<T, O extends Options, E extends IXWP
     public void visitFooterRef( CTHdrFtrRef footerRef, CTSectPr sectPr, E masterPage )
         throws Exception
     {
+        this.currentFooterRef = footerRef;
         this.currentFooter = getFooter( footerRef );
         visitFooter( currentFooter, footerRef, sectPr, masterPage );
         this.currentFooter = null;
+        this.currentFooterRef = null;
     }
 
     protected abstract void visitFooter( CTHdrFtr currentFooter, CTHdrFtrRef footerRef, CTSectPr sectPr, E masterPage )
@@ -801,5 +822,48 @@ public abstract class OpenXMlFormatsVisitor<T, O extends Options, E extends IXWP
     protected boolean isWordDocumentPartParsing()
     {
         return currentHeader == null && currentFooter == null;
+    }
+
+    public CTTbl getParentTable()
+    {
+        if ( tables.isEmpty() )
+        {
+            return null;
+        }
+        return tables.peek();
+
+    }
+
+    public byte[] getPictureBytes( CTPicture picture )
+        throws Exception
+    {
+        CTBlipFillProperties blipProps = picture.getBlipFill();
+
+        if ( blipProps == null || !blipProps.isSetBlip() )
+        {
+            // return null if Blip data is missing
+            return null;
+        }
+
+        String blipId = blipProps.getBlip().getEmbed();
+        InputStream in = provider.getInputStreamByRelId( getPartRelIdParsing(), blipId );
+        if ( in == null )
+        {
+            return null;
+        }
+        return IOUtils.toByteArray( in );
+    }
+
+    private String getPartRelIdParsing()
+    {
+        if ( currentHeaderRef != null )
+        {
+            return currentHeaderRef.getId();
+        }
+        if ( currentFooterRef != null )
+        {
+            return currentFooterRef.getId();
+        }
+        return null;
     }
 }

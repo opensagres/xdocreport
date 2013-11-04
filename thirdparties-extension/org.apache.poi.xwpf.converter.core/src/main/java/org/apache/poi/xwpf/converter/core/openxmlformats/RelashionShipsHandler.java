@@ -27,7 +27,7 @@ public class RelashionShipsHandler
     extends DefaultHandler
 {
 
-    private static class Relationship
+    static class Relationship
     {
         public final String id;
 
@@ -63,13 +63,13 @@ public class RelashionShipsHandler
         this.fontsDocuments = new ArrayList<FontsDocument>();
     }
 
-    public static RelashionShipsHandler create( AbstractOpenXMLFormatsPartProvider provider )
+    public static RelashionShipsHandler create( String partName, AbstractOpenXMLFormatsPartProvider provider )
         throws SAXException, IOException
     {
         XMLReader xmlReader = XMLReaderFactory.createXMLReader();
         RelashionShipsHandler contentHandler = new RelashionShipsHandler( provider );
         xmlReader.setContentHandler( contentHandler );
-        xmlReader.parse( new InputSource( provider.getEntryInputStream( "word/_rels/document.xml.rels" ) ) );
+        xmlReader.parse( new InputSource( provider.getEntryInputStream( "word/_rels/" + partName + ".rels" ) ) );
         return contentHandler;
     }
 
@@ -86,7 +86,7 @@ public class RelashionShipsHandler
             if ( "http://schemas.openxmlformats.org/officeDocument/2006/relationships/settings".equals( type ) )
             {
                 // settings
-                InputStream in = provider.getEntryInputStream( "word/" + target );
+                InputStream in = getInputStream( target );
                 try
                 {
                     settings = SettingsDocument.Factory.parse( in ).getSettings();
@@ -99,7 +99,7 @@ public class RelashionShipsHandler
             else if ( "http://schemas.openxmlformats.org/officeDocument/2006/relationships/styles".equals( type ) )
             {
                 // style
-                InputStream in = provider.getEntryInputStream( "word/" + target );
+                InputStream in = getInputStream( target );
                 try
                 {
                     styles = StylesDocument.Factory.parse( in ).getStyles();
@@ -112,7 +112,7 @@ public class RelashionShipsHandler
             else if ( "http://schemas.openxmlformats.org/officeDocument/2006/relationships/theme".equals( type ) )
             {
                 // theme
-                InputStream in = provider.getEntryInputStream( "word/" + target );
+                InputStream in = getInputStream( target );
                 try
                 {
                     ThemeDocument theme = ThemeDocument.Factory.parse( in );
@@ -126,7 +126,7 @@ public class RelashionShipsHandler
             else if ( "http://schemas.openxmlformats.org/officeDocument/2006/relationships/fontTable".equals( type ) )
             {
                 // fontTable
-                InputStream in = provider.getEntryInputStream( "word/" + target );
+                InputStream in = getInputStream( target );
                 try
                 {
                     FontsDocument fonts = FontsDocument.Factory.parse( in );
@@ -138,6 +138,17 @@ public class RelashionShipsHandler
                 }
             }
         }
+    }
+
+    private InputStream getInputStream( String target )
+    {
+        return provider.getEntryInputStream( "word/" + target );
+    }
+
+    public InputStream getInputStreamByRelId( String relId )
+    {
+        Relationship relation = getRelationship( relId );
+        return getInputStream( relation.target );
     }
 
     public List<ThemeDocument> getThemeDocuments()
@@ -163,16 +174,21 @@ public class RelashionShipsHandler
     public FtrDocument getFtrDocument( String relId )
         throws XmlException, IOException
     {
-        Relationship relationship = relationships.get( relId );
+        Relationship relationship = getRelationship( relId );
         InputStream in = provider.getEntryInputStream( "word/" + relationship.target );
         FtrDocument ftrDoc = FtrDocument.Factory.parse( in );
         return ftrDoc;
     }
 
+    Relationship getRelationship( String relId )
+    {
+        return relationships.get( relId );
+    }
+
     public HdrDocument getHdrDocument( String relId )
         throws XmlException, IOException
     {
-        Relationship relationship = relationships.get( relId );
+        Relationship relationship = getRelationship( relId );
         InputStream in = provider.getEntryInputStream( "word/" + relationship.target );
         HdrDocument hdrDoc = HdrDocument.Factory.parse( in );
         return hdrDoc;

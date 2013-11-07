@@ -208,7 +208,7 @@ public class ODTDocumentHandler
 
         if ( spanNeeded )
         {
-            internalStartSpan( null, true );
+            internalStartSpan( styleGen.getTextStyleName( null ), true );
         }
         else
         {

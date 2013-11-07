@@ -50,7 +50,7 @@ public class ODTDocumentHandlerTestCase
         formatter.transform( "&auml; &uuml; &eacute;", handler );
 
         Assert.assertEquals( "", handler.getTextBefore() );
-        Assert.assertEquals( "<text:span>ä </text:span><text:span>ü </text:span><text:span>é</text:span>",
+        Assert.assertEquals( "<text:span text:style-name=\"XDocReport_EmptyText\" >ä </text:span><text:span text:style-name=\"XDocReport_EmptyText\" >ü </text:span><text:span text:style-name=\"XDocReport_EmptyText\" >é</text:span>",
                              handler.getTextBody() );
         Assert.assertEquals( "", handler.getTextEnd() );
     }
@@ -67,7 +67,7 @@ public class ODTDocumentHandlerTestCase
         formatter.transform( "&amp;&lt;", handler );
 
         Assert.assertEquals( "", handler.getTextBefore() );
-        Assert.assertEquals( "<text:span>&amp;</text:span><text:span>&lt;</text:span>", handler.getTextBody() );
+        Assert.assertEquals( "<text:span text:style-name=\"XDocReport_EmptyText\" >&amp;</text:span><text:span text:style-name=\"XDocReport_EmptyText\" >&lt;</text:span>", handler.getTextBody() );
         Assert.assertEquals( "", handler.getTextEnd() );
     }
 
@@ -186,7 +186,7 @@ public class ODTDocumentHandlerTestCase
         // content.xml
         Assert.assertEquals( "", handler.getTextBefore() );
         Assert.assertEquals( "", handler.getTextBody() );
-        Assert.assertEquals( "<text:p text:style-name=\"XDocReport_P0\"><text:span>text</text:span></text:p>",
+        Assert.assertEquals( "<text:p text:style-name=\"XDocReport_P0\"><text:span text:style-name=\"XDocReport_EmptyText\" >text</text:span></text:p>",
                              handler.getTextEnd() );
     }
 
@@ -209,7 +209,7 @@ public class ODTDocumentHandlerTestCase
         // content.xml
         Assert.assertEquals( "", handler.getTextBefore() );
         Assert.assertEquals( "", handler.getTextBody() );
-        Assert.assertEquals( "<text:p text:style-name=\"XDocReport_P0\"><text:span>text</text:span></text:p>",
+        Assert.assertEquals( "<text:p text:style-name=\"XDocReport_P0\"><text:span text:style-name=\"XDocReport_EmptyText\" >text</text:span></text:p>",
                              handler.getTextEnd() );
     }
 
@@ -290,7 +290,7 @@ public class ODTDocumentHandlerTestCase
         // content.xml
         Assert.assertEquals( "", handler.getTextBefore() );
         Assert.assertEquals( "", handler.getTextBody() );
-        Assert.assertEquals( "<text:p text:style-name=\"XDocReport_P0\"><text:span>text</text:span></text:p>",
+        Assert.assertEquals( "<text:p text:style-name=\"XDocReport_P0\"><text:span text:style-name=\"XDocReport_EmptyText\" >text</text:span></text:p>",
                              handler.getTextEnd() );
     }
 
@@ -354,7 +354,7 @@ public class ODTDocumentHandlerTestCase
         // content.xml
         Assert.assertEquals( "", handler.getTextBefore() );
         Assert.assertEquals( "", handler.getTextBody() );
-        Assert.assertEquals( "<text:p text:style-name=\"XDocReport_P0\"><text:span>text</text:span></text:p>",
+        Assert.assertEquals( "<text:p text:style-name=\"XDocReport_P0\"><text:span text:style-name=\"XDocReport_EmptyText\" >text</text:span></text:p>",
                              handler.getTextEnd() );
     }
 
@@ -435,7 +435,7 @@ public class ODTDocumentHandlerTestCase
         // content.xml
         Assert.assertEquals( "", handler.getTextBefore() );
         Assert.assertEquals( "", handler.getTextBody() );
-        Assert.assertEquals( "<text:p text:style-name=\"XDocReport_P0\"><text:span>text</text:span></text:p>",
+        Assert.assertEquals( "<text:p text:style-name=\"XDocReport_P0\"><text:span text:style-name=\"XDocReport_EmptyText\" >text</text:span></text:p>",
                              handler.getTextEnd() );
     }
 
@@ -482,7 +482,7 @@ public class ODTDocumentHandlerTestCase
         // content.xml
         Assert.assertEquals( "", handler.getTextBefore() );
         Assert.assertEquals( "", handler.getTextBody() );
-        Assert.assertEquals( "<text:p text:style-name=\"XDocReport_P0\"><text:span>text</text:span></text:p>",
+        Assert.assertEquals( "<text:p text:style-name=\"XDocReport_P0\"><text:span text:style-name=\"XDocReport_EmptyText\" >text</text:span></text:p>",
                              handler.getTextEnd() );
     }
 
@@ -545,7 +545,7 @@ public class ODTDocumentHandlerTestCase
         // content.xml
         Assert.assertEquals( "", handler.getTextBefore() );
         Assert.assertEquals( "", handler.getTextBody() );
-        Assert.assertEquals( "<text:p text:style-name=\"XDocReport_P0\"><text:span>text</text:span></text:p>",
+        Assert.assertEquals( "<text:p text:style-name=\"XDocReport_P0\"><text:span text:style-name=\"XDocReport_EmptyText\" >text</text:span></text:p>",
                              handler.getTextEnd() );
     }
 
@@ -609,7 +609,7 @@ public class ODTDocumentHandlerTestCase
         // content.xml
         Assert.assertEquals( "", handler.getTextBefore() );
         Assert.assertEquals( "", handler.getTextBody() );
-        Assert.assertEquals( "<text:p text:style-name=\"XDocReport_P0\"><text:span>text</text:span></text:p>",
+        Assert.assertEquals( "<text:p text:style-name=\"XDocReport_P0\"><text:span text:style-name=\"XDocReport_EmptyText\" >text</text:span></text:p>",
                              handler.getTextEnd() );
     }
 
@@ -686,7 +686,7 @@ public class ODTDocumentHandlerTestCase
                              handler );
 
         Assert.assertEquals( "", handler.getTextBefore() );
-        Assert.assertEquals( "<text:span>xxx</text:span>", handler.getTextBody() );
+        Assert.assertEquals( "<text:span text:style-name=\"XDocReport_EmptyText\" >xxx</text:span>", handler.getTextBody() );
         Assert.assertEquals( "<text:h text:style-name=\"Heading_20_1\" text:outline-level=\"1\">Title1</text:h>"
             + "<text:h text:style-name=\"Heading_20_2\" text:outline-level=\"2\">Title2</text:h>"
             + "<text:h text:style-name=\"Heading_20_3\" text:outline-level=\"3\">Title3</text:h>"
@@ -740,7 +740,7 @@ public class ODTDocumentHandlerTestCase
         Assert.assertEquals( "", handler.getTextBefore() );
         Assert.assertEquals( "", handler.getTextBody() );
         Assert.assertEquals( "<text:h text:style-name=\"Heading_20_1\" text:outline-level=\"1\">Title1</text:h>"
-            + "<text:p><text:span>paragraph1</text:span></text:p>", handler.getTextEnd() );
+            + "<text:p><text:span text:style-name=\"XDocReport_EmptyText\" >paragraph1</text:span></text:p>", handler.getTextEnd() );
     }
 
     @Test
@@ -758,7 +758,7 @@ public class ODTDocumentHandlerTestCase
         Assert.assertEquals( "", handler.getTextBefore() );
         Assert.assertEquals( "", handler.getTextBody() );
         Assert.assertEquals( "<text:h text:style-name=\"Heading_20_1\" text:outline-level=\"1\">Title1</text:h>"
-            + "<text:p><text:span>paragraph1</text:span></text:p>", handler.getTextEnd() );
+            + "<text:p><text:span text:style-name=\"XDocReport_EmptyText\" >paragraph1</text:span></text:p>", handler.getTextEnd() );
     }
 
     @Test
@@ -775,7 +775,7 @@ public class ODTDocumentHandlerTestCase
 
         Assert.assertEquals( "", handler.getTextBefore() );
         Assert.assertEquals( "", handler.getTextBody() );
-        Assert.assertEquals( "<text:h text:style-name=\"Heading_20_1\" text:outline-level=\"1\">Title1</text:h><text:p><text:span>text</text:span><text:p><text:span>paragraph</text:span></text:p></text:p>",
+        Assert.assertEquals( "<text:h text:style-name=\"Heading_20_1\" text:outline-level=\"1\">Title1</text:h><text:p><text:span text:style-name=\"XDocReport_EmptyText\" >text</text:span><text:p><text:span text:style-name=\"XDocReport_EmptyText\" >paragraph</text:span></text:p></text:p>",
                              handler.getTextEnd() );
     }
 
@@ -792,7 +792,7 @@ public class ODTDocumentHandlerTestCase
 
         Assert.assertEquals( "", handler.getTextBefore() );
         Assert.assertEquals( "", handler.getTextBody() );
-        Assert.assertEquals( "<text:p><text:span>bla bla bla</text:span></text:p>", handler.getTextEnd() );
+        Assert.assertEquals( "<text:p><text:span text:style-name=\"XDocReport_EmptyText\" >bla bla bla</text:span></text:p>", handler.getTextEnd() );
     }
 
     @Test
@@ -807,9 +807,9 @@ public class ODTDocumentHandlerTestCase
         formatter.transform( "some <strong>text</strong><p>paragraph1</p><p>paragraph2</p>", handler );
 
         Assert.assertEquals( "", handler.getTextBefore() );
-        Assert.assertEquals( "<text:span>some </text:span><text:span text:style-name=\"XDocReport_Bold\" >text</text:span>",
+        Assert.assertEquals( "<text:span text:style-name=\"XDocReport_EmptyText\" >some </text:span><text:span text:style-name=\"XDocReport_Bold\" >text</text:span>",
                              handler.getTextBody() );
-        Assert.assertEquals( "<text:p><text:span>paragraph1</text:span></text:p><text:p><text:span>paragraph2</text:span></text:p>",
+        Assert.assertEquals( "<text:p><text:span text:style-name=\"XDocReport_EmptyText\" >paragraph1</text:span></text:p><text:p><text:span text:style-name=\"XDocReport_EmptyText\" >paragraph2</text:span></text:p>",
                              handler.getTextEnd() );
     }
 
@@ -834,9 +834,9 @@ public class ODTDocumentHandlerTestCase
         Assert.assertEquals( "", handler.getTextBody() );
         Assert.assertEquals( "<text:list text:style-name=\"XDocReport_OL\">"
             + "<text:list-item text:style-name=\"XDocReport_OL\">" + "<text:p text:style-name=\"XDocReport_OL_P\">"
-            + "<text:span>item1</text:span>" + "</text:p>" + "</text:list-item>"
+            + "<text:span text:style-name=\"XDocReport_EmptyText\" >item1</text:span>" + "</text:p>" + "</text:list-item>"
             + "<text:list-item text:style-name=\"XDocReport_OL\">" + "<text:p text:style-name=\"XDocReport_OL_P\">"
-            + "<text:span>item2</text:span>" + "</text:p>" + "</text:list-item>" + "</text:list>", handler.getTextEnd() );
+            + "<text:span text:style-name=\"XDocReport_EmptyText\" >item2</text:span>" + "</text:p>" + "</text:list-item>" + "</text:list>", handler.getTextEnd() );
     }
 
     @Test
@@ -860,9 +860,9 @@ public class ODTDocumentHandlerTestCase
         Assert.assertEquals( "", handler.getTextBody() );
         Assert.assertEquals( "<text:list text:style-name=\"XDocReport_OL\">"
             + "<text:list-item text:style-name=\"XDocReport_OL\">" + "<text:p text:style-name=\"XDocReport_OL_P\">"
-            + "<text:span>item1</text:span>" + "</text:p>" + "</text:list-item>"
+            + "<text:span text:style-name=\"XDocReport_EmptyText\" >item1</text:span>" + "</text:p>" + "</text:list-item>"
             + "<text:list-item text:style-name=\"XDocReport_OL\">" + "<text:p text:style-name=\"XDocReport_OL_P\">"
-            + "<text:span>item2</text:span>" + "</text:p>" + "</text:list-item>" + "</text:list>", handler.getTextEnd() );
+            + "<text:span text:style-name=\"XDocReport_EmptyText\" >item2</text:span>" + "</text:p>" + "</text:list-item>" + "</text:list>", handler.getTextEnd() );
     }
 
     @Test
@@ -885,7 +885,7 @@ public class ODTDocumentHandlerTestCase
         Assert.assertEquals( "", handler.getTextBefore() );
         Assert.assertEquals( "", handler.getTextBody() );
         Assert.assertEquals( "", handler.getTextBody() );
-        Assert.assertEquals( "<text:list text:style-name=\"XDocReport_OL\"><text:list-item text:style-name=\"XDocReport_OL\"><text:p text:style-name=\"XDocReport_OL_P\"><text:span>item1</text:span></text:p></text:list-item><text:list-item text:style-name=\"XDocReport_OL\"><text:p text:style-name=\"XDocReport_OL_P\"><text:span>item2</text:span></text:p></text:list-item></text:list><text:list text:style-name=\"XDocReport_UL\"><text:list-item text:style-name=\"XDocReport_UL\"><text:p text:style-name=\"XDocReport_UL_P\"><text:span>item1</text:span></text:p></text:list-item><text:list-item text:style-name=\"XDocReport_UL\"><text:p text:style-name=\"XDocReport_UL_P\"><text:span>item2</text:span></text:p></text:list-item></text:list>",
+        Assert.assertEquals( "<text:list text:style-name=\"XDocReport_OL\"><text:list-item text:style-name=\"XDocReport_OL\"><text:p text:style-name=\"XDocReport_OL_P\"><text:span text:style-name=\"XDocReport_EmptyText\" >item1</text:span></text:p></text:list-item><text:list-item text:style-name=\"XDocReport_OL\"><text:p text:style-name=\"XDocReport_OL_P\"><text:span text:style-name=\"XDocReport_EmptyText\" >item2</text:span></text:p></text:list-item></text:list><text:list text:style-name=\"XDocReport_UL\"><text:list-item text:style-name=\"XDocReport_UL\"><text:p text:style-name=\"XDocReport_UL_P\"><text:span text:style-name=\"XDocReport_EmptyText\" >item1</text:span></text:p></text:list-item><text:list-item text:style-name=\"XDocReport_UL\"><text:p text:style-name=\"XDocReport_UL_P\"><text:span text:style-name=\"XDocReport_EmptyText\" >item2</text:span></text:p></text:list-item></text:list>",
                              handler.getTextEnd() );
     }
 
@@ -908,7 +908,7 @@ public class ODTDocumentHandlerTestCase
 
         Assert.assertEquals( "", handler.getTextBefore() );
         Assert.assertEquals( "", handler.getTextBody() );
-        Assert.assertEquals( "<text:list text:style-name=\"XDocReport_UL\"><text:list-item text:style-name=\"XDocReport_UL\"><text:p text:style-name=\"XDocReport_UL_P\"><text:span>item1</text:span></text:p></text:list-item><text:list-item text:style-name=\"XDocReport_UL\"><text:p text:style-name=\"XDocReport_UL_P\"><text:span>item2</text:span></text:p></text:list-item></text:list>",
+        Assert.assertEquals( "<text:list text:style-name=\"XDocReport_UL\"><text:list-item text:style-name=\"XDocReport_UL\"><text:p text:style-name=\"XDocReport_UL_P\"><text:span text:style-name=\"XDocReport_EmptyText\" >item1</text:span></text:p></text:list-item><text:list-item text:style-name=\"XDocReport_UL\"><text:p text:style-name=\"XDocReport_UL_P\"><text:span text:style-name=\"XDocReport_EmptyText\" >item2</text:span></text:p></text:list-item></text:list>",
                              handler.getTextEnd() );
     }
 
@@ -934,7 +934,7 @@ public class ODTDocumentHandlerTestCase
 
         Assert.assertEquals( "", handler.getTextBefore() );
         Assert.assertEquals( "", handler.getTextBody() );
-        Assert.assertEquals( "<text:list text:style-name=\"XDocReport_UL\"><text:list-item text:style-name=\"XDocReport_UL\"><text:p text:style-name=\"XDocReport_UL_P\"><text:span text:style-name=\"XDocReport_Bold\" >Bold</text:span><text:span> style.</text:span></text:p><text:list text:style-name=\"XDocReport_UL\"><text:list-item text:style-name=\"XDocReport_UL\"><text:p text:style-name=\"XDocReport_UL_P\"><text:span>zaza</text:span></text:p></text:list-item><text:list-item text:style-name=\"XDocReport_UL\"><text:p text:style-name=\"XDocReport_UL_P\"><text:span>zaza</text:span></text:p></text:list-item><text:list-item text:style-name=\"XDocReport_UL\"><text:p text:style-name=\"XDocReport_UL_P\"><text:span>zaza</text:span></text:p></text:list-item></text:list></text:list-item><text:list-item text:style-name=\"XDocReport_UL\"><text:p text:style-name=\"XDocReport_UL_P\"><text:span text:style-name=\"XDocReport_Italic\" >Italic</text:span><text:span> style.</text:span></text:p><text:list text:style-name=\"XDocReport_UL\"><text:list-item text:style-name=\"XDocReport_UL\"><text:p text:style-name=\"XDocReport_UL_P\"><text:span>zazaaa</text:span></text:p></text:list-item><text:list-item text:style-name=\"XDocReport_UL\"><text:p text:style-name=\"XDocReport_UL_P\"><text:span>zzzzzzzzzzzz</text:span></text:p><text:list text:style-name=\"XDocReport_UL\"><text:list-item text:style-name=\"XDocReport_UL\"><text:p text:style-name=\"XDocReport_UL_P\"><text:span>ddddddddddddddddddd</text:span></text:p></text:list-item></text:list></text:list-item></text:list></text:list-item><text:list-item text:style-name=\"XDocReport_UL\"><text:p text:style-name=\"XDocReport_UL_P\"><text:span text:style-name=\"XDocReport_Bold\" ><text:span text:style-name=\"XDocReport_Italic\" >BoldAndItalic</text:span></text:span><text:span> style.</text:span></text:p></text:list-item></text:list>",
+        Assert.assertEquals( "<text:list text:style-name=\"XDocReport_UL\"><text:list-item text:style-name=\"XDocReport_UL\"><text:p text:style-name=\"XDocReport_UL_P\"><text:span text:style-name=\"XDocReport_Bold\" >Bold</text:span><text:span text:style-name=\"XDocReport_EmptyText\" > style.</text:span></text:p><text:list text:style-name=\"XDocReport_UL\"><text:list-item text:style-name=\"XDocReport_UL\"><text:p text:style-name=\"XDocReport_UL_P\"><text:span text:style-name=\"XDocReport_EmptyText\" >zaza</text:span></text:p></text:list-item><text:list-item text:style-name=\"XDocReport_UL\"><text:p text:style-name=\"XDocReport_UL_P\"><text:span text:style-name=\"XDocReport_EmptyText\" >zaza</text:span></text:p></text:list-item><text:list-item text:style-name=\"XDocReport_UL\"><text:p text:style-name=\"XDocReport_UL_P\"><text:span text:style-name=\"XDocReport_EmptyText\" >zaza</text:span></text:p></text:list-item></text:list></text:list-item><text:list-item text:style-name=\"XDocReport_UL\"><text:p text:style-name=\"XDocReport_UL_P\"><text:span text:style-name=\"XDocReport_Italic\" >Italic</text:span><text:span text:style-name=\"XDocReport_EmptyText\" > style.</text:span></text:p><text:list text:style-name=\"XDocReport_UL\"><text:list-item text:style-name=\"XDocReport_UL\"><text:p text:style-name=\"XDocReport_UL_P\"><text:span text:style-name=\"XDocReport_EmptyText\" >zazaaa</text:span></text:p></text:list-item><text:list-item text:style-name=\"XDocReport_UL\"><text:p text:style-name=\"XDocReport_UL_P\"><text:span text:style-name=\"XDocReport_EmptyText\" >zzzzzzzzzzzz</text:span></text:p><text:list text:style-name=\"XDocReport_UL\"><text:list-item text:style-name=\"XDocReport_UL\"><text:p text:style-name=\"XDocReport_UL_P\"><text:span text:style-name=\"XDocReport_EmptyText\" >ddddddddddddddddddd</text:span></text:p></text:list-item></text:list></text:list-item></text:list></text:list-item><text:list-item text:style-name=\"XDocReport_UL\"><text:p text:style-name=\"XDocReport_UL_P\"><text:span text:style-name=\"XDocReport_Bold\" ><text:span text:style-name=\"XDocReport_Italic\" >BoldAndItalic</text:span></text:span><text:span text:style-name=\"XDocReport_EmptyText\" > style.</text:span></text:p></text:list-item></text:list>",
                              handler.getTextEnd() );
     }
 
@@ -951,7 +951,7 @@ public class ODTDocumentHandlerTestCase
 
         Assert.assertEquals( "", handler.getTextBefore() );
         Assert.assertEquals( "", handler.getTextBody() );
-        Assert.assertEquals( "<text:p text:style-name=\"XDocReport_ParaBreakBefore\"><text:span>bla bla bla</text:span></text:p>",
+        Assert.assertEquals( "<text:p text:style-name=\"XDocReport_ParaBreakBefore\"><text:span text:style-name=\"XDocReport_EmptyText\" >bla bla bla</text:span></text:p>",
                              handler.getTextEnd() );
     }
 
@@ -968,7 +968,7 @@ public class ODTDocumentHandlerTestCase
 
         Assert.assertEquals( "", handler.getTextBefore() );
         Assert.assertEquals( "", handler.getTextBody() );
-        Assert.assertEquals( "<text:p text:style-name=\"XDocReport_ParaBreakAfter\"><text:span>bla bla bla</text:span></text:p>",
+        Assert.assertEquals( "<text:p text:style-name=\"XDocReport_ParaBreakAfter\"><text:span text:style-name=\"XDocReport_EmptyText\" >bla bla bla</text:span></text:p>",
                              handler.getTextEnd() );
     }
 
@@ -984,7 +984,7 @@ public class ODTDocumentHandlerTestCase
         formatter.transform( "a<br/>b", handler );
 
         Assert.assertEquals( "", handler.getTextBefore() );
-        Assert.assertEquals( "<text:span>a</text:span><text:line-break /><text:span>b</text:span>",
+        Assert.assertEquals( "<text:span text:style-name=\"XDocReport_EmptyText\" >a</text:span><text:line-break /><text:span text:style-name=\"XDocReport_EmptyText\" >b</text:span>",
                              handler.getTextBody() );
         Assert.assertEquals( "", handler.getTextEnd() );
     }
@@ -1027,7 +1027,7 @@ public class ODTDocumentHandlerTestCase
         // content.xml
         Assert.assertEquals( "", handler.getTextBefore() );
         Assert.assertEquals( "", handler.getTextBody() );
-        Assert.assertEquals( "<text:p><text:span>Before </text:span><text:span text:style-name=\"XDocReport_T0\" >Underline <text:span text:style-name=\"XDocReport_T1\" >and bold <text:span text:style-name=\"XDocReport_T2\" >and italic</text:span> No italics</text:span> No bold</text:span><text:span> No Underline</text:span></text:p>",
+        Assert.assertEquals( "<text:p><text:span text:style-name=\"XDocReport_EmptyText\" >Before </text:span><text:span text:style-name=\"XDocReport_T0\" >Underline <text:span text:style-name=\"XDocReport_T1\" >and bold <text:span text:style-name=\"XDocReport_T2\" >and italic</text:span> No italics</text:span> No bold</text:span><text:span text:style-name=\"XDocReport_EmptyText\" > No Underline</text:span></text:p>",
                              handler.getTextEnd() );
     }
 
@@ -1051,7 +1051,7 @@ public class ODTDocumentHandlerTestCase
         // content.xml
         Assert.assertEquals( "", handler.getTextBefore() );
         Assert.assertEquals( "", handler.getTextBody() );
-        Assert.assertEquals( "<text:p text:style-name=\"XDocReport_P0\"><text:span>AAA</text:span><text:span>BBB</text:span></text:p>",
+        Assert.assertEquals( "<text:p text:style-name=\"XDocReport_P0\"><text:span text:style-name=\"XDocReport_EmptyText\" >AAA</text:span><text:span text:style-name=\"XDocReport_EmptyText\" >BBB</text:span></text:p>",
                              handler.getTextEnd() );
     }
 
@@ -1075,9 +1075,9 @@ public class ODTDocumentHandlerTestCase
         Assert.assertEquals( "", handler.getTextBody() );
         Assert.assertEquals( "<table:table>"
             + "<table:table-column table:number-columns-repeated=\"2\" ></table:table-column>"
-            + "<table:table-row><table:table-cell><text:p><text:span>A</text:span></text:p></table:table-cell><table:table-cell><text:p><text:span>B</text:span></text:p></table:table-cell></table:table-row>"
-            + "<table:table-row><table:table-cell><text:p><text:span>C</text:span></text:p></table:table-cell><table:table-cell><text:p><text:span>D</text:span></text:p></table:table-cell></table:table-row>"
-            + "<table:table-row><table:table-cell><text:p><text:span>E</text:span></text:p></table:table-cell><table:table-cell><text:p><text:span>F</text:span></text:p></table:table-cell></table:table-row>"
+            + "<table:table-row><table:table-cell><text:p><text:span text:style-name=\"XDocReport_EmptyText\" >A</text:span></text:p></table:table-cell><table:table-cell><text:p><text:span text:style-name=\"XDocReport_EmptyText\" >B</text:span></text:p></table:table-cell></table:table-row>"
+            + "<table:table-row><table:table-cell><text:p><text:span text:style-name=\"XDocReport_EmptyText\" >C</text:span></text:p></table:table-cell><table:table-cell><text:p><text:span text:style-name=\"XDocReport_EmptyText\" >D</text:span></text:p></table:table-cell></table:table-row>"
+            + "<table:table-row><table:table-cell><text:p><text:span text:style-name=\"XDocReport_EmptyText\" >E</text:span></text:p></table:table-cell><table:table-cell><text:p><text:span text:style-name=\"XDocReport_EmptyText\" >F</text:span></text:p></table:table-cell></table:table-row>"
             + "</table:table>",
                              handler.getTextEnd() );
     }

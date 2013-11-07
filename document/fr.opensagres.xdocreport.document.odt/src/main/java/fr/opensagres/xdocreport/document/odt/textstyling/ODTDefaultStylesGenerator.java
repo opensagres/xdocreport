@@ -67,6 +67,8 @@ public class ODTDefaultStylesGenerator
 
     protected static final String PAGE_BREAK_AFTER_PARAGRAPH_STYLE_NAME = "XDocReport_ParaBreakAfter";
 
+    protected static final String EMPTY_TEXT_STYLE_NAME = "XDocReport_EmptyText";
+
     // font size for the default OOo Headers
     protected static String[] TITLE_FONT_SIZE = { "115%", "14pt", "14pt", "85%", "85%", "75%" };
 
@@ -146,6 +148,7 @@ public class ODTDefaultStylesGenerator
     public String generateTextStyles()
     {
         StringBuilder region = new StringBuilder();
+        region.append( generateStyle( EMPTY_TEXT_STYLE_NAME, "" ) );
         region.append( generateStyle( BOLD_STYLE_NAME, "fo:font-weight=\"bold\"" ) );
         region.append( generateStyle( ITALIC_STYLE_NAME, "fo:font-style=\"italic\"" ) );
         region.append( generateStyle( UNDERLINE_STYLE_NAME,
@@ -395,11 +398,12 @@ public class ODTDefaultStylesGenerator
     @Override
     public String getTextStyleName( ContainerProperties properties )
     {
-        if (properties == null) {
-            return null;
+        if ( properties == null )
+        {
+            return EMPTY_TEXT_STYLE_NAME;
         }
         this.styleName = null;
-        
+
         // <style:text-properties
         setPropertiesKind( ODTStyleProperties.TEXT );
         if ( properties.isBold() )

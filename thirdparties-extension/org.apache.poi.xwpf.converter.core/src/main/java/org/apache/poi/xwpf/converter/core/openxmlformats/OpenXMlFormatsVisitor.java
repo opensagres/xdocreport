@@ -681,7 +681,7 @@ public abstract class OpenXMlFormatsVisitor<T, O extends Options, E extends IXWP
         if ( positionH != null )
         {
             relativeFromH = positionH.getRelativeFrom();
-            offsetX = DxaUtil.emu2points( positionH.getPosOffset() );
+            //offsetX = DxaUtil.emu2points( positionH.getPosOffset() );
         }
 
         STRelFromV.Enum relativeFromV = null;

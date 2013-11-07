@@ -56,37 +56,13 @@ public class ExtendedDocument
 
     private PageOrientation orientation = PageOrientation.Portrait;
 
-    public ExtendedDocument( OutputStream out, Rectangle rectangle )
-        throws DocumentException
-    {
-        super( rectangle );
-        this.writer = ExtendedPdfWriter.getInstance( this, out );
-        headerFooter = createExtendedHeaderFooter();
-        writer.setPageEvent( headerFooter );
-        this.originMarginTop = marginTop;
-        this.originMarginBottom = marginBottom;
-        this.originMarginRight = marginRight;
-        this.originMarginLeft = marginLeft;
-    }
-
-    public ExtendedDocument( OutputStream out, Rectangle rectangle, float marginLeft, float marginRight,
-                             float marginTop, float marginBottom )
-        throws DocumentException
-    {
-        super( rectangle, marginLeft, marginRight, marginTop, marginBottom );
-        this.writer = ExtendedPdfWriter.getInstance( this, out );
-        headerFooter = createExtendedHeaderFooter();
-        writer.setPageEvent( headerFooter );
-        this.originMarginTop = marginTop;
-        this.originMarginBottom = marginBottom;
-        this.originMarginRight = marginRight;
-        this.originMarginLeft = marginLeft;
-    }
-
-    public ExtendedDocument( OutputStream out )
+    public ExtendedDocument( OutputStream out, IPdfWriterConfiguration configuration )
         throws DocumentException
     {
         this.writer = ExtendedPdfWriter.getInstance( this, out );
+        if (configuration != null) {
+            configuration.configure( writer );
+        }
         headerFooter = createExtendedHeaderFooter();
         writer.setPageEvent( headerFooter );
         this.originMarginTop = marginTop;

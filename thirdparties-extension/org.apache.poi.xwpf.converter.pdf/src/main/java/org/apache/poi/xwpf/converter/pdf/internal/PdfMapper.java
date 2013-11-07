@@ -157,7 +157,7 @@ public class PdfMapper
         throws Exception
     {
         // Create instance of PDF document
-        this.pdfDocument = new StylableDocument( out );
+        this.pdfDocument = new StylableDocument( out, options.getConfiguration() );
         this.pdfDocument.setMasterPageManager( getMasterPageManager() );
         return pdfDocument;
 

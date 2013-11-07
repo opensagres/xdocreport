@@ -79,7 +79,7 @@ public class FastPdfMapper
     /**
      * Logger for this class
      */
-    private static final Logger LOGGER = Logger.getLogger( PdfMapper.class.getName() );
+    private static final Logger LOGGER = Logger.getLogger( FastPdfMapper.class.getName() );
 
     private final OutputStream out;
 
@@ -114,7 +114,7 @@ public class FastPdfMapper
         throws Exception
     {
         // Create instance of PDF document
-        this.pdfDocument = new StylableDocument( out );
+        this.pdfDocument = new StylableDocument( out, options.getConfiguration() );
         this.pdfDocument.setMasterPageManager( getMasterPageManager() );
         return pdfDocument;
 

@@ -145,7 +145,7 @@ public class ElementVisitorForIText
         // Create document
         try
         {
-            document = new StylableDocument( out, styleEngine );
+            document = new StylableDocument( out, options.getConfiguration(), styleEngine );
         }
         catch ( DocumentException e )
         {

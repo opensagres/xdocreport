@@ -27,7 +27,9 @@ package org.apache.poi.xwpf.converter.pdf;
 import org.apache.poi.xwpf.converter.core.Options;
 
 import com.lowagie.text.pdf.BaseFont;
+import com.lowagie.text.pdf.PdfWriter;
 
+import fr.opensagres.xdocreport.itext.extension.IPdfWriterConfiguration;
 import fr.opensagres.xdocreport.itext.extension.font.IFontProvider;
 import fr.opensagres.xdocreport.itext.extension.font.ITextFontRegistry;
 
@@ -44,6 +46,8 @@ public class PdfOptions
 
     private IFontProvider fontProvider;
 
+    private IPdfWriterConfiguration configuration;
+
     private PdfOptions()
     {
         this.fontEncoding = BaseFont.IDENTITY_H;
@@ -52,7 +56,7 @@ public class PdfOptions
 
     /**
      * Create an instance of Pdf options.
-     *
+     * 
      * @return
      */
     public static PdfOptions create()
@@ -62,7 +66,7 @@ public class PdfOptions
 
     /**
      * Returns the font encoding.
-     *
+     * 
      * @return
      */
     public String getFontEncoding()
@@ -72,7 +76,7 @@ public class PdfOptions
 
     /**
      * Set font encoding to use when retrieving fonts. The default value is underlying operating system encoding
-     *
+     * 
      * @param fontEncoding font encoding to use
      * @return this instance
      */
@@ -84,7 +88,7 @@ public class PdfOptions
 
     /**
      * Set the font provider.
-     *
+     * 
      * @param fontProvider
      * @return
      */
@@ -96,7 +100,7 @@ public class PdfOptions
 
     /**
      * Returns the font provider.
-     *
+     * 
      * @return
      */
     public IFontProvider getFontProvider()
@@ -106,11 +110,32 @@ public class PdfOptions
 
     /**
      * Returns the default Pdf Options.
-     *
+     * 
      * @return
      */
     public static PdfOptions getDefault()
     {
         return DEFAULT;
     }
+
+    /**
+     * Returns the configuration to use to configure iText {@link PdfWriter} and null otherwise.
+     * 
+     * @return
+     */
+    public IPdfWriterConfiguration getConfiguration()
+    {
+        return configuration;
+    }
+
+    /**
+     * Set the configuration to use to configure iText {@link PdfWriter} and null otherwise.
+     * 
+     * @param configuration the configuration to use to configure iText {@link PdfWriter} and null otherwise
+     */
+    public void setConfiguration( IPdfWriterConfiguration configuration )
+    {
+        this.configuration = configuration;
+    }
+
 }

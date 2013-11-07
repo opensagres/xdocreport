@@ -27,7 +27,9 @@ package org.odftoolkit.odfdom.converter.pdf;
 import org.odftoolkit.odfdom.converter.core.Options;
 
 import com.lowagie.text.pdf.BaseFont;
+import com.lowagie.text.pdf.PdfWriter;
 
+import fr.opensagres.xdocreport.itext.extension.IPdfWriterConfiguration;
 import fr.opensagres.xdocreport.itext.extension.font.IFontProvider;
 import fr.opensagres.xdocreport.itext.extension.font.ITextFontRegistry;
 
@@ -43,6 +45,8 @@ public class PdfOptions
     private String fontEncoding;
 
     private IFontProvider fontProvider;
+
+    private IPdfWriterConfiguration configuration;
 
     private PdfOptions()
     {
@@ -102,6 +106,26 @@ public class PdfOptions
     public IFontProvider getFontProvider()
     {
         return fontProvider;
+    }
+
+    /**
+     * Returns the configuration to use to configure iText {@link PdfWriter} and null otherwise.
+     * 
+     * @return
+     */
+    public IPdfWriterConfiguration getConfiguration()
+    {
+        return configuration;
+    }
+
+    /**
+     * Set the configuration to use to configure iText {@link PdfWriter} and null otherwise.
+     * 
+     * @param configuration the configuration to use to configure iText {@link PdfWriter} and null otherwise
+     */
+    public void setConfiguration( IPdfWriterConfiguration configuration )
+    {
+        this.configuration = configuration;
     }
 
     /**

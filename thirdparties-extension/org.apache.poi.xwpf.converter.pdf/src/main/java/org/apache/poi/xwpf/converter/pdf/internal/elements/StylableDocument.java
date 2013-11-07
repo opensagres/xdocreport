@@ -52,6 +52,7 @@ import fr.opensagres.xdocreport.itext.extension.ExtendedPdfPTable;
 import fr.opensagres.xdocreport.itext.extension.IITextContainer;
 import fr.opensagres.xdocreport.itext.extension.IMasterPage;
 import fr.opensagres.xdocreport.itext.extension.IMasterPageHeaderFooter;
+import fr.opensagres.xdocreport.itext.extension.IPdfWriterConfiguration;
 
 public class StylableDocument
     extends ExtendedDocument
@@ -71,10 +72,10 @@ public class StylableDocument
 
     private MasterPageManager masterPageManager;
 
-    public StylableDocument( OutputStream out )
+    public StylableDocument( OutputStream out, IPdfWriterConfiguration configuration )
         throws DocumentException
     {
-        super( out );
+        super( out, configuration );
     }
 
     public void addElement( Element element )

@@ -43,6 +43,7 @@ import com.lowagie.text.pdf.PdfPTable;
 
 import fr.opensagres.xdocreport.itext.extension.ExtendedDocument;
 import fr.opensagres.xdocreport.itext.extension.IMasterPage;
+import fr.opensagres.xdocreport.itext.extension.IPdfWriterConfiguration;
 import fr.opensagres.xdocreport.itext.extension.PageOrientation;
 import fr.opensagres.xdocreport.itext.extension.font.FontGroup;
 
@@ -69,10 +70,10 @@ public class StylableDocument
 
     private int colIdx;
 
-    public StylableDocument( OutputStream out, StyleEngineForIText styleEngine )
+    public StylableDocument( OutputStream out, IPdfWriterConfiguration configuration, StyleEngineForIText styleEngine )
         throws DocumentException
     {
-        super( out );
+        super( out, configuration );
         this.styleEngine = styleEngine;
     }
 

@@ -42,7 +42,7 @@ public class ExtendedMasterPageTestCase
 
         try
         {
-            ExtendedDocument document = new ExtendedDocument( new FileOutputStream( "output.pdf" ) );
+            ExtendedDocument document = new ExtendedDocument( new FileOutputStream( "output.pdf" ), null );
 
             // Create Master Page 1
             MasterPage masterPage1 = createMasterPage( "MP1" );

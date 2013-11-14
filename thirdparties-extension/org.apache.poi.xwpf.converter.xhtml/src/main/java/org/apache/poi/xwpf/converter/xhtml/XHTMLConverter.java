@@ -52,9 +52,14 @@ public class XHTMLConverter
     {
 
         options = options != null ? options : XHTMLOptions.getDefault();
-        ContentHandler contentHandler =
-            out != null ? new SimpleContentHandler( out, options.getIndent() )
-                            : new SimpleContentHandler( writer, options.getIndent() );
+        // Create SAX content handler.
+        IContentHandlerFactory factory = options.getContentHandlerFactory();
+        if ( factory == null )
+        {
+            factory = DefaultContentHandlerFactory.INSTANCE;
+        }
+        ContentHandler contentHandler = factory.create( out, writer, options );
+        // convert the document to XHTML
         convert( document, contentHandler, options );
     }
 

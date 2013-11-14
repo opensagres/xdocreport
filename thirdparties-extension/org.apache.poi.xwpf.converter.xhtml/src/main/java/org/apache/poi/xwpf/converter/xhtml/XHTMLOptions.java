@@ -43,6 +43,8 @@ public class XHTMLOptions
 
     private IURIResolver resolver;
 
+    private IContentHandlerFactory contentHandlerFactory;
+
     private XHTMLOptions()
     {
         this.indent = null;
@@ -114,6 +116,17 @@ public class XHTMLOptions
     public XHTMLOptions setIgnoreStylesIfUnused( boolean ignoreStylesIfUnused )
     {
         this.ignoreStylesIfUnused = ignoreStylesIfUnused;
+        return this;
+    }
+
+    public IContentHandlerFactory getContentHandlerFactory()
+    {
+        return contentHandlerFactory;
+    }
+
+    public XHTMLOptions setContentHandlerFactory( IContentHandlerFactory contentHandlerFactory )
+    {
+        this.contentHandlerFactory = contentHandlerFactory;
         return this;
     }
 }

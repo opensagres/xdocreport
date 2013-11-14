@@ -209,7 +209,7 @@ public class SimpleContentHandler
         return true;
     }
 
-    private void flushCharacters( String characters )
+    protected void flushCharacters( String characters )
         throws SAXException
     {
         write( characters );

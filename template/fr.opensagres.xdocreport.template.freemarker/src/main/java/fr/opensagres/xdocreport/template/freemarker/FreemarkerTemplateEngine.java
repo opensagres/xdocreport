@@ -29,7 +29,9 @@ import java.io.InputStreamReader;
 import java.io.Reader;
 import java.io.StringReader;
 import java.io.Writer;
+import java.util.ArrayList;
 import java.util.Enumeration;
+import java.util.List;
 import java.util.Map;
 
 import fr.opensagres.xdocreport.core.EncodingConstants;
@@ -43,6 +45,8 @@ import fr.opensagres.xdocreport.template.config.ITemplateEngineConfiguration;
 import fr.opensagres.xdocreport.template.formatter.IDocumentFormatter;
 import fr.opensagres.xdocreport.template.freemarker.cache.XDocReportEntryTemplateLoader;
 import fr.opensagres.xdocreport.template.freemarker.internal.XDocFreemarkerContext;
+import freemarker.cache.MultiTemplateLoader;
+import freemarker.cache.TemplateLoader;
 import freemarker.core.Environment;
 import freemarker.core.TemplateElement;
 import freemarker.template.Configuration;
@@ -68,6 +72,14 @@ public class FreemarkerTemplateEngine
     private Configuration freemarkerConfiguration = null;
 
     private boolean forceModifyReader = false;
+
+    private final List<TemplateLoader> templateLoaders;
+
+    public FreemarkerTemplateEngine()
+    {
+        this.templateLoaders = new ArrayList<TemplateLoader>();
+        this.templateLoaders.add( new XDocReportEntryTemplateLoader( this ) );
+    }
 
     public String getKind()
     {
@@ -170,10 +182,10 @@ public class FreemarkerTemplateEngine
         // Force square bracket syntax to write [#list instead of <#list.
         // Square bracket is used because <#list is not well XML.
         this.freemarkerConfiguration.setTagSyntax( Configuration.SQUARE_BRACKET_TAG_SYNTAX );
-        this.freemarkerConfiguration
         // Force template loader with XDocReportEntryLoader to use
         // XDocReportRegistry.
-        .setTemplateLoader( new XDocReportEntryTemplateLoader( this ) );
+        this.freemarkerConfiguration.setTemplateLoader( new MultiTemplateLoader(
+                                                                                 templateLoaders.toArray( new TemplateLoader[0] ) ) );
         // as soon as report changes when source (odt, docx,...) change,
         // template entry must be refreshed.
         try
@@ -294,10 +306,20 @@ public class FreemarkerTemplateEngine
             }
         }
     }
-    
+
     @Override
     public boolean isFieldNameStartsWithUpperCase()
     {
         return true;
+    }
+
+    /**
+     * Add a Freemarker template loader.
+     * 
+     * @param loader the freemarker template loader to add.
+     */
+    public void addTemplateLoader( TemplateLoader loader )
+    {
+        templateLoaders.add( loader );
     }
 }

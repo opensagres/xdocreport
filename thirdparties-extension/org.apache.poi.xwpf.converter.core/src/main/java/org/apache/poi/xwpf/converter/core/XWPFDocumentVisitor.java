@@ -659,7 +659,7 @@ public abstract class XWPFDocumentVisitor<T, O extends Options, E extends IXWPFM
             if ( StringUtils.isNotEmpty( hyperlinkId ) )
             {
                 XWPFHyperlink hyperlink = document.getHyperlinkByID( hyperlinkId );
-                href = hyperlink.getURL();
+                href = hyperlink != null ? hyperlink.getURL() : null;
             }
             for ( CTR r : link.getRList() )
             {

@@ -320,25 +320,25 @@ public class ODTDefaultStylesGenerator
         return ITALIC_STYLE_NAME;
     }
 
-    @Override
+    //@Override
     public String getUnderlineStyleName()
     {
         return UNDERLINE_STYLE_NAME;
     }
 
-    @Override
+    //@Override
     public String getStrikeStyleName()
     {
         return STRIKE_STYLE_NAME;
     }
 
-    @Override
+    //@Override
     public String getSubscriptStyleName()
     {
         return SUBSCRIPT_STYLE_NAME;
     }
 
-    @Override
+    //@Override
     public String getSuperscriptStyleName()
     {
         return SUPERSCRIPT_STYLE_NAME;
@@ -376,7 +376,7 @@ public class ODTDefaultStylesGenerator
         return style.toString();
     }
 
-    @Override
+    //@Override
     public String generateAllStyles( ODTDefaultStyle defaultStyle )
     {
         StringBuilder styles = new StringBuilder();
@@ -395,7 +395,7 @@ public class ODTDefaultStylesGenerator
         return dynamicStyles.toString();
     }
 
-    @Override
+    //@Override
     public String getTextStyleName( ContainerProperties properties )
     {
         if ( properties == null )

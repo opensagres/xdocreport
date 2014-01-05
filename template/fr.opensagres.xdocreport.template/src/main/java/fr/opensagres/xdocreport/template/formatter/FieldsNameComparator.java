@@ -13,7 +13,7 @@ public class FieldsNameComparator
         return INSTANCE;
     }
 
-    @Override
+    //@Override
     public int compare( String field1, String field2 )
     {
         return field2.compareTo( field1 );

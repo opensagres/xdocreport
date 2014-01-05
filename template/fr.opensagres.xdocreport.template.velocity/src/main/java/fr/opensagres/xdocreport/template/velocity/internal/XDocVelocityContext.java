@@ -63,7 +63,7 @@ public class XDocVelocityContext extends VelocityContext implements IContext {
 		return result;
 	}
 
-	@Override
+	//@Override
 	public void putMap(Map<String, Object> contextMap) {
 		Set<Entry<String, Object>> entries = contextMap.entrySet();
 		for (Entry<String, Object> entry : entries) {
@@ -71,7 +71,7 @@ public class XDocVelocityContext extends VelocityContext implements IContext {
 		}
 	}
 
-	@Override
+	//@Override
 	public Map<String, Object> getContextMap() {
 		Map<String, Object> contextMap = new HashMap<String, Object>();
 		Object[] keys = super.getKeys();

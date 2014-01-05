@@ -58,7 +58,7 @@ public class Activator implements BundleActivator {
 		FileResourcesService fileResourcesService = new FileResourcesService(
 				root) {
 
-			@Override
+			//@Override
 			@GET
 			@Path("/name")
 			@Consumes("application/json")

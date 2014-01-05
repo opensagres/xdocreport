@@ -103,7 +103,7 @@ public class JavaMainDumper
         DumpHelper.generate( templateEngine, DumpHelper.JAVA_MAIN_DUMP_TEMPLATE, dumpContext, out );
     }
 
-    @Override
+    //@Override
     public MimeMapping getMimeMapping()
     {
         return null;

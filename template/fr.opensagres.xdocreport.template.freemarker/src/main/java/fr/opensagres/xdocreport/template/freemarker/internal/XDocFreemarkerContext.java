@@ -66,13 +66,13 @@ public class XDocFreemarkerContext
         return map.get( key );
     }
 
-    @Override
+    //@Override
     public void putMap( Map<String, Object> contextMap )
     {
         map.putAll( contextMap );
     }
 
-	@Override
+	//@Override
 	public Map<String, Object> getContextMap() {
 		return map;
 	}

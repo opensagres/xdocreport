@@ -84,7 +84,6 @@ public class VelocityTemplateEngine
         return new XDocVelocityContext();
     }
 
-    @Override
     public IContext createContext( Map<String, Object> contextMap )
     {
         return new XDocVelocityContext( contextMap );
@@ -184,7 +183,6 @@ public class VelocityTemplateEngine
 
     }
 
-    @Override
     public boolean isFieldNameStartsWithUpperCase()
     {
         return false;

@@ -461,7 +461,6 @@ public class XHTMLMapper
         }
     }
 
-    @Override
     public void setActiveMasterPage( XHTMLMasterPage masterPage )
     {
         if ( pageDiv )
@@ -540,7 +539,6 @@ public class XHTMLMapper
 
     }
 
-    @Override
     public XHTMLMasterPage createMasterPage( CTSectPr sectPr )
     {
         return new XHTMLMasterPage( sectPr );

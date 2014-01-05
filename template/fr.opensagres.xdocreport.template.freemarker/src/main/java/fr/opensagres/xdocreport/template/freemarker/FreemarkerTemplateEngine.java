@@ -96,7 +96,7 @@ public class FreemarkerTemplateEngine
         return new XDocFreemarkerContext();
     }
 
-    @Override
+    //@Override
     public IContext createContext( Map<String, Object> contextMap )
     {
         return new XDocFreemarkerContext( contextMap );
@@ -307,7 +307,7 @@ public class FreemarkerTemplateEngine
         }
     }
 
-    @Override
+    //@Override
     public boolean isFieldNameStartsWithUpperCase()
     {
         return true;

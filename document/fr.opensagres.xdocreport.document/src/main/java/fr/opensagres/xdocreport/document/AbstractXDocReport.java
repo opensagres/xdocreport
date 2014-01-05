@@ -462,7 +462,7 @@ public abstract class AbstractXDocReport
         return internalGetTemplateEngine().createContext();
     }
 
-    @Override
+    //@Override
     public IContext createContext( Map<String, Object> contextMap )
         throws XDocReportException
     {

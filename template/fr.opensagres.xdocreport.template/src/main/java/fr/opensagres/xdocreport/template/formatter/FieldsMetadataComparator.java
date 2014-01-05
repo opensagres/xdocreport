@@ -13,7 +13,7 @@ public class FieldsMetadataComparator
         return INSTANCE;
     }
 
-    @Override
+    //@Override
     public int compare( FieldMetadata field1, FieldMetadata field2 )
     {
         return FieldsNameComparator.getInstance().compare( field1.getFieldName(), field2.getFieldName() );

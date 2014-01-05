@@ -96,7 +96,7 @@ public class HTMLDocumentHandler
         super.write( "</u>" );
     }
 
-    @Override
+    //@Override
     public void startStrike()
         throws IOException
     {
@@ -110,7 +110,7 @@ public class HTMLDocumentHandler
 
     }
 
-    @Override
+    //@Override
     public void startSubscript()
         throws IOException
     {
@@ -123,7 +123,7 @@ public class HTMLDocumentHandler
         super.write( "</sub>" );
     }
 
-    @Override
+    //@Override
     public void startSuperscript()
         throws IOException
     {

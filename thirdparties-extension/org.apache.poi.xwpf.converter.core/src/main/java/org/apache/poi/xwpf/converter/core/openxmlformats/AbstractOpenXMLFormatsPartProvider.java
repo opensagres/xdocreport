@@ -100,7 +100,6 @@ public abstract class AbstractOpenXMLFormatsPartProvider
         return handler;
     }
 
-    @Override
     public InputStream getInputStreamByRelId( String partName, String relId )
         throws Exception
     {

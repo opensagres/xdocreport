@@ -211,14 +211,12 @@ public class PdfMapper
         return pdfHeaderFooter.getTableCell();
     }
 
-    @Override
     public void setActiveMasterPage( StylableMasterPage masterPage )
     {
         pdfDocument.setActiveMasterPage( masterPage );
 
     }
 
-    @Override
     public StylableMasterPage createMasterPage( CTSectPr sectPr )
     {
         return new StylableMasterPage( sectPr );

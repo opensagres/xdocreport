@@ -25,6 +25,9 @@
 
 		<!-- Struts2 support -->		
 		<module>org.apache.struts2.views.xdocreport</module>
+		
+		<!-- Spring MVC support -->		
+		<module>org.springframework.web.servlet.view.xdocreport</module>		
 	</modules>
 	
 </project>

@@ -98,5 +98,10 @@ public class Docx2PDFViaDocx4jConverter
 
         return MimeMappingConstants.PDF_MIME_MAPPING;
     }
+    
+    public boolean isDefault()
+    {
+        return true;
+    }
 
 }

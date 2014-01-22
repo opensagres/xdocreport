@@ -70,4 +70,12 @@ public interface IConverter
      * @return
      */
     boolean canSupportEntries();
+
+    /**
+     * Returns true if the converter is the default converter to use when there is several converters with same from/to
+     * and false otherwise.
+     * 
+     * @return
+     */
+    boolean isDefault();
 }

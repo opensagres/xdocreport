@@ -59,7 +59,7 @@ public class ODF2XHTMLConverter
         {
             OdfTextDocument odfDocument = OdfTextDocument.loadDocument( in );
             org.odftoolkit.odfdom.converter.xhtml.XHTMLConverter.getInstance().convert( odfDocument, out,
-                                                                                            toXHTMLOptions( options ) );
+                                                                                        toXHTMLOptions( options ) );
         }
         catch ( ODFConverterException e )
         {
@@ -106,4 +106,8 @@ public class ODF2XHTMLConverter
         return XHTML_MIME_MAPPING;
     }
 
+    public boolean isDefault()
+    {
+        return true;
+    }
 }

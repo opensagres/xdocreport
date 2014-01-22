@@ -59,13 +59,26 @@ public class ConverterTo
         return converters.get( via );
     }
 
-    public IConverter getFirstConverter()
+    /**
+     * Returns the default converter or the first converter if none default converter.
+     * 
+     * @return
+     */
+    public IConverter getDefaultConverter()
     {
+        IConverter defaultConverter = null;
         for ( IConverter converter : getConvertersTo() )
         {
-            return converter;
+            if ( converter.isDefault() )
+            {
+                return converter;
+            }
+            if ( defaultConverter == null )
+            {
+                defaultConverter = converter;
+            }
         }
-        return null;
+        return defaultConverter;
     }
 
     public void addConverter( String via, IConverter converter )

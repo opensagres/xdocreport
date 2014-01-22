@@ -258,6 +258,12 @@ public abstract class BaseXDocReportServlet
     protected void clearRegistryFromHTTPSession( HttpServletRequest request )
     {
         HttpSession session = request.getSession();
+        XDocReportRegistry registry =
+            (XDocReportRegistry) session.getAttribute( XDocBaseServletConstants.XDOCREPORTREGISTRY_SESSION_KEY );
+        if ( registry != null )
+        {
+            registry.dispose();
+        }
         session.removeAttribute( XDOCREPORTREGISTRY_SESSION_KEY );
     }
 

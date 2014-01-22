@@ -135,7 +135,7 @@ public class ConverterRegistry
         }
         if ( via == null )
         {
-            IConverter converter = toConverters.getFirstConverter();
+            IConverter converter = toConverters.getDefaultConverter();
             if ( throwError && converter == null )
             {
                 if ( throwError )

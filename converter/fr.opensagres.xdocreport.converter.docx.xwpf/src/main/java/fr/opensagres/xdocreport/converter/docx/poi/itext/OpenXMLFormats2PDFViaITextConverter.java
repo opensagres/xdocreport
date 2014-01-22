@@ -58,7 +58,7 @@ public class OpenXMLFormats2PDFViaITextConverter
         return INSTANCE;
     }
 
-    //@Override
+    // @Override
     public void convert( final IEntryInputStreamProvider inProvider, OutputStream out, Options options )
         throws XDocConverterException
     {
@@ -109,4 +109,8 @@ public class OpenXMLFormats2PDFViaITextConverter
         return MimeMappingConstants.PDF_MIME_MAPPING;
     }
 
+    public boolean isDefault()
+    {
+        return false;
+    }
 }

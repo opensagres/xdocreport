@@ -23,7 +23,7 @@
  * WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 /**
-* * Copyright (C) 2011 The XDocReport Team <xdocreport@googlegroups.com>
+ * * Copyright (C) 2011 The XDocReport Team <xdocreport@googlegroups.com>
  *
  * All rights reserved.
  *
@@ -64,5 +64,7 @@ public interface IXDocReportController
 
     InputStream getSourceStream()
         throws IOException;
+
+    boolean isCacheReport();
 
 }

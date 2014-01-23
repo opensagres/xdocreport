@@ -77,4 +77,9 @@ public abstract class AbstractXDocReportController
     }
 
     protected abstract FieldsMetadata createFieldsMetadata();
+
+    public boolean isCacheReport()
+    {
+        return true;
+    }
 }

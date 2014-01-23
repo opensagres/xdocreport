@@ -406,18 +406,18 @@ public abstract class AbstractProcessXDocReportServlet
         IXDocReport report = null;
         // 3) Get template engine to use for the report
         ITemplateEngine templateEngine = null;
-
+        boolean cacheReport = isCacheReport( reportId, request );
         String templateEngineKind = getTemplateEngineKind( reportId, request );
         if ( StringUtils.isNotEmpty( templateEngineKind ) )
         {
             // 3.1) Load report with template engine kind
-            report = registry.loadReport( sourceStream, reportId, templateEngineKind );
+            report = registry.loadReport( sourceStream, reportId, templateEngineKind, cacheReport );
         }
         else
         {
             // 3.1) Load report with template engine
             templateEngine = getTemplateEngine( reportId, request );
-            report = registry.loadReport( sourceStream, reportId, templateEngine );
+            report = registry.loadReport( sourceStream, reportId, templateEngine, cacheReport );
         }
 
         // 6) Set FieldsMetaData
@@ -430,11 +430,37 @@ public abstract class AbstractProcessXDocReportServlet
         return report;
     }
 
+    /**
+     * Returns true if the report with the given id must be cached and false otherwise.
+     * 
+     * @param reportId the report id.
+     * @param request the HTTP request.
+     * @return true if the report with the given id must be cached and false otherwise.
+     */
+    protected boolean isCacheReport( String reportId, HttpServletRequest request )
+    {
+        return true;
+    }
+
+    /**
+     * Returns true if the original document "template" document with the given id must be cached and false otherwise.
+     * 
+     * @param reportId the report id.
+     * @param request the HTTP request.
+     * @return true if the original document "template" document with the given id must be cached and false otherwise.
+     */
     protected boolean isCacheOriginalDocument( String reportId, HttpServletRequest request )
     {
         return cacheOriginalDocument;
     }
 
+    /**
+     * Returns the fields metadata to use for the report.
+     * 
+     * @param reportId the report id.
+     * @param request the HTTP request.
+     * @return
+     */
     protected FieldsMetadata getFieldsMetadata( String reportId, HttpServletRequest request )
     {
         return null;

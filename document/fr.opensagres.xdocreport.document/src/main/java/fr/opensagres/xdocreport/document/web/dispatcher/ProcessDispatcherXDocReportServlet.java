@@ -129,6 +129,21 @@ public class ProcessDispatcherXDocReportServlet
         }
         return super.getFieldsMetadata( reportId, request );
     }
+    
+    @Override
+    protected boolean isCacheReport( String reportId, HttpServletRequest request )
+    {
+
+        for ( IXDocReportDispatcher<?> dispatcher : dispatchers )
+        {
+            Boolean cacheReport = dispatcher.isCacheReport( reportId );
+            if ( cacheReport != null )
+            {
+                return cacheReport;
+            }
+        }
+        return super.isCacheReport( reportId, request );
+    }
 
     @Override
     protected void populateContext( IContext context, String reportId, HttpServletRequest request )

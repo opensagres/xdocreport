@@ -38,4 +38,6 @@ public interface IXDocReportLoader
     String getTemplateEngineKind( String reportId );
 
     FieldsMetadata getFieldsMetadata( String reportId );
+
+    Boolean isCacheReport( String reportId );
 }

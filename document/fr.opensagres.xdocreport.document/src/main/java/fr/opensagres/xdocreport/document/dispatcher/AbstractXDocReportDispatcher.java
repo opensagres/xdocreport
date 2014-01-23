@@ -33,7 +33,8 @@ public abstract class AbstractXDocReportDispatcher<T extends IXDocReportControll
     implements IXDocReportDispatcher<T>
 {
 
-    public InputStream getSourceStream( String reportId ) throws IOException
+    public InputStream getSourceStream( String reportId )
+        throws IOException
     {
         T controller = getReportController( reportId );
         if ( controller != null )
@@ -59,6 +60,16 @@ public abstract class AbstractXDocReportDispatcher<T extends IXDocReportControll
         if ( controller != null )
         {
             return controller.getFieldsMetadata();
+        }
+        return null;
+    }
+
+    public Boolean isCacheReport( String reportId )
+    {
+        T controller = getReportController( reportId );
+        if ( controller != null )
+        {
+            return controller.isCacheReport();
         }
         return null;
     }

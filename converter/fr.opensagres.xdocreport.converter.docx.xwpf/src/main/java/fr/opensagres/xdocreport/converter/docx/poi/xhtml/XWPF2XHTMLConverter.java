@@ -105,6 +105,7 @@ public class XWPF2XHTMLConverter
         return XHTML_MIME_MAPPING;
     }
 
+    @Override
     public boolean isDefault()
     {
         return true;

@@ -109,8 +109,4 @@ public class OpenXMLFormats2PDFViaITextConverter
         return MimeMappingConstants.PDF_MIME_MAPPING;
     }
 
-    public boolean isDefault()
-    {
-        return false;
-    }
 }

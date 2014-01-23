@@ -49,4 +49,9 @@ public abstract class AbstractConverterNoEntriesSupport
     {
         return false;
     }
+
+    public boolean isDefault()
+    {
+        return false;
+    }
 }

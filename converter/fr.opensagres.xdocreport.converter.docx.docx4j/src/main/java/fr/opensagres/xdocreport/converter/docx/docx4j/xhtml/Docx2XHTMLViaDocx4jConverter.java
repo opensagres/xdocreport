@@ -95,9 +95,5 @@ public class Docx2XHTMLViaDocx4jConverter
     {
         return XHTML_MIME_MAPPING;
     }
-
-    public boolean isDefault()
-    {
-        return true;
-    }
+    
 }

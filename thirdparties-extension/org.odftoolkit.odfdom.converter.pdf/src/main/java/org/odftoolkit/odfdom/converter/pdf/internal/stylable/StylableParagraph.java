@@ -120,8 +120,10 @@ public class StylableParagraph
             else
             {
                 Float textIndent = paragraphProperties.getTextIndent();
-                if ( textIndent != null && textIndent > 0.0f )
+                if ( textIndent != null)
                 {
+                    // text indent can be negative. 
+                    // See https://code.google.com/p/xdocreport/issues/detail?id=366 
                     super.setFirstLineIndent( textIndent );
                 }
             }

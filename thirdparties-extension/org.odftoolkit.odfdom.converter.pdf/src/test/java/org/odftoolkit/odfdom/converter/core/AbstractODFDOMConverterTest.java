@@ -113,6 +113,13 @@ public abstract class AbstractODFDOMConverterTest
     }
 
     @Test
+    public void Issue366()
+        throws Exception
+    {
+        doGenerate( "Issue366.odt" );
+    }
+    
+    @Test
     public void ODTBig()
         throws Exception
     {

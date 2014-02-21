@@ -2,7 +2,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>fr.opensagres.xdocreport</groupId>
 	<artifactId>xdocreport-parent</artifactId>
-	<version>1.0.4</version>
+	<version>1.0.5-SNAPSHOT</version>
 	<packaging>pom</packaging>
 	<description>XDocReport means XML Document reporting. It's Java API to merge XML document created with MS Office (docx) or OpenOffice (odt), LibreOffice (odt) with a Java model to generate report and convert it if you need to another format (PDF, XHTML...).</description>
 	<parent>
@@ -243,7 +243,7 @@
 		<connection>scm:git:http://code.google.com/p/xdocreport</connection>
 		<developerConnection>scm:git:https://code.google.com/p/xdocreport</developerConnection>
 		<url>http://code.google.com/p/xdocreport/source/checkout/</url>
-	  <tag>xdocreport-parent-1.0.4</tag>
+	  <tag>xdocreport-parent-1.0.3-SNAPSHOT</tag>
   </scm>
 	<modules>
 		<module>thirdparties-extension</module>

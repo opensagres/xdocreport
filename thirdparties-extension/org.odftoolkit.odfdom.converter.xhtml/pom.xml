@@ -4,13 +4,13 @@
   <parent>
 		<groupId>fr.opensagres.xdocreport</groupId>
 		<artifactId>thirdparties-extension</artifactId>
-		<version>1.0.4</version>
+		<version>1.0.5-SNAPSHOT</version>
 	</parent>
   <dependencies>
   	<dependency>
   		<groupId>fr.opensagres.xdocreport</groupId>
   		<artifactId>org.odftoolkit.odfdom.converter.core</artifactId>
-  		<version>1.0.4</version>
+  		<version>1.0.5-SNAPSHOT</version>
   	</dependency>
   </dependencies>
 </project>

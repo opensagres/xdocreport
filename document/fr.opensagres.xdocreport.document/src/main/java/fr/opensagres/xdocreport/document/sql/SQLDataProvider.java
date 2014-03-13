@@ -31,6 +31,7 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
+import fr.opensagres.xdocreport.core.utils.StringUtils;
 import fr.opensagres.xdocreport.template.IContext;
 import fr.opensagres.xdocreport.template.formatter.FieldsMetadata;
 
@@ -72,25 +73,39 @@ public abstract class SQLDataProvider
                 tableName = getTableName( rs, columnIndex );
                 columnLabel = getColumnLabel( rs, columnIndex );
 
-                if ( isList( tableName, columnLabel ) )
+                String listName = getListName( tableName, columnLabel );
+                if ( listName != null )
                 {
                     // The field is a list, build a Collection
-                    Collection<Map<String, Object>> list = (Collection<Map<String, Object>>) super.get( tableName );
+                    Collection<Map<String, Object>> list = (Collection<Map<String, Object>>) super.get( listName );
                     if ( list == null )
                     {
                         // initialize list if need.
                         list = new ArrayList<Map<String, Object>>();
-                        super.put( tableName, list );
+                        super.put( listName, list );
                     }
                     if ( pojoItem == null )
                     {
                         pojoItem = new HashMap<String, Object>();
                         list.add( pojoItem );
                     }
+
+                    String getterName = columnLabel;
+                    boolean sameListName = ( listName.equals( tableName ) );
+                    if ( !sameListName )
+                    {
+                        getterName = tableName + "_" + columnLabel;
+
+                    }
                     // update the pojo item with current column value
-                    pojoItem.put( columnLabel, rs.getObject( columnIndex ) );
-                    // update fields metadata with the field as list
-                    metadata.addFieldAsList( tableName + "." + columnLabel );
+                    pojoItem.put( getterName, rs.getObject( columnIndex ) );
+                    String fieldName = listName + "." + getterName;
+                    metadata.addFieldAsList( fieldName );
+                    if ( !sameListName )
+                    {
+                        metadata.addFieldReplacement( tableName + "." + columnLabel, fieldName );
+                    }
+
                 }
                 else
                 {
@@ -161,5 +176,5 @@ public abstract class SQLDataProvider
      * @param columnName
      * @return
      */
-    protected abstract boolean isList( String tableName, String columnName );
+    protected abstract String getListName( String tableName, String columnName );
 }

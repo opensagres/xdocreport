@@ -92,6 +92,8 @@ public class FieldsMetadata
 
     private List<FieldMetadata> sortedFieldsAsImage;
 
+    private List<ICustomFormatter> customFormatters;
+
     public FieldsMetadata()
     {
         this( (String) null );
@@ -119,6 +121,7 @@ public class FieldsMetadata
         this.sortedFieldsAsList = null;
         this.sortedFieldsAsTextStyling = null;
         this.sortedFieldsAsImage = null;
+        this.customFormatters = null;
     }
 
     /**
@@ -681,6 +684,94 @@ public class FieldsMetadata
     public void setUseImageSize( boolean useImageSize )
     {
         this.useImageSize = useImageSize;
+    }
+
+    /**
+     * Add custom formatter.
+     * 
+     * @param customFormatter
+     */
+    public void addCustomFormatter( ICustomFormatter customFormatter )
+    {
+        if ( customFormatters == null )
+        {
+            customFormatters = new ArrayList<ICustomFormatter>();
+        }
+        this.customFormatters.add( customFormatter );
+    }
+
+    /**
+     * Returns list of custom formatters and null otherwise.
+     * 
+     * @return
+     */
+    public List<ICustomFormatter> getCustomFormatter()
+    {
+        return customFormatters;
+    }
+
+    /**
+     * Add field replacement.
+     * 
+     * @param search
+     * @param replacement
+     */
+    public void addFieldReplacement( String search, String replacement )
+    {
+        FieldReplacementFormatter mappingFormatter = getFieldReplacementFormatter();
+        if ( mappingFormatter == null )
+        {
+            mappingFormatter = new FieldReplacementFormatter();
+            addCustomFormatter( mappingFormatter );
+        }
+        mappingFormatter.addMapping( search, replacement );
+
+    }
+
+    /**
+     * Returns an instance of FieldReplacementFormatter and null otherwise.
+     * 
+     * @return
+     */
+    private FieldReplacementFormatter getFieldReplacementFormatter()
+    {
+        if ( customFormatters == null )
+        {
+            return null;
+        }
+        for ( ICustomFormatter customFormatter : customFormatters )
+        {
+            if ( customFormatter instanceof FieldReplacementFormatter )
+            {
+                return (FieldReplacementFormatter) customFormatter;
+            }
+        }
+        return null;
+    }
+
+    /**
+     * Format the given content by using custom formatter.
+     * 
+     * @param content
+     * @param formatter
+     * @return
+     */
+    public String customFormat( String content, IDocumentFormatter formatter )
+    {
+        if ( customFormatters == null )
+        {
+            return content;
+        }
+        String newContent = null;
+        for ( ICustomFormatter customFormatter : customFormatters )
+        {
+            newContent = customFormatter.format( content, formatter );
+            if ( newContent != null )
+            {
+                return newContent;
+            }
+        }
+        return newContent != null ? newContent : content;
     }
 
 }

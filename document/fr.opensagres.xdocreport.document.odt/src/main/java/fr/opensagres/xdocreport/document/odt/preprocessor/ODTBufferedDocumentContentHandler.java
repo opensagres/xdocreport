@@ -48,10 +48,7 @@ import fr.opensagres.xdocreport.core.utils.StringUtils;
 import fr.opensagres.xdocreport.document.images.AbstractImageRegistry;
 import fr.opensagres.xdocreport.document.images.IImageRegistry;
 import fr.opensagres.xdocreport.document.images.ImageProviderInfo;
-import fr.opensagres.xdocreport.document.odt.template.ODTContextHelper;
-import fr.opensagres.xdocreport.document.odt.textstyling.IODTStylesGenerator;
 import fr.opensagres.xdocreport.document.preprocessor.sax.BufferedElement;
-import fr.opensagres.xdocreport.document.preprocessor.sax.IBufferedRegion;
 import fr.opensagres.xdocreport.document.preprocessor.sax.TransformedBufferedDocumentContentHandler;
 import fr.opensagres.xdocreport.document.textstyling.ITransformResult;
 import fr.opensagres.xdocreport.template.TemplateContextHelper;
@@ -304,6 +301,7 @@ public class ODTBufferedDocumentContentHandler
                 // It's an interpolation, unescape the XML
                 characters = StringUtils.xmlUnescape( characters );
             }
+            characters = customFormat( characters, formatter );
             String fieldName = characters;
             if ( processScriptBefore( fieldName ) )
             {
@@ -363,6 +361,17 @@ public class ODTBufferedDocumentContentHandler
             }
         }
         super.flushCharacters( characters );
+    }
+
+    private String customFormat( String content, IDocumentFormatter formatter )
+    {
+        FieldsMetadata metadata = getFieldsMetadata();
+        if ( metadata == null )
+        {
+            return null;
+        }
+        String newContent = metadata.customFormat( content, formatter );
+        return newContent != null ? newContent : content;
     }
 
 }

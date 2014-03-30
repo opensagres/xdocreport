@@ -80,6 +80,11 @@ public class StylableTable
         // beginTableRow/addElement/endTableRow protects before too many/too less cells in a row than declared
         inTableRow = true;
         this.currentRowStyle = currentRowStyle;
+        if ( inTableHeaderRows )
+        {
+            // increment header rows count
+            setHeaderRows( getHeaderRows() + 1 );
+        }
     }
 
     public void endTableRow()
@@ -96,11 +101,6 @@ public class StylableTable
         }
         inTableRow = false;
         currentRowStyle = null;
-        if ( inTableHeaderRows )
-        {
-            // increment header rows count
-            setHeaderRows( getHeaderRows() + 1 );
-        }
     }
 
     @Override

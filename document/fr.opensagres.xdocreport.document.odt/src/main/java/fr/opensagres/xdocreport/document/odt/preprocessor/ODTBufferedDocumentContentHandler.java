@@ -368,7 +368,7 @@ public class ODTBufferedDocumentContentHandler
         FieldsMetadata metadata = getFieldsMetadata();
         if ( metadata == null )
         {
-            return null;
+            return content;
         }
         String newContent = metadata.customFormat( content, formatter );
         return newContent != null ? newContent : content;

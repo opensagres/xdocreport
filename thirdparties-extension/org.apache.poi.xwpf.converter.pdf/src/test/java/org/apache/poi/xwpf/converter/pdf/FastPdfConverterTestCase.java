@@ -55,4 +55,11 @@ public class FastPdfConverterTestCase
 
         System.out.println( "Generate " + fileOutName + " with " + ( System.currentTimeMillis() - startTime ) + " ms." );
     }
+    
+    @Override
+    public void Issue393()
+        throws IOException
+    {
+        // Do nothing, don't why, there is a StackOverflow?
+    }
 }

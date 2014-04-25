@@ -378,11 +378,16 @@ public class FastPdfMapper
                     // Loop for each alternative names font (from the fontTable.xml) to find the well font.
                     for ( String altName : altNames )
                     {
-                        font = getFont( altName, fontSize, fontStyle, fontColor );
-                        if ( isFontExists( font ) )
+                        // check if the current font name is not the same that original (o avoid StackOverFlow : see
+                        // https://code.google.com/p/xdocreport/issues/detail?id=393)
+                        if ( !fontFamily.equals( altName ) )
                         {
-                            stylesDocument.setFontNameToUse( fontFamily, altName );
-                            return font;
+                            font = getFont( altName, fontSize, fontStyle, fontColor );
+                            if ( isFontExists( font ) )
+                            {
+                                stylesDocument.setFontNameToUse( fontFamily, altName );
+                                return font;
+                            }
                         }
                     }
                 }

@@ -27,7 +27,8 @@
 		<module>org.apache.struts2.views.xdocreport</module>
 		
 		<!-- Spring MVC support -->		
-		<module>org.springframework.web.servlet.view.xdocreport</module>		
+		<module>org.springframework.web.servlet.view.xdocreport</module>
+		<module>fr.opensagres.xdocreport.itext5.extension</module>
 	</modules>
 	
 </project>

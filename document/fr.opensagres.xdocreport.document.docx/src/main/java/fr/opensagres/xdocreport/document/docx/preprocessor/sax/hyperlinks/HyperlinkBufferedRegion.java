@@ -201,11 +201,11 @@ public class HyperlinkBufferedRegion
         {
             if ( i == rBufferedRegions.size() - 1 )
             {
-                rBufferedRegions.get( i ).setTContent( newContent );
+                rBufferedRegions.get( i ).setTContent(0, newContent );
             }
             else
             {
-                rBufferedRegions.get( i ).setTContent( "" );
+                rBufferedRegions.get( i ).setTContent(0, "" );
             }
         }
     }

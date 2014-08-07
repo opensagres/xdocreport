@@ -69,17 +69,17 @@ public class FldSimpleBufferedRegion
         String fieldName = getFieldName();
         if ( fieldName != null )
         {
-            getTRegion().append( fieldName );
+            getTRegion(0).append( fieldName );
         }
         else
         {
-            getTRegion().append( tContent );
+            getTRegion(0).append( tContent );
         }
     }
 
     public void setNewTContent( String tContent )
     {
-        getTRegion().setTextContent( tContent );
+        getTRegion(0).setTextContent( tContent );
     }
 
 }

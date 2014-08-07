@@ -213,7 +213,7 @@ public class PBufferedRegion
                 {
                     // fieldName was not setted and w:r was not rested, modify
                     // the t content with fieldName
-                    rBufferedRegion.setTContent( fieldName );
+                    rBufferedRegion.setTContent(0, fieldName );
                     fieldNameSetted = true;
                     containsField = true;
                 }

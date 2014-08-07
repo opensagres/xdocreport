@@ -37,6 +37,7 @@ import static fr.opensagres.xdocreport.document.docx.DocxUtils.isFldChar;
 import static fr.opensagres.xdocreport.document.docx.DocxUtils.isFldSimple;
 import static fr.opensagres.xdocreport.document.docx.DocxUtils.isInstrText;
 import static fr.opensagres.xdocreport.document.docx.DocxUtils.isT;
+import static fr.opensagres.xdocreport.document.docx.DocxUtils.isR;
 
 import java.util.Map;
 
@@ -53,247 +54,230 @@ import fr.opensagres.xdocreport.template.formatter.FieldsMetadata;
 import fr.opensagres.xdocreport.template.formatter.IDocumentFormatter;
 
 /**
- * SAX content handler to generate lazy Freemarker/Velocity loop directive in the table row which contains a list
- * fields.
+ * SAX content handler to generate lazy Freemarker/Velocity loop directive in
+ * the table row which contains a list fields.
  */
-public class DocXBufferedDocumentContentHandler
-    extends TransformedBufferedDocumentContentHandler<DocxBufferedDocument>
-{
+public class DocXBufferedDocumentContentHandler extends
+		TransformedBufferedDocumentContentHandler<DocxBufferedDocument> {
 
-    private static final String W_TR = "w:tr";
+	private static final String W_TR = "w:tr";
 
-    private static final String W_TC = "w:tc";
+	private static final String W_TC = "w:tc";
 
-    private boolean instrTextParsing;
+	private boolean instrTextParsing;
 
-    private boolean tParsing = false;
+	private boolean tParsing = false;
 
-    protected DocXBufferedDocumentContentHandler( String entryName, FieldsMetadata fieldsMetadata,
-                                                  IDocumentFormatter formater, Map<String, Object> sharedContext )
-    {
-        super( entryName, fieldsMetadata, formater, sharedContext );
-    }
+	private int tIndex = -1;
 
-    @Override
-    protected DocxBufferedDocument createDocument()
-    {
-        return new DocxBufferedDocument( this );
-    }
+	protected DocXBufferedDocumentContentHandler(String entryName,
+			FieldsMetadata fieldsMetadata, IDocumentFormatter formater,
+			Map<String, Object> sharedContext) {
+		super(entryName, fieldsMetadata, formater, sharedContext);
+	}
 
-    @Override
-    protected String getTableRowName()
-    {
-        return W_TR;
-    }
+	@Override
+	protected DocxBufferedDocument createDocument() {
+		return new DocxBufferedDocument(this);
+	}
 
-    @Override
-    protected String getTableCellName()
-    {
-        return W_TC;
-    }
+	@Override
+	protected String getTableRowName() {
+		return W_TR;
+	}
 
-    @Override
-    public boolean doStartElement( String uri, String localName, String name, Attributes attributes )
-        throws SAXException
-    {
+	@Override
+	protected String getTableCellName() {
+		return W_TC;
+	}
 
-        IDocumentFormatter formatter = super.getFormatter();
+	@Override
+	public boolean doStartElement(String uri, String localName, String name,
+			Attributes attributes) throws SAXException {
 
-        // Transform mergefield name WordML code with just name of name
-        // Merge field is represent with w:fldSimple or w:instrText (complex
-        // field). See
-        // http://www.documentinteropinitiative.org/implnotes/ecma-376/812d4aca-3071-4352-872a-ca21d65ec913.aspx
+		IDocumentFormatter formatter = super.getFormatter();
 
-        RBufferedRegion currentRRegion = bufferedDocument.getCurrentRRegion();
-        if ( isFldChar( uri, localName, name ) && currentRRegion != null )
-        {
-            // w:fdlChar element
-            String fldCharType = attributes.getValue( W_NS, FLDCHARTYPE_ATTR );
-            currentRRegion.setFldCharType( fldCharType );
-            return super.doStartElement( uri, localName, name, attributes );
-        }
+		// Transform mergefield name WordML code with just name of name
+		// Merge field is represent with w:fldSimple or w:instrText (complex
+		// field). See
+		// http://www.documentinteropinitiative.org/implnotes/ecma-376/812d4aca-3071-4352-872a-ca21d65ec913.aspx
 
-        if ( isInstrText( uri, localName, name ) && currentRRegion != null )
-        {
-            // w:instrText element
-            instrTextParsing = true;
-            return super.doStartElement( uri, localName, name, attributes );
-        }
+		RBufferedRegion currentRRegion = bufferedDocument.getCurrentRRegion();
+		if (isFldChar(uri, localName, name) && currentRRegion != null) {
+			// w:fdlChar element
+			String fldCharType = attributes.getValue(W_NS, FLDCHARTYPE_ATTR);
+			currentRRegion.setFldCharType(fldCharType);
+			return super.doStartElement(uri, localName, name, attributes);
+		}
 
-        if ( isT( uri, localName, name ) )
-        {
-            // w:t element
-            tParsing = true;
-            return super.doStartElement( uri, localName, name, attributes );
-        }
+		if (isInstrText(uri, localName, name) && currentRRegion != null) {
+			// w:instrText element
+			instrTextParsing = true;
+			return super.doStartElement(uri, localName, name, attributes);
+		}
 
-        if ( isFldSimple( uri, localName, name ) )
-        {
-            // w:fldSimple element
-            // start of fldSimple mergefield, add the fieldName of mergefield
-            // and ignore element
-            FldSimpleBufferedRegion currentFldSimpleRegion = bufferedDocument.getCurrentFldSimpleRegion();
-            if ( currentFldSimpleRegion.getFieldName() == null )
-            {
-                super.doStartElement( uri, localName, name, attributes );
-                return true;
-            }
-            return false;
-        }
+		if (isT(uri, localName, name)) {
+			// w:t element
+			tParsing = true;
+			tIndex++;
+			return super.doStartElement(uri, localName, name, attributes);
+		}
 
-        if ( isBlip( uri, localName, name ) )
-        {
-            BookmarkBufferedRegion currentBookmark = bufferedDocument.getCurrentBookmark();
-            // <a:blip r:embed="rId5" />
-            if ( currentBookmark != null && formatter != null )
-            {
-                int index = attributes.getIndex( R_NS, EMBED_ATTR );
-                if ( index >= 0 )
-                {
-                    // modify "embed" attribute with image script (Velocity,
-                    // Freemarker)
-                    // <a:blip
-                    // r:embed="${imageRegistry.getPath(___imageInfo,'rId5')}" />
-                    String embed = attributes.getValue( index );
-                    String newEmbed =
-                        formatter.getFunctionDirective( TemplateContextHelper.IMAGE_REGISTRY_KEY,
-                                                        IImageRegistry.GET_PATH_METHOD,
-                                                        AbstractImageRegistry.IMAGE_INFO, "'" + embed + "'" );
-                    AttributesImpl attr = toAttributesImpl( attributes );
-                    attr.setValue( index, newEmbed );
-                    attributes = attr;
-                }
-            }
-        }
-        else if ( isExtent( uri, localName, name ) || isExt( uri, localName, name ) )
-        {
-            // <wp:extent cx="1262380" cy="1352550" />
-            // OR
-            // <a:ext cx="1262380" cy="1352550" />
-            BookmarkBufferedRegion currentBookmark = bufferedDocument.getCurrentBookmark();
-            if ( currentBookmark != null && formatter != null )
-            {
-                // modify "cx" and "cy" attribute with image script (Velocity,
-                // Freemarker)
-                // <wp:extent
-                // cx="${imageRegistry.getWidth(___imageInfo, '1262380')}"
-                // cy="${imageRegistry.getHeight(___imageInfo, '1352550')}" />
-                String newCX = null;
-                String newCY = null;
-                int cxIndex = attributes.getIndex( CX_ATTR );
-                if ( cxIndex != -1 )
-                {
-                    String oldCX = attributes.getValue( cxIndex );
-                    newCX =
-                        formatter.getFunctionDirective( TemplateContextHelper.IMAGE_REGISTRY_KEY,
-                                                        IImageRegistry.GET_WIDTH_METHOD, IImageRegistry.IMAGE_INFO, "'"
-                                                            + oldCX + "'" );
-                }
-                int cyIndex = attributes.getIndex( CY_ATTR );
-                if ( cyIndex != -1 )
-                {
-                    String oldCY = attributes.getValue( cyIndex );
-                    newCY =
-                        formatter.getFunctionDirective( TemplateContextHelper.IMAGE_REGISTRY_KEY,
-                                                        IImageRegistry.GET_HEIGHT_METHOD, IImageRegistry.IMAGE_INFO,
-                                                        "'" + oldCY + "'" );
-                }
-                if ( newCX != null || newCY != null )
-                {
-                    AttributesImpl attr = toAttributesImpl( attributes );
-                    if ( newCX != null )
-                    {
-                        attr.setValue( cxIndex, newCX );
-                    }
-                    if ( newCY != null )
-                    {
-                        attr.setValue( cyIndex, newCY );
-                    }
-                    attributes = attr;
-                }
-            }
-        }
-        // Another element
-        return super.doStartElement( uri, localName, name, attributes );
+		if (isR(uri, localName, name)) {
+			tIndex = -1;
+		}
 
-    }
+		if (isFldSimple(uri, localName, name)) {
+			// w:fldSimple element
+			// start of fldSimple mergefield, add the fieldName of mergefield
+			// and ignore element
+			FldSimpleBufferedRegion currentFldSimpleRegion = bufferedDocument
+					.getCurrentFldSimpleRegion();
+			if (currentFldSimpleRegion.getFieldName() == null) {
+				super.doStartElement(uri, localName, name, attributes);
+				return true;
+			}
+			return false;
+		}
 
-    @Override
-    public void doEndElement( String uri, String localName, String name )
-        throws SAXException
-    {
+		if (isBlip(uri, localName, name)) {
+			BookmarkBufferedRegion currentBookmark = bufferedDocument
+					.getCurrentBookmark();
+			// <a:blip r:embed="rId5" />
+			if (currentBookmark != null && formatter != null) {
+				int index = attributes.getIndex(R_NS, EMBED_ATTR);
+				if (index >= 0) {
+					// modify "embed" attribute with image script (Velocity,
+					// Freemarker)
+					// <a:blip
+					// r:embed="${imageRegistry.getPath(___imageInfo,'rId5')}"
+					// />
+					String embed = attributes.getValue(index);
+					String newEmbed = formatter
+							.getFunctionDirective(
+									TemplateContextHelper.IMAGE_REGISTRY_KEY,
+									IImageRegistry.GET_PATH_METHOD,
+									AbstractImageRegistry.IMAGE_INFO, "'"
+											+ embed + "'");
+					AttributesImpl attr = toAttributesImpl(attributes);
+					attr.setValue(index, newEmbed);
+					attributes = attr;
+				}
+			}
+		} else if (isExtent(uri, localName, name)
+				|| isExt(uri, localName, name)) {
+			// <wp:extent cx="1262380" cy="1352550" />
+			// OR
+			// <a:ext cx="1262380" cy="1352550" />
+			BookmarkBufferedRegion currentBookmark = bufferedDocument
+					.getCurrentBookmark();
+			if (currentBookmark != null && formatter != null) {
+				// modify "cx" and "cy" attribute with image script (Velocity,
+				// Freemarker)
+				// <wp:extent
+				// cx="${imageRegistry.getWidth(___imageInfo, '1262380')}"
+				// cy="${imageRegistry.getHeight(___imageInfo, '1352550')}" />
+				String newCX = null;
+				String newCY = null;
+				int cxIndex = attributes.getIndex(CX_ATTR);
+				if (cxIndex != -1) {
+					String oldCX = attributes.getValue(cxIndex);
+					newCX = formatter.getFunctionDirective(
+							TemplateContextHelper.IMAGE_REGISTRY_KEY,
+							IImageRegistry.GET_WIDTH_METHOD,
+							IImageRegistry.IMAGE_INFO, "'" + oldCX + "'");
+				}
+				int cyIndex = attributes.getIndex(CY_ATTR);
+				if (cyIndex != -1) {
+					String oldCY = attributes.getValue(cyIndex);
+					newCY = formatter.getFunctionDirective(
+							TemplateContextHelper.IMAGE_REGISTRY_KEY,
+							IImageRegistry.GET_HEIGHT_METHOD,
+							IImageRegistry.IMAGE_INFO, "'" + oldCY + "'");
+				}
+				if (newCX != null || newCY != null) {
+					AttributesImpl attr = toAttributesImpl(attributes);
+					if (newCX != null) {
+						attr.setValue(cxIndex, newCX);
+					}
+					if (newCY != null) {
+						attr.setValue(cyIndex, newCY);
+					}
+					attributes = attr;
+				}
+			}
+		}
+		// Another element
+		return super.doStartElement(uri, localName, name, attributes);
 
-        RBufferedRegion currentRRegion = bufferedDocument.getCurrentRRegion();
-        if ( isInstrText( uri, localName, name ) && currentRRegion != null )
-        {
-            super.doEndElement( uri, localName, name );
-            instrTextParsing = false;
-            return;
-        }
+	}
 
-        if ( isT( uri, localName, name ) )
-        {
-            super.doEndElement( uri, localName, name );
-            tParsing = false;
-            return;
-        }
+	@Override
+	public void doEndElement(String uri, String localName, String name)
+			throws SAXException {
 
-        FldSimpleBufferedRegion currentFldSimpleRegion = bufferedDocument.getCurrentFldSimpleRegion();
-        if ( isFldSimple( uri, localName, name ) && currentFldSimpleRegion != null )
-        {
-            // it's end of fldSimple and it's Mergefield=> ignore the element
-            String fieldName = currentFldSimpleRegion.getFieldName();
-            if ( fieldName == null )
-            {
-                super.doEndElement( uri, localName, name );
-            }
-            return;
-        }
-        super.doEndElement( uri, localName, name );
-    }
+		RBufferedRegion currentRRegion = bufferedDocument.getCurrentRRegion();
+		if (isInstrText(uri, localName, name) && currentRRegion != null) {
+			super.doEndElement(uri, localName, name);
+			instrTextParsing = false;
+			return;
+		}
 
-    @Override
-    protected void flushCharacters( String characters )
-    {
-        FldSimpleBufferedRegion currentFldSimpleRegion = bufferedDocument.getCurrentFldSimpleRegion();
-        if ( tParsing && currentFldSimpleRegion != null )
-        {
-            // fldSimple mergefield is parsing, replace with field name.
-            currentFldSimpleRegion.setTContent( characters );
-            extractListDirectiveInfo( currentFldSimpleRegion );
-            resetCharacters();
-            return;
-        }
+		if (isT(uri, localName, name)) {
+			super.doEndElement(uri, localName, name);
+			tParsing = false;
+			return;
+		}
 
-        RBufferedRegion currentRRegion = bufferedDocument.getCurrentRRegion();
-        if ( currentRRegion != null )
-        {
-            if ( instrTextParsing )
-            {
-                FieldMetadata fieldAsTextStyling = super.getFieldAsTextStyling( characters );
-                characters = processRowIfNeeded( characters );
-                currentRRegion.setInstrText( characters, fieldAsTextStyling );
-                extractListDirectiveInfo( currentRRegion );
-                resetCharacters();
-                return;
-            }
-            else
-            {
-                if ( tParsing )
-                {
-                    currentRRegion.setTContent( characters );
-                    resetCharacters();
-                    return;
-                }
-            }
-        }
+		FldSimpleBufferedRegion currentFldSimpleRegion = bufferedDocument
+				.getCurrentFldSimpleRegion();
+		if (isFldSimple(uri, localName, name) && currentFldSimpleRegion != null) {
+			// it's end of fldSimple and it's Mergefield=> ignore the element
+			String fieldName = currentFldSimpleRegion.getFieldName();
+			if (fieldName == null) {
+				super.doEndElement(uri, localName, name);
+			}
+			return;
+		}
+		super.doEndElement(uri, localName, name);
+	}
 
-        super.flushCharacters( characters );
-    }
+	@Override
+	protected void flushCharacters(String characters) {
+		FldSimpleBufferedRegion currentFldSimpleRegion = bufferedDocument
+				.getCurrentFldSimpleRegion();
+		if (tParsing && currentFldSimpleRegion != null) {
+			// fldSimple mergefield is parsing, replace with field name.
+			currentFldSimpleRegion.setTContent(characters);
+			extractListDirectiveInfo(currentFldSimpleRegion);
+			resetCharacters();
+			return;
+		}
 
-    private void extractListDirectiveInfo( MergefieldBufferedRegion mergefield )
-    {
-        super.extractListDirectiveInfo( mergefield.getFieldName() );
-    }
+		RBufferedRegion currentRRegion = bufferedDocument.getCurrentRRegion();
+		if (currentRRegion != null) {
+			if (instrTextParsing) {
+				FieldMetadata fieldAsTextStyling = super
+						.getFieldAsTextStyling(characters);
+				characters = processRowIfNeeded(characters);
+				currentRRegion.setInstrText(characters, fieldAsTextStyling);
+				extractListDirectiveInfo(currentRRegion);
+				resetCharacters();
+				return;
+			} else {
+				if (tParsing) {
+					currentRRegion.setTContent(tIndex, characters);
+					resetCharacters();
+					return;
+				}
+			}
+		}
+
+		super.flushCharacters(characters);
+	}
+
+	private void extractListDirectiveInfo(MergefieldBufferedRegion mergefield) {
+		super.extractListDirectiveInfo(mergefield.getFieldName());
+	}
 
 }

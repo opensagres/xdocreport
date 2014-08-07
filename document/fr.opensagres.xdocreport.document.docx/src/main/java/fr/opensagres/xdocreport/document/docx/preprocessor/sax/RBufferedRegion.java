@@ -60,9 +60,9 @@ public class RBufferedRegion
         return fldCharType;
     }
 
-    public void setTContent( String tContent )
+    public void setTContent(int index, String tContent )
     {
-        getTRegion().setTextContent( tContent );
+        getTRegion(index).setTextContent( tContent );
     }
 
     @Override
@@ -92,7 +92,7 @@ public class RBufferedRegion
 
     public String getTContent()
     {
-        return getTRegion().getTextContent();
+        return getTRegion(0).getTextContent();
     }
 
     public FieldMetadata getFieldAsTextStyling()

@@ -213,13 +213,9 @@ public abstract class MergefieldBufferedRegion
         return null;
     }
 
-    public BufferedElement getTRegion()
+    public BufferedElement getTRegion(int index)
     {
-        if ( tRegion == null )
-        {
-            tRegion = super.findFirstChild( "w:t" );
-        }
-        return tRegion;
+    	return super.findChildAt( "w:t", index );       
     }
 
 }

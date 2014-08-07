@@ -18,7 +18,7 @@ import fr.opensagres.xdocreport.template.freemarker.FreemarkerDocumentFormatter;
  */
 public class Issue401  {
 
-	//@Test
+	@Test
     public void issue401()
         throws Exception
     {
@@ -52,7 +52,7 @@ public class Issue401  {
 							+ "<w:lang w:val=\"fr-BE\"/>"
 						+ "</w:rPr>"
 						+ "<w:t>hey  </w:t>"
-						+ "<w:br />"
+						+ "<w:br/>"
 						+ "<w:t xml:space=\"preserve\">it&apos;s me !  </w:t>"
 					+ "</w:r>"
 					+ "<w:bookmarkStart w:id=\"0\" w:name=\"_GoBack\"/>"

@@ -148,8 +148,15 @@ public abstract class MergefieldBufferedRegion
                     // foreach($developer in $developers)
                     // remove first " if needed
                     if ( fieldName.startsWith( "\"" ) && fieldName.endsWith( "\"" ) )
-                    {
-                        fieldName = fieldName.substring( 1, fieldName.length() - 1 );
+                    {                    	
+                    	if (fieldName.length() == 1) {
+                    		// in some case, filedName can be just "
+                        	// <w:instrText xml:space="preserve"> MERGEFIELD "</w:instrText>
+                        	// see https://code.google.com/p/xdocreport/issues/detail?id=430
+                    		fieldName = "";
+                    	} else {
+                    		fieldName = fieldName.substring( 1, fieldName.length() - 1 );
+                    	}
                     }
                     // Fix bug
                     // http://code.google.com/p/xdocreport/issues/detail?id=29

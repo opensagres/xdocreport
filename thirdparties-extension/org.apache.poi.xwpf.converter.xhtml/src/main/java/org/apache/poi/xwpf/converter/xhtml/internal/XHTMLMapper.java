@@ -57,7 +57,6 @@ import java.math.BigInteger;
 import java.util.List;
 
 import org.apache.poi.xwpf.converter.core.IURIResolver;
-import org.apache.poi.xwpf.converter.core.IXWPFMasterPage;
 import org.apache.poi.xwpf.converter.core.ListItemContext;
 import org.apache.poi.xwpf.converter.core.XWPFDocumentVisitor;
 import org.apache.poi.xwpf.converter.core.styles.XWPFStylesDocument;
@@ -458,6 +457,7 @@ public class XHTMLMapper
         if ( attributes != null )
         {
             startElement( IMG_ELEMENT, attributes );
+            endElement( IMG_ELEMENT );
         }
     }
 

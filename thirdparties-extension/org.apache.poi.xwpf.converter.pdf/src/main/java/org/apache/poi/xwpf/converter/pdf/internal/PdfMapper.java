@@ -33,7 +33,6 @@ import java.util.List;
 import java.util.logging.Logger;
 
 import org.apache.poi.xwpf.converter.core.BorderSide;
-import org.apache.poi.xwpf.converter.core.IXWPFMasterPage;
 import org.apache.poi.xwpf.converter.core.ListItemContext;
 import org.apache.poi.xwpf.converter.core.ParagraphLineSpacing;
 import org.apache.poi.xwpf.converter.core.TableCellBorder;

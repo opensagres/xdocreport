@@ -96,7 +96,7 @@ public class FreemarkerTemplateEngine
         return new XDocFreemarkerContext();
     }
 
-    //@Override
+    // @Override
     public IContext createContext( Map<String, Object> contextMap )
     {
         return new XDocFreemarkerContext( contextMap );
@@ -112,11 +112,12 @@ public class FreemarkerTemplateEngine
         process( context, writer, template );
     }
 
-    protected void processNoCache( String entryName, IContext context, Reader reader, Writer writer )
+    @Override
+    protected void processNoCache( String templateName, IContext context, Reader reader, Writer writer )
         throws XDocReportException, IOException
     {
         // Create a new template.
-        Template template = new Template( entryName, getReader( reader ), getFreemarkerConfiguration() );
+        Template template = new Template( templateName, getReader( reader ), getFreemarkerConfiguration() );
         // Merge template with Java model
         process( context, writer, template );
     }
@@ -307,7 +308,7 @@ public class FreemarkerTemplateEngine
         }
     }
 
-    //@Override
+    // @Override
     public boolean isFieldNameStartsWithUpperCase()
     {
         return true;

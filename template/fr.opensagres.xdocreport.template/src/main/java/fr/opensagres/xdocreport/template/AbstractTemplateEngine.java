@@ -105,16 +105,17 @@ public abstract class AbstractTemplateEngine
         try
         {
             writer = getWriter( writer );
+            String templateName = getCachedTemplateName( reportId, entryName );
             if ( useTemplateCache )
             {
                 // cache template is used, process it
-                processWithCache( getCachedTemplateName( reportId, entryName ), context, writer );
+                processWithCache( templateName, context, writer );
             }
             else
             {
                 // No cache template is used, get the reader from the entry
                 reader = readerProvider.getEntryReader( entryName );
-                processNoCache( entryName, context, reader, writer );
+                processNoCache( templateName, context, reader, writer );
             }
             if ( LOGGER.isLoggable( Level.FINE ) )
             {
@@ -207,9 +208,28 @@ public abstract class AbstractTemplateEngine
 
     }
 
+    /**
+     * Merge the given template with the given context and writes the result in the given writer. Cache is used here to
+     * avoid parsing the template name each time.
+     * 
+     * @param templateName the template name.
+     * @param context the context.
+     * @param writer the result of merge.
+     * @throws XDocReportException
+     * @throws IOException
+     */
     protected abstract void processWithCache( String templateName, IContext context, Writer writer )
         throws XDocReportException, IOException;
 
-    protected abstract void processNoCache( String entryName, IContext context, Reader reader, Writer writer )
+    /**
+     * Merge the given template with the given context and writes the result in the given writer.
+     * 
+     * @param templateName the template name.
+     * @param context the context.
+     * @param writer the result of merge.
+     * @throws XDocReportException
+     * @throws IOException
+     */
+    protected abstract void processNoCache( String templateName, IContext context, Reader reader, Writer writer )
         throws XDocReportException, IOException;
 }

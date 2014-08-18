@@ -102,11 +102,11 @@ public class VelocityTemplateEngine
     }
 
     @Override
-    protected void processNoCache( String entryName, IContext context, Reader reader, Writer writer )
+    protected void processNoCache( String templateName, IContext context, Reader reader, Writer writer )
         throws XDocReportException, IOException
     {
         VelocityEngine velocityEngine = getVelocityEngine();
-        velocityEngine.evaluate( (VelocityContext) context, writer, "", reader );
+        velocityEngine.evaluate( (VelocityContext) context, writer, templateName, reader );
     }
 
     protected synchronized VelocityEngine getVelocityEngine()

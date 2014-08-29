@@ -1,5 +1,5 @@
 Manifest-Version: 1.0
-Bnd-LastModified: 1409340122415
+Bnd-LastModified: 1409346529595
 Build-Jdk: 1.8.0_05
 Built-By: pascalleclercq
 Bundle-Description: XDocReport means XML Document reporting. It's Java A
@@ -11,25 +11,28 @@ Bundle-ManifestVersion: 2
 Bundle-Name: org.apache.poi.xwpf.converter.pdf.itext5
 Bundle-RequiredExecutionEnvironment: J2SE-1.5, JavaSE-1.6
 Bundle-SymbolicName: org.apache.poi.xwpf.converter.pdf.itext5
-Bundle-Version: 1.0.5.qualifier
+Bundle-Version: 1.0.5.201408292307
 Created-By: Apache Maven Bundle Plugin
 Export-Package: org.apache.poi.xwpf.converter.pdf.internal.elements;vers
- ion="1.0.5.SNAPSHOT",org.apache.poi.xwpf.converter.pdf.internal;version
- ="1.0.5.SNAPSHOT",org.apache.poi.xwpf.converter.pdf;version="1.0.5.SNAP
+ ion="1.0.5.SNAPSHOT",org.apache.poi.xwpf.converter.pdf;version="1.0.5.S
+ NAPSHOT",org.apache.poi.xwpf.converter.pdf.internal;version="1.0.5.SNAP
  SHOT"
 Implementation-Title: org.apache.poi.xwpf.converter.pdf.itext5
 Implementation-Vendor-Id: fr.opensagres.xdocreport
 Implementation-Version: 1.0.5-SNAPSHOT
 Import-Package: com.itextpdf.text,com.itextpdf.text.pdf,com.itextpdf.tex
- t.pdf.draw,fr.opensagres.xdocreport.itext.extension,fr.opensagres.xdocr
- eport.itext.extension.font,javax.xml.stream,org.apache.poi.xwpf.convert
- er.core,org.apache.poi.xwpf.converter.core.openxmlformats,org.apache.po
- i.xwpf.converter.core.styles,org.apache.poi.xwpf.converter.core.utils,o
- rg.apache.poi.xwpf.usermodel,org.apache.xmlbeans,org.apache.xmlbeans.im
- pl.values,org.openxmlformats.schemas.drawingml.x2006.main,org.openxmlfo
- rmats.schemas.drawingml.x2006.picture,org.openxmlformats.schemas.drawin
- gml.x2006.wordprocessingDrawing,org.openxmlformats.schemas.wordprocessi
- ngml.x2006.main
+ t.pdf.draw,fr.opensagres.xdocreport.itext.extension;version="[1.0,2)",f
+ r.opensagres.xdocreport.itext.extension.font;version="[1.0,2)",javax.xm
+ l.stream,org.apache.poi.xwpf.converter.core;version="[1.0,2)",org.apach
+ e.poi.xwpf.converter.core.openxmlformats;version="[1.0,2)",org.apache.p
+ oi.xwpf.converter.core.styles;version="[1.0,2)",org.apache.poi.xwpf.con
+ verter.core.styles.paragraph;version="[1.0,2)",org.apache.poi.xwpf.conv
+ erter.core.utils;version="[1.0,2)",org.apache.poi.xwpf.usermodel,org.ap
+ ache.xmlbeans,org.apache.xmlbeans.impl.values,org.openxmlformats.schema
+ s.drawingml.x2006.main,org.openxmlformats.schemas.drawingml.x2006.pictu
+ re,org.openxmlformats.schemas.drawingml.x2006.wordprocessingDrawing,org
+ .openxmlformats.schemas.wordprocessingml.x2006.main
+Originally-Created-By: Apache Maven Bundle Plugin
 Specification-Title: org.apache.poi.xwpf.converter.pdf.itext5
 Specification-Version: 1.0.5-SNAPSHOT
 Tool: Bnd-1.50.0

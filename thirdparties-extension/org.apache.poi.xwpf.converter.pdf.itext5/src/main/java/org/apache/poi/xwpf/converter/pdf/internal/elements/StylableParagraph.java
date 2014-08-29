@@ -24,10 +24,10 @@
  */
 package org.apache.poi.xwpf.converter.pdf.internal.elements;
 
-import java.awt.Color;
 import java.math.BigInteger;
 
 import org.apache.poi.xwpf.converter.core.utils.ColorHelper;
+import org.apache.poi.xwpf.converter.pdf.internal.Converter;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTBorder;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.STBorder;
 
@@ -114,8 +114,7 @@ public class StylableParagraph
                 size = borderSize.floatValue() / 8f;
             }
             // border color
-            Color awtColor=ColorHelper.getBorderColor( border );
-            BaseColor borderColor = new BaseColor(awtColor.getRed(),awtColor.getGreen(),awtColor.getBlue());
+            BaseColor borderColor = Converter.toBaseColor(ColorHelper.getBorderColor( border ));
 
             // border padding
             Float space = null;

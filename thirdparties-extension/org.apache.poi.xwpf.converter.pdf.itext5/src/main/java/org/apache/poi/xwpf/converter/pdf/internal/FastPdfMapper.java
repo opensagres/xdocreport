@@ -2,12 +2,12 @@ package org.apache.poi.xwpf.converter.pdf.internal;
 
 import static org.apache.poi.xwpf.converter.core.utils.DxaUtil.emu2points;
 
-import java.awt.Color;
 import java.io.OutputStream;
 import java.math.BigInteger;
 import java.util.List;
 import java.util.logging.Logger;
 
+import org.apache.poi.xwpf.converter.core.Color;
 import org.apache.poi.xwpf.converter.core.ListItemContext;
 import org.apache.poi.xwpf.converter.core.ParagraphLineSpacing;
 import org.apache.poi.xwpf.converter.core.TableWidth;
@@ -278,8 +278,7 @@ public class FastPdfMapper
         }
 
         // Font color
-        Color awtColor = stylesDocument.getFontColor( run, paragraph );
-        BaseColor fontColor = new BaseColor(awtColor.getRed(),awtColor.getGreen(),awtColor.getBlue());
+        BaseColor fontColor = Converter.toBaseColor(stylesDocument.getFontColor( run, paragraph ));
         // Font
         this.currentRunFontAscii = getFont( fontFamilyAscii, fontSize, fontStyle, fontColor );
         this.currentRunFontEastAsia = getFont( fontFamilyEastAsia, fontSize, fontStyle, fontColor );
@@ -354,7 +353,9 @@ public class FastPdfMapper
         this.currentRunBackgroundColor = null;
     }
 
-    private Font getFont( String fontFamily, Float fontSize, int fontStyle, BaseColor fontColor )
+    
+
+	private Font getFont( String fontFamily, Float fontSize, int fontStyle, BaseColor fontColor )
     {
 
         String fontToUse = stylesDocument.getFontNameToUse( fontFamily );

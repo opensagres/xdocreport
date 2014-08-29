@@ -24,9 +24,9 @@
  */
 package org.apache.poi.xwpf.converter.pdf.internal.elements;
 
-import java.awt.Color;
 
 import org.apache.poi.xwpf.converter.core.TableCellBorder;
+import org.apache.poi.xwpf.converter.pdf.internal.Converter;
 
 import com.itextpdf.text.BaseColor;
 import com.itextpdf.text.Element;
@@ -120,8 +120,7 @@ public class StylableTableCell
             //borderSize = borderSize / 2;                    
         }
         
-        Color awtColor = border.getBorderColor();
-        BaseColor borderColor = new BaseColor(awtColor.getRed(), awtColor.getGreen(), awtColor.getBlue());
+        BaseColor borderColor = Converter.toBaseColor(border.getBorderColor());
         switch ( borderSide )
         {
             case Rectangle.TOP:

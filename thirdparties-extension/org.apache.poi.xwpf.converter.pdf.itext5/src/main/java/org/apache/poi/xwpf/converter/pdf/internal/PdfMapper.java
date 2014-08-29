@@ -26,13 +26,13 @@ package org.apache.poi.xwpf.converter.pdf.internal;
 
 import static org.apache.poi.xwpf.converter.core.utils.DxaUtil.emu2points;
 
-import java.awt.Color;
 import java.io.OutputStream;
 import java.math.BigInteger;
 import java.util.List;
 import java.util.logging.Logger;
 
 import org.apache.poi.xwpf.converter.core.BorderSide;
+import org.apache.poi.xwpf.converter.core.Color;
 import org.apache.poi.xwpf.converter.core.ListItemContext;
 import org.apache.poi.xwpf.converter.core.ParagraphLineSpacing;
 import org.apache.poi.xwpf.converter.core.TableCellBorder;
@@ -518,7 +518,7 @@ public class PdfMapper
                                                    listItemFontColor != null ? listItemFontColor : fontColor );
             Chunk symbol =
                 createTextChunk( listItemText, false, listItemFont, currentRunUnderlinePatterns,
-                                 currentRunBackgroundColor );
+                                 Converter.toBaseColor(currentRunBackgroundColor) );
             pdfParagraph.add( symbol );
             pdfParagraph.setListItemText( null );
         }
@@ -672,7 +672,7 @@ public class PdfMapper
                 // end chunk
                 Font chunkFont = getFont( font, fontAsian, fontComplex, currentGroup );
                 Chunk chunk =
-                    createTextChunk( sbuf.toString(), pageNumber, chunkFont, underlinePatterns, backgroundColor );
+                    createTextChunk( sbuf.toString(), pageNumber, chunkFont, underlinePatterns, Converter.toBaseColor( backgroundColor) );
                 parent.addElement( chunk );
                 // start new chunk
                 sbuf.setLength( 0 );
@@ -682,7 +682,7 @@ public class PdfMapper
         }
         // end chunk
         Font chunkFont = getFont( font, fontAsian, fontComplex, currentGroup );
-        Chunk chunk = createTextChunk( sbuf.toString(), pageNumber, chunkFont, underlinePatterns, backgroundColor );
+        Chunk chunk = createTextChunk( sbuf.toString(), pageNumber, chunkFont, underlinePatterns, Converter.toBaseColor(backgroundColor) );
         parent.addElement( chunk );
     }
 
@@ -1140,7 +1140,7 @@ public class PdfMapper
         Color backgroundColor = stylesDocument.getTableCellBackgroundColor( cell );
         if ( backgroundColor != null )
         {
-            pdfPCell.setBackgroundColor( backgroundColor );
+            pdfPCell.setBackgroundColor( Converter.toBaseColor(backgroundColor) );
         }
 
         // Vertical aligment

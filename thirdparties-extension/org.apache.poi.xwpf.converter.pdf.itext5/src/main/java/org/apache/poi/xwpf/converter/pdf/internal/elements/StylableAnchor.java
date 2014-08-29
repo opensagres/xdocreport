@@ -22,55 +22,33 @@
  * OF CONTRACT, TORT OR OTHERWISE,  ARISING FROM, OUT OF OR IN CONNECTION
  * WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
-package org.apache.poi.xwpf.converter.core;
+package org.apache.poi.xwpf.converter.pdf.internal.elements;
 
-import org.apache.poi.xwpf.converter.core.Color;
+import com.itextpdf.text.Anchor;
+import com.itextpdf.text.Element;
 
-public class TableCellBorder
+import fr.opensagres.xdocreport.itext.extension.IITextContainer;
+
+public class StylableAnchor
+    extends Anchor
+    implements IITextContainer
 {
 
-    private final boolean hasBorder;
+    private IITextContainer parent;
 
-    private final Float borderSize;
-
-    private final Color borderColor;
-
-    private final boolean fromTableCell;
-
-    public TableCellBorder( boolean hasBorder, boolean fromTableCell )
+    public IITextContainer getITextContainer()
     {
-        this.hasBorder = hasBorder;
-        this.borderSize = null;
-        this.borderColor = null;
-        this.fromTableCell = fromTableCell;
+        return parent;
     }
 
-    public TableCellBorder( Float borderSize, Color borderColor, boolean fromTableCell )
+    public void setITextContainer( IITextContainer parent )
     {
-        this.hasBorder = true;
-        this.borderSize = borderSize;
-        this.borderColor = borderColor;
-        this.fromTableCell = fromTableCell;
+        this.parent = parent;
     }
 
-    public boolean hasBorder()
+    public void addElement( Element element )
     {
-        return hasBorder;
-    }
-
-    public Float getBorderSize()
-    {
-        return borderSize;
-    }
-
-    public Color getBorderColor()
-    {
-        return borderColor;
-    }
-
-    public boolean isFromTableCell()
-    {
-        return fromTableCell;
+        super.add( element );
     }
 
 }

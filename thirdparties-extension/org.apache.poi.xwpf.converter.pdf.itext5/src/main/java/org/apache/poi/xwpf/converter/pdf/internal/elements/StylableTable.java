@@ -22,42 +22,45 @@
  * OF CONTRACT, TORT OR OTHERWISE,  ARISING FROM, OUT OF OR IN CONNECTION
  * WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
-package org.apache.poi.xwpf.converter.core.registry;
+package org.apache.poi.xwpf.converter.pdf.internal.elements;
 
-import org.apache.poi.xwpf.converter.core.Color;
-import java.util.HashMap;
-import java.util.Map;
+import fr.opensagres.xdocreport.itext.extension.ExtendedPdfPTable;
+import fr.opensagres.xdocreport.itext.extension.IITextContainer;
 
-public abstract class AbstractColorRegistry
+public class StylableTable
+    extends ExtendedPdfPTable
+    implements IITextContainer
 {
 
-    private final Map<String, Color> colors = new HashMap<String, Color>();
+    private final StylableDocument ownerDocument;
 
-    public Color getColor( String style )
+    private final IITextContainer parent;
+
+    public StylableTable( StylableDocument ownerDocument, IITextContainer parent, int numColumns )
     {
-        Color color = colors.get( style );
-        if ( color == null )
-        {
-            color = internalCreateColor( style );
-        }
-        return color;
+        super( numColumns );
+        this.ownerDocument = ownerDocument;
+        this.parent = parent;
+        // Ugly code to resolve this problem : When Paragraph is before
+        // PDFTable, space before paragraph and table is
+        // too little and paragraph content cut the table.
+        // Add spacing before to resolve that.
+        super.setSpacingBefore( 5f );
     }
 
-    private synchronized Color internalCreateColor( String style )
+    public IITextContainer getParent()
     {
-        Color color = colors.get( style );
-        if ( color != null )
-        {
-            return color;
-        }
-        color = createColor( style );
-        if ( color != null )
-        {
-            colors.put( style, color );
-        }
-        return color;
+        return parent;
     }
 
-    protected abstract Color createColor( String style );
+    public StylableDocument getOwnerDocument()
+    {
+        return ownerDocument;
+    }
 
+    public int getColIdx()
+    {
+    	  return currentColIdx;
+     //   return currentRowIdx;
+    }
 }

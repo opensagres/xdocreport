@@ -22,42 +22,50 @@
  * OF CONTRACT, TORT OR OTHERWISE,  ARISING FROM, OUT OF OR IN CONNECTION
  * WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
-package org.apache.poi.xwpf.converter.core.registry;
+package org.apache.poi.xwpf.converter.pdf.internal.elements;
 
-import org.apache.poi.xwpf.converter.core.Color;
-import java.util.HashMap;
-import java.util.Map;
-
-public abstract class AbstractColorRegistry
+/**
+ * fixes for pdf conversion by Leszek Piotrowicz <leszekp@safe-mail.net>
+ */
+public class StyleColumnProperties
 {
+    private Integer relWidth;
 
-    private final Map<String, Color> colors = new HashMap<String, Color>();
+    private Float startIndent;
 
-    public Color getColor( String style )
+    private Float endIndent;
+
+    public StyleColumnProperties()
     {
-        Color color = colors.get( style );
-        if ( color == null )
-        {
-            color = internalCreateColor( style );
-        }
-        return color;
     }
 
-    private synchronized Color internalCreateColor( String style )
+    public Integer getRelWidth()
     {
-        Color color = colors.get( style );
-        if ( color != null )
-        {
-            return color;
-        }
-        color = createColor( style );
-        if ( color != null )
-        {
-            colors.put( style, color );
-        }
-        return color;
+        return relWidth;
     }
 
-    protected abstract Color createColor( String style );
+    public void setRelWidth( Integer relWidth )
+    {
+        this.relWidth = relWidth;
+    }
 
+    public Float getStartIndent()
+    {
+        return startIndent;
+    }
+
+    public void setStartIndent( Float startIndent )
+    {
+        this.startIndent = startIndent;
+    }
+
+    public Float getEndIndent()
+    {
+        return endIndent;
+    }
+
+    public void setEndIndent( Float endIndent )
+    {
+        this.endIndent = endIndent;
+    }
 }

@@ -22,42 +22,43 @@
  * OF CONTRACT, TORT OR OTHERWISE,  ARISING FROM, OUT OF OR IN CONNECTION
  * WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
-package org.apache.poi.xwpf.converter.core.registry;
+package org.apache.poi.xwpf.converter.pdf;
 
-import org.apache.poi.xwpf.converter.core.Color;
-import java.util.HashMap;
-import java.util.Map;
+import java.io.IOException;
+import java.io.OutputStream;
+import java.io.Writer;
 
-public abstract class AbstractColorRegistry
+import org.apache.poi.xwpf.converter.core.AbstractXWPFConverter;
+import org.apache.poi.xwpf.converter.core.IXWPFConverter;
+import org.apache.poi.xwpf.converter.core.XWPFConverterException;
+import org.apache.poi.xwpf.converter.pdf.internal.PdfMapper;
+import org.apache.poi.xwpf.usermodel.XWPFDocument;
+
+public class PdfConverter
+    extends AbstractXWPFConverter<PdfOptions>
 {
 
-    private final Map<String, Color> colors = new HashMap<String, Color>();
+    private static final IXWPFConverter<PdfOptions> INSTANCE = new PdfConverter();
 
-    public Color getColor( String style )
+    public static IXWPFConverter<PdfOptions> getInstance()
     {
-        Color color = colors.get( style );
-        if ( color == null )
-        {
-            color = internalCreateColor( style );
-        }
-        return color;
+        return INSTANCE;
     }
 
-    private synchronized Color internalCreateColor( String style )
+    @Override
+    protected void doConvert( XWPFDocument document, OutputStream out, Writer writer, PdfOptions options )
+        throws XWPFConverterException, IOException
     {
-        Color color = colors.get( style );
-        if ( color != null )
+        try
         {
-            return color;
+            PdfMapper mapper = new PdfMapper( document, out, options );
+            mapper.start();
         }
-        color = createColor( style );
-        if ( color != null )
+        catch ( Exception e )
         {
-            colors.put( style, color );
+            throw new XWPFConverterException( e );
         }
-        return color;
-    }
 
-    protected abstract Color createColor( String style );
+    }
 
 }

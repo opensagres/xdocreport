@@ -24,7 +24,7 @@
  */
 package org.apache.poi.xwpf.converter.core.utils;
 
-import java.awt.Color;
+import org.apache.poi.xwpf.converter.core.Color;
 
 import org.apache.poi.xwpf.converter.core.registry.ColorRegistry;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTBorder;

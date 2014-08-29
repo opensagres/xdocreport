@@ -24,7 +24,7 @@
  */
 package org.apache.poi.xwpf.converter.core.openxmlformats.styles.run;
 
-import java.awt.Color;
+import org.apache.poi.xwpf.converter.core.Color;
 
 import org.apache.poi.xwpf.converter.core.styles.XWPFStylesDocument;
 import org.apache.poi.xwpf.converter.core.utils.ColorHelper;

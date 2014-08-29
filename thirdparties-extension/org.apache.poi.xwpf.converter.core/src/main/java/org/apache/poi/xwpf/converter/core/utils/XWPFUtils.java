@@ -24,15 +24,14 @@
  */
 package org.apache.poi.xwpf.converter.core.utils;
 
-import java.awt.Color;
 
+import org.apache.poi.xwpf.converter.core.Color;
 import org.apache.poi.xwpf.converter.core.PageOrientation;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTOnOff;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTSectPr;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTSectType;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.STOnOff;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.STSectionMark;
-import org.openxmlformats.schemas.wordprocessingml.x2006.main.STShd;
 
 public class XWPFUtils
 {

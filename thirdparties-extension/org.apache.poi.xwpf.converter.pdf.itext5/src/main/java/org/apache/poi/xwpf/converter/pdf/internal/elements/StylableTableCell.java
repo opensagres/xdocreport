@@ -25,18 +25,12 @@
 package org.apache.poi.xwpf.converter.pdf.internal.elements;
 
 import java.awt.Color;
-import java.math.BigInteger;
 
 import org.apache.poi.xwpf.converter.core.TableCellBorder;
-import org.apache.poi.xwpf.converter.core.utils.ColorHelper;
-import org.apache.poi.xwpf.converter.pdf.internal.Converter;
-import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTBorder;
-import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTTblBorders;
-import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTTcBorders;
-import org.openxmlformats.schemas.wordprocessingml.x2006.main.STBorder;
 
-import com.lowagie.text.Element;
-import com.lowagie.text.Rectangle;
+import com.itextpdf.text.BaseColor;
+import com.itextpdf.text.Element;
+import com.itextpdf.text.Rectangle;
 
 import fr.opensagres.xdocreport.itext.extension.ExtendedPdfPCell;
 import fr.opensagres.xdocreport.itext.extension.ExtendedPdfPTable;
@@ -126,7 +120,8 @@ public class StylableTableCell
             //borderSize = borderSize / 2;                    
         }
         
-        Color borderColor = Converter.toAwtColor( border.getBorderColor());
+        Color awtColor = border.getBorderColor();
+        BaseColor borderColor = new BaseColor(awtColor.getRed(), awtColor.getGreen(), awtColor.getBlue());
         switch ( borderSide )
         {
             case Rectangle.TOP:

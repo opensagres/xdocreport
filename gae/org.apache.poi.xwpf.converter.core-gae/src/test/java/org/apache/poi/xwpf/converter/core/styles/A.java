@@ -36,7 +36,7 @@ import org.apache.poi.xwpf.usermodel.XWPFRun;
 import org.junit.Assert;
 import org.junit.Test;
 
-import com.google.code.appengine.awt.Color;
+import org.apache.poi.xwpf.converter.core.Color;
 
 public class A
 {

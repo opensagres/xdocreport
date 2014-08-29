@@ -1,0 +1,35 @@
+Manifest-Version: 1.0
+Bnd-LastModified: 1409340122415
+Build-Jdk: 1.8.0_05
+Built-By: pascalleclercq
+Bundle-Description: XDocReport means XML Document reporting. It's Java A
+ PI to merge XML document created with MS Office (docx) or OpenOffice (o
+ dt), LibreOffice (odt) with a Java model to generate report and convert
+  it if you need to another format (PDF, XHTML...).
+Bundle-License: http://www.opensource.org/licenses/mit-license.php
+Bundle-ManifestVersion: 2
+Bundle-Name: org.apache.poi.xwpf.converter.pdf.itext5
+Bundle-RequiredExecutionEnvironment: J2SE-1.5, JavaSE-1.6
+Bundle-SymbolicName: org.apache.poi.xwpf.converter.pdf.itext5
+Bundle-Version: 1.0.5.qualifier
+Created-By: Apache Maven Bundle Plugin
+Export-Package: org.apache.poi.xwpf.converter.pdf.internal.elements;vers
+ ion="1.0.5.SNAPSHOT",org.apache.poi.xwpf.converter.pdf.internal;version
+ ="1.0.5.SNAPSHOT",org.apache.poi.xwpf.converter.pdf;version="1.0.5.SNAP
+ SHOT"
+Implementation-Title: org.apache.poi.xwpf.converter.pdf.itext5
+Implementation-Vendor-Id: fr.opensagres.xdocreport
+Implementation-Version: 1.0.5-SNAPSHOT
+Import-Package: com.itextpdf.text,com.itextpdf.text.pdf,com.itextpdf.tex
+ t.pdf.draw,fr.opensagres.xdocreport.itext.extension,fr.opensagres.xdocr
+ eport.itext.extension.font,javax.xml.stream,org.apache.poi.xwpf.convert
+ er.core,org.apache.poi.xwpf.converter.core.openxmlformats,org.apache.po
+ i.xwpf.converter.core.styles,org.apache.poi.xwpf.converter.core.utils,o
+ rg.apache.poi.xwpf.usermodel,org.apache.xmlbeans,org.apache.xmlbeans.im
+ pl.values,org.openxmlformats.schemas.drawingml.x2006.main,org.openxmlfo
+ rmats.schemas.drawingml.x2006.picture,org.openxmlformats.schemas.drawin
+ gml.x2006.wordprocessingDrawing,org.openxmlformats.schemas.wordprocessi
+ ngml.x2006.main
+Specification-Title: org.apache.poi.xwpf.converter.pdf.itext5
+Specification-Version: 1.0.5-SNAPSHOT
+Tool: Bnd-1.50.0

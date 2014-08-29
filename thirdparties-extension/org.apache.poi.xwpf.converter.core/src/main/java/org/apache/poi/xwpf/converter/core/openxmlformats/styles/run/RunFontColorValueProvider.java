@@ -1,8 +1,6 @@
 package org.apache.poi.xwpf.converter.core.openxmlformats.styles.run;
 
-import java.awt.Color;
-import java.math.BigInteger;
-
+import org.apache.poi.xwpf.converter.core.Color;
 import org.apache.poi.xwpf.converter.core.styles.XWPFStylesDocument;
 import org.apache.poi.xwpf.converter.core.utils.ColorHelper;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTParaRPr;

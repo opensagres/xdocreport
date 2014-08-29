@@ -22,42 +22,38 @@
  * OF CONTRACT, TORT OR OTHERWISE,  ARISING FROM, OUT OF OR IN CONNECTION
  * WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
-package org.apache.poi.xwpf.converter.core.registry;
+package org.apache.poi.xwpf.converter.pdf.internal.elements;
 
-import org.apache.poi.xwpf.converter.core.Color;
-import java.util.HashMap;
-import java.util.Map;
-
-public abstract class AbstractColorRegistry
+/**
+ * fixes for pdf conversion by Leszek Piotrowicz <leszekp@safe-mail.net>
+ */
+public class StyleColumnsProperties
 {
+    private Integer columnCount;
 
-    private final Map<String, Color> colors = new HashMap<String, Color>();
+    private Float columnGap;
 
-    public Color getColor( String style )
+    public StyleColumnsProperties()
     {
-        Color color = colors.get( style );
-        if ( color == null )
-        {
-            color = internalCreateColor( style );
-        }
-        return color;
     }
 
-    private synchronized Color internalCreateColor( String style )
+    public Integer getColumnCount()
     {
-        Color color = colors.get( style );
-        if ( color != null )
-        {
-            return color;
-        }
-        color = createColor( style );
-        if ( color != null )
-        {
-            colors.put( style, color );
-        }
-        return color;
+        return columnCount;
     }
 
-    protected abstract Color createColor( String style );
+    public void setColumnCount( Integer columnCount )
+    {
+        this.columnCount = columnCount;
+    }
 
+    public Float getColumnGap()
+    {
+        return columnGap;
+    }
+
+    public void setColumnGap( Float columnGap )
+    {
+        this.columnGap = columnGap;
+    }
 }

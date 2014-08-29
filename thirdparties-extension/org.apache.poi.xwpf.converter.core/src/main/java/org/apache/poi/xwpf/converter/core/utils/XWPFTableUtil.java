@@ -26,7 +26,7 @@ package org.apache.poi.xwpf.converter.core.utils;
 
 import static org.apache.poi.xwpf.converter.core.utils.DxaUtil.dxa2points;
 
-import java.awt.Color;
+import org.apache.poi.xwpf.converter.core.Color;
 import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.Collection;

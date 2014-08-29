@@ -28,14 +28,14 @@ import java.awt.Color;
 import java.math.BigInteger;
 
 import org.apache.poi.xwpf.converter.core.utils.ColorHelper;
-import org.apache.poi.xwpf.converter.pdf.internal.Converter;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTBorder;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.STBorder;
 
-import com.lowagie.text.Font;
-import com.lowagie.text.Paragraph;
-import com.lowagie.text.Rectangle;
-import com.lowagie.text.pdf.BaseFont;
+import com.itextpdf.text.BaseColor;
+import com.itextpdf.text.Font;
+import com.itextpdf.text.Paragraph;
+import com.itextpdf.text.Rectangle;
+import com.itextpdf.text.pdf.BaseFont;
 
 import fr.opensagres.xdocreport.itext.extension.ExtendedParagraph;
 import fr.opensagres.xdocreport.itext.extension.IITextContainer;
@@ -61,7 +61,7 @@ public class StylableParagraph
 
     private int listItemFontStyle = -1;
 
-    private Color listItemFontColor;
+    private BaseColor listItemFontColor;
 
     public StylableParagraph( StylableDocument ownerDocument, IITextContainer parent )
     {
@@ -114,9 +114,9 @@ public class StylableParagraph
                 size = borderSize.floatValue() / 8f;
             }
             // border color
-            org.apache.poi.xwpf.converter.core.Color bdColor = ColorHelper.getBorderColor( border );
+            Color awtColor=ColorHelper.getBorderColor( border );
+            BaseColor borderColor = new BaseColor(awtColor.getRed(),awtColor.getGreen(),awtColor.getBlue());
 
-            Color borderColor = Converter.toAwtColor(bdColor); 
             // border padding
             Float space = null;
             BigInteger borderSpace = border.getSpace();
@@ -229,12 +229,12 @@ public class StylableParagraph
         this.listItemFontStyle = listItemFontStyle;
     }
 
-    public Color getListItemFontColor()
+    public BaseColor getListItemFontColor()
     {
         return listItemFontColor;
     }
 
-    public void setListItemFontColor( Color listItemFontColor )
+    public void setListItemFontColor( BaseColor listItemFontColor )
     {
         this.listItemFontColor = listItemFontColor;
     }

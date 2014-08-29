@@ -24,8 +24,7 @@
  */
 package org.apache.poi.xwpf.converter.core.styles;
 
-import java.awt.Color;
-import java.awt.Font;
+import org.apache.poi.xwpf.converter.core.Color;
 import java.io.IOException;
 import java.io.InputStream;
 import java.math.BigInteger;
@@ -117,7 +116,6 @@ import org.apache.poi.xwpf.usermodel.XWPFTableCell;
 import org.apache.poi.xwpf.usermodel.XWPFTableRow;
 import org.apache.xmlbeans.XmlException;
 import org.openxmlformats.schemas.drawingml.x2006.main.ThemeDocument;
-import org.openxmlformats.schemas.spreadsheetml.x2006.main.CTCell;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTBorder;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTDocDefaults;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTFont;

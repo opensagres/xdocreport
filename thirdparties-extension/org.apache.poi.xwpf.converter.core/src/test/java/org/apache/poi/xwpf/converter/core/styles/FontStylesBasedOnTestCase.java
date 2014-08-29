@@ -24,7 +24,7 @@
  */
 package org.apache.poi.xwpf.converter.core.styles;
 
-import java.awt.Color;
+import org.apache.poi.xwpf.converter.core.Color;
 import java.util.List;
 
 import org.apache.poi.xwpf.converter.core.utils.ColorHelper;

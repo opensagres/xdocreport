@@ -51,11 +51,11 @@ import static org.apache.poi.xwpf.converter.xhtml.internal.styles.CSSStyleProper
 import static org.apache.poi.xwpf.converter.xhtml.internal.styles.CSSStylePropertyConstants.TEXT_INDENT;
 import static org.apache.poi.xwpf.converter.xhtml.internal.styles.CSSStylePropertyConstants.WIDTH;
 
-import java.awt.Color;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.poi.xwpf.converter.core.Color;
 import org.apache.poi.xwpf.converter.core.TableHeight;
 import org.apache.poi.xwpf.converter.core.TableWidth;
 import org.apache.poi.xwpf.converter.core.styles.XWPFStylesDocument;

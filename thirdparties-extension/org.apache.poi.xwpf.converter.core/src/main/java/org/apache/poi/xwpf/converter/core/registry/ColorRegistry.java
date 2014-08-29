@@ -24,7 +24,7 @@
  */
 package org.apache.poi.xwpf.converter.core.registry;
 
-import java.awt.Color;
+import org.apache.poi.xwpf.converter.core.Color;
 
 public class ColorRegistry
     extends AbstractColorRegistry

@@ -26,13 +26,13 @@ package org.apache.poi.xwpf.converter.pdf.internal;
 
 import static org.apache.poi.xwpf.converter.core.utils.DxaUtil.emu2points;
 
+import java.awt.Color;
 import java.io.OutputStream;
 import java.math.BigInteger;
 import java.util.List;
 import java.util.logging.Logger;
 
 import org.apache.poi.xwpf.converter.core.BorderSide;
-import org.apache.poi.xwpf.converter.core.Color;
 import org.apache.poi.xwpf.converter.core.ListItemContext;
 import org.apache.poi.xwpf.converter.core.ParagraphLineSpacing;
 import org.apache.poi.xwpf.converter.core.TableCellBorder;
@@ -87,18 +87,19 @@ import org.openxmlformats.schemas.wordprocessingml.x2006.main.STTextDirection;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.STVerticalJc;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.STVerticalJc.Enum;
 
-import com.lowagie.text.Chunk;
-import com.lowagie.text.DocumentException;
-import com.lowagie.text.Element;
-import com.lowagie.text.Font;
-import com.lowagie.text.Image;
-import com.lowagie.text.Paragraph;
-import com.lowagie.text.Rectangle;
-import com.lowagie.text.pdf.PdfPCell;
-import com.lowagie.text.pdf.PdfPTable;
-import com.lowagie.text.pdf.draw.DottedLineSeparator;
-import com.lowagie.text.pdf.draw.LineSeparator;
-import com.lowagie.text.pdf.draw.VerticalPositionMark;
+import com.itextpdf.text.BaseColor;
+import com.itextpdf.text.Chunk;
+import com.itextpdf.text.DocumentException;
+import com.itextpdf.text.Element;
+import com.itextpdf.text.Font;
+import com.itextpdf.text.Image;
+import com.itextpdf.text.Paragraph;
+import com.itextpdf.text.Rectangle;
+import com.itextpdf.text.pdf.PdfPCell;
+import com.itextpdf.text.pdf.PdfPTable;
+import com.itextpdf.text.pdf.draw.DottedLineSeparator;
+import com.itextpdf.text.pdf.draw.LineSeparator;
+import com.itextpdf.text.pdf.draw.VerticalPositionMark;
 
 import fr.opensagres.xdocreport.itext.extension.ExtendedChunk;
 import fr.opensagres.xdocreport.itext.extension.ExtendedImage;
@@ -320,7 +321,7 @@ public class PdfMapper
         Color backgroundColor = stylesDocument.getBackgroundColor( docxParagraph );
         if ( backgroundColor != null )
         {
-            pdfParagraph.setBackgroundColor( Converter.toAwtColor(backgroundColor) );
+            pdfParagraph.setBackgroundColor( new BaseColor(backgroundColor.getRed(),backgroundColor.getGreen(), backgroundColor.getBlue()) );
         }
 
         // border
@@ -393,11 +394,14 @@ public class PdfMapper
 
                 // Font color
                 Color listItemFontColor = stylesDocument.getFontColor( lvlRPr );
-
+                
                 pdfParagraph.setListItemFontFamily( listItemFontFamily );
                 pdfParagraph.setListItemFontSize( listItemFontSize );
                 pdfParagraph.setListItemFontStyle( listItemFontStyle );
-                pdfParagraph.setListItemFontColor( Converter.toAwtColor(listItemFontColor) );
+                if(listItemFontColor!=null) {
+                	pdfParagraph.setListItemFontColor( new BaseColor(listItemFontColor.getRed(),listItemFontColor.getGreen(), listItemFontColor.getBlue()) );	
+                }
+                
 
             }
             pdfParagraph.setListItemText( itemContext.getText() );
@@ -473,8 +477,8 @@ public class PdfMapper
         }
 
         // Font color
-        Color fontColor = stylesDocument.getFontColor( docxRun );
-
+        Color fontColorAwt = stylesDocument.getFontColor( docxRun );
+        BaseColor fontColor = new BaseColor(fontColorAwt.getRGB());
         // Font
         this.currentRunFontAscii = getFont( fontFamilyAscii, fontSize, fontStyle, fontColor );
         this.currentRunFontEastAsia = getFont( fontFamilyEastAsia, fontSize, fontStyle, fontColor );
@@ -505,13 +509,13 @@ public class PdfMapper
             String listItemFontFamily = pdfParagraph.getListItemFontFamily();
             Float listItemFontSize = pdfParagraph.getListItemFontSize();
             int listItemFontStyle = pdfParagraph.getListItemFontStyle();
-            java.awt.Color listItemFontColor = pdfParagraph.getListItemFontColor();
+            BaseColor listItemFontColor = pdfParagraph.getListItemFontColor();
             Font listItemFont =
                 options.getFontProvider().getFont( listItemFontFamily != null ? listItemFontFamily : fontFamilyAscii,
                                                    options.getFontEncoding(),
                                                    listItemFontSize != null ? listItemFontSize : fontSize,
                                                    listItemFontStyle != Font.NORMAL ? listItemFontStyle : fontStyle,
-                                                   listItemFontColor != null ? listItemFontColor : Converter.toAwtColor(fontColor) );
+                                                   listItemFontColor != null ? listItemFontColor : fontColor );
             Chunk symbol =
                 createTextChunk( listItemText, false, listItemFont, currentRunUnderlinePatterns,
                                  currentRunBackgroundColor );
@@ -543,18 +547,18 @@ public class PdfMapper
         this.currentRunBackgroundColor = null;
     }
 
-    private Font getFont( String fontFamily, Float fontSize, int fontStyle, Color fontColor )
+    private Font getFont( String fontFamily, Float fontSize, int fontStyle, BaseColor fontColor )
     {
 
         String fontToUse = stylesDocument.getFontNameToUse( fontFamily );
         if ( StringUtils.isNotEmpty( fontToUse ) )
         {
             return options.getFontProvider().getFont( fontToUse, options.getFontEncoding(), fontSize, fontStyle,
-                                                    Converter.toAwtColor(fontColor)   );
+                                                      fontColor );
         }
 
         Font font =
-            options.getFontProvider().getFont( fontFamily, options.getFontEncoding(), fontSize, fontStyle, Converter.toAwtColor(fontColor)  );
+            options.getFontProvider().getFont( fontFamily, options.getFontEncoding(), fontSize, fontStyle, fontColor );
         if ( !isFontExists( font ) )
         {
             // font is not found
@@ -612,7 +616,7 @@ public class PdfMapper
     }
 
     private Chunk createTextChunk( String text, boolean pageNumber, Font currentRunFont,
-                                   UnderlinePatterns currentRunUnderlinePatterns, Color currentRunBackgroundColor )
+                                   UnderlinePatterns currentRunUnderlinePatterns, BaseColor currentRunBackgroundColor )
     {
         Chunk textChunk =
             pageNumber ? new ExtendedChunk( pdfDocument, true, currentRunFont ) : new Chunk( text, currentRunFont );
@@ -639,7 +643,7 @@ public class PdfMapper
         // background color
         if ( currentRunBackgroundColor != null )
         {
-            textChunk.setBackground( Converter.toAwtColor( currentRunBackgroundColor) );
+            textChunk.setBackground( currentRunBackgroundColor );
         }
         if ( currentRunX != null )
         {
@@ -1136,7 +1140,7 @@ public class PdfMapper
         Color backgroundColor = stylesDocument.getTableCellBackgroundColor( cell );
         if ( backgroundColor != null )
         {
-            pdfPCell.setBackgroundColor( Converter.toAwtColor(backgroundColor) );
+            pdfPCell.setBackgroundColor( backgroundColor );
         }
 
         // Vertical aligment

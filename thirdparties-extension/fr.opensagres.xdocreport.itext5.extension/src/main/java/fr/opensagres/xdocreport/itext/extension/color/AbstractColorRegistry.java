@@ -24,18 +24,19 @@
  */
 package fr.opensagres.xdocreport.itext.extension.color;
 
-import java.awt.Color;
 import java.util.HashMap;
 import java.util.Map;
+
+import com.itextpdf.text.BaseColor;
 
 public abstract class AbstractColorRegistry
 {
 
-    private final Map<String, Color> colors = new HashMap<String, Color>();
+    private final Map<String, BaseColor> colors = new HashMap<String, BaseColor>();
 
-    public Color getColor( String style )
+    public BaseColor getColor( String style )
     {
-        Color color = colors.get( style );
+    	BaseColor color = colors.get( style );
         if ( color == null )
         {
             color = internalCreateColor( style );
@@ -43,9 +44,9 @@ public abstract class AbstractColorRegistry
         return color;
     }
 
-    private synchronized Color internalCreateColor( String style )
+    private synchronized BaseColor internalCreateColor( String style )
     {
-        Color color = colors.get( style );
+    	BaseColor color = colors.get( style );
         if ( color != null )
         {
             return color;
@@ -58,6 +59,6 @@ public abstract class AbstractColorRegistry
         return color;
     }
 
-    protected abstract Color createColor( String style );
+    protected abstract BaseColor createColor( String style );
 
 }

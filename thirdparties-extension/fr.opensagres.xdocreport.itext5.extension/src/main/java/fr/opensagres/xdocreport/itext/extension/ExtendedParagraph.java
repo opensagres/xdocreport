@@ -24,7 +24,6 @@
  */
 package fr.opensagres.xdocreport.itext.extension;
 
-import java.awt.Color;
 
 import com.itextpdf.text.BaseColor;
 import com.itextpdf.text.Element;
@@ -39,7 +38,7 @@ public class ExtendedParagraph
 {
     private static final long serialVersionUID = 664309269352903329L;
 
-    public static final Color TRANSPARENT_COLOR = Color.WHITE;
+    public static final BaseColor TRANSPARENT_COLOR = BaseColor.WHITE;
 
     private IITextContainer container;
 

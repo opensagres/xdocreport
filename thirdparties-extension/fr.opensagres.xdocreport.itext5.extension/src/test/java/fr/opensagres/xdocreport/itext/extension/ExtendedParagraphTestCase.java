@@ -24,7 +24,6 @@
  */
 package fr.opensagres.xdocreport.itext.extension;
 
-import java.awt.Color;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 

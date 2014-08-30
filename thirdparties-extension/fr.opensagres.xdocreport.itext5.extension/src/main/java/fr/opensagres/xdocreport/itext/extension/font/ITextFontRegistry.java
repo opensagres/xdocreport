@@ -24,9 +24,6 @@
  */
 package fr.opensagres.xdocreport.itext.extension.font;
 
-import java.awt.Color;
-
-import com.itextpdf.text.Font;
 
 
 public class ITextFontRegistry

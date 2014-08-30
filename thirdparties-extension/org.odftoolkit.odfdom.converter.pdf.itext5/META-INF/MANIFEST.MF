@@ -1,0 +1,36 @@
+Manifest-Version: 1.0
+Bnd-LastModified: 1409434426751
+Build-Jdk: 1.8.0_05
+Built-By: pascalleclercq
+Bundle-Description: XDocReport means XML Document reporting. It's Java A
+ PI to merge XML document created with MS Office (docx) or OpenOffice (o
+ dt), LibreOffice (odt) with a Java model to generate report and convert
+  it if you need to another format (PDF, XHTML...).
+Bundle-License: http://www.opensource.org/licenses/mit-license.php
+Bundle-ManifestVersion: 2
+Bundle-Name: org.odftoolkit.odfdom.converter.pdf.itext5
+Bundle-RequiredExecutionEnvironment: J2SE-1.5, JavaSE-1.6
+Bundle-SymbolicName: org.odftoolkit.odfdom.converter.pdf.itext5
+Bundle-Version: 1.0.5.qualifier
+Created-By: Apache Maven Bundle Plugin
+Export-Package: org.odftoolkit.odfdom.converter.pdf;version="1.0.5.SNAPS
+ HOT"
+Implementation-Title: org.odftoolkit.odfdom.converter.pdf.itext5
+Implementation-Vendor-Id: fr.opensagres.xdocreport
+Implementation-Version: 1.0.5-SNAPSHOT
+Import-Package: com.itextpdf.text,com.itextpdf.text.factories,com.itextp
+ df.text.pdf,com.itextpdf.text.pdf.draw,fr.opensagres.xdocreport.itext.e
+ xtension,fr.opensagres.xdocreport.itext.extension.color,fr.opensagres.x
+ docreport.itext.extension.font,fr.opensagres.xdocreport.utils,org.odfto
+ olkit.odfdom.converter.core,org.odftoolkit.odfdom.converter.core.utils,
+ org.odftoolkit.odfdom.doc,org.odftoolkit.odfdom.dom,org.odftoolkit.odfd
+ om.dom.attribute.fo,org.odftoolkit.odfdom.dom.attribute.style,org.odfto
+ olkit.odfdom.dom.attribute.table,org.odftoolkit.odfdom.dom.element,org.
+ odftoolkit.odfdom.dom.element.draw,org.odftoolkit.odfdom.dom.element.of
+ fice,org.odftoolkit.odfdom.dom.element.style,org.odftoolkit.odfdom.dom.
+ element.svg,org.odftoolkit.odfdom.dom.element.table,org.odftoolkit.odfd
+ om.dom.element.text,org.odftoolkit.odfdom.dom.style,org.odftoolkit.odfd
+ om.incubator.doc.office,org.odftoolkit.odfdom.pkg,org.w3c.dom
+Specification-Title: org.odftoolkit.odfdom.converter.pdf.itext5
+Specification-Version: 1.0.5-SNAPSHOT
+Tool: Bnd-1.50.0

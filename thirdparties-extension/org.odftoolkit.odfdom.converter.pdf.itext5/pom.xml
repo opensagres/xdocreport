@@ -6,12 +6,17 @@
 		<artifactId>thirdparties-extension</artifactId>
 		<version>1.0.5-SNAPSHOT</version>
 	</parent>
-	<artifactId>fr.opensagres.xdocreport.itext5.extension</artifactId>
+	<artifactId>org.odftoolkit.odfdom.converter.pdf.itext5</artifactId>
 	<dependencies>
 		<dependency>
-			<groupId>com.itextpdf</groupId>
-			<artifactId>itextpdf</artifactId>
-			<version>5.4.1</version>
+			<groupId>fr.opensagres.xdocreport</groupId>
+			<artifactId>org.odftoolkit.odfdom.converter.core</artifactId>
+			<version>1.0.5-SNAPSHOT</version>
+		</dependency>
+		<dependency>
+			<groupId>fr.opensagres.xdocreport</groupId>
+			<artifactId>fr.opensagres.xdocreport.itext5.extension</artifactId>
+			<version>1.0.5-SNAPSHOT</version>
 		</dependency>
 	</dependencies>
 </project>

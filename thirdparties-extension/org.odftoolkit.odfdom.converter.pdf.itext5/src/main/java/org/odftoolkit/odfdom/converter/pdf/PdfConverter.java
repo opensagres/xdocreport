@@ -79,6 +79,7 @@ public class PdfConverter
         }
         catch ( Exception e )
         {
+        	e.printStackTrace();
             throw new ODFConverterException( e );
         }
     }

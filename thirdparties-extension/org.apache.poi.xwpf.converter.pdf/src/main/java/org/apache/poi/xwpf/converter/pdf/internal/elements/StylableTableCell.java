@@ -25,15 +25,9 @@
 package org.apache.poi.xwpf.converter.pdf.internal.elements;
 
 import java.awt.Color;
-import java.math.BigInteger;
 
 import org.apache.poi.xwpf.converter.core.TableCellBorder;
-import org.apache.poi.xwpf.converter.core.utils.ColorHelper;
 import org.apache.poi.xwpf.converter.pdf.internal.Converter;
-import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTBorder;
-import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTTblBorders;
-import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTTcBorders;
-import org.openxmlformats.schemas.wordprocessingml.x2006.main.STBorder;
 
 import com.lowagie.text.Element;
 import com.lowagie.text.Rectangle;

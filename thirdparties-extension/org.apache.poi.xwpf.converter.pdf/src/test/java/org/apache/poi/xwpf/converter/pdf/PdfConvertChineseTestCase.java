@@ -24,7 +24,6 @@
  */
 package org.apache.poi.xwpf.converter.pdf;
 
-import java.awt.Color;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -34,12 +33,6 @@ import org.apache.poi.xwpf.converter.core.AbstractXWPFPOIConverterTest;
 import org.apache.poi.xwpf.converter.core.XWPFConverterException;
 import org.apache.poi.xwpf.usermodel.XWPFDocument;
 import org.junit.Test;
-
-import com.lowagie.text.Font;
-import com.lowagie.text.pdf.BaseFont;
-
-import fr.opensagres.xdocreport.itext.extension.font.IFontProvider;
-import fr.opensagres.xdocreport.itext.extension.font.ITextFontRegistry;
 
 public class PdfConvertChineseTestCase
 {

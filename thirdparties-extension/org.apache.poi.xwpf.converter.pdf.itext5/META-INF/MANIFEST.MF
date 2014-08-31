@@ -1,5 +1,5 @@
 Manifest-Version: 1.0
-Bnd-LastModified: 1409381690566
+Bnd-LastModified: 1409516741558
 Build-Jdk: 1.8.0_05
 Built-By: pascalleclercq
 Bundle-Description: XDocReport means XML Document reporting. It's Java A

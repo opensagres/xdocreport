@@ -478,7 +478,8 @@ public class PdfMapper
 
         // Font color
         Color fontColorAwt = stylesDocument.getFontColor( docxRun );
-        BaseColor fontColor = new BaseColor(fontColorAwt.getRGB());
+        
+        BaseColor fontColor = Converter.toBaseColor(fontColorAwt);
         // Font
         this.currentRunFontAscii = getFont( fontFamilyAscii, fontSize, fontStyle, fontColor );
         this.currentRunFontEastAsia = getFont( fontFamilyEastAsia, fontSize, fontStyle, fontColor );

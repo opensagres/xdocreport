@@ -41,6 +41,8 @@ public class XWPFRunHelper
 
     private static final String PAGE = "page";
 
+    private static final String NUMPAGES = "numpages";
+    
     private static final String PAGE_AND_SPACE = "page ";
 
     private static final String HYPERLINK = "HYPERLINK";
@@ -179,4 +181,21 @@ public class XWPFRunHelper
         }
         return STBrType.TEXT_WRAPPING;
     }
+        
+        /**
+         * Returns true if the given instr is PAGE and false otherwise.
+         * 
+         * @param instr
+         * @return
+         */
+        public static boolean isInstrTextNumpages( String instr )
+        {
+            if ( StringUtils.isEmpty( instr ) )
+            {
+                return false;
+            }
+            
+            instr = instr.trim().toLowerCase();
+            return instr.startsWith( NUMPAGES );
+        }    
 }

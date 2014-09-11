@@ -140,6 +140,10 @@ public abstract class XWPFDocumentVisitor<T, O extends Options, E extends IXWPFM
     protected final O options;
 
     private boolean pageBreakOnNextParagraph;
+    
+        protected boolean processingTotalPageCountField = false;
+        
+        protected boolean totalPageFieldUsed = false;
 
     /**
      * Map of w:numId and ListContext
@@ -562,6 +566,7 @@ public abstract class XWPFDocumentVisitor<T, O extends Options, E extends IXWPFM
                         fldCharTypeParsing = false;
                         rListAfterSeparate = null;
                         pageNumber = false;
+                        processingTotalPageCountField = false;
                         url = null;
                     }
                 }
@@ -578,6 +583,13 @@ public abstract class XWPFDocumentVisitor<T, O extends Options, E extends IXWPFM
                                 boolean instrTextPage = XWPFRunHelper.isInstrTextPage( instrText );
                                 if ( !instrTextPage )
                                 {
+                                	                                	
+                                	                                	// test if it's <w:r><w:instrText>NUMPAGES</w:instrText></w:r>
+                                	 processingTotalPageCountField = XWPFRunHelper.isInstrTextNumpages( instrText );
+                                	 if(!totalPageFieldUsed){
+                                	 	totalPageFieldUsed = true;
+                                	 }
+                                	                                	
                                     // test if it's <w:instrText>HYPERLINK
                                     // "http://code.google.com/p/xdocrepor"</w:instrText>
                                     String instrTextHyperlink = XWPFRunHelper.getInstrTextHyperlink( instrText );

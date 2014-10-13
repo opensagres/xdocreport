@@ -69,6 +69,8 @@ public abstract class AbstractFieldsMetadataClassSerializer
     // package name to exclude while processing
     private final List<String> excludedPackages;
 
+    private IPropertyDescriptorFilter filter = new AllowAllPropertyDescriptorFilter();;
+    
     public AbstractFieldsMetadataClassSerializer( String id, String description )
     {
         this.id = id;
@@ -87,22 +89,17 @@ public abstract class AbstractFieldsMetadataClassSerializer
         return description;
     }
 
-    /*
-     * (non-Javadoc)
-     * @see fr.opensagres.xdocreport.template.formatter.IFieldsMetadataClassSerializer
-     * #load(fr.opensagres.xdocreport.template.formatter.FieldsMetadata, java.lang.String, java.lang.Class)
-     */
+    
+    public void setFilter(IPropertyDescriptorFilter filter) {
+		this.filter = filter;
+	}
+    
     public void load( FieldsMetadata fieldsMetadata, String key, Class<?> clazz )
         throws XDocReportException
     {
         load( fieldsMetadata, key, clazz, false );
     }
 
-    /*
-     * (non-Javadoc)
-     * @see fr.opensagres.xdocreport.template.formatter.IFieldsMetadataClassSerializer
-     * #load(fr.opensagres.xdocreport.template.formatter.FieldsMetadata, java.lang.String, java.lang.Class, boolean)
-     */
     public void load( FieldsMetadata fieldsMetadata, String key, Class<?> clazz, boolean listType )
         throws XDocReportException
     {
@@ -148,6 +145,10 @@ public abstract class AbstractFieldsMetadataClassSerializer
 
             if ( wasVisited )
                 continue;
+            
+            if(filter.test(propertyDescriptor)) {
+            	return;
+            }
 
             // process the field
             if ( Iterable.class.isAssignableFrom( returnTypeClass ) )
@@ -183,6 +184,7 @@ public abstract class AbstractFieldsMetadataClassSerializer
             }
             else if ( isTextField( returnTypeClass ) )
             {// add text field
+
                 addField( key, fieldsMetadata, path, propertyDescriptor, isList, false );
             }
             else
@@ -371,5 +373,16 @@ public abstract class AbstractFieldsMetadataClassSerializer
         return !name.equals( "getClass" ) && ( name.startsWith( "get" ) || name.startsWith( "is" ) );
     }
 
+    
+    
     protected abstract String getFieldName( String key, String getterName );
+    
+
+    static class AllowAllPropertyDescriptorFilter implements IPropertyDescriptorFilter {
+
+		public boolean test(PropertyDescriptor descriptor) {
+			return false;
+		}
+    	
+    }
 }

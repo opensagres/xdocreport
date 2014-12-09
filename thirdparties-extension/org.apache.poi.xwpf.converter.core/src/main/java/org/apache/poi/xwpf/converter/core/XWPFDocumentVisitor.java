@@ -89,6 +89,7 @@ import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTP;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTPPr;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTPTab;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTR;
+import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTRPr;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTRow;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTRunTrackChange;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTSdtBlock;
@@ -726,6 +727,10 @@ public abstract class XWPFDocumentVisitor<T, O extends Options, E extends IXWPFM
 
     {
         CTR ctr = run.getCTR();
+        CTRPr rPr = ctr.getRPr();
+        boolean hasTexStyles = (rPr != null && rPr.getHighlight() != null  || rPr.getStrike() != null || 
+        								rPr.getDstrike() != null || rPr.getVertAlign() != null ) ;
+        StringBuilder text = new StringBuilder();
 
         // Loop for each element of <w:run text, tab, image etc
         // to keep the order of thoses elements.
@@ -748,7 +753,14 @@ public abstract class XWPFDocumentVisitor<T, O extends Options, E extends IXWPFM
                 }
                 else
                 {
-                    visitText( ctText, pageNumber, paragraphContainer );
+                	if(hasTexStyles)
+                	{
+                		text.append(ctText.getStringValue());
+                	}
+                	else
+                	{
+                		visitText( ctText, pageNumber, paragraphContainer );
+                	}                    
                 }
             }
             else if ( o instanceof CTPTab )
@@ -786,8 +798,20 @@ public abstract class XWPFDocumentVisitor<T, O extends Options, E extends IXWPFM
                 visitDrawing( (CTDrawing) o, paragraphContainer );
             }
         }
+        if(hasTexStyles && StringUtils.isNotEmpty(text.toString()))
+        {
+        	visitStyleText(run, text.toString());
+        }
         c.dispose();
     }
+    
+    /**
+     * Text styles handling, fonts, highlighting, background colors, subscript, superscript, strikes (single strikes) etc.
+     * @param run
+     * @param text
+     * @throws Exception
+     */
+    protected abstract void visitStyleText(XWPFRun run, String text) throws Exception;
 
     protected abstract void visitText( CTText ctText, boolean pageNumber, T paragraphContainer )
         throws Exception;

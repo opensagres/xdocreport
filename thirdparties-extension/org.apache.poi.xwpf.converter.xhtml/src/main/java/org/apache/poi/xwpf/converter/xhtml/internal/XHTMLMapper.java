@@ -121,7 +121,7 @@ public class XHTMLMapper
     /**
      * To hold paragraph reference and to be used while processing individual runs which has tabs
      */
-    private XWPFParagraph paragraph;
+    private XWPFParagraph currentParagraph;
 
     private boolean generateStyles = true;
 
@@ -234,7 +234,7 @@ public class XHTMLMapper
         throws Exception
     {	    	
 		if(run.getParent() instanceof XWPFParagraph) {
-			paragraph = (XWPFParagraph) run.getParent();
+			this.currentParagraph = (XWPFParagraph) run.getParent();
 		}
 
         XWPFParagraph paragraph = run.getParagraph();
@@ -266,7 +266,7 @@ public class XHTMLMapper
             endElement( A_ELEMENT );
         }
         this.currentRunAttributes = null;
-        paragraph = null;
+        this.currentParagraph = null;
     }
 
     @Override
@@ -317,7 +317,7 @@ public class XHTMLMapper
     	// 1) create attributes
 
         // 1.1) Create "class" attributes.
-        AttributesImpl runAttributes = createClassAttribute( paragraph.getStyleID() );
+        AttributesImpl runAttributes = createClassAttribute( currentParagraph.getStyleID() );
 
         // 1.2) Create "style" attributes.
         CSSStyle cssStyle = getStylesDocument().createCSSStyle( rPr );
@@ -365,7 +365,7 @@ public class XHTMLMapper
     {
     	//For some reason tabs become null ???
     	//Add equivalent spaces in html render as no tab in html world
-    	if(paragraph != null && tabs == null)
+    	if(currentParagraph != null && tabs == null)
     	{
 			startElement( SPAN_ELEMENT, null );
 			characters(TAB_CHAR_SEQUENCE);
@@ -479,20 +479,32 @@ public class XHTMLMapper
         //At lease support solid borders for now
         if(cssStyle != null) {
         	TableCellBorder border = getStylesDocument().getTableBorder(table, BorderSide.TOP);
-        	String style = border.getBorderSize() + "px solid " +StringUtils.toHexString(border.getBorderColor()); 
-        	cssStyle.addProperty(CSSStylePropertyConstants.BORDER_TOP, style);
+        	if(border != null)
+        	{
+        		String style = border.getBorderSize() + "px solid " +StringUtils.toHexString(border.getBorderColor()); 
+            	cssStyle.addProperty(CSSStylePropertyConstants.BORDER_TOP, style);
+        	}        	
         	
         	border = getStylesDocument().getTableBorder(table, BorderSide.BOTTOM);
-        	style = border.getBorderSize() + "px solid " + StringUtils.toHexString(border.getBorderColor());         	
-        	cssStyle.addProperty(CSSStylePropertyConstants.BORDER_BOTTOM, style);
+        	if(border != null)
+        	{
+        		String style = border.getBorderSize() + "px solid " + StringUtils.toHexString(border.getBorderColor());         	
+            	cssStyle.addProperty(CSSStylePropertyConstants.BORDER_BOTTOM, style);
+        	}        	
         	
         	border = getStylesDocument().getTableBorder(table, BorderSide.LEFT);
-        	style = border.getBorderSize() + "px solid " + StringUtils.toHexString(border.getBorderColor());
-        	cssStyle.addProperty(CSSStylePropertyConstants.BORDER_LEFT, style);
+        	if(border != null)
+        	{
+        		String style = border.getBorderSize() + "px solid " + StringUtils.toHexString(border.getBorderColor());
+            	cssStyle.addProperty(CSSStylePropertyConstants.BORDER_LEFT, style);
+        	}        	
         	
         	border = getStylesDocument().getTableBorder(table, BorderSide.RIGHT);
-        	style = border.getBorderSize() + "px solid " + StringUtils.toHexString(border.getBorderColor());
-        	cssStyle.addProperty(CSSStylePropertyConstants.BORDER_RIGHT, style);
+        	if(border != null)
+        	{
+        		String style = border.getBorderSize() + "px solid " + StringUtils.toHexString(border.getBorderColor());
+            	cssStyle.addProperty(CSSStylePropertyConstants.BORDER_RIGHT, style);
+        	}        	
         }
         attributes = createStyleAttribute( cssStyle, attributes );
 

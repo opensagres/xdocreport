@@ -139,6 +139,10 @@ public class StringUtils
      * @return
      */
     public static String toHexString(Color colour) {
+    	if(colour == null)
+    	{
+    		return "";
+    	}
 		String hexColour = Integer.toHexString(colour.getRGB() & 0xffffff);
 		if (hexColour.length() < 6) {
 			hexColour = "000000".substring(0, 6 - hexColour.length()) + hexColour;

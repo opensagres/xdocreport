@@ -728,7 +728,7 @@ public abstract class XWPFDocumentVisitor<T, O extends Options, E extends IXWPFM
     {
         CTR ctr = run.getCTR();
         CTRPr rPr = ctr.getRPr();
-        boolean hasTexStyles = (rPr != null && rPr.getHighlight() != null  || rPr.getStrike() != null || 
+        boolean hasTexStyles = rPr != null && (rPr.getHighlight() != null  || rPr.getStrike() != null || 
         								rPr.getDstrike() != null || rPr.getVertAlign() != null ) ;
         StringBuilder text = new StringBuilder();
 
@@ -811,7 +811,10 @@ public abstract class XWPFDocumentVisitor<T, O extends Options, E extends IXWPFM
      * @param text
      * @throws Exception
      */
-    protected abstract void visitStyleText(XWPFRun run, String text) throws Exception;
+    protected void visitStyleText(XWPFRun run, String text) throws Exception
+    {
+    	//child should implement
+    }
 
     protected abstract void visitText( CTText ctText, boolean pageNumber, T paragraphContainer )
         throws Exception;

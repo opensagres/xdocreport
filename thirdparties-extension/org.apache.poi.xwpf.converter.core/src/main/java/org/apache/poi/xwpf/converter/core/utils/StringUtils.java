@@ -24,6 +24,8 @@
  */
 package org.apache.poi.xwpf.converter.core.utils;
 
+import org.apache.poi.xwpf.converter.core.Color;
+
 /**
  * String Utilities.
  */
@@ -105,5 +107,47 @@ public class StringUtils
             return line;
         }
     }
+    
+    public static String replaceNonUnicodeChars(String text) {
+		StringBuilder newString = new StringBuilder(text.length());
+		for (int offset = 0; offset < text.length();)
+		{
+		    int codePoint = text.codePointAt(offset);
+		    offset += Character.charCount(codePoint);
+
+		    // Replace invisible control characters and unused code points
+		    switch (Character.getType(codePoint))
+		    {
+		        case Character.CONTROL:     // \p{Cc}
+		        case Character.FORMAT:      // \p{Cf}
+		        case Character.PRIVATE_USE: // \p{Co}
+		        case Character.SURROGATE:   // \p{Cs}
+		        case Character.UNASSIGNED:  // \p{Cn}
+		            newString.append('\u2022');
+		            break;
+		        default:
+		            newString.append(Character.toChars(codePoint));
+		            break;
+		    }
+		}
+		return newString.toString();
+	}
+    
+    /**
+     * Color to hex representation
+     * @param colour
+     * @return
+     */
+    public static String toHexString(Color colour) {
+    	if(colour == null)
+    	{
+    		return "";
+    	}
+		String hexColour = Integer.toHexString(colour.getRGB() & 0xffffff);
+		if (hexColour.length() < 6) {
+			hexColour = "000000".substring(0, 6 - hexColour.length()) + hexColour;
+		 }
+		 return "#" + hexColour;
+	}
 
 }

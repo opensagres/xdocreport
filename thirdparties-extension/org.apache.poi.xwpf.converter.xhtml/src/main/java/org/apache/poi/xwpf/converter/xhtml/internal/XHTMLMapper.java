@@ -56,14 +56,20 @@ import java.io.IOException;
 import java.math.BigInteger;
 import java.util.List;
 
+import org.apache.poi.xwpf.converter.core.BorderSide;
+import org.apache.poi.xwpf.converter.core.Color;
 import org.apache.poi.xwpf.converter.core.IURIResolver;
 import org.apache.poi.xwpf.converter.core.ListItemContext;
+import org.apache.poi.xwpf.converter.core.TableCellBorder;
 import org.apache.poi.xwpf.converter.core.XWPFDocumentVisitor;
 import org.apache.poi.xwpf.converter.core.styles.XWPFStylesDocument;
+import org.apache.poi.xwpf.converter.core.styles.run.RunFontStyleStrikeValueProvider;
+import org.apache.poi.xwpf.converter.core.styles.run.RunTextHighlightingValueProvider;
 import org.apache.poi.xwpf.converter.core.utils.DxaUtil;
 import org.apache.poi.xwpf.converter.core.utils.StringUtils;
 import org.apache.poi.xwpf.converter.xhtml.XHTMLOptions;
 import org.apache.poi.xwpf.converter.xhtml.internal.styles.CSSStyle;
+import org.apache.poi.xwpf.converter.xhtml.internal.styles.CSSStylePropertyConstants;
 import org.apache.poi.xwpf.converter.xhtml.internal.styles.CSSStylesDocument;
 import org.apache.poi.xwpf.converter.xhtml.internal.utils.SAXHelper;
 import org.apache.poi.xwpf.converter.xhtml.internal.utils.StringEscapeUtils;
@@ -93,6 +99,7 @@ import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTTabs;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTTblPr;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTTcPr;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTText;
+import org.openxmlformats.schemas.wordprocessingml.x2006.main.STVerticalAlignRun;
 import org.xml.sax.Attributes;
 import org.xml.sax.ContentHandler;
 import org.xml.sax.SAXException;
@@ -101,10 +108,20 @@ import org.xml.sax.helpers.AttributesImpl;
 public class XHTMLMapper
     extends XWPFDocumentVisitor<Object, XHTMLOptions, XHTMLMasterPage>
 {
+	
+	/**
+	 * There is no HTML representation for tab. So apply 4 spaces by default
+	 */
+	static final String TAB_CHAR_SEQUENCE = "&nbsp;&nbsp;&nbsp;&nbsp;";
 
     private static final String WORD_MEDIA = "word/media/";
 
     private final ContentHandler contentHandler;
+    
+    /**
+     * To hold paragraph reference and to be used while processing individual runs which has tabs
+     */
+    private XWPFParagraph currentParagraph;
 
     private boolean generateStyles = true;
 
@@ -188,6 +205,20 @@ public class XHTMLMapper
 
         // 2) create element
         startElement( P_ELEMENT, attributes );
+        
+        //To handle list items in paragraph
+        if(itemContext != null)
+        {			
+	        startElement( SPAN_ELEMENT, attributes );
+	        String text = itemContext.getText();	        
+	        if ( StringUtils.isNotEmpty( text ) )
+	        {	
+	        	text = StringUtils.replaceNonUnicodeChars(text);
+	        	text = text + "\u0020";
+	        	SAXHelper.characters( contentHandler, StringEscapeUtils.escapeHtml( text ) );
+	        }
+	        endElement( SPAN_ELEMENT );
+		}
         return null;
     }
 
@@ -201,7 +232,10 @@ public class XHTMLMapper
     @Override
     protected void visitRun( XWPFRun run, boolean pageNumber, String url, Object paragraphContainer )
         throws Exception
-    {
+    {	    	
+		if(run.getParent() instanceof XWPFParagraph) {
+			this.currentParagraph = (XWPFParagraph) run.getParent();
+		}
 
         XWPFParagraph paragraph = run.getParagraph();
         // 1) create attributes
@@ -232,6 +266,7 @@ public class XHTMLMapper
             endElement( A_ELEMENT );
         }
         this.currentRunAttributes = null;
+        this.currentParagraph = null;
     }
 
     @Override
@@ -265,6 +300,58 @@ public class XHTMLMapper
             endElement( SPAN_ELEMENT );
         }
     }
+    
+    @Override
+    protected void visitStyleText(XWPFRun run, String text) throws Exception 
+    {
+    	if(run.getFontFamily() == null) {
+			run.setFontFamily(getStylesDocument().getFontFamilyAscii(run));
+		}
+    	
+		if(run.getFontSize() <= 0) {
+			run.setFontSize(getStylesDocument().getFontSize(run).intValue());
+		}
+		
+		CTRPr rPr = run.getCTR().getRPr();
+		
+    	// 1) create attributes
+
+        // 1.1) Create "class" attributes.
+        AttributesImpl runAttributes = createClassAttribute( currentParagraph.getStyleID() );
+
+        // 1.2) Create "style" attributes.
+        CSSStyle cssStyle = getStylesDocument().createCSSStyle( rPr );
+        if(cssStyle != null) {
+        	Color color = RunTextHighlightingValueProvider.INSTANCE.getValue(rPr, getStylesDocument());
+        	if(color != null) cssStyle.addProperty(CSSStylePropertyConstants.BACKGROUND_COLOR, StringUtils.toHexString(color));
+        	if(Boolean.TRUE.equals(RunFontStyleStrikeValueProvider.INSTANCE.getValue(rPr, getStylesDocument())) ||
+        			rPr.getDstrike() != null)
+        		cssStyle.addProperty("text-decoration", "line-through");
+        	if(rPr.getVertAlign() != null) {
+        		int align = rPr.getVertAlign().getVal().intValue();
+        		if(STVerticalAlignRun.INT_SUPERSCRIPT == align) {
+        			cssStyle.addProperty("vertical-align", "super");
+        		}
+        		else if(STVerticalAlignRun.INT_SUBSCRIPT == align) {
+        			cssStyle.addProperty("vertical-align", "sub");
+        		}
+        	}	        		
+        }
+        runAttributes = createStyleAttribute( cssStyle, runAttributes );
+        if ( runAttributes != null )
+        {
+            startElement( SPAN_ELEMENT, runAttributes );
+        }        
+        if ( StringUtils.isNotEmpty( text ) )
+        {
+            // Escape with HTML characters
+            characters( StringEscapeUtils.escapeHtml( text ) );
+        }
+        if ( runAttributes != null )
+        {
+            endElement( SPAN_ELEMENT );
+        } 
+    }
 
     @Override
     protected void visitTab( CTPTab o, Object paragraphContainer )
@@ -276,6 +363,15 @@ public class XHTMLMapper
     protected void visitTabs( CTTabs tabs, Object paragraphContainer )
         throws Exception
     {
+    	//For some reason tabs become null ???
+    	//Add equivalent spaces in html render as no tab in html world
+    	if(currentParagraph != null && tabs == null)
+    	{
+			startElement( SPAN_ELEMENT, null );
+			characters(TAB_CHAR_SEQUENCE);
+			endElement(SPAN_ELEMENT);
+			return;
+		}
     }
 
     @Override
@@ -313,6 +409,9 @@ public class XHTMLMapper
         // 1.2) Create "style" attributes.
         CTTblPr tblPr = table.getCTTbl().getTblPr();
         CSSStyle cssStyle = getStylesDocument().createCSSStyle( tblPr );
+        if(cssStyle != null) {
+        	cssStyle.addProperty(CSSStylePropertyConstants.BORDER_COLLAPSE, CSSStylePropertyConstants.BORDER_COLLAPSE_COLLAPSE);
+        }
         attributes = createStyleAttribute( cssStyle, attributes );
 
         // 2) create element
@@ -377,6 +476,36 @@ public class XHTMLMapper
         // 1.2) Create "style" attributes.
         CTTcPr tcPr = cell.getCTTc().getTcPr();
         CSSStyle cssStyle = getStylesDocument().createCSSStyle( tcPr );
+        //At lease support solid borders for now
+        if(cssStyle != null) {
+        	TableCellBorder border = getStylesDocument().getTableBorder(table, BorderSide.TOP);
+        	if(border != null)
+        	{
+        		String style = border.getBorderSize() + "px solid " +StringUtils.toHexString(border.getBorderColor()); 
+            	cssStyle.addProperty(CSSStylePropertyConstants.BORDER_TOP, style);
+        	}        	
+        	
+        	border = getStylesDocument().getTableBorder(table, BorderSide.BOTTOM);
+        	if(border != null)
+        	{
+        		String style = border.getBorderSize() + "px solid " + StringUtils.toHexString(border.getBorderColor());         	
+            	cssStyle.addProperty(CSSStylePropertyConstants.BORDER_BOTTOM, style);
+        	}        	
+        	
+        	border = getStylesDocument().getTableBorder(table, BorderSide.LEFT);
+        	if(border != null)
+        	{
+        		String style = border.getBorderSize() + "px solid " + StringUtils.toHexString(border.getBorderColor());
+            	cssStyle.addProperty(CSSStylePropertyConstants.BORDER_LEFT, style);
+        	}        	
+        	
+        	border = getStylesDocument().getTableBorder(table, BorderSide.RIGHT);
+        	if(border != null)
+        	{
+        		String style = border.getBorderSize() + "px solid " + StringUtils.toHexString(border.getBorderColor());
+            	cssStyle.addProperty(CSSStylePropertyConstants.BORDER_RIGHT, style);
+        	}        	
+        }
         attributes = createStyleAttribute( cssStyle, attributes );
 
         // colspan attribute
@@ -453,6 +582,23 @@ public class XHTMLMapper
             // img/@height
             float height = emu2points( ext.getCy() );
             attributes = SAXHelper.addAttrValue( attributes, HEIGHT, getStylesDocument().getValueAsPoint( height ) );
+        }
+        else 
+        {    
+        	// external link images inserted
+        	String link = picture.getBlipFill().getBlip().getLink();
+            String src = document.getPackagePart().getRelationships().getRelationshipByID(link).getTargetURI().toString();
+        	attributes = SAXHelper.addAttrValue( null, SRC_ATTR, src );
+        	
+        	CTPositiveSize2D ext = picture.getSpPr().getXfrm().getExt();
+
+            // img/@width
+            float width = emu2points( ext.getCx() );
+            attributes = SAXHelper.addAttrValue( attributes, WIDTH, getStylesDocument().getValueAsPoint( width ) );
+
+            // img/@height
+            float height = emu2points( ext.getCy() );
+            attributes = SAXHelper.addAttrValue( attributes, HEIGHT, getStylesDocument().getValueAsPoint( height ) );	
         }
         if ( attributes != null )
         {

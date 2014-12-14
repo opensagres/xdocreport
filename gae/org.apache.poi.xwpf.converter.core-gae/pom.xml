@@ -41,7 +41,7 @@
 		<dependency>
 			<groupId>org.apache.poi</groupId>
 			<artifactId>poi-ooxml</artifactId>
-			<version>3.8</version>
+			<version>3.10-FINAL</version>
 			<exclusions>
 				<!-- surprisingly this artifect contains a subset of org.apache.poi:ooxml-schemas:1.1 -->
 				<exclusion>

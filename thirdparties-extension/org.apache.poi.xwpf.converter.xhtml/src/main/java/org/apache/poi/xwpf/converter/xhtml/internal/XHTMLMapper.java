@@ -232,16 +232,12 @@ public class XHTMLMapper
     @Override
     protected void visitRun( XWPFRun run, boolean pageNumber, String url, Object paragraphContainer )
         throws Exception
-    {	    	
-		if(run.getParent() instanceof XWPFParagraph) {
-			this.currentParagraph = (XWPFParagraph) run.getParent();
-		}
-
-        XWPFParagraph paragraph = run.getParagraph();
+    {
+		this.currentParagraph = run.getParagraph();
         // 1) create attributes
 
         // 1.1) Create "class" attributes.
-        this.currentRunAttributes = createClassAttribute( paragraph.getStyleID() );
+        this.currentRunAttributes = createClassAttribute( this.currentParagraph.getStyleID() );
 
         // 1.2) Create "style" attributes.
         CTRPr rPr = run.getCTR().getRPr();

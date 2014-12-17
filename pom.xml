@@ -38,6 +38,7 @@
 					<forkMode>always</forkMode>
 					<!-- It's better to use "target" folder as basedir for tests... -->
 					<basedir>${project.build.directory}</basedir>
+					<redirectTestOutputToFile>true</redirectTestOutputToFile>
 				</configuration>
 			</plugin>
 			<plugin>

@@ -1,4 +1,6 @@
 language: java
 
+mvn clean install
+
 notifications:
   email: true

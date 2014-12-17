@@ -1,4 +1,6 @@
 language: java
 
+script: mvn clean install
+
 notifications:
   email: true

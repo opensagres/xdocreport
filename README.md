@@ -21,6 +21,6 @@ MIT License is called a weak license which allow redistribution and modification
 
 iText is a very powerful Java library for creating PDF. Our iText based converter is by far the best PDF converter that we provide. iText 2.1.7 comes with a *LGPL license* which is not compliant with our *MIT License*.
 
-Thus, people that would use and redistribute xdocreport with iText based converter will have to comply with the *LGPL license*. This is exactly what we do with our samples https://code.google.com/p/xdocreport/source/browse/?repo=samples
+Thus, people that would use and redistribute xdocreport with iText based converter will have to comply with the *LGPL license*. This is exactly what we do with our [XDocReport Samples](https://github.com/opensagres/xdocreport.samples).
 
 Which are licensed under *LGPL license* and not the *MIT License*.

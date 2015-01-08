@@ -9,7 +9,7 @@
 
 	<properties>
 		<osgi.version>4.2.0</osgi.version>
-		<paxrunnerversion>1.7.5</paxrunnerversion>
+		<paxrunnerversion>1.8.6</paxrunnerversion>
 		<paxexamversion>2.4.0</paxexamversion>
 	</properties>
 	<build>

@@ -253,10 +253,13 @@ public class DocxDocumentHandler
                 super.write( "<w:br/>" );
             }
             addLineBreak = 0;
-            // w:t
-            super.write( "<w:t xml:space=\"preserve\" >" );
-            super.write( content );
-            super.write( "</w:t>" );
+            if(!content.isEmpty()) 
+            {
+	            // w:t
+	            super.write( "<w:t xml:space=\"preserve\" >" );
+	            super.write( content );
+	            super.write( "</w:t>" );
+            }
             super.write( "</w:r>" );
         }
     }
@@ -534,6 +537,10 @@ public class DocxDocumentHandler
     protected void doStartOrderedList( ListProperties properties )
         throws IOException
     {
+    	if(this.addLineBreak>0) 
+    	{
+    		handleString("");
+    	}
         // if ( numbersStack.isEmpty() )
         // {
         if ( getCurrentListIndex() < 1 )
@@ -550,6 +557,10 @@ public class DocxDocumentHandler
     protected void doStartUnorderedList( ListProperties properties )
         throws IOException
     {
+    	if(this.addLineBreak>0) 
+    	{
+    		handleString("");
+    	}
         // if ( numbersStack.isEmpty() )
         // {
         if ( getCurrentListIndex() < 1 )

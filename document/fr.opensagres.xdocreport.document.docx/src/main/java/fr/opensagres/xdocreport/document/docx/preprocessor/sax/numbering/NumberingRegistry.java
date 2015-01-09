@@ -56,7 +56,7 @@ public class NumberingRegistry
 
     public NumberInfo addNum( int abstractNumId, Integer maxNumId )
     {
-        int numId = maxNumId != null ? maxNumId.intValue() + 1 + numbers.size() : numbers.size();
+        int numId = maxNumId != null ? maxNumId.intValue() + 1 + numbers.size() : numbers.size()+1;
         NumberInfo info = new NumberInfo( numId, abstractNumId );
         numbers.add( info );
         return info;

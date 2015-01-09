@@ -30,11 +30,21 @@ public class NumberInfo
     private final int numId;
 
     private final int abstractNumId;
+    
+    private final boolean ordered;
 
-    public NumberInfo( int numId, int abstractNumId )
+    public NumberInfo( int numId, int abstractNumId, boolean ordered )
     {
         this.numId = numId;
-        this.abstractNumId = abstractNumId;
+        this.ordered = ordered;
+        if(ordered) 
+        {
+        	this.abstractNumId = numId;//Word seems to accept gaps in abstractNumIds
+        }
+        else 
+        {
+            this.abstractNumId = abstractNumId;
+        }
     }
 
     public int getNumId()
@@ -45,5 +55,10 @@ public class NumberInfo
     public int getAbstractNumId()
     {
         return abstractNumId;
+    }
+    
+    public boolean isOrdered()
+    {
+    	return ordered;
     }
 }

@@ -1,7 +1,7 @@
 Manifest-Version: 1.0
-Bnd-LastModified: 1409513909133
+Bnd-LastModified: 1420799694668
 Build-Jdk: 1.8.0_05
-Built-By: pascalleclercq
+Built-By: schulzm
 Bundle-Description: XDocReport means XML Document reporting. It's Java A
  PI to merge XML document created with MS Office (docx) or OpenOffice (o
  dt), LibreOffice (odt) with a Java model to generate report and convert
@@ -11,7 +11,7 @@ Bundle-ManifestVersion: 2
 Bundle-Name: org.odftoolkit.odfdom.converter.pdf.itext5
 Bundle-RequiredExecutionEnvironment: J2SE-1.5, JavaSE-1.6
 Bundle-SymbolicName: org.odftoolkit.odfdom.converter.pdf.itext5
-Bundle-Version: 1.0.5.201408312137
+Bundle-Version: 1.0.5.201501091132
 Created-By: Apache Maven Bundle Plugin
 Export-Package: org.odftoolkit.odfdom.converter.pdf;version="1.0.5.SNAPS
  HOT"

@@ -54,10 +54,10 @@ public class NumberingRegistry
         return true;
     }
 
-    public NumberInfo addNum( int abstractNumId, Integer maxNumId )
+    public NumberInfo addNum( int abstractNumId, Integer maxNumId, boolean ordered )
     {
         int numId = maxNumId != null ? maxNumId.intValue() + 1 + numbers.size() : numbers.size()+1;
-        NumberInfo info = new NumberInfo( numId, abstractNumId );
+        NumberInfo info = new NumberInfo( numId, abstractNumId, ordered );
         numbers.add( info );
         return info;
     }

@@ -546,7 +546,7 @@ public class DocxDocumentHandler
         if ( getCurrentListIndex() < 1 )
         {
             int abstractNumId = styleGen.getAbstractNumIdForList( true, defaultStyle );
-            int numId = getNumberingRegistry().addNum( abstractNumId, getMaxNumId() ).getNumId();
+            int numId = getNumberingRegistry().addNum( abstractNumId, getMaxNumId(), true ).getNumId();
             // numbersStack.push( numId );
             currentNumId = numId;
         }
@@ -566,7 +566,7 @@ public class DocxDocumentHandler
         if ( getCurrentListIndex() < 1 )
         {
             int abstractNumId = styleGen.getAbstractNumIdForList( false, defaultStyle );
-            int numId = getNumberingRegistry().addNum( abstractNumId, getMaxNumId() ).getNumId();
+            int numId = getNumberingRegistry().addNum( abstractNumId, getMaxNumId(), false ).getNumId();
             // numbersStack.push( numId );
             currentNumId = numId;
         }

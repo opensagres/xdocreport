@@ -34,6 +34,7 @@ import java.util.Properties;
 import org.apache.velocity.Template;
 import org.apache.velocity.VelocityContext;
 import org.apache.velocity.app.VelocityEngine;
+import org.apache.velocity.runtime.parser.node.SimpleNode;
 
 import fr.opensagres.xdocreport.core.EncodingConstants;
 import fr.opensagres.xdocreport.core.XDocReportException;
@@ -107,6 +108,16 @@ public class VelocityTemplateEngine
     {
         VelocityEngine velocityEngine = getVelocityEngine();
         velocityEngine.evaluate( (VelocityContext) context, writer, templateName, reader );
+    }
+
+    public SimpleNode parse(String templateName) throws XDocReportException {
+        VelocityEngine velocityEngine = getVelocityEngine();
+        Template template = velocityEngine.getTemplate( templateName, EncodingConstants.UTF_8.name() );
+        if ( template != null )
+        {
+        	return (SimpleNode)template.getData();
+        }
+    	return null;
     }
 
     protected synchronized VelocityEngine getVelocityEngine()

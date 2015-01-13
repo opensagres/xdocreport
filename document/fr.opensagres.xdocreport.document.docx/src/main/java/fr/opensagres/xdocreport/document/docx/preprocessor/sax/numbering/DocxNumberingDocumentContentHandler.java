@@ -139,12 +139,7 @@ public class DocxNumberingDocumentContentHandler
                                                            IDocxStylesGenerator.generateAbstractNumBullet,
                                                            DocxContextHelper.DEFAULT_STYLE_KEY ) );
         }
-        if ( defaultStyle.getAbstractNumIdForOrdererList() == null )
-        {
-            region.append( formatter.getFunctionDirective( DocxContextHelper.STYLES_GENERATOR_KEY,
-                                                           IDocxStylesGenerator.generateAbstractNumDecimal,
-                                                           DocxContextHelper.DEFAULT_STYLE_KEY ) );
-        }
+        region.append( generateScriptsForDynamicOrderedNumbers() );
         hasDynamicAbstractNum = true;
 
     }
@@ -197,6 +192,43 @@ public class DocxNumberingDocumentContentHandler
         script.append( abstractNumId );
         script.append( "\"/>" );
         script.append( "</w:num>" );
+
+        // 3) end loop
+        script.append( formatter.getEndLoopDirective( itemListInfos ) );
+
+        script.append( formatter.getEndIfDirective( DocxContextHelper.NUMBERING_REGISTRY_KEY ) );
+
+        return script.toString();
+    }
+    
+    private String generateScriptsForDynamicOrderedNumbers()
+    {
+
+        StringBuilder script = new StringBuilder();
+        // Start if
+        String startIf = formatter.getStartIfDirective( DocxContextHelper.NUMBERING_REGISTRY_KEY );
+        script.append( startIf );
+
+        String listInfos =
+            formatter.formatAsSimpleField( false, DocxContextHelper.NUMBERING_REGISTRY_KEY,
+                                           NumberingRegistry.numbersMethod );
+        String itemListInfos = formatter.formatAsSimpleField( false, ITEM_INFO );
+
+        // 1) Start loop
+        String startLoop = formatter.getStartLoopDirective( itemListInfos, listInfos );
+        script.append( startLoop );
+
+        String abstractNumId = formatter.formatAsSimpleField( false, ITEM_INFO, "abstractNumId" );
+
+        String abstractNumOrdered = formatter.formatAsSimpleField( false, ITEM_INFO, "ordered" );
+        String startIfOrderedList = formatter.getStartIfDirective( abstractNumOrdered );
+        script.append( startIfOrderedList );
+
+        script.append( formatter.getFunctionDirective( DocxContextHelper.STYLES_GENERATOR_KEY,
+                                                           IDocxStylesGenerator.generateAbstractNumDecimal,
+                                                           DocxContextHelper.DEFAULT_STYLE_KEY, abstractNumId ) );
+		
+        script.append( formatter.getEndIfDirective( abstractNumOrdered ) );
 
         // 3) end loop
         script.append( formatter.getEndLoopDirective( itemListInfos ) );

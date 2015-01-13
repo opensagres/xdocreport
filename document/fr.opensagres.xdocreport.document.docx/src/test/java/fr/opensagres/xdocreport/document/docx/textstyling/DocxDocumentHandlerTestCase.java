@@ -538,8 +538,8 @@ public class DocxDocumentHandlerTestCase
 
         Assert.assertEquals( "", handler.getTextBefore() );
         Assert.assertEquals( "", handler.getTextBody() );
-        Assert.assertEquals( "<w:p><w:pPr><w:numPr><w:ilvl w:val=\"0\" /><w:numId w:val=\"0\" /></w:numPr></w:pPr><w:r><w:t xml:space=\"preserve\" >item1</w:t></w:r></w:p>"
-                                 + "<w:p><w:pPr><w:numPr><w:ilvl w:val=\"0\" /><w:numId w:val=\"0\" /></w:numPr></w:pPr><w:r><w:t xml:space=\"preserve\" >item2</w:t></w:r></w:p>",
+        Assert.assertEquals( "<w:p><w:pPr><w:numPr><w:ilvl w:val=\"0\" /><w:numId w:val=\"1\" /></w:numPr></w:pPr><w:r><w:t xml:space=\"preserve\" >item1</w:t></w:r></w:p>"
+                                 + "<w:p><w:pPr><w:numPr><w:ilvl w:val=\"0\" /><w:numId w:val=\"1\" /></w:numPr></w:pPr><w:r><w:t xml:space=\"preserve\" >item2</w:t></w:r></w:p>",
                              handler.getTextEnd() );
     }
 
@@ -563,10 +563,10 @@ public class DocxDocumentHandlerTestCase
         Assert.assertEquals( "", handler.getTextBefore() );
         Assert.assertEquals( "", handler.getTextBody() );
         Assert.assertEquals( "", handler.getTextBody() );
-        Assert.assertEquals( "<w:p><w:pPr><w:numPr><w:ilvl w:val=\"0\" /><w:numId w:val=\"0\" /></w:numPr></w:pPr><w:r><w:t xml:space=\"preserve\" >item1</w:t></w:r></w:p>"
-                                 + "<w:p><w:pPr><w:numPr><w:ilvl w:val=\"0\" /><w:numId w:val=\"0\" /></w:numPr></w:pPr><w:r><w:t xml:space=\"preserve\" >item2</w:t></w:r></w:p>"
-                                 + "<w:p><w:pPr><w:numPr><w:ilvl w:val=\"0\" /><w:numId w:val=\"1\" /></w:numPr></w:pPr><w:r><w:t xml:space=\"preserve\" >item1</w:t></w:r></w:p>"
-                                 + "<w:p><w:pPr><w:numPr><w:ilvl w:val=\"0\" /><w:numId w:val=\"1\" /></w:numPr></w:pPr><w:r><w:t xml:space=\"preserve\" >item2</w:t></w:r></w:p>",
+        Assert.assertEquals( "<w:p><w:pPr><w:numPr><w:ilvl w:val=\"0\" /><w:numId w:val=\"1\" /></w:numPr></w:pPr><w:r><w:t xml:space=\"preserve\" >item1</w:t></w:r></w:p>"
+                                 + "<w:p><w:pPr><w:numPr><w:ilvl w:val=\"0\" /><w:numId w:val=\"1\" /></w:numPr></w:pPr><w:r><w:t xml:space=\"preserve\" >item2</w:t></w:r></w:p>"
+                                 + "<w:p><w:pPr><w:numPr><w:ilvl w:val=\"0\" /><w:numId w:val=\"2\" /></w:numPr></w:pPr><w:r><w:t xml:space=\"preserve\" >item1</w:t></w:r></w:p>"
+                                 + "<w:p><w:pPr><w:numPr><w:ilvl w:val=\"0\" /><w:numId w:val=\"2\" /></w:numPr></w:pPr><w:r><w:t xml:space=\"preserve\" >item2</w:t></w:r></w:p>",
                              handler.getTextEnd() );
     }
 
@@ -590,8 +590,8 @@ public class DocxDocumentHandlerTestCase
         Assert.assertEquals( "", handler.getTextBefore() );
         Assert.assertEquals( "", handler.getTextBody() );
         Assert.assertEquals( "", handler.getTextBody() );
-        Assert.assertEquals( "<w:p><w:pPr><w:numPr><w:ilvl w:val=\"0\" /><w:numId w:val=\"0\" /></w:numPr></w:pPr><w:r><w:t xml:space=\"preserve\" >item1</w:t></w:r></w:p>"
-                                 + "<w:p><w:pPr><w:numPr><w:ilvl w:val=\"0\" /><w:numId w:val=\"0\" /></w:numPr></w:pPr><w:r><w:t xml:space=\"preserve\" >item2</w:t></w:r></w:p>"
+        Assert.assertEquals( "<w:p><w:pPr><w:numPr><w:ilvl w:val=\"0\" /><w:numId w:val=\"1\" /></w:numPr></w:pPr><w:r><w:t xml:space=\"preserve\" >item1</w:t></w:r></w:p>"
+                                 + "<w:p><w:pPr><w:numPr><w:ilvl w:val=\"0\" /><w:numId w:val=\"1\" /></w:numPr></w:pPr><w:r><w:t xml:space=\"preserve\" >item2</w:t></w:r></w:p>"
                                  + "<w:p><w:r><w:t xml:space=\"preserve\" >xxxx</w:t></w:r></w:p>",
                              handler.getTextEnd() );
     }
@@ -615,8 +615,8 @@ public class DocxDocumentHandlerTestCase
 
         Assert.assertEquals( "", handler.getTextBefore() );
         Assert.assertEquals( "", handler.getTextBody() );
-        Assert.assertEquals( "<w:p><w:pPr><w:numPr><w:ilvl w:val=\"0\" /><w:numId w:val=\"0\" /></w:numPr></w:pPr><w:r><w:t xml:space=\"preserve\" >item1</w:t></w:r></w:p>"
-                                 + "<w:p><w:pPr><w:numPr><w:ilvl w:val=\"0\" /><w:numId w:val=\"0\" /></w:numPr></w:pPr><w:r><w:t xml:space=\"preserve\" >item2</w:t></w:r></w:p>",
+        Assert.assertEquals( "<w:p><w:pPr><w:numPr><w:ilvl w:val=\"0\" /><w:numId w:val=\"1\" /></w:numPr></w:pPr><w:r><w:t xml:space=\"preserve\" >item1</w:t></w:r></w:p>"
+                                 + "<w:p><w:pPr><w:numPr><w:ilvl w:val=\"0\" /><w:numId w:val=\"1\" /></w:numPr></w:pPr><w:r><w:t xml:space=\"preserve\" >item2</w:t></w:r></w:p>",
                              handler.getTextEnd() );
     }
 
@@ -642,7 +642,7 @@ public class DocxDocumentHandlerTestCase
 
         Assert.assertEquals( "", handler.getTextBefore() );
         Assert.assertEquals( "", handler.getTextBody() );
-        Assert.assertEquals( "<w:p><w:pPr><w:numPr><w:ilvl w:val=\"0\" /><w:numId w:val=\"0\" /></w:numPr></w:pPr><w:r><w:rPr><w:b /></w:rPr><w:t xml:space=\"preserve\" >Bold</w:t></w:r><w:r><w:t xml:space=\"preserve\" > style.</w:t></w:r></w:p><w:p><w:pPr><w:numPr><w:ilvl w:val=\"1\" /><w:numId w:val=\"0\" /></w:numPr></w:pPr><w:r><w:t xml:space=\"preserve\" >zaza</w:t></w:r></w:p><w:p><w:pPr><w:numPr><w:ilvl w:val=\"1\" /><w:numId w:val=\"0\" /></w:numPr></w:pPr><w:r><w:t xml:space=\"preserve\" >zaza</w:t></w:r></w:p><w:p><w:pPr><w:numPr><w:ilvl w:val=\"1\" /><w:numId w:val=\"0\" /></w:numPr></w:pPr><w:r><w:t xml:space=\"preserve\" >zaza</w:t></w:r></w:p><w:p><w:pPr><w:numPr><w:ilvl w:val=\"0\" /><w:numId w:val=\"0\" /></w:numPr></w:pPr><w:r><w:rPr><w:i /></w:rPr><w:t xml:space=\"preserve\" >Italic</w:t></w:r><w:r><w:t xml:space=\"preserve\" > style.</w:t></w:r></w:p><w:p><w:pPr><w:numPr><w:ilvl w:val=\"1\" /><w:numId w:val=\"0\" /></w:numPr></w:pPr><w:r><w:t xml:space=\"preserve\" >zazaaa</w:t></w:r></w:p><w:p><w:pPr><w:numPr><w:ilvl w:val=\"1\" /><w:numId w:val=\"0\" /></w:numPr></w:pPr><w:r><w:t xml:space=\"preserve\" >zzzzzzzzzzzz</w:t></w:r></w:p><w:p><w:pPr><w:numPr><w:ilvl w:val=\"2\" /><w:numId w:val=\"0\" /></w:numPr></w:pPr><w:r><w:t xml:space=\"preserve\" >ddddddddddddddddddd</w:t></w:r></w:p><w:p><w:pPr><w:numPr><w:ilvl w:val=\"0\" /><w:numId w:val=\"0\" /></w:numPr></w:pPr><w:r><w:rPr><w:b /><w:i /></w:rPr><w:t xml:space=\"preserve\" >BoldAndItalic</w:t></w:r><w:r><w:t xml:space=\"preserve\" > style.</w:t></w:r></w:p>",
+        Assert.assertEquals( "<w:p><w:pPr><w:numPr><w:ilvl w:val=\"0\" /><w:numId w:val=\"1\" /></w:numPr></w:pPr><w:r><w:rPr><w:b /></w:rPr><w:t xml:space=\"preserve\" >Bold</w:t></w:r><w:r><w:t xml:space=\"preserve\" > style.</w:t></w:r></w:p><w:p><w:pPr><w:numPr><w:ilvl w:val=\"1\" /><w:numId w:val=\"1\" /></w:numPr></w:pPr><w:r><w:t xml:space=\"preserve\" >zaza</w:t></w:r></w:p><w:p><w:pPr><w:numPr><w:ilvl w:val=\"1\" /><w:numId w:val=\"1\" /></w:numPr></w:pPr><w:r><w:t xml:space=\"preserve\" >zaza</w:t></w:r></w:p><w:p><w:pPr><w:numPr><w:ilvl w:val=\"1\" /><w:numId w:val=\"1\" /></w:numPr></w:pPr><w:r><w:t xml:space=\"preserve\" >zaza</w:t></w:r></w:p><w:p><w:pPr><w:numPr><w:ilvl w:val=\"0\" /><w:numId w:val=\"1\" /></w:numPr></w:pPr><w:r><w:rPr><w:i /></w:rPr><w:t xml:space=\"preserve\" >Italic</w:t></w:r><w:r><w:t xml:space=\"preserve\" > style.</w:t></w:r></w:p><w:p><w:pPr><w:numPr><w:ilvl w:val=\"1\" /><w:numId w:val=\"1\" /></w:numPr></w:pPr><w:r><w:t xml:space=\"preserve\" >zazaaa</w:t></w:r></w:p><w:p><w:pPr><w:numPr><w:ilvl w:val=\"1\" /><w:numId w:val=\"1\" /></w:numPr></w:pPr><w:r><w:t xml:space=\"preserve\" >zzzzzzzzzzzz</w:t></w:r></w:p><w:p><w:pPr><w:numPr><w:ilvl w:val=\"2\" /><w:numId w:val=\"1\" /></w:numPr></w:pPr><w:r><w:t xml:space=\"preserve\" >ddddddddddddddddddd</w:t></w:r></w:p><w:p><w:pPr><w:numPr><w:ilvl w:val=\"0\" /><w:numId w:val=\"1\" /></w:numPr></w:pPr><w:r><w:rPr><w:b /><w:i /></w:rPr><w:t xml:space=\"preserve\" >BoldAndItalic</w:t></w:r><w:r><w:t xml:space=\"preserve\" > style.</w:t></w:r></w:p>",
                              handler.getTextEnd() );
     }
 

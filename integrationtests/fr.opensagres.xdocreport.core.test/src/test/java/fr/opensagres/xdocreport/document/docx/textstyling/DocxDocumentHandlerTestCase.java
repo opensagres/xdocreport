@@ -24,6 +24,7 @@
  */
 package fr.opensagres.xdocreport.document.docx.textstyling;
 
+import org.junit.Assert;
 import org.junit.Test;
 
 import fr.opensagres.xdocreport.document.textstyling.IDocumentHandler;
@@ -46,5 +47,19 @@ public class DocxDocumentHandlerTestCase
         
         //Assert.assertEquals( "<w:p><w:r><w:t xml:space=\"preserve\" >Here are severals styles :</w:t></w:r></w:p><w:p><w:pPr><w:pStyle w:val=\"Paragraphedeliste\" /><w:numPr><w:ilvl w:val=\"0\" /><w:numId w:val=\"1\" /></w:numPr></w:pPr><w:r><w:rPr><w:b /></w:rPr><w:t xml:space=\"preserve\" >Bold</w:t></w:r><w:r><w:t xml:space=\"preserve\" > style.</w:t></w:r></w:p><w:p><w:pPr><w:pStyle w:val=\"Paragraphedeliste\" /><w:numPr><w:ilvl w:val=\"0\" /><w:numId w:val=\"1\" /></w:numPr></w:pPr><w:r><w:rPr><w:i /></w:rPr><w:t xml:space=\"preserve\" >Italic</w:t></w:r><w:r><w:t xml:space=\"preserve\" > style.</w:t></w:r></w:p><w:p><w:pPr><w:pStyle w:val=\"Paragraphedeliste\" /><w:numPr><w:ilvl w:val=\"0\" /><w:numId w:val=\"1\" /></w:numPr></w:pPr><w:r><w:rPr><w:b /><w:i /></w:rPr><w:t xml:space=\"preserve\" >BoldAndItalic</w:t></w:r><w:r><w:t xml:space=\"preserve\" > style.</w:t></w:r></w:p><w:p><w:r><w:t xml:space=\"preserve\" >Here are 3 styles :</w:t></w:r></w:p><w:p><w:pPr><w:pStyle w:val=\"Paragraphedeliste\" /><w:numPr><w:ilvl w:val=\"1\" /><w:numId w:val=\"1\" /></w:numPr></w:pPr><w:r><w:rPr><w:b /></w:rPr><w:t xml:space=\"preserve\" >Bold</w:t></w:r><w:r><w:t xml:space=\"preserve\" > style.</w:t></w:r></w:p><w:p><w:pPr><w:pStyle w:val=\"Paragraphedeliste\" /><w:numPr><w:ilvl w:val=\"0\" /><w:numId w:val=\"1\" /></w:numPr></w:pPr><w:r><w:rPr><w:i /></w:rPr><w:t xml:space=\"preserve\" >Italic</w:t></w:r><w:r><w:t xml:space=\"preserve\" > style.</w:t></w:r></w:p><w:p><w:pPr><w:pStyle w:val=\"Paragraphedeliste\" /><w:numPr><w:ilvl w:val=\"0\" /><w:numId w:val=\"1\" /></w:numPr></w:pPr><w:r><w:rPr><w:b /><w:i /></w:rPr><w:t xml:space=\"preserve\" >BoldAndItalic</w:t></w:r><w:r><w:t xml:space=\"preserve\" > style.</w:t></w:r></w:p><w:p><w:r><w:t xml:space=\"preserve\" >XDocReport can manage thoses styles.</w:t></w:r></w:p>",
          //                    handler.getTextEnd() );
+    }
+
+    @Test
+    public void testListsFollowingLinebreaks()
+        throws Exception
+    {
+        ITextStylingTransformer formatter = HTMLTextStylingTransformer.INSTANCE;
+        IDocumentHandler handler = new DocxDocumentHandler( null, new MockContext(), null );
+        formatter.transform( "Some text followed by linebreak in front of an unordered list<br/><ul><li>first</li><li>second</li></ul>"
+        				   + "Some text followed by linebreak in front of an   ordered list<br/><ol><li>first</li><li>second</li></ol>",
+                             handler );
+        Assert.assertEquals( "", handler.getTextBefore());
+        Assert.assertEquals( "<w:r><w:t xml:space=\"preserve\" >Some text followed by linebreak in front of an unordered list</w:t></w:r><w:r><w:br/></w:r>", handler.getTextBody());
+        Assert.assertEquals( "<w:p><w:pPr><w:numPr><w:ilvl w:val=\"0\" /><w:numId w:val=\"1\" /></w:numPr></w:pPr><w:r><w:t xml:space=\"preserve\" >first</w:t></w:r></w:p><w:p><w:pPr><w:numPr><w:ilvl w:val=\"0\" /><w:numId w:val=\"1\" /></w:numPr></w:pPr><w:r><w:t xml:space=\"preserve\" >second</w:t></w:r></w:p><w:p><w:r><w:t xml:space=\"preserve\" >Some text followed by linebreak in front of an   ordered list</w:t></w:r><w:r><w:br/></w:r></w:p><w:p><w:pPr><w:numPr><w:ilvl w:val=\"0\" /><w:numId w:val=\"2\" /></w:numPr></w:pPr><w:r><w:t xml:space=\"preserve\" >first</w:t></w:r></w:p><w:p><w:pPr><w:numPr><w:ilvl w:val=\"0\" /><w:numId w:val=\"2\" /></w:numPr></w:pPr><w:r><w:t xml:space=\"preserve\" >second</w:t></w:r></w:p>", handler.getTextEnd());
     }
 }

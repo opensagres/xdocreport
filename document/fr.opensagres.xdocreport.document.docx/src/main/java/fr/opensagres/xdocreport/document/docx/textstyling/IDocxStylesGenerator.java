@@ -45,6 +45,6 @@ public interface IDocxStylesGenerator
 
     String generateAbstractNumBullet( DefaultStyle defaultStyle );
 
-    String generateAbstractNumDecimal( DefaultStyle defaultStyle );
+    String generateAbstractNumDecimal( DefaultStyle defaultStyle, int abstractNumId );
 
 }

@@ -24,6 +24,7 @@
  */
 package fr.opensagres.xdocreport.document.docx.textstyling;
 
+import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -77,9 +78,9 @@ public class DocxDefaultStylesGenerator
         return XDocReport_AbstractNum_bullet.getContent();
     }
 
-    public String generateAbstractNumDecimal( DefaultStyle defaultStyle )
+    public String generateAbstractNumDecimal( DefaultStyle defaultStyle, int abstractNumId )
     {
-        return XDocReport_AbstractNum_decimal.getContent();
+        return MessageFormat.format(XDocReport_AbstractNum_decimal.getContent(), abstractNumId);
     }
 
     public void generateHyperlinkStyle( StringBuilder style, DefaultStyle defaultStyle )

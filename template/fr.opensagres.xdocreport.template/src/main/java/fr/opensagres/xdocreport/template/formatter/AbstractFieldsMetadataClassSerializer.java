@@ -41,6 +41,7 @@ import java.util.List;
 import fr.opensagres.xdocreport.core.XDocReportException;
 import fr.opensagres.xdocreport.template.annotations.FieldMetadata;
 import fr.opensagres.xdocreport.template.annotations.ImageMetadata;
+import java.lang.reflect.WildcardType;
 
 /**
  * Abstract class for Fields metadata serializer.
@@ -160,20 +161,40 @@ public abstract class AbstractFieldsMetadataClassSerializer
                     Type[] types = parameterizedType.getActualTypeArguments();
                     if ( types.length == 1 )
                     {
-                        Class<?> itemClazz = (Class<?>) types[0];
-                        if ( isImageField( itemClazz ) )
-                        {// add image field as is
-                            addField( key, fieldsMetadata, path, propertyDescriptor, true, true );
-                        }
-                        else if ( isTextField( itemClazz ) )
-                        {// add text field as is
-                            addField( key, fieldsMetadata, path, propertyDescriptor, true, false );
+                        Class<?> itemClazz = null;
+                        if ( types[0] instanceof WildcardType )
+                        {
+                            // WildcardType cannot be cast to Class
+                            WildcardType wildcardType = (WildcardType) types[0];
+                            if ( wildcardType.getLowerBounds().length != 0 )
+                            {
+                                itemClazz = (Class<?>) wildcardType.getLowerBounds()[0];
+                            }
+                            else if ( wildcardType.getUpperBounds().length != 0 )
+                            {
+                                itemClazz = (Class<?>) wildcardType.getUpperBounds()[0];
+                            }
                         }
                         else
-                        {// continue building with this class
-                            path.add( propertyDescriptor );
-                            process( fieldsMetadata, key, itemClazz, path, true );
-                            path.remove( propertyDescriptor );
+                        {
+                            itemClazz = (Class<?>) types[0];
+                        }
+                        if ( itemClazz != null )
+                        {
+                            if ( isImageField( itemClazz ) )
+                            {// add image field as is
+                                addField( key, fieldsMetadata, path, propertyDescriptor, true, true );
+                            }
+                            else if ( isTextField( itemClazz ) )
+                            {// add text field as is
+                                addField( key, fieldsMetadata, path, propertyDescriptor, true, false );
+                            }
+                            else
+                            {// continue building with this class
+                                path.add( propertyDescriptor );
+                                process( fieldsMetadata, key, itemClazz, path, true );
+                                path.remove( propertyDescriptor );
+                            }
                         }
                     }
                 }

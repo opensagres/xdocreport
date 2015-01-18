@@ -1,5 +1,5 @@
 @REM
-@REM Copyright (C) 2011-2012 The XDocReport Team <xdocreport@googlegroups.com>
+@REM Copyright (C) 2011-2015 The XDocReport Team <xdocreport@googlegroups.com>
 @REM
 @REM All rights reserved.
 @REM

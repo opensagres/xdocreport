@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
 
-    Copyright (C) 2011-2012 The XDocReport Team <xdocreport@googlegroups.com>
+    Copyright (C) 2011-2015 The XDocReport Team <xdocreport@googlegroups.com>
 
     All rights reserved.
 

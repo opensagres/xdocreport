@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2011-2013 The XDocReport Team <xdocreport@googlegroups.com>
+ * Copyright (C) 2011-2015 The XDocReport Team <xdocreport@googlegroups.com>
  *
  * All rights reserved.
  *

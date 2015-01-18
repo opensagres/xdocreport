@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2011-2012 The XDocReport Team <xdocreport@googlegroups.com>
+ * Copyright (C) 2011-2015 The XDocReport Team <xdocreport@googlegroups.com>
  *
  * All rights reserved.
  *
@@ -30,7 +30,7 @@
 /*
  * SettingsDialog.java
  *
- * Created on 9 fŽvr. 2012, 16:19:52
+ * Created on 9 fï¿½vr. 2012, 16:19:52
  */
 
 package fr.opensagres.xdocreport.gui;

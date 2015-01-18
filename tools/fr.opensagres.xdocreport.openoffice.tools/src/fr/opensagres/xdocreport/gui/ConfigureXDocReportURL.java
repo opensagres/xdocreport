@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2011-2012 The XDocReport Team <xdocreport@googlegroups.com>
+ * Copyright (C) 2011-2015 The XDocReport Team <xdocreport@googlegroups.com>
  *
  * All rights reserved.
  *
@@ -30,7 +30,7 @@
 /*
  * ConfigureXDocReportURL.java
  *
- * Created on 16 fŽvr. 2012, 15:31:38
+ * Created on 16 fï¿½vr. 2012, 15:31:38
  */
 
 package fr.opensagres.xdocreport.gui;

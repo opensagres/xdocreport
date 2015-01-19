@@ -29,6 +29,7 @@ import static org.junit.Assert.assertNotNull;
 import static org.ops4j.pax.exam.CoreOptions.mavenBundle;
 import static org.ops4j.pax.exam.CoreOptions.options;
 import static org.ops4j.pax.exam.CoreOptions.systemProperty;
+import static org.ops4j.pax.exam.CoreOptions.when;
 
 import java.io.File;
 import java.util.Collection;
@@ -61,6 +62,7 @@ public class DocumentTest
     public static Option[] configure()
     {
         return options(
+        		allowCustomLocalRepository(),
         		CoreOptions.junitBundles(),
         		CoreOptions.cleanCaches(),
                         //
@@ -110,6 +112,14 @@ public class DocumentTest
         assertNotNull( discoveries );
 
         assertEquals( 5, discoveries.size() );
-
     }
+    private static Option allowCustomLocalRepository() {
+		//see: https://ops4j1.jira.com/browse/PAXEXAM-543
+		String localRepo = System.getProperty("maven.repo.local", "");
+		return when(localRepo.length() > 0).useOptions(
+		    systemProperty("org.ops4j.pax.url.mvn.localRepository").value(localRepo)
+		);
+	}
+    
+   
 }

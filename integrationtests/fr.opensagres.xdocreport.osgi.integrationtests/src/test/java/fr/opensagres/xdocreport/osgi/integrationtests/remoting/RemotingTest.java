@@ -28,6 +28,7 @@ import static org.junit.Assert.assertNotNull;
 import static org.ops4j.pax.exam.CoreOptions.mavenBundle;
 import static org.ops4j.pax.exam.CoreOptions.options;
 import static org.ops4j.pax.exam.CoreOptions.systemProperty;
+import static org.ops4j.pax.exam.CoreOptions.when;
 
 import java.io.IOException;
 import java.net.Socket;
@@ -93,7 +94,7 @@ public class RemotingTest {
 		Option[] options = {
 				
 				
-				
+				allowCustomLocalRepository(),
 				//CoreOptions.webProfile(),
                 mavenBundle( "fr.opensagres.xdocreport", "fr.opensagres.xdocreport.remoting.resources" ).versionAsInProject(),
                 // converter API
@@ -325,6 +326,15 @@ public class RemotingTest {
 						)).start();
 	}
 
+	
+	 private static Option allowCustomLocalRepository() {
+			//see: https://ops4j1.jira.com/browse/PAXEXAM-543
+			String localRepo = System.getProperty("maven.repo.local", "");
+			return when(localRepo.length() > 0).useOptions(
+			    systemProperty("org.ops4j.pax.url.mvn.localRepository").value(localRepo)
+			);
+		}
+	 
 	private WebClient createWebClient() {
 
 		JAXRSClientFactoryBean factory = new JAXRSClientFactoryBean();

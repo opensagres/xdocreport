@@ -28,6 +28,7 @@ import static org.junit.Assert.assertNotNull;
 import static org.ops4j.pax.exam.CoreOptions.mavenBundle;
 import static org.ops4j.pax.exam.CoreOptions.options;
 import static org.ops4j.pax.exam.CoreOptions.systemProperty;
+import static org.ops4j.pax.exam.CoreOptions.when;
 import static org.ops4j.pax.exam.CoreOptions.wrappedBundle;
 
 import java.io.File;
@@ -66,7 +67,7 @@ public class TemplateEngineTest
                         //
                         // PaxRunnerOptions.vmOption("-Xrunjdwp:transport=dt_socket,server=y,suspend=y,address=5006"),
                         // equinox(),
-
+        				allowCustomLocalRepository(),
                         // logProfile(),
                         // this is how you set the default log level when using pax
                         // logging (logProfile)
@@ -111,4 +112,11 @@ public class TemplateEngineTest
 
     }
 
+    private static Option allowCustomLocalRepository() {
+		//see: https://ops4j1.jira.com/browse/PAXEXAM-543
+		String localRepo = System.getProperty("maven.repo.local", "");
+		return when(localRepo.length() > 0).useOptions(
+		    systemProperty("org.ops4j.pax.url.mvn.localRepository").value(localRepo)
+		);
+	}
 }

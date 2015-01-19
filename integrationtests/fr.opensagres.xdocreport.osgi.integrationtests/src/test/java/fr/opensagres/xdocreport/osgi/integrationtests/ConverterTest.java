@@ -28,6 +28,7 @@ import static org.junit.Assert.assertNotNull;
 import static org.ops4j.pax.exam.CoreOptions.mavenBundle;
 import static org.ops4j.pax.exam.CoreOptions.options;
 import static org.ops4j.pax.exam.CoreOptions.systemProperty;
+import static org.ops4j.pax.exam.CoreOptions.when;
 import static org.ops4j.pax.exam.CoreOptions.wrappedBundle;
 
 import org.junit.Test;
@@ -69,7 +70,7 @@ public class ConverterTest
                         // uncomment for "remote debugging"
         		//CoreOptions.vmOption("-Xrunjdwp:transport=dt_socket,server=y,suspend=y,address=5006"),
                         // equinox(),
-        		
+        				allowCustomLocalRepository(),
         				CoreOptions.junitBundles(),
                         systemProperty( "org.ops4j.pax.logging.DefaultServiceLog.level" ).value( "DEBUG" ),
 
@@ -155,22 +156,11 @@ public class ConverterTest
 
     }
 
-    // @Ignore
-    // @Test
-    // public void findFromODTToPDFViaITextConverterViaRegistry(
-    // BundleContext context) throws Exception {
-    // Options o = Options.getFrom(DocumentKind.ODT).to(ConverterTypeTo.PDF)
-    // .via(ConverterTypeVia.ITEXT);
-    // // context.createFilter(arg0)
-    // // Test if converter is not null
-    // // context.getServiceReferences(arg0, arg1)
-    // // ServiceReference reference =
-    // // context.getServiceReference(IConverter.class.getName());
-    // // TODO: Filter filter = new Filter("");
-    // // ServiceTracker tracker = new ServiceTracker(context, filter,
-    // // customizer);
-    // // IConverter converter=reference.
-    // // assertNotNull(converter);
-    //
-    // }
+    private static Option allowCustomLocalRepository() {
+		//see: https://ops4j1.jira.com/browse/PAXEXAM-543
+		String localRepo = System.getProperty("maven.repo.local", "");
+		return when(localRepo.length() > 0).useOptions(
+		    systemProperty("org.ops4j.pax.url.mvn.localRepository").value(localRepo)
+		);
+	}
 }

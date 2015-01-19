@@ -248,4 +248,13 @@
 			<version>0.9.27</version>
 		</dependency>
 	</dependencies>
+	
+	<repositories>
+<!-- required for javax.activation:com.springsource.javax.activation:jar:1.1.1 -->
+		<repository>
+			<id>com.springsource.repository.bundles.external</id>
+			<name>SpringSource Enterprise Bundle Repository - External Bundle Releases</name>
+			<url>http://repository.springsource.com/maven/bundles/external</url>
+		</repository>
+	</repositories>
 </project>

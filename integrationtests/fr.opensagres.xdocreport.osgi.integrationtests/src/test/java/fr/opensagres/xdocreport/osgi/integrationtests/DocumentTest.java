@@ -37,20 +37,20 @@ import javax.inject.Inject;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.ops4j.pax.exam.Configuration;
 import org.ops4j.pax.exam.CoreOptions;
 import org.ops4j.pax.exam.Customizer;
 import org.ops4j.pax.exam.Option;
-import org.ops4j.pax.exam.junit.Configuration;
-import org.ops4j.pax.exam.junit.ExamReactorStrategy;
-import org.ops4j.pax.exam.junit.JUnit4TestRunner;
-import org.ops4j.pax.exam.spi.reactors.EagerSingleStagedReactorFactory;
+import org.ops4j.pax.exam.junit.PaxExam;
+import org.ops4j.pax.exam.spi.reactors.ExamReactorStrategy;
+import org.ops4j.pax.exam.spi.reactors.PerMethod;
 import org.osgi.framework.BundleContext;
 
 import fr.opensagres.xdocreport.document.discovery.IXDocReportFactoryDiscovery;
 import fr.opensagres.xdocreport.document.registry.XDocReportRegistry;
 
-@RunWith( JUnit4TestRunner.class )
-@ExamReactorStrategy(EagerSingleStagedReactorFactory.class)
+@RunWith( PaxExam.class )
+@ExamReactorStrategy(PerMethod.class)
 public class DocumentTest
 {
 

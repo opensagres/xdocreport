@@ -30,17 +30,14 @@ import static org.ops4j.pax.exam.CoreOptions.options;
 import static org.ops4j.pax.exam.CoreOptions.systemProperty;
 import static org.ops4j.pax.exam.CoreOptions.wrappedBundle;
 
-import java.io.File;
-
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.ops4j.pax.exam.Configuration;
 import org.ops4j.pax.exam.CoreOptions;
-import org.ops4j.pax.exam.Customizer;
 import org.ops4j.pax.exam.Option;
-import org.ops4j.pax.exam.junit.Configuration;
-import org.ops4j.pax.exam.junit.ExamReactorStrategy;
-import org.ops4j.pax.exam.junit.JUnit4TestRunner;
-import org.ops4j.pax.exam.spi.reactors.AllConfinedStagedReactorFactory;
+import org.ops4j.pax.exam.junit.PaxExam;
+import org.ops4j.pax.exam.spi.reactors.ExamReactorStrategy;
+import org.ops4j.pax.exam.spi.reactors.PerMethod;
 
 import fr.opensagres.xdocreport.converter.ConverterRegistry;
 import fr.opensagres.xdocreport.converter.ConverterTypeTo;
@@ -49,8 +46,8 @@ import fr.opensagres.xdocreport.converter.IConverter;
 import fr.opensagres.xdocreport.converter.Options;
 import fr.opensagres.xdocreport.core.document.DocumentKind;
 
-@RunWith( JUnit4TestRunner.class )
-@ExamReactorStrategy(AllConfinedStagedReactorFactory.class)
+@RunWith( PaxExam.class )
+@ExamReactorStrategy(PerMethod.class)
 public class ConverterTest
 {
 
@@ -94,7 +91,9 @@ public class ConverterTest
                         mavenBundle( "fr.opensagres.xdocreport", "org.apache.poi.xwpf.converter.pdf" ).versionAsInProject(),
                         mavenBundle( "fr.opensagres.xdocreport", "org.apache.poi.xwpf.converter.xhtml" ).versionAsInProject(),
                         // 3rd parties modules...
-                        
+        				mavenBundle("org.slf4j", "slf4j-api", "1.6.1"),
+
+        				mavenBundle("org.slf4j", "slf4j-simple", "1.6.1").noStart(),
                         
                         wrappedBundle( mavenBundle( "org.apache.poi", "poi", "3.8" ) ),
                         wrappedBundle( mavenBundle( "org.apache.poi", "poi-ooxml", "3.8" ) ).exports("org.apache.poi.openxml4j.opc","org.apache.poi.xwpf.usermodel"),

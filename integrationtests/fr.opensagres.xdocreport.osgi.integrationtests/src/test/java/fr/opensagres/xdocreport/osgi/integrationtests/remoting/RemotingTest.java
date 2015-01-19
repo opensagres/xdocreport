@@ -42,19 +42,19 @@ import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.ops4j.pax.exam.Configuration;
 import org.ops4j.pax.exam.CoreOptions;
 import org.ops4j.pax.exam.Option;
-import org.ops4j.pax.exam.junit.Configuration;
-import org.ops4j.pax.exam.junit.ExamReactorStrategy;
-import org.ops4j.pax.exam.junit.JUnit4TestRunner;
+import org.ops4j.pax.exam.junit.PaxExam;
 import org.ops4j.pax.exam.spi.PaxExamRuntime;
-import org.ops4j.pax.exam.spi.reactors.EagerSingleStagedReactorFactory;
+import org.ops4j.pax.exam.spi.reactors.ExamReactorStrategy;
+import org.ops4j.pax.exam.spi.reactors.PerClass;
 import org.osgi.framework.BundleContext;
 
 import fr.opensagres.xdocreport.remoting.resources.services.jaxrs.JAXRSResourcesService;
 
-@RunWith(JUnit4TestRunner.class)
-@ExamReactorStrategy(EagerSingleStagedReactorFactory.class)
+@RunWith(PaxExam.class)
+@ExamReactorStrategy(PerClass.class)
 public class RemotingTest {
 
 	@Configuration
@@ -70,7 +70,6 @@ public class RemotingTest {
 						CoreOptions
 								.cleanCaches(),
 						// Run this test under Felix.
-						CoreOptions.frameworks(CoreOptions.felix()),
 						CoreOptions.composite(cfxdosgi()),
 						// TODO:
 						// bundle("file:multibundle/apache-cxf-dosgi-ri-1.2/dosgi_bundles/spring-osgi-extender-1.2.0.jar").startLevel(6),
@@ -213,7 +212,7 @@ public class RemotingTest {
 				systemProperty("org.ops4j.pax.logging.DefaultServiceLog.level")
 						.value("DEBUG"),
 //				PaxRunnerOptions.cleanCaches(),
-				mavenBundle("org.osgi","org.osgi.compendium","4.2.0"),
+//				mavenBundle("org.osgi","org.osgi.compendium","4.2.0"),
 				mavenBundle("org.osgi","org.osgi.enterprise","4.2.0"),
 //				// CoreOptions.junitBundles(),
 //

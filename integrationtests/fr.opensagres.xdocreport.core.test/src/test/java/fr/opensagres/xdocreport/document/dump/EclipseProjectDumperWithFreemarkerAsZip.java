@@ -26,14 +26,12 @@ package fr.opensagres.xdocreport.document.dump;
 
 import java.io.File;
 import java.io.FileOutputStream;
-import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import fr.opensagres.xdocreport.core.XDocReportException;
 import fr.opensagres.xdocreport.document.IXDocReport;
 import fr.opensagres.xdocreport.document.dump.eclipse.EclipseProjectDumper;
 import fr.opensagres.xdocreport.document.dump.eclipse.EclipseProjectDumper.EclipseProjectDumperOptions;

@@ -31,7 +31,6 @@ import java.util.HashMap;
 import org.junit.Assert;
 import org.junit.Test;
 
-import junit.framework.TestCase;
 import fr.opensagres.xdocreport.core.document.SyntaxKind;
 import fr.opensagres.xdocreport.core.io.IOUtils;
 import fr.opensagres.xdocreport.document.docx.preprocessor.sax.DocxPreprocessor;

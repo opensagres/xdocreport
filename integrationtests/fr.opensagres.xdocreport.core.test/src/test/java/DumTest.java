@@ -33,7 +33,6 @@ import java.util.Map;
 import fr.opensagres.xdocreport.core.utils.Base64Utility;
 import fr.opensagres.xdocreport.document.IXDocReport;
 import fr.opensagres.xdocreport.document.json.JSONObject;
-import fr.opensagres.xdocreport.document.json.JSONTokener;
 import fr.opensagres.xdocreport.document.registry.XDocReportRegistry;
 import fr.opensagres.xdocreport.template.formatter.FieldsMetadata;
 import fr.opensagres.xdocreport.template.formatter.FieldsMetadataXMLSerializer;

@@ -39,7 +39,6 @@ import fr.opensagres.xdocreport.template.ITemplateEngine;
 import fr.opensagres.xdocreport.template.formatter.IDocumentFormatter;
 import fr.opensagres.xdocreport.template.velocity.VelocityDocumentFormatter;
 import fr.opensagres.xdocreport.template.velocity.discovery.VelocityTemplateEngineDiscovery;
-import fr.opensagres.xdocreport.template.velocity.internal.VelocityTemplateEngine;
 import fr.opensagres.xdocreport.template.velocity.internal.XDocVelocityContext;
 
 public class DOMFontsPreprocessorWithVelocityTestCase

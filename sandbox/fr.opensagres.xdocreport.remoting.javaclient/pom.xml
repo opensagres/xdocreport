@@ -3,14 +3,14 @@
   <parent>
 		<artifactId>sandbox</artifactId>
 		<groupId>fr.opensagres.xdocreport</groupId>
-		<version>1.0.5-SNAPSHOT</version>
+		<version>1.0.5</version>
 	</parent>
   <artifactId>fr.opensagres.xdocreport.remoting.javaclient</artifactId>
   <dependencies>
     <dependency>
       <groupId>fr.opensagres.xdocreport</groupId>
       <artifactId>fr.opensagres.xdocreport.remoting.api</artifactId>
-      <version>1.0.5-SNAPSHOT</version>
+      <version>1.0.5</version>
     </dependency>
     <dependency>
       <groupId>org.apache.cxf</groupId>

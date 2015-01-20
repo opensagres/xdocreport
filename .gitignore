@@ -3,3 +3,4 @@
 .settings
 .classpath
 /target
+/.repository/

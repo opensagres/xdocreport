@@ -42,14 +42,14 @@
 	<dependencies>
 
 		<dependency>
-				<artifactId>slf4j-api</artifactId>
-					<groupId>org.slf4j</groupId>
-					<version>1.6.1</version>
+			<artifactId>slf4j-api</artifactId>
+			<groupId>org.slf4j</groupId>
+			<version>1.6.1</version>
 		</dependency>
 		<dependency>
-				<artifactId>slf4j-simple</artifactId>
-					<groupId>org.slf4j</groupId>
-					<version>1.6.1</version>
+			<artifactId>slf4j-simple</artifactId>
+			<groupId>org.slf4j</groupId>
+			<version>1.6.1</version>
 		</dependency>
 		<dependency>
 			<groupId>org.ops4j.pax.exam</groupId>
@@ -247,14 +247,49 @@
 			<artifactId>logback-classic</artifactId>
 			<version>0.9.27</version>
 		</dependency>
+		<!-- for CXF D-OSGi -->
+		<dependency>
+			<groupId>javax.activation</groupId>
+			<artifactId>com.springsource.javax.activation</artifactId>
+			<version>1.1.1</version>
+		</dependency>
+		<dependency>
+			<groupId>javax.mail</groupId>
+			<artifactId>com.springsource.javax.mail</artifactId>
+			<version>1.4.0</version>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>org.springframework.aop</artifactId>
+			<version>3.0.6.RELEASE</version>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>org.springframework.context</artifactId>
+			<version>3.0.6.RELEASE</version>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>org.springframework.transaction</artifactId>
+			<version>3.0.6.RELEASE</version>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>org.springframework.orm</artifactId>
+			<version>3.0.6.RELEASE</version>
+		</dependency>
 	</dependencies>
-	
+
 	<repositories>
-<!-- required for javax.activation:com.springsource.javax.activation:jar:1.1.1 -->
 		<repository>
 			<id>com.springsource.repository.bundles.external</id>
 			<name>SpringSource Enterprise Bundle Repository - External Bundle Releases</name>
 			<url>http://repository.springsource.com/maven/bundles/external</url>
+		</repository>
+		<repository>
+			<id>com.springsource.repository.bundles.release</id>
+			<name>SpringSource Enterprise Bundle Repository - SpringSource Bundle Releases</name>
+			<url>http://repository.springsource.com/maven/bundles/release</url>
 		</repository>
 	</repositories>
 </project>

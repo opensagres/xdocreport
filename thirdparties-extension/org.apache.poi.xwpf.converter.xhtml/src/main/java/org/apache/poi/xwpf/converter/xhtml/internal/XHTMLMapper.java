@@ -65,6 +65,7 @@ import org.apache.poi.xwpf.converter.core.XWPFDocumentVisitor;
 import org.apache.poi.xwpf.converter.core.styles.XWPFStylesDocument;
 import org.apache.poi.xwpf.converter.core.styles.run.RunFontStyleStrikeValueProvider;
 import org.apache.poi.xwpf.converter.core.styles.run.RunTextHighlightingValueProvider;
+import org.apache.poi.xwpf.converter.core.utils.ColorHelper;
 import org.apache.poi.xwpf.converter.core.utils.DxaUtil;
 import org.apache.poi.xwpf.converter.core.utils.StringUtils;
 import org.apache.poi.xwpf.converter.xhtml.XHTMLOptions;
@@ -86,11 +87,14 @@ import org.apache.xmlbeans.XmlException;
 import org.openxmlformats.schemas.drawingml.x2006.main.CTPositiveSize2D;
 import org.openxmlformats.schemas.drawingml.x2006.picture.CTPicture;
 import org.openxmlformats.schemas.drawingml.x2006.wordprocessingDrawing.STRelFromH.Enum;
+import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTBackground;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTBookmark;
+import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTBorder;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTBr;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTHdrFtrRef;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTPPr;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTPTab;
+import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTPageBorders;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTPageMar;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTPageSz;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTRPr;
@@ -146,11 +150,54 @@ public class XHTMLMapper
     {
         return new CSSStylesDocument( document, options.isIgnoreStylesIfUnused(), options.getIndent() );
     }
+    
+    private void addPageBackground(CSSStyle style) {
+		CTBackground background = document.getDocument().getBackground();
+		if(background != null) {
+			Object color = background.getColor();
+			if(color instanceof byte[]) {
+				byte[] rgb = (byte[]) color;
+				style.addProperty("background-color", String.format("#%02x%02x%02x", rgb[0], rgb[1], rgb[2]));
+			}
+		}
+	}
+    
+    private void addPageBorders(CSSStyle style) {
+		
+		getStylesDocument().getCSSStyles().add(style);
+		CTPageBorders borders = getMasterPageManager().getBodySectPr().getPgBorders();
+		if(borders != null) {
+			CTBorder border = borders.getTop();			
+			if(border != null) style.addProperty("border-top", getBorderStyle(border));
+			
+			border = borders.getLeft();
+			if(border != null) style.addProperty("border-left", getBorderStyle(border));
+			
+			border = borders.getBottom();			
+			if(border != null) style.addProperty("border-bottom", getBorderStyle(border));
+			
+			border = borders.getRight();
+			if(border != null)style.addProperty("border-right", getBorderStyle(border));
+		}
+	}
+	
+	private String getBorderStyle(CTBorder border) {
+		// http://officeopenxml.com/WPtableBorders.php
+        // if w:sz="4" => 1/4 points		
+		BigInteger size = border.getSz() != null ? border.getSz() : new BigInteger("0");
+		String bStyle = Math.ceil((size.floatValue() / 8f)) + "pt solid";
+		Color color = ColorHelper.getBorderColor(border);
+		bStyle = bStyle + (color != null ? " " + ColorHelper.toHexString(color) : "");
+		return bStyle;
+	}
 
     @Override
     protected Object startVisitDocument()
         throws Exception
     {
+    	CSSStyle style = new CSSStyle("body", null);
+    	addPageBackground(style);
+    	addPageBorders(style);
         if ( !options.isFragment() )
         {
             contentHandler.startDocument();
@@ -477,28 +524,36 @@ public class XHTMLMapper
         	TableCellBorder border = getStylesDocument().getTableBorder(table, BorderSide.TOP);
         	if(border != null)
         	{
-        		String style = border.getBorderSize() + "px solid " +StringUtils.toHexString(border.getBorderColor()); 
+        		Float size = border.getBorderSize() != null ? border.getBorderSize() : 0f;
+        		Color color = border.getBorderColor();
+        		String style = Math.ceil(size) + "pt solid " + (color != null ? ColorHelper.toHexString(color) : ""); 
             	cssStyle.addProperty(CSSStylePropertyConstants.BORDER_TOP, style);
         	}        	
         	
         	border = getStylesDocument().getTableBorder(table, BorderSide.BOTTOM);
         	if(border != null)
         	{
-        		String style = border.getBorderSize() + "px solid " + StringUtils.toHexString(border.getBorderColor());         	
+        		Float size = border.getBorderSize() != null ? border.getBorderSize() : 0f;
+        		Color color = border.getBorderColor();
+        		String style = Math.ceil(size) + "pt solid " + (color != null ? ColorHelper.toHexString(color) : "");         	
             	cssStyle.addProperty(CSSStylePropertyConstants.BORDER_BOTTOM, style);
         	}        	
         	
         	border = getStylesDocument().getTableBorder(table, BorderSide.LEFT);
         	if(border != null)
         	{
-        		String style = border.getBorderSize() + "px solid " + StringUtils.toHexString(border.getBorderColor());
+        		Float size = border.getBorderSize() != null ? border.getBorderSize() : 0f;
+        		Color color = border.getBorderColor();
+        		String style = Math.ceil(size) + "pt solid " + (color != null ? ColorHelper.toHexString(color) : "");
             	cssStyle.addProperty(CSSStylePropertyConstants.BORDER_LEFT, style);
         	}        	
         	
         	border = getStylesDocument().getTableBorder(table, BorderSide.RIGHT);
         	if(border != null)
         	{
-        		String style = border.getBorderSize() + "px solid " + StringUtils.toHexString(border.getBorderColor());
+        		Float size = border.getBorderSize() != null ? border.getBorderSize() : 0f;
+        		Color color = border.getBorderColor();
+        		String style = Math.ceil(size) + "pt solid " + (color != null ? ColorHelper.toHexString(color) : "");
             	cssStyle.addProperty(CSSStylePropertyConstants.BORDER_RIGHT, style);
         	}        	
         }

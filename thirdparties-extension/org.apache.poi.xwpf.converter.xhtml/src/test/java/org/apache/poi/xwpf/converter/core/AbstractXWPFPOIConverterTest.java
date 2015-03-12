@@ -520,6 +520,12 @@ public abstract class AbstractXWPFPOIConverterTest
     {
     	doGenerate("TestTxtFormatTableBorderExternalImages.docx");
     }
+    
+    @Test
+    public void TestPageBorderAndBackgroundColor() throws IOException
+    {
+    	doGenerate("TestPageBorderAndBackground-color.docx");
+    }
 
     protected abstract void doGenerate( String fileName )
         throws IOException;

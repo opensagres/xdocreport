@@ -86,4 +86,15 @@ public enum ImageFormat
         }
         return ImageFormat.getFormatByExtension( extension );
     }
+
+    /**
+     * Returns the image format retrieved by the official mimeType according to
+     *
+     * @param mimeType
+     * @return
+     */
+    public static ImageFormat getFormatByMimeType( String mimeType )
+    {
+        return getFormatByExtension(mimeType.replace("image/", ""));
+    }
 }

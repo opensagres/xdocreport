@@ -24,14 +24,14 @@
  */
 package fr.opensagres.xdocreport.document.images;
 
+import fr.opensagres.xdocreport.core.io.IOUtils;
+import fr.opensagres.xdocreport.core.logging.LogUtils;
+
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-
-import fr.opensagres.xdocreport.core.io.IOUtils;
-import fr.opensagres.xdocreport.core.logging.LogUtils;
 
 public abstract class AbstractInputStreamImageProvider
     extends AbstractImageProvider
@@ -79,9 +79,15 @@ public abstract class AbstractInputStreamImageProvider
     }
 
     @Override
-    protected SimpleImageInfo loadImageInfo()
+    protected IImageInfo loadImageInfo()
         throws IOException
     {
-        return new SimpleImageInfo( getInputStream() );
+        SimpleImageInfo imageInfo = new SimpleImageInfo();
+        imageInfo.setInput(getInputStream());
+        if (!imageInfo.check())
+        {
+            throw new IOException("Unable to read image info.");
+        }
+        return imageInfo;
     }
 }

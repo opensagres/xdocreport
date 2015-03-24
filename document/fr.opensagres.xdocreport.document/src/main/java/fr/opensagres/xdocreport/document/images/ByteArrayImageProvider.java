@@ -24,13 +24,13 @@
  */
 package fr.opensagres.xdocreport.document.images;
 
+import fr.opensagres.xdocreport.core.document.ImageFormat;
+import fr.opensagres.xdocreport.core.io.IOUtils;
+
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-
-import fr.opensagres.xdocreport.core.document.ImageFormat;
-import fr.opensagres.xdocreport.core.io.IOUtils;
 
 /**
  * Image provider implementation with byte array for image content. This provider is useful when image content can
@@ -98,7 +98,7 @@ public class ByteArrayImageProvider
     {
         try
         {
-            SimpleImageInfo imageInfo = getImageInfo();
+            IImageInfo imageInfo = getImageInfo();
             if ( imageInfo == null )
             {
                 return null;
@@ -112,14 +112,20 @@ public class ByteArrayImageProvider
     }
 
     @Override
-    protected SimpleImageInfo loadImageInfo()
+    protected IImageInfo loadImageInfo()
         throws IOException
     {
         if ( imageByteArray == null )
         {
             return null;
         }
-        return new SimpleImageInfo( imageByteArray );
+        SimpleImageInfo imageInfo = new SimpleImageInfo();
+        imageInfo.setInput(new ByteArrayInputStream(imageByteArray));
+        if (!imageInfo.check())
+        {
+            throw new IOException("Unable to read image info.");
+        }
+        return imageInfo;
     }
 
     protected boolean doIsValid()

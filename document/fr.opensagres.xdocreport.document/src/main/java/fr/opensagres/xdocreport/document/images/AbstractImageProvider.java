@@ -24,9 +24,9 @@
  */
 package fr.opensagres.xdocreport.document.images;
 
-import java.io.IOException;
-
 import fr.opensagres.xdocreport.template.formatter.NullImageBehaviour;
+
+import java.io.IOException;
 
 /**
  * Base class for image provider.
@@ -35,7 +35,7 @@ public abstract class AbstractImageProvider
     implements IImageProvider
 {
 
-    private SimpleImageInfo imageInfo;
+    private IImageInfo imageInfo;
 
     private Float width;
 
@@ -178,7 +178,7 @@ public abstract class AbstractImageProvider
      * @return
      * @throws IOException
      */
-    public SimpleImageInfo getImageInfo()
+    public IImageInfo getImageInfo()
         throws IOException
     {
         if ( imageInfo == null )
@@ -223,7 +223,7 @@ public abstract class AbstractImageProvider
      * @return
      * @throws IOException
      */
-    protected abstract SimpleImageInfo loadImageInfo()
+    protected abstract IImageInfo loadImageInfo()
         throws IOException;
 
     /*

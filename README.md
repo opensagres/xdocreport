@@ -7,6 +7,16 @@ XDocReport means XML Document reporting. It's Java API to merge XML document cre
 
 Please read [Getting Started](https://github.com/opensagres/xdocreport/wiki/Getting-Started)
 
+# Samples & Demo
+
+You can test our online demo : 
+
+ * http://mytomcatapp-opensagres.rhcloud.com/demo-webapp/ a Web Application which uses XDocReport to generate report.
+ * http://mytomcatapp-opensagres.rhcloud.com/rest-service-reporting/ a Web Application which uses REST Service to generate report.
+ * http://mytomcatapp-opensagres.rhcloud.com/rest-service-converter/ a Web Application which uses REST Service to convert docx, odt to pdf, xhtml.
+ 
+You can find source code of thoses demo at https://github.com/opensagres/xdocreport.samples
+
 # License
 
 XDocReport code is license under *MIT license* but the samples are licensed under *LGPL license*, this is why.

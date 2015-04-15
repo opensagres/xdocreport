@@ -1,1 +1,2 @@
+DynamicImport-Package: *
 Bundle-Activator: fr.opensagres.xdocreport.template.internal.osgi.Activator

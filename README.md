@@ -1,6 +1,7 @@
 XDocReport
 ==========
 
+[![Maven Central](https://img.shields.io/maven-central/v/fr.opensagres.xdocreport/xdocreport.svg)](http://search.maven.org/#search%7Cga%7C1%7Cg%3A%22fr.opensagres.xdocreport%22%20AND%20a%3A%22xdocreport%22)
 [![Build Status](https://secure.travis-ci.org/opensagres/xdocreport.png)](http://travis-ci.org/opensagres/xdocreport)
 
 XDocReport means XML Document reporting. It's Java API to merge XML document created with MS Office (docx) or OpenOffice (odt), LibreOffice (odt) with a Java model to generate report and convert it if you need to another format (PDF, XHTML...). 

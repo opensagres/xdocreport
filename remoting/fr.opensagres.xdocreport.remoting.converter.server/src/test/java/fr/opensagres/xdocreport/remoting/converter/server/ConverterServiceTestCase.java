@@ -105,7 +105,8 @@ public class ConverterServiceTestCase
         post.setRequestHeader( "Content-Type", ct );
         Part[] parts = new Part[4];
         String fileName = "ODTCV.odt";
-
+        System.out.println("root : "+root);
+        System.out.println("fileName : "+fileName);
         parts[0] =
             new FilePart( "document", new File( root, fileName ), "application/vnd.oasis.opendocument.text", "UTF-8" );
         parts[1] = new StringPart( "outputFormat", ConverterTypeTo.PDF.name() );

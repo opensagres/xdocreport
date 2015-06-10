@@ -62,7 +62,12 @@ public class RBufferedRegion
 
     public void setTContent(int index, String tContent )
     {
-        getTRegion(index).setTextContent( tContent );
+        // w:t could not exists in some case, NPE test must be done. 
+        // See https://github.com/opensagres/xdocreport/issues/36
+        BufferedElement wt = getTRegion(index);
+        if (wt != null) {
+            wt.setTextContent( tContent );
+        }
     }
 
     @Override

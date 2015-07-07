@@ -61,7 +61,11 @@ public class DocxDocumentHandler
     private boolean underlining;
 
     private boolean striking;
+    
+    private boolean subscripting;
 
+    private boolean superscripting;
+    
     private Stack<ContainerProperties> paragraphsStack;
 
     private Stack<SpanProperties> spansStack;
@@ -100,6 +104,8 @@ public class DocxDocumentHandler
         this.italicsing = false;
         this.underlining = false;
         this.striking = false;
+        this.subscripting = false;
+        this.superscripting = false;
         this.paragraphsStack = new Stack<ContainerProperties>();
         this.spansStack = new Stack<SpanProperties>();
         this.addLineBreak = 0;
@@ -182,25 +188,25 @@ public class DocxDocumentHandler
     public void startSubscript()
         throws IOException
     {
-        // TODO
+    	this.subscripting = true;
     }
 
     public void endSubscript()
         throws IOException
     {
-        // TODO
+    	this.subscripting = false;
     }
 
     public void startSuperscript()
         throws IOException
     {
-        // TODO
+    	this.superscripting = true;
     }
 
     public void endSuperscript()
         throws IOException
     {
-        // TODO
+    	this.superscripting = false;
     }
 
     @Override
@@ -223,6 +229,8 @@ public class DocxDocumentHandler
             boolean italic = italicsing;
             boolean underline = underlining;
             boolean strike = striking;
+            boolean subscript = subscripting;
+            boolean superscript = superscripting;
             SpanProperties properties = getCurrentSpanProperties();
             if ( properties != null )
             {
@@ -243,10 +251,18 @@ public class DocxDocumentHandler
                 {
                     strike = properties.isStrike();
                 }
+                if ( !subscript )
+                {
+                	subscript = properties.isSubscript();
+                }
+                if ( !superscript)
+                {
+                	superscript = properties.isSuperscript();
+                }
             }
             super.write( "<w:r>" );
             // w:RP
-            processRunProperties( false, bold, italic, underline, strike );
+            processRunProperties( false, bold, italic, underline, strike, subscript, superscript );
             // w:br
             for ( int i = 0; i < addLineBreak; i++ )
             {
@@ -265,7 +281,7 @@ public class DocxDocumentHandler
     }
 
     private void processRunProperties( boolean isInsidePPr, boolean bold, boolean italics, boolean underline,
-                                       boolean strike )
+                                       boolean strike, boolean subscript, boolean superscript )
         throws IOException
     {
         if ( bold || italics || underline || strike )
@@ -290,6 +306,12 @@ public class DocxDocumentHandler
             if ( strike )
             {
                 super.write( "<w:strike />" );
+            }
+            if (subscript) {
+            	super.write( "<w:vertAlign w:val=\"subscript\"/>" );
+            }
+            if (superscript) {
+            	super.write( "<w:vertAlign w:val=\"superscript\"/>" );
             }
             super.write( "</w:rPr>" );
         }
@@ -447,7 +469,7 @@ public class DocxDocumentHandler
             }
             // rPPr
             processRunProperties( true, properties.isBold(), properties.isItalic(), properties.isUnderline(),
-                                  properties.isStrike() );
+                                  properties.isStrike(), properties.isSubscript(), properties.isSuperscript() );
         }
 
         endPPrIfNeeded();

@@ -43,7 +43,9 @@ public abstract class MergefieldBufferedRegion
 
     private static final String W_P = "w:p";
 
-    private static final String MERGEFORMAT = "\\* MERGEFORMAT";
+    private static final String START_MERGEFORMAT = "\\*";
+    
+    private static final String MERGEFORMAT = "MERGEFORMAT";
 
     private static final String MERGEFIELD_FIELD_TYPE = "MERGEFIELD";
 
@@ -136,9 +138,19 @@ public abstract class MergefieldBufferedRegion
             if ( StringUtils.isNotEmpty( fieldName ) )
             {
                 // Test if fieldName ends with \* MERGEFORMAT
-                if ( fieldName.endsWith( MERGEFORMAT ) )
+            	// sometimes \* MERGEFORMAT is splitted in several w:instrText
+            	// ex : 
+            	// <w:r><w:instrText xml:space="preserve"> MERGEFIELD ${acuOther.cond} \* MER</w:instrText></w:r>
+            	// <w:r><w:instrText xml:space="preserve">GEFORMAT </w:instrText></w:r>
+            	//
+            	// see https://github.com/dnmd/xdocreport/blob/master/Issue42.java
+            	int mergeFormatIndex = fieldName.lastIndexOf(START_MERGEFORMAT);
+                if ( mergeFormatIndex != -1 )
                 {
-                    fieldName = fieldName.substring( 0, fieldName.length() - MERGEFORMAT.length() ).trim();
+                	String mergeformat = fieldName.substring(mergeFormatIndex + START_MERGEFORMAT.length(), fieldName.length()).trim();
+                	if (MERGEFORMAT.startsWith(mergeformat)) {
+                		fieldName = fieldName.substring( 0, mergeFormatIndex ).trim();
+                	}
                 }
                 if ( StringUtils.isNotEmpty( fieldName ) )
                 {

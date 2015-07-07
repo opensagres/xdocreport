@@ -67,6 +67,7 @@ public class ConverterTest
 
         return options(
 
+        		CoreOptions.cleanCaches(),
                         // uncomment for "remote debugging"
         		//CoreOptions.vmOption("-Xrunjdwp:transport=dt_socket,server=y,suspend=y,address=5006"),
                         // equinox(),

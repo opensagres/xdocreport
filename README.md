@@ -6,7 +6,7 @@ XDocReport
 
 XDocReport means XML Document reporting. It's Java API to merge XML document created with MS Office (docx) or OpenOffice (odt), LibreOffice (odt) with a Java model to generate report and convert it if you need to another format (PDF, XHTML...). 
 
-Please read [Getting Started](https://github.com/opensagres/xdocreport/wiki/Getting-Started)
+Please read [GettingStarted](https://github.com/opensagres/xdocreport/wiki/Getting-Started)
 
 # Samples & Demo
 

@@ -27,6 +27,7 @@ package org.apache.poi.xwpf.converter.core.styles.run;
 import java.math.BigInteger;
 
 import org.apache.poi.xwpf.converter.core.styles.XWPFStylesDocument;
+import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTDocDefaults;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTRPr;
 
 public class RunFontSizeValueProvider
@@ -39,5 +40,27 @@ public class RunFontSizeValueProvider
     public Float getValue( CTRPr pr, XWPFStylesDocument stylesDocument )
     {
         return ( pr != null && pr.isSetSz() ) ? pr.getSz().getVal().divide( new BigInteger( "2" ) ).floatValue() : null;
+    }
+    
+    @Override
+    protected Float getValueFromDocDefaultsStyle( CTDocDefaults docDefaults, XWPFStylesDocument stylesDocument )
+    {
+        Float result = getValue( getRPr( docDefaults ), stylesDocument );
+        if (result == null && docDefaults != null)
+        {
+            if (docDefaults.isSetRPrDefault())
+            {
+                CTRPr rpr = docDefaults.getRPrDefault().getRPr();
+                if (rpr == null || rpr.getSz() == null)
+                {
+                    result = 10f;
+                }
+            }
+            else
+            {
+                result = 11f;
+            }
+        }
+        return result;
     }
 }

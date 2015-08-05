@@ -126,7 +126,7 @@ public class TableInfo
                     XWPFTableCell cell = new XWPFTableCell( ctTc, row, row.getTable().getBody() );
                     cellIndex = getCellIndex( cellIndex, cell );
                     lastCol = ( cellIndex == nbColumns - 1 );
-                    addCellInfo( cell, firstRow, lastRow, firstCol, lastCol );
+                    addCellInfo( row.getTableCell( ctTc ), firstRow, lastRow, firstCol, lastCol );
                     firstCol = false;
                 }
             }

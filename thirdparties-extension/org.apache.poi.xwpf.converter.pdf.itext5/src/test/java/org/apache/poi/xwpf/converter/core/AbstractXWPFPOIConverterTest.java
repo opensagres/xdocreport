@@ -453,6 +453,13 @@ public abstract class AbstractXWPFPOIConverterTest
     {
         doGenerate( "TestParagraphWithBorder.docx" );
     }
+    
+    @Test
+    public void TestSdtCell()
+        throws IOException
+    {
+        doGenerate( "TestSdtCell.docx" );
+    }
 
     @Test
     public void TestTable()

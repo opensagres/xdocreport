@@ -958,6 +958,11 @@ public abstract class XWPFDocumentVisitor<T, O extends Options, E extends IXWPFM
                         XWPFTableCell cell = new XWPFTableCell( ctTc, row, row.getTable().getBody() );
                         cellIndex = getCellIndex( cellIndex, cell );
                         lastCol = ( cellIndex == nbColumns );
+                        List<XWPFTableCell> rowCells = row.getTableCells();
+                        if (!rowCells.contains(cell))
+                        {
+                            rowCells.add(cell);
+                        }
                         vMergedCells = getVMergedCells( cell, rowIndex, cellIndex );
                         if ( vMergedCells == null || vMergedCells.size() > 0 )
                         {

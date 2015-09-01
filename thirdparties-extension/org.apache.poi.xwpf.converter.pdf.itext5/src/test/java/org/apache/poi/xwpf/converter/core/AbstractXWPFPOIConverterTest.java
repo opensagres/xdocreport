@@ -26,7 +26,6 @@ package org.apache.poi.xwpf.converter.core;
 
 import java.io.IOException;
 
-import org.junit.Ignore;
 import org.junit.Test;
 
 public abstract class AbstractXWPFPOIConverterTest
@@ -54,7 +53,6 @@ public abstract class AbstractXWPFPOIConverterTest
     }
 
     @Test
-    @Ignore("not sure about the null pointer exception")
     public void CV()
         throws IOException
     {

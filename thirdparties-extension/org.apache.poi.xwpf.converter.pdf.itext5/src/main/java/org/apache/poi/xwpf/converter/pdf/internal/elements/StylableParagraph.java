@@ -68,7 +68,7 @@ public class StylableParagraph
         super();
         this.ownerDocument = ownerDocument;
         this.parent = parent;
-        this.originMultipliedLeading = null;
+        this.originMultipliedLeading = 1f;
     }
 
     public StylableParagraph( StylableDocument ownerDocument, Paragraph title, IITextContainer parent )

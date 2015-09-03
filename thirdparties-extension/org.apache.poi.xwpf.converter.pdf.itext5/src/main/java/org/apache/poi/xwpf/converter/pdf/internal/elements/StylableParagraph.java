@@ -53,7 +53,7 @@ public class StylableParagraph
 
     private String listItemText;
 
-    private Float originMultipliedLeading;
+    private Float originMultipliedLeading = 1f;
 
     private String listItemFontFamily;
 
@@ -68,7 +68,6 @@ public class StylableParagraph
         super();
         this.ownerDocument = ownerDocument;
         this.parent = parent;
-        this.originMultipliedLeading = 1f;
     }
 
     public StylableParagraph( StylableDocument ownerDocument, Paragraph title, IITextContainer parent )

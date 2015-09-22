@@ -425,6 +425,13 @@ public abstract class AbstractXWPFPOIConverterTest
     }
 
     @Test
+    public void TestLeading()
+        throws IOException
+    {
+        doGenerate( "TestLeading.docx" );
+    }
+
+    @Test
     public void TestList()
         throws IOException
     {

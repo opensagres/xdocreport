@@ -26,6 +26,8 @@ package fr.opensagres.xdocreport.document.odt.textstyling;
 
 import java.text.DecimalFormat;
 import java.text.DecimalFormatSymbols;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import fr.opensagres.xdocreport.document.textstyling.properties.ContainerProperties;
 import fr.opensagres.xdocreport.document.textstyling.properties.ContainerProperties.ContainerType;
@@ -40,6 +42,8 @@ public class ODTDefaultStylesGenerator
     implements IODTStylesGenerator
 {
     protected static final String HEADER_PREFIX = "Heading_20_";
+    
+    protected static final Pattern HEADER_PATTERN = Pattern.compile(HEADER_PREFIX + "(\\d+).*");
 
     protected static final String[] BULLET_CHARS = { "\u2022", "\u25e6", "\u25aa" };
 
@@ -284,15 +288,17 @@ public class ODTDefaultStylesGenerator
 
     public int getHeaderStyleNameLevel( String styleName )
     {
-        if ( styleName != null && styleName.startsWith( HEADER_PREFIX ) )
-        {
-            String headerIdx = styleName.substring( 11 );
-            return Integer.parseInt( headerIdx );
+        if ( styleName == null ) {
+            return -1;
         }
-        else
+
+        Matcher matcher = HEADER_PATTERN.matcher(styleName);
+        if ( !matcher.find() )
         {
             return -1;
         }
+        String headerIdx = matcher.group(1);
+        return Integer.parseInt( headerIdx );
     }
 
     public String getOLStyleName()

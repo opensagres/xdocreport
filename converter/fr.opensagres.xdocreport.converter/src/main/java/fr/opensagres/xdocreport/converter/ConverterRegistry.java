@@ -200,7 +200,7 @@ public class ConverterRegistry
         String from = discovery.getFrom();
         String to = discovery.getTo();
         String via = discovery.getVia();
-        String with = discovery.getId();
+        String with = discovery.getWith();
         IConverter converter = discovery.getConverter();
         ConverterFrom converterFrom = converters.get( from );
         if ( converterFrom == null )

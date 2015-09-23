@@ -118,25 +118,29 @@ public class OptionsRegistryTest {
         public String getVia() {
             return via;
         }
+        
+        public String getWith() {
+            return with;
+        }
 
         public IConverter getConverter() {
             return new AbstractConverterNoEntriesSupport() {
                 public void convert(InputStream in, OutputStream out, Options options) throws XDocConverterException {
-                    throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+                    throw new UnsupportedOperationException("Not supported yet.");
                 }
 
                 public MimeMapping getMimeMapping() {
-                    throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+                    throw new UnsupportedOperationException("Not supported yet.");
                 }
             };
         }
 
         public String getId() {
-            return with;
+            throw new UnsupportedOperationException("Not supported.");
         }
 
         public String getDescription() {
-            throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+            throw new UnsupportedOperationException("Not supported yet.");
         }
     }
 }

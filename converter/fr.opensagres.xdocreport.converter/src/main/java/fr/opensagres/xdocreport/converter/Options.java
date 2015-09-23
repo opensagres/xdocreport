@@ -118,6 +118,11 @@ public class Options
         return via( via.name() );
     }
     
+    public Options with( ConverterTypeWith with )
+    {
+        return with( with.name() );
+    }
+    
     public Options with( String with )
     {
         this.with = with;

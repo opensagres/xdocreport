@@ -59,6 +59,10 @@ public class XWPF2XHTMLConverterDiscovery
     {
         return ConverterTypeVia.XWPF.name();
     }
+    
+    public String getWith() {
+        return null;
+    }
 
     public IConverter getConverter()
     {

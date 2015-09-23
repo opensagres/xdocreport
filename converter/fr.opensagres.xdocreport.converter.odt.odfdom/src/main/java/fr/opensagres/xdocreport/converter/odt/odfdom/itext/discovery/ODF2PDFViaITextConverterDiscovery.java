@@ -26,6 +26,7 @@ package fr.opensagres.xdocreport.converter.odt.odfdom.itext.discovery;
 
 import fr.opensagres.xdocreport.converter.ConverterTypeTo;
 import fr.opensagres.xdocreport.converter.ConverterTypeVia;
+import fr.opensagres.xdocreport.converter.ConverterTypeWith;
 import fr.opensagres.xdocreport.converter.IConverter;
 import fr.opensagres.xdocreport.converter.discovery.IConverterDiscovery;
 import fr.opensagres.xdocreport.converter.odt.odfdom.itext.ODF2PDFViaITextConverter;
@@ -60,6 +61,10 @@ public class ODF2PDFViaITextConverterDiscovery
         return ConverterTypeVia.ODFDOM.name();
     }
 
+    public String getWith() {
+        return ConverterTypeWith.ITEXT2.name();
+    }
+    
     public IConverter getConverter()
     {
         return ODF2PDFViaITextConverter.getInstance();

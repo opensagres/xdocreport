@@ -46,6 +46,7 @@ public class OptionsRegistryTest {
     public static void setup() {
         register("a", "b", "c", "d");
         register("a", "b", "c", "e");
+        register("a", "b", "e", null);
         register("a", "b", "e", "d");
     }
     
@@ -83,7 +84,7 @@ public class OptionsRegistryTest {
     
     @Test
     public void basicSimilarTest() {
-        IConverter con = reg.getConverter("a", "b", "c", null);
+        IConverter con = reg.getConverter("a", "b", "e", null);
         Assert.assertNotNull(con);
         Assert.assertTrue(con instanceof IConverter);
     }

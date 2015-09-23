@@ -28,6 +28,7 @@ import fr.opensagres.xdocreport.converter.internal.AbstractConverterNoEntriesSup
 import java.io.InputStream;
 import java.io.OutputStream;
 import org.junit.Assert;
+import org.junit.BeforeClass;
 import org.junit.Test;
 
 /**
@@ -36,32 +37,61 @@ import org.junit.Test;
  */
 public class OptionsRegistryTest {
     
-    private final ConverterRegistry reg = ConverterRegistry.getRegistry();
-    private void register(String from, String to, String via, String with) {
-        reg.registerInstance(new Disco(from, to, via, with));
+    private static final ConverterRegistry reg = ConverterRegistry.getRegistry();
+    private static void register(String from, String to, String via, String with) {
+        ConverterRegistry.getRegistry().registerInstance(new Disco(from, to, via, with));
+    }
+    
+    @BeforeClass
+    public static void setup() {
+        register("a", "b", "c", "d");
+        register("a", "b", "c", "e");
+        register("a", "b", "e", "d");
     }
     
     @Test
     public void basicTest() {
-        register("a", "b", "c", "d");
         IConverter con = reg.getConverter("a", "b", "c", "d");
+        Assert.assertNotNull(con);
+        Assert.assertTrue(con instanceof IConverter);
+        con = reg.getConverter("a", "b", null, "d");
+        Assert.assertNotNull(con);
+        Assert.assertTrue(con instanceof IConverter);
+        con = reg.getConverter("a", "b", "c", null);
+        Assert.assertNotNull(con);
+        Assert.assertTrue(con instanceof IConverter);
+        con = reg.getConverter("a", "b", null, null);
         Assert.assertNotNull(con);
         Assert.assertTrue(con instanceof IConverter);
     }
     
     @Test
     public void basicFailTest() {
-        register("a", "b", "c", "d");
-        IConverter con = reg.getConverter("a", "b", "c", "e");
+        IConverter con = reg.getConverter("a", "b", "c", "x");
         Assert.assertNull(con);
         Assert.assertFalse(con instanceof IConverter);
-        con = reg.getConverter("a", "b", "e", "d");
+        con = reg.getConverter("a", "b", "x", "d");
         Assert.assertNull(con);
         Assert.assertFalse(con instanceof IConverter);
-        con = reg.getConverter("a", "e", "c", "d");
+        con = reg.getConverter("a", "x", "c", "d");
         Assert.assertNull(con);
         Assert.assertFalse(con instanceof IConverter);
-        con = reg.getConverter("e", "b", "c", "d");
+        con = reg.getConverter("x", "b", "c", "d");
+        Assert.assertNull(con);
+        Assert.assertFalse(con instanceof IConverter);
+    }
+    
+    @Test
+    public void basicSimilarTest() {
+        IConverter con = reg.getConverter("a", "b", "c", null);
+        Assert.assertNotNull(con);
+        Assert.assertTrue(con instanceof IConverter);
+    }
+    
+    
+    @Test
+    public void basicTooDissimilarTest() {
+        IConverter con = reg.getConverter("a", "b", "f", null);
         Assert.assertNull(con);
         Assert.assertFalse(con instanceof IConverter);
     }

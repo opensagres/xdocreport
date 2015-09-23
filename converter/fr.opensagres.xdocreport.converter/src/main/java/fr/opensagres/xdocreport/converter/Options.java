@@ -37,6 +37,8 @@ public class Options
     private String to;
 
     private String via;
+    
+    private String with;
 
     private Map<String, Object> properties = null;
 
@@ -114,6 +116,17 @@ public class Options
     public Options via( ConverterTypeVia via )
     {
         return via( via.name() );
+    }
+    
+    public Options with( String with )
+    {
+        this.with = with;
+        return this;
+    }
+    
+    public String getWith()
+    {
+        return with;
     }
 
     public Object getSubOptions( Class<?> subOptionsClass )

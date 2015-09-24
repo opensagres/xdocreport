@@ -27,87 +27,107 @@ import fr.opensagres.xdocreport.converter.discovery.IConverterDiscovery;
 import fr.opensagres.xdocreport.converter.internal.AbstractConverterNoEntriesSupport;
 import java.io.InputStream;
 import java.io.OutputStream;
+import org.junit.After;
 import org.junit.Assert;
-import org.junit.BeforeClass;
+import org.junit.Before;
 import org.junit.Test;
 
 /**
  *
  * @author benoit
  */
-public class OptionsRegistryTest {
-    
+public class ConverterRegistryTest {
+
     private static final ConverterRegistry reg = ConverterRegistry.getRegistry();
+
     private static void register(String from, String to, String via, String with) {
         ConverterRegistry.getRegistry().registerInstance(new Disco(from, to, via, with));
     }
     
-    @BeforeClass
-    public static void setup() {
-        register("a", "b", "c", "d");
-        register("a", "b", "c", "e");
-        register("a", "b", "e", null);
-        register("a", "b", "e", "d");
+    @Before
+    public void setup() {
+        register("from_1", "to_1", "via_1", "with_1");
+        IConverter con = reg.getConverter("from_1", "to_1", "via_1", "with_1");
+        Assert.assertNotNull(con);
+        Assert.assertTrue(con instanceof IConverter);
     }
-    
+
+    @After
+    public void tearDown() {
+        reg.dispose();
+    }
+
     @Test
-    public void basicTest() {
-        IConverter con = reg.getConverter("a", "b", "c", "d");
+    public void testDispose() {
+        Assert.assertFalse(reg.getFroms().isEmpty());
+        reg.dispose();
+        IConverter con = reg.getConverter("from_1", "to_1", "via_1", "with_1");
+        Assert.assertNull(con);
+        Assert.assertFalse(con instanceof IConverter);
+        Assert.assertTrue(reg.getFroms().isEmpty());
+
+    }
+
+    @Test
+    public void allowedNullTest() {
+        IConverter con = reg.getConverter("from_1", "to_1", null, "with_1");
         Assert.assertNotNull(con);
         Assert.assertTrue(con instanceof IConverter);
-        con = reg.getConverter("a", "b", null, "d");
+        con = reg.getConverter("from_1", "to_1", "via_1", null);
         Assert.assertNotNull(con);
         Assert.assertTrue(con instanceof IConverter);
-        con = reg.getConverter("a", "b", "c", null);
-        Assert.assertNotNull(con);
-        Assert.assertTrue(con instanceof IConverter);
-        con = reg.getConverter("a", "b", null, null);
+        con = reg.getConverter("from_1", "to_1", null, null);
         Assert.assertNotNull(con);
         Assert.assertTrue(con instanceof IConverter);
     }
-    
+
+    @Test
+    public void disallowedNullTest() {
+        IConverter con = reg.getConverter(null, "to_1", "via_1", "with_1");
+        Assert.assertNull(con);
+        Assert.assertFalse(con instanceof IConverter);
+        con = reg.getConverter("from_1", null, "via_1", "with_1");
+        Assert.assertNull(con);
+        Assert.assertFalse(con instanceof IConverter);
+        con = reg.getConverter(null, null, "via_1", "with_1");
+        Assert.assertNull(con);
+        Assert.assertFalse(con instanceof IConverter);
+    }
+
     @Test
     public void basicFailTest() {
-        IConverter con = reg.getConverter("a", "b", "c", "x");
+        IConverter con = reg.getConverter("from_1", "to_1", "via_1", "nonexistent");
         Assert.assertNull(con);
         Assert.assertFalse(con instanceof IConverter);
-        con = reg.getConverter("a", "b", "x", "d");
+        con = reg.getConverter("from_1", "to_1", "nonexistent", "with_1");
         Assert.assertNull(con);
         Assert.assertFalse(con instanceof IConverter);
-        con = reg.getConverter("a", "x", "c", "d");
+        con = reg.getConverter("from_1", "nonexistent", "via_1", "with_1");
         Assert.assertNull(con);
         Assert.assertFalse(con instanceof IConverter);
-        con = reg.getConverter("x", "b", "c", "d");
+        con = reg.getConverter("nonexistent", "to_1", "via_1", "with_1");
         Assert.assertNull(con);
         Assert.assertFalse(con instanceof IConverter);
     }
-    
-    @Test
-    public void basicSimilarTest() {
-        IConverter con = reg.getConverter("a", "b", "e", null);
-        Assert.assertNotNull(con);
-        Assert.assertTrue(con instanceof IConverter);
-    }
-    
-    
+
     @Test
     public void basicTooDissimilarTest() {
-        IConverter con = reg.getConverter("a", "b", "f", null);
+        IConverter con = reg.getConverter("from_1", "to_1", "f", null);
         Assert.assertNull(con);
         Assert.assertFalse(con instanceof IConverter);
     }
-    
+
     private static class Disco implements IConverterDiscovery {
 
         private final String from, to, via, with;
-        
+
         public Disco(String from, String to, String via, String with) {
             this.from = from;
             this.to = to;
             this.via = via;
             this.with = with;
         }
-        
+
         public String getFrom() {
             return from;
         }
@@ -119,7 +139,7 @@ public class OptionsRegistryTest {
         public String getVia() {
             return via;
         }
-        
+
         public String getWith() {
             return with;
         }

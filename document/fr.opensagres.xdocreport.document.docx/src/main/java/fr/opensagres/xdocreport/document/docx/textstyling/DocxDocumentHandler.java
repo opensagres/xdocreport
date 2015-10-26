@@ -340,7 +340,11 @@ public class DocxDocumentHandler
     private void internalStartParagraph( ContainerProperties properties )
         throws IOException
     {
-        internalStartParagraph( properties, null, false );
+        if (properties != null && properties.getStyleName() != null) {
+            internalStartParagraph(properties, properties.getStyleName(), false);
+        } else {
+            internalStartParagraph(properties, null, false);
+        }
     }
 
     public void startParagraph( ParagraphProperties properties )

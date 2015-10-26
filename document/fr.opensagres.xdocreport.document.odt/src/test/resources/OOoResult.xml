@@ -72,5 +72,12 @@
     <text:span text:style-name="XDocReport_Bold">bold text</text:span>
     <text:span text:style-name="XDocReport_Italic">italic text </text:span>
     <text:a xlink:href="http://code.google.com/p/xdocreport" xlink:type="simple">XDocReport</text:a>
+    <text:p text:style-name="Standard">
+      <text:span text:style-name="XDocReport_EmptyText">Template style</text:span>
+    </text:p>
+    <text:p text:style-name="XDocReport_P0">
+      <text:span text:style-name="XDocReport_EmptyText">Template style inheritance</text:span>
+    </text:p>
   </text:p>
+  
 </root>

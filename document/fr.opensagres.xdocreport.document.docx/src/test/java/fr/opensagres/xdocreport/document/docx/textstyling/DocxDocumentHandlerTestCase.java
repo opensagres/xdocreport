@@ -520,6 +520,23 @@ public class DocxDocumentHandlerTestCase
     }
 
     @Test
+    public void testParagraphWithStyle()
+            throws Exception {
+        IContext context = new MockContext();
+        BufferedElement parent = null;
+
+        ITextStylingTransformer formatter = HTMLTextStylingTransformer.INSTANCE;
+        IDocumentHandler handler = new DocxDocumentHandler(parent, context, "word/document.xml");
+        formatter.transform("some <strong>text</strong><p style=\"name:Standard\">paragraph1</p><p>paragraph2</p>", handler);
+
+        Assert.assertEquals("", handler.getTextBefore());
+        Assert.assertEquals("<w:r><w:t xml:space=\"preserve\" >some </w:t></w:r><w:r><w:rPr><w:b /></w:rPr><w:t xml:space=\"preserve\" >text</w:t></w:r>",
+                handler.getTextBody());
+        Assert.assertEquals("<w:p><w:pPr><w:pStyle w:val=\"Standard\" /></w:pPr><w:r><w:t xml:space=\"preserve\" >paragraph1</w:t></w:r></w:p><w:p><w:r><w:t xml:space=\"preserve\" >paragraph2</w:t></w:r></w:p>",
+                handler.getTextEnd());
+    }
+
+    @Test
     public void testOrderedList()
         throws Exception
     {

@@ -53,6 +53,8 @@ public abstract class ContainerProperties
 
     private TextAlignment textAlignment;
 
+    private String styleName;
+
     private final ContainerType type;
 
     public ContainerProperties( ContainerType type )
@@ -154,4 +156,13 @@ public abstract class ContainerProperties
     {
         this.textAlignment = textAlignment;
     }
+
+    public String getStyleName() {
+        return styleName;
+    }
+
+    public void setStyleName(String styleName) {
+        this.styleName = styleName;
+    }
+
 }

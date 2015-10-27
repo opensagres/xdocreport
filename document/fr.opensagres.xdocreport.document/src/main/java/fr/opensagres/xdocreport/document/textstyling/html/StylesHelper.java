@@ -88,7 +88,7 @@ public class StylesHelper
         if ( !stylesMap.isEmpty() )
         {
             ParagraphProperties properties = new ParagraphProperties();
-            processContainerproperties( properties, stylesMap );
+            processContainerproperties(properties, stylesMap);
             return properties;
         }
         return null;
@@ -262,6 +262,11 @@ public class StylesHelper
                 properties.setTextAlignment( TextAlignment.Inherit );
             }
 
+        }
+        // style
+        String styleName = stylesMap.get("name");
+        if (styleName != null) {
+            properties.setStyleName(styleName);
         }
     }
 

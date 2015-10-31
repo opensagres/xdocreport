@@ -37,7 +37,6 @@ import fr.opensagres.xdocreport.converter.MimeMapping;
 import fr.opensagres.xdocreport.converter.MimeMappingConstants;
 import fr.opensagres.xdocreport.converter.Options;
 import fr.opensagres.xdocreport.converter.XDocConverterException;
-import fr.opensagres.xdocreport.converter.docx.docx4j.pdf.Docx2PDFViaDocx4jConverter;
 import fr.opensagres.xdocreport.converter.internal.AbstractConverterNoEntriesSupport;
 import fr.opensagres.xdocreport.core.logging.LogUtils;
 
@@ -51,7 +50,7 @@ public class Docx2XHTMLViaDocx4jConverter
     /**
      * Logger for this class
      */
-    private static final Logger LOGGER = LogUtils.getLogger( Docx2PDFViaDocx4jConverter.class.getName() );
+    private static final Logger LOGGER = LogUtils.getLogger( Docx2XHTMLViaDocx4jConverter.class.getName() );
 
     public static Docx2XHTMLViaDocx4jConverter getInstance()
     {
@@ -95,5 +94,5 @@ public class Docx2XHTMLViaDocx4jConverter
     {
         return XHTML_MIME_MAPPING;
     }
-    
+
 }

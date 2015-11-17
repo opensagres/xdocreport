@@ -57,11 +57,13 @@ import fr.opensagres.xdocreport.document.preprocessor.sax.TransformedBufferedDoc
 public class FldSimpleBufferedRegion
     extends MergefieldBufferedRegion
 {
+	private boolean hasFieldName;
 
     public FldSimpleBufferedRegion( TransformedBufferedDocumentContentHandler handler, BufferedElement parent,
                                     String uri, String localName, String name, Attributes attributes )
     {
         super( handler, parent, uri, localName, name, attributes );
+        this.hasFieldName = false;
     }
 
     public void setTContent( String tContent )
@@ -69,7 +71,12 @@ public class FldSimpleBufferedRegion
         String fieldName = getFieldName();
         if ( fieldName != null )
         {
-            getTRegion(0).append( fieldName );
+        	// don't add the already computed field name.
+        	// see https://github.com/opensagres/xdocreport/issues/77
+        	if (!hasFieldName) {
+        		getTRegion(0).append( fieldName );
+        	}
+        	hasFieldName = true;
         }
         else
         {

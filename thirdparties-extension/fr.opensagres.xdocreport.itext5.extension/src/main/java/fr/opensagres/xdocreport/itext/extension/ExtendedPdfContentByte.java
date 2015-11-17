@@ -44,17 +44,17 @@ public class ExtendedPdfContentByte
     }
 
     @Override
-    public void addImage( Image image, float a, float b, float c, float d, float e, float f, boolean inlineImage )
+    public void addImage( Image image, double a, double b, double c, double d, double e, double f, boolean inlineImage, boolean isMCBlockOpened )
         throws DocumentException
     {
         if ( image instanceof ExtendedImage )
         {
             ExtendedImage extImg = (ExtendedImage) image;
-            super.addImage( extImg.getImage(), a, b, c, d, e, f + extImg.getOffsetY(), inlineImage );
+            super.addImage( extImg.getImage(), a, b, c, d, e, f + extImg.getOffsetY(), inlineImage, isMCBlockOpened );
         }
         else
         {
-            super.addImage( image, a, b, c, d, e, f, inlineImage );
+            super.addImage( image, a, b, c, d, e, f, inlineImage, isMCBlockOpened );
         }
     }
 }

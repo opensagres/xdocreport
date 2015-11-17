@@ -30,7 +30,7 @@ import org.junit.Test;
 public abstract class AbstractODFDOMConverterTest
 {
     @Test
-    @Ignore("not sure about the NullPointerException")
+    @Ignore("AssertionError from iText because top left cell on new page is null")
     public void CV()
         throws Exception
     {

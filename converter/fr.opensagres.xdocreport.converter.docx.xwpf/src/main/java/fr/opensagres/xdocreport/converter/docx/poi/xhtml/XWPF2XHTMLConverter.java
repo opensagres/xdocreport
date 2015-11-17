@@ -38,7 +38,6 @@ import fr.opensagres.xdocreport.converter.MimeMappingConstants;
 import fr.opensagres.xdocreport.converter.Options;
 import fr.opensagres.xdocreport.converter.OptionsHelper;
 import fr.opensagres.xdocreport.converter.XDocConverterException;
-import fr.opensagres.xdocreport.converter.docx.poi.itext.XWPF2PDFViaITextConverter;
 import fr.opensagres.xdocreport.converter.internal.AbstractConverterNoEntriesSupport;
 import fr.opensagres.xdocreport.core.logging.LogUtils;
 
@@ -52,7 +51,7 @@ public class XWPF2XHTMLConverter
     /**
      * Logger for this class
      */
-    private static final Logger LOGGER = LogUtils.getLogger( XWPF2PDFViaITextConverter.class.getName() );
+    private static final Logger LOGGER = LogUtils.getLogger( XWPF2XHTMLConverter.class.getName() );
 
     public static XWPF2XHTMLConverter getInstance()
     {

@@ -24,20 +24,15 @@
  */
 package fr.opensagres.xdocreport.document.preprocessor.sax;
 
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.Map;
-
+import fr.opensagres.xdocreport.core.utils.StringUtils;
+import fr.opensagres.xdocreport.document.DocumentContextHelper;
+import fr.opensagres.xdocreport.template.formatter.*;
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
 
-import fr.opensagres.xdocreport.core.utils.StringUtils;
-import fr.opensagres.xdocreport.document.DocumentContextHelper;
-import fr.opensagres.xdocreport.template.formatter.Directive;
-import fr.opensagres.xdocreport.template.formatter.DirectivesStack;
-import fr.opensagres.xdocreport.template.formatter.FieldMetadata;
-import fr.opensagres.xdocreport.template.formatter.FieldsMetadata;
-import fr.opensagres.xdocreport.template.formatter.IDocumentFormatter;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Document transformed to manage lazy loop for row table and dynamic image.
@@ -487,7 +482,7 @@ public abstract class TransformedBufferedDocumentContentHandler<Document extends
 
     public FieldMetadata getFieldAsTextStyling( String content )
     {
-        if ( formatter != null && fieldsMetadata != null )
+        if ( formatter != null && fieldsMetadata != null && !SaxUtils.isInstruction(content))
         {
         	return fieldsMetadata.getFieldAsTextStyling(content);
         }

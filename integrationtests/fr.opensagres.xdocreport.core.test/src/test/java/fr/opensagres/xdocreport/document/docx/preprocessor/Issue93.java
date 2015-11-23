@@ -7,6 +7,7 @@ import fr.opensagres.xdocreport.template.formatter.FieldsMetadata;
 import fr.opensagres.xdocreport.template.formatter.IDocumentFormatter;
 import fr.opensagres.xdocreport.template.velocity.VelocityDocumentFormatter;
 import org.junit.Assert;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import java.io.InputStream;
@@ -14,13 +15,14 @@ import java.io.StringWriter;
 import java.util.HashMap;
 
 /**
- * See https://github.com/opensagres/xdocreport/issues/89
+ * See https://github.com/opensagres/xdocreport/issues/93
  * <p>
  * User: Kevin Senechal <kevin@dooapp.com>
  * Date: 23/11/2015
  * Time: 10:10
  */
-public class Issue89 {
+@Ignore // remove it during issue 93 debugging
+public class Issue93 {
 
     @Test
     public void testStylingHtmlInsideLoop() throws Exception{
@@ -123,8 +125,6 @@ public class Issue89 {
                 "xmlns:wne=\"http://schemas.microsoft.com/office/word/2006/wordml\" "+
                 "xmlns:wps=\"http://schemas.microsoft.com/office/word/2010/wordprocessingShape\" "+
                 "mc:Ignorable=\"w14 wp14\">"+
-                // this line should be inside loop. see issue 93
-                "#set($___NoEscape0=${___TextStylingRegistry.transform($htmlInsideLoop,\"Html\",$false,\"DOCX\",\"0_elementId\",$___context,\"word/document.xml\")}) $___NoEscape0.TextBefore"+
                 "<w:p w:rsidR=\"00C7281A\" w:rsidRDefault=\"00CC4527\">"+
                         "<w:r>"+
                                 "<w:rPr>"+
@@ -132,6 +132,7 @@ public class Issue89 {
                                 "</w:rPr>"+
                                 "<w:t>#foreach($htmlInsideLoop in $htmls)</w:t>"+
                         "</w:r>"+
+                        "#set($___NoEscape0=${___TextStylingRegistry.transform($htmlInsideLoop,\"Html\",$false,\"DOCX\",\"0_elementId\",$___context,\"word/document.xml\")}) $___NoEscape0.TextBefore"+
                         "<w:r>"+
                                 "<w:rPr>"+
                                         "<w:noProof/>"+

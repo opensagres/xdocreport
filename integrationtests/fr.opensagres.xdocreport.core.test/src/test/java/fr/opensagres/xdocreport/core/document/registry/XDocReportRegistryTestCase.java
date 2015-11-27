@@ -44,6 +44,8 @@ import fr.opensagres.xdocreport.core.io.XDocArchive;
 import fr.opensagres.xdocreport.document.IXDocReport;
 import fr.opensagres.xdocreport.document.odt.ODTReport;
 import fr.opensagres.xdocreport.document.registry.XDocReportRegistry;
+import fr.opensagres.xdocreport.template.FieldExtractor;
+import fr.opensagres.xdocreport.template.FieldsExtractor;
 import fr.opensagres.xdocreport.template.IContext;
 import fr.opensagres.xdocreport.template.TemplateEngineKind;
 import fr.opensagres.xdocreport.template.freemarker.FreemarkerTemplateEngine;
@@ -306,6 +308,27 @@ public class XDocReportRegistryTestCase
         assertNull( "Error while loading report", ex );
     }
 
+    @Test
+    public void testWithLoadingWithBOMMarkup()
+    {
+        Exception ex = null;
+        try
+        {
+            IXDocReport report =
+                XDocReportRegistry.getRegistry().loadReport( XDocReportRegistryTestCase.class.getResourceAsStream( "bom.docx" ),
+                                                             TemplateEngineKind.Velocity );
+            report.extractFields(new FieldsExtractor<FieldExtractor>());
+
+        }
+        catch ( Exception e )
+        {
+            ex = e;
+            e.printStackTrace();
+        }
+        assertNull( "Error while loading report", ex );
+
+    }
+    
     private String processTemplateEngineForEntry( IXDocReport report, IContext context, String entryName )
         throws IOException, XDocReportException
     {

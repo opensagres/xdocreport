@@ -72,6 +72,7 @@ import org.odftoolkit.odfdom.dom.element.OdfStyleBase;
 import org.odftoolkit.odfdom.dom.element.office.OfficeAutomaticStylesElement;
 import org.odftoolkit.odfdom.dom.element.office.OfficeMasterStylesElement;
 import org.odftoolkit.odfdom.dom.element.office.OfficeStylesElement;
+import org.odftoolkit.odfdom.dom.element.style.StyleBackgroundImageElement;
 import org.odftoolkit.odfdom.dom.element.style.StyleColumnElement;
 import org.odftoolkit.odfdom.dom.element.style.StyleColumnsElement;
 import org.odftoolkit.odfdom.dom.element.style.StyleDefaultStyleElement;

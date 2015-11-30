@@ -24,8 +24,6 @@
  */
 package org.odftoolkit.odfdom.converter.pdf.internal;
 
-import java.awt.Font;
-import java.awt.Image;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;

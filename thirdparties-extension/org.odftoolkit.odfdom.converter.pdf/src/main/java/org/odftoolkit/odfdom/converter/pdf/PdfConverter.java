@@ -29,8 +29,16 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.io.Writer;
 
+import org.odftoolkit.odfdom.converter.core.AbstractODFConverter;
+import org.odftoolkit.odfdom.converter.core.IODFConverter;
+import org.odftoolkit.odfdom.converter.core.ODFConverterException;
 import org.odftoolkit.odfdom.converter.pdf.internal.ElementVisitorForIText;
 import org.odftoolkit.odfdom.converter.pdf.internal.StyleEngineForIText;
+import org.odftoolkit.odfdom.doc.OdfDocument;
+import org.odftoolkit.odfdom.dom.OdfContentDom;
+import org.odftoolkit.odfdom.dom.OdfStylesDom;
+import org.odftoolkit.odfdom.incubator.doc.office.OdfOfficeMasterStyles;
+import org.odftoolkit.odfdom.pkg.OdfElement;
 
 public class PdfConverter
     extends AbstractODFConverter<PdfOptions>

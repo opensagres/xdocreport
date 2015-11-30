@@ -31,6 +31,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.odftoolkit.odfdom.converter.core.AbstractStyleEngine;
+import org.odftoolkit.odfdom.converter.core.utils.ODFUtils;
 import org.odftoolkit.odfdom.converter.pdf.PdfOptions;
 import org.odftoolkit.odfdom.converter.pdf.internal.stylable.StylableImage;
 import org.odftoolkit.odfdom.converter.pdf.internal.styles.Style;
@@ -50,7 +52,64 @@ import org.odftoolkit.odfdom.converter.pdf.internal.styles.StyleTableCellPropert
 import org.odftoolkit.odfdom.converter.pdf.internal.styles.StyleTableProperties;
 import org.odftoolkit.odfdom.converter.pdf.internal.styles.StyleTableRowProperties;
 import org.odftoolkit.odfdom.converter.pdf.internal.styles.StyleTextProperties;
+import org.odftoolkit.odfdom.doc.OdfDocument;
+import org.odftoolkit.odfdom.dom.attribute.fo.FoBreakBeforeAttribute;
+import org.odftoolkit.odfdom.dom.attribute.fo.FoFontStyleAttribute;
+import org.odftoolkit.odfdom.dom.attribute.fo.FoFontWeightAttribute;
+import org.odftoolkit.odfdom.dom.attribute.fo.FoKeepTogetherAttribute;
+import org.odftoolkit.odfdom.dom.attribute.fo.FoTextAlignAttribute;
+import org.odftoolkit.odfdom.dom.attribute.style.StyleFontStyleAsianAttribute;
+import org.odftoolkit.odfdom.dom.attribute.style.StyleFontStyleComplexAttribute;
+import org.odftoolkit.odfdom.dom.attribute.style.StyleFontWeightAsianAttribute;
+import org.odftoolkit.odfdom.dom.attribute.style.StyleFontWeightComplexAttribute;
+import org.odftoolkit.odfdom.dom.attribute.style.StyleNumFormatAttribute;
+import org.odftoolkit.odfdom.dom.attribute.style.StylePrintOrientationAttribute;
+import org.odftoolkit.odfdom.dom.attribute.style.StyleTextLineThroughStyleAttribute;
+import org.odftoolkit.odfdom.dom.attribute.style.StyleTextUnderlineStyleAttribute;
+import org.odftoolkit.odfdom.dom.attribute.style.StyleTypeAttribute;
+import org.odftoolkit.odfdom.dom.attribute.style.StyleVerticalAlignAttribute;
+import org.odftoolkit.odfdom.dom.attribute.style.StyleWrapAttribute;
+import org.odftoolkit.odfdom.dom.attribute.table.TableAlignAttribute;
+import org.odftoolkit.odfdom.dom.element.OdfStyleBase;
+import org.odftoolkit.odfdom.dom.element.office.OfficeAutomaticStylesElement;
+import org.odftoolkit.odfdom.dom.element.office.OfficeMasterStylesElement;
+import org.odftoolkit.odfdom.dom.element.office.OfficeStylesElement;
+import org.odftoolkit.odfdom.dom.element.style.StyleColumnElement;
+import org.odftoolkit.odfdom.dom.element.style.StyleColumnsElement;
+import org.odftoolkit.odfdom.dom.element.style.StyleDefaultStyleElement;
+import org.odftoolkit.odfdom.dom.element.style.StyleFooterStyleElement;
+import org.odftoolkit.odfdom.dom.element.style.StyleGraphicPropertiesElement;
+import org.odftoolkit.odfdom.dom.element.style.StyleHeaderFooterPropertiesElement;
+import org.odftoolkit.odfdom.dom.element.style.StyleListLevelLabelAlignmentElement;
+import org.odftoolkit.odfdom.dom.element.style.StyleListLevelPropertiesElement;
+import org.odftoolkit.odfdom.dom.element.style.StylePageLayoutElement;
+import org.odftoolkit.odfdom.dom.element.style.StylePageLayoutPropertiesElement;
+import org.odftoolkit.odfdom.dom.element.style.StyleParagraphPropertiesElement;
+import org.odftoolkit.odfdom.dom.element.style.StyleSectionPropertiesElement;
+import org.odftoolkit.odfdom.dom.element.style.StyleStyleElement;
+import org.odftoolkit.odfdom.dom.element.style.StyleTabStopElement;
+import org.odftoolkit.odfdom.dom.element.style.StyleTabStopsElement;
+import org.odftoolkit.odfdom.dom.element.style.StyleTableCellPropertiesElement;
+import org.odftoolkit.odfdom.dom.element.style.StyleTablePropertiesElement;
+import org.odftoolkit.odfdom.dom.element.style.StyleTableRowPropertiesElement;
+import org.odftoolkit.odfdom.dom.element.style.StyleTextPropertiesElement;
+import org.odftoolkit.odfdom.dom.element.text.TextListLevelStyleBulletElement;
+import org.odftoolkit.odfdom.dom.element.text.TextListLevelStyleImageElement;
+import org.odftoolkit.odfdom.dom.element.text.TextListLevelStyleNumberElement;
+import org.odftoolkit.odfdom.dom.element.text.TextListStyleElement;
+import org.odftoolkit.odfdom.dom.element.text.TextOutlineLevelStyleElement;
+import org.odftoolkit.odfdom.dom.element.text.TextOutlineStyleElement;
+import org.odftoolkit.odfdom.dom.style.OdfStyleFamily;
+import org.odftoolkit.odfdom.pkg.OdfElement;
 import org.w3c.dom.Node;
+
+import com.lowagie.text.Element;
+import com.lowagie.text.Font;
+import com.lowagie.text.Image;
+
+import fr.opensagres.xdocreport.itext.extension.PageOrientation;
+import fr.opensagres.xdocreport.utils.BorderType;
+import fr.opensagres.xdocreport.utils.StringUtils;
 
 /**
  * fixes for pdf conversion by Leszek Piotrowicz <leszekp@safe-mail.net>

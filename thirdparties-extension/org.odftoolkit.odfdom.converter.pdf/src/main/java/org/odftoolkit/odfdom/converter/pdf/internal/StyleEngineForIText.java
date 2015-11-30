@@ -24,6 +24,8 @@
  */
 package org.odftoolkit.odfdom.converter.pdf.internal;
 
+import java.awt.Font;
+import java.awt.Image;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -127,6 +129,8 @@ public class StyleEngineForIText
 
     private List<StyleColumnProperties> currentColumnPropertiesList;
 
+    private BackgroundImage backgroundImage = null;
+
     private final PdfOptions options;
 
     private final Map<String, Style> stylesMap = new HashMap<String, Style>();
@@ -135,6 +139,56 @@ public class StyleEngineForIText
     {
         super( odfDocument );
         this.options = options != null ? options : PdfOptions.getDefault();
+    }
+
+    public BackgroundImage getBackgroundImage() {
+    	return backgroundImage;
+    }
+
+    public void visit(StyleBackgroundImageElement ele) {
+
+    	String href = ele.getXlinkHrefAttribute();
+        if (StringUtils.isNotEmpty(href)) {
+            byte[] imageStream = odfDocument.getPackage().getBytes(href);
+	         try {
+		        if (imageStream != null) {
+		        	BackgroundImage.Builder builder = new BackgroundImage.Builder(imageStream);
+		            Node parentNode = ele.getParentNode();
+		            builder.setRepeat(BackgroundImage.Repeat.fromODT(ele.getStyleRepeatAttribute()));
+		            builder.setPosition(BackgroundImage.Position.fromODT(ele.getStylePositionAttribute()));
+		            if (parentNode instanceof StylePageLayoutPropertiesElement) {
+		            	StylePageLayoutPropertiesElement layout = (StylePageLayoutPropertiesElement) parentNode;
+		                String svgWidth = layout.getFoPageWidthAttribute();
+		                if (StringUtils.isNotEmpty(svgWidth)) {
+		                	builder.setPageWidth(ODFUtils.getDimensionAsPoint(svgWidth));
+		                }
+		                String svgHeight = layout.getFoPageHeightAttribute();
+		                if (StringUtils.isNotEmpty(svgHeight)) {
+		                	builder.setPageHeight(ODFUtils.getDimensionAsPoint(svgHeight));
+		                }
+		                String leftMargin = layout.getFoMarginLeftAttribute();
+	                	if (StringUtils.isNotEmpty(leftMargin)) {
+	                		builder.setLeftMargin(ODFUtils.getDimensionAsPoint(leftMargin));
+	                	}
+	                	String rightMargin = layout.getFoMarginRightAttribute();
+	                	if (StringUtils.isNotEmpty(rightMargin)) {
+	                		builder.setRightMargin(ODFUtils.getDimensionAsPoint(rightMargin));
+	                	}
+	                	String topMargin = layout.getFoMarginTopAttribute();
+	                	if (StringUtils.isNotEmpty(topMargin)) {
+	                		builder.setTopMargin(ODFUtils.getDimensionAsPoint(topMargin));
+	                	}
+	                	String bottomMargin = layout.getFoMarginBottomAttribute();
+	                	if (StringUtils.isNotEmpty(bottomMargin)) {
+	                		builder.setBottomMargin(ODFUtils.getDimensionAsPoint(bottomMargin));
+	                	}
+		            }
+		            backgroundImage = builder.build();
+		        }
+			} catch (Exception e) {
+				throw new RuntimeException(e);
+			}
+        }
     }
 
     public void visit( OfficeStylesElement ele )

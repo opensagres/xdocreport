@@ -63,6 +63,11 @@ public class PdfConverter
             // process content
             ByteArrayOutputStream tempOut = new ByteArrayOutputStream();
             ElementVisitorForIText visitorForIText = processBody( odfDocument, tempOut, styleEngine, options, null );
+
+            if (styleEngine.getBackgroundImage() != null) {
+            	styleEngine.getBackgroundImage().insert(tempOut);
+            }
+
             Integer expectedPageCount = visitorForIText.getExpectedPageCount();
             int actualPageCount = visitorForIText.getActualPageCount();
             if ( expectedPageCount == null || expectedPageCount == actualPageCount )

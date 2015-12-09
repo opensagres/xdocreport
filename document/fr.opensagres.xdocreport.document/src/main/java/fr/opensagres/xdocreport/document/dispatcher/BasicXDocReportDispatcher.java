@@ -27,6 +27,7 @@ package fr.opensagres.xdocreport.document.dispatcher;
 import java.util.Collection;
 import java.util.LinkedHashMap;
 import java.util.Map;
+import java.util.function.Predicate;
 
 public class BasicXDocReportDispatcher<T extends IXDocReportController>
     extends AbstractXDocReportDispatcher<T>
@@ -50,18 +51,18 @@ public class BasicXDocReportDispatcher<T extends IXDocReportController>
         controllersMap.put( reportId, controller );
     }
 
-    public void unregister( T controller )
+    public void unregister( final T controller )
     {
-        controllersMap.remove( controller );
+        controllersMap.entrySet().removeIf(new Predicate<Map.Entry<String, T>>() {
+            public boolean test(Map.Entry<String, T> t) {
+                return t.getValue() == controller;
+            }
+        });
     }
 
     public void unregister( String reportId )
     {
-        T controller = controllersMap.get( reportId );
-        if ( controller != null )
-        {
-            unregister( controller );
-        }
+        controllersMap.remove( reportId );
     }
 
     public Collection<T> getControllers()

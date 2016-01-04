@@ -32,14 +32,15 @@ import java.io.StringWriter;
 
 import fr.opensagres.xdocreport.core.io.IOUtils;
 
-public abstract class AbstractDataProvider implements IDataProvider
+public abstract class AbstractDataProvider
+    implements IDataProvider
 {
 
     private final InputStream data;
 
     private final InputStream properties;
 
-    public AbstractDataProvider(InputStream data, InputStream properties)
+    public AbstractDataProvider( InputStream data, InputStream properties )
     {
         this.data = data;
         this.properties = properties;
@@ -55,12 +56,13 @@ public abstract class AbstractDataProvider implements IDataProvider
         return properties;
     }
 
-    public String getDataAsString() throws IOException
+    public String getDataAsString()
+        throws IOException
     {
         StringWriter sw = new StringWriter();
         // force utf-8 encoding
-        BufferedReader br = new BufferedReader(new InputStreamReader(getData(), "UTF-8"));
-        IOUtils.copy(br, sw);
+        BufferedReader br = new BufferedReader( new InputStreamReader( getData(), "UTF-8" ) );
+        IOUtils.copy( br, sw );
         return sw.toString();
     }
 

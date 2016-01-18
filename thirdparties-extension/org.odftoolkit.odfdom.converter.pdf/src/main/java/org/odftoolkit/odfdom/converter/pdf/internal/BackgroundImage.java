@@ -12,6 +12,8 @@ import com.lowagie.text.pdf.PdfStamper;
  */
 public class BackgroundImage {
 
+	private static final int DEFAULT_DPI = 72;
+
 	private final byte[] imageBytes;
 	private final Repeat repeat;
 	private final Float pageWidth;
@@ -165,47 +167,50 @@ public class BackgroundImage {
 	 * Insert the backgroundImage in the given OutputStream.
 	 * @param out the pdf as a ByteArrayOutputStream
 	 */
-	public void insert(ByteArrayOutputStream out) {
+	public ByteArrayOutputStream insert(ByteArrayOutputStream out) {
 
 		try {
 			Image image = Image.getInstance(imageBytes);
-
+			float imageWidth = image.getWidth() * DEFAULT_DPI / image.getDpiX();
+			float imageHeight = image.getHeight() * DEFAULT_DPI / image.getDpiY();
 			switch (repeat) {
 			case BOTH:
+				ByteArrayOutputStream stream = out;
 				//TODO: maybe we could get better results if we tiled the byteArray instead of the images themselves.
-				for (float x = leftMargin; x < pageWidth - rightMargin; x += image.getWidth()) {
-					for (float y = pageHeight - topMargin; y > bottomMargin; y -= image.getHeight()) {
+				for (float x = leftMargin; x < pageWidth - rightMargin; x += imageWidth) {
+					for (float y = pageHeight - topMargin; y > bottomMargin; y -= imageHeight) {
 
-						if (x + image.getWidth() > pageWidth - rightMargin || y - image.getHeight() < bottomMargin) {
-							byte[] data = new byte[(int)image.getWidth() * (int)image.getHeight()];
-							for (int k = 0; k < (int)image.getHeight(); k++) {
-								for (int i = 0; i < image.getWidth(); i++) {
+						if (x + imageWidth > pageWidth - rightMargin || y - imageHeight < bottomMargin) {
+							byte[] data = new byte[(int)imageWidth * (int)imageHeight];
+							for (int k = 0; k < (int)imageHeight; k++) {
+								for (int i = 0; i < imageWidth; i++) {
 									if (x + i < pageWidth - rightMargin && y - k > bottomMargin) {
-										data[i + k * (int)image.getWidth()] = (byte) 0xff;
+										data[i + k * (int)imageWidth] = (byte) 0xff;
 									}
 								}
 							}
 
 							Image clone = Image.getInstance(image);
-							Image mask = Image.getInstance((int)image.getWidth(), (int)image.getHeight(), 1, 8, data);
+							Image mask = Image.getInstance((int)imageWidth, (int)imageHeight, 1, 8, data);
 							mask.makeMask();
 							clone.setImageMask(mask);
-							clone.setAbsolutePosition(x, y - image.getHeight());
-							insertImage(out, clone);
+							clone.setAbsolutePosition(x, y - imageHeight);
+							stream = insertImage(stream, clone);
 						} else {
-							image.setAbsolutePosition(x, y - image.getHeight());
-							insertImage(out, image);
+							image.setAbsolutePosition(x, y - imageHeight);
+							image.scaleAbsolute(imageWidth, imageHeight);
+							stream = insertImage(stream, image);
 						}
 					}
 				}
-				break;
+				return stream;
 			case NONE:
 
 				float y;
 				if (position.name().split("_")[0].equals("TOP")) {
-					y = pageHeight - image.getHeight() - topMargin;
+					y = pageHeight - imageHeight - topMargin;
 				} else if (position.name().split("_")[0].equals("CENTER")) {
-					y = (pageHeight - image.getHeight() - topMargin) / 2;
+					y = (pageHeight - imageHeight - topMargin) / 2;
 				} else if (position.name().split("_")[0].equals("BOTTOM")) {
 					y = bottomMargin;
 				} else {
@@ -215,40 +220,43 @@ public class BackgroundImage {
 				if (position.name().split("_")[1].equals("LEFT")) {
 					x = leftMargin;
 				} else if (position.name().split("_")[1].equals("CENTER")) {
-					x = (pageWidth - image.getWidth() - rightMargin) / 2;
+					x = (pageWidth - imageWidth - rightMargin) / 2;
 				} else if (position.name().split("_")[1].equals("RIGHT")) {
-					x = pageWidth - image.getWidth() - rightMargin;
+					x = pageWidth - imageWidth - rightMargin;
 				} else {
 					throw new UnsupportedOperationException(position + " is not supported");
 				}
 
 				image.setAbsolutePosition(x, y);
-				insertImage(out, image);
-				break;
+				image.scaleAbsolute(imageWidth, imageHeight);
+				return insertImage(out, image);
 			case STRETCH:
 				image.setAbsolutePosition(leftMargin, bottomMargin);
 				image.scaleAbsolute(pageWidth - leftMargin - rightMargin, pageHeight - topMargin - bottomMargin);
-				insertImage(out, image);
-				break;
+				return insertImage(out, image);
 			default:
 				throw new UnsupportedOperationException(repeat + " is not implemented");
 			}
-
 		} catch (Exception e) {
 			throw new RuntimeException(e);
 		}
 	}
 
-	private void insertImage(ByteArrayOutputStream out, Image image) {
+	private ByteArrayOutputStream insertImage(ByteArrayOutputStream out, Image image) {
+
+
 		try {
+			ByteArrayOutputStream os = new ByteArrayOutputStream(out.size());
 			PdfReader reader = new PdfReader(out.toByteArray());
-			PdfStamper stamper = new PdfStamper(reader, out);
+			PdfStamper stamper = new PdfStamper(reader, os);
 
 			for (int i = 1; i <= reader.getNumberOfPages(); i++) {
 				PdfContentByte canvas = stamper.getUnderContent(i);
 				canvas.addImage(image);
 			}
+			reader.close();
 			stamper.close();
+			return os;
 		} catch (Exception e) {
 			throw new RuntimeException(e);
 		}

@@ -136,7 +136,7 @@ public class StyleEngineForIText
 
     public StyleEngineForIText( OdfDocument odfDocument, PdfOptions options )
     {
-        super( odfDocument );
+        super(odfDocument);
         this.options = options != null ? options : PdfOptions.getDefault();
     }
 
@@ -158,29 +158,17 @@ public class StyleEngineForIText
 		            if (parentNode instanceof StylePageLayoutPropertiesElement) {
 		            	StylePageLayoutPropertiesElement layout = (StylePageLayoutPropertiesElement) parentNode;
 		                String svgWidth = layout.getFoPageWidthAttribute();
-		                if (StringUtils.isNotEmpty(svgWidth)) {
-		                	builder.setPageWidth(ODFUtils.getDimensionAsPoint(svgWidth));
-		                }
+		                if (StringUtils.isNotEmpty(svgWidth)) builder.setPageWidth(ODFUtils.getDimensionAsPoint(svgWidth));
 		                String svgHeight = layout.getFoPageHeightAttribute();
-		                if (StringUtils.isNotEmpty(svgHeight)) {
-		                	builder.setPageHeight(ODFUtils.getDimensionAsPoint(svgHeight));
-		                }
+		                if (StringUtils.isNotEmpty(svgHeight)) builder.setPageHeight(ODFUtils.getDimensionAsPoint(svgHeight));
 		                String leftMargin = layout.getFoMarginLeftAttribute();
-	                	if (StringUtils.isNotEmpty(leftMargin)) {
-	                		builder.setLeftMargin(ODFUtils.getDimensionAsPoint(leftMargin));
-	                	}
+	                	if (StringUtils.isNotEmpty(leftMargin)) builder.setLeftMargin(ODFUtils.getDimensionAsPoint(leftMargin));
 	                	String rightMargin = layout.getFoMarginRightAttribute();
-	                	if (StringUtils.isNotEmpty(rightMargin)) {
-	                		builder.setRightMargin(ODFUtils.getDimensionAsPoint(rightMargin));
-	                	}
+	                	if (StringUtils.isNotEmpty(rightMargin)) builder.setRightMargin(ODFUtils.getDimensionAsPoint(rightMargin));
 	                	String topMargin = layout.getFoMarginTopAttribute();
-	                	if (StringUtils.isNotEmpty(topMargin)) {
-	                		builder.setTopMargin(ODFUtils.getDimensionAsPoint(topMargin));
-	                	}
+	                	if (StringUtils.isNotEmpty(topMargin)) builder.setTopMargin(ODFUtils.getDimensionAsPoint(topMargin));
 	                	String bottomMargin = layout.getFoMarginBottomAttribute();
-	                	if (StringUtils.isNotEmpty(bottomMargin)) {
-	                		builder.setBottomMargin(ODFUtils.getDimensionAsPoint(bottomMargin));
-	                	}
+	                	if (StringUtils.isNotEmpty(bottomMargin)) builder.setBottomMargin(ODFUtils.getDimensionAsPoint(bottomMargin));
 		            }
 		            backgroundImage = builder.build();
 		        }
@@ -525,6 +513,12 @@ public class StyleEngineForIText
         if ( StringUtils.isNotEmpty( marginTop ) )
         {
             headerFooterProperties.setMarginTop( ODFUtils.getDimensionAsPoint( marginTop ) );
+        }
+        // height
+        String height = ele.getSvgHeightAttribute();
+        if ( StringUtils.isNotEmpty( height ) )
+        {
+        	headerFooterProperties.setHeight(ODFUtils.getDimensionAsPoint(height));
         }
     }
 

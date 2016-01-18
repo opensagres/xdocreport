@@ -99,6 +99,11 @@ public class StylableHeaderFooter
             {
                 tableCell.setPaddingTop( marginTop );
             }
+            Float height = headerFooterProperties.getHeight();
+            if ( height != null )
+            {
+//            	tableCell.setFixedHeight(height);
+            }
         }
     }
 

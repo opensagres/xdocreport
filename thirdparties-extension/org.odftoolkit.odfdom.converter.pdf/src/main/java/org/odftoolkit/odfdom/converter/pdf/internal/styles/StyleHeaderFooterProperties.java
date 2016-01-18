@@ -38,6 +38,18 @@ public class StyleHeaderFooterProperties
 
     private Float minHeight;
 
+    private Float height;
+
+    public Float getHeight()
+    {
+    	return height;
+    }
+
+    public void setHeight( Float height )
+    {
+    	this.height = height;
+    }
+
     public Float getMargin()
     {
         return margin;

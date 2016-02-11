@@ -38,6 +38,7 @@ import com.itextpdf.text.Chunk;
 import com.itextpdf.text.Element;
 import com.itextpdf.text.Font;
 import com.itextpdf.text.Paragraph;
+import com.itextpdf.text.TabSettings;
 import com.itextpdf.text.pdf.BaseFont;
 
 import fr.opensagres.xdocreport.itext.extension.ExtendedParagraph;
@@ -46,8 +47,8 @@ import fr.opensagres.xdocreport.itext.extension.ExtendedParagraph;
  * fixes for paragraph pdf conversion by Leszek Piotrowicz <leszekp@safe-mail.net>
  */
 public class StylableParagraph
-    extends ExtendedParagraph
-    implements IStylableContainer
+extends ExtendedParagraph
+implements IStylableContainer
 {
     private static final long serialVersionUID = 664309269352903329L;
 
@@ -66,6 +67,7 @@ public class StylableParagraph
         super();
         this.ownerDocument = ownerDocument;
         this.parent = parent;
+        this.setTabSettings(new TabSettings(56f));
         super.setMultipliedLeading( DEFAULT_LINE_HEIGHT );
     }
 
@@ -74,6 +76,7 @@ public class StylableParagraph
         super( title );
         this.ownerDocument = ownerDocument;
         this.parent = parent;
+        this.setTabSettings(new TabSettings(56f));
         super.setMultipliedLeading( DEFAULT_LINE_HEIGHT );
     }
 
@@ -121,8 +124,8 @@ public class StylableParagraph
                 Float textIndent = paragraphProperties.getTextIndent();
                 if ( textIndent != null)
                 {
-                    // text indent can be negative. 
-                    // See https://code.google.com/p/xdocreport/issues/detail?id=366 
+                    // text indent can be negative.
+                    // See https://code.google.com/p/xdocreport/issues/detail?id=366
                     super.setFirstLineIndent( textIndent );
                 }
             }
@@ -200,7 +203,7 @@ public class StylableParagraph
         }
         p.addElement( new Chunk( content, font ) );
         p.getElement(); // post-processing here
-        return (Chunk) p.getChunks().get( 0 );
+        return p.getChunks().get( 0 );
     }
 
     @Override
@@ -240,7 +243,7 @@ public class StylableParagraph
     {
         // add space if last chunk is a bookmark
         // otherwise the bookmark will disappear from pdf
-    	java.util.List<Chunk> chunks = getChunks();
+        java.util.List<Chunk> chunks = getChunks();
         if ( chunks.size() > 0 )
         {
             Chunk lastChunk = chunks.get( chunks.size() - 1 );

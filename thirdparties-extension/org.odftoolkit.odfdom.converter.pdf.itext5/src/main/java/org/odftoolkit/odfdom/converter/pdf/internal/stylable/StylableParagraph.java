@@ -54,6 +54,8 @@ implements IStylableContainer
 
     public static final float DEFAULT_LINE_HEIGHT = 1.0f;
 
+    public static final float DEFAULT_TAB_INTERVAL = 56.0f;
+
     private final StylableDocument ownerDocument;
 
     private IStylableContainer parent;
@@ -67,7 +69,7 @@ implements IStylableContainer
         super();
         this.ownerDocument = ownerDocument;
         this.parent = parent;
-        this.setTabSettings(new TabSettings(56f));
+        super.setTabSettings(new TabSettings(DEFAULT_TAB_INTERVAL));
         super.setMultipliedLeading( DEFAULT_LINE_HEIGHT );
     }
 
@@ -76,7 +78,7 @@ implements IStylableContainer
         super( title );
         this.ownerDocument = ownerDocument;
         this.parent = parent;
-        this.setTabSettings(new TabSettings(56f));
+        super.setTabSettings(new TabSettings(DEFAULT_TAB_INTERVAL));
         super.setMultipliedLeading( DEFAULT_LINE_HEIGHT );
     }
 

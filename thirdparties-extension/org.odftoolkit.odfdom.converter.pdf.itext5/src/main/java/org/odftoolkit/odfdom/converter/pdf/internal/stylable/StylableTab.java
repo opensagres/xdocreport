@@ -133,7 +133,7 @@ public class StylableTab
             }
             else
             {
-                chunk = new Chunk( leaderText, font );
+                chunk = Chunk.TABBING;
             }
         }
         return chunk;

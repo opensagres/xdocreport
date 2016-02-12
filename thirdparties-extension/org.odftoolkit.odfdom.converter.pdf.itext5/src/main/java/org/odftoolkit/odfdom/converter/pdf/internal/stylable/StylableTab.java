@@ -39,7 +39,7 @@ import com.itextpdf.text.pdf.PdfContentByte;
 import com.itextpdf.text.pdf.draw.DrawInterface;
 
 public class StylableTab
-implements IStylableElement, DrawInterface
+    implements IStylableElement, DrawInterface
 {
     private IStylableContainer parent;
 
@@ -133,7 +133,6 @@ implements IStylableElement, DrawInterface
             }
             else
             {
-                // chunk = new Chunk( leaderText, font );
                 chunk = Chunk.TABBING;
             }
         }

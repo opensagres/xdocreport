@@ -47,8 +47,8 @@ import fr.opensagres.xdocreport.itext.extension.ExtendedParagraph;
  * fixes for paragraph pdf conversion by Leszek Piotrowicz <leszekp@safe-mail.net>
  */
 public class StylableParagraph
-extends ExtendedParagraph
-implements IStylableContainer
+    extends ExtendedParagraph
+    implements IStylableContainer
 {
     private static final long serialVersionUID = 664309269352903329L;
 
@@ -69,7 +69,7 @@ implements IStylableContainer
         super();
         this.ownerDocument = ownerDocument;
         this.parent = parent;
-        super.setTabSettings(new TabSettings(DEFAULT_TAB_INTERVAL));
+        super.setTabSettings( new TabSettings( DEFAULT_TAB_INTERVAL ) );
         super.setMultipliedLeading( DEFAULT_LINE_HEIGHT );
     }
 
@@ -78,7 +78,7 @@ implements IStylableContainer
         super( title );
         this.ownerDocument = ownerDocument;
         this.parent = parent;
-        super.setTabSettings(new TabSettings(DEFAULT_TAB_INTERVAL));
+        super.setTabSettings( new TabSettings( DEFAULT_TAB_INTERVAL ) );
         super.setMultipliedLeading( DEFAULT_LINE_HEIGHT );
     }
 
@@ -205,7 +205,7 @@ implements IStylableContainer
         }
         p.addElement( new Chunk( content, font ) );
         p.getElement(); // post-processing here
-        return p.getChunks().get( 0 );
+        return (Chunk) p.getChunks().get( 0 );
     }
 
     @Override

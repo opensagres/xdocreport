@@ -218,7 +218,7 @@ public class StylableParagraph
 
     private void postProcessEmptyParagraph()
     {
-        // add space if this paragraph is empty
+        // add new line if this paragraph is empty
         // otherwise its height will be zero
         boolean empty = true;
         java.util.List<Chunk> chunks = getChunks();
@@ -232,7 +232,7 @@ public class StylableParagraph
         }
         if ( empty )
         {
-            super.add( new Chunk( ODFUtils.TAB_STR ) );
+            super.add(Chunk.NEWLINE);
         }
     }
 

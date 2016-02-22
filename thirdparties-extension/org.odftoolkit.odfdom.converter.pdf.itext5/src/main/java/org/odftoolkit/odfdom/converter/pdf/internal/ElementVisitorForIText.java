@@ -137,7 +137,8 @@ public class ElementVisitorForIText
 
     private Integer expectedPageCount; // page count processing
 
-    public ElementVisitorForIText( OdfDocument odfDocument, OutputStream out, StyleEngineForIText styleEngine, PdfOptions options, Integer forcedPageCount )
+    public ElementVisitorForIText( OdfDocument odfDocument, OutputStream out, StyleEngineForIText styleEngine,
+                                   PdfOptions options, Integer forcedPageCount )
     {
         super( odfDocument, options.getExtractor(), out, null );
         this.styleEngine = styleEngine;
@@ -154,7 +155,8 @@ public class ElementVisitorForIText
         }
     }
 
-    public ElementVisitorForIText( OdfDocument odfDocument, OutputStream out, StyleEngineForIText styleEngine, PdfAOptions options, Integer forcedPageCount )
+    public ElementVisitorForIText( OdfDocument odfDocument, OutputStream out, StyleEngineForIText styleEngine,
+                                   PdfAOptions options, Integer forcedPageCount )
     {
         super( odfDocument, options.getExtractor(), out, null );
         this.styleEngine = styleEngine;
@@ -180,7 +182,8 @@ public class ElementVisitorForIText
         if ( document.isOpen() )
         {
             return document.getPageNumber();
-        } else
+        }
+        else
         {
             return document.getPageNumber() - 1;
         }
@@ -294,7 +297,8 @@ public class ElementVisitorForIText
     @Override
     public void visit( TextSectionElement ele )
     {
-        StylableDocumentSection documentSection = document.createDocumentSection( currentContainer, !parseOfficeTextElement );
+        StylableDocumentSection documentSection =
+            document.createDocumentSection( currentContainer, !parseOfficeTextElement );
         applyStyles( ele, documentSection );
         addITextContainer( ele, documentSection );
     }
@@ -312,7 +316,7 @@ public class ElementVisitorForIText
         }
         while ( currentHeadingNumbering.size() > outlineLevel )
         {
-            currentHeadingNumbering.remove(currentHeadingNumbering.size() - 1);
+            currentHeadingNumbering.remove(currentHeadingNumbering.size() - 1 );
         }
         if ( currentHeadingNumbering.size() == outlineLevel )
         {
@@ -320,7 +324,8 @@ public class ElementVisitorForIText
         }
         while ( currentHeadingNumbering.size() < outlineLevel )
         {
-            currentHeadingNumbering.add(StylableHeading.getFirst( currentContainer.getLastStyleApplied(), currentHeadingNumbering.size() + 1) );
+            currentHeadingNumbering.add(StylableHeading.getFirst( currentContainer.getLastStyleApplied(),
+                                                                  currentHeadingNumbering.size() + 1 ) );
         }
 
         processParagraphOrHeading( ele, new ArrayList<Integer>( currentHeadingNumbering ) );
@@ -329,7 +334,7 @@ public class ElementVisitorForIText
     // ---------------------- visit //text:p
 
     @Override
-    public void visit(TextPElement ele)
+    public void visit( TextPElement ele )
     {
         processParagraphOrHeading( ele, null );
     }
@@ -347,13 +352,16 @@ public class ElementVisitorForIText
             if ( joinWithPrevious )
             {
                 // add this paragraph to existing wrapper
-            } else
+            }
+            else
             {
                 // start a new wrapper
                 currentContainer = paragraphWrapper;
             }
             // process paragraph
-            StylableParagraph paragraph = headingNumbering != null ? document.createHeading( currentContainer, headingNumbering ) : document.createParagraph( currentContainer );
+            StylableParagraph paragraph =
+                headingNumbering != null ? document.createHeading( currentContainer, headingNumbering )
+                                : document.createParagraph( currentContainer );
             applyStyles( ele, paragraph );
             // apply top or bottom margin if necessary
             if ( joinWithNext )
@@ -369,7 +377,8 @@ public class ElementVisitorForIText
             if ( joinWithNext )
             {
                 // some paragraph will be added to current wrapper, do nothing
-            } else
+            }
+            else
             {
                 // end current wrapper
                 IStylableContainer oldContainer = currentContainer.getParent();
@@ -381,7 +390,9 @@ public class ElementVisitorForIText
         {
             // paragraph has no border and no background
             // don't have to wrap it in a table
-            StylableParagraph paragraph = headingNumbering != null ? document.createHeading( currentContainer, headingNumbering ) : document.createParagraph( currentContainer );
+            StylableParagraph paragraph =
+                headingNumbering != null ? document.createHeading( currentContainer, headingNumbering )
+                                : document.createParagraph( currentContainer );
             applyStyles( ele, paragraph );
             // apply margin (left, right, top, bottom) values
             paragraph.setIndentation( paragraphWrapper );
@@ -402,7 +413,7 @@ public class ElementVisitorForIText
     {
         if ( node instanceof TextParagraphElementBase )
         {
-            TextParagraphElementBase ele = ( TextParagraphElementBase ) node;
+            TextParagraphElementBase ele = (TextParagraphElementBase) node;
             StylableParagraphWrapper paragraphWrapper2 = createParagraphWrapperAndApplyStyles( ele );
             Style style1 = paragraphWrapper1.getLastStyleApplied();
             Style style2 = paragraphWrapper2.getLastStyleApplied();
@@ -437,7 +448,7 @@ public class ElementVisitorForIText
     // ---------------------- visit //text:a
 
     @Override
-    public void visit(TextAElement ele)
+    public void visit( TextAElement ele )
     {
         StylableAnchor anchor = document.createAnchor( currentContainer );
         String reference = ele.getXlinkHrefAttribute();
@@ -461,7 +472,7 @@ public class ElementVisitorForIText
                     }
                 }
             }
-            linkFont.setColor( Converter.toBaseColor( Color.BLUE ) );
+            linkFont.setColor( Converter.toBaseColor(Color.BLUE) );
         }
 
         // set the link
@@ -581,9 +592,9 @@ public class ElementVisitorForIText
         applyStyles( ele, list );
         Boolean continueNumbering = ele.getTextContinueNumberingAttribute();
         if ( Boolean.TRUE.equals( continueNumbering ) && previousList != null
-                && previousList.getLastStyleApplied() != null && list.getLastStyleApplied() != null
-                && previousList.getLastStyleApplied().getStyleName() != null
-                && previousList.getLastStyleApplied().getStyleName().equals(list.getLastStyleApplied().getStyleName() ) )
+            && previousList.getLastStyleApplied() != null && list.getLastStyleApplied() != null
+            && previousList.getLastStyleApplied().getStyleName() != null
+            && previousList.getLastStyleApplied().getStyleName().equals(list.getLastStyleApplied().getStyleName() ) )
         {
             list.setFirst( previousList.getIndex() );
         }
@@ -619,9 +630,9 @@ public class ElementVisitorForIText
             Node parentNode = ele.getParentNode();
             if ( parentNode instanceof DrawFrameElement )
             {
-                frame = ( DrawFrameElement ) parentNode;
+                frame = (DrawFrameElement) parentNode;
                 String svgX = frame.getSvgXAttribute();
-                if ( StringUtils.isNotEmpty(svgX) )
+                if ( StringUtils.isNotEmpty( svgX ) )
                 {
                     x = ODFUtils.getDimensionAsPoint( svgX );
                 }
@@ -636,7 +647,8 @@ public class ElementVisitorForIText
                     width = ODFUtils.getDimensionAsPoint( svgWidth );
                 }
                 String svgHeight = frame.getSvgHeightAttribute();
-                if ( StringUtils.isNotEmpty( svgHeight ) ) {
+                if ( StringUtils.isNotEmpty( svgHeight ) )
+                {
                     height = ODFUtils.getDimensionAsPoint( svgHeight );
                 }
             }
@@ -827,7 +839,8 @@ public class ElementVisitorForIText
     private void addITextContainer( OdfElement ele, IStylableContainer newContainer, boolean add )
     {
         IStylableContainer oldContainer = currentContainer;
-        try {
+        try
+        {
             currentContainer = newContainer;
             super.visit( ele );
             if ( add )
@@ -862,7 +875,8 @@ public class ElementVisitorForIText
                     {
                         document.setActiveMasterPage( masterPage );
                     }
-                } else if ( document.getActiveMasterPage() == null )
+                }
+                else if ( document.getActiveMasterPage() == null )
                 {
                     // no master page was activated yet
                     // activate default
@@ -879,7 +893,7 @@ public class ElementVisitorForIText
         Style parentElementStyle = element != null ? getParentElementStyle( element ) : null;
         if ( e instanceof OdfStylableElement )
         {
-            OdfStylableElement ele = ( OdfStylableElement ) e;
+            OdfStylableElement ele = (OdfStylableElement) e;
 
             String styleName = ele.getStyleName();
             String familyName = ele.getStyleFamily() != null ? ele.getStyleFamily().getName() : null;
@@ -888,7 +902,7 @@ public class ElementVisitorForIText
         }
         else if ( e instanceof TextListElement )
         {
-            TextListElement ele = ( TextListElement ) e;
+            TextListElement ele = (TextListElement) e;
 
             String styleName = ele.getTextStyleNameAttribute();
 
@@ -902,7 +916,8 @@ public class ElementVisitorForIText
         for ( IStylableContainer c = element.getParent(); c != null; c = c.getParent() )
         {
             Style style = c.getLastStyleApplied();
-            if ( style != null ) {
+            if ( style != null )
+            {
                 return style;
             }
         }

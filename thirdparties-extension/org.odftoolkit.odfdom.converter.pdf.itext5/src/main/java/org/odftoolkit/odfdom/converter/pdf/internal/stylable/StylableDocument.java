@@ -114,7 +114,8 @@ public class StylableDocument
         return new StylableHeading( this, parent, headingNumbering );
     }
 
-    public StylableImage createImage( IStylableContainer parent, Image image, Float x, Float y, Float width, Float height )
+    public StylableImage createImage( IStylableContainer parent, Image image, Float x, Float y, Float width,
+                                      Float height )
     {
         return new StylableImage( this, parent, image, x, y, width, height );
     }
@@ -164,7 +165,7 @@ public class StylableDocument
         // flush pending content
         flushTable();
         // activate master page in three steps
-        Style style = getStyleMasterPage( ( StylableMasterPage ) masterPage );
+        Style style = getStyleMasterPage( (StylableMasterPage) masterPage );
         if ( style != null )
         {
             // step 1 - apply styles like page dimensions and orientation
@@ -177,7 +178,7 @@ public class StylableDocument
             // set a flag used by addElement/pageBreak
             masterPageJustChanged = true;
         }
-        activeMasterPage = ( StylableMasterPage ) masterPage;
+        activeMasterPage = (StylableMasterPage) masterPage;
         // step 3 - initialize column layout, it needs page dimensions which may be lowered by header/footer in step 2
         layoutTable = StylableDocumentSection.createLayoutTable( getPageWidth(), getAdjustedPageHeight(), style );
         text = StylableDocumentSection.createColumnText();
@@ -229,13 +230,13 @@ public class StylableDocument
     @Override
     public StylableMasterPage getMasterPage( String masterPageName )
     {
-        return ( StylableMasterPage ) super.getMasterPage( masterPageName );
+        return (StylableMasterPage) super.getMasterPage( masterPageName );
     }
 
     @Override
     public StylableMasterPage getDefaultMasterPage()
     {
-        return ( StylableMasterPage ) super.getDefaultMasterPage();
+        return (StylableMasterPage) super.getDefaultMasterPage();
     }
 
     //
@@ -331,7 +332,8 @@ public class StylableDocument
         {
             setColIdx( colIdx + 1 );
             simulateText();
-        } else
+        }
+        else
         {
             pageBreak();
         }
@@ -369,7 +371,8 @@ public class StylableDocument
             {
                 // page break with new master page activation
                 // style changed so recreate table
-                layoutTable = StylableDocumentSection.createLayoutTable( getPageWidth(), getAdjustedPageHeight(), nextStyle );
+                layoutTable =
+                    StylableDocumentSection.createLayoutTable( getPageWidth(), getAdjustedPageHeight(), nextStyle );
             }
             setColIdx( 0 );
             simulateText();
@@ -416,7 +419,8 @@ public class StylableDocument
     {
         colIdx = idx;
         PdfPCell cell = StylableDocumentSection.getCell( layoutTable, colIdx );
-        text.setSimpleColumn( cell.getLeft() + cell.getPaddingLeft(), -getAdjustedPageHeight(), cell.getRight() - cell.getPaddingRight(), 0.0f );
+        text.setSimpleColumn( cell.getLeft() + cell.getPaddingLeft(), -getAdjustedPageHeight(),
+                              cell.getRight() - cell.getPaddingRight(), 0.0f );
         cell.setColumn( ColumnText.duplicate( text ) );
     }
 
@@ -427,7 +431,8 @@ public class StylableDocument
         {
             res = text.go( true );
         }
-        catch ( DocumentException e ) {
+        catch ( DocumentException e )
+        {
             throw new ODFConverterException( e );
         }
         if ( ColumnText.hasMoreText( res ) )
@@ -448,7 +453,8 @@ public class StylableDocument
             try
             {
                 super.add( layoutTable );
-            } catch ( DocumentException e )
+            }
+            catch ( DocumentException e )
             {
                 throw new ODFConverterException( e );
             }

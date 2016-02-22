@@ -57,13 +57,13 @@ public class ExtendedDocument
     private PageOrientation orientation = PageOrientation.Portrait;
 
     public ExtendedDocument( OutputStream out )
-            throws DocumentException
+        throws DocumentException
     {
         this( out, ( IPdfWriterConfiguration ) null );
     }
 
     public ExtendedDocument( OutputStream out, IPdfWriterConfiguration configuration )
-            throws DocumentException
+        throws DocumentException
     {
         this.writer = ExtendedPdfWriter.getInstance( this, out );
         if (configuration != null) {
@@ -74,7 +74,7 @@ public class ExtendedDocument
     }
 
     public ExtendedDocument(OutputStream out, IPdfAWriterConfiguration configuration)
-            throws DocumentException
+        throws DocumentException
     {
         if ( configuration != null ) {
             this.writer = ExtendedPdfAWriter.getInstance( this, out, configuration );
@@ -117,17 +117,22 @@ public class ExtendedDocument
 
     public void addElement( Element element )
     {
-        try {
-            add(element);
-        } catch (DocumentException e) {
+        try
+        {
+            add( element );
+        }
+        catch ( DocumentException e )
+        {
             e.printStackTrace();
         }
     }
 
     @Override
-    public boolean add( Element element ) throws DocumentException
+    public boolean add( Element element )
+        throws DocumentException
     {
-        if ( !isOpen() ) {
+        if ( !isOpen() )
+        {
             open();
         }
         return super.add( element );
@@ -163,14 +168,14 @@ public class ExtendedDocument
         headerFooter.setMasterPage( masterPage );
     }
 
-    public IMasterPage getActiveMasterPage()
-    {
+    public IMasterPage getActiveMasterPage() {
         return headerFooter.getMasterPage();
     }
 
     public void addMasterPage( IMasterPage currentMasterPage )
     {
-        if (defaultMasterPage == null) {
+        if ( defaultMasterPage == null )
+        {
             defaultMasterPage = currentMasterPage;
         }
         masterPagesCache.put( currentMasterPage.getName(), currentMasterPage );
@@ -179,14 +184,16 @@ public class ExtendedDocument
     public void setActiveMasterPage( String masterPageName )
     {
         IMasterPage masterPage = getMasterPage( masterPageName );
-        if ( masterPage != null ) {
+        if ( masterPage != null )
+        {
             setActiveMasterPage( masterPage );
         }
     }
 
-    public IMasterPage getMasterPage(String masterPageName)
+    public IMasterPage getMasterPage( String masterPageName )
     {
-        if ( masterPageName == null ) {
+        if ( masterPageName == null )
+        {
             return null;
         }
         return masterPagesCache.get( masterPageName );
@@ -209,7 +216,8 @@ public class ExtendedDocument
 
     public void setOrientation( PageOrientation orientation )
     {
-        if ( !this.orientation.equals( orientation )) {
+        if ( !this.orientation.equals( orientation ) )
+        {
             super.getPageSize().rotate();
         }
         this.orientation = orientation;

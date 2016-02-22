@@ -77,8 +77,7 @@ public class PdfOptions
     /**
      * Set font encoding to use when retrieving fonts. The default value is unicode encoding
      *
-     * @param fontEncoding
-     *            font encoding to use
+     * @param fontEncoding font encoding to use
      * @return this instance
      */
     public PdfOptions fontEncoding( String fontEncoding )
@@ -122,8 +121,7 @@ public class PdfOptions
     /**
      * Set the configuration to use to configure iText {@link PdfWriter} and null otherwise.
      *
-     * @param configuration
-     *            the configuration to use to configure iText {@link PdfWriter} and null otherwise
+     * @param configuration the configuration to use to configure iText {@link PdfWriter} and null otherwise
      */
     public void setConfiguration( IPdfWriterConfiguration configuration )
     {

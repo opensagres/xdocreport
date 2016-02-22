@@ -53,7 +53,7 @@ public class PdfConverter
 
     @Override
     protected void doConvert( OdfDocument odfDocument, OutputStream out, Writer writer, PdfOptions options )
-            throws ODFConverterException, IOException
+        throws ODFConverterException, IOException
     {
         try
         {
@@ -65,7 +65,7 @@ public class PdfConverter
             ElementVisitorForIText visitorForIText = processBody( odfDocument, tempOut, styleEngine, options, null );
             Integer expectedPageCount = visitorForIText.getExpectedPageCount();
             int actualPageCount = visitorForIText.getActualPageCount();
-            if (expectedPageCount == null || expectedPageCount == actualPageCount)
+            if ( expectedPageCount == null || expectedPageCount == actualPageCount )
             {
                 // page count not required or correct, copy temp stream to output stream
                 out.write( tempOut.toByteArray() );
@@ -79,13 +79,13 @@ public class PdfConverter
         }
         catch ( Exception e )
         {
-            e.printStackTrace();
+                e.printStackTrace();
             throw new ODFConverterException( e );
         }
     }
 
     private StyleEngineForIText processStyles( OdfDocument odfDocument, PdfOptions options )
-            throws Exception
+        throws Exception
     {
         StyleEngineForIText styleEngine = new StyleEngineForIText( odfDocument, options );
 
@@ -107,18 +107,22 @@ public class PdfConverter
         return styleEngine;
     }
 
-    private ElementVisitorForIText processBody( OdfDocument odfDocument, OutputStream out, StyleEngineForIText styleEngine, PdfOptions options, Integer forcedPageCount )
-            throws Exception
+    private ElementVisitorForIText processBody( OdfDocument odfDocument, OutputStream out,
+                                                StyleEngineForIText styleEngine, PdfOptions options,
+                                                Integer forcedPageCount )
+        throws Exception
     {
         ElementVisitorForIText visitorForIText;
 
         if ( options != null && options instanceof PdfAOptions )
         {
-            visitorForIText = new ElementVisitorForIText( odfDocument, out, styleEngine, ( PdfAOptions ) options, forcedPageCount );
+            visitorForIText =
+                new ElementVisitorForIText( odfDocument, out, styleEngine, ( PdfAOptions ) options, forcedPageCount );
         }
         else
         {
-            visitorForIText = new ElementVisitorForIText( odfDocument, out, styleEngine, options, forcedPageCount );
+            visitorForIText =
+                new ElementVisitorForIText( odfDocument, out, styleEngine, options, forcedPageCount );
         }
 
         OdfOfficeMasterStyles masterStyles = odfDocument.getOfficeMasterStyles();

@@ -27,11 +27,11 @@ package fr.opensagres.xdocreport.itext.extension;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 
+import junit.framework.TestCase;
+
 import com.itextpdf.text.DocumentException;
 import com.itextpdf.text.Paragraph;
 import com.itextpdf.text.pdf.PdfPCell;
-
-import junit.framework.TestCase;
 
 public class ExtendedMasterPageTestCase
     extends TestCase
@@ -47,7 +47,7 @@ public class ExtendedMasterPageTestCase
             // Create Master Page 1
             MasterPage masterPage1 = createMasterPage( "MP1" );
             // Add Master Page to document
-            document.addMasterPage(masterPage1);
+            document.addMasterPage( masterPage1 );
 
             // Create Master Page 2
             MasterPage masterPage2 = createMasterPage( "MP2" );
@@ -88,7 +88,8 @@ public class ExtendedMasterPageTestCase
         {
             // TODO Auto-generated catch block
             e1.printStackTrace();
-        } catch ( DocumentException e1 )
+        }
+        catch ( DocumentException e1 )
         {
             // TODO Auto-generated catch block
             e1.printStackTrace();

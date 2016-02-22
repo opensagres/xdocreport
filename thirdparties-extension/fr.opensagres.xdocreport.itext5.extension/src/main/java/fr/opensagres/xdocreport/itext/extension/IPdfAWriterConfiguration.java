@@ -35,14 +35,21 @@ public interface IPdfAWriterConfiguration {
     /**
      * Configure the given {@link PdfAWriter}
      *
-     * @param writer
-     *            iText {@link PdfAWriter} to configure.
+     * @param writer iText {@link PdfAWriter} to configure.
      */
-    void configure(PdfAWriter writer);
+    void configure( PdfAWriter writer );
 
     /**
      * Returns the iText {@link PdfAConformanceLevel} of this configuration
      */
     PdfAConformanceLevel getConformanceLevel();
+
+    /**
+     * Configure the iText {@link PdfAWriter} color profile. <br>
+     * <b>Must be executed with the instance of the iText {@link PdfAWriter} opened.</b>
+     *
+     * @param writer iText {@link PdfAWriter} to configure.
+     */
+    void configureOutputIntents( PdfAWriter writer );
 
 }

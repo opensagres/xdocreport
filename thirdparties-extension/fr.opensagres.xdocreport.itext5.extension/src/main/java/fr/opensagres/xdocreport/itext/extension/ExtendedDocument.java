@@ -68,7 +68,7 @@ public class ExtendedDocument extends Document implements IITextContainer {
 
     public ExtendedDocument(OutputStream out, IPdfAWriterConfiguration configuration) throws DocumentException {
         if (configuration != null) {
-            this.writer = ExtendedPdfAWriter.getInstance(this, out, configuration.getConformanceLevel());
+            this.writer = ExtendedPdfAWriter.getInstance(this, out, configuration);
             configuration.configure((PdfAWriter) writer);
         } else {
             this.writer = ExtendedPdfAWriter.getInstance(this, out);

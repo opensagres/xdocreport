@@ -316,7 +316,7 @@ public class ElementVisitorForIText
         }
         while ( currentHeadingNumbering.size() > outlineLevel )
         {
-            currentHeadingNumbering.remove(currentHeadingNumbering.size() - 1 );
+            currentHeadingNumbering.remove( currentHeadingNumbering.size() - 1 );
         }
         if ( currentHeadingNumbering.size() == outlineLevel )
         {
@@ -324,8 +324,8 @@ public class ElementVisitorForIText
         }
         while ( currentHeadingNumbering.size() < outlineLevel )
         {
-            currentHeadingNumbering.add(StylableHeading.getFirst( currentContainer.getLastStyleApplied(),
-                                                                  currentHeadingNumbering.size() + 1 ) );
+            currentHeadingNumbering.add( StylableHeading.getFirst( currentContainer.getLastStyleApplied(),
+                                                                   currentHeadingNumbering.size() + 1 ) );
         }
 
         processParagraphOrHeading( ele, new ArrayList<Integer>( currentHeadingNumbering ) );
@@ -594,7 +594,7 @@ public class ElementVisitorForIText
         if ( Boolean.TRUE.equals( continueNumbering ) && previousList != null
             && previousList.getLastStyleApplied() != null && list.getLastStyleApplied() != null
             && previousList.getLastStyleApplied().getStyleName() != null
-            && previousList.getLastStyleApplied().getStyleName().equals(list.getLastStyleApplied().getStyleName() ) )
+            && previousList.getLastStyleApplied().getStyleName().equals( list.getLastStyleApplied().getStyleName() ) )
         {
             list.setFirst( previousList.getIndex() );
         }

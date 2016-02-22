@@ -36,7 +36,9 @@ import fr.opensagres.xdocreport.itext.extension.font.ITextFontRegistry;
 /**
  * Pdf options to customize the ODT->PDF converter.
  */
-public class PdfOptions extends Options {
+public class PdfOptions
+    extends Options
+{
 
     private static final PdfOptions DEFAULT = new PdfOptions();
 
@@ -46,7 +48,8 @@ public class PdfOptions extends Options {
 
     private IPdfWriterConfiguration configuration;
 
-    protected PdfOptions() {
+    protected PdfOptions()
+    {
         this.fontEncoding = BaseFont.IDENTITY_H;
         this.fontProvider = ITextFontRegistry.getRegistry();
     }
@@ -56,7 +59,8 @@ public class PdfOptions extends Options {
      *
      * @return
      */
-    public static PdfOptions create() {
+    public static PdfOptions create()
+    {
         return new PdfOptions();
     }
 
@@ -65,7 +69,8 @@ public class PdfOptions extends Options {
      *
      * @return
      */
-    public String getFontEncoding() {
+    public String getFontEncoding()
+    {
         return fontEncoding;
     }
 
@@ -76,7 +81,8 @@ public class PdfOptions extends Options {
      *            font encoding to use
      * @return this instance
      */
-    public PdfOptions fontEncoding(String fontEncoding) {
+    public PdfOptions fontEncoding( String fontEncoding )
+    {
         this.fontEncoding = fontEncoding;
         return this;
     }
@@ -87,7 +93,8 @@ public class PdfOptions extends Options {
      * @param fontProvider
      * @return
      */
-    public PdfOptions fontProvider(IFontProvider fontProvider) {
+    public PdfOptions fontProvider( IFontProvider fontProvider )
+    {
         this.fontProvider = fontProvider;
         return this;
     }
@@ -97,7 +104,8 @@ public class PdfOptions extends Options {
      *
      * @return
      */
-    public IFontProvider getFontProvider() {
+    public IFontProvider getFontProvider()
+    {
         return fontProvider;
     }
 
@@ -106,7 +114,8 @@ public class PdfOptions extends Options {
      *
      * @return
      */
-    public IPdfWriterConfiguration getConfiguration() {
+    public IPdfWriterConfiguration getConfiguration()
+    {
         return configuration;
     }
 
@@ -116,7 +125,8 @@ public class PdfOptions extends Options {
      * @param configuration
      *            the configuration to use to configure iText {@link PdfWriter} and null otherwise
      */
-    public void setConfiguration(IPdfWriterConfiguration configuration) {
+    public void setConfiguration( IPdfWriterConfiguration configuration )
+    {
         this.configuration = configuration;
     }
 
@@ -125,7 +135,8 @@ public class PdfOptions extends Options {
      *
      * @return
      */
-    public static PdfOptions getDefault() {
+    public static PdfOptions getDefault()
+    {
         return DEFAULT;
     }
 }

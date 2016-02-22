@@ -4,11 +4,14 @@ import com.itextpdf.text.pdf.PdfAWriter;
 
 import fr.opensagres.xdocreport.itext.extension.IPdfAWriterConfiguration;
 
-public class PdfAOptions extends PdfOptions {
+public class PdfAOptions
+    extends PdfOptions
+{
 
     private IPdfAWriterConfiguration pdfAconfiguration;
 
-    protected PdfAOptions() {
+    protected PdfAOptions()
+    {
         super();
     }
 
@@ -17,7 +20,8 @@ public class PdfAOptions extends PdfOptions {
      *
      * @return
      */
-    public static PdfAOptions create() {
+    public static PdfAOptions create()
+    {
         return new PdfAOptions();
     }
 
@@ -26,7 +30,8 @@ public class PdfAOptions extends PdfOptions {
      *
      * @return
      */
-    public IPdfAWriterConfiguration getPdfAConfiguration() {
+    public IPdfAWriterConfiguration getPdfAConfiguration()
+    {
         return pdfAconfiguration;
     }
 
@@ -36,7 +41,8 @@ public class PdfAOptions extends PdfOptions {
      * @param configuration
      *            the configuration to use to configure iText {@link PdfAWriter} and null otherwise
      */
-    public void setPdfAConfiguration(IPdfAWriterConfiguration configuration) {
+    public void setPdfAConfiguration( IPdfAWriterConfiguration configuration )
+    {
         this.pdfAconfiguration = configuration;
     }
 

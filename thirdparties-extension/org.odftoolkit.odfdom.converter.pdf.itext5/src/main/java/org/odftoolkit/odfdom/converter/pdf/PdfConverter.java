@@ -40,68 +40,85 @@ import org.odftoolkit.odfdom.dom.OdfStylesDom;
 import org.odftoolkit.odfdom.incubator.doc.office.OdfOfficeMasterStyles;
 import org.odftoolkit.odfdom.pkg.OdfElement;
 
-public class PdfConverter extends AbstractODFConverter<PdfOptions> {
+public class PdfConverter
+    extends AbstractODFConverter<PdfOptions>
+{
 
     private static final IODFConverter<PdfOptions> INSTANCE = new PdfConverter();
 
-    public static IODFConverter<PdfOptions> getInstance() {
+    public static IODFConverter<PdfOptions> getInstance()
+    {
         return INSTANCE;
     }
 
     @Override
-    protected void doConvert(OdfDocument odfDocument, OutputStream out, Writer writer, PdfOptions options) throws ODFConverterException, IOException {
-        try {
+    protected void doConvert( OdfDocument odfDocument, OutputStream out, Writer writer, PdfOptions options )
+            throws ODFConverterException, IOException
+    {
+        try
+        {
             // process styles
-            StyleEngineForIText styleEngine = processStyles(odfDocument, options);
+            StyleEngineForIText styleEngine = processStyles( odfDocument, options );
 
             // process content
             ByteArrayOutputStream tempOut = new ByteArrayOutputStream();
-            ElementVisitorForIText visitorForIText = processBody(odfDocument, tempOut, styleEngine, options, null);
+            ElementVisitorForIText visitorForIText = processBody( odfDocument, tempOut, styleEngine, options, null );
             Integer expectedPageCount = visitorForIText.getExpectedPageCount();
             int actualPageCount = visitorForIText.getActualPageCount();
-            if (expectedPageCount == null || expectedPageCount == actualPageCount) {
+            if (expectedPageCount == null || expectedPageCount == actualPageCount)
+            {
                 // page count not required or correct, copy temp stream to output stream
-                out.write(tempOut.toByteArray());
+                out.write( tempOut.toByteArray() );
                 out.close();
-            } else {
-                // page count inconsistent, do second visit with forced page count
-                processBody(odfDocument, out, styleEngine, options, actualPageCount);
             }
-        } catch (Exception e) {
+            else
+            {
+                // page count inconsistent, do second visit with forced page count
+                processBody( odfDocument, out, styleEngine, options, actualPageCount );
+            }
+        }
+        catch ( Exception e )
+        {
             e.printStackTrace();
-            throw new ODFConverterException(e);
+            throw new ODFConverterException( e );
         }
     }
 
-    private StyleEngineForIText processStyles(OdfDocument odfDocument, PdfOptions options) throws Exception {
-        StyleEngineForIText styleEngine = new StyleEngineForIText(odfDocument, options);
+    private StyleEngineForIText processStyles( OdfDocument odfDocument, PdfOptions options )
+            throws Exception
+    {
+        StyleEngineForIText styleEngine = new StyleEngineForIText( odfDocument, options );
 
         OdfStylesDom stylesDom = odfDocument.getStylesDom();
         OdfContentDom contentDom = odfDocument.getContentDom();
 
         // 1.1) Parse
         // styles.xml//office:document-styles/office:styles
-        stylesDom.getOfficeStyles().accept(styleEngine);
+        stylesDom.getOfficeStyles().accept( styleEngine );
 
         // 1.2) Parse
         // styles.xml//office:document-styles/office:automatic-styles
-        stylesDom.getAutomaticStyles().accept(styleEngine);
+        stylesDom.getAutomaticStyles().accept( styleEngine );
 
         // 1.3) Parse
         // content.xml//office:document-content/office:automatic-styles
-        contentDom.getAutomaticStyles().accept(styleEngine);
+        contentDom.getAutomaticStyles().accept( styleEngine );
 
         return styleEngine;
     }
 
-    private ElementVisitorForIText processBody(OdfDocument odfDocument, OutputStream out, StyleEngineForIText styleEngine, PdfOptions options, Integer forcedPageCount)
-            throws Exception {
+    private ElementVisitorForIText processBody( OdfDocument odfDocument, OutputStream out, StyleEngineForIText styleEngine, PdfOptions options, Integer forcedPageCount )
+            throws Exception
+    {
         ElementVisitorForIText visitorForIText;
 
-        if (options != null && options instanceof PdfAOptions) {
-            visitorForIText = new ElementVisitorForIText(odfDocument, out, styleEngine, (PdfAOptions) options, forcedPageCount);
-        } else {
-            visitorForIText = new ElementVisitorForIText(odfDocument, out, styleEngine, options, forcedPageCount);
+        if ( options != null && options instanceof PdfAOptions )
+        {
+            visitorForIText = new ElementVisitorForIText( odfDocument, out, styleEngine, ( PdfAOptions ) options, forcedPageCount );
+        }
+        else
+        {
+            visitorForIText = new ElementVisitorForIText( odfDocument, out, styleEngine, options, forcedPageCount );
         }
 
         OdfOfficeMasterStyles masterStyles = odfDocument.getOfficeMasterStyles();
@@ -109,11 +126,11 @@ public class PdfConverter extends AbstractODFConverter<PdfOptions> {
 
         // 2.1) Parse
         // styles.xml//office:document-styles/office:master-styles
-        masterStyles.accept(visitorForIText);
+        masterStyles.accept( visitorForIText );
 
         // 2.2) Parse
         // content.xml//office:body
-        contentRoot.accept(visitorForIText);
+        contentRoot.accept( visitorForIText );
 
         visitorForIText.save();
 

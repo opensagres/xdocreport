@@ -34,7 +34,10 @@ import com.itextpdf.text.Element;
 import com.itextpdf.text.pdf.PdfAWriter;
 import com.itextpdf.text.pdf.PdfWriter;
 
-public class ExtendedDocument extends Document implements IITextContainer {
+public class ExtendedDocument
+    extends Document
+    implements IITextContainer
+{
     private Map<String, IMasterPage> masterPagesCache = new HashMap<String, IMasterPage>();
 
     private IMasterPage defaultMasterPage;
@@ -53,56 +56,67 @@ public class ExtendedDocument extends Document implements IITextContainer {
 
     private PageOrientation orientation = PageOrientation.Portrait;
 
-    public ExtendedDocument(OutputStream out) throws DocumentException {
-        this(out, (IPdfWriterConfiguration) null);
+    public ExtendedDocument( OutputStream out )
+            throws DocumentException
+    {
+        this( out, ( IPdfWriterConfiguration ) null );
     }
 
-    public ExtendedDocument(OutputStream out, IPdfWriterConfiguration configuration) throws DocumentException {
-        this.writer = ExtendedPdfWriter.getInstance(this, out);
+    public ExtendedDocument( OutputStream out, IPdfWriterConfiguration configuration )
+            throws DocumentException
+    {
+        this.writer = ExtendedPdfWriter.getInstance( this, out );
         if (configuration != null) {
-            configuration.configure(writer);
+            configuration.configure( writer );
         }
         headerFooter = createExtendedHeaderFooter();
         initAttributes();
     }
 
-    public ExtendedDocument(OutputStream out, IPdfAWriterConfiguration configuration) throws DocumentException {
-        if (configuration != null) {
-            this.writer = ExtendedPdfAWriter.getInstance(this, out, configuration);
-            configuration.configure((PdfAWriter) writer);
+    public ExtendedDocument(OutputStream out, IPdfAWriterConfiguration configuration)
+            throws DocumentException
+    {
+        if ( configuration != null ) {
+            this.writer = ExtendedPdfAWriter.getInstance( this, out, configuration );
+            configuration.configure( (PdfAWriter) writer );
         } else {
-            this.writer = ExtendedPdfAWriter.getInstance(this, out);
+            this.writer = ExtendedPdfAWriter.getInstance( this, out );
         }
         headerFooter = createExtendedHeaderFooter();
         initAttributes();
     }
 
-    private void initAttributes() {
-        writer.setPageEvent(headerFooter);
+    private void initAttributes()
+    {
+        writer.setPageEvent( headerFooter );
         this.originMarginTop = marginTop;
         this.originMarginBottom = marginBottom;
         this.originMarginRight = marginRight;
         this.originMarginLeft = marginLeft;
     }
 
-    protected ExtendedHeaderFooter createExtendedHeaderFooter() {
-        return new ExtendedHeaderFooter(this);
+    protected ExtendedHeaderFooter createExtendedHeaderFooter()
+    {
+        return new ExtendedHeaderFooter( this );
     }
 
     @Override
-    public int getPageNumber() {
+    public int getPageNumber()
+    {
         return writer.getCurrentPageNumber();
     }
 
-    public boolean setOriginalMargins(float marginLeft, float marginRight, float marginTop, float marginBottom) {
+    public boolean setOriginalMargins( float marginLeft, float marginRight, float marginTop, float marginBottom )
+    {
         this.originMarginTop = marginTop;
         this.originMarginBottom = marginBottom;
         this.originMarginRight = marginRight;
         this.originMarginLeft = marginLeft;
-        return super.setMargins(marginLeft, marginRight, marginTop, marginBottom);
+        return super.setMargins( marginLeft, marginRight, marginTop, marginBottom );
     }
 
-    public void addElement(Element element) {
+    public void addElement( Element element )
+    {
         try {
             add(element);
         } catch (DocumentException e) {
@@ -111,76 +125,91 @@ public class ExtendedDocument extends Document implements IITextContainer {
     }
 
     @Override
-    public boolean add(Element element) throws DocumentException {
-        if (!isOpen()) {
+    public boolean add( Element element ) throws DocumentException
+    {
+        if ( !isOpen() ) {
             open();
         }
-        return super.add(element);
+        return super.add( element );
     }
 
-    public IMasterPage getDefaultMasterPage() {
+    public IMasterPage getDefaultMasterPage()
+    {
         return defaultMasterPage;
     }
 
-    public float getOriginMarginBottom() {
+    public float getOriginMarginBottom()
+    {
         return originMarginBottom;
     }
 
-    public float getOriginMarginLeft() {
+    public float getOriginMarginLeft()
+    {
         return originMarginLeft;
     }
 
-    public float getOriginMarginRight() {
+    public float getOriginMarginRight()
+    {
         return originMarginRight;
     }
 
-    public float getOriginMarginTop() {
+    public float getOriginMarginTop()
+    {
         return originMarginTop;
     }
 
-    public void setActiveMasterPage(IMasterPage masterPage) {
-        headerFooter.setMasterPage(masterPage);
+    public void setActiveMasterPage( IMasterPage masterPage )
+    {
+        headerFooter.setMasterPage( masterPage );
     }
 
-    public IMasterPage getActiveMasterPage() {
+    public IMasterPage getActiveMasterPage()
+    {
         return headerFooter.getMasterPage();
     }
 
-    public void addMasterPage(IMasterPage currentMasterPage) {
+    public void addMasterPage( IMasterPage currentMasterPage )
+    {
         if (defaultMasterPage == null) {
             defaultMasterPage = currentMasterPage;
         }
-        masterPagesCache.put(currentMasterPage.getName(), currentMasterPage);
+        masterPagesCache.put( currentMasterPage.getName(), currentMasterPage );
     }
 
-    public void setActiveMasterPage(String masterPageName) {
-        IMasterPage masterPage = getMasterPage(masterPageName);
-        if (masterPage != null) {
-            setActiveMasterPage(masterPage);
+    public void setActiveMasterPage( String masterPageName )
+    {
+        IMasterPage masterPage = getMasterPage( masterPageName );
+        if ( masterPage != null ) {
+            setActiveMasterPage( masterPage );
         }
     }
 
-    public IMasterPage getMasterPage(String masterPageName) {
-        if (masterPageName == null) {
+    public IMasterPage getMasterPage(String masterPageName)
+    {
+        if ( masterPageName == null ) {
             return null;
         }
-        return masterPagesCache.get(masterPageName);
+        return masterPagesCache.get( masterPageName );
     }
 
-    public IITextContainer getITextContainer() {
+    public IITextContainer getITextContainer()
+    {
         return null;
     }
 
-    public void setITextContainer(IITextContainer container) {
+    public void setITextContainer( IITextContainer container )
+    {
 
     }
 
-    public PageOrientation getOrientation() {
+    public PageOrientation getOrientation()
+    {
         return orientation;
     }
 
-    public void setOrientation(PageOrientation orientation) {
-        if (!this.orientation.equals(orientation)) {
+    public void setOrientation( PageOrientation orientation )
+    {
+        if ( !this.orientation.equals( orientation )) {
             super.getPageSize().rotate();
         }
         this.orientation = orientation;

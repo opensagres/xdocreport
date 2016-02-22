@@ -18,8 +18,8 @@ public class ExtendedPdfAWriter
         super( document, os, conformanceLevel );
         pdf = document;
         this.configuration = configuration;
-        directContent = new ExtendedPdfContentByte(this);
-        directContentUnder = new ExtendedPdfContentByte(this);
+        directContent = new ExtendedPdfContentByte( this );
+        directContentUnder = new ExtendedPdfContentByte( this );
     }
 
     public static ExtendedPdfAWriter getInstance( Document document, OutputStream os, IPdfAWriterConfiguration configuration )
@@ -29,7 +29,7 @@ public class ExtendedPdfAWriter
         document.addDocListener( pdf );
 
         PdfAConformanceLevel conformanceLevel = null;
-        if (configuration != null) {
+        if ( configuration != null ) {
             conformanceLevel = configuration.getConformanceLevel();
         }
 
@@ -42,7 +42,7 @@ public class ExtendedPdfAWriter
     public void open() {
         super.open();
 
-        if (configuration != null) {
+        if ( configuration != null ) {
             configuration.configureOutputIntents(this);
         }
     }

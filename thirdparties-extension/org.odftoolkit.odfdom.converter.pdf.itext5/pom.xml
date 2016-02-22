@@ -23,5 +23,11 @@
 			<version>5.5.7</version>
 			<scope>provided</scope>
 		</dependency>
+		<dependency>
+			<groupId>com.itextpdf</groupId>
+			<artifactId>itext-pdfa</artifactId>
+			<version>5.5.7</version>
+			<scope>provided</scope>
+		</dependency>
 	</dependencies>
 </project>

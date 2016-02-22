@@ -79,7 +79,7 @@ public class PdfConverter
         }
         catch ( Exception e )
         {
-        	e.printStackTrace();
+               e.printStackTrace();
             throw new ODFConverterException( e );
         }
     }
@@ -112,8 +112,18 @@ public class PdfConverter
                                                 Integer forcedPageCount )
         throws Exception
     {
-        ElementVisitorForIText visitorForIText =
-            new ElementVisitorForIText( odfDocument, out, styleEngine, options, forcedPageCount );
+        ElementVisitorForIText visitorForIText;
+
+        if ( options != null && options instanceof PdfAOptions )
+        {
+            visitorForIText =
+                new ElementVisitorForIText( odfDocument, out, styleEngine, ( PdfAOptions ) options, forcedPageCount );
+        }
+        else
+        {
+            visitorForIText =
+                new ElementVisitorForIText( odfDocument, out, styleEngine, options, forcedPageCount );
+        }
 
         OdfOfficeMasterStyles masterStyles = odfDocument.getOfficeMasterStyles();
         OdfElement contentRoot = odfDocument.getContentRoot();

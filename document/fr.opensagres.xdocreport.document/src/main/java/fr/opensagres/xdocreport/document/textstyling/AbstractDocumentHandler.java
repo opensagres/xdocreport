@@ -62,6 +62,8 @@ public abstract class AbstractDocumentHandler
 
     private Stack<TableProperties> tablesStack;
 
+    private Stack<TableCellProperties> tableCellsStack;
+
     private Stack<Writer> tempWriterStack;
 
     public AbstractDocumentHandler( BufferedElement parent, IContext context, String entryName )
@@ -72,6 +74,7 @@ public abstract class AbstractDocumentHandler
         this.listStack = new Stack<Boolean>();
         this.entryName = entryName;
         this.tablesStack = null;
+        this.tableCellsStack = null;
     }
 
     public void handleString( String s )
@@ -163,14 +166,19 @@ public abstract class AbstractDocumentHandler
         throws IOException
     {
         TableProperties tableProperties = this.tablesStack.peek();
-        tableProperties.setColumnCount( tableProperties.getColumnCount() + 1 );
-        doStartTableCell( properties );
+        tableProperties.setColumnCount(tableProperties.getColumnCount() + 1);
+        if (tableCellsStack == null) {
+            tableCellsStack = new Stack<TableCellProperties>();
+        }
+        this.tableCellsStack.push(properties);
+        doStartTableCell(properties);
     }
 
     public final void endTableCell()
         throws IOException
     {
-        doEndTableCell();
+        TableCellProperties properties = this.tableCellsStack.pop();
+        doEndTableCell(properties);
     }
 
     public BufferedElement getParent()
@@ -333,6 +341,6 @@ public abstract class AbstractDocumentHandler
     protected abstract void doStartTableCell( TableCellProperties properties )
         throws IOException;
 
-    protected abstract void doEndTableCell()
-        throws IOException;
+    protected abstract void doEndTableCell(TableCellProperties properties)
+            throws IOException;
 }

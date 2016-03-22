@@ -777,8 +777,8 @@ public class DocxDocumentHandler
 
     }
 
-    public void doEndTableCell()
-        throws IOException
+    public void doEndTableCell(TableCellProperties properties)
+            throws IOException
     {
         endParagraph();
         super.write( "</w:tc>" );

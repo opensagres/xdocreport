@@ -51,6 +51,8 @@ public class ODTDocumentHandler
 
     private boolean insideHeader = false;
 
+    private Stack<Boolean> tableStack;
+
     private Stack<Integer> spanStack;
 
     private int listDepth = 0;
@@ -75,6 +77,7 @@ public class ODTDocumentHandler
     {
         this.paragraphsStack = new Stack<Boolean>();
         this.spanStack = new Stack<Integer>();
+        this.tableStack = new Stack<Boolean>();
     }
 
     public void endDocument()
@@ -257,8 +260,7 @@ public class ODTDocumentHandler
         throws IOException
     {
 
-        if ( ( paragraphWasInserted && paragraphsStack.isEmpty() ) || closeHeader )
-        {
+        if (((paragraphWasInserted || !tableStack.isEmpty()) && paragraphsStack.isEmpty()) || closeHeader) {
             internalStartParagraph( false, (String) null );
         }
     }
@@ -515,6 +517,8 @@ public class ODTDocumentHandler
         // table:table-column
         // that's here temp writer is used.
         pushTempWriter();
+        //Control if inside table
+        tableStack.push(true);
     }
 
     public void doEndTable( TableProperties properties )
@@ -529,7 +533,8 @@ public class ODTDocumentHandler
         startTable.append( "\" >" );
         startTable.append( "</table:table-column>" );
         popTempWriter( startTable.toString() );
-        super.write( "</table:table>" );
+        super.write("</table:table>");
+        tableStack.pop();
     }
 
     protected void doStartTableRow( TableRowProperties properties )
@@ -547,14 +552,17 @@ public class ODTDocumentHandler
     protected void doStartTableCell( TableCellProperties properties )
         throws IOException
     {
-        super.write( "<table:table-cell>" );
-        internalStartParagraph( false, (String) null );
+        super.write("<table:table-cell>");
+        if (properties != null) {
+            internalStartParagraph(true, styleGen.getTextStyleName(properties));
+        }
     }
 
-    public void doEndTableCell()
-        throws IOException
+    public void doEndTableCell(TableCellProperties properties)
+            throws IOException
     {
-        endParagraph();
-        super.write( "</table:table-cell>" );
+        endParagraphIfNeeded();
+        super.write("</table:table-cell>");
     }
+
 }

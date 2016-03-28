@@ -554,7 +554,7 @@ public class ODTDocumentHandler
     {
         super.write("<table:table-cell>");
         if (properties != null) {
-            internalStartParagraph(true, styleGen.getTextStyleName(properties));
+            internalStartParagraph(false, styleGen.getTextStyleName(properties));
         }
     }
 

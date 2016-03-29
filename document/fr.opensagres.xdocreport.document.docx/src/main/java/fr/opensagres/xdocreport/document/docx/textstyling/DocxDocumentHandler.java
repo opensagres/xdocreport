@@ -783,7 +783,7 @@ public class DocxDocumentHandler
 
     }
 
-    public void doEndTableCell(TableCellProperties properties)
+    public void doEndTableCell()
             throws IOException
     {
         endParagraphIfNeeded();

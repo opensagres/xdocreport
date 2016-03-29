@@ -558,7 +558,7 @@ public class ODTDocumentHandler
         }
     }
 
-    public void doEndTableCell(TableCellProperties properties)
+    public void doEndTableCell()
             throws IOException
     {
         endParagraphIfNeeded();

@@ -775,7 +775,7 @@ public class ODTDocumentHandlerTestCase
 
         Assert.assertEquals( "", handler.getTextBefore() );
         Assert.assertEquals( "", handler.getTextBody() );
-        Assert.assertEquals( "<text:h text:style-name=\"Heading_20_1\" text:outline-level=\"1\">Title1</text:h><text:p><text:span text:style-name=\"XDocReport_EmptyText\" >text</text:span><text:p><text:span text:style-name=\"XDocReport_EmptyText\" >paragraph</text:span></text:p></text:p>",
+        Assert.assertEquals( "<text:h text:style-name=\"Heading_20_1\" text:outline-level=\"1\">Title1</text:h><text:p><text:span text:style-name=\"XDocReport_EmptyText\" >text</text:span></text:p><text:p><text:span text:style-name=\"XDocReport_EmptyText\" >paragraph</text:span></text:p>",
                              handler.getTextEnd() );
     }
 

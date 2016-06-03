@@ -55,6 +55,17 @@ public class ODTDocumentHandler
 
     private Stack<Integer> spanStack;
 
+    /**
+     * Stores each nested tag added to the document.
+     * Required to verify if a new paragraph can be added.
+     * Paragraphs cannot be direct children of another paragraph, but they
+     * can, sometimes, be nested if there are other tags between them, like
+     * a list and a list-item.
+     *
+     * Relevant document: http://docs.oasis-open.org/office/v1.2/os/OpenDocument-v1.2-os-part1.html#__RefHeading__1415138_253892949
+     */
+    private Stack<String> nestedTagStack;
+
     private int listDepth = 0;
 
     private List<Boolean> lastItemAlreadyClosed = new ArrayList<Boolean>();
@@ -78,6 +89,7 @@ public class ODTDocumentHandler
         this.paragraphsStack = new Stack<Boolean>();
         this.spanStack = new Stack<Integer>();
         this.tableStack = new Stack<Boolean>();
+        this.nestedTagStack = new Stack<String>();
     }
 
     public void endDocument()
@@ -240,6 +252,8 @@ public class ODTDocumentHandler
         {
             spanStack.push( 1 );
         }
+
+        pushNestedTag("span");
     }
 
     private void internalEndSpan()
@@ -252,6 +266,7 @@ public class ODTDocumentHandler
         while ( depth > 0 )
         {
             super.write( "</text:span>" );
+            popNestedTag("span");
             depth--;
         }
     }
@@ -259,7 +274,6 @@ public class ODTDocumentHandler
     private void startParagraphIfNeeded()
         throws IOException
     {
-
         if (((paragraphWasInserted || !tableStack.isEmpty()) && paragraphsStack.isEmpty()) || closeHeader) {
             internalStartParagraph( false, (String) null );
         }
@@ -268,10 +282,14 @@ public class ODTDocumentHandler
     public void startParagraph( ParagraphProperties properties )
         throws IOException
     {
-        if ( paragraphsStack.isEmpty() || !paragraphsStack.peek() )
+        if ( !paragraphsStack.isEmpty() && !paragraphsStack.peek() )
         {
-            super.setTextLocation( TextLocation.End );
-            internalStartParagraph( false, properties );
+            internalEndParagraph();
+        }
+
+        if(nestedTagStack.isEmpty() || !"p".equals(nestedTagStack.peek())) {
+            super.setTextLocation(TextLocation.End);
+            internalStartParagraph(false, properties);
         }
     }
 
@@ -306,15 +324,6 @@ public class ODTDocumentHandler
             }
         }
         internalStartParagraph( containerIsList, styleName );
-
-        // if ( properties != null )
-        // {
-        // // Remove "span" added by internalStartParagraph
-        // // spanStack.pop();
-        //
-        // // Process properties
-        // // startSpan( properties );
-        // }
     }
 
     private void internalStartParagraph( boolean containerIsList, String styleName )
@@ -337,6 +346,7 @@ public class ODTDocumentHandler
 
         // Put a 0 in the stack, endSpan is called when a paragraph is ended
         spanStack.push( 0 );
+        pushNestedTag("p");
     }
 
     private void internalEndParagraph()
@@ -347,8 +357,10 @@ public class ODTDocumentHandler
             // Close any spans from paragraph style
             internalEndSpan();
 
+
             super.write( "</text:p>" );
             paragraphsStack.pop();
+            popNestedTag("p");
         }
     }
 
@@ -361,6 +373,7 @@ public class ODTDocumentHandler
             + level + "\">" );
         insideHeader = true;
         closeHeader = false;
+        pushNestedTag("h");
     }
 
     public void endHeading( int level )
@@ -369,6 +382,7 @@ public class ODTDocumentHandler
         super.write( "</text:h>" );
         insideHeader = false;
         closeHeader = true;
+        popNestedTag("h");
         // startParagraph();
     }
 
@@ -429,6 +443,7 @@ public class ODTDocumentHandler
             super.write( "<text:list>" );
         }
         listDepth++;
+        pushNestedTag("list");
     }
 
     protected void internalEndList()
@@ -440,11 +455,14 @@ public class ODTDocumentHandler
         {
             // startParagraph();
         }
+
+        popNestedTag("list");
     }
 
     public void startListItem( ListItemProperties properties )
         throws IOException
     {
+        pushNestedTag("list-item");
         if ( itemStyle != null )
         {
             super.write( "<text:list-item text:style-name=\"" + itemStyle + "\">" );
@@ -455,6 +473,8 @@ public class ODTDocumentHandler
             super.write( "<text:list-item>" );
             internalStartParagraph( true, (String) null );
         }
+
+
     }
 
     public void endListItem()
@@ -470,6 +490,7 @@ public class ODTDocumentHandler
         }
         endParagraphIfNeeded();
         super.write( "</text:list-item>" );
+        popNestedTag("list-item");
     }
 
     public void startSpan( SpanProperties properties )
@@ -541,18 +562,21 @@ public class ODTDocumentHandler
         throws IOException
     {
         super.write( "<table:table-row>" );
+        pushNestedTag("table-row");
     }
 
     protected void doEndTableRow()
         throws IOException
     {
         super.write( "</table:table-row>" );
+        popNestedTag("table-row");
     }
 
     protected void doStartTableCell( TableCellProperties properties )
         throws IOException
     {
         super.write("<table:table-cell>");
+        pushNestedTag("table-cell");
         if (properties != null) {
             internalStartParagraph(false, styleGen.getTextStyleName(properties));
         }
@@ -563,6 +587,19 @@ public class ODTDocumentHandler
     {
         endParagraphIfNeeded();
         super.write("</table:table-cell>");
+        popNestedTag("table-cell");
     }
 
+    private void popNestedTag(String tag) {
+        String stackTag = nestedTagStack.peek();
+        if(stackTag.equals(tag)) {
+            nestedTagStack.pop();
+        } else {
+            throw new RuntimeException("Invalid nested tag. Should be <" + tag + "> found <" + stackTag + ">.");
+        }
+    }
+
+    private void pushNestedTag(String tag) {
+        nestedTagStack.push(tag);
+    }
 }

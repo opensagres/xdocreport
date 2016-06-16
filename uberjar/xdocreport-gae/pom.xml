@@ -3,7 +3,7 @@
 	<parent>
 		<groupId>fr.opensagres.xdocreport</groupId>
 		<artifactId>uberjar</artifactId>
-		<version>1.0.6</version>
+		<version>1.1.0-SNAPSHOT</version>
 		<relativePath>..</relativePath>
 	</parent>
 	<artifactId>xdocreport-gae</artifactId>
@@ -12,14 +12,14 @@
 		<dependency>
 			<groupId>fr.opensagres.xdocreport</groupId>
 			<artifactId>fr.opensagres.xdocreport.document.odt</artifactId>
-			<version>1.0.6</version>
+			<version>1.1.0-SNAPSHOT</version>
 		</dependency>
 
 		<!-- Converter ODT GAE -->
 		<dependency>
 			<groupId>fr.opensagres.xdocreport</groupId>
 			<artifactId>fr.opensagres.xdocreport.converter.odt.odfdom</artifactId>
-			<version>1.0.6</version>
+			<version>1.1.0-SNAPSHOT</version>
 			<exclusions>
 				<exclusion>
 					<artifactId>org.odftoolkit.odfdom.converter.pdf</artifactId>
@@ -30,7 +30,7 @@
 		<dependency>
 			<artifactId>org.odftoolkit.odfdom.converter.pdf-gae</artifactId>
 			<groupId>fr.opensagres.xdocreport</groupId>
-			<version>1.0.6</version>
+			<version>1.1.0-SNAPSHOT</version>
 			<exclusions>
 				<exclusion>
 					<artifactId>org.odftoolkit.odfdom.converter.core</artifactId>
@@ -43,14 +43,14 @@
 		<dependency>
 			<groupId>fr.opensagres.xdocreport</groupId>
 			<artifactId>fr.opensagres.xdocreport.document.docx</artifactId>
-			<version>1.0.6</version>
+			<version>1.1.0-SNAPSHOT</version>
 		</dependency>
 
 		<!-- Converter DOCX GAE -->
 		<dependency>
 			<groupId>fr.opensagres.xdocreport</groupId>
 			<artifactId>fr.opensagres.xdocreport.converter.docx.xwpf</artifactId>
-			<version>1.0.6</version>
+			<version>1.1.0-SNAPSHOT</version>
 			<exclusions>
 				<exclusion>
 					<artifactId>org.apache.poi.xwpf.converter.pdf</artifactId>
@@ -69,25 +69,25 @@
 		<dependency>
 			<groupId>fr.opensagres.xdocreport</groupId>
 			<artifactId>org.apache.poi.xwpf.converter.xhtml-gae</artifactId>
-			<version>1.0.6</version>
+			<version>1.1.0-SNAPSHOT</version>
 		</dependency>
 		<dependency>
 			<artifactId>org.apache.poi.xwpf.converter.pdf-gae</artifactId>
 			<groupId>fr.opensagres.xdocreport</groupId>
-			<version>1.0.6</version>
+			<version>1.1.0-SNAPSHOT</version>
 		</dependency>
 
 		<!-- Velocity Template -->
 		<dependency>
 			<groupId>fr.opensagres.xdocreport</groupId>
 			<artifactId>fr.opensagres.xdocreport.template.velocity</artifactId>
-			<version>1.0.6</version>
+			<version>1.1.0-SNAPSHOT</version>
 		</dependency>
 		<!-- Freemarker Template -->
 		<dependency>
 			<groupId>fr.opensagres.xdocreport</groupId>
 			<artifactId>fr.opensagres.xdocreport.template.freemarker</artifactId>
-			<version>1.0.6</version>
+			<version>1.1.0-SNAPSHOT</version>
 		</dependency>
 	</dependencies>
 </project>

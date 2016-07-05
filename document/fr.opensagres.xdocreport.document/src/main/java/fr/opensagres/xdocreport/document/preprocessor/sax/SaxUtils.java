@@ -12,7 +12,10 @@ public class SaxUtils {
     public static final String IF_INSTRUCTION = "#if(";
     public static final String SET_INSTRUCTION = "#set(";
 
-    public static boolean isInstruction(String tagContent){
-        return tagContent.contains(FOREACH_INSTRUCTION) || tagContent.contains(IF_INSTRUCTION) || tagContent.contains(SET_INSTRUCTION);
+    public static final String FREEMARKER_FOREACH_INSTRUCTION = "#list";
+    public static final String FREEMARKER_IF_INSTRUCTION = "#if";
+
+    public static boolean isInstruction(String tagContent) {
+        return tagContent.contains(FOREACH_INSTRUCTION) || tagContent.contains(IF_INSTRUCTION) || tagContent.contains(SET_INSTRUCTION) || tagContent.contains(FREEMARKER_FOREACH_INSTRUCTION) || tagContent.contains(FREEMARKER_IF_INSTRUCTION);
     }
 }

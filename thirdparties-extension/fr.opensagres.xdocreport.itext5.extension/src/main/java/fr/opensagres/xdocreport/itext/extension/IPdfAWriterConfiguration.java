@@ -22,36 +22,34 @@
  * OF CONTRACT, TORT OR OTHERWISE,  ARISING FROM, OUT OF OR IN CONNECTION
  * WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
-package org.odftoolkit.odfdom.converter.pdf;
+package fr.opensagres.xdocreport.itext.extension;
 
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.OutputStream;
+import com.itextpdf.text.pdf.PdfAConformanceLevel;
+import com.itextpdf.text.pdf.PdfAWriter;
 
-import org.odftoolkit.odfdom.converter.core.AbstractODFDOMConverterTest;
-import org.odftoolkit.odfdom.doc.OdfTextDocument;
+/**
+ * API for the configuration to use to configure iText {@link PdfAWriter} and null otherwise
+ */
+public interface IPdfAWriterConfiguration {
 
-public class PdfConverterTestCase
-    extends AbstractODFDOMConverterTest
-{
+    /**
+     * Configure the given {@link PdfAWriter}
+     *
+     * @param writer iText {@link PdfAWriter} to configure.
+     */
+    void configure( PdfAWriter writer );
 
-    protected void doGenerate( String fileInName )
-        throws Exception
-    {
+    /**
+     * Returns the iText {@link PdfAConformanceLevel} of this configuration
+     */
+    PdfAConformanceLevel getConformanceLevel();
 
-        String root = "target";
-        String fileOutName = root + "/" + fileInName + ".pdf";
+    /**
+     * Configure the iText {@link PdfAWriter} color profile. <br>
+     * <b>Must be executed with the instance of the iText {@link PdfAWriter} opened.</b>
+     *
+     * @param writer iText {@link PdfAWriter} to configure.
+     */
+    void configureOutputIntents( PdfAWriter writer );
 
-        long startTime = System.currentTimeMillis();
-        System.out.println( "Starting generation " + fileOutName );
-
-        OdfTextDocument document =
-            OdfTextDocument.loadDocument( AbstractODFDOMConverterTest.class.getResourceAsStream( fileInName ) );
-
-        OutputStream out = new FileOutputStream( new File( fileOutName ) );
-        PdfOptions options = PdfOptions.create();
-        PdfConverter.getInstance().convert( document, out, options );
-
-        System.out.println( "Generated " + fileOutName + " in " + ( System.currentTimeMillis() - startTime ) + " ms." );
-    }
 }

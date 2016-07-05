@@ -284,7 +284,7 @@ public class DocxDocumentHandler
                                        boolean strike, boolean subscript, boolean superscript )
         throws IOException
     {
-        if ( bold || italics || underline || strike )
+        if ( bold || italics || underline || strike || subscript || superscript  )
         {
             if ( isInsidePPr )
             {

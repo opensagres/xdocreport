@@ -72,6 +72,7 @@ import org.odftoolkit.odfdom.dom.element.OdfStyleBase;
 import org.odftoolkit.odfdom.dom.element.office.OfficeAutomaticStylesElement;
 import org.odftoolkit.odfdom.dom.element.office.OfficeMasterStylesElement;
 import org.odftoolkit.odfdom.dom.element.office.OfficeStylesElement;
+import org.odftoolkit.odfdom.dom.element.style.StyleBackgroundImageElement;
 import org.odftoolkit.odfdom.dom.element.style.StyleColumnElement;
 import org.odftoolkit.odfdom.dom.element.style.StyleColumnsElement;
 import org.odftoolkit.odfdom.dom.element.style.StyleDefaultStyleElement;
@@ -127,14 +128,54 @@ public class StyleEngineForIText
 
     private List<StyleColumnProperties> currentColumnPropertiesList;
 
+    private BackgroundImage backgroundImage = null;
+
     private final PdfOptions options;
 
     private final Map<String, Style> stylesMap = new HashMap<String, Style>();
 
     public StyleEngineForIText( OdfDocument odfDocument, PdfOptions options )
     {
-        super( odfDocument );
+        super(odfDocument);
         this.options = options != null ? options : PdfOptions.getDefault();
+    }
+
+    public BackgroundImage getBackgroundImage() {
+    	return backgroundImage;
+    }
+
+    public void visit(StyleBackgroundImageElement ele) {
+
+    	String href = ele.getXlinkHrefAttribute();
+        if (StringUtils.isNotEmpty(href)) {
+            byte[] imageStream = odfDocument.getPackage().getBytes(href);
+	         try {
+		        if (imageStream != null) {
+		        	BackgroundImage.Builder builder = new BackgroundImage.Builder(imageStream);
+		            Node parentNode = ele.getParentNode();
+		            builder.setRepeat(BackgroundImage.Repeat.fromODT(ele.getStyleRepeatAttribute()));
+		            builder.setPosition(BackgroundImage.Position.fromODT(ele.getStylePositionAttribute()));
+		            if (parentNode instanceof StylePageLayoutPropertiesElement) {
+		            	StylePageLayoutPropertiesElement layout = (StylePageLayoutPropertiesElement) parentNode;
+		                String svgWidth = layout.getFoPageWidthAttribute();
+		                if (StringUtils.isNotEmpty(svgWidth)) builder.setPageWidth(ODFUtils.getDimensionAsPoint(svgWidth));
+		                String svgHeight = layout.getFoPageHeightAttribute();
+		                if (StringUtils.isNotEmpty(svgHeight)) builder.setPageHeight(ODFUtils.getDimensionAsPoint(svgHeight));
+		                String leftMargin = layout.getFoMarginLeftAttribute();
+	                	if (StringUtils.isNotEmpty(leftMargin)) builder.setLeftMargin(ODFUtils.getDimensionAsPoint(leftMargin));
+	                	String rightMargin = layout.getFoMarginRightAttribute();
+	                	if (StringUtils.isNotEmpty(rightMargin)) builder.setRightMargin(ODFUtils.getDimensionAsPoint(rightMargin));
+	                	String topMargin = layout.getFoMarginTopAttribute();
+	                	if (StringUtils.isNotEmpty(topMargin)) builder.setTopMargin(ODFUtils.getDimensionAsPoint(topMargin));
+	                	String bottomMargin = layout.getFoMarginBottomAttribute();
+	                	if (StringUtils.isNotEmpty(bottomMargin)) builder.setBottomMargin(ODFUtils.getDimensionAsPoint(bottomMargin));
+		            }
+		            backgroundImage = builder.build();
+		        }
+			} catch (Exception e) {
+				throw new RuntimeException(e);
+			}
+        }
     }
 
     public void visit( OfficeStylesElement ele )
@@ -472,6 +513,12 @@ public class StyleEngineForIText
         if ( StringUtils.isNotEmpty( marginTop ) )
         {
             headerFooterProperties.setMarginTop( ODFUtils.getDimensionAsPoint( marginTop ) );
+        }
+        // height
+        String height = ele.getSvgHeightAttribute();
+        if ( StringUtils.isNotEmpty( height ) )
+        {
+        	headerFooterProperties.setHeight(ODFUtils.getDimensionAsPoint(height));
         }
     }
 

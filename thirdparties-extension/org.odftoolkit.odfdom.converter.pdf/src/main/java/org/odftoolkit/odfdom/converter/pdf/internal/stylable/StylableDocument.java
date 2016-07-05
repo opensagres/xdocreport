@@ -299,6 +299,8 @@ public class StylableDocument
     // was written by Leszek Piotrowicz <leszekp@safe-mail.net>
     //
 
+    boolean first = true;
+
     public void addElement( Element element )
     {
         if ( !super.isOpen() )
@@ -314,6 +316,17 @@ public class StylableDocument
         StylableDocumentSection.getCell( layoutTable, colIdx ).getColumn().addElement( element );
         simulateText();
         documentEmpty = false;
+//        if (first) {
+//        	first = false;
+//        	try {
+//				Image img = Image.getInstance("/Users/ben/Documents/1000000000000028000001135F95BFF1.png");
+//				img.setAbsolutePosition(0f, 0f);
+//				this.add(img);
+//			} catch (Exception e) {
+//				// TODO Auto-generated catch block
+//				e.printStackTrace();
+//			}
+//        }
     }
 
     public void columnBreak()

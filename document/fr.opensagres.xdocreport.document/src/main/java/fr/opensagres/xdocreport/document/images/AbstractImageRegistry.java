@@ -292,6 +292,17 @@ public abstract class AbstractImageRegistry
         return fieldsMetadata;
     }
 
-    protected abstract String getSize( float sizeAsPixel );
+    /**
+     * 
+     * @param sizeAsPixel
+     * @return sizeAsDxa
+     */
+    public abstract String getSize( float sizeAsPixel );
 
+    /**
+     * 
+     * @param sizeAsDxa
+     * @return sizeAsPixel
+     */
+    public abstract float getSize( String sizeAsDxa );
 }

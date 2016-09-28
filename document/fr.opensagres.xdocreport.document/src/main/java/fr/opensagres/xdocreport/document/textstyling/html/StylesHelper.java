@@ -78,7 +78,7 @@ public class StylesHelper
 
     /**
      * Create {@link ParagraphProperties} from inline style.
-     * 
+     *
      * @param style
      * @return
      */
@@ -96,7 +96,7 @@ public class StylesHelper
 
     /**
      * Create {@link HeaderProperties} from inline style.
-     * 
+     *
      * @param style
      * @return
      */
@@ -114,7 +114,7 @@ public class StylesHelper
 
     /**
      * Create {@link ListItemProperties} from inline style.
-     * 
+     *
      * @param style
      * @return
      */
@@ -132,7 +132,7 @@ public class StylesHelper
 
     /**
      * Create {@link ListProperties} from inline style.
-     * 
+     *
      * @param style
      * @return
      */
@@ -150,7 +150,7 @@ public class StylesHelper
 
     /**
      * Create {@link SpanProperties} from inline style.
-     * 
+     *
      * @param style
      * @return
      */
@@ -204,6 +204,13 @@ public class StylesHelper
             }
         }
 
+        // color
+        String color = stylesMap.get( "color" );
+        if ( color != null )
+        {
+            properties.setColor(color);
+        }
+        
         // text-decoration
         String textDecoration = stylesMap.get( "text-decoration" );
         properties.setStrike( false );

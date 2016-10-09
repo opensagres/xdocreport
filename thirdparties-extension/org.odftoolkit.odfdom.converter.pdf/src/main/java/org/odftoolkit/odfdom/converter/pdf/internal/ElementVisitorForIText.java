@@ -572,6 +572,9 @@ public class ElementVisitorForIText
         StylableList list = document.createList( currentContainer, currentListLevel );
         applyStyles( ele, list );
         Boolean continueNumbering = ele.getTextContinueNumberingAttribute();
+        if (continueNumbering == null){
+        	continueNumbering = ele.getTextStyleNameAttribute() != null;
+        }        
         if ( Boolean.TRUE.equals( continueNumbering ) && previousList != null
             && previousList.getLastStyleApplied() != null && list.getLastStyleApplied() != null
             && previousList.getLastStyleApplied().getStyleName() != null

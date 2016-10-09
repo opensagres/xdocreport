@@ -133,7 +133,22 @@ public class Options
     {
         if ( subOptionsValue != null )
         {
-            setProperty( subOptionsValue.getClass().getName(), subOptionsValue );
+            Class<?> clazz = subOptionsValue.getClass();
+            String clazzName;
+            if (clazz.isAnonymousClass()) {
+                // not sure if getInterfaces can return null
+                if (clazz.getInterfaces() != null && clazz.getInterfaces().length > 0) {
+                    // anonymous classes can implement only one interface
+                    clazzName = clazz.getInterfaces()[0].getName();
+                }
+                else {
+                    clazzName = clazz.getSuperclass().getName();
+                }
+            }
+            else {
+                clazzName = clazz.getName();
+            }
+            setProperty( clazzName, subOptionsValue );
         }
         return this;
     }

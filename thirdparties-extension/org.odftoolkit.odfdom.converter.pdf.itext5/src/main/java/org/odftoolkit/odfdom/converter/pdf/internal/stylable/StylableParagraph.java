@@ -38,6 +38,7 @@ import com.itextpdf.text.Chunk;
 import com.itextpdf.text.Element;
 import com.itextpdf.text.Font;
 import com.itextpdf.text.Paragraph;
+import com.itextpdf.text.TabSettings;
 import com.itextpdf.text.pdf.BaseFont;
 
 import fr.opensagres.xdocreport.itext.extension.ExtendedParagraph;
@@ -53,6 +54,8 @@ public class StylableParagraph
 
     public static final float DEFAULT_LINE_HEIGHT = 1.0f;
 
+    public static final float DEFAULT_TAB_INTERVAL = 56.0f;
+
     private final StylableDocument ownerDocument;
 
     private IStylableContainer parent;
@@ -66,6 +69,7 @@ public class StylableParagraph
         super();
         this.ownerDocument = ownerDocument;
         this.parent = parent;
+        super.setTabSettings( new TabSettings( DEFAULT_TAB_INTERVAL ) );
         super.setMultipliedLeading( DEFAULT_LINE_HEIGHT );
     }
 
@@ -74,6 +78,7 @@ public class StylableParagraph
         super( title );
         this.ownerDocument = ownerDocument;
         this.parent = parent;
+        super.setTabSettings( new TabSettings( DEFAULT_TAB_INTERVAL ) );
         super.setMultipliedLeading( DEFAULT_LINE_HEIGHT );
     }
 
@@ -121,8 +126,8 @@ public class StylableParagraph
                 Float textIndent = paragraphProperties.getTextIndent();
                 if ( textIndent != null)
                 {
-                    // text indent can be negative. 
-                    // See https://code.google.com/p/xdocreport/issues/detail?id=366 
+                    // text indent can be negative.
+                    // See https://code.google.com/p/xdocreport/issues/detail?id=366
                     super.setFirstLineIndent( textIndent );
                 }
             }
@@ -218,7 +223,7 @@ public class StylableParagraph
 
     private void postProcessEmptyParagraph()
     {
-        // add space if this paragraph is empty
+        // add new line if this paragraph is empty
         // otherwise its height will be zero
         boolean empty = true;
         java.util.List<Chunk> chunks = getChunks();
@@ -232,7 +237,7 @@ public class StylableParagraph
         }
         if ( empty )
         {
-            super.add( new Chunk( ODFUtils.TAB_STR ) );
+            super.add(Chunk.NEWLINE);
         }
     }
 
@@ -240,7 +245,7 @@ public class StylableParagraph
     {
         // add space if last chunk is a bookmark
         // otherwise the bookmark will disappear from pdf
-    	java.util.List<Chunk> chunks = getChunks();
+        java.util.List<Chunk> chunks = getChunks();
         if ( chunks.size() > 0 )
         {
             Chunk lastChunk = chunks.get( chunks.size() - 1 );

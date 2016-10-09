@@ -65,17 +65,28 @@ public class PdfConverter
             ElementVisitorForIText visitorForIText = processBody( odfDocument, tempOut, styleEngine, options, null );
             Integer expectedPageCount = visitorForIText.getExpectedPageCount();
             int actualPageCount = visitorForIText.getActualPageCount();
+
             if ( expectedPageCount == null || expectedPageCount == actualPageCount )
             {
                 // page count not required or correct, copy temp stream to output stream
+                if (styleEngine.getBackgroundImage() != null) {
+                	tempOut = styleEngine.getBackgroundImage().insert(tempOut);
+                }
                 out.write( tempOut.toByteArray() );
                 out.close();
             }
             else
             {
                 // page count inconsistent, do second visit with forced page count
-                processBody( odfDocument, out, styleEngine, options, actualPageCount );
+            	tempOut = new ByteArrayOutputStream();
+                processBody( odfDocument, tempOut, styleEngine, options, actualPageCount );
+                if (styleEngine.getBackgroundImage() != null) {
+                	tempOut = styleEngine.getBackgroundImage().insert(tempOut);
+                }
+                out.write( tempOut.toByteArray() );
+                out.close();
             }
+
         }
         catch ( Exception e )
         {
@@ -83,7 +94,7 @@ public class PdfConverter
         }
     }
 
-    private StyleEngineForIText processStyles( OdfDocument odfDocument, PdfOptions options )
+	private StyleEngineForIText processStyles( OdfDocument odfDocument, PdfOptions options )
         throws Exception
     {
         StyleEngineForIText styleEngine = new StyleEngineForIText( odfDocument, options );
@@ -106,7 +117,7 @@ public class PdfConverter
         return styleEngine;
     }
 
-    private ElementVisitorForIText processBody( OdfDocument odfDocument, OutputStream out,
+    private ElementVisitorForIText processBody( OdfDocument odfDocument, ByteArrayOutputStream out,
                                                 StyleEngineForIText styleEngine, PdfOptions options,
                                                 Integer forcedPageCount )
         throws Exception

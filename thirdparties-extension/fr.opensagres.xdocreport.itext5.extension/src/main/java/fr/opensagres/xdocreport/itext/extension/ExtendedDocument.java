@@ -31,6 +31,7 @@ import java.util.Map;
 import com.itextpdf.text.Document;
 import com.itextpdf.text.DocumentException;
 import com.itextpdf.text.Element;
+import com.itextpdf.text.pdf.PdfAWriter;
 import com.itextpdf.text.pdf.PdfWriter;
 
 public class ExtendedDocument
@@ -55,6 +56,12 @@ public class ExtendedDocument
 
     private PageOrientation orientation = PageOrientation.Portrait;
 
+    public ExtendedDocument( OutputStream out )
+        throws DocumentException
+    {
+        this( out, ( IPdfWriterConfiguration ) null );
+    }
+
     public ExtendedDocument( OutputStream out, IPdfWriterConfiguration configuration )
         throws DocumentException
     {
@@ -63,6 +70,24 @@ public class ExtendedDocument
             configuration.configure( writer );
         }
         headerFooter = createExtendedHeaderFooter();
+        initAttributes();
+    }
+
+    public ExtendedDocument(OutputStream out, IPdfAWriterConfiguration configuration)
+        throws DocumentException
+    {
+        if ( configuration != null ) {
+            this.writer = ExtendedPdfAWriter.getInstance( this, out, configuration );
+            configuration.configure( (PdfAWriter) writer );
+        } else {
+            this.writer = ExtendedPdfAWriter.getInstance( this, out );
+        }
+        headerFooter = createExtendedHeaderFooter();
+        initAttributes();
+    }
+
+    private void initAttributes()
+    {
         writer.setPageEvent( headerFooter );
         this.originMarginTop = marginTop;
         this.originMarginBottom = marginBottom;
@@ -142,7 +167,7 @@ public class ExtendedDocument
     {
         headerFooter.setMasterPage( masterPage );
     }
-    
+
     public IMasterPage getActiveMasterPage() {
         return headerFooter.getMasterPage();
     }

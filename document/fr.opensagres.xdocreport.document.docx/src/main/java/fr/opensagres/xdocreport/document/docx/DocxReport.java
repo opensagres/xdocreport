@@ -36,15 +36,15 @@ import static fr.opensagres.xdocreport.document.docx.DocxConstants.WORD_RELS_XML
 import static fr.opensagres.xdocreport.document.docx.DocxConstants.WORD_STYLES_XML_ENTRY;
 
 import java.io.IOException;
-import java.io.Reader;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
-import org.xml.sax.InputSource;
+import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.parsers.SAXParser;
+import javax.xml.parsers.SAXParserFactory;
+
 import org.xml.sax.SAXException;
-import org.xml.sax.XMLReader;
-import org.xml.sax.helpers.XMLReaderFactory;
 
 import fr.opensagres.xdocreport.converter.MimeMapping;
 import fr.opensagres.xdocreport.core.XDocReportException;
@@ -159,13 +159,11 @@ public class DocxReport
         // Loop for each entries *.xml.rels
         for ( String relsEntryName : xmlRelsEntryNames )
         {
-            HyperlinkContentHandler contentHandler = new HyperlinkContentHandler();
-            Reader reader = preprocessedArchive.getEntryReader( relsEntryName );
             try
             {
-                XMLReader xmlReader = XMLReaderFactory.createXMLReader();
-                xmlReader.setContentHandler( contentHandler );
-                xmlReader.parse( new InputSource( reader ) );
+                HyperlinkContentHandler contentHandler = new HyperlinkContentHandler();
+                SAXParser saxParser = SAXParserFactory.newInstance().newSAXParser();
+				saxParser.parse(preprocessedArchive.getEntryInputStream(relsEntryName), contentHandler);
                 if ( contentHandler.getHyperlinks() != null )
                 {
                     // Current *.xml.rels document has hyperlinks, store it in
@@ -186,6 +184,10 @@ public class DocxReport
             {
                 throw new XDocReportException( e );
             }
+			catch (ParserConfigurationException e)
+			{
+                throw new XDocReportException( e );
+			}
         }
         // Default style
         sharedContext.put( DocxContextHelper.DEFAULT_STYLE_KEY, defaultStyle );

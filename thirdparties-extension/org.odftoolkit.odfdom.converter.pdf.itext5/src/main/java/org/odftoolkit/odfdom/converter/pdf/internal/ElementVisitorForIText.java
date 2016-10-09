@@ -34,6 +34,7 @@ import org.odftoolkit.odfdom.converter.core.ElementVisitorConverter;
 import org.odftoolkit.odfdom.converter.core.ODFConverterException;
 import org.odftoolkit.odfdom.converter.core.utils.ODFUtils;
 import org.odftoolkit.odfdom.converter.pdf.Converter;
+import org.odftoolkit.odfdom.converter.pdf.PdfAOptions;
 import org.odftoolkit.odfdom.converter.pdf.PdfOptions;
 import org.odftoolkit.odfdom.converter.pdf.internal.stylable.IStylableContainer;
 import org.odftoolkit.odfdom.converter.pdf.internal.stylable.IStylableElement;
@@ -147,6 +148,23 @@ public class ElementVisitorForIText
         try
         {
             document = new StylableDocument( out, options.getConfiguration(), styleEngine );
+        }
+        catch ( DocumentException e )
+        {
+            throw new ODFConverterException( e );
+        }
+    }
+
+    public ElementVisitorForIText( OdfDocument odfDocument, OutputStream out, StyleEngineForIText styleEngine,
+                                   PdfAOptions options, Integer forcedPageCount )
+    {
+        super( odfDocument, options.getExtractor(), out, null );
+        this.styleEngine = styleEngine;
+        this.forcedPageCount = forcedPageCount;
+
+        try
+        {
+            document = new StylableDocument( out, options.getPdfAConfiguration(), styleEngine );
         }
         catch ( DocumentException e )
         {

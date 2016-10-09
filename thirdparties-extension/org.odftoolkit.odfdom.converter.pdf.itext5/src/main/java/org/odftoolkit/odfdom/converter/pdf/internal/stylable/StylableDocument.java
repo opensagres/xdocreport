@@ -43,6 +43,7 @@ import com.itextpdf.text.pdf.PdfPTable;
 
 import fr.opensagres.xdocreport.itext.extension.ExtendedDocument;
 import fr.opensagres.xdocreport.itext.extension.IMasterPage;
+import fr.opensagres.xdocreport.itext.extension.IPdfAWriterConfiguration;
 import fr.opensagres.xdocreport.itext.extension.IPdfWriterConfiguration;
 import fr.opensagres.xdocreport.itext.extension.PageOrientation;
 import fr.opensagres.xdocreport.itext.extension.font.FontGroup;
@@ -71,6 +72,13 @@ public class StylableDocument
     private int colIdx;
 
     public StylableDocument( OutputStream out, IPdfWriterConfiguration configuration, StyleEngineForIText styleEngine )
+        throws DocumentException
+    {
+        super( out, configuration );
+        this.styleEngine = styleEngine;
+    }
+
+    public StylableDocument( OutputStream out, IPdfAWriterConfiguration configuration, StyleEngineForIText styleEngine )
         throws DocumentException
     {
         super( out, configuration );
@@ -207,6 +215,7 @@ public class StylableDocument
         return null;
     }
 
+    @Override
     public StylableMasterPage getActiveMasterPage()
     {
         return activeMasterPage;
@@ -299,6 +308,7 @@ public class StylableDocument
     // was written by Leszek Piotrowicz <leszekp@safe-mail.net>
     //
 
+    @Override
     public void addElement( Element element )
     {
         if ( !super.isOpen() )

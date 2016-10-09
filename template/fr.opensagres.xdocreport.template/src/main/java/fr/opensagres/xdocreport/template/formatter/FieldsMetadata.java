@@ -351,6 +351,24 @@ public class FieldsMetadata
         }
         return sortedFieldsAsTextStyling;
     }
+    
+	/**
+	 * Returns the fields metadata as text styling from the given content and
+	 * null otherwise.
+	 * 
+	 * @param content
+	 * @return the fields metadata as text styling from the given content and
+	 *         null otherwise.
+	 */
+	public FieldMetadata getFieldAsTextStyling(String content) {
+		Collection<FieldMetadata> fieldsAsTextStyling = getFieldsAsTextStyling();
+		for (FieldMetadata field : fieldsAsTextStyling) {
+			if (content.contains(field.getFieldName())) {
+				return field;
+			}
+		}
+		return null;
+	}
 
     /**
      * Returns true if there are fields as image and false otherwise.

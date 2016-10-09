@@ -32,6 +32,7 @@ import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTBorder;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.STBorder;
 
 import com.itextpdf.text.BaseColor;
+import com.itextpdf.text.Chunk;
 import com.itextpdf.text.Font;
 import com.itextpdf.text.Paragraph;
 import com.itextpdf.text.Rectangle;
@@ -39,6 +40,7 @@ import com.itextpdf.text.pdf.BaseFont;
 
 import fr.opensagres.xdocreport.itext.extension.ExtendedParagraph;
 import fr.opensagres.xdocreport.itext.extension.IITextContainer;
+import java.util.List;
 
 public class StylableParagraph
     extends ExtendedParagraph
@@ -53,7 +55,7 @@ public class StylableParagraph
 
     private String listItemText;
 
-    private Float originMultipliedLeading;
+    private Float originMultipliedLeading = 1f;
 
     private String listItemFontFamily;
 
@@ -68,7 +70,6 @@ public class StylableParagraph
         super();
         this.ownerDocument = ownerDocument;
         this.parent = parent;
-        this.originMultipliedLeading = null;
     }
 
     public StylableParagraph( StylableDocument ownerDocument, Paragraph title, IITextContainer parent )
@@ -272,6 +273,31 @@ public class StylableParagraph
             float margin = font.getBaseFont().getFontDescriptor( BaseFont.AWT_LEADING, size );
             float multiplier = ( ascender + descender + margin ) / size;
             super.setMultipliedLeading( originMultipliedLeading * multiplier );
+            // copied from ODF
+            float itextdescender = -font.getBaseFont().getFontDescriptor( BaseFont.DESCENT, size ); // negative
+            float textRise = itextdescender + getTotalLeading() - font.getSize() * multiplier;
+            
+            List<Chunk> chunks = getChunks();
+            for ( Chunk chunk : chunks )
+            {
+                Font f = chunk.getFont();
+                if ( f != null )
+                {
+                    // have to raise underline and strikethru as well
+                    float s = f.getSize();
+                    if ( f.isUnderlined() )
+                    {
+                        f.setStyle( f.getStyle() & ~Font.UNDERLINE );
+                        chunk.setUnderline( s * 1 / 17, s * -1 / 7 + textRise );
+                    }
+                    if ( f.isStrikethru() )
+                    {
+                        f.setStyle( f.getStyle() & ~Font.STRIKETHRU );
+                        chunk.setUnderline( s * 1 / 17, s * 1 / 4 + textRise );
+                    }
+                }
+                chunk.setTextRise( chunk.getTextRise() + textRise );
+            }
         }
     }
 

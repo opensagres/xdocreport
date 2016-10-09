@@ -284,7 +284,7 @@ public class DocxDocumentHandler
                                        boolean strike, boolean subscript, boolean superscript )
         throws IOException
     {
-        if ( bold || italics || underline || strike )
+        if ( bold || italics || underline || strike || subscript || superscript  )
         {
             if ( isInsidePPr )
             {
@@ -340,7 +340,11 @@ public class DocxDocumentHandler
     private void internalStartParagraph( ContainerProperties properties )
         throws IOException
     {
-        internalStartParagraph( properties, null, false );
+        if (properties != null && properties.getStyleName() != null) {
+            internalStartParagraph(properties, properties.getStyleName(), false);
+        } else {
+            internalStartParagraph(properties, null, false);
+        }
     }
 
     public void startParagraph( ParagraphProperties properties )

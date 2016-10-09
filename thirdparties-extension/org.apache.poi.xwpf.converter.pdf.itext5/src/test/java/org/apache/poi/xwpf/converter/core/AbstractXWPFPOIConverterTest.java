@@ -26,7 +26,6 @@ package org.apache.poi.xwpf.converter.core;
 
 import java.io.IOException;
 
-import org.junit.Ignore;
 import org.junit.Test;
 
 public abstract class AbstractXWPFPOIConverterTest
@@ -54,7 +53,6 @@ public abstract class AbstractXWPFPOIConverterTest
     }
 
     @Test
-    @Ignore("not sure about the null pointer exception")
     public void CV()
         throws IOException
     {
@@ -427,6 +425,13 @@ public abstract class AbstractXWPFPOIConverterTest
     }
 
     @Test
+    public void TestLeading()
+        throws IOException
+    {
+        doGenerate( "TestLeading.docx" );
+    }
+
+    @Test
     public void TestList()
         throws IOException
     {
@@ -452,6 +457,13 @@ public abstract class AbstractXWPFPOIConverterTest
         throws IOException
     {
         doGenerate( "TestParagraphWithBorder.docx" );
+    }
+    
+    @Test
+    public void TestSdtCell()
+        throws IOException
+    {
+        doGenerate( "TestSdtCell.docx" );
     }
 
     @Test

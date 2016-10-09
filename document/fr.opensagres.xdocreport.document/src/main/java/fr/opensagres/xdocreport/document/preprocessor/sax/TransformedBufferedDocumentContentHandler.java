@@ -489,14 +489,7 @@ public abstract class TransformedBufferedDocumentContentHandler<Document extends
     {
         if ( formatter != null && fieldsMetadata != null )
         {
-            Collection<FieldMetadata> fieldsAsTextStyling = fieldsMetadata.getFieldsAsTextStyling();
-            for ( FieldMetadata field : fieldsAsTextStyling )
-            {
-                if ( content.contains( field.getFieldName() ) )
-                {
-                    return field;
-                }
-            }
+        	return fieldsMetadata.getFieldAsTextStyling(content);
         }
         return null;
     }

@@ -48,7 +48,7 @@ public class PdfOptions
 
     private IPdfWriterConfiguration configuration;
 
-    private PdfOptions()
+    protected PdfOptions()
     {
         this.fontEncoding = BaseFont.IDENTITY_H;
         this.fontProvider = ITextFontRegistry.getRegistry();
@@ -56,7 +56,7 @@ public class PdfOptions
 
     /**
      * Create an instance of Pdf options.
-     * 
+     *
      * @return
      */
     public static PdfOptions create()
@@ -66,7 +66,7 @@ public class PdfOptions
 
     /**
      * Returns the font encoding.
-     * 
+     *
      * @return
      */
     public String getFontEncoding()
@@ -76,7 +76,7 @@ public class PdfOptions
 
     /**
      * Set font encoding to use when retrieving fonts. The default value is unicode encoding
-     * 
+     *
      * @param fontEncoding font encoding to use
      * @return this instance
      */
@@ -88,7 +88,7 @@ public class PdfOptions
 
     /**
      * Set the font provider.
-     * 
+     *
      * @param fontProvider
      * @return
      */
@@ -100,7 +100,7 @@ public class PdfOptions
 
     /**
      * Returns the font provider.
-     * 
+     *
      * @return
      */
     public IFontProvider getFontProvider()
@@ -110,7 +110,7 @@ public class PdfOptions
 
     /**
      * Returns the configuration to use to configure iText {@link PdfWriter} and null otherwise.
-     * 
+     *
      * @return
      */
     public IPdfWriterConfiguration getConfiguration()
@@ -120,7 +120,7 @@ public class PdfOptions
 
     /**
      * Set the configuration to use to configure iText {@link PdfWriter} and null otherwise.
-     * 
+     *
      * @param configuration the configuration to use to configure iText {@link PdfWriter} and null otherwise
      */
     public void setConfiguration( IPdfWriterConfiguration configuration )
@@ -130,7 +130,7 @@ public class PdfOptions
 
     /**
      * Returns the default Pdf Options.
-     * 
+     *
      * @return
      */
     public static PdfOptions getDefault()

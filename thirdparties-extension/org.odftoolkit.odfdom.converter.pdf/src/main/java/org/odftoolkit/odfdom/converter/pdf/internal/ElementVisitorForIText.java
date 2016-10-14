@@ -608,12 +608,14 @@ public class ElementVisitorForIText
     {    	
     	// add image in the pdf.
 		Image imageObj = imageCache.get(href);
-		if (imageObj == null) {
+		if (imageObj == null) 
+		{
 			imageObj = StylableImage.getImage(imageStream);
 			imageCache.put(href, imageObj);
 		} 
 		
-		if (imageObj != null) {
+		if (imageObj != null) 
+		{
             DrawFrameElement frame = null;
             Float x = null;
             Float y = null;

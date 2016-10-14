@@ -28,7 +28,9 @@ import java.awt.Color;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.odftoolkit.odfdom.converter.core.ElementVisitorConverter;
 import org.odftoolkit.odfdom.converter.core.ODFConverterException;
@@ -134,6 +136,9 @@ public class ElementVisitorForIText
     private Integer forcedPageCount; // page count processing
 
     private Integer expectedPageCount; // page count processing
+    
+    // Image Cache
+    private Map<String, Image> imageCache = new HashMap<String, Image>();
 
     public ElementVisitorForIText( OdfDocument odfDocument, OutputStream out, StyleEngineForIText styleEngine,
                                    PdfOptions options, Integer forcedPageCount )
@@ -572,6 +577,9 @@ public class ElementVisitorForIText
         StylableList list = document.createList( currentContainer, currentListLevel );
         applyStyles( ele, list );
         Boolean continueNumbering = ele.getTextContinueNumberingAttribute();
+        if (continueNumbering == null){
+        	continueNumbering = ele.getTextStyleNameAttribute() != null;
+        }        
         if ( Boolean.TRUE.equals( continueNumbering ) && previousList != null
             && previousList.getLastStyleApplied() != null && list.getLastStyleApplied() != null
             && previousList.getLastStyleApplied().getStyleName() != null
@@ -597,11 +605,17 @@ public class ElementVisitorForIText
 
     @Override
     protected void visitImage( DrawImageElement ele, String href, byte[] imageStream )
-    {
-        // add image in the pdf.
-        Image imageObj = StylableImage.getImage( imageStream );
-        if ( imageObj != null )
-        {
+    {    	
+    	// add image in the pdf.
+		Image imageObj = imageCache.get(href);
+		if (imageObj == null) 
+		{
+			imageObj = StylableImage.getImage(imageStream);
+			imageCache.put(href, imageObj);
+		} 
+		
+		if (imageObj != null) 
+		{
             DrawFrameElement frame = null;
             Float x = null;
             Float y = null;

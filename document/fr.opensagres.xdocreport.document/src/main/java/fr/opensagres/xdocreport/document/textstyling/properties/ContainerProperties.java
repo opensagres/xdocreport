@@ -57,6 +57,8 @@ public abstract class ContainerProperties
 
     private final ContainerType type;
 
+    private String color;
+
     public ContainerProperties( ContainerType type )
     {
         this.type = type;
@@ -65,6 +67,15 @@ public abstract class ContainerProperties
     public ContainerType getType()
     {
         return type;
+    }
+
+    public String getColor() {
+        return color;
+    }
+
+    public ContainerProperties setColor(String color) {
+        this.color = color;
+        return this;
     }
 
     public boolean isPageBreakBefore()

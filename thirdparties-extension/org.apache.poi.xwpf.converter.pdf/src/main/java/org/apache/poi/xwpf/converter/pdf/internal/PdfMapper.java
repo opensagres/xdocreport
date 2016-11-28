@@ -29,6 +29,8 @@ import static org.apache.poi.xwpf.converter.core.utils.DxaUtil.emu2points;
 import java.io.OutputStream;
 import java.math.BigInteger;
 import java.util.List;
+import java.util.Map;
+import java.util.HashMap;
 import java.util.logging.Logger;
 
 import org.apache.poi.xwpf.converter.core.BorderSide;
@@ -107,6 +109,9 @@ import fr.opensagres.xdocreport.itext.extension.ExtendedPdfPCell;
 import fr.opensagres.xdocreport.itext.extension.ExtendedPdfPTable;
 import fr.opensagres.xdocreport.itext.extension.IITextContainer;
 import fr.opensagres.xdocreport.itext.extension.font.FontGroup;
+import org.w3c.dom.NamedNodeMap;
+import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
 
 public class PdfMapper extends
 		XWPFDocumentVisitor<IITextContainer, PdfOptions, StylableMasterPage> {
@@ -144,6 +149,8 @@ public class PdfMapper extends
 
 	private Integer expectedPageCount;
 
+	private Map<String, String> anchorMap;
+
 	public PdfMapper(XWPFDocument document, OutputStream out,
 			PdfOptions options, Integer expectedPageCount) throws Exception {
 		super(document, options != null ? options : PdfOptions.getDefault());
@@ -158,6 +165,7 @@ public class PdfMapper extends
 		// Create instance of PDF document
 		this.pdfDocument = new StylableDocument(out, options.getConfiguration());
 		this.pdfDocument.setMasterPageManager(getMasterPageManager());
+		anchorMap = new HashMap<String, String>();
 		return pdfDocument;
 
 	}
@@ -165,6 +173,7 @@ public class PdfMapper extends
 	@Override
 	protected void endVisitDocument() throws Exception {
 		pdfDocument.close();
+		anchorMap.clear();
 		out.close();
 	}
 
@@ -517,6 +526,12 @@ public class PdfMapper extends
 		if (url != null) {
 			// URL is not null, generate a PDF hyperlink.
 			StylableAnchor pdfAnchor = new StylableAnchor();
+			//use in anchor link
+      if (!anchorMap.containsKey(url)) {
+        if (url.startsWith("#")) {
+          anchorMap.put(url.substring(1), url);
+        }
+      }
 			pdfAnchor.setReference(url);
 			pdfAnchor.setITextContainer(container);
 			container = pdfAnchor;
@@ -580,7 +595,7 @@ public class PdfMapper extends
 
 	/**
 	 * Returns true if the iText font exists and false otherwise.
-	 * 
+	 *
 	 * @param font
 	 * @return
 	 */
@@ -592,9 +607,30 @@ public class PdfMapper extends
 	@Override
 	protected void visitText(CTText docxText, boolean pageNumber,
 			IITextContainer pdfParagraphContainer) throws Exception {
+
+		//Get color value when w:rPr inside a w:t
+		//ex: <w:t> <w:r><w:rPr></w:rPr></w:r></w:t>
+		Node domNode = docxText.getDomNode();
+		java.awt.Color color = null;
+		if (domNode != null) {
+			try {
+				Node colorNode = domNode.getChildNodes().item(0).getChildNodes().item(0).getChildNodes().item(0);
+				if (null != colorNode) {
+					Node valNode = colorNode.getAttributes().getNamedItem("w:val");
+					color = java.awt.Color.decode(valNode.getNodeValue());
+				}
+			} catch (Exception e) {
+			}
+		}
 		Font font = currentRunFontAscii;
 		Font fontAsian = currentRunFontEastAsia;
 		Font fontComplex = currentRunFontHAnsi;
+		if (color != null) {
+			//set text color
+			font.setColor(color);
+			fontAsian.setColor(color);
+			fontComplex.setColor(color);
+		}
 		createAndAddChunks(pdfParagraphContainer, docxText.getStringValue(),
 				currentRunUnderlinePatterns, currentRunBackgroundColor,
 				pageNumber, font, fontAsian, fontComplex);
@@ -639,6 +675,9 @@ public class PdfMapper extends
 		if (currentRunX != null) {
 			this.currentRunX += textChunk.getWidthPoint();
 		}
+		if (anchorMap.containsKey(text)) {
+      textChunk.setLocalDestination(text);
+    }
 		return textChunk;
 	}
 

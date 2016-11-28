@@ -24,16 +24,20 @@
 package org.apache.poi.xwpf.converter.core.styles.run;
 
 import java.util.List;
+
 import org.apache.poi.xwpf.converter.core.styles.Data;
-import org.apache.poi.xwpf.converter.core.styles.XWPFStylesDocument;
 import org.apache.poi.xwpf.usermodel.BodyElementType;
 import org.apache.poi.xwpf.usermodel.IBodyElement;
 import org.apache.poi.xwpf.usermodel.XWPFDocument;
 import org.apache.poi.xwpf.usermodel.XWPFParagraph;
 import org.apache.poi.xwpf.usermodel.XWPFRun;
+
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
+
 import org.junit.Test;
+
+import fr.opensagres.poi.xwpf.converter.core.styles.XWPFStylesDocument;
 
 /**
  *

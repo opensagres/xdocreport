@@ -30,11 +30,12 @@ import java.io.IOException;
 import java.io.OutputStream;
 
 import org.apache.poi.xwpf.converter.core.AbstractXWPFPOIConverterTest;
-import org.apache.poi.xwpf.converter.core.FileImageExtractor;
-import org.apache.poi.xwpf.converter.core.FileURIResolver;
-import org.apache.poi.xwpf.converter.core.XWPFConverterException;
 import org.apache.poi.xwpf.usermodel.XWPFDocument;
 import org.junit.Test;
+
+import fr.opensagres.poi.xwpf.converter.core.FileImageExtractor;
+import fr.opensagres.poi.xwpf.converter.core.FileURIResolver;
+import fr.opensagres.poi.xwpf.converter.core.XWPFConverterException;
 
 public class XHTMLConverterChineseTestCase
 {

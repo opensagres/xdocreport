@@ -32,6 +32,9 @@ import java.io.OutputStream;
 import org.apache.poi.xwpf.converter.core.AbstractXWPFPOIConverterTest;
 import org.apache.poi.xwpf.usermodel.XWPFDocument;
 
+import fr.opensagres.poi.xwpf.converter.pdf.PdfConverter;
+import fr.opensagres.poi.xwpf.converter.pdf.PdfOptions;
+
 public class PdfConverterTestCase
     extends AbstractXWPFPOIConverterTest
 {

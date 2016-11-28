@@ -28,10 +28,9 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.logging.Logger;
 
-import org.apache.poi.xwpf.converter.core.openxmlformats.AbstractOpenXMLFormatsPartProvider;
-import org.apache.poi.xwpf.converter.pdf.FastPdfConverter;
-import org.apache.poi.xwpf.converter.pdf.PdfOptions;
-
+import fr.opensagres.poi.xwpf.converter.core.openxmlformats.AbstractOpenXMLFormatsPartProvider;
+import fr.opensagres.poi.xwpf.converter.pdf.FastPdfConverter;
+import fr.opensagres.poi.xwpf.converter.pdf.PdfOptions;
 import fr.opensagres.xdocreport.converter.MimeMapping;
 import fr.opensagres.xdocreport.converter.MimeMappingConstants;
 import fr.opensagres.xdocreport.converter.Options;
@@ -64,7 +63,7 @@ public class OpenXMLFormats2PDFViaITextConverter
     {
         try
         {
-            org.apache.poi.xwpf.converter.core.openxmlformats.IOpenXMLFormatsPartProvider provider =
+            fr.opensagres.poi.xwpf.converter.core.openxmlformats.IOpenXMLFormatsPartProvider provider =
                 new AbstractOpenXMLFormatsPartProvider()
                 {
 

@@ -55,12 +55,6 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.apache.poi.xwpf.converter.core.Color;
-import org.apache.poi.xwpf.converter.core.TableHeight;
-import org.apache.poi.xwpf.converter.core.TableWidth;
-import org.apache.poi.xwpf.converter.core.styles.XWPFStylesDocument;
-import org.apache.poi.xwpf.converter.core.utils.StringUtils;
-import org.apache.poi.xwpf.converter.core.utils.XWPFUtils;
 import org.apache.poi.xwpf.converter.xhtml.internal.XHTMLConstants;
 import org.apache.poi.xwpf.converter.xhtml.internal.utils.SAXHelper;
 import org.apache.poi.xwpf.usermodel.ParagraphAlignment;
@@ -77,6 +71,13 @@ import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTTrPr;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.STTextDirection;
 import org.xml.sax.ContentHandler;
 import org.xml.sax.SAXException;
+
+import fr.opensagres.poi.xwpf.converter.core.Color;
+import fr.opensagres.poi.xwpf.converter.core.TableHeight;
+import fr.opensagres.poi.xwpf.converter.core.TableWidth;
+import fr.opensagres.poi.xwpf.converter.core.styles.XWPFStylesDocument;
+import fr.opensagres.poi.xwpf.converter.core.utils.StringUtils;
+import fr.opensagres.poi.xwpf.converter.core.utils.XWPFUtils;
 
 public class CSSStylesDocument
     extends XWPFStylesDocument

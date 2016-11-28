@@ -24,7 +24,7 @@
  */
 package org.apache.poi.xwpf.converter.xhtml.internal;
 
-import static org.apache.poi.xwpf.converter.core.utils.DxaUtil.emu2points;
+import static fr.opensagres.poi.xwpf.converter.core.utils.DxaUtil.emu2points;
 import static org.apache.poi.xwpf.converter.xhtml.internal.XHTMLConstants.A_ELEMENT;
 import static org.apache.poi.xwpf.converter.xhtml.internal.XHTMLConstants.BODY_ELEMENT;
 import static org.apache.poi.xwpf.converter.xhtml.internal.XHTMLConstants.BR_ELEMENT;
@@ -56,17 +56,6 @@ import java.io.IOException;
 import java.math.BigInteger;
 import java.util.List;
 
-import org.apache.poi.xwpf.converter.core.BorderSide;
-import org.apache.poi.xwpf.converter.core.Color;
-import org.apache.poi.xwpf.converter.core.IURIResolver;
-import org.apache.poi.xwpf.converter.core.ListItemContext;
-import org.apache.poi.xwpf.converter.core.TableCellBorder;
-import org.apache.poi.xwpf.converter.core.XWPFDocumentVisitor;
-import org.apache.poi.xwpf.converter.core.styles.XWPFStylesDocument;
-import org.apache.poi.xwpf.converter.core.styles.run.RunFontStyleStrikeValueProvider;
-import org.apache.poi.xwpf.converter.core.styles.run.RunTextHighlightingValueProvider;
-import org.apache.poi.xwpf.converter.core.utils.DxaUtil;
-import org.apache.poi.xwpf.converter.core.utils.StringUtils;
 import org.apache.poi.xwpf.converter.xhtml.XHTMLOptions;
 import org.apache.poi.xwpf.converter.xhtml.internal.styles.CSSStyle;
 import org.apache.poi.xwpf.converter.xhtml.internal.styles.CSSStylePropertyConstants;
@@ -104,6 +93,18 @@ import org.xml.sax.Attributes;
 import org.xml.sax.ContentHandler;
 import org.xml.sax.SAXException;
 import org.xml.sax.helpers.AttributesImpl;
+
+import fr.opensagres.poi.xwpf.converter.core.BorderSide;
+import fr.opensagres.poi.xwpf.converter.core.Color;
+import fr.opensagres.poi.xwpf.converter.core.IURIResolver;
+import fr.opensagres.poi.xwpf.converter.core.ListItemContext;
+import fr.opensagres.poi.xwpf.converter.core.TableCellBorder;
+import fr.opensagres.poi.xwpf.converter.core.XWPFDocumentVisitor;
+import fr.opensagres.poi.xwpf.converter.core.styles.XWPFStylesDocument;
+import fr.opensagres.poi.xwpf.converter.core.styles.run.RunFontStyleStrikeValueProvider;
+import fr.opensagres.poi.xwpf.converter.core.styles.run.RunTextHighlightingValueProvider;
+import fr.opensagres.poi.xwpf.converter.core.utils.DxaUtil;
+import fr.opensagres.poi.xwpf.converter.core.utils.StringUtils;
 
 public class XHTMLMapper
     extends XWPFDocumentVisitor<Object, XHTMLOptions, XHTMLMasterPage>

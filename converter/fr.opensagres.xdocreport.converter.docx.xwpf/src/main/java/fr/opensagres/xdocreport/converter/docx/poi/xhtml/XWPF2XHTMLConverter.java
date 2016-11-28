@@ -88,7 +88,7 @@ public class XWPF2XHTMLConverter
         final IURIResolver resolver = OptionsHelper.getURIResolver( options );
         if ( resolver != null )
         {
-            xhtmlOptions.URIResolver( new org.apache.poi.xwpf.converter.core.IURIResolver()
+            xhtmlOptions.URIResolver( new fr.opensagres.poi.xwpf.converter.core.IURIResolver()
             {
                 public String resolve( String uri )
                 {

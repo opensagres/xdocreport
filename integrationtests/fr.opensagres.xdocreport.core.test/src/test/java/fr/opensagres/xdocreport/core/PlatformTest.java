@@ -33,6 +33,6 @@ public class PlatformTest {
 	@Test
 	public void getVersion() throws Exception {
 		String version = Platform.getVersion();
-		Assert.assertTrue("version should start with 1 but is "+version, version.startsWith("1."));
+		Assert.assertTrue("version should start with 2 but is "+version, version.startsWith("2."));
 	}
 }

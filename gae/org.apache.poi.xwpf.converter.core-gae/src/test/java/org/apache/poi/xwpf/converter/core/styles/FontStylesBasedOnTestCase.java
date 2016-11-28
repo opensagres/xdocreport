@@ -26,7 +26,6 @@ package org.apache.poi.xwpf.converter.core.styles;
 
 import java.util.List;
 
-import org.apache.poi.xwpf.converter.core.utils.ColorHelper;
 import org.apache.poi.xwpf.usermodel.BodyElementType;
 import org.apache.poi.xwpf.usermodel.IBodyElement;
 import org.apache.poi.xwpf.usermodel.XWPFDocument;
@@ -35,7 +34,9 @@ import org.apache.poi.xwpf.usermodel.XWPFRun;
 import org.junit.Assert;
 import org.junit.Test;
 
-import org.apache.poi.xwpf.converter.core.Color;
+import fr.opensagres.poi.xwpf.converter.core.Color;
+import fr.opensagres.poi.xwpf.converter.core.styles.XWPFStylesDocument;
+import fr.opensagres.poi.xwpf.converter.core.utils.ColorHelper;
 
 public class FontStylesBasedOnTestCase
 {

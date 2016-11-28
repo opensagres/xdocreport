@@ -24,8 +24,9 @@
  */
 package org.apache.poi.xwpf.converter.xhtml.internal;
 
-import org.apache.poi.xwpf.converter.core.IXWPFMasterPage;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTSectPr;
+
+import fr.opensagres.poi.xwpf.converter.core.IXWPFMasterPage;
 
 public class XHTMLMasterPage
     implements IXWPFMasterPage<String>

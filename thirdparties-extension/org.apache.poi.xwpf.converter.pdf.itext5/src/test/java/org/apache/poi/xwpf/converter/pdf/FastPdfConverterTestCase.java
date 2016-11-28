@@ -30,7 +30,10 @@ import java.io.IOException;
 import java.io.OutputStream;
 
 import org.apache.poi.xwpf.converter.core.AbstractXWPFPOIConverterTest;
-import org.apache.poi.xwpf.converter.core.openxmlformats.ZipArchive;
+
+import fr.opensagres.poi.xwpf.converter.core.openxmlformats.ZipArchive;
+import fr.opensagres.poi.xwpf.converter.pdf.FastPdfConverter;
+import fr.opensagres.poi.xwpf.converter.pdf.PdfOptions;
 
 public class FastPdfConverterTestCase
     extends AbstractXWPFPOIConverterTest

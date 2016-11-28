@@ -24,8 +24,8 @@
  */
 package org.apache.poi.xwpf.converter.xhtml;
 
-import org.apache.poi.xwpf.converter.core.IURIResolver;
-import org.apache.poi.xwpf.converter.core.Options;
+import fr.opensagres.poi.xwpf.converter.core.IURIResolver;
+import fr.opensagres.poi.xwpf.converter.core.Options;
 
 public class XHTMLOptions
     extends Options

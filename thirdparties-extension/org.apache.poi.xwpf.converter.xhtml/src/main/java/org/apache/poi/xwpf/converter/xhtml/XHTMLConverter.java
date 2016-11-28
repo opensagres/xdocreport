@@ -28,12 +28,13 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.io.Writer;
 
-import org.apache.poi.xwpf.converter.core.AbstractXWPFConverter;
-import org.apache.poi.xwpf.converter.core.IXWPFConverter;
-import org.apache.poi.xwpf.converter.core.XWPFConverterException;
 import org.apache.poi.xwpf.converter.xhtml.internal.XHTMLMapper;
 import org.apache.poi.xwpf.usermodel.XWPFDocument;
 import org.xml.sax.ContentHandler;
+
+import fr.opensagres.poi.xwpf.converter.core.AbstractXWPFConverter;
+import fr.opensagres.poi.xwpf.converter.core.IXWPFConverter;
+import fr.opensagres.poi.xwpf.converter.core.XWPFConverterException;
 
 public class XHTMLConverter
     extends AbstractXWPFConverter<XHTMLOptions>

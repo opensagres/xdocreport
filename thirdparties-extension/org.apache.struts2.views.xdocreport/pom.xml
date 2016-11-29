@@ -5,7 +5,7 @@
 		<groupId>fr.opensagres.xdocreport</groupId>
 		<version>2.0.0-SNAPSHOT</version>
 	</parent>
-	<artifactId>org.apache.struts2.views.xdocreport</artifactId>
+	<artifactId>fr.opensagres.struts2.views.xdocreport</artifactId>
 	<dependencies>
 		<dependency>
 			<groupId>fr.opensagres.xdocreport</groupId>

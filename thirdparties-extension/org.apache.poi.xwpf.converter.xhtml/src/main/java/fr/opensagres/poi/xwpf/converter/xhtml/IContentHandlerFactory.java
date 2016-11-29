@@ -22,62 +22,20 @@
  * OF CONTRACT, TORT OR OTHERWISE,  ARISING FROM, OUT OF OR IN CONNECTION
  * WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
-package org.apache.poi.xwpf.converter.xhtml.internal;
+package fr.opensagres.poi.xwpf.converter.xhtml;
 
-import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTSectPr;
+import java.io.OutputStream;
+import java.io.Writer;
 
-import fr.opensagres.poi.xwpf.converter.core.IXWPFMasterPage;
+import org.xml.sax.ContentHandler;
 
-public class XHTMLMasterPage
-    implements IXWPFMasterPage<String>
+/**
+ * SAX {@link ContentHandler} factory used by the XHTML converter.
+ * 
+ */
+public interface IContentHandlerFactory
 {
 
-    private final CTSectPr sectPr;
+    ContentHandler create( OutputStream out, Writer writer, XHTMLOptions options );
 
-    private String header;
-
-    private String footer;
-
-    private int type;
-
-    public XHTMLMasterPage( CTSectPr sectPr )
-    {
-        this.sectPr = sectPr;
-    }
-
-    public String getHeader()
-    {
-        return header;
-    }
-
-    public void setHeader( String header )
-    {
-        this.header = header;
-    }
-
-    public String getFooter()
-    {
-        return footer;
-    }
-
-    public void setFooter( String footer )
-    {
-        this.footer = footer;
-    }
-
-    public CTSectPr getSectPr()
-    {
-        return sectPr;
-    }
-
-    public int getType()
-    {
-        return type;
-    }
-
-    public boolean setType( int type )
-    {
-        this.type = type;
-        return true;
-    }
 }

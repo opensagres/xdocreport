@@ -22,46 +22,40 @@
  * OF CONTRACT, TORT OR OTHERWISE,  ARISING FROM, OUT OF OR IN CONNECTION
  * WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
-package org.apache.poi.xwpf.converter.xhtml.internal;
+package fr.opensagres.poi.xwpf.converter.xhtml.internal;
 
 import static fr.opensagres.poi.xwpf.converter.core.utils.DxaUtil.emu2points;
-import static org.apache.poi.xwpf.converter.xhtml.internal.XHTMLConstants.A_ELEMENT;
-import static org.apache.poi.xwpf.converter.xhtml.internal.XHTMLConstants.BODY_ELEMENT;
-import static org.apache.poi.xwpf.converter.xhtml.internal.XHTMLConstants.BR_ELEMENT;
-import static org.apache.poi.xwpf.converter.xhtml.internal.XHTMLConstants.CLASS_ATTR;
-import static org.apache.poi.xwpf.converter.xhtml.internal.XHTMLConstants.COLSPAN_ATTR;
-import static org.apache.poi.xwpf.converter.xhtml.internal.XHTMLConstants.DIV_ELEMENT;
-import static org.apache.poi.xwpf.converter.xhtml.internal.XHTMLConstants.HEAD_ELEMENT;
-import static org.apache.poi.xwpf.converter.xhtml.internal.XHTMLConstants.HREF_ATTR;
-import static org.apache.poi.xwpf.converter.xhtml.internal.XHTMLConstants.HTML_ELEMENT;
-import static org.apache.poi.xwpf.converter.xhtml.internal.XHTMLConstants.ID_ATTR;
-import static org.apache.poi.xwpf.converter.xhtml.internal.XHTMLConstants.IMG_ELEMENT;
-import static org.apache.poi.xwpf.converter.xhtml.internal.XHTMLConstants.P_ELEMENT;
-import static org.apache.poi.xwpf.converter.xhtml.internal.XHTMLConstants.ROWSPAN_ATTR;
-import static org.apache.poi.xwpf.converter.xhtml.internal.XHTMLConstants.SPAN_ELEMENT;
-import static org.apache.poi.xwpf.converter.xhtml.internal.XHTMLConstants.SRC_ATTR;
-import static org.apache.poi.xwpf.converter.xhtml.internal.XHTMLConstants.STYLE_ATTR;
-import static org.apache.poi.xwpf.converter.xhtml.internal.XHTMLConstants.TABLE_ELEMENT;
-import static org.apache.poi.xwpf.converter.xhtml.internal.XHTMLConstants.TD_ELEMENT;
-import static org.apache.poi.xwpf.converter.xhtml.internal.XHTMLConstants.TH_ELEMENT;
-import static org.apache.poi.xwpf.converter.xhtml.internal.XHTMLConstants.TR_ELEMENT;
-import static org.apache.poi.xwpf.converter.xhtml.internal.styles.CSSStylePropertyConstants.HEIGHT;
-import static org.apache.poi.xwpf.converter.xhtml.internal.styles.CSSStylePropertyConstants.MARGIN_BOTTOM;
-import static org.apache.poi.xwpf.converter.xhtml.internal.styles.CSSStylePropertyConstants.MARGIN_LEFT;
-import static org.apache.poi.xwpf.converter.xhtml.internal.styles.CSSStylePropertyConstants.MARGIN_RIGHT;
-import static org.apache.poi.xwpf.converter.xhtml.internal.styles.CSSStylePropertyConstants.MARGIN_TOP;
-import static org.apache.poi.xwpf.converter.xhtml.internal.styles.CSSStylePropertyConstants.WIDTH;
+import static fr.opensagres.poi.xwpf.converter.xhtml.internal.XHTMLConstants.A_ELEMENT;
+import static fr.opensagres.poi.xwpf.converter.xhtml.internal.XHTMLConstants.BODY_ELEMENT;
+import static fr.opensagres.poi.xwpf.converter.xhtml.internal.XHTMLConstants.BR_ELEMENT;
+import static fr.opensagres.poi.xwpf.converter.xhtml.internal.XHTMLConstants.CLASS_ATTR;
+import static fr.opensagres.poi.xwpf.converter.xhtml.internal.XHTMLConstants.COLSPAN_ATTR;
+import static fr.opensagres.poi.xwpf.converter.xhtml.internal.XHTMLConstants.DIV_ELEMENT;
+import static fr.opensagres.poi.xwpf.converter.xhtml.internal.XHTMLConstants.HEAD_ELEMENT;
+import static fr.opensagres.poi.xwpf.converter.xhtml.internal.XHTMLConstants.HREF_ATTR;
+import static fr.opensagres.poi.xwpf.converter.xhtml.internal.XHTMLConstants.HTML_ELEMENT;
+import static fr.opensagres.poi.xwpf.converter.xhtml.internal.XHTMLConstants.ID_ATTR;
+import static fr.opensagres.poi.xwpf.converter.xhtml.internal.XHTMLConstants.IMG_ELEMENT;
+import static fr.opensagres.poi.xwpf.converter.xhtml.internal.XHTMLConstants.P_ELEMENT;
+import static fr.opensagres.poi.xwpf.converter.xhtml.internal.XHTMLConstants.ROWSPAN_ATTR;
+import static fr.opensagres.poi.xwpf.converter.xhtml.internal.XHTMLConstants.SPAN_ELEMENT;
+import static fr.opensagres.poi.xwpf.converter.xhtml.internal.XHTMLConstants.SRC_ATTR;
+import static fr.opensagres.poi.xwpf.converter.xhtml.internal.XHTMLConstants.STYLE_ATTR;
+import static fr.opensagres.poi.xwpf.converter.xhtml.internal.XHTMLConstants.TABLE_ELEMENT;
+import static fr.opensagres.poi.xwpf.converter.xhtml.internal.XHTMLConstants.TD_ELEMENT;
+import static fr.opensagres.poi.xwpf.converter.xhtml.internal.XHTMLConstants.TH_ELEMENT;
+import static fr.opensagres.poi.xwpf.converter.xhtml.internal.XHTMLConstants.TR_ELEMENT;
+import static fr.opensagres.poi.xwpf.converter.xhtml.internal.styles.CSSStylePropertyConstants.HEIGHT;
+import static fr.opensagres.poi.xwpf.converter.xhtml.internal.styles.CSSStylePropertyConstants.MARGIN_BOTTOM;
+import static fr.opensagres.poi.xwpf.converter.xhtml.internal.styles.CSSStylePropertyConstants.MARGIN_LEFT;
+import static fr.opensagres.poi.xwpf.converter.xhtml.internal.styles.CSSStylePropertyConstants.MARGIN_RIGHT;
+import static fr.opensagres.poi.xwpf.converter.xhtml.internal.styles.CSSStylePropertyConstants.MARGIN_TOP;
+import static fr.opensagres.poi.xwpf.converter.xhtml.internal.styles.CSSStylePropertyConstants.WIDTH;
 
 import java.io.IOException;
 import java.math.BigInteger;
 import java.util.List;
 
-import org.apache.poi.xwpf.converter.xhtml.XHTMLOptions;
-import org.apache.poi.xwpf.converter.xhtml.internal.styles.CSSStyle;
-import org.apache.poi.xwpf.converter.xhtml.internal.styles.CSSStylePropertyConstants;
-import org.apache.poi.xwpf.converter.xhtml.internal.styles.CSSStylesDocument;
-import org.apache.poi.xwpf.converter.xhtml.internal.utils.SAXHelper;
-import org.apache.poi.xwpf.converter.xhtml.internal.utils.StringEscapeUtils;
 import org.apache.poi.xwpf.usermodel.XWPFDocument;
 import org.apache.poi.xwpf.usermodel.XWPFFooter;
 import org.apache.poi.xwpf.usermodel.XWPFHeader;
@@ -105,6 +99,12 @@ import fr.opensagres.poi.xwpf.converter.core.styles.run.RunFontStyleStrikeValueP
 import fr.opensagres.poi.xwpf.converter.core.styles.run.RunTextHighlightingValueProvider;
 import fr.opensagres.poi.xwpf.converter.core.utils.DxaUtil;
 import fr.opensagres.poi.xwpf.converter.core.utils.StringUtils;
+import fr.opensagres.poi.xwpf.converter.xhtml.XHTMLOptions;
+import fr.opensagres.poi.xwpf.converter.xhtml.internal.styles.CSSStyle;
+import fr.opensagres.poi.xwpf.converter.xhtml.internal.styles.CSSStylePropertyConstants;
+import fr.opensagres.poi.xwpf.converter.xhtml.internal.styles.CSSStylesDocument;
+import fr.opensagres.poi.xwpf.converter.xhtml.internal.utils.SAXHelper;
+import fr.opensagres.poi.xwpf.converter.xhtml.internal.utils.StringEscapeUtils;
 
 public class XHTMLMapper
     extends XWPFDocumentVisitor<Object, XHTMLOptions, XHTMLMasterPage>

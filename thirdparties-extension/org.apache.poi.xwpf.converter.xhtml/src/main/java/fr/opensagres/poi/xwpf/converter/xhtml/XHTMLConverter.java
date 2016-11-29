@@ -22,19 +22,19 @@
  * OF CONTRACT, TORT OR OTHERWISE,  ARISING FROM, OUT OF OR IN CONNECTION
  * WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
-package org.apache.poi.xwpf.converter.xhtml;
+package fr.opensagres.poi.xwpf.converter.xhtml;
 
 import java.io.IOException;
 import java.io.OutputStream;
 import java.io.Writer;
 
-import org.apache.poi.xwpf.converter.xhtml.internal.XHTMLMapper;
 import org.apache.poi.xwpf.usermodel.XWPFDocument;
 import org.xml.sax.ContentHandler;
 
 import fr.opensagres.poi.xwpf.converter.core.AbstractXWPFConverter;
 import fr.opensagres.poi.xwpf.converter.core.IXWPFConverter;
 import fr.opensagres.poi.xwpf.converter.core.XWPFConverterException;
+import fr.opensagres.poi.xwpf.converter.xhtml.internal.XHTMLMapper;
 
 public class XHTMLConverter
     extends AbstractXWPFConverter<XHTMLOptions>

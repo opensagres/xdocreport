@@ -22,14 +22,15 @@
  * OF CONTRACT, TORT OR OTHERWISE,  ARISING FROM, OUT OF OR IN CONNECTION
  * WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
-package org.apache.poi.xwpf.converter.xhtml.internal.utils;
+package fr.opensagres.poi.xwpf.converter.xhtml.internal.utils;
 
-import org.apache.poi.xwpf.converter.xhtml.internal.EmptyAttributes;
-import org.apache.poi.xwpf.converter.xhtml.internal.XHTMLConstants;
 import org.xml.sax.Attributes;
 import org.xml.sax.ContentHandler;
 import org.xml.sax.SAXException;
 import org.xml.sax.helpers.AttributesImpl;
+
+import fr.opensagres.poi.xwpf.converter.xhtml.internal.EmptyAttributes;
+import fr.opensagres.poi.xwpf.converter.xhtml.internal.XHTMLConstants;
 
 public class SAXHelper
 {

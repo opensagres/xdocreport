@@ -22,26 +22,28 @@
  * OF CONTRACT, TORT OR OTHERWISE,  ARISING FROM, OUT OF OR IN CONNECTION
  * WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
-package org.apache.poi.xwpf.converter.xhtml;
+package fr.opensagres.poi.xwpf.converter.xhtml.internal.styles;
 
-import java.io.OutputStream;
-import java.io.Writer;
-
-import org.xml.sax.ContentHandler;
-
-/**
- * Default {@link IContentHandlerFactory} which create instance SAX {@link SimpleContentHandler}.
- */
-public class DefaultContentHandlerFactory
-    implements IContentHandlerFactory
+public class CSSProperty
 {
 
-    public static final IContentHandlerFactory INSTANCE = new DefaultContentHandlerFactory();
+    private final String name;
 
-    public ContentHandler create( OutputStream out, Writer writer, XHTMLOptions options )
+    private final String value;
+
+    public CSSProperty( String name, String value )
     {
+        this.name = name;
+        this.value = value;
+    }
 
-        return out != null ? new SimpleContentHandler( out, options.getIndent() )
-                        : new SimpleContentHandler( writer, options.getIndent() );
+    public String getName()
+    {
+        return name;
+    }
+
+    public String getValue()
+    {
+        return value;
     }
 }

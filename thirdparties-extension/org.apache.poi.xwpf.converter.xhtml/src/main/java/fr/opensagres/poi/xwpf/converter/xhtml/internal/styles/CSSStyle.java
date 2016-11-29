@@ -22,15 +22,16 @@
  * OF CONTRACT, TORT OR OTHERWISE,  ARISING FROM, OUT OF OR IN CONNECTION
  * WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
-package org.apache.poi.xwpf.converter.xhtml.internal.styles;
+package fr.opensagres.poi.xwpf.converter.xhtml.internal.styles;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-import org.apache.poi.xwpf.converter.xhtml.internal.utils.SAXHelper;
 import org.xml.sax.ContentHandler;
 import org.xml.sax.SAXException;
+
+import fr.opensagres.poi.xwpf.converter.xhtml.internal.utils.SAXHelper;
 
 public class CSSStyle
 {

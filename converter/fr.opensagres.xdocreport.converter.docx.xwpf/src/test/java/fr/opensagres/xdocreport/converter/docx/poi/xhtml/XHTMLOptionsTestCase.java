@@ -24,10 +24,10 @@
  */
 package fr.opensagres.xdocreport.converter.docx.poi.xhtml;
 
-import org.apache.poi.xwpf.converter.xhtml.XHTMLOptions;
 import org.junit.Assert;
 import org.junit.Test;
 
+import fr.opensagres.poi.xwpf.converter.xhtml.XHTMLOptions;
 import fr.opensagres.xdocreport.converter.IURIResolver;
 import fr.opensagres.xdocreport.converter.Options;
 import fr.opensagres.xdocreport.converter.OptionsHelper;

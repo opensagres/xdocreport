@@ -22,41 +22,39 @@
  * OF CONTRACT, TORT OR OTHERWISE,  ARISING FROM, OUT OF OR IN CONNECTION
  * WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
-package org.apache.poi.xwpf.converter.xhtml.internal.styles;
+package fr.opensagres.poi.xwpf.converter.xhtml.internal.styles;
 
-import static org.apache.poi.xwpf.converter.xhtml.internal.XHTMLConstants.P_ELEMENT;
-import static org.apache.poi.xwpf.converter.xhtml.internal.XHTMLConstants.SPAN_ELEMENT;
-import static org.apache.poi.xwpf.converter.xhtml.internal.XHTMLConstants.TABLE_ELEMENT;
-import static org.apache.poi.xwpf.converter.xhtml.internal.XHTMLConstants.TD_ELEMENT;
-import static org.apache.poi.xwpf.converter.xhtml.internal.XHTMLConstants.TR_ELEMENT;
-import static org.apache.poi.xwpf.converter.xhtml.internal.styles.CSSStylePropertyConstants.BACKGROUND_COLOR;
-import static org.apache.poi.xwpf.converter.xhtml.internal.styles.CSSStylePropertyConstants.COLOR;
-import static org.apache.poi.xwpf.converter.xhtml.internal.styles.CSSStylePropertyConstants.FONT_FAMILY;
-import static org.apache.poi.xwpf.converter.xhtml.internal.styles.CSSStylePropertyConstants.FONT_SIZE;
-import static org.apache.poi.xwpf.converter.xhtml.internal.styles.CSSStylePropertyConstants.FONT_STYLE;
-import static org.apache.poi.xwpf.converter.xhtml.internal.styles.CSSStylePropertyConstants.FONT_STYLE_ITALIC;
-import static org.apache.poi.xwpf.converter.xhtml.internal.styles.CSSStylePropertyConstants.FONT_WEIGHT;
-import static org.apache.poi.xwpf.converter.xhtml.internal.styles.CSSStylePropertyConstants.FONT_WEIGHT_BOLD;
-import static org.apache.poi.xwpf.converter.xhtml.internal.styles.CSSStylePropertyConstants.HEIGHT;
-import static org.apache.poi.xwpf.converter.xhtml.internal.styles.CSSStylePropertyConstants.MARGIN_BOTTOM;
-import static org.apache.poi.xwpf.converter.xhtml.internal.styles.CSSStylePropertyConstants.MARGIN_TOP;
-import static org.apache.poi.xwpf.converter.xhtml.internal.styles.CSSStylePropertyConstants.MIN_HEIGHT;
-import static org.apache.poi.xwpf.converter.xhtml.internal.styles.CSSStylePropertyConstants.TEXT_ALIGN;
-import static org.apache.poi.xwpf.converter.xhtml.internal.styles.CSSStylePropertyConstants.TEXT_ALIGN_CENTER;
-import static org.apache.poi.xwpf.converter.xhtml.internal.styles.CSSStylePropertyConstants.TEXT_ALIGN_JUSTIFIED;
-import static org.apache.poi.xwpf.converter.xhtml.internal.styles.CSSStylePropertyConstants.TEXT_ALIGN_LEFT;
-import static org.apache.poi.xwpf.converter.xhtml.internal.styles.CSSStylePropertyConstants.TEXT_ALIGN_RIGHT;
-import static org.apache.poi.xwpf.converter.xhtml.internal.styles.CSSStylePropertyConstants.TEXT_DECORATION;
-import static org.apache.poi.xwpf.converter.xhtml.internal.styles.CSSStylePropertyConstants.TEXT_DECORATION_UNDERLINE;
-import static org.apache.poi.xwpf.converter.xhtml.internal.styles.CSSStylePropertyConstants.TEXT_INDENT;
-import static org.apache.poi.xwpf.converter.xhtml.internal.styles.CSSStylePropertyConstants.WIDTH;
+import static fr.opensagres.poi.xwpf.converter.xhtml.internal.XHTMLConstants.P_ELEMENT;
+import static fr.opensagres.poi.xwpf.converter.xhtml.internal.XHTMLConstants.SPAN_ELEMENT;
+import static fr.opensagres.poi.xwpf.converter.xhtml.internal.XHTMLConstants.TABLE_ELEMENT;
+import static fr.opensagres.poi.xwpf.converter.xhtml.internal.XHTMLConstants.TD_ELEMENT;
+import static fr.opensagres.poi.xwpf.converter.xhtml.internal.XHTMLConstants.TR_ELEMENT;
+import static fr.opensagres.poi.xwpf.converter.xhtml.internal.styles.CSSStylePropertyConstants.BACKGROUND_COLOR;
+import static fr.opensagres.poi.xwpf.converter.xhtml.internal.styles.CSSStylePropertyConstants.COLOR;
+import static fr.opensagres.poi.xwpf.converter.xhtml.internal.styles.CSSStylePropertyConstants.FONT_FAMILY;
+import static fr.opensagres.poi.xwpf.converter.xhtml.internal.styles.CSSStylePropertyConstants.FONT_SIZE;
+import static fr.opensagres.poi.xwpf.converter.xhtml.internal.styles.CSSStylePropertyConstants.FONT_STYLE;
+import static fr.opensagres.poi.xwpf.converter.xhtml.internal.styles.CSSStylePropertyConstants.FONT_STYLE_ITALIC;
+import static fr.opensagres.poi.xwpf.converter.xhtml.internal.styles.CSSStylePropertyConstants.FONT_WEIGHT;
+import static fr.opensagres.poi.xwpf.converter.xhtml.internal.styles.CSSStylePropertyConstants.FONT_WEIGHT_BOLD;
+import static fr.opensagres.poi.xwpf.converter.xhtml.internal.styles.CSSStylePropertyConstants.HEIGHT;
+import static fr.opensagres.poi.xwpf.converter.xhtml.internal.styles.CSSStylePropertyConstants.MARGIN_BOTTOM;
+import static fr.opensagres.poi.xwpf.converter.xhtml.internal.styles.CSSStylePropertyConstants.MARGIN_TOP;
+import static fr.opensagres.poi.xwpf.converter.xhtml.internal.styles.CSSStylePropertyConstants.MIN_HEIGHT;
+import static fr.opensagres.poi.xwpf.converter.xhtml.internal.styles.CSSStylePropertyConstants.TEXT_ALIGN;
+import static fr.opensagres.poi.xwpf.converter.xhtml.internal.styles.CSSStylePropertyConstants.TEXT_ALIGN_CENTER;
+import static fr.opensagres.poi.xwpf.converter.xhtml.internal.styles.CSSStylePropertyConstants.TEXT_ALIGN_JUSTIFIED;
+import static fr.opensagres.poi.xwpf.converter.xhtml.internal.styles.CSSStylePropertyConstants.TEXT_ALIGN_LEFT;
+import static fr.opensagres.poi.xwpf.converter.xhtml.internal.styles.CSSStylePropertyConstants.TEXT_ALIGN_RIGHT;
+import static fr.opensagres.poi.xwpf.converter.xhtml.internal.styles.CSSStylePropertyConstants.TEXT_DECORATION;
+import static fr.opensagres.poi.xwpf.converter.xhtml.internal.styles.CSSStylePropertyConstants.TEXT_DECORATION_UNDERLINE;
+import static fr.opensagres.poi.xwpf.converter.xhtml.internal.styles.CSSStylePropertyConstants.TEXT_INDENT;
+import static fr.opensagres.poi.xwpf.converter.xhtml.internal.styles.CSSStylePropertyConstants.WIDTH;
 
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.apache.poi.xwpf.converter.xhtml.internal.XHTMLConstants;
-import org.apache.poi.xwpf.converter.xhtml.internal.utils.SAXHelper;
 import org.apache.poi.xwpf.usermodel.ParagraphAlignment;
 import org.apache.poi.xwpf.usermodel.UnderlinePatterns;
 import org.apache.poi.xwpf.usermodel.XWPFDocument;
@@ -78,6 +76,8 @@ import fr.opensagres.poi.xwpf.converter.core.TableWidth;
 import fr.opensagres.poi.xwpf.converter.core.styles.XWPFStylesDocument;
 import fr.opensagres.poi.xwpf.converter.core.utils.StringUtils;
 import fr.opensagres.poi.xwpf.converter.core.utils.XWPFUtils;
+import fr.opensagres.poi.xwpf.converter.xhtml.internal.XHTMLConstants;
+import fr.opensagres.poi.xwpf.converter.xhtml.internal.utils.SAXHelper;
 
 public class CSSStylesDocument
     extends XWPFStylesDocument

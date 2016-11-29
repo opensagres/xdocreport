@@ -22,12 +22,10 @@
  * OF CONTRACT, TORT OR OTHERWISE,  ARISING FROM, OUT OF OR IN CONNECTION
  * WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
-package org.apache.poi.xwpf.converter.core.styles;
+package fr.opensagres.poi.xwpf.converter.core.styles;
 
 import java.util.List;
 
-import fr.opensagres.poi.xwpf.converter.core.styles.XWPFStylesDocument;
-import fr.opensagres.poi.xwpf.converter.core.utils.ColorHelper;
 import org.apache.poi.xwpf.usermodel.BodyElementType;
 import org.apache.poi.xwpf.usermodel.IBodyElement;
 import org.apache.poi.xwpf.usermodel.XWPFDocument;
@@ -37,6 +35,8 @@ import org.junit.Assert;
 import org.junit.Test;
 
 import fr.opensagres.poi.xwpf.converter.core.Color;
+import fr.opensagres.poi.xwpf.converter.core.styles.XWPFStylesDocument;
+import fr.opensagres.poi.xwpf.converter.core.utils.ColorHelper;
 
 public class A
 {

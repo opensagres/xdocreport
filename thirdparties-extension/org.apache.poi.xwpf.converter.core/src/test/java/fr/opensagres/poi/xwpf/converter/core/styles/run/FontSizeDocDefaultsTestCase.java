@@ -21,11 +21,10 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package org.apache.poi.xwpf.converter.core.styles.run;
+package fr.opensagres.poi.xwpf.converter.core.styles.run;
 
 import java.util.List;
 
-import org.apache.poi.xwpf.converter.core.styles.Data;
 import org.apache.poi.xwpf.usermodel.BodyElementType;
 import org.apache.poi.xwpf.usermodel.IBodyElement;
 import org.apache.poi.xwpf.usermodel.XWPFDocument;
@@ -37,6 +36,7 @@ import static org.junit.Assert.assertTrue;
 
 import org.junit.Test;
 
+import fr.opensagres.poi.xwpf.converter.core.styles.Data;
 import fr.opensagres.poi.xwpf.converter.core.styles.XWPFStylesDocument;
 
 /**

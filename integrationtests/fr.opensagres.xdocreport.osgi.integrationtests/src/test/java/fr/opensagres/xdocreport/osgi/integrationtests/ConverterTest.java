@@ -89,9 +89,9 @@ public class ConverterTest
                         mavenBundle( "fr.opensagres.xdocreport", "org.odftoolkit.odfdom.converter.xhtml" ).versionAsInProject(),
                         mavenBundle( "fr.opensagres.xdocreport", "fr.opensagres.xdocreport.itext.extension" ).versionAsInProject(),
 
-                        mavenBundle( "fr.opensagres.xdocreport", "org.apache.poi.xwpf.converter.core" ).versionAsInProject(),
-                        mavenBundle( "fr.opensagres.xdocreport", "org.apache.poi.xwpf.converter.pdf" ).versionAsInProject(),
-                        mavenBundle( "fr.opensagres.xdocreport", "org.apache.poi.xwpf.converter.xhtml" ).versionAsInProject(),
+                        mavenBundle( "fr.opensagres.xdocreport", "fr.opensagres.poi.xwpf.converter.core" ).versionAsInProject(),
+                        mavenBundle( "fr.opensagres.xdocreport", "fr.opensagres.poi.xwpf.converter.pdf" ).versionAsInProject(),
+                        mavenBundle( "fr.opensagres.xdocreport", "fr.opensagres.poi.xwpf.converter.xhtml" ).versionAsInProject(),
                         // 3rd parties modules...
         				mavenBundle("org.slf4j", "slf4j-api", "1.6.1"),
 

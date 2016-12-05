@@ -22,18 +22,18 @@
 			<version>2.0.0-SNAPSHOT</version>
 			<exclusions>
 				<exclusion>
-					<artifactId>org.odftoolkit.odfdom.converter.pdf</artifactId>
+					<artifactId>fr.opensagres.odfdom.converter.pdf</artifactId>
 					<groupId>fr.opensagres.xdocreport</groupId>
 				</exclusion>
 			</exclusions>
 		</dependency>
 		<dependency>
-			<artifactId>org.odftoolkit.odfdom.converter.pdf-gae</artifactId>
+			<artifactId>fr.opensagres.odfdom.converter.pdf-gae</artifactId>
 			<groupId>fr.opensagres.xdocreport</groupId>
 			<version>2.0.0-SNAPSHOT</version>
 			<exclusions>
 				<exclusion>
-					<artifactId>org.odftoolkit.odfdom.converter.core</artifactId>
+					<artifactId>fr.opensagres.odfdom.converter.core</artifactId>
 					<groupId>fr.opensagres.xdocreport</groupId>
 				</exclusion>
 			</exclusions>

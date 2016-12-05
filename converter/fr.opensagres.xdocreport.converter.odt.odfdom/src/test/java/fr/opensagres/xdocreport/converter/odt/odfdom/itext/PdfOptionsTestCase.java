@@ -26,8 +26,8 @@ package fr.opensagres.xdocreport.converter.odt.odfdom.itext;
 
 import org.junit.Assert;
 import org.junit.Test;
-import org.odftoolkit.odfdom.converter.pdf.PdfOptions;
 
+import fr.opensagres.odfdom.converter.pdf.PdfOptions;
 import fr.opensagres.xdocreport.converter.Options;
 import fr.opensagres.xdocreport.converter.OptionsHelper;
 

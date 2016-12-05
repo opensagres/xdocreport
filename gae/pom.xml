@@ -62,10 +62,10 @@
 	</build>
 	<modules>
 		<module>fr.opensagres.xdocreport.itext.extension-gae</module>
-		<module>org.apache.poi.xwpf.converter.core-gae</module>
-		<module>org.apache.poi.xwpf.converter.pdf-gae</module>
-		<module>org.odftoolkit.odfdom.converter.pdf-gae</module>
-		<module>org.apache.poi.xwpf.converter.xhtml-gae</module>
+		<module>fr.opensagres.poi.xwpf.converter.core-gae</module>
+		<module>fr.opensagres.poi.xwpf.converter.pdf-gae</module>
+		<module>fr.opensagres.odfdom.converter.pdf-gae</module>
+		<module>fr.opensagres.poi.xwpf.converter.xhtml-gae</module>
 	</modules>
 	<dependencies>
 		<dependency>

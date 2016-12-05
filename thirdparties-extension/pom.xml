@@ -27,7 +27,7 @@
 		<module>fr.opensagres.struts2.views.xdocreport</module>
 		
 		<!-- Spring MVC support -->		
-		<module>org.springframework.web.servlet.view.xdocreport</module>
+		<module>fr.opensagres.web.servlet.view.xdocreport</module>
 		<!-- iText 5 support -->
 		<module>fr.opensagres.xdocreport.itext5.extension</module>
 		<module>fr.opensagres.poi.xwpf.converter.pdf.itext5</module>

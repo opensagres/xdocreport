@@ -22,7 +22,7 @@
  * OF CONTRACT, TORT OR OTHERWISE,  ARISING FROM, OUT OF OR IN CONNECTION
  * WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
-package org.springframework.web.servlet.view.xdocreport;
+package fr.opensagres.web.servlet.view.xdocreport;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -60,7 +60,7 @@ import fr.opensagres.xdocreport.template.IContext;
  *           class="fr.opensagres.xdocreport.samples.reporting.springmvc.report.DocxProjectWithVelocityListConfiguration" />
  * 
  *     <bean id="docxReport"
- *         class="org.springframework.web.servlet.view.xdocreport.XDocReportView"
+ *         class="fr.opensagres.web.servlet.view.xdocreport.XDocReportView"
  *         p:url="classpath:fr/opensagres/xdocreport/samples/reporting/springmvc/report/DocxProjectWithVelocityList.docx"
  *         p:templateEngineId="Velocity" >
  *         <property name="configuration" ref="reportConfiguration" /> 

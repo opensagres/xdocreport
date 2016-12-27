@@ -1,4 +1,5 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 	<artifactId>remoting</artifactId>
 	<name>XDocReport Remoting Component</name>
@@ -14,23 +15,20 @@
 		<module>fr.opensagres.xdocreport.remoting.resources</module>
 		<module>fr.opensagres.xdocreport.remoting.resources.services.client</module>
 		<module>fr.opensagres.xdocreport.remoting.resources.services.server</module>
-		<!-- REST converter service -->		
+		<!-- REST converter service -->
 		<module>fr.opensagres.xdocreport.remoting.converter</module>
 		<module>fr.opensagres.xdocreport.remoting.converter.server</module>
-		<!-- TODO ?
-		<module>
-			fr.opensagres.xdocreport.remoting.converter.client
-		</module>
-		-->
-		<!-- REST reporting service -->		
+		<!-- TODO ? <module> fr.opensagres.xdocreport.remoting.converter.client 
+			</module> -->
+		<!-- REST reporting service -->
 		<module>fr.opensagres.xdocreport.remoting.reporting</module>
-		<module>fr.opensagres.xdocreport.remoting.reporting.server</module>		
+		<module>fr.opensagres.xdocreport.remoting.reporting.server</module>
 	</modules>
 	<dependencies>
 		<dependency>
-			<groupId>org.apache.geronimo.specs</groupId>
-			<artifactId>geronimo-jaxrs_1.1_spec</artifactId>
-			<version>1.0</version>
+			<groupId>javax.ws.rs</groupId>
+			<artifactId>javax.ws.rs-api</artifactId>
+			<version>2.0.1</version>
 			<optional>true</optional>
 		</dependency>
 	</dependencies>

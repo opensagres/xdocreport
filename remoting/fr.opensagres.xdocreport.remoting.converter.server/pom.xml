@@ -1,4 +1,5 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 	<parent>
 		<groupId>fr.opensagres.xdocreport</groupId>
@@ -6,12 +7,12 @@
 		<version>2.0.0-SNAPSHOT</version>
 	</parent>
 	<artifactId>fr.opensagres.xdocreport.remoting.converter.server</artifactId>
-		<dependencies>
-
+	<dependencies>
 		<dependency>
 			<groupId>org.apache.cxf</groupId>
 			<artifactId>cxf-rt-frontend-jaxrs</artifactId>
-			<version>2.6.2</version>
+			<version>3.1.9</version>
+			<scope>provided</scope>
 		</dependency>
 		<dependency>
 			<groupId>fr.opensagres.xdocreport</groupId>
@@ -25,42 +26,37 @@
 			<version>2.0.0-SNAPSHOT</version>
 			<optional>true</optional>
 		</dependency>
-
 		<dependency>
 			<groupId>fr.opensagres.xdocreport</groupId>
 			<artifactId>fr.opensagres.xdocreport.remoting.converter</artifactId>
 			<version>2.0.0-SNAPSHOT</version>
 		</dependency>
-
-
-
-
 		<!-- Jetty is extremely convenient for testing REST and WS -->
 		<dependency>
 			<groupId>org.eclipse.jetty</groupId>
 			<artifactId>jetty-server</artifactId>
-			<version>7.4.2.v20110526</version>
+			<version>9.2.15.v20160210</version>
 			<scope>test</scope>
 		</dependency>
 
 		<dependency>
 			<groupId>org.eclipse.jetty</groupId>
 			<artifactId>jetty-servlet</artifactId>
-			<version>7.4.2.v20110526</version>
+			<version>9.2.15.v20160210</version>
 			<scope>test</scope>
 		</dependency>
 
 		<dependency>
 			<groupId>org.eclipse.jetty</groupId>
 			<artifactId>jetty-webapp</artifactId>
-			<version>7.4.2.v20110526</version>
+			<version>9.2.15.v20160210</version>
 			<scope>test</scope>
 		</dependency>
 
 		<dependency>
 			<groupId>org.apache.cxf</groupId>
 			<artifactId>cxf-rt-transports-http-jetty</artifactId>
-			<version>2.6.2</version>
+			<version>3.1.9</version>
 			<scope>test</scope>
 		</dependency>
 
@@ -85,5 +81,5 @@
 			<version>3.1</version>
 			<scope>test</scope>
 		</dependency>
-		</dependencies>
+	</dependencies>
 </project>

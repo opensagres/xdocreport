@@ -37,6 +37,7 @@ import org.junit.Assert;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
+
 import fr.opensagres.xdocreport.core.io.IOUtils;
 import fr.opensagres.xdocreport.document.tools.remoting.resources.FileUtils;
 import fr.opensagres.xdocreport.document.tools.remoting.resources.Main;
@@ -66,16 +67,16 @@ public class MainTest
 
         // 1) Copy resources in the target folder.
         initResources();
+        CXFNonSpringJaxrsServlet s = new CXFNonSpringJaxrsServlet(new MockJAXRSResourcesApplication());
+        
+        ServletHolder holder = new ServletHolder( s );
 
-        ServletHolder servlet = new ServletHolder( CXFNonSpringJaxrsServlet.class );
-        servlet.setInitParameter( "javax.ws.rs.Application", MockJAXRSResourcesApplication.class.getName() );
-
-        servlet.setInitParameter( "timeout", "60000" );
+        holder.setInitParameter( "timeout", "60000" );
         server = new Server( PORT );
 
         ServletContextHandler context = new ServletContextHandler( server, "/", ServletContextHandler.SESSIONS );
 
-        context.addServlet( servlet, "/*" );
+        context.addServlet( holder, "/*" );
         server.start();
 
     }

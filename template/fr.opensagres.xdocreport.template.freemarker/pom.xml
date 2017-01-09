@@ -4,7 +4,7 @@
 	<parent>
 		<groupId>fr.opensagres.xdocreport</groupId>
 		<artifactId>template</artifactId>
-		<version>2.0.0</version>
+		<version>2.0.1-SNAPSHOT</version>
 	</parent>
 	<build>
 		<!-- src/test/java must be declared as testResource Otherwise, resources 
@@ -20,7 +20,7 @@
 		<dependency>
 			<groupId>fr.opensagres.xdocreport</groupId>
 			<artifactId>fr.opensagres.xdocreport.template</artifactId>
-			<version>2.0.0</version>
+			<version>2.0.1-SNAPSHOT</version>
 		</dependency>
 		<!-- cf. http://freemarker.sourceforge.net/freemarkerdownload.html -->
 		<dependency>

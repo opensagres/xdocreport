@@ -3,7 +3,7 @@
 	<parent>
 		<artifactId>gae</artifactId>
 		<groupId>fr.opensagres.xdocreport</groupId>
-		<version>2.0.0</version>
+		<version>2.0.1-SNAPSHOT</version>
 	</parent>
 	<artifactId>fr.opensagres.poi.xwpf.converter.xhtml-gae</artifactId>
 	<build>
@@ -40,7 +40,7 @@
 		<dependency>
 			<groupId>fr.opensagres.xdocreport</groupId>
 			<artifactId>fr.opensagres.poi.xwpf.converter.core-gae</artifactId>
-			<version>2.0.0</version>
+			<version>2.0.1-SNAPSHOT</version>
 		</dependency>
 	</dependencies>
 </project>

@@ -3,34 +3,34 @@
   <parent>
 		<artifactId>sandbox</artifactId>
 		<groupId>fr.opensagres.xdocreport</groupId>
-		<version>2.0.0</version>
+		<version>2.0.1-SNAPSHOT</version>
 	</parent>
   <artifactId>fr.opensagres.xdocreport.remoting.rest</artifactId>
   <dependencies>
     <dependency>
       <groupId>fr.opensagres.xdocreport</groupId>
       <artifactId>fr.opensagres.xdocreport.remoting.shared</artifactId>
-      <version>2.0.0</version>
+      <version>2.0.1-SNAPSHOT</version>
     </dependency>
 
     <!-- We need some impl in order to have smtg to test on... -->
     <dependency>
       <groupId>fr.opensagres.xdocreport</groupId>
       <artifactId>fr.opensagres.xdocreport.document.docx</artifactId>
-      <version>2.0.0</version>
+      <version>2.0.1-SNAPSHOT</version>
       <scope>test</scope>
     </dependency>
 
     <dependency>
       <groupId>fr.opensagres.xdocreport</groupId>
       <artifactId>fr.opensagres.xdocreport.converter.docx.xwpf</artifactId>
-      <version>2.0.0</version>
+      <version>2.0.1-SNAPSHOT</version>
       <scope>test</scope>
     </dependency>
     <dependency>
       <groupId>fr.opensagres.xdocreport</groupId>
       <artifactId>fr.opensagres.xdocreport.template.velocity</artifactId>
-      <version>2.0.0</version>
+      <version>2.0.1-SNAPSHOT</version>
       <scope>test</scope>
     </dependency>
     <!-- test dependencies -->

@@ -32,6 +32,8 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.Timer;
+import java.util.TimerTask;
 import java.util.logging.Logger;
 
 import fr.opensagres.xdocreport.converter.MimeMapping;
@@ -45,9 +47,6 @@ import fr.opensagres.xdocreport.core.registry.AbstractRegistry;
 import fr.opensagres.xdocreport.core.utils.StringUtils;
 import fr.opensagres.xdocreport.document.IXDocReport;
 import fr.opensagres.xdocreport.document.discovery.IXDocReportFactoryDiscovery;
-import fr.opensagres.xdocreport.document.timing.AlarmTimer;
-import fr.opensagres.xdocreport.document.timing.AlarmTimerListener;
-import fr.opensagres.xdocreport.document.timing.PooledAlarmTimer;
 import fr.opensagres.xdocreport.template.ITemplateEngine;
 import fr.opensagres.xdocreport.template.TemplateEngineKind;
 import fr.opensagres.xdocreport.template.cache.ITemplateCacheInfoProvider;
@@ -82,7 +81,7 @@ public class XDocReportRegistry
      * IXDocReport cache.
      */
     private final ICacheStorage<String, IXDocReport> cachedReports;
-
+    private final Timer cleanupTimer = new Timer();
     public XDocReportRegistry()
     {
         super( IXDocReportFactoryDiscovery.class );
@@ -517,19 +516,17 @@ public class XDocReportRegistry
     {
         return Collections.unmodifiableCollection( cachedReports.values() );
     }
-
+    
     public void setClearTimeout( long timeout )
     {
-        PooledAlarmTimer pooledAlarmTimer = new PooledAlarmTimer( timeout );
-        pooledAlarmTimer.addAlarmTimerListener( new AlarmTimerListener()
-        {
-
-            public void alarm( AlarmTimer timer )
-            {
+    	cleanupTimer.schedule(new TimerTask() {
+			
+			@Override
+			public void run() {
                 clear();
-
-            }
-        } );
+				
+			}
+		}, timeout, timeout);
     }
 
     /**
@@ -594,6 +591,7 @@ public class XDocReportRegistry
     @Override
     protected void doDispose()
     {
+    	this.cleanupTimer.cancel();
         this.reportFactoryDiscoveries.clear();
         this.cachedReports.clear();
     }

@@ -59,7 +59,7 @@ public interface IImageProvider
      * @return
      * @throws IOException
      */
-    Float getWidth(float defaultWidth)
+    Float getWidth(Float defaultWidth)
         throws IOException;
 
     /**
@@ -76,7 +76,7 @@ public interface IImageProvider
      * @return
      * @throws IOException
      */
-    Float getHeight(float defaultHeight)
+    Float getHeight(Float defaultHeight)
         throws IOException;
 
     /**

@@ -302,7 +302,7 @@ public abstract class AbstractImageRegistry
     /**
      * 
      * @param sizeAsDxa
-     * @return sizeAsPixel
+     * @return sizeAsPixel null in case the size cannot be computed
      */
-    public abstract float getSize( String sizeAsDxa );
+    public abstract Float getSize( String sizeAsDxa );
 }

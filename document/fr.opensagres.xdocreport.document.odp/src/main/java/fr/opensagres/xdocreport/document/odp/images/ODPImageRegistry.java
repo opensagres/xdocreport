@@ -74,10 +74,15 @@ public class ODPImageRegistry
     }
     
     @Override
-	public float getSize( String sizeAsDxa )
+	public Float getSize( String sizeAsDxa )
     {
-    	float sizeAsPixel = Float.parseFloat(sizeAsDxa);
-    	sizeAsPixel = (sizeAsPixel / 914400)  *  96 ;
-        return sizeAsPixel;
+    	if(sizeAsDxa == null) return null;
+        try{
+        	float sizeAsPixel = Float.parseFloat(sizeAsDxa);
+        	sizeAsPixel = (sizeAsPixel / 914400)  *  96 ;
+            return Float.valueOf(sizeAsPixel);
+    	}catch(NumberFormatException e){
+    		return null;
+    	}
     }
 }

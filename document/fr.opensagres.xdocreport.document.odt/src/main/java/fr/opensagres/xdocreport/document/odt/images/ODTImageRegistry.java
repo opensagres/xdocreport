@@ -78,6 +78,8 @@ public class ODTImageRegistry
     @Override
 	public Float getSize( String sizeAsDxa )
     {
+    	if(sizeAsDxa == null) return null;
+    	
     	//TODO parse string containing unit information like "0.582cm"
     	try{
     		float sizeAsPixel = Float.parseFloat(sizeAsDxa);

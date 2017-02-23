@@ -74,6 +74,7 @@ public class DocxImageRegistry
     @Override
 	public Float getSize( String sizeAsDxa )
     {
+    	if(sizeAsDxa == null) return null;
         try{
     		float sizeAsPixel = Float.parseFloat(sizeAsDxa);
     		sizeAsPixel = (sizeAsPixel / 914400)  *  96 ;

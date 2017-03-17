@@ -24,12 +24,15 @@
  */
 package fr.opensagres.odfdom.converter.internal.xhtml;
 
+import java.io.File;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.io.Writer;
 import java.util.ArrayList;
+import java.util.Base64;
 import java.util.Collection;
 import java.util.List;
+import javax.activation.MimetypesFileTypeMap;
 
 import org.odftoolkit.odfdom.doc.OdfDocument;
 import org.odftoolkit.odfdom.dom.element.OdfStylableElement;
@@ -90,14 +93,22 @@ public class ElementVisitorForXHTML
 
     private XHTMLPageContentBuffer currentXHTMLContent;
 
+    private boolean exportImageAsBase64;
+
     public ElementVisitorForXHTML( ODFXHTMLPage xhtml, XHTMLOptions options, OdfDocument odfDocument, OutputStream out,
                                    Writer writer )
     {
         super( odfDocument, options != null ? options.getExtractor() : null, out, writer );
         this.xhtml = xhtml;
         this.currentXHTMLContent = null;
+        this.exportImageAsBase64 = options != null ? options.getExportImageAsBase64() : false;
     }
 
+    @Override
+    protected boolean isNeedImageStream()
+    {
+        return exportImageAsBase64;
+    }
     // ---------------------- visit root
     // styles.xml//office:document-styles/office:master-styles
 
@@ -465,11 +476,25 @@ public class ElementVisitorForXHTML
         Collection<String> attributes = new ArrayList<String>();
 
         // src
-        String src = ele.getXlinkHrefAttribute();
-        IURIResolver uriResolver = xhtml.getStyleEngine().getURIResolver();
-        src = uriResolver.resolve( src );
-        attributes.add( SRC_ATTR );
-        attributes.add( src );
+        if( exportImageAsBase64 && imageStream != null )
+        {
+            String mimeType = new MimetypesFileTypeMap().getContentType( new File( href ) );
+            StringBuilder src = new StringBuilder();
+            src.append( DATA_ATTR_TAG );
+            src.append( mimeType + ";base64,");
+            src.append( Base64.getEncoder().encodeToString( imageStream ) );
+
+            attributes.add( SRC_ATTR );
+            attributes.add( src.toString() );
+        }
+        else
+        {
+            String src = ele.getXlinkHrefAttribute();
+            IURIResolver uriResolver = xhtml.getStyleEngine().getURIResolver();
+            src = uriResolver.resolve( src );
+            attributes.add( SRC_ATTR );
+            attributes.add( src );
+        }
 
         // other attributes
         Node parentNode = ele.getParentNode();

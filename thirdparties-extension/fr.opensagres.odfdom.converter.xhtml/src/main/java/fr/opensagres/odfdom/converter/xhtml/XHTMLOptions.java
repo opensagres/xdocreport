@@ -37,6 +37,8 @@ public class XHTMLOptions
 
     private IURIResolver resolver = IURIResolver.DEFAULT;
 
+    private boolean exportImageAsBase64;
+
     private XHTMLOptions()
     {
     }
@@ -76,6 +78,14 @@ public class XHTMLOptions
     public XHTMLOptions URIResolver( IURIResolver resolver )
     {
         this.resolver = resolver;
+        return this;
+    }
+
+    public boolean getExportImageAsBase64() { return exportImageAsBase64; }
+
+    public XHTMLOptions exportImageAsBase64( boolean exportImageAsBase64 )
+    {
+        this.exportImageAsBase64 = exportImageAsBase64;
         return this;
     }
 }

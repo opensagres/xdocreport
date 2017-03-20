@@ -29,11 +29,11 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.io.Writer;
 import java.util.ArrayList;
-import java.util.Base64;
 import java.util.Collection;
 import java.util.List;
 import javax.activation.MimetypesFileTypeMap;
 
+import fr.opensagres.xdocreport.core.utils.Base64Utility;
 import org.odftoolkit.odfdom.doc.OdfDocument;
 import org.odftoolkit.odfdom.dom.element.OdfStylableElement;
 import org.odftoolkit.odfdom.dom.element.draw.DrawFrameElement;
@@ -482,7 +482,7 @@ public class ElementVisitorForXHTML
             StringBuilder src = new StringBuilder();
             src.append( DATA_ATTR_TAG );
             src.append( mimeType + ";base64,");
-            src.append( Base64.getEncoder().encodeToString( imageStream ) );
+            src.append( Base64Utility.encode( imageStream ) );
 
             attributes.add( SRC_ATTR );
             attributes.add( src.toString() );

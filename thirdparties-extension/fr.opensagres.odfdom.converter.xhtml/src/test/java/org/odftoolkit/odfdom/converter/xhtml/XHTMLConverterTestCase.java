@@ -45,6 +45,7 @@ public class XHTMLConverterTestCase
     {
         doGenerateSysOut( fileInName );
         doGenerateHTMLFile( fileInName );
+        doGenerateHTMLFileInnerImage( fileInName );
     }
 
     protected void doGenerateSysOut( String fileInName )
@@ -64,10 +65,30 @@ public class XHTMLConverterTestCase
         System.out.println( "Elapsed time=" + ( System.currentTimeMillis() - startTime ) );
     }
 
+    protected void doGenerateHTMLFileInnerImage( String fileInName )
+            throws Exception
+    {
+        String fileOutName = "target/" + fileInName + "_inner_image.html";
+
+        long startTime = System.currentTimeMillis();
+
+        OdfTextDocument document =
+                OdfTextDocument.loadDocument( AbstractODFDOMConverterTest.class.getResourceAsStream( fileInName ) );
+        XHTMLOptions options = XHTMLOptions.create();
+        options.indent( 1 );
+        options.generateCSSComments( true );
+        options.exportImageAsBase64( true );
+
+        OutputStream out = new FileOutputStream( new File( fileOutName ) );
+        XHTMLConverter.getInstance().convert( document, out, options );
+
+        System.out.println( "Generate " + fileOutName + " with " + ( System.currentTimeMillis() - startTime ) + " ms." );
+
+    }
+
     protected void doGenerateHTMLFile( String fileInName )
         throws Exception
     {
-
         String root = "target";
         String fileOutName = root + "/" + fileInName + ".html";
 
@@ -78,6 +99,7 @@ public class XHTMLConverterTestCase
         XHTMLOptions options = XHTMLOptions.create();
         options.indent( 1 );
         options.generateCSSComments( true );
+        options.exportImageAsBase64( true );
         // Extract image
         File imageFolder = new File( root + "/images/" + fileInName );
         options.setExtractor( new FileImageExtractor( imageFolder ) );

@@ -85,4 +85,6 @@ public interface XHTMLConstants
     String STYLE_ATTR = "style";
 
     String DISPLAY_ATTR = "display";
+
+    String DATA_ATTR_TAG = "data:";
 }

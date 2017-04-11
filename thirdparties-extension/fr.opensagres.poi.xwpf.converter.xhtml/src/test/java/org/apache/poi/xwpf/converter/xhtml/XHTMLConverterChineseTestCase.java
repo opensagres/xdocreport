@@ -29,6 +29,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 
+import fr.opensagres.poi.xwpf.converter.core.ImageManager;
 import org.apache.poi.xwpf.converter.core.AbstractXWPFPOIConverterTest;
 import org.apache.poi.xwpf.usermodel.XWPFDocument;
 import org.junit.Test;
@@ -84,11 +85,8 @@ public class XHTMLConverterChineseTestCase
 
         XHTMLOptions options = XHTMLOptions.create().indent( 4 );
         // Extract image
-        File imageFolder = new File( root + "/images/" + fileInName );
-        options.setExtractor( new FileImageExtractor( imageFolder ) );
-        // URI resolver
-        options.URIResolver( new FileURIResolver( imageFolder ) );
-        
+        options.setImageManager( new ImageManager( new File(root), "images" ) );
+
         File outFile = new File( fileOutName );
         outFile.getParentFile().mkdirs();
         OutputStream out = new FileOutputStream( outFile );

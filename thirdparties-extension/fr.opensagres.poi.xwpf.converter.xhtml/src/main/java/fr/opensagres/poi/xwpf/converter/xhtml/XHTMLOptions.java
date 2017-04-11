@@ -25,6 +25,7 @@
 package fr.opensagres.poi.xwpf.converter.xhtml;
 
 import fr.opensagres.poi.xwpf.converter.core.IURIResolver;
+import fr.opensagres.poi.xwpf.converter.core.ImageManager;
 import fr.opensagres.poi.xwpf.converter.core.Options;
 
 public class XHTMLOptions
@@ -80,9 +81,16 @@ public class XHTMLOptions
         return resolver;
     }
 
+    @Deprecated
     public XHTMLOptions URIResolver( IURIResolver resolver )
     {
         this.resolver = resolver;
+        return this;
+    }
+
+    public XHTMLOptions setImageManager( ImageManager imageManager ) {
+        this.resolver = imageManager;
+        setExtractor(imageManager);
         return this;
     }
 

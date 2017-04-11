@@ -34,7 +34,7 @@ public class Options
      * 
      * @param extractor image extractor.
      */
-    public void setExtractor( IImageExtractor extractor )
+    protected void setExtractor( IImageExtractor extractor )
     {
         this.extractor = extractor;
     }

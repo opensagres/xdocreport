@@ -33,8 +33,6 @@ import fr.opensagres.poi.xwpf.converter.core.ImageManager;
 import org.apache.poi.xwpf.converter.core.AbstractXWPFPOIConverterTest;
 import org.apache.poi.xwpf.usermodel.XWPFDocument;
 
-import fr.opensagres.poi.xwpf.converter.core.FileImageExtractor;
-import fr.opensagres.poi.xwpf.converter.core.FileURIResolver;
 import fr.opensagres.poi.xwpf.converter.xhtml.XHTMLConverter;
 import fr.opensagres.poi.xwpf.converter.xhtml.XHTMLOptions;
 

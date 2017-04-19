@@ -56,15 +56,7 @@ import java.io.IOException;
 import java.math.BigInteger;
 import java.util.List;
 
-import org.apache.poi.xwpf.usermodel.XWPFDocument;
-import org.apache.poi.xwpf.usermodel.XWPFFooter;
-import org.apache.poi.xwpf.usermodel.XWPFHeader;
-import org.apache.poi.xwpf.usermodel.XWPFParagraph;
-import org.apache.poi.xwpf.usermodel.XWPFPictureData;
-import org.apache.poi.xwpf.usermodel.XWPFRun;
-import org.apache.poi.xwpf.usermodel.XWPFTable;
-import org.apache.poi.xwpf.usermodel.XWPFTableCell;
-import org.apache.poi.xwpf.usermodel.XWPFTableRow;
+import org.apache.poi.xwpf.usermodel.*;
 import org.apache.xmlbeans.XmlException;
 import org.openxmlformats.schemas.drawingml.x2006.main.CTPositiveSize2D;
 import org.openxmlformats.schemas.drawingml.x2006.picture.CTPicture;
@@ -188,6 +180,24 @@ public class XHTMLMapper
             endElement( HTML_ELEMENT );
             contentHandler.endDocument();
         }
+    }
+
+    @Override
+    protected Object startVisitSDT(XWPFSDT contents, int colWidths, Object container) throws SAXException {
+//        AttributesImpl attributes = createClassAttribute(  );
+
+        // 1.2) Create "style" attributes.
+//        CSSStyle cssStyle = getStylesDocument().createCSSStyle( pPr );
+//        attributes = createStyleAttribute( cssStyle, attributes );
+
+        // 2) create element
+        startElement(DIV_ELEMENT, null);
+        return null;
+    }
+
+    @Override
+    protected void endVisitSDT(XWPFSDT contents, Object container, Object tableContainer) throws SAXException {
+        endElement(DIV_ELEMENT);
     }
 
     @Override

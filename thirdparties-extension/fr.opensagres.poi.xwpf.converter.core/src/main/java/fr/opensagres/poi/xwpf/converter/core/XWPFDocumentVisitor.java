@@ -35,25 +35,8 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import org.apache.poi.openxml4j.opc.PackagePart;
-import org.apache.poi.xwpf.usermodel.BodyElementType;
-import org.apache.poi.xwpf.usermodel.BodyType;
-import org.apache.poi.xwpf.usermodel.IBody;
-import org.apache.poi.xwpf.usermodel.IBodyElement;
-import org.apache.poi.xwpf.usermodel.XWPFAbstractNum;
-import org.apache.poi.xwpf.usermodel.XWPFDocument;
-import org.apache.poi.xwpf.usermodel.XWPFFooter;
-import org.apache.poi.xwpf.usermodel.XWPFHeader;
-import org.apache.poi.xwpf.usermodel.XWPFHeaderFooter;
-import org.apache.poi.xwpf.usermodel.XWPFHyperlink;
-import org.apache.poi.xwpf.usermodel.XWPFHyperlinkRun;
-import org.apache.poi.xwpf.usermodel.XWPFNum;
-import org.apache.poi.xwpf.usermodel.XWPFParagraph;
-import org.apache.poi.xwpf.usermodel.XWPFPictureData;
-import org.apache.poi.xwpf.usermodel.XWPFRun;
-import org.apache.poi.xwpf.usermodel.XWPFStyle;
-import org.apache.poi.xwpf.usermodel.XWPFTable;
-import org.apache.poi.xwpf.usermodel.XWPFTableCell;
-import org.apache.poi.xwpf.usermodel.XWPFTableRow;
+import org.apache.poi.util.SAXHelper;
+import org.apache.poi.xwpf.usermodel.*;
 import org.apache.xmlbeans.XmlCursor;
 import org.apache.xmlbeans.XmlException;
 import org.apache.xmlbeans.XmlObject;
@@ -113,6 +96,7 @@ import fr.opensagres.poi.xwpf.converter.core.utils.DxaUtil;
 import fr.opensagres.poi.xwpf.converter.core.utils.StringUtils;
 import fr.opensagres.poi.xwpf.converter.core.utils.XWPFRunHelper;
 import fr.opensagres.poi.xwpf.converter.core.utils.XWPFTableUtil;
+import org.xml.sax.SAXException;
 
 /**
  * Visitor to visit elements from entry word/document.xml, word/header*.xml, word/footer*.xml
@@ -187,7 +171,6 @@ public abstract class XWPFDocumentVisitor<T, O extends Options, E extends IXWPFM
     /**
      * Main entry for visit XWPFDocument.
      * 
-     * @param out
      * @throws Exception
      */
     public void start()
@@ -251,9 +234,30 @@ public abstract class XWPFDocumentVisitor<T, O extends Options, E extends IXWPFM
                     previousParagraphStyleName = null;
                     visitTable( (XWPFTable) bodyElement, i, container );
                     break;
+                case CONTENTCONTROL:
+                    visitSDT((XWPFSDT)bodyElement, i, container);
+                    break;
             }
         }
 
+    }
+
+    /**
+     * @param contents content controls
+     */
+    protected void visitSDT(XWPFSDT contents, int index, T container) throws SAXException {
+        int colWidths = 0;
+        T tableContainer = startVisitSDT( contents, colWidths, container );
+        visitSDTBody( contents, colWidths, tableContainer );
+        endVisitSDT( contents, container, tableContainer );
+    }
+
+    protected abstract T startVisitSDT(XWPFSDT contents, int colWidths, T container) throws SAXException;
+
+    protected abstract void endVisitSDT(XWPFSDT contents, T container, T tableContainer) throws SAXException;
+
+    private void visitSDTBody(XWPFSDT contents, int colWidths, T tableContainer) {
+        contents.getContent().getText();
     }
 
     /**
@@ -1218,7 +1222,7 @@ public abstract class XWPFDocumentVisitor<T, O extends Options, E extends IXWPFM
     /**
      * Returns the {@link XWPFHeader} of the given header reference.
      * 
-     * @param headerref the header reference.
+     * @param headerRef the header reference.
      * @return
      * @throws XmlException
      * @throws IOException

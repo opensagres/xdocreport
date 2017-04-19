@@ -35,7 +35,6 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import org.apache.poi.openxml4j.opc.PackagePart;
-import org.apache.poi.util.SAXHelper;
 import org.apache.poi.xwpf.usermodel.*;
 import org.apache.xmlbeans.XmlCursor;
 import org.apache.xmlbeans.XmlException;
@@ -246,18 +245,17 @@ public abstract class XWPFDocumentVisitor<T, O extends Options, E extends IXWPFM
      * @param contents content controls
      */
     protected void visitSDT(XWPFSDT contents, int index, T container) throws SAXException {
-        int colWidths = 0;
-        T tableContainer = startVisitSDT( contents, colWidths, container );
-        visitSDTBody( contents, colWidths, tableContainer );
-        endVisitSDT( contents, container, tableContainer );
+        T sdtContainer = startVisitSDT( contents,  container );
+        visitSDTBody( contents, sdtContainer );
+        endVisitSDT( contents, container, sdtContainer );
     }
 
-    protected abstract T startVisitSDT(XWPFSDT contents, int colWidths, T container) throws SAXException;
+    protected abstract T startVisitSDT(XWPFSDT contents, T container) throws SAXException;
 
-    protected abstract void endVisitSDT(XWPFSDT contents, T container, T tableContainer) throws SAXException;
+    protected abstract void endVisitSDT(XWPFSDT contents, T container, T sdtContainer) throws SAXException;
 
-    private void visitSDTBody(XWPFSDT contents, int colWidths, T tableContainer) {
-        contents.getContent().getText();
+    protected void visitSDTBody(XWPFSDT contents, T sdtContainer) throws SAXException {
+        // TODO 17/4/19 use reflection to get WSPFSDTContent field and visitParagraph, visitRun etc
     }
 
     /**

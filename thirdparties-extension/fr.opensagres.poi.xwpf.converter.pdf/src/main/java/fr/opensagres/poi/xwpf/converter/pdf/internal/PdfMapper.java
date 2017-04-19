@@ -158,12 +158,12 @@ public class PdfMapper extends
 	}
 
 	@Override
-	protected IITextContainer startVisitSDT(XWPFSDT contents, int colWidths, IITextContainer container) {
+	protected IITextContainer startVisitSDT(XWPFSDT contents, IITextContainer container) {
 		return null;
 	}
 
 	@Override
-	protected void endVisitSDT(XWPFSDT contents, IITextContainer container, IITextContainer tableContainer) {
+	protected void endVisitSDT(XWPFSDT contents, IITextContainer container, IITextContainer sdtContainer) {
 
 	}
 

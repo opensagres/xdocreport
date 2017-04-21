@@ -26,8 +26,11 @@ package fr.opensagres.poi.xwpf.converter.core.styles;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.math.BigInteger;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -1426,18 +1429,96 @@ public class XWPFStylesDocument
         }
         return null;
     }
+    
+	private static abstract class DocumentVisitor {
+		protected abstract boolean acceptRelationshipType(String relationshipType);
 
+		protected abstract boolean visitDocumentPart(String relationshipType, POIXMLDocumentPart p);
+
+		final void visitDocument(XWPFDocument document) {
+			Method partCollectionGetter = null;
+			boolean useLegacyPoi = false;
+			try {
+				try {
+					partCollectionGetter = document.getClass().getMethod("getRelationParts"); // POI 3.16
+
+				} catch (NoSuchMethodException nsmEx) {
+					partCollectionGetter = document.getClass().getMethod("getRelations"); // older POI
+					useLegacyPoi = true;
+				}
+
+				if (partCollectionGetter != null) {
+					@SuppressWarnings("unchecked")
+					Collection<Object> partCollection = (Collection<Object>) partCollectionGetter.invoke(document);
+					for (Object currentPartObject : partCollection) {
+						Method relationshipAccessor = null;
+						if (useLegacyPoi) {
+							relationshipAccessor = currentPartObject.getClass().getMethod("getPackageRelationship");
+						} else {
+							relationshipAccessor = currentPartObject.getClass().getMethod("getRelationship");
+						}
+						Object relationship = relationshipAccessor.invoke(currentPartObject);
+						if (relationship != null) {
+							Method relationshipTypeAccessor = relationship.getClass().getMethod("getRelationshipType");
+							String relationshipType = (String) relationshipTypeAccessor.invoke(relationship);
+							if (this.acceptRelationshipType(relationshipType)) {
+								POIXMLDocumentPart currentPart = null;
+								if (useLegacyPoi) {
+									currentPart = (POIXMLDocumentPart) currentPartObject;
+								} else {
+									Method documentPartAccessor = currentPartObject.getClass()
+											.getMethod("getDocumentPart");
+									currentPart = (POIXMLDocumentPart) documentPartAccessor.invoke(currentPartObject);
+								}
+								if (currentPart != null) {
+									boolean breakLoop = this.visitDocumentPart(relationshipType, currentPart);
+									if (breakLoop) {
+										return;
+									}
+								}
+							}
+						}
+					}
+				}
+			} catch (IllegalAccessException e) {
+				e.printStackTrace();
+			} catch (IllegalArgumentException e) {
+				e.printStackTrace();
+			} catch (InvocationTargetException e) {
+				e.printStackTrace();
+			} catch (NoSuchMethodException e) {
+				e.printStackTrace();
+			} catch (SecurityException e) {
+				e.printStackTrace();
+			}
+		}
+
+	}
+
+    private static class SettingsDocumentVisitor extends DocumentVisitor {
+		private XWPFSettings result = null;
+		
+		@Override
+		protected boolean acceptRelationshipType(String relationshipType) {
+			return XWPFRelation.SETTINGS.getRelation().equals(relationshipType);
+		}
+		
+		@Override
+		protected boolean visitDocumentPart(String relationshipType, POIXMLDocumentPart p) {
+			result = (XWPFSettings)p;
+			return true;
+		}
+		
+		XWPFSettings getResult() {
+			return result;
+		}
+    }
+    
     private static XWPFSettings getSettings( XWPFDocument document )
     {
-        for ( POIXMLDocumentPart p : document.getRelations() )
-        {
-            String relationshipType = p.getPackageRelationship().getRelationshipType();
-            if ( relationshipType.equals( XWPFRelation.SETTINGS.getRelation() ) )
-            {
-                return (XWPFSettings) p;
-            }
-        }
-        return null;
+    	final SettingsDocumentVisitor visitor = new SettingsDocumentVisitor();
+    	visitor.visitDocument(document);
+    	return visitor.getResult();
     }
 
     public List<ThemeDocument> getThemeDocuments()
@@ -1445,56 +1526,75 @@ public class XWPFStylesDocument
         return themeDocuments;
     }
 
+    private static class ThemeDocumentVisitor extends DocumentVisitor {
+
+    	private final List<ThemeDocument> themeDocuments = new ArrayList<ThemeDocument>();
+    	
+		@Override
+		protected boolean acceptRelationshipType(String relationshipType) {
+			return "http://schemas.openxmlformats.org/officeDocument/2006/relationships/theme".equals( relationshipType );
+		}
+
+		@Override
+		protected boolean visitDocumentPart(String relationshipType, POIXMLDocumentPart p) {
+			try {
+                InputStream inputStream = p.getPackagePart().getInputStream();
+                ThemeDocument theme = ThemeDocument.Factory.parse( inputStream );
+                themeDocuments.add( theme );
+            } catch ( IOException e ) {
+                e.printStackTrace();
+            } catch (XmlException e) {
+				e.printStackTrace();
+			}
+			return false;
+		}
+		
+		List<ThemeDocument> getThemeDocuments() {
+			return themeDocuments;
+		}
+    	
+    }
+    
     private static List<ThemeDocument> getThemeDocuments( XWPFDocument document )
     {
-        List<ThemeDocument> themeDocuments = new ArrayList<ThemeDocument>();
-
-        for ( POIXMLDocumentPart p : document.getRelations() )
-        {
-            String relationshipType = p.getPackageRelationship().getRelationshipType();
-            if ( "http://schemas.openxmlformats.org/officeDocument/2006/relationships/theme".equals( relationshipType ) )
-            {
-                try
-                {
-                    InputStream inputStream = p.getPackagePart().getInputStream();
-                    ThemeDocument theme = ThemeDocument.Factory.parse( inputStream );
-                    themeDocuments.add( theme );
-                }
-                catch ( Throwable e )
-                {
-                    e.printStackTrace();
-                }
-            }
-        }
-
-        return themeDocuments;
+    	final ThemeDocumentVisitor visitor = new ThemeDocumentVisitor();
+    	visitor.visitDocument(document);
+    	return visitor.getThemeDocuments();
     }
 
+    private static class FontsDocumentVisitor extends DocumentVisitor {
+
+    	private final List<FontsDocument> fontsDocuments = new ArrayList<FontsDocument>();
+    	
+		@Override
+		protected boolean acceptRelationshipType(String relationshipType) {
+			return XWPFRelation.FONT_TABLE.getRelation().equals( relationshipType );
+		}
+
+		@Override
+		protected boolean visitDocumentPart(String relationshipType, POIXMLDocumentPart p) {
+			try {
+				InputStream inputStream = p.getPackagePart().getInputStream();
+				FontsDocument fontsDocument = FontsDocument.Factory.parse(inputStream);
+				fontsDocuments.add(fontsDocument);
+			} catch (IOException e) {
+				e.printStackTrace();
+			} catch (XmlException e) {
+				e.printStackTrace();
+			}
+			return false;
+		}
+
+		List<FontsDocument> getFontsDocuments() {
+			return fontsDocuments;
+		}
+    }
+    
     private static List<FontsDocument> getFontsDocument( XWPFDocument document )
     {
-
-        List<FontsDocument> fontsDocuments = new ArrayList<FontsDocument>();
-
-        for ( POIXMLDocumentPart p : document.getRelations() )
-        {
-            String relationshipType = p.getPackageRelationship().getRelationshipType();
-            // "http://schemas.openxmlformats.org/officeDocument/2006/relationships/fontTable"
-            if ( XWPFRelation.FONT_TABLE.getRelation().equals( relationshipType ) )
-            {
-                try
-                {
-                    InputStream inputStream = p.getPackagePart().getInputStream();
-                    FontsDocument fontsDocument = FontsDocument.Factory.parse( inputStream );
-                    fontsDocuments.add( fontsDocument );
-                }
-                catch ( Exception e )
-                {
-                    e.printStackTrace();
-                }
-
-            }
-        }
-        return fontsDocuments;
+    	final FontsDocumentVisitor visitor = new FontsDocumentVisitor();
+    	visitor.visitDocument(document);
+    	return visitor.getFontsDocuments();
     }
 
     public List<String> getFontsAltName( String fontName )

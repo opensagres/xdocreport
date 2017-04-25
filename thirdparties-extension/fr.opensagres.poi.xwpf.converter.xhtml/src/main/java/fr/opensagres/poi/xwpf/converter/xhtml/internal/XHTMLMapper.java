@@ -165,26 +165,20 @@ public class XHTMLMapper
 
     @Override
     protected Object startVisitSDT(XWPFSDT contents, Object container) throws SAXException {
-//        AttributesImpl attributes = createClassAttribute( contents );
 
-        // 1.2) Create "style" attributes.
-//        CSSStyle cssStyle = getStylesDocument().createCSSStyle( pPr );
-//        attributes = createStyleAttribute( cssStyle, attributes );
-
-        // 2) create element
         startElement(DIV_ELEMENT, null);
-        startElement(PRE_ELEMENT, null);
+//        startElement(PRE_ELEMENT, null);
         return null;
     }
 
-    @Override
-    protected void visitSDTBody(XWPFSDT contents, Object sdtContainer) throws SAXException {
-        characters(contents.getContent().getText());
-    }
+//    @Override
+//    protected void visitSDTBody(XWPFSDT contents, Object sdtContainer) throws SAXException {
+//        characters(contents.getContent().getText());
+//    }
 
     @Override
     protected void endVisitSDT(XWPFSDT contents, Object container, Object sdtContainer) throws SAXException {
-        endElement(PRE_ELEMENT);
+//        endElement(PRE_ELEMENT);
         endElement(DIV_ELEMENT);
     }
 

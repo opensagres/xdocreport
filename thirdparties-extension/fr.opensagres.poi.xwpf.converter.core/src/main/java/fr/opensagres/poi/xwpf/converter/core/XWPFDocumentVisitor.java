@@ -25,6 +25,7 @@
 package fr.opensagres.poi.xwpf.converter.core;
 
 import java.io.IOException;
+import java.lang.reflect.Field;
 import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -244,7 +245,7 @@ public abstract class XWPFDocumentVisitor<T, O extends Options, E extends IXWPFM
     /**
      * @param contents content controls
      */
-    protected void visitSDT(XWPFSDT contents, int index, T container) throws SAXException {
+    protected void visitSDT(XWPFSDT contents, int index, T container) throws Exception {
         T sdtContainer = startVisitSDT( contents,  container );
         visitSDTBody( contents, sdtContainer );
         endVisitSDT( contents, container, sdtContainer );
@@ -254,8 +255,31 @@ public abstract class XWPFDocumentVisitor<T, O extends Options, E extends IXWPFM
 
     protected abstract void endVisitSDT(XWPFSDT contents, T container, T sdtContainer) throws SAXException;
 
-    protected void visitSDTBody(XWPFSDT contents, T sdtContainer) throws SAXException {
+    protected void visitSDTBody(XWPFSDT contents, T sdtContainer) throws Exception {
         // TODO 17/4/19 use reflection to get WSPFSDTContent field and visitParagraph, visitRun etc
+        ISDTContent content = contents.getContent();
+        Field bodyElements;
+        try {
+            bodyElements = content.getClass().getDeclaredField("bodyElements");
+            bodyElements.setAccessible(true);
+            List<ISDTContents> isdtContents = (List<ISDTContents>) bodyElements.get(content);
+            for (int i = 0; i < isdtContents.size(); i++) {
+                ISDTContents isdtContent = isdtContents.get(i);
+                if (isdtContent instanceof XWPFParagraph) {
+                    visitParagraph((XWPFParagraph) isdtContent, i, sdtContainer);
+                } else if (isdtContent instanceof XWPFTable) {
+                    visitTable((XWPFTable) isdtContent, i, sdtContainer);
+                } else if (isdtContent instanceof XWPFRun) {
+                    visitRun((XWPFParagraph) ((XWPFRun) isdtContent).getParent(), (XmlObject) isdtContent, sdtContainer);
+                } else if (isdtContent instanceof XWPFSDT) {
+                    visitSDT((XWPFSDT) isdtContent, i, sdtContainer);
+                }
+            }
+        } catch (NoSuchFieldException e) {
+            e.printStackTrace();
+        } catch (IllegalAccessException e) {
+            e.printStackTrace();
+        }
     }
 
     /**

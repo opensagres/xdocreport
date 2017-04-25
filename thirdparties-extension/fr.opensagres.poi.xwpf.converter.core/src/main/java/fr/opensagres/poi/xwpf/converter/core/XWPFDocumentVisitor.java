@@ -256,7 +256,6 @@ public abstract class XWPFDocumentVisitor<T, O extends Options, E extends IXWPFM
     protected abstract void endVisitSDT(XWPFSDT contents, T container, T sdtContainer) throws SAXException;
 
     protected void visitSDTBody(XWPFSDT contents, T sdtContainer) throws Exception {
-        // TODO 17/4/19 use reflection to get WSPFSDTContent field and visitParagraph, visitRun etc
         ISDTContent content = contents.getContent();
         Field bodyElements;
         try {

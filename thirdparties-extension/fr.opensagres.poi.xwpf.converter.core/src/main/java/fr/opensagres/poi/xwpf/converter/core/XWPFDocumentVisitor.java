@@ -25,6 +25,7 @@
 package fr.opensagres.poi.xwpf.converter.core;
 
 import java.io.IOException;
+import java.lang.reflect.Field;
 import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -35,25 +36,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import org.apache.poi.openxml4j.opc.PackagePart;
-import org.apache.poi.xwpf.usermodel.BodyElementType;
-import org.apache.poi.xwpf.usermodel.BodyType;
-import org.apache.poi.xwpf.usermodel.IBody;
-import org.apache.poi.xwpf.usermodel.IBodyElement;
-import org.apache.poi.xwpf.usermodel.XWPFAbstractNum;
-import org.apache.poi.xwpf.usermodel.XWPFDocument;
-import org.apache.poi.xwpf.usermodel.XWPFFooter;
-import org.apache.poi.xwpf.usermodel.XWPFHeader;
-import org.apache.poi.xwpf.usermodel.XWPFHeaderFooter;
-import org.apache.poi.xwpf.usermodel.XWPFHyperlink;
-import org.apache.poi.xwpf.usermodel.XWPFHyperlinkRun;
-import org.apache.poi.xwpf.usermodel.XWPFNum;
-import org.apache.poi.xwpf.usermodel.XWPFParagraph;
-import org.apache.poi.xwpf.usermodel.XWPFPictureData;
-import org.apache.poi.xwpf.usermodel.XWPFRun;
-import org.apache.poi.xwpf.usermodel.XWPFStyle;
-import org.apache.poi.xwpf.usermodel.XWPFTable;
-import org.apache.poi.xwpf.usermodel.XWPFTableCell;
-import org.apache.poi.xwpf.usermodel.XWPFTableRow;
+import org.apache.poi.xwpf.usermodel.*;
 import org.apache.xmlbeans.XmlCursor;
 import org.apache.xmlbeans.XmlException;
 import org.apache.xmlbeans.XmlObject;
@@ -113,6 +96,7 @@ import fr.opensagres.poi.xwpf.converter.core.utils.DxaUtil;
 import fr.opensagres.poi.xwpf.converter.core.utils.StringUtils;
 import fr.opensagres.poi.xwpf.converter.core.utils.XWPFRunHelper;
 import fr.opensagres.poi.xwpf.converter.core.utils.XWPFTableUtil;
+import org.xml.sax.SAXException;
 
 /**
  * Visitor to visit elements from entry word/document.xml, word/header*.xml, word/footer*.xml
@@ -187,7 +171,6 @@ public abstract class XWPFDocumentVisitor<T, O extends Options, E extends IXWPFM
     /**
      * Main entry for visit XWPFDocument.
      * 
-     * @param out
      * @throws Exception
      */
     public void start()
@@ -251,9 +234,51 @@ public abstract class XWPFDocumentVisitor<T, O extends Options, E extends IXWPFM
                     previousParagraphStyleName = null;
                     visitTable( (XWPFTable) bodyElement, i, container );
                     break;
+                case CONTENTCONTROL:
+                    visitSDT((XWPFSDT)bodyElement, i, container);
+                    break;
             }
         }
 
+    }
+
+    /**
+     * @param contents content controls
+     */
+    protected void visitSDT(XWPFSDT contents, int index, T container) throws Exception {
+        T sdtContainer = startVisitSDT( contents,  container );
+        visitSDTBody( contents, sdtContainer );
+        endVisitSDT( contents, container, sdtContainer );
+    }
+
+    protected abstract T startVisitSDT(XWPFSDT contents, T container) throws SAXException;
+
+    protected abstract void endVisitSDT(XWPFSDT contents, T container, T sdtContainer) throws SAXException;
+
+    protected void visitSDTBody(XWPFSDT contents, T sdtContainer) throws Exception {
+        ISDTContent content = contents.getContent();
+        Field bodyElements;
+        try {
+            bodyElements = content.getClass().getDeclaredField("bodyElements");
+            bodyElements.setAccessible(true);
+            List<ISDTContents> isdtContents = (List<ISDTContents>) bodyElements.get(content);
+            for (int i = 0; i < isdtContents.size(); i++) {
+                ISDTContents isdtContent = isdtContents.get(i);
+                if (isdtContent instanceof XWPFParagraph) {
+                    visitParagraph((XWPFParagraph) isdtContent, i, sdtContainer);
+                } else if (isdtContent instanceof XWPFTable) {
+                    visitTable((XWPFTable) isdtContent, i, sdtContainer);
+                } else if (isdtContent instanceof XWPFRun) {
+                    visitRun((XWPFParagraph) ((XWPFRun) isdtContent).getParent(), (XmlObject) isdtContent, sdtContainer);
+                } else if (isdtContent instanceof XWPFSDT) {
+                    visitSDT((XWPFSDT) isdtContent, i, sdtContainer);
+                }
+            }
+        } catch (NoSuchFieldException e) {
+            e.printStackTrace();
+        } catch (IllegalAccessException e) {
+            e.printStackTrace();
+        }
     }
 
     /**
@@ -1218,7 +1243,7 @@ public abstract class XWPFDocumentVisitor<T, O extends Options, E extends IXWPFM
     /**
      * Returns the {@link XWPFHeader} of the given header reference.
      * 
-     * @param headerref the header reference.
+     * @param headerRef the header reference.
      * @return
      * @throws XmlException
      * @throws IOException

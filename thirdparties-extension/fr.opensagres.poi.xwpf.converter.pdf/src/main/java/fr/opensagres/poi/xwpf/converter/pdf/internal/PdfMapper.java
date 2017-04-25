@@ -31,18 +31,7 @@ import java.math.BigInteger;
 import java.util.List;
 import java.util.logging.Logger;
 
-import org.apache.poi.xwpf.usermodel.IBodyElement;
-import org.apache.poi.xwpf.usermodel.ParagraphAlignment;
-import org.apache.poi.xwpf.usermodel.UnderlinePatterns;
-import org.apache.poi.xwpf.usermodel.XWPFDocument;
-import org.apache.poi.xwpf.usermodel.XWPFFooter;
-import org.apache.poi.xwpf.usermodel.XWPFHeader;
-import org.apache.poi.xwpf.usermodel.XWPFParagraph;
-import org.apache.poi.xwpf.usermodel.XWPFPictureData;
-import org.apache.poi.xwpf.usermodel.XWPFRun;
-import org.apache.poi.xwpf.usermodel.XWPFTable;
-import org.apache.poi.xwpf.usermodel.XWPFTableCell;
-import org.apache.poi.xwpf.usermodel.XWPFTableRow;
+import org.apache.poi.xwpf.usermodel.*;
 import org.openxmlformats.schemas.drawingml.x2006.main.CTPositiveSize2D;
 import org.openxmlformats.schemas.drawingml.x2006.picture.CTPicture;
 import org.openxmlformats.schemas.drawingml.x2006.wordprocessingDrawing.STRelFromH;
@@ -168,6 +157,19 @@ public class PdfMapper extends
 		out.close();
 	}
 
+	@Override
+	protected IITextContainer startVisitSDT(XWPFSDT contents, IITextContainer container) {
+		return null;
+	}
+
+	@Override
+	protected void endVisitSDT(XWPFSDT contents, IITextContainer container, IITextContainer sdtContainer) {
+
+	}
+
+	@Override
+	protected void visitSDTBody(XWPFSDT contents, IITextContainer sdtContainer) throws Exception {
+	}
 	// ------------------------- Header/Footer
 
 	@Override

@@ -521,6 +521,12 @@ public abstract class AbstractXWPFPOIConverterTest
     	doGenerate("TestTxtFormatTableBorderExternalImages.docx");
     }
 
+    @Test
+    public void simpleContentsImpl() throws IOException
+    {
+    	doGenerate("contents.docx");
+    }
+
     protected abstract void doGenerate( String fileName )
         throws IOException;
 

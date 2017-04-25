@@ -25,26 +25,7 @@
 package fr.opensagres.poi.xwpf.converter.xhtml.internal;
 
 import static fr.opensagres.poi.xwpf.converter.core.utils.DxaUtil.emu2points;
-import static fr.opensagres.poi.xwpf.converter.xhtml.internal.XHTMLConstants.A_ELEMENT;
-import static fr.opensagres.poi.xwpf.converter.xhtml.internal.XHTMLConstants.BODY_ELEMENT;
-import static fr.opensagres.poi.xwpf.converter.xhtml.internal.XHTMLConstants.BR_ELEMENT;
-import static fr.opensagres.poi.xwpf.converter.xhtml.internal.XHTMLConstants.CLASS_ATTR;
-import static fr.opensagres.poi.xwpf.converter.xhtml.internal.XHTMLConstants.COLSPAN_ATTR;
-import static fr.opensagres.poi.xwpf.converter.xhtml.internal.XHTMLConstants.DIV_ELEMENT;
-import static fr.opensagres.poi.xwpf.converter.xhtml.internal.XHTMLConstants.HEAD_ELEMENT;
-import static fr.opensagres.poi.xwpf.converter.xhtml.internal.XHTMLConstants.HREF_ATTR;
-import static fr.opensagres.poi.xwpf.converter.xhtml.internal.XHTMLConstants.HTML_ELEMENT;
-import static fr.opensagres.poi.xwpf.converter.xhtml.internal.XHTMLConstants.ID_ATTR;
-import static fr.opensagres.poi.xwpf.converter.xhtml.internal.XHTMLConstants.IMG_ELEMENT;
-import static fr.opensagres.poi.xwpf.converter.xhtml.internal.XHTMLConstants.P_ELEMENT;
-import static fr.opensagres.poi.xwpf.converter.xhtml.internal.XHTMLConstants.ROWSPAN_ATTR;
-import static fr.opensagres.poi.xwpf.converter.xhtml.internal.XHTMLConstants.SPAN_ELEMENT;
-import static fr.opensagres.poi.xwpf.converter.xhtml.internal.XHTMLConstants.SRC_ATTR;
-import static fr.opensagres.poi.xwpf.converter.xhtml.internal.XHTMLConstants.STYLE_ATTR;
-import static fr.opensagres.poi.xwpf.converter.xhtml.internal.XHTMLConstants.TABLE_ELEMENT;
-import static fr.opensagres.poi.xwpf.converter.xhtml.internal.XHTMLConstants.TD_ELEMENT;
-import static fr.opensagres.poi.xwpf.converter.xhtml.internal.XHTMLConstants.TH_ELEMENT;
-import static fr.opensagres.poi.xwpf.converter.xhtml.internal.XHTMLConstants.TR_ELEMENT;
+import static fr.opensagres.poi.xwpf.converter.xhtml.internal.XHTMLConstants.*;
 import static fr.opensagres.poi.xwpf.converter.xhtml.internal.styles.CSSStylePropertyConstants.HEIGHT;
 import static fr.opensagres.poi.xwpf.converter.xhtml.internal.styles.CSSStylePropertyConstants.MARGIN_BOTTOM;
 import static fr.opensagres.poi.xwpf.converter.xhtml.internal.styles.CSSStylePropertyConstants.MARGIN_LEFT;
@@ -56,15 +37,7 @@ import java.io.IOException;
 import java.math.BigInteger;
 import java.util.List;
 
-import org.apache.poi.xwpf.usermodel.XWPFDocument;
-import org.apache.poi.xwpf.usermodel.XWPFFooter;
-import org.apache.poi.xwpf.usermodel.XWPFHeader;
-import org.apache.poi.xwpf.usermodel.XWPFParagraph;
-import org.apache.poi.xwpf.usermodel.XWPFPictureData;
-import org.apache.poi.xwpf.usermodel.XWPFRun;
-import org.apache.poi.xwpf.usermodel.XWPFTable;
-import org.apache.poi.xwpf.usermodel.XWPFTableCell;
-import org.apache.poi.xwpf.usermodel.XWPFTableRow;
+import org.apache.poi.xwpf.usermodel.*;
 import org.apache.xmlbeans.XmlException;
 import org.openxmlformats.schemas.drawingml.x2006.main.CTPositiveSize2D;
 import org.openxmlformats.schemas.drawingml.x2006.picture.CTPicture;
@@ -188,6 +161,25 @@ public class XHTMLMapper
             endElement( HTML_ELEMENT );
             contentHandler.endDocument();
         }
+    }
+
+    @Override
+    protected Object startVisitSDT(XWPFSDT contents, Object container) throws SAXException {
+
+        startElement(DIV_ELEMENT, null);
+//        startElement(PRE_ELEMENT, null);
+        return null;
+    }
+
+//    @Override
+//    protected void visitSDTBody(XWPFSDT contents, Object sdtContainer) throws SAXException {
+//        characters(contents.getContent().getText());
+//    }
+
+    @Override
+    protected void endVisitSDT(XWPFSDT contents, Object container, Object sdtContainer) throws SAXException {
+//        endElement(PRE_ELEMENT);
+        endElement(DIV_ELEMENT);
     }
 
     @Override

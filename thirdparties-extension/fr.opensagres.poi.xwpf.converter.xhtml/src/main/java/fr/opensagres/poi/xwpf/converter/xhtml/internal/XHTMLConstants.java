@@ -53,6 +53,8 @@ public class XHTMLConstants
 
     public static final String DIV_ELEMENT = "div";
 
+    public static final String PRE_ELEMENT = "pre";
+
     public static final String SPAN_ELEMENT = "span";
 
     public static final String IMG_ELEMENT = "img";

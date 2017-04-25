@@ -167,6 +167,9 @@ public class PdfMapper extends
 
 	}
 
+	@Override
+	protected void visitSDTBody(XWPFSDT contents, IITextContainer sdtContainer) throws Exception {
+	}
 	// ------------------------- Header/Footer
 
 	@Override

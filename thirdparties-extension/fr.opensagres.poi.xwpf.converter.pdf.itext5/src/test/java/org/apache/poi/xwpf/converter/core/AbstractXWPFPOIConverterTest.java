@@ -425,13 +425,6 @@ public abstract class AbstractXWPFPOIConverterTest
     }
 
     @Test
-    public void TestLeading()
-        throws IOException
-    {
-        doGenerate( "TestLeading.docx" );
-    }
-
-    @Test
     public void TestList()
         throws IOException
     {
@@ -457,13 +450,6 @@ public abstract class AbstractXWPFPOIConverterTest
         throws IOException
     {
         doGenerate( "TestParagraphWithBorder.docx" );
-    }
-    
-    @Test
-    public void TestSdtCell()
-        throws IOException
-    {
-        doGenerate( "TestSdtCell.docx" );
     }
 
     @Test
@@ -506,6 +492,13 @@ public abstract class AbstractXWPFPOIConverterTest
         throws IOException
     {
         doGenerate( "TestTableNested.docx" );
+    }
+	
+	@Test
+    public void TestTableMultiLineMerge()
+        throws IOException
+    {
+        doGenerate( "TestTableMultiLineMerge.docx" );
     }
 
     @Test

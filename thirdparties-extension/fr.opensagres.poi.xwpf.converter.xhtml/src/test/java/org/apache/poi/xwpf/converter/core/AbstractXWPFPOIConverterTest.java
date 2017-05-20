@@ -493,6 +493,13 @@ public abstract class AbstractXWPFPOIConverterTest
     {
         doGenerate( "TestTableNested.docx" );
     }
+	
+	@Test
+    public void TestTableMultiLineMerge()
+        throws IOException
+    {
+        doGenerate( "TestTableMultiLineMerge.docx" );
+    }
 
     @Test
     public void TestTabulation()
@@ -513,18 +520,6 @@ public abstract class AbstractXWPFPOIConverterTest
         throws IOException
     {
         doGenerate( "TestTitle.docx" );
-    }
-    
-    @Test
-    public void TestTxtFormatTableBorderExternalImages() throws IOException
-    {
-    	doGenerate("TestTxtFormatTableBorderExternalImages.docx");
-    }
-
-    @Test
-    public void simpleContentsImpl() throws IOException
-    {
-    	doGenerate("contents.docx");
     }
 
     protected abstract void doGenerate( String fileName )

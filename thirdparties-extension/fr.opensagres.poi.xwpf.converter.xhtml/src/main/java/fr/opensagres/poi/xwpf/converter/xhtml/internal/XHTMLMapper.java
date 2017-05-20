@@ -194,6 +194,9 @@ public class XHTMLMapper
         // 1.2) Create "style" attributes.
         CTPPr pPr = paragraph.getCTP().getPPr();
         CSSStyle cssStyle = getStylesDocument().createCSSStyle( pPr );
+        if(cssStyle != null) {
+            cssStyle.addProperty(CSSStylePropertyConstants.WHITE_SPACE, "pre-wrap");            
+        }
         attributes = createStyleAttribute( cssStyle, attributes );
 
         // 2) create element
@@ -239,6 +242,9 @@ public class XHTMLMapper
         // 1.2) Create "style" attributes.
         CTRPr rPr = run.getCTR().getRPr();
         CSSStyle cssStyle = getStylesDocument().createCSSStyle( rPr );
+        if (cssStyle != null) {
+            cssStyle.addProperty(CSSStylePropertyConstants.WHITE_SPACE, "pre-wrap");
+        }
         this.currentRunAttributes = createStyleAttribute( cssStyle, currentRunAttributes );
 
         if ( url != null )
@@ -567,14 +573,14 @@ public class XHTMLMapper
             }
 
             CTPositiveSize2D ext = picture.getSpPr().getXfrm().getExt();
-
+            CSSStyle style = new CSSStyle( IMG_ELEMENT, null );
             // img/@width
             float width = emu2points( ext.getCx() );
-            attributes = SAXHelper.addAttrValue( attributes, WIDTH, getStylesDocument().getValueAsPoint( width ) );
-
             // img/@height
             float height = emu2points( ext.getCy() );
-            attributes = SAXHelper.addAttrValue( attributes, HEIGHT, getStylesDocument().getValueAsPoint( height ) );
+            style.addProperty(WIDTH, getStylesDocument().getValueAsPoint( width ) );
+            style.addProperty(HEIGHT, getStylesDocument().getValueAsPoint( height ) );
+            attributes = SAXHelper.addAttrValue( attributes, STYLE_ATTR, style.getInlineStyles() );
         }
         else 
         {    
@@ -584,14 +590,14 @@ public class XHTMLMapper
         	attributes = SAXHelper.addAttrValue( null, SRC_ATTR, src );
         	
         	CTPositiveSize2D ext = picture.getSpPr().getXfrm().getExt();
-
+        	CSSStyle style = new CSSStyle( IMG_ELEMENT, null );
             // img/@width
             float width = emu2points( ext.getCx() );
-            attributes = SAXHelper.addAttrValue( attributes, WIDTH, getStylesDocument().getValueAsPoint( width ) );
-
             // img/@height
             float height = emu2points( ext.getCy() );
-            attributes = SAXHelper.addAttrValue( attributes, HEIGHT, getStylesDocument().getValueAsPoint( height ) );	
+            style.addProperty(WIDTH, getStylesDocument().getValueAsPoint( width ) );
+            style.addProperty(HEIGHT, getStylesDocument().getValueAsPoint( height ) );
+            attributes = SAXHelper.addAttrValue( attributes, STYLE_ATTR, style.getInlineStyles() );
         }
         if ( attributes != null )
         {

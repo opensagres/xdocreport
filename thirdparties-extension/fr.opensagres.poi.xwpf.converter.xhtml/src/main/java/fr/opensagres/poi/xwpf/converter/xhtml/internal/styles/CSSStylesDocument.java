@@ -38,6 +38,8 @@ import static fr.opensagres.poi.xwpf.converter.xhtml.internal.styles.CSSStylePro
 import static fr.opensagres.poi.xwpf.converter.xhtml.internal.styles.CSSStylePropertyConstants.FONT_WEIGHT;
 import static fr.opensagres.poi.xwpf.converter.xhtml.internal.styles.CSSStylePropertyConstants.FONT_WEIGHT_BOLD;
 import static fr.opensagres.poi.xwpf.converter.xhtml.internal.styles.CSSStylePropertyConstants.HEIGHT;
+import static fr.opensagres.poi.xwpf.converter.xhtml.internal.styles.CSSStylePropertyConstants.MARGIN_LEFT;
+import static fr.opensagres.poi.xwpf.converter.xhtml.internal.styles.CSSStylePropertyConstants.MARGIN_RIGHT;
 import static fr.opensagres.poi.xwpf.converter.xhtml.internal.styles.CSSStylePropertyConstants.MARGIN_BOTTOM;
 import static fr.opensagres.poi.xwpf.converter.xhtml.internal.styles.CSSStylePropertyConstants.MARGIN_TOP;
 import static fr.opensagres.poi.xwpf.converter.xhtml.internal.styles.CSSStylePropertyConstants.MIN_HEIGHT;
@@ -159,21 +161,20 @@ public class CSSStylesDocument
         {
             String tagName = P_ELEMENT;
             CSSStyle style = ignoreStylesIfUnused ? null : getOrCreateStyle( null, tagName, className );
+            
             // indentation left
             Float indentationLeft = super.getIndentationLeft( pPr );
             if ( indentationLeft != null )
             {
                 style = getOrCreateStyle( style, tagName, className );
-                style.addProperty( TEXT_ALIGN, TEXT_ALIGN_LEFT );
-                style.addProperty( TEXT_INDENT, getValueAsPoint( indentationLeft ) );
+                style.addProperty( MARGIN_LEFT, getValueAsPoint( indentationLeft ) );
             }
             // indentation right
             Float indentationRight = super.getIndentationRight( pPr );
             if ( indentationRight != null )
             {
                 style = getOrCreateStyle( style, tagName, className );
-                style.addProperty( TEXT_ALIGN, TEXT_ALIGN_RIGHT );
-                style.addProperty( TEXT_INDENT, getValueAsPoint( indentationRight ) );
+                style.addProperty( MARGIN_RIGHT, getValueAsPoint( indentationRight ) );
             }
             // indentation first line
             Float indentationFirstLine = super.getIndentationFirstLine( pPr );

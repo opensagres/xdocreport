@@ -128,5 +128,7 @@ public class CSSStylePropertyConstants
     public static final String FONT_STYLE_ITALIC = "italic";
     
     public static final String FONT_SIZE = "font-size";
+    
+    public static final String WHITE_SPACE = "white-space";
 
 }

@@ -1116,16 +1116,7 @@ public class StringEscapeUtils
                 String entityName = this.entityName( c );
                 if ( entityName == null )
                 {
-                    if ( c > 0x7F )
-                    {
-                        writer.write( "&#" );
-                        writer.write( Integer.toString( c, 10 ) );
-                        writer.write( ';' );
-                    }
-                    else
-                    {
-                        writer.write( c );
-                    }
+                    writer.write( c );
                 }
                 else
                 {

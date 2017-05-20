@@ -611,7 +611,7 @@ public abstract class XWPFDocumentVisitor<T, O extends Options, E extends IXWPFM
                                 if ( !instrTextPage )
                                 {
                                 	                                	
-                                	                                	// test if it's <w:r><w:instrText>NUMPAGES</w:instrText></w:r>
+                                	 // test if it's <w:r><w:instrText>NUMPAGES</w:instrText></w:r>
                                 	 processingTotalPageCountField = XWPFRunHelper.isInstrTextNumpages( instrText );
                                 	 if(!totalPageFieldUsed){
                                 	 	totalPageFieldUsed = true;
@@ -622,7 +622,12 @@ public abstract class XWPFDocumentVisitor<T, O extends Options, E extends IXWPFM
                                     String instrTextHyperlink = XWPFRunHelper.getInstrTextHyperlink( instrText );
                                     if ( instrTextHyperlink != null )
                                     {
-                                        url = instrTextHyperlink;
+                                        // test if it's <w:instrText>HYPERLINK \l _Toc29586</w:instrText>
+                                        if (instrTextHyperlink.startsWith("\\l ")) {
+                                            url = "#" + instrTextHyperlink.substring(3);
+                                        } else {
+                                            url = instrTextHyperlink;
+                                        }
                                     }
                                 }
                                 else
@@ -953,6 +958,7 @@ public abstract class XWPFDocumentVisitor<T, O extends Options, E extends IXWPFM
 
             firstCol = true;
             int cellIndex = -1;
+            int cellPtr = 0;
             CTRow ctRow = row.getCtRow();
             XmlCursor c = ctRow.newCursor();
             c.selectPath( "./*" );
@@ -965,13 +971,14 @@ public abstract class XWPFDocumentVisitor<T, O extends Options, E extends IXWPFM
                     XWPFTableCell cell = row.getTableCell( tc );
                     cellIndex = getCellIndex( cellIndex, cell );
                     lastCol = ( cellIndex == nbColumns );
-                    vMergedCells = getVMergedCells( cell, rowIndex, cellIndex );
+                    vMergedCells = getVMergedCells( cell, rowIndex, cellPtr );
                     if ( vMergedCells == null || vMergedCells.size() > 0 )
                     {
                         lastRow = isLastRow( lastRowIfNoneVMerge, rowIndex, rowsSize, vMergedCells );
-                        visitCell( cell, tableContainer, firstRow, lastRow, firstCol, lastCol, rowIndex, cellIndex,
+                        visitCell( cell, tableContainer, firstRow, lastRow, firstCol, lastCol, rowIndex, cellPtr,
                                    vMergedCells );
                     }
+                    cellPtr++;
                     firstCol = false;
                 }
                 else if ( o instanceof CTSdtCell )
@@ -989,13 +996,14 @@ public abstract class XWPFDocumentVisitor<T, O extends Options, E extends IXWPFM
                         {
                             rowCells.add(cell);
                         }
-                        vMergedCells = getVMergedCells( cell, rowIndex, cellIndex );
+                        vMergedCells = getVMergedCells( cell, rowIndex, cellPtr );
                         if ( vMergedCells == null || vMergedCells.size() > 0 )
                         {
                             lastRow = isLastRow( lastRowIfNoneVMerge, rowIndex, rowsSize, vMergedCells );
-                            visitCell( cell, tableContainer, firstRow, lastRow, firstCol, lastCol, rowIndex, cellIndex,
+                            visitCell( cell, tableContainer, firstRow, lastRow, firstCol, lastCol, rowIndex, cellPtr,
                                        vMergedCells );
                         }
+                        cellPtr++;
                         firstCol = false;
                     }
                 }

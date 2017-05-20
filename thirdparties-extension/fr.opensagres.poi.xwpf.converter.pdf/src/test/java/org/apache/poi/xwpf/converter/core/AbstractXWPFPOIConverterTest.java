@@ -493,6 +493,13 @@ public abstract class AbstractXWPFPOIConverterTest
     {
         doGenerate( "TestTableNested.docx" );
     }
+	
+	@Test
+    public void TestTableMultiLineMerge()
+        throws IOException
+    {
+        doGenerate( "TestTableMultiLineMerge.docx" );
+    }
 
     @Test
     public void TestTabulation()

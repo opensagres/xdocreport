@@ -60,7 +60,7 @@ public class DxaUtil
 
     public static float dxa2points( BigInteger dxa )
     {
-        return dxa.intValue() / 20;
+        return (float) (dxa.doubleValue() / 20);
     }
 
     public static float dxa2inch( float dxa )

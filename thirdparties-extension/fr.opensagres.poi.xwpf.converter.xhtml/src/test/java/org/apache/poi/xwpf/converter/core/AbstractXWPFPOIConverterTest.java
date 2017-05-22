@@ -522,6 +522,16 @@ public abstract class AbstractXWPFPOIConverterTest
         doGenerate( "TestTitle.docx" );
     }
 
+    @Test
+    public void numberingBugFix() throws IOException
+    {
+        try {
+            doGenerate("underlineBug.docx");
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
     protected abstract void doGenerate( String fileName )
         throws IOException;
 

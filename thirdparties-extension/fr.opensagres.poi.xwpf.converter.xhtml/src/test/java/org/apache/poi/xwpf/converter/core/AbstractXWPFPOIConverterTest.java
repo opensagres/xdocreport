@@ -526,7 +526,7 @@ public abstract class AbstractXWPFPOIConverterTest
     public void numberingBugFix() throws IOException
     {
         try {
-            doGenerate("numberingBug.docx");
+            doGenerate("underlineBug.docx");
         } catch (Exception e) {
             e.printStackTrace();
         }

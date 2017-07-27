@@ -446,9 +446,7 @@ public class XDocReport
 
     /**
      * Load the template report by using the given controller and cache it to the given registry
-     * 
-     * @param reportId the report id used to retrieves from the cache the template report if it is already loaded.
-     * @param controller the controller used to load the template report.
+     *
      * @param registry
      * @return an instance of the loaded template report.
      * @throws IOException

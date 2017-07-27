@@ -105,9 +105,10 @@ public class XDocReportRegistry
 
     /**
      * Load report.
+     *
+     * Note : this function does't cache the report.
      * 
      * @param sourceStream
-     * @param reportId
      * @return
      * @throws IOException
      * @throws XDocReportException
@@ -115,14 +116,14 @@ public class XDocReportRegistry
     public IXDocReport loadReport( InputStream sourceStream )
         throws IOException, XDocReportException
     {
-        return loadReport( sourceStream, null, null, null, true );
+        return loadReport( sourceStream, null, null, null, false );
     }
 
     /**
      * Load report.
      * 
      * @param sourceStream
-     * @param reportId
+     * @param cacheReport
      * @return
      * @throws IOException
      * @throws XDocReportException
@@ -135,6 +136,8 @@ public class XDocReportRegistry
 
     /**
      * Load report.
+     *
+     * Note : this function cache the report.
      * 
      * @param sourceStream
      * @param reportId
@@ -165,6 +168,8 @@ public class XDocReportRegistry
 
     /**
      * Load report.
+     *
+     * Note : this function cache the report.
      * 
      * @param sourceStream
      * @param reportId
@@ -196,6 +201,8 @@ public class XDocReportRegistry
 
     /**
      * Load report.
+     *
+     * Note : this function cache the report.
      * 
      * @param sourceStream
      * @param reportId
@@ -227,7 +234,9 @@ public class XDocReportRegistry
 
     /**
      * Load report.
-     * 
+     *
+     * Note : this function cache the report.
+     *
      * @param sourceStream
      * @param reportId
      * @return
@@ -258,6 +267,8 @@ public class XDocReportRegistry
 
     /**
      * Load report.
+     *
+     * Note : this function does't cache the report.
      * 
      * @param sourceStream
      * @param templateEngine
@@ -268,7 +279,7 @@ public class XDocReportRegistry
     public IXDocReport loadReport( InputStream sourceStream, ITemplateEngine templateEngine )
         throws IOException, XDocReportException
     {
-        return loadReport( sourceStream, templateEngine, true );
+        return loadReport( sourceStream, templateEngine, false );
     }
 
     /**
@@ -288,9 +299,11 @@ public class XDocReportRegistry
 
     /**
      * Load report.
+     *
+     * Note : this function does't cache the report.
      * 
      * @param sourceStream
-     * @param templateEngine
+     * @param templateEngineKind
      * @return
      * @throws IOException
      * @throws XDocReportException
@@ -298,14 +311,14 @@ public class XDocReportRegistry
     public IXDocReport loadReport( InputStream sourceStream, TemplateEngineKind templateEngineKind )
         throws IOException, XDocReportException
     {
-        return loadReport( sourceStream, templateEngineKind, true );
+        return loadReport( sourceStream, templateEngineKind, false );
     }
 
     /**
      * Load report.
      * 
      * @param sourceStream
-     * @param templateEngine
+     * @param templateEngineKind
      * @return
      * @throws IOException
      * @throws XDocReportException
@@ -461,7 +474,7 @@ public class XDocReportRegistry
     /**
      * Returns true if report identified with the given id exists in the registry and false otherwise.
      * 
-     * @param id
+     * @param reportId
      * @return
      */
     public boolean existsReport( String reportId )

@@ -51,7 +51,7 @@ public class DocXReportFactoryDiscoveryTestCase
         try
         {
             IXDocReport report =
-                XDocReportRegistry.getRegistry().loadReport( DocXReportFactoryDiscoveryTestCase.class.getResourceAsStream( "DocxHelloWordWithFreemarker.docx" ) );
+                XDocReportRegistry.getRegistry().loadReport( DocXReportFactoryDiscoveryTestCase.class.getResourceAsStream( "DocxHelloWordWithFreemarker.docx" ), true );
             // Report is created
             assertNotNull( "Report must ne not null", report );
 

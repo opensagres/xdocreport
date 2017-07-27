@@ -51,7 +51,7 @@ public class PPTXReportFactoryDiscoveryTestCase
         try
         {
             IXDocReport report =
-                XDocReportRegistry.getRegistry().loadReport( PPTXReportFactoryDiscoveryTestCase.class.getResourceAsStream( "PPTXHelloWordWithFreemarker.pptx" ) );
+                XDocReportRegistry.getRegistry().loadReport( PPTXReportFactoryDiscoveryTestCase.class.getResourceAsStream( "PPTXHelloWordWithFreemarker.pptx" ), true );
             // Report is created
             assertNotNull( "Report must ne not null", report );
 

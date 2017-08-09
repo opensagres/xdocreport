@@ -51,7 +51,7 @@ public class DynamicBean
             }
             else
             {
-                bean = getDynamicBean( key );
+                bean = bean.getDynamicBean( key );
             }
         }
     }

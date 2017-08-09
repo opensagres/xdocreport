@@ -51,7 +51,7 @@ public class ODTReportFactoryDiscoveryTestCase
         try
         {
             IXDocReport report =
-                XDocReportRegistry.getRegistry().loadReport( ODTReportFactoryDiscoveryTestCase.class.getResourceAsStream( "ODTHelloWordWithFreemarker.odt" ) );
+                XDocReportRegistry.getRegistry().loadReport( ODTReportFactoryDiscoveryTestCase.class.getResourceAsStream( "ODTHelloWordWithFreemarker.odt" ), true );
             // Report is created
             assertNotNull( "Report must ne not null", report );
 

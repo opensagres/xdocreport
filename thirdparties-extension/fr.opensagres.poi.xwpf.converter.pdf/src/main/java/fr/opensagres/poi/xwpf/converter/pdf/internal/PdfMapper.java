@@ -287,7 +287,6 @@ public class PdfMapper extends
 							.getMultipleLeading());
 				}
 			}
-
 		}
 
 		// text-align
@@ -488,6 +487,7 @@ public class PdfMapper extends
 
 		StylableParagraph pdfParagraph = (StylableParagraph) pdfParagraphContainer;
 		pdfParagraph.adjustMultipliedLeading(currentRunFontAscii);
+		pdfParagraph.adjustLeading(currentRunFontAscii);
 
 		// addd symbol list item chunk if needed.
 		String listItemText = pdfParagraph.getListItemText();

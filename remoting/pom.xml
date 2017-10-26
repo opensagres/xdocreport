@@ -5,7 +5,7 @@
 	<parent>
 		<groupId>fr.opensagres.xdocreport</groupId>
 		<artifactId>xdocreport-parent</artifactId>
-		<version>1.1.0-SNAPSHOT</version>
+		<version>2.0.2-SNAPSHOT</version>
 		<relativePath>..</relativePath>
 	</parent>
 	<packaging>pom</packaging>
@@ -14,23 +14,20 @@
 		<module>fr.opensagres.xdocreport.remoting.resources</module>
 		<module>fr.opensagres.xdocreport.remoting.resources.services.client</module>
 		<module>fr.opensagres.xdocreport.remoting.resources.services.server</module>
-		<!-- REST converter service -->		
+		<!-- REST converter service -->
 		<module>fr.opensagres.xdocreport.remoting.converter</module>
 		<module>fr.opensagres.xdocreport.remoting.converter.server</module>
-		<!-- TODO ?
-		<module>
-			fr.opensagres.xdocreport.remoting.converter.client
-		</module>
-		-->
-		<!-- REST reporting service -->		
+		<!-- TODO ? <module> fr.opensagres.xdocreport.remoting.converter.client 
+			</module> -->
+		<!-- REST reporting service -->
 		<module>fr.opensagres.xdocreport.remoting.reporting</module>
-		<module>fr.opensagres.xdocreport.remoting.reporting.server</module>		
+		<module>fr.opensagres.xdocreport.remoting.reporting.server</module>
 	</modules>
 	<dependencies>
 		<dependency>
-			<groupId>org.apache.geronimo.specs</groupId>
-			<artifactId>geronimo-jaxrs_1.1_spec</artifactId>
-			<version>1.0</version>
+			<groupId>javax.ws.rs</groupId>
+			<artifactId>javax.ws.rs-api</artifactId>
+			<version>2.0.1</version>
 			<optional>true</optional>
 		</dependency>
 	</dependencies>

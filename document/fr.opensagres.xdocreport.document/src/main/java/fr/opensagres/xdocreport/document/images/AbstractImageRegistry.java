@@ -263,7 +263,7 @@ public abstract class AbstractImageRegistry
             return defaultWidth;
         }
         IImageProvider imageProvider = info.getImageProvider();
-        Float width = imageProvider.getWidth();
+        Float width = imageProvider.getWidth(getSize(defaultWidth));
         if ( width != null )
         {
             return getSize( width );
@@ -279,7 +279,7 @@ public abstract class AbstractImageRegistry
             return defaultHeight;
         }
         IImageProvider imageProvider = info.getImageProvider();
-        Float height = imageProvider.getHeight();
+        Float height = imageProvider.getHeight(getSize(defaultHeight));
         if ( height != null )
         {
             return getSize( height );
@@ -292,6 +292,17 @@ public abstract class AbstractImageRegistry
         return fieldsMetadata;
     }
 
-    protected abstract String getSize( float sizeAsPixel );
+    /**
+     * 
+     * @param sizeAsPixel
+     * @return sizeAsDxa
+     */
+    public abstract String getSize( float sizeAsPixel );
 
+    /**
+     * 
+     * @param sizeAsDxa
+     * @return sizeAsPixel null in case the size cannot be computed
+     */
+    public abstract Float getSize( String sizeAsDxa );
 }

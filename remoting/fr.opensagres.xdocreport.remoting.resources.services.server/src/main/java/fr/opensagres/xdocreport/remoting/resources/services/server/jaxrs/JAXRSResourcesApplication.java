@@ -47,8 +47,8 @@ public class JAXRSResourcesApplication
 
     public Set<Class<?>> getClasses()
     {
-
         HashSet<Class<?>> set = new HashSet<Class<?>>();
+        set.add(com.fasterxml.jackson.jaxrs.json.JacksonJaxbJsonProvider.class);
         return set;
     }
 
@@ -77,6 +77,7 @@ public class JAXRSResourcesApplication
         HashSet<Object> singletons = new HashSet<Object>();
         // register here Providers
         singletons.addAll( Providers.get() );
+        
         List<JAXRSResourcesService> services = getRegistry().getJaxRsResourcesService();
         for ( final ResourcesService service : services )
         {

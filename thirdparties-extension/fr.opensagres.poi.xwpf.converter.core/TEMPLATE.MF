@@ -1,0 +1,2 @@
+Import-Package: javax.xml.stream,org.apache.xmlbeans,org.apache.xmlbeans.impl.values,*
+Export-Package: fr.opensagres.poi.xwpf.converter.core.*

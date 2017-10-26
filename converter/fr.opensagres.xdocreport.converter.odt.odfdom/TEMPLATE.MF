@@ -1,7 +1,7 @@
 Fragment-Host: fr.opensagres.xdocreport.converter
 Import-Package: fr.opensagres.xdocreport.core.discovery,
- org.odftoolkit.odfdom.converter.core,
- org.odftoolkit.odfdom.converter.pdf,
- org.odftoolkit.odfdom.converter.xhtml,
+ fr.opensagres.odfdom.converter.core,
+ fr.opensagres.odfdom.converter.pdf,
+ fr.opensagres.odfdom.converter.xhtml,
  fr.opensagres.xdocreport.core.utils,
- org.odftoolkit.odfdom.doc;resolution:=optional
+ fr.opensagres.odfdom.doc;resolution:=optional

@@ -24,6 +24,8 @@
  */
 package fr.opensagres.xdocreport.document.odt.images;
 
+import java.text.DecimalFormat;
+
 import fr.opensagres.xdocreport.core.io.IEntryOutputStreamProvider;
 import fr.opensagres.xdocreport.core.io.IEntryReaderProvider;
 import fr.opensagres.xdocreport.core.io.IEntryWriterProvider;
@@ -40,6 +42,8 @@ public class ODTImageRegistry
     extends AbstractImageRegistry
 {
 
+	private DecimalFormat df = new DecimalFormat("#");
+	
     private static final String POINT_UNIT = "pt";
 
     private static final String IMAGE_BASE_PATH = "Pictures/";
@@ -63,18 +67,27 @@ public class ODTImageRegistry
     }
 
     @Override
-    protected String getSize( float sizeAsPixel )
+    public String getSize( float sizeAsPixel )
     {
         float sizeAsPoint = sizeAsPixel * 0.75f;
-        String s = Float.toString( sizeAsPoint );
-        // TODO Use DecimalFormat.getIntegerInstance()to format the float to
-        // String.
-        int dotindex = s.indexOf( '.' );
-        if ( dotindex != -1 )
-        {
-            return s.substring( 0, dotindex ) + POINT_UNIT;
-        }
+        String s = df.format(sizeAsPoint);
         return s + POINT_UNIT;
+    }
+    
+    
+    @Override
+	public Float getSize( String sizeAsDxa )
+    {
+    	if(sizeAsDxa == null) return null;
+    	
+    	//TODO parse string containing unit information like "0.582cm"
+    	try{
+    		float sizeAsPixel = Float.parseFloat(sizeAsDxa);
+    		sizeAsPixel = (sizeAsPixel /  0.75f) ;
+            return Float.valueOf(sizeAsPixel);
+    	}catch(NumberFormatException e){
+    		return null;
+    	}
     }
 
 }

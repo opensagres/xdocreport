@@ -28,11 +28,11 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 
-import org.odftoolkit.odfdom.converter.core.ODFConverterException;
-import org.odftoolkit.odfdom.converter.pdf.PdfConverter;
-import org.odftoolkit.odfdom.converter.pdf.PdfOptions;
 import org.odftoolkit.odfdom.doc.OdfTextDocument;
 
+import fr.opensagres.odfdom.converter.core.ODFConverterException;
+import fr.opensagres.odfdom.converter.pdf.PdfConverter;
+import fr.opensagres.odfdom.converter.pdf.PdfOptions;
 import fr.opensagres.xdocreport.converter.MimeMapping;
 import fr.opensagres.xdocreport.converter.MimeMappingConstants;
 import fr.opensagres.xdocreport.converter.Options;

@@ -71,7 +71,9 @@ public class LargeBinaryDataMessageBodyWriter
     {
         InputStream content = t.getContent();
         httpHeaders.add( "Content-Disposition", "attachement;filename=" + t.getFileName() );
-        httpHeaders.add( "Content-Type", t.getMimeType() );
+        if (!httpHeaders.containsKey("Content-Type")) {
+        	httpHeaders.add( "Content-Type", t.getMimeType() );	
+        }
         httpHeaders.add( "X-resourceId", t.getResourceId() );
         copyLarge( content, entityStream );
         entityStream.flush();

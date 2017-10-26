@@ -49,7 +49,7 @@ public class JSONImage
         return null;
     }
 
-    public Float getWidth()
+    public Float getWidth(Float defaultWidth)
         throws IOException
     {
         // TODO Auto-generated method stub
@@ -62,7 +62,7 @@ public class JSONImage
 
     }
 
-    public Float getHeight()
+    public Float getHeight(Float defaultHeight)
         throws IOException
     {
         // TODO Auto-generated method stub

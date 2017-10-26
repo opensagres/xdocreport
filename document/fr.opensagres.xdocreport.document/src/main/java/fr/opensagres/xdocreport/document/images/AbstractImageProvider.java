@@ -82,7 +82,7 @@ public abstract class AbstractImageProvider
      * (non-Javadoc)
      * @see fr.opensagres.xdocreport.document.images.IImageProvider#getWidth()
      */
-    public Float getWidth()
+    public Float getWidth(Float defaultWidth)
         throws IOException
     {
         if ( width != null )
@@ -114,7 +114,7 @@ public abstract class AbstractImageProvider
      * (non-Javadoc)
      * @see fr.opensagres.xdocreport.document.images.IImageProvider#getHeight()
      */
-    public Float getHeight()
+    public Float getHeight(Float defaultHeight)
         throws IOException
     {
         if ( height != null )

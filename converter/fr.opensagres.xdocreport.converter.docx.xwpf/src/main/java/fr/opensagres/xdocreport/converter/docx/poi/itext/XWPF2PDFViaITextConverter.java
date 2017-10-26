@@ -28,10 +28,10 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.logging.Logger;
 
-import org.apache.poi.xwpf.converter.pdf.PdfConverter;
-import org.apache.poi.xwpf.converter.pdf.PdfOptions;
 import org.apache.poi.xwpf.usermodel.XWPFDocument;
 
+import fr.opensagres.poi.xwpf.converter.pdf.PdfConverter;
+import fr.opensagres.poi.xwpf.converter.pdf.PdfOptions;
 import fr.opensagres.xdocreport.converter.MimeMapping;
 import fr.opensagres.xdocreport.converter.MimeMappingConstants;
 import fr.opensagres.xdocreport.converter.Options;

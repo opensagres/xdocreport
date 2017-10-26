@@ -26,8 +26,8 @@ package fr.opensagres.xdocreport.converter.odt.odfdom.xhtml;
 
 import org.junit.Assert;
 import org.junit.Test;
-import org.odftoolkit.odfdom.converter.xhtml.XHTMLOptions;
 
+import fr.opensagres.odfdom.converter.xhtml.XHTMLOptions;
 import fr.opensagres.xdocreport.converter.IURIResolver;
 import fr.opensagres.xdocreport.converter.Options;
 import fr.opensagres.xdocreport.converter.OptionsHelper;
@@ -76,7 +76,7 @@ public class XHTMLOptionsTestCase
         throws Exception
     {
         XHTMLOptions xhtmlOptions1 =
-            XHTMLOptions.create().URIResolver( new org.odftoolkit.odfdom.converter.core.IURIResolver()
+            XHTMLOptions.create().URIResolver( new fr.opensagres.odfdom.converter.core.IURIResolver()
             {
 
                 public String resolve( String uri )

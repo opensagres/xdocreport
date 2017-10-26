@@ -77,7 +77,7 @@ public class XDocReportRegistryTestCase
         try
         {
             IXDocReport report =
-                XDocReportRegistry.getRegistry().loadReport( XDocReportRegistryTestCase.class.getResourceAsStream( "ODTHelloWordWithFreemarker.odt" ) );
+                XDocReportRegistry.getRegistry().loadReport( XDocReportRegistryTestCase.class.getResourceAsStream( "ODTHelloWordWithFreemarker.odt" ), true );
             // Report is created
             assertNotNull( "Report must be not null", report );
 

@@ -24,10 +24,10 @@
  */
 package fr.opensagres.xdocreport.converter.docx.poi.itext;
 
-import org.apache.poi.xwpf.converter.pdf.PdfOptions;
 import org.junit.Assert;
 import org.junit.Test;
 
+import fr.opensagres.poi.xwpf.converter.pdf.PdfOptions;
 import fr.opensagres.xdocreport.converter.Options;
 import fr.opensagres.xdocreport.converter.OptionsHelper;
 

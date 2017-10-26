@@ -28,10 +28,10 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 
-import org.odftoolkit.odfdom.converter.core.ODFConverterException;
-import org.odftoolkit.odfdom.converter.xhtml.XHTMLOptions;
 import org.odftoolkit.odfdom.doc.OdfTextDocument;
 
+import fr.opensagres.odfdom.converter.core.ODFConverterException;
+import fr.opensagres.odfdom.converter.xhtml.XHTMLOptions;
 import fr.opensagres.xdocreport.converter.IURIResolver;
 import fr.opensagres.xdocreport.converter.MimeMapping;
 import fr.opensagres.xdocreport.converter.MimeMappingConstants;
@@ -58,7 +58,7 @@ public class ODF2XHTMLConverter
         try
         {
             OdfTextDocument odfDocument = OdfTextDocument.loadDocument( in );
-            org.odftoolkit.odfdom.converter.xhtml.XHTMLConverter.getInstance().convert( odfDocument, out,
+            fr.opensagres.odfdom.converter.xhtml.XHTMLConverter.getInstance().convert( odfDocument, out,
                                                                                         toXHTMLOptions( options ) );
         }
         catch ( ODFConverterException e )
@@ -90,7 +90,7 @@ public class ODF2XHTMLConverter
         final IURIResolver resolver = OptionsHelper.getURIResolver( options );
         if ( resolver != null )
         {
-            xhtmlOptions.URIResolver( new org.odftoolkit.odfdom.converter.core.IURIResolver()
+            xhtmlOptions.URIResolver( new fr.opensagres.odfdom.converter.core.IURIResolver()
             {
                 public String resolve( String uri )
                 {

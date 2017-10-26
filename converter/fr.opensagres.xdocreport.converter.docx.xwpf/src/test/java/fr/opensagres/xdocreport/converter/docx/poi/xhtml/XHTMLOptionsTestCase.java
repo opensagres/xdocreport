@@ -24,10 +24,10 @@
  */
 package fr.opensagres.xdocreport.converter.docx.poi.xhtml;
 
-import org.apache.poi.xwpf.converter.xhtml.XHTMLOptions;
 import org.junit.Assert;
 import org.junit.Test;
 
+import fr.opensagres.poi.xwpf.converter.xhtml.XHTMLOptions;
 import fr.opensagres.xdocreport.converter.IURIResolver;
 import fr.opensagres.xdocreport.converter.Options;
 import fr.opensagres.xdocreport.converter.OptionsHelper;
@@ -76,7 +76,7 @@ public class XHTMLOptionsTestCase
         throws Exception
     {
         XHTMLOptions xhtmlOptions1 =
-            XHTMLOptions.create().URIResolver( new org.apache.poi.xwpf.converter.core.IURIResolver()
+            XHTMLOptions.create().URIResolver( new fr.opensagres.poi.xwpf.converter.core.IURIResolver()
             {
 
                 public String resolve( String uri )

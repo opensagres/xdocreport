@@ -24,6 +24,8 @@
  */
 package fr.opensagres.xdocreport.document.ods.images;
 
+import java.text.DecimalFormat;
+
 import fr.opensagres.xdocreport.core.io.IEntryOutputStreamProvider;
 import fr.opensagres.xdocreport.core.io.IEntryReaderProvider;
 import fr.opensagres.xdocreport.core.io.IEntryWriterProvider;
@@ -40,6 +42,8 @@ public class ODSImageRegistry
     extends AbstractImageRegistry
 {
 
+	private DecimalFormat df = new DecimalFormat("#");
+	
     private static final String IMAGE_BASE_PATH = "Pictures/";
 
     public ODSImageRegistry( IEntryReaderProvider readerProvider, IEntryWriterProvider writerProvider,
@@ -61,17 +65,23 @@ public class ODSImageRegistry
     }
 
     @Override
-    protected String getSize( float sizeAsPixel )
+	public String getSize( float sizeAsPixel )
     {
-        float sizeAsDxa = sizeAsPixel / 96 * 914400;
-        String s = Float.toString( sizeAsDxa );
-        // TODO Use DecimalFormat.getIntegerInstance()to format the float to
-        // String.
-        int dotindex = s.indexOf( '.' );
-        if ( dotindex != -1 )
-        {
-            return s.substring( 0, dotindex );
-        }
+        float sizeAsDxa = (sizeAsPixel / 96) * 914400;
+        String s = df.format(sizeAsDxa);
         return s;
+    }
+    
+    @Override
+	public Float getSize( String sizeAsDxa )
+    {
+    	if(sizeAsDxa == null) return null;
+        try{
+        	float sizeAsPixel = Float.parseFloat(sizeAsDxa);
+        	sizeAsPixel = (sizeAsPixel / 914400)  *  96 ;
+            return Float.valueOf(sizeAsPixel);
+    	}catch(NumberFormatException e){
+    		return null;
+    	}
     }
 }

@@ -34,6 +34,15 @@ import java.io.InputStream;
 import java.io.PrintStream;
 import java.io.Writer;
 
+import javax.ws.rs.RuntimeType;
+import javax.ws.rs.client.Client;
+import javax.ws.rs.client.ClientBuilder;
+import javax.ws.rs.core.Configuration;
+
+import org.apache.cxf.jaxrs.impl.ConfigurationImpl;
+
+import com.fasterxml.jackson.jaxrs.json.JacksonJaxbJsonProvider;
+
 import fr.opensagres.xdocreport.core.io.IOUtils;
 import fr.opensagres.xdocreport.core.utils.StringUtils;
 import fr.opensagres.xdocreport.document.tools.internal.ArgContext;
@@ -47,6 +56,8 @@ import fr.opensagres.xdocreport.remoting.resources.services.ServiceType;
 import fr.opensagres.xdocreport.remoting.resources.services.client.jaxrs.JAXRSResourcesServiceClientFactory;
 import fr.opensagres.xdocreport.remoting.resources.services.client.jaxws.JAXWSResourcesServiceClientFactory;
 import fr.opensagres.xdocreport.remoting.resources.services.jaxrs.JAXRSResourcesService;
+import fr.opensagres.xdocreport.remoting.resources.services.jaxrs.LargeBinaryDataMessageBodyReader;
+import fr.opensagres.xdocreport.remoting.resources.services.jaxrs.LargeBinaryDataMessageBodyWriter;
 import fr.opensagres.xdocreport.remoting.resources.services.jaxws.JAXWSResourcesService;
 
 public class Main
@@ -142,20 +153,26 @@ public class Main
         throws IOException
     {
         String resources = null;
-        JAXRSResourcesService client =
-            JAXRSResourcesServiceClientFactory.create( baseAddress, user, password, connectionTimeout, allowChunking );
+      Client client =  ClientBuilder.newBuilder()
+    		  .register(JacksonJaxbJsonProvider.class)
+    		  .register(LargeBinaryDataMessageBodyReader.class)
+    		  .register(LargeBinaryDataMessageBodyWriter.class)
+    		  .build();
+
+      JAXRSResourcesService jaxrsClient =
+            JAXRSResourcesServiceClientFactory.create(client, baseAddress);
         switch ( serviceName )
         {
             case uploadLarge:
                 resources = context.get( "-resources" );
-                processUploadLargeLargeFile( client, resources, out );
+                processUploadLargeLargeFile( jaxrsClient, resources, out );
                 break;
             case downloadLarge:
                 resources = context.get( "-resources" );
-                processDownloadLargeFile( client, resources, out );
+                processDownloadLargeFile( jaxrsClient, resources, out );
                 break;
             default:
-                processCommons( client, serviceName, out, context );
+                processCommons( jaxrsClient, serviceName, out, context );
         }
     }
 

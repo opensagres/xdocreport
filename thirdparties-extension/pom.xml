@@ -5,33 +5,33 @@
 	<parent>
 		<groupId>fr.opensagres.xdocreport</groupId>
 		<artifactId>xdocreport-parent</artifactId>
-		<version>1.1.0-SNAPSHOT</version>
+		<version>2.0.2-SNAPSHOT</version>
 		<relativePath>..</relativePath>
 	</parent>
 	<packaging>pom</packaging>
 	<modules>
 		<!-- Apache POI PDF/XHTML converters -->
-		<module>org.apache.poi.xwpf.converter.core</module>
-		<module>org.apache.poi.xwpf.converter.pdf</module>
-		<module>org.apache.poi.xwpf.converter.xhtml</module>
+		<module>fr.opensagres.poi.xwpf.converter.core</module>
+		<module>fr.opensagres.poi.xwpf.converter.pdf</module>
+		<module>fr.opensagres.poi.xwpf.converter.xhtml</module>
 		
 		<!-- ODFDOM converters -->								
-		<module>org.odftoolkit.odfdom.converter.core</module>
-		<module>org.odftoolkit.odfdom.converter.pdf</module>
-		<module>org.odftoolkit.odfdom.converter.xhtml</module>
+		<module>fr.opensagres.odfdom.converter.core</module>
+		<module>fr.opensagres.odfdom.converter.pdf</module>
+		<module>fr.opensagres.odfdom.converter.xhtml</module>
 						
 		<!-- iText extension for PDF -->
 		<module>fr.opensagres.xdocreport.itext.extension</module>
 
 		<!-- Struts2 support -->		
-		<module>org.apache.struts2.views.xdocreport</module>
+		<module>fr.opensagres.struts2.views.xdocreport</module>
 		
 		<!-- Spring MVC support -->		
-		<module>org.springframework.web.servlet.view.xdocreport</module>
+		<module>fr.opensagres.web.servlet.view.xdocreport</module>
 		<!-- iText 5 support -->
 		<module>fr.opensagres.xdocreport.itext5.extension</module>
-		<module>org.apache.poi.xwpf.converter.pdf.itext5</module>
-		<module>org.odftoolkit.odfdom.converter.pdf.itext5</module>
+		<module>fr.opensagres.poi.xwpf.converter.pdf.itext5</module>
+		<module>fr.opensagres.odfdom.converter.pdf.itext5</module>
 	</modules>
 	
 </project>

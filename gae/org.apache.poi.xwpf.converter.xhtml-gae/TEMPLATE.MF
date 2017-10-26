@@ -1,2 +1,0 @@
-Import-Package: javax.xml.stream,org.apache.xmlbeans,org.apache.xmlbeans.impl.values,*
-Export-Package: org.apache.poi.xwpf.converter.xhtml.*

@@ -55,7 +55,7 @@ public class JAXRSResourcesServiceImpl
     public Resource getRoot()
         throws ResourcesException
     {
-        return super.getRoot();
+    	return super.getRoot();
     }
 
     @Override

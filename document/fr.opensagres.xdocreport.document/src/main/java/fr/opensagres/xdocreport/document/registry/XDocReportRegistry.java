@@ -32,6 +32,8 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.Timer;
+import java.util.TimerTask;
 import java.util.logging.Logger;
 
 import fr.opensagres.xdocreport.converter.MimeMapping;
@@ -45,9 +47,6 @@ import fr.opensagres.xdocreport.core.registry.AbstractRegistry;
 import fr.opensagres.xdocreport.core.utils.StringUtils;
 import fr.opensagres.xdocreport.document.IXDocReport;
 import fr.opensagres.xdocreport.document.discovery.IXDocReportFactoryDiscovery;
-import fr.opensagres.xdocreport.document.timing.AlarmTimer;
-import fr.opensagres.xdocreport.document.timing.AlarmTimerListener;
-import fr.opensagres.xdocreport.document.timing.PooledAlarmTimer;
 import fr.opensagres.xdocreport.template.ITemplateEngine;
 import fr.opensagres.xdocreport.template.TemplateEngineKind;
 import fr.opensagres.xdocreport.template.cache.ITemplateCacheInfoProvider;
@@ -82,7 +81,7 @@ public class XDocReportRegistry
      * IXDocReport cache.
      */
     private final ICacheStorage<String, IXDocReport> cachedReports;
-
+    private final Timer cleanupTimer = new Timer();
     public XDocReportRegistry()
     {
         super( IXDocReportFactoryDiscovery.class );
@@ -106,9 +105,10 @@ public class XDocReportRegistry
 
     /**
      * Load report.
+     *
+     * Note : this function does't cache the report.
      * 
      * @param sourceStream
-     * @param reportId
      * @return
      * @throws IOException
      * @throws XDocReportException
@@ -116,14 +116,14 @@ public class XDocReportRegistry
     public IXDocReport loadReport( InputStream sourceStream )
         throws IOException, XDocReportException
     {
-        return loadReport( sourceStream, null, null, null, true );
+        return loadReport( sourceStream, null, null, null, false );
     }
 
     /**
      * Load report.
      * 
      * @param sourceStream
-     * @param reportId
+     * @param cacheReport
      * @return
      * @throws IOException
      * @throws XDocReportException
@@ -136,6 +136,8 @@ public class XDocReportRegistry
 
     /**
      * Load report.
+     *
+     * Note : this function cache the report.
      * 
      * @param sourceStream
      * @param reportId
@@ -166,6 +168,8 @@ public class XDocReportRegistry
 
     /**
      * Load report.
+     *
+     * Note : this function cache the report.
      * 
      * @param sourceStream
      * @param reportId
@@ -197,6 +201,8 @@ public class XDocReportRegistry
 
     /**
      * Load report.
+     *
+     * Note : this function cache the report.
      * 
      * @param sourceStream
      * @param reportId
@@ -228,7 +234,9 @@ public class XDocReportRegistry
 
     /**
      * Load report.
-     * 
+     *
+     * Note : this function cache the report.
+     *
      * @param sourceStream
      * @param reportId
      * @return
@@ -259,6 +267,8 @@ public class XDocReportRegistry
 
     /**
      * Load report.
+     *
+     * Note : this function does't cache the report.
      * 
      * @param sourceStream
      * @param templateEngine
@@ -269,7 +279,7 @@ public class XDocReportRegistry
     public IXDocReport loadReport( InputStream sourceStream, ITemplateEngine templateEngine )
         throws IOException, XDocReportException
     {
-        return loadReport( sourceStream, templateEngine, true );
+        return loadReport( sourceStream, templateEngine, false );
     }
 
     /**
@@ -289,9 +299,11 @@ public class XDocReportRegistry
 
     /**
      * Load report.
+     *
+     * Note : this function does't cache the report.
      * 
      * @param sourceStream
-     * @param templateEngine
+     * @param templateEngineKind
      * @return
      * @throws IOException
      * @throws XDocReportException
@@ -299,14 +311,14 @@ public class XDocReportRegistry
     public IXDocReport loadReport( InputStream sourceStream, TemplateEngineKind templateEngineKind )
         throws IOException, XDocReportException
     {
-        return loadReport( sourceStream, templateEngineKind, true );
+        return loadReport( sourceStream, templateEngineKind, false );
     }
 
     /**
      * Load report.
      * 
      * @param sourceStream
-     * @param templateEngine
+     * @param templateEngineKind
      * @return
      * @throws IOException
      * @throws XDocReportException
@@ -462,7 +474,7 @@ public class XDocReportRegistry
     /**
      * Returns true if report identified with the given id exists in the registry and false otherwise.
      * 
-     * @param id
+     * @param reportId
      * @return
      */
     public boolean existsReport( String reportId )
@@ -517,19 +529,17 @@ public class XDocReportRegistry
     {
         return Collections.unmodifiableCollection( cachedReports.values() );
     }
-
+    
     public void setClearTimeout( long timeout )
     {
-        PooledAlarmTimer pooledAlarmTimer = new PooledAlarmTimer( timeout );
-        pooledAlarmTimer.addAlarmTimerListener( new AlarmTimerListener()
-        {
-
-            public void alarm( AlarmTimer timer )
-            {
+    	cleanupTimer.schedule(new TimerTask() {
+			
+			@Override
+			public void run() {
                 clear();
-
-            }
-        } );
+				
+			}
+		}, timeout, timeout);
     }
 
     /**
@@ -594,6 +604,7 @@ public class XDocReportRegistry
     @Override
     protected void doDispose()
     {
+    	this.cleanupTimer.cancel();
         this.reportFactoryDiscoveries.clear();
         this.cachedReports.clear();
     }

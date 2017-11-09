@@ -110,7 +110,7 @@ public class ColorHelper
 
     public static Color getColor( String hexColor, Object val, boolean background )
     {
-        if ( hexColor != null )
+        if ( hexColor != null && !"".equals(hexColor) )
         {
             if ( AUTO.equals( hexColor ) )
             {

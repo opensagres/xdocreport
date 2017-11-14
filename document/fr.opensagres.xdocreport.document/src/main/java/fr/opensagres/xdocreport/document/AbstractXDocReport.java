@@ -716,7 +716,7 @@ public abstract class AbstractXDocReport
             // 7) End process report generation
             if ( LOGGER.isLoggable( Level.FINE ) )
             {
-                LOGGER.fine( "End convert report with error done with " + ( System.currentTimeMillis() - startTime )
+                LOGGER.fine( "End convert report done with " + ( System.currentTimeMillis() - startTime )
                     + "(ms)." );
             }
         }
@@ -725,7 +725,7 @@ public abstract class AbstractXDocReport
             // Error while report generation
             if ( LOGGER.isLoggable( Level.FINE ) )
             {
-                LOGGER.fine( "End process report with error done with " + ( System.currentTimeMillis() - startTime )
+                LOGGER.fine( "End convert report with error done with " + ( System.currentTimeMillis() - startTime )
                     + "(ms)." );
                 LOGGER.throwing( getClass().getName(), "convert", e );
             }

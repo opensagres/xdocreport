@@ -155,7 +155,7 @@ public class ListItemContext
             for ( int i = 0; i < numbers.size(); i++ )
             {
                 number = numbers.get( i );
-                text = StringUtils.replaceAll( text, "%" + ( i + startIndex ), number );
+                text = StringUtils.replaceAll( text, "%" + ( i + 1 ), number );
             }
         }
         return text;

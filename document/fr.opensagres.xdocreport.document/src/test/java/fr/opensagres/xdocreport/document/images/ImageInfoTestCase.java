@@ -24,6 +24,7 @@
  */
 package fr.opensagres.xdocreport.document.images;
 
+import org.junit.Assert;
 import org.junit.Test;
 
 import java.io.IOException;
@@ -42,6 +43,7 @@ public class ImageInfoTestCase {
         assertThat(info.getMimeType().getType(), is("jpeg"));
         assertThat(info.getHeight(), is(1536));
         assertThat(info.getWidth(), is(2048));
+        checkIfStreamIsClosed(in);
     }
 
     @Test
@@ -51,6 +53,7 @@ public class ImageInfoTestCase {
         assertThat(info.getMimeType().getType(), is("jpeg"));
         assertThat(info.getHeight(), is(1536));
         assertThat(info.getWidth(), is(2048));
+        checkIfStreamIsClosed(in);
     }
 
     private IImageInfo loadImageInfo(InputStream is) throws IOException {
@@ -58,5 +61,13 @@ public class ImageInfoTestCase {
         imageInfo.setInput(is);
         imageInfo.check();
         return imageInfo;
+    }
+
+    private void checkIfStreamIsClosed(InputStream is) throws IOException {
+        try {
+            is.read();
+            Assert.fail();
+        } catch (IOException e) {
+        }
     }
 }

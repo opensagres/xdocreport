@@ -38,6 +38,7 @@
 package fr.opensagres.xdocreport.document.images;
 
 import fr.opensagres.xdocreport.core.document.ImageFormat;
+import fr.opensagres.xdocreport.core.io.IOUtils;
 
 import java.io.DataInput;
 import java.io.FileInputStream;
@@ -349,6 +350,10 @@ public class SimpleImageInfo implements IImageInfo {
             }
         } catch (IOException ioe) {
             return false;
+        } finally {
+            if (in != null) {
+                IOUtils.closeQuietly(in);
+            }
         }
     }
 

@@ -24,12 +24,11 @@
  */
 package fr.opensagres.xdocreport.document.images;
 
-import java.io.File;
-
+import fr.opensagres.xdocreport.core.document.ImageFormat;
 import org.junit.Assert;
 import org.junit.Test;
 
-import fr.opensagres.xdocreport.core.document.ImageFormat;
+import java.io.*;
 
 public class FileImageProviderTestCase
 {
@@ -177,5 +176,26 @@ public class FileImageProviderTestCase
         Assert.assertEquals( 1100f, imageProvider.getWidth(null).floatValue(), 0 );
         Assert.assertNotNull( imageProvider.getHeight(null) );
         Assert.assertEquals( 1000f, imageProvider.getHeight(null).floatValue(), 0 );
+    }
+
+    @Test
+    public void checkIfInputStreamIsClosedAfterLoadingImageInfo() throws Exception {
+        File file = new File("src/test/resources/fr/opensagres/xdocreport/document/images/logo.png");
+        final InputStream fis = new FileInputStream(file);
+        FileImageProvider imageProvider = new FileImageProvider(file, true) {
+            @Override
+            protected InputStream getInputStream() throws IOException {
+                return fis;
+            }
+        };
+
+        imageProvider.getHeight(300f);
+
+        try {
+            // Check if stream is closed. If so, it should throw an Exception
+            fis.read();
+            Assert.fail();
+        } catch (IOException e) {
+        }
     }
 }

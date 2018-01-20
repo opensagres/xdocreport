@@ -95,7 +95,7 @@ public class CSSStylePropertyConstants
 
     public static final String TEXT_ALIGN_CENTER = "center";
 
-    public static final String TEXT_ALIGN_JUSTIFIED = "justified";
+    public static final String TEXT_ALIGN_JUSTIFIED = "justify";
 
     public static final String LINE_HEIGHT = "line-height";
 

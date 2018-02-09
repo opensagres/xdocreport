@@ -537,6 +537,15 @@ public class PdfMapper extends
 		this.currentRunBackgroundColor = null;
 	}
 
+	/**
+	 * Strike-through is part of the {@link Font} definition. Therefore, it does not need any special treatment and
+	 * we exclude it by overriding this method of the superclass.
+	 */
+	@Override
+	protected boolean hasTextStyles(CTRPr rPr) {
+		return rPr != null && (rPr.getHighlight() != null || rPr.getDstrike() != null || rPr.getVertAlign() != null);
+	}
+
 	private Font getFont(String fontFamily, Float fontSize, int fontStyle,
 			Color fontColor) {
 

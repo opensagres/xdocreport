@@ -771,8 +771,7 @@ public abstract class XWPFDocumentVisitor<T, O extends Options, E extends IXWPFM
     {
         CTR ctr = run.getCTR();
         CTRPr rPr = ctr.getRPr();
-        boolean hasTexStyles = rPr != null && (rPr.getHighlight() != null  || rPr.getStrike() != null || 
-        								rPr.getDstrike() != null || rPr.getVertAlign() != null ) ;
+        boolean hasTexStyles = hasTextStyles(rPr);
         StringBuilder text = new StringBuilder();
 
         // Loop for each element of <w:run text, tab, image etc
@@ -847,7 +846,12 @@ public abstract class XWPFDocumentVisitor<T, O extends Options, E extends IXWPFM
         }
         c.dispose();
     }
-    
+
+    protected boolean hasTextStyles(CTRPr rPr) {
+        return rPr != null && (rPr.getHighlight() != null  || rPr.getStrike() != null
+                || rPr.getDstrike() != null || rPr.getVertAlign() != null );
+    }
+
     /**
      * Text styles handling, fonts, highlighting, background colors, subscript, superscript, strikes (single strikes) etc.
      * @param run

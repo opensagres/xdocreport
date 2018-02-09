@@ -314,7 +314,7 @@ public abstract class AbstractXDocReport
     public void preprocess()
         throws XDocReportException, IOException
     {
-        setDocumentArchive( getOriginalDocumentArchive() );
+        doPreprocessorIfNeeded();
     }
 
     /**

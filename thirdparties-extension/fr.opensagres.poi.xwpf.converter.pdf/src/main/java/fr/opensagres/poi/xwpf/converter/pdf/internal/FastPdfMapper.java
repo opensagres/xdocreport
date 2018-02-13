@@ -33,6 +33,7 @@ import java.util.logging.Logger;
 
 import org.apache.poi.xwpf.usermodel.ParagraphAlignment;
 import org.apache.poi.xwpf.usermodel.UnderlinePatterns;
+import org.apache.poi.xwpf.usermodel.VerticalAlign;
 import org.openxmlformats.schemas.drawingml.x2006.main.CTPositiveSize2D;
 import org.openxmlformats.schemas.drawingml.x2006.picture.CTPicture;
 import org.openxmlformats.schemas.drawingml.x2006.wordprocessingDrawing.STRelFromH;
@@ -114,6 +115,8 @@ public class FastPdfMapper
     private Float currentRunX;
 
     private Float currentPageWidth;
+
+    private VerticalAlign currentRunVerticalAlign = VerticalAlign.BASELINE;
 
     public FastPdfMapper( IOpenXMLFormatsPartProvider provider, OutputStream out, PdfOptions options )
         throws Exception
@@ -303,6 +306,17 @@ public class FastPdfMapper
         // Font color
         Color fontColor = stylesDocument.getFontColor( run, paragraph );
 
+        // superscript or subscript
+        this.currentRunVerticalAlign = stylesDocument.getVerticalAlign(run);
+
+        // to make the text more pleasing to the eye, use a smaller font in case of superscript or subscript
+        switch (currentRunVerticalAlign) {
+            case SUBSCRIPT:
+            case SUPERSCRIPT:
+                fontSize = fontSize * 0.8f;
+                break;
+        }
+
         // Font
         this.currentRunFontAscii = getFont( fontFamilyAscii, fontSize, fontStyle, fontColor );
         this.currentRunFontEastAsia = getFont( fontFamilyEastAsia, fontSize, fontStyle, fontColor );
@@ -369,6 +383,7 @@ public class FastPdfMapper
         this.currentRunFontHAnsi = null;
         this.currentRunUnderlinePatterns = null;
         this.currentRunBackgroundColor = null;
+        this.currentRunVerticalAlign = VerticalAlign.BASELINE;
     }
 
    
@@ -473,6 +488,14 @@ public class FastPdfMapper
         if ( currentRunX != null )
         {
             this.currentRunX += textChunk.getWidthPoint();
+        }
+        switch (currentRunVerticalAlign) {
+            case SUBSCRIPT:
+                textChunk.setTextRise(- currentRunFont.getSize() / 3);
+                break;
+            case SUPERSCRIPT:
+                textChunk.setTextRise(currentRunFont.getSize() / 3);
+                break;
         }
         return textChunk;
     }

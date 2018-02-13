@@ -1304,6 +1304,10 @@ public class XWPFStylesDocument
         return RunVerticalAlignValueProvider.INSTANCE.getValue(run, this);
     }
 
+    public VerticalAlign getVerticalAlign( CTR run )
+    {
+        return RunVerticalAlignValueProvider.INSTANCE.getValue(run.getRPr(), this);
+    }
     public CTStyle getDefaultCharacterStyle()
     {
         return defaultCharacterStyle;

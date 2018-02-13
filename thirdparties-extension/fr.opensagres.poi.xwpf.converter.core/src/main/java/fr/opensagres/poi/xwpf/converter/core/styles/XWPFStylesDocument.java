@@ -739,6 +739,26 @@ public class XWPFStylesDocument
                                                                                                                                 this );
     }
 
+    public VerticalAlign getVerticalAlign( XWPFRun run )
+    {
+        return RunVerticalAlignValueProvider.INSTANCE.getValue(run, this);
+    }
+
+    public VerticalAlign getVerticalAlign( CTR run )
+    {
+        return RunVerticalAlignValueProvider.INSTANCE.getValue(run.getRPr(), this);
+    }
+
+    public float getVerticalAlignFontFactor()
+    {
+        return 0.8f;
+    }
+
+    public float getVerticalAlignOffset()
+    {
+        return 1 / 3f;
+    }
+
     // ------------------------ Table
 
     /**
@@ -1297,26 +1317,6 @@ public class XWPFStylesDocument
     public Boolean getTableCellNoWrap( CTTcPr tcPr )
     {
         return TableCellNoWrapValueProvider.INSTANCE.getValue( tcPr );
-    }
-
-    public VerticalAlign getVerticalAlign( XWPFRun run )
-    {
-        return RunVerticalAlignValueProvider.INSTANCE.getValue(run, this);
-    }
-
-    public VerticalAlign getVerticalAlign( CTR run )
-    {
-        return RunVerticalAlignValueProvider.INSTANCE.getValue(run.getRPr(), this);
-    }
-
-    public float getVerticalAlignFontFactor()
-    {
-        return 0.8f;
-    }
-
-    public float getVerticalAlignOffset()
-    {
-        return 1 / 3f;
     }
 
     public CTStyle getDefaultCharacterStyle()

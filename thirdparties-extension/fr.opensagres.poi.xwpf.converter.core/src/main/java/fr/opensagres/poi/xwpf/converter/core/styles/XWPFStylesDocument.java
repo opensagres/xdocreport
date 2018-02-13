@@ -1308,6 +1308,17 @@ public class XWPFStylesDocument
     {
         return RunVerticalAlignValueProvider.INSTANCE.getValue(run.getRPr(), this);
     }
+
+    public float getVerticalAlignFontFactor()
+    {
+        return 0.8f;
+    }
+
+    public float getVerticalAlignOffset()
+    {
+        return 1 / 3f;
+    }
+
     public CTStyle getDefaultCharacterStyle()
     {
         return defaultCharacterStyle;

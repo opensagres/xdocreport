@@ -474,7 +474,7 @@ public class PdfMapper extends
 		switch (currentRunVerticalAlign) {
 			case SUBSCRIPT:
 			case SUPERSCRIPT:
-				fontSize = fontSize * 0.8f;
+				fontSize = fontSize * stylesDocument.getVerticalAlignFontFactor();
 				break;
 		}
 
@@ -668,10 +668,10 @@ public class PdfMapper extends
 
 		switch (currentRunVerticalAlign) {
 			case SUBSCRIPT:
-				textChunk.setTextRise(- currentRunFont.getSize() / 3);
+				textChunk.setTextRise(- currentRunFont.getSize() * stylesDocument.getVerticalAlignOffset());
 				break;
 			case SUPERSCRIPT:
-				textChunk.setTextRise(currentRunFont.getSize() / 3);
+				textChunk.setTextRise(currentRunFont.getSize() * stylesDocument.getVerticalAlignOffset());
 				break;
 		}
 

@@ -467,6 +467,17 @@ public class PdfMapper extends
 		// Font color
 		Color fontColor = stylesDocument.getFontColor(docxRun);
 
+		// superscript or subscript
+		this.currentRunVerticalAlign = stylesDocument.getVerticalAlign(docxRun);
+
+		// to make the text more pleasing to the eye, use a smaller font in case of superscript or subscript
+		switch (currentRunVerticalAlign) {
+			case SUBSCRIPT:
+			case SUPERSCRIPT:
+				fontSize = fontSize * 0.8f;
+				break;
+		}
+
 		// Font
 		this.currentRunFontAscii = getFont(fontFamilyAscii, fontSize,
 				fontStyle, fontColor);
@@ -487,9 +498,6 @@ public class PdfMapper extends
 			this.currentRunBackgroundColor = stylesDocument
 					.getTextHighlighting(docxRun);
 		}
-
-		// superscript or subscript
-		this.currentRunVerticalAlign = stylesDocument.getVerticalAlign(docxRun);
 
 		StylableParagraph pdfParagraph = (StylableParagraph) pdfParagraphContainer;
 		pdfParagraph.adjustMultipliedLeading(currentRunFontAscii);

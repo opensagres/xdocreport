@@ -38,6 +38,7 @@ import java.util.Map;
 import org.apache.poi.POIXMLDocumentPart;
 import org.apache.poi.xwpf.usermodel.ParagraphAlignment;
 import org.apache.poi.xwpf.usermodel.UnderlinePatterns;
+import org.apache.poi.xwpf.usermodel.VerticalAlign;
 import org.apache.poi.xwpf.usermodel.XWPFDocument;
 import org.apache.poi.xwpf.usermodel.XWPFParagraph;
 import org.apache.poi.xwpf.usermodel.XWPFRelation;
@@ -110,6 +111,7 @@ import fr.opensagres.poi.xwpf.converter.core.styles.run.RunFontStyleItalicValueP
 import fr.opensagres.poi.xwpf.converter.core.styles.run.RunFontStyleStrikeValueProvider;
 import fr.opensagres.poi.xwpf.converter.core.styles.run.RunTextHighlightingValueProvider;
 import fr.opensagres.poi.xwpf.converter.core.styles.run.RunUnderlineValueProvider;
+import fr.opensagres.poi.xwpf.converter.core.styles.run.RunVerticalAlignValueProvider;
 import fr.opensagres.poi.xwpf.converter.core.styles.table.TableAlignmentValueProvider;
 import fr.opensagres.poi.xwpf.converter.core.styles.table.TableBorderBottomValueProvider;
 import fr.opensagres.poi.xwpf.converter.core.styles.table.TableBorderInsideHValueProvider;
@@ -735,6 +737,26 @@ public class XWPFStylesDocument
         return fr.opensagres.poi.xwpf.converter.core.openxmlformats.styles.run.RunTextHighlightingValueProvider.INSTANCE.getValue( run,
                                                                                                                                 paragraph,
                                                                                                                                 this );
+    }
+
+    public VerticalAlign getVerticalAlign( XWPFRun run )
+    {
+        return RunVerticalAlignValueProvider.INSTANCE.getValue(run, this);
+    }
+
+    public VerticalAlign getVerticalAlign( CTR run )
+    {
+        return RunVerticalAlignValueProvider.INSTANCE.getValue(run.getRPr(), this);
+    }
+
+    public float getVerticalAlignFontFactor()
+    {
+        return 0.8f;
+    }
+
+    public float getVerticalAlignOffset()
+    {
+        return 1 / 3f;
     }
 
     // ------------------------ Table

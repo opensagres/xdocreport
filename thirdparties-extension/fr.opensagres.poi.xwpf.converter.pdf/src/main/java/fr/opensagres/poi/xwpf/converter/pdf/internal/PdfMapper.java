@@ -133,6 +133,8 @@ public class PdfMapper extends
 
 	private Integer expectedPageCount;
 
+	private VerticalAlign currentRunVerticalAlign = VerticalAlign.BASELINE;
+
 	public PdfMapper(XWPFDocument document, OutputStream out,
 			PdfOptions options, Integer expectedPageCount) throws Exception {
 		super(document, options != null ? options : PdfOptions.getDefault());
@@ -465,6 +467,17 @@ public class PdfMapper extends
 		// Font color
 		Color fontColor = stylesDocument.getFontColor(docxRun);
 
+		// superscript or subscript
+		this.currentRunVerticalAlign = stylesDocument.getVerticalAlign(docxRun);
+
+		// to make the text more pleasing to the eye, use a smaller font in case of superscript or subscript
+		switch (currentRunVerticalAlign) {
+			case SUBSCRIPT:
+			case SUPERSCRIPT:
+				fontSize = fontSize * stylesDocument.getVerticalAlignFontFactor();
+				break;
+		}
+
 		// Font
 		this.currentRunFontAscii = getFont(fontFamilyAscii, fontSize,
 				fontStyle, fontColor);
@@ -535,15 +548,17 @@ public class PdfMapper extends
 		this.currentRunFontHAnsi = null;
 		this.currentRunUnderlinePatterns = null;
 		this.currentRunBackgroundColor = null;
+		this.currentRunVerticalAlign = VerticalAlign.BASELINE;
 	}
 
 	/**
-	 * Strike-through is part of the {@link Font} definition. Therefore, it does not need any special treatment and
-	 * we exclude it by overriding this method of the superclass.
+	 * Strike-through is part of the {@link Font} definition. Vertical align is handled by this class.
+	 *
+	 * Therefore, they do not need any special treatment and we exclude them by overriding this method of the superclass.
 	 */
 	@Override
 	protected boolean hasTextStyles(CTRPr rPr) {
-		return rPr != null && (rPr.getHighlight() != null || rPr.getDstrike() != null || rPr.getVertAlign() != null);
+		return rPr != null && (rPr.getHighlight() != null || rPr.getDstrike() != null);
 	}
 
 	private Font getFont(String fontFamily, Float fontSize, int fontStyle,
@@ -650,6 +665,16 @@ public class PdfMapper extends
 		if (currentRunX != null) {
 			this.currentRunX += textChunk.getWidthPoint();
 		}
+
+		switch (currentRunVerticalAlign) {
+			case SUBSCRIPT:
+				textChunk.setTextRise(- currentRunFont.getSize() * stylesDocument.getVerticalAlignOffset());
+				break;
+			case SUPERSCRIPT:
+				textChunk.setTextRise(currentRunFont.getSize() * stylesDocument.getVerticalAlignOffset());
+				break;
+		}
+
 		return textChunk;
 	}
 

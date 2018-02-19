@@ -181,7 +181,12 @@ public abstract class MergefieldBufferedRegion
                     // to have [#if 'a' = "one"]1[#else]not 1[/#if]
                     fieldName = StringUtils.xmlUnescape( fieldName );
 
-                    if ( fieldAsTextStyling != null )
+                    FieldMetadata fieldMetadata = fieldAsTextStyling;
+                    if ( fieldMetadata == null ) {
+                        fieldMetadata = handler.getFieldAsTextStyling(fieldName);
+                    }
+
+                    if ( fieldMetadata != null )
                     {
                         // Find parent paragraph
                         BufferedElement parent = mergefield.findParent( W_P );
@@ -203,8 +208,8 @@ public abstract class MergefieldBufferedRegion
                         // Set
                         String setVariableDirective =
                             formatter.formatAsCallTextStyling( variableIndex, fieldName, DocumentKind.DOCX.name(),
-                                                               fieldAsTextStyling.getSyntaxKind(),
-                                                               fieldAsTextStyling.isSyntaxWithDirective(), elementId,
+                                                               fieldMetadata.getSyntaxKind(),
+                                                               fieldMetadata.isSyntaxWithDirective(), elementId,
                                                                handler.getEntryName() );
 
                         String textBefore =

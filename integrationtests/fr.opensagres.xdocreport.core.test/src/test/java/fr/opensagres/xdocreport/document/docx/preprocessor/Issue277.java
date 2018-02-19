@@ -52,6 +52,13 @@ public class Issue277 {
                 + "<w:document xmlns:w=\"http://schemas.openxmlformats.org/wordprocessingml/2006/main\">"
                 + "<w:p w:rsidR=\"00EB1008\" w:rsidRDefault=\"00EB1008\" w:rsidP=\"00EB1008\">"
                 + "<w:r>" + "<w:fldChar w:fldCharType=\"begin\"/>" + "</w:r>"
+                // the follwing instr text field was split into several fields
+                // this can happen if you edit the field code manually, since word may give the changed part a new RSID
+                // in this case, the field is split into three parts
+                //   MERGEFIELD $
+                //   developer.name
+                //   \* MERGEFORMAT
+                // the preprocessor has to combine the fields to be able to detect '$developer.name'
                 + "<w:r>" + "<w:instrText xml:space=\"preserve\">MERGEFIELD $</w:instrText>" + "</w:r>"
                 + "<w:r w:rsidR=\"00C72DB5\">" + "<w:instrText>developer.name</w:instrText>" + "</w:r>"
                 + "<w:r>" + "<w:instrText xml:space=\"preserve\">\\* MERGEFORMAT </w:instrText>" + "</w:r>"

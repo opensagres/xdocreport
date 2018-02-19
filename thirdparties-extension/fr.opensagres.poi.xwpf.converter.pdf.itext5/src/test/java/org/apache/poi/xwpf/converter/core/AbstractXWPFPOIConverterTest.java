@@ -522,6 +522,13 @@ public abstract class AbstractXWPFPOIConverterTest
         doGenerate( "TestTitle.docx" );
     }
 
+    @Test
+    public void TestSuperscriptSubscript()
+            throws IOException
+    {
+        doGenerate( "TestSuperscriptSubscript.docx" );
+    }
+
     protected abstract void doGenerate( String fileName )
         throws IOException;
 

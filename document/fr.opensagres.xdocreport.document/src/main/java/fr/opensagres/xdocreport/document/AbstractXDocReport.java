@@ -314,7 +314,7 @@ public abstract class AbstractXDocReport
     public void preprocess()
         throws XDocReportException, IOException
     {
-        setDocumentArchive( getOriginalDocumentArchive() );
+        doPreprocessorIfNeeded();
     }
 
     /**
@@ -335,7 +335,7 @@ public abstract class AbstractXDocReport
         }
         if ( templateEngine == null )
         {
-            // template engine is not setted, preprorcessor cannot be done
+            // template engine is not set, so preprocessing cannot be done
             return;
         }
         Map<String, Object> sharedContext = new HashMap<String, Object>();
@@ -347,30 +347,27 @@ public abstract class AbstractXDocReport
         onBeforePreprocessing( sharedContext, preprocessedArchive );
         try
         {
-
             IDocumentFormatter formatter = internalGetTemplateEngine().getDocumentFormatter();
-            // Preprocessor
-            String entryName = null;
-            Set<Entry<String, Collection<IXDocPreprocessor>>> preprocessorEntryNames = preprocessors.entrySet();
+            
             // Loop for each preprocessor registered
-            for ( Entry<String, Collection<IXDocPreprocessor>> entry : preprocessorEntryNames )
+            for ( Entry<String, Collection<IXDocPreprocessor>> entry : preprocessors.entrySet() )
             {
-                entryName = entry.getKey();
+                String preprocessorName = entry.getKey();
                 Collection<IXDocPreprocessor> entryPreprocessors = entry.getValue();
-                if ( preprocessedArchive.hasEntry( entryName ) )
+                if ( preprocessedArchive.hasEntry( preprocessorName ) )
                 {
                     for ( IXDocPreprocessor preprocessor : entryPreprocessors )
                     {
                         // XML Document contains a XML file which must be
                         // preprocessed
-                        preprocessor.preprocess( entryName, preprocessedArchive, fieldsMetadata, formatter,
+                        preprocessor.preprocess( preprocessorName, preprocessedArchive, fieldsMetadata, formatter,
                                                  sharedContext );
                     }
                 }
                 else
                 {
                     // Test if it's wilcard?
-                    Set<String> entriesNameFromWilcard = preprocessedArchive.getEntryNames( entryName );
+                    Set<String> entriesNameFromWilcard = preprocessedArchive.getEntryNames( preprocessorName );
                     if ( entriesNameFromWilcard.size() > 0 )
                     {
                         for ( String entryNameFromWilcard : entriesNameFromWilcard )
@@ -389,7 +386,7 @@ public abstract class AbstractXDocReport
                         entryPreprocessors = entry.getValue();
                         for ( IXDocPreprocessor preprocessor : entryPreprocessors )
                         {
-                            if ( preprocessor.create( entryName, preprocessedArchive, fieldsMetadata, formatter,
+                            if ( preprocessor.create( preprocessorName, preprocessedArchive, fieldsMetadata, formatter,
                                                       sharedContext ) )
                             {
                                 break;

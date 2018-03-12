@@ -81,7 +81,7 @@ public class XDocReportRegistry
      * IXDocReport cache.
      */
     private final ICacheStorage<String, IXDocReport> cachedReports;
-    private final Timer cleanupTimer = new Timer();
+    private Timer cleanupTimer;
     public XDocReportRegistry()
     {
         super( IXDocReportFactoryDiscovery.class );
@@ -530,8 +530,18 @@ public class XDocReportRegistry
         return Collections.unmodifiableCollection( cachedReports.values() );
     }
     
+	/**
+	 * Clear cache with timeout. If this method is called, you must call
+	 * {@link XDocReportRegistry#dispose()} method at the end of your program to
+	 * stop the timer Thread.
+	 * 
+	 * @param timeout
+	 */
     public void setClearTimeout( long timeout )
     {
+    	if (cleanupTimer == null) {
+    		cleanupTimer = new Timer();
+    	}
     	cleanupTimer.schedule(new TimerTask() {
 			
 			@Override
@@ -604,7 +614,9 @@ public class XDocReportRegistry
     @Override
     protected void doDispose()
     {
-    	this.cleanupTimer.cancel();
+    	if (cleanupTimer != null) {
+        	this.cleanupTimer.cancel();	
+    	}
         this.reportFactoryDiscoveries.clear();
         this.cachedReports.clear();
     }

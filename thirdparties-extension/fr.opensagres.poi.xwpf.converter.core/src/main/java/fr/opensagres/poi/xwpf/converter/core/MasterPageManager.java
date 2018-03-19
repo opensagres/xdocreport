@@ -247,30 +247,32 @@ public class MasterPageManager
         masterPage.setType( STHdrFtr.INT_FIRST );
     }
 
-    private void inheritHeader( IXWPFMasterPage<Object> aMasterPage, int aType, Map<Integer, Object> aPreviousHeaders )
+    private void inheritHeader( IXWPFMasterPage<Object> masterPage, int type, Map<Integer, Object> previousHeaders )
     {
-        if ( !headers.containsKey( aType ) )
+        // see http://officeopenxml.com/WPSectionHeaderReference.php
+        if ( !headers.containsKey( type ) )
         {
-            Object header = aPreviousHeaders.get( aType );
+            Object header = previousHeaders.get( type );
             if ( header != null )
             {
-                aMasterPage.setType( aType );
-                aMasterPage.setHeader( header );
-                headers.put( aType, header );
+                masterPage.setType( type );
+                masterPage.setHeader( header );
+                headers.put( type, header );
             }
         }
     }
 
-    private void inheritFooter( IXWPFMasterPage<Object> aMasterPage, int aType, Map<Integer, Object> aPreviousFooters )
+    private void inheritFooter( IXWPFMasterPage<Object> masterPage, int type, Map<Integer, Object> previousFooters )
     {
-        if ( !footers.containsKey( aType ) )
+        // see http://officeopenxml.com/WPSectionFooterReference.php
+        if ( !footers.containsKey( type ) )
         {
-            Object footer = aPreviousFooters.get( aType );
+            Object footer = previousFooters.get( type );
             if ( footer != null )
             {
-                aMasterPage.setType( aType );
-                aMasterPage.setFooter( footer );
-                footers.put( aType, footer );
+                masterPage.setType( type );
+                masterPage.setFooter( footer );
+                footers.put( type, footer );
             }
         }
     }

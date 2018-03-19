@@ -24,7 +24,7 @@
  */
 package fr.opensagres.poi.xwpf.converter.core;
 
-import java.util.Collection;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.Map;
@@ -69,6 +69,10 @@ public class MasterPageManager
 
     private final boolean evenAndOddHeaders;
 
+    private Map<Integer, Object> headers;
+
+    private Map<Integer, Object> footers;
+
     public MasterPageManager( CTDocument1 document, IMasterPageHandler visitor )
         throws Exception
     {
@@ -82,6 +86,8 @@ public class MasterPageManager
 
         // get event
         this.evenAndOddHeaders = isEventAndOddHeaders( visitor.getStylesDocument() );
+        headers = Collections.EMPTY_MAP;
+        footers = Collections.EMPTY_MAP;
     }
 
     public void initialize()
@@ -180,7 +186,6 @@ public class MasterPageManager
         IXWPFMasterPage masterPage = documentHandler.createMasterPage( sectPr );
         visitHeadersFooters( masterPage, sectPr );
         masterPages.put( sectPr, masterPage );
-
     }
 
     // ------------------------------ Header/Footer visitor -----------
@@ -198,35 +203,78 @@ public class MasterPageManager
         // (the default value), then the first page uses the odd page header. If
         // the element is set to true but the
         // first page header type is omitted, then a blank header is created.
-        boolean ignoreFirstHeaderFooter = !XWPFUtils.isCTOnOff( sectPr.getTitlePg() );
-
-        Collection<CTHdrFtrRef> headersRef = sectPr.getHeaderReferenceList();
-        Collection<CTHdrFtrRef> footersRef = sectPr.getFooterReferenceList();
-
-        boolean firstHeaderFooter = false;
-        for ( CTHdrFtrRef headerRef : headersRef )
+        boolean titlePage = XWPFUtils.isCTOnOff( sectPr.getTitlePg() );
+        Map<Integer, Object> previousHeaders = headers;
+        Map<Integer, Object> previousFooters = footers;
+        headers = new HashMap<Integer, Object>();
+        footers = new HashMap<Integer, Object>();
+        for ( CTHdrFtrRef reference : sectPr.getHeaderReferenceList() )
         {
-            STHdrFtr type = headerRef.xgetType();
-            firstHeaderFooter = ( type != null && type.enumValue() == STHdrFtr.FIRST );
-            if ( !firstHeaderFooter || ( firstHeaderFooter && !ignoreFirstHeaderFooter ) )
+            STHdrFtr type = reference.xgetType();
+            int typeValue = type == null ? STHdrFtr.INT_DEFAULT : type.enumValue().intValue();
+            if ( typeValue != STHdrFtr.INT_FIRST || titlePage )
             {
-                masterPage.setType( type.enumValue().intValue() );
-                documentHandler.visitHeaderRef( headerRef, sectPr, masterPage );
+                masterPage.setType( typeValue );
+                documentHandler.visitHeaderRef( reference, sectPr, masterPage );
+                masterPage.setType( typeValue );
+                headers.put( typeValue, masterPage.getHeader() );
             }
         }
-
-        for ( CTHdrFtrRef footerRef : footersRef )
+        for ( CTHdrFtrRef reference : sectPr.getFooterReferenceList() )
         {
-            STHdrFtr type = footerRef.xgetType();
-            firstHeaderFooter = ( type != null && type.enumValue() == STHdrFtr.FIRST );
-            if ( !firstHeaderFooter || ( firstHeaderFooter && !ignoreFirstHeaderFooter ) )
+            STHdrFtr type = reference.xgetType();
+            int typeValue = type == null ? STHdrFtr.INT_DEFAULT : type.enumValue().intValue();
+            if ( typeValue != STHdrFtr.INT_FIRST || titlePage )
             {
-                masterPage.setType( type.enumValue().intValue() );
-                documentHandler.visitFooterRef( footerRef, sectPr, masterPage );
+                masterPage.setType( typeValue );
+                documentHandler.visitFooterRef( reference, sectPr, masterPage );
+                masterPage.setType( typeValue );
+                footers.put( typeValue, masterPage.getFooter() );
             }
         }
+        if ( titlePage )
+        {
+            inheritHeader( masterPage, STHdrFtr.INT_FIRST, previousHeaders );
+            inheritFooter( masterPage, STHdrFtr.INT_FIRST, previousFooters );
+        }
+        if ( evenAndOddHeaders )
+        {
+            inheritHeader( masterPage, STHdrFtr.INT_EVEN, previousHeaders );
+            inheritFooter( masterPage, STHdrFtr.INT_EVEN, previousFooters );
+        }
+        inheritHeader( masterPage, STHdrFtr.INT_DEFAULT, previousHeaders );
+        inheritFooter( masterPage, STHdrFtr.INT_DEFAULT, previousFooters );
         masterPage.setType( STHdrFtr.INT_FIRST );
+    }
 
+    private void inheritHeader( IXWPFMasterPage<Object> masterPage, int type, Map<Integer, Object> previousHeaders )
+    {
+        // see http://officeopenxml.com/WPSectionHeaderReference.php
+        if ( !headers.containsKey( type ) )
+        {
+            Object header = previousHeaders.get( type );
+            if ( header != null )
+            {
+                masterPage.setType( type );
+                masterPage.setHeader( header );
+                headers.put( type, header );
+            }
+        }
+    }
+
+    private void inheritFooter( IXWPFMasterPage<Object> masterPage, int type, Map<Integer, Object> previousFooters )
+    {
+        // see http://officeopenxml.com/WPSectionFooterReference.php
+        if ( !footers.containsKey( type ) )
+        {
+            Object footer = previousFooters.get( type );
+            if ( footer != null )
+            {
+                masterPage.setType( type );
+                masterPage.setFooter( footer );
+                footers.put( type, footer );
+            }
+        }
     }
 
     private CTSectPr getSectPr( CTP paragraph )
@@ -268,13 +316,12 @@ public class MasterPageManager
             {
                 currentMasterPage.setType( newType );
             }
-
         }
     }
 
     /**
      * Returns true if <w:evenAndOddHeaders /> is defined in the word/settings.xml entry and false otherwise.
-     * 
+     *
      * @param stylesDocument
      * @return
      */

@@ -51,4 +51,10 @@ public class ExtendedPdfWriter
         pdf.addWriter( writer );
         return writer;
     }
+
+    @Override
+    public void setPageCount( int pageNumber )
+    {
+        pdf.setPageCount( pageNumber );
+    }
 }

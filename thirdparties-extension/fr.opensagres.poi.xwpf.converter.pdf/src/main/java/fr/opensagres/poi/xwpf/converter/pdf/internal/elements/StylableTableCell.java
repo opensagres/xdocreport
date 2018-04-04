@@ -52,6 +52,7 @@ public class StylableTableCell
         getColumn().setAdjustFirstLine( false );
         // make a room for borders
         setUseBorderPadding( true );
+        setPadding( 0 );
     }
 
     public StylableTableCell( StylableDocument ownerDocument, IITextContainer parent, ExtendedPdfPTable table )
@@ -65,6 +66,7 @@ public class StylableTableCell
         setUseBorderPadding( true );
     }
 
+    @Override
     public void addElement( Element element )
     {
         super.addElement( element );
@@ -108,18 +110,18 @@ public class StylableTableCell
             return;
         }
         Float borderSize = border.getBorderSize();
-        
-        if (inside) {
+
+        if ( inside )
+        {
             // manage conflict border
-            
-            
+
             // divide the border side by 2 to avoid multiply with 2 the border
             // this code simplify the "Conflicts between adjacent cells"
             // http://officeopenxml.com/WPtableCellBorderConflicts.php
-            //borderSize = borderSize / 2;                    
+            borderSize = borderSize / 2;
         }
-        
-        Color borderColor = Converter.toAwtColor( border.getBorderColor());
+
+        Color borderColor = Converter.toAwtColor( border.getBorderColor() );
         switch ( borderSide )
         {
             case Rectangle.TOP:

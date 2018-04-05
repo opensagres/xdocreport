@@ -623,7 +623,7 @@ public class PdfMapper
 
     /**
      * Returns true if the iText font exists and false otherwise.
-     * 
+     *
      * @param font
      * @return
      */
@@ -722,7 +722,8 @@ public class PdfMapper
         }
         // end chunk
         Font chunkFont = getFont( font, fontAsian, fontComplex, currentGroup );
-        Chunk chunk = createTextChunk( sbuf.toString(), pageNumber, chunkFont, underlinePatterns, backgroundColor );
+        Chunk chunk = createTextChunk( textContent.isEmpty() ? " " : sbuf.toString(), pageNumber, chunkFont,
+                                       underlinePatterns, backgroundColor );
         parent.addElement( chunk );
     }
 

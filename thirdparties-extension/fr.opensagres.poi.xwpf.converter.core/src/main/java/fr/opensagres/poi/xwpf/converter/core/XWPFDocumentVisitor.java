@@ -891,7 +891,7 @@ public abstract class XWPFDocumentVisitor<T, O extends Options, E extends IXWPFM
         }
         if ( hasTexStyles && StringUtils.isNotEmpty( text.toString() ) )
         {
-            visitStyleText( run, text.toString() );
+            visitStyleText(run, text.toString(), paragraphContainer, pageNumber);
         }
         c.dispose();
     }
@@ -910,8 +910,7 @@ public abstract class XWPFDocumentVisitor<T, O extends Options, E extends IXWPFM
      * @param text
      * @throws Exception
      */
-    protected void visitStyleText( XWPFRun run, String text )
-        throws Exception
+    protected void visitStyleText(XWPFRun run, String text, T paragraphContainer, boolean pageNumber) throws Exception
     {
         // child should implement
     }

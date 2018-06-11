@@ -470,6 +470,12 @@ public class PdfMapper
     }
 
     @Override
+    protected void visitStyleText(XWPFRun run, String text, IITextContainer paragraphContainer, boolean pageNumber) throws Exception {
+        createAndAddChunks( paragraphContainer, text, currentRunUnderlinePatterns, currentRunBackgroundColor,
+                pageNumber, currentRunFontAscii, currentRunFontEastAsia, currentRunFontHAnsi );
+    }
+
+    @Override
     protected void visitRun( XWPFRun docxRun, boolean pageNumber, String url, IITextContainer pdfParagraphContainer )
         throws Exception
     {
@@ -543,7 +549,7 @@ public class PdfMapper
                                                    listItemFontSize != null ? listItemFontSize : fontSize,
                                                    listItemFontStyle != Font.NORMAL ? listItemFontStyle : fontStyle,
                                                    listItemFontColor != null ? listItemFontColor
-                                                                   : Converter.toBaseColor( fontColor ) );
+                                         : Converter.toBaseColor( fontColor ) );
             Chunk symbol = createTextChunk( listItemText, false, listItemFont, currentRunUnderlinePatterns,
                                             currentRunBackgroundColor );
             pdfParagraph.add( symbol );

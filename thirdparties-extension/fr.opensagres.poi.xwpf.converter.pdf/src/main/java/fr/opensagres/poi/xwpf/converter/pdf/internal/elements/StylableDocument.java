@@ -28,12 +28,14 @@ import static fr.opensagres.poi.xwpf.converter.core.utils.DxaUtil.dxa2points;
 
 import java.io.OutputStream;
 import java.math.BigInteger;
+import java.util.Collection;
 
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTPageMar;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTPageNumber;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTPageSz;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTSectPr;
 
+import com.lowagie.text.Chunk;
 import com.lowagie.text.Document;
 import com.lowagie.text.DocumentException;
 import com.lowagie.text.Element;
@@ -94,7 +96,37 @@ public class StylableDocument
         }
         text.addElement( element );
         StylableDocumentSection.getCell( layoutTable, colIdx ).getColumn().addElement( element );
-        simulateText();
+        try
+        {
+            if ( ColumnText.hasMoreText( text.go( true ) ) )
+            {
+                checkNotEmpty: if ( element instanceof StylableParagraph )
+                {
+                    Collection<Object> chunks = element.getChunks();
+                    if ( !chunks.isEmpty() )
+                    {
+                        for ( Object object : element.getChunks() )
+                        {
+                            if ( !( object instanceof Chunk ) )
+                            {
+                                break checkNotEmpty;
+                            }
+                            Chunk chunk = (Chunk) object;
+                            if ( chunk.hasAttributes() || !chunk.getContent().trim().isEmpty() )
+                            {
+                                break checkNotEmpty;
+                            }
+                        }
+                        return;
+                    }
+                }
+                columnBreak();
+            }
+        }
+        catch ( DocumentException e )
+        {
+            throw new XWPFConverterException( e );
+        }
         documentEmpty = false;
     }
 

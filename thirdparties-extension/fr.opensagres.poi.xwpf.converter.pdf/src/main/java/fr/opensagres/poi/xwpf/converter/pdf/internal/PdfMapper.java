@@ -659,6 +659,12 @@ public class PdfMapper
     }
 
     @Override
+    protected void visitStyleText(XWPFRun run, String text, IITextContainer paragraphContainer, boolean pageNumber) throws Exception {
+        createAndAddChunks( paragraphContainer, text, currentRunUnderlinePatterns, currentRunBackgroundColor,
+                pageNumber, currentRunFontAscii, currentRunFontEastAsia, currentRunFontHAnsi );
+    }
+
+    @Override
     protected void visitText( CTText docxText, boolean pageNumber, IITextContainer pdfParagraphContainer )
         throws Exception
     {

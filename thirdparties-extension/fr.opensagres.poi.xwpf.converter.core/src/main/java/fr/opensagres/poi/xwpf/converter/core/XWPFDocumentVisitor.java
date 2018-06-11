@@ -36,7 +36,29 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import org.apache.poi.openxml4j.opc.PackagePart;
-import org.apache.poi.xwpf.usermodel.*;
+import org.apache.poi.xwpf.usermodel.BodyElementType;
+import org.apache.poi.xwpf.usermodel.BodyType;
+import org.apache.poi.xwpf.usermodel.IBody;
+import org.apache.poi.xwpf.usermodel.IBodyElement;
+import org.apache.poi.xwpf.usermodel.ISDTContent;
+import org.apache.poi.xwpf.usermodel.ISDTContents;
+import org.apache.poi.xwpf.usermodel.XWPFAbstractNum;
+import org.apache.poi.xwpf.usermodel.XWPFDocument;
+import org.apache.poi.xwpf.usermodel.XWPFFooter;
+import org.apache.poi.xwpf.usermodel.XWPFHeader;
+import org.apache.poi.xwpf.usermodel.XWPFHeaderFooter;
+import org.apache.poi.xwpf.usermodel.XWPFHyperlink;
+import org.apache.poi.xwpf.usermodel.XWPFHyperlinkRun;
+import org.apache.poi.xwpf.usermodel.XWPFNum;
+import org.apache.poi.xwpf.usermodel.XWPFNumbering;
+import org.apache.poi.xwpf.usermodel.XWPFParagraph;
+import org.apache.poi.xwpf.usermodel.XWPFPictureData;
+import org.apache.poi.xwpf.usermodel.XWPFRun;
+import org.apache.poi.xwpf.usermodel.XWPFSDT;
+import org.apache.poi.xwpf.usermodel.XWPFStyle;
+import org.apache.poi.xwpf.usermodel.XWPFTable;
+import org.apache.poi.xwpf.usermodel.XWPFTableCell;
+import org.apache.poi.xwpf.usermodel.XWPFTableRow;
 import org.apache.xmlbeans.XmlCursor;
 import org.apache.xmlbeans.XmlException;
 import org.apache.xmlbeans.XmlObject;
@@ -90,17 +112,17 @@ import org.openxmlformats.schemas.wordprocessingml.x2006.main.STBrType;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.STFldCharType;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.STMerge;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.STOnOff;
+import org.xml.sax.SAXException;
 
 import fr.opensagres.poi.xwpf.converter.core.styles.XWPFStylesDocument;
 import fr.opensagres.poi.xwpf.converter.core.utils.DxaUtil;
 import fr.opensagres.poi.xwpf.converter.core.utils.StringUtils;
 import fr.opensagres.poi.xwpf.converter.core.utils.XWPFRunHelper;
 import fr.opensagres.poi.xwpf.converter.core.utils.XWPFTableUtil;
-import org.xml.sax.SAXException;
 
 /**
  * Visitor to visit elements from entry word/document.xml, word/header*.xml, word/footer*.xml
- * 
+ *
  * @param <T>
  * @param <O>
  * @param <E>
@@ -126,10 +148,10 @@ public abstract class XWPFDocumentVisitor<T, O extends Options, E extends IXWPFM
     protected final O options;
 
     private boolean pageBreakOnNextParagraph;
-    
-        protected boolean processingTotalPageCountField = false;
-        
-        protected boolean totalPageFieldUsed = false;
+
+    protected boolean processingTotalPageCountField = false;
+
+    protected boolean totalPageFieldUsed = false;
 
     /**
      * Map of w:numId and ListContext
@@ -151,6 +173,7 @@ public abstract class XWPFDocumentVisitor<T, O extends Options, E extends IXWPFM
         return new XWPFStylesDocument( document );
     }
 
+    @Override
     public XWPFStylesDocument getStylesDocument()
     {
         return stylesDocument;
@@ -170,7 +193,7 @@ public abstract class XWPFDocumentVisitor<T, O extends Options, E extends IXWPFM
 
     /**
      * Main entry for visit XWPFDocument.
-     * 
+     *
      * @throws Exception
      */
     public void start()
@@ -187,7 +210,7 @@ public abstract class XWPFDocumentVisitor<T, O extends Options, E extends IXWPFM
 
     /**
      * Start of visit document.
-     * 
+     *
      * @return
      * @throws Exception
      */
@@ -196,7 +219,7 @@ public abstract class XWPFDocumentVisitor<T, O extends Options, E extends IXWPFM
 
     /**
      * End of visit document.
-     * 
+     *
      * @throws Exception
      */
     protected abstract void endVisitDocument()
@@ -235,7 +258,7 @@ public abstract class XWPFDocumentVisitor<T, O extends Options, E extends IXWPFM
                     visitTable( (XWPFTable) bodyElement, i, container );
                     break;
                 case CONTENTCONTROL:
-                    visitSDT((XWPFSDT)bodyElement, i, container);
+                    visitSDT( (XWPFSDT) bodyElement, i, container );
                     break;
             }
         }
@@ -245,45 +268,65 @@ public abstract class XWPFDocumentVisitor<T, O extends Options, E extends IXWPFM
     /**
      * @param contents content controls
      */
-    protected void visitSDT(XWPFSDT contents, int index, T container) throws Exception {
-        T sdtContainer = startVisitSDT( contents,  container );
+    protected void visitSDT( XWPFSDT contents, int index, T container )
+        throws Exception
+    {
+        T sdtContainer = startVisitSDT( contents, container );
         visitSDTBody( contents, sdtContainer );
         endVisitSDT( contents, container, sdtContainer );
     }
 
-    protected abstract T startVisitSDT(XWPFSDT contents, T container) throws SAXException;
+    protected abstract T startVisitSDT( XWPFSDT contents, T container )
+        throws SAXException;
 
-    protected abstract void endVisitSDT(XWPFSDT contents, T container, T sdtContainer) throws SAXException;
+    protected abstract void endVisitSDT( XWPFSDT contents, T container, T sdtContainer )
+        throws SAXException;
 
-    protected void visitSDTBody(XWPFSDT contents, T sdtContainer) throws Exception {
+    protected void visitSDTBody( XWPFSDT contents, T sdtContainer )
+        throws Exception
+    {
         ISDTContent content = contents.getContent();
         Field bodyElements;
-        try {
-            bodyElements = content.getClass().getDeclaredField("bodyElements");
-            bodyElements.setAccessible(true);
-            List<ISDTContents> isdtContents = (List<ISDTContents>) bodyElements.get(content);
-            for (int i = 0; i < isdtContents.size(); i++) {
-                ISDTContents isdtContent = isdtContents.get(i);
-                if (isdtContent instanceof XWPFParagraph) {
-                    visitParagraph((XWPFParagraph) isdtContent, i, sdtContainer);
-                } else if (isdtContent instanceof XWPFTable) {
-                    visitTable((XWPFTable) isdtContent, i, sdtContainer);
-                } else if (isdtContent instanceof XWPFRun) {
-                    visitRun((XWPFParagraph) ((XWPFRun) isdtContent).getParent(), (XmlObject) isdtContent, sdtContainer);
-                } else if (isdtContent instanceof XWPFSDT) {
-                    visitSDT((XWPFSDT) isdtContent, i, sdtContainer);
+        try
+        {
+            bodyElements = content.getClass().getDeclaredField( "bodyElements" );
+            bodyElements.setAccessible( true );
+            List<ISDTContents> isdtContents = (List<ISDTContents>) bodyElements.get( content );
+            for ( int i = 0; i < isdtContents.size(); i++ )
+            {
+                ISDTContents isdtContent = isdtContents.get( i );
+                if ( isdtContent instanceof XWPFParagraph )
+                {
+                    visitParagraph( (XWPFParagraph) isdtContent, i, sdtContainer );
+                }
+                else if ( isdtContent instanceof XWPFTable )
+                {
+                    visitTable( (XWPFTable) isdtContent, i, sdtContainer );
+                }
+                else if ( isdtContent instanceof XWPFRun )
+                {
+                    visitRun( (XWPFParagraph) ( (XWPFRun) isdtContent ).getParent(), (XmlObject) isdtContent,
+                              sdtContainer );
+                }
+                else if ( isdtContent instanceof XWPFSDT )
+                {
+                    visitSDT( (XWPFSDT) isdtContent, i, sdtContainer );
                 }
             }
-        } catch (NoSuchFieldException e) {
+        }
+        catch ( NoSuchFieldException e )
+        {
             e.printStackTrace();
-        } catch (IllegalAccessException e) {
+        }
+        catch ( IllegalAccessException e )
+        {
             e.printStackTrace();
         }
     }
 
     /**
      * Visit the given paragraph.
-     * 
+     *
      * @param paragraph
      * @param index
      * @param container
@@ -330,11 +373,11 @@ public abstract class XWPFDocumentVisitor<T, O extends Options, E extends IXWPFM
             {
                 // get the abstractNum by usisng abstractNumId
                 /**
-                 * <w:abstractNum w:abstractNumId="1"> <w:nsid w:val="3CBA6E67" /> <w:multiLevelType
-                 * w:val="hybridMultilevel" /> <w:tmpl w:val="7416D4FA" /> - <w:lvl w:ilvl="0" w:tplc="040C0001">
-                 * <w:start w:val="1" /> <w:numFmt w:val="bullet" /> <w:lvlText w:val="o" /> <w:lvlJc w:val="left" /> -
-                 * <w:pPr> <w:ind w:left="720" w:hanging="360" /> </w:pPr> - <w:rPr> <w:rFonts w:ascii="Symbol"
-                 * w:hAnsi="Symbol" w:hint="default" /> </w:rPr> </w:lvl>
+                 * <w:abstractNum w:abstractNumId="1"> <w:nsid w:val="3CBA6E67" />
+                 * <w:multiLevelType w:val="hybridMultilevel" /> <w:tmpl w:val="7416D4FA" /> -
+                 * <w:lvl w:ilvl="0" w:tplc="040C0001"> <w:start w:val="1" /> <w:numFmt w:val="bullet" />
+                 * <w:lvlText w:val="o" /> <w:lvlJc w:val="left" /> - <w:pPr> <w:ind w:left="720" w:hanging="360" />
+                 * </w:pPr> - <w:rPr> <w:rFonts w:ascii="Symbol" w:hAnsi="Symbol" w:hint="default" /> </w:rPr> </w:lvl>
                  */
                 XWPFAbstractNum abstractNum = getXWPFAbstractNum( num );
 
@@ -368,11 +411,11 @@ public abstract class XWPFDocumentVisitor<T, O extends Options, E extends IXWPFM
             {
                 // get the abstractNum by usisng abstractNumId
                 /**
-                 * <w:abstractNum w:abstractNumId="1"> <w:nsid w:val="3CBA6E67" /> <w:multiLevelType
-                 * w:val="hybridMultilevel" /> <w:tmpl w:val="7416D4FA" /> - <w:lvl w:ilvl="0" w:tplc="040C0001">
-                 * <w:start w:val="1" /> <w:numFmt w:val="bullet" /> <w:lvlText w:val="o" /> <w:lvlJc w:val="left" /> -
-                 * <w:pPr> <w:ind w:left="720" w:hanging="360" /> </w:pPr> - <w:rPr> <w:rFonts w:ascii="Symbol"
-                 * w:hAnsi="Symbol" w:hint="default" /> </w:rPr> </w:lvl>
+                 * <w:abstractNum w:abstractNumId="1"> <w:nsid w:val="3CBA6E67" />
+                 * <w:multiLevelType w:val="hybridMultilevel" /> <w:tmpl w:val="7416D4FA" /> -
+                 * <w:lvl w:ilvl="0" w:tplc="040C0001"> <w:start w:val="1" /> <w:numFmt w:val="bullet" />
+                 * <w:lvlText w:val="o" /> <w:lvlJc w:val="left" /> - <w:pPr> <w:ind w:left="720" w:hanging="360" />
+                 * </w:pPr> - <w:rPr> <w:rFonts w:ascii="Symbol" w:hAnsi="Symbol" w:hint="default" /> </w:rPr> </w:lvl>
                  */
                 XWPFAbstractNum abstractNum = getXWPFAbstractNum( num );
 
@@ -443,7 +486,8 @@ public abstract class XWPFDocumentVisitor<T, O extends Options, E extends IXWPFM
             // CTPPr pPr = p.getPPr();
             // if (pPr != null) {
             // XmlObject[] wRuns =
-            // pPr.selectPath("declare namespace w='http://schemas.openxmlformats.org/wordprocessingml/2006/main' .//w:r");
+            // pPr.selectPath("declare namespace w='http://schemas.openxmlformats.org/wordprocessingml/2006/main'
+            // .//w:r");
             // if (wRuns != null) {
             // for ( int i = 0; i < wRuns.length; i++ )
             // {
@@ -457,7 +501,8 @@ public abstract class XWPFDocumentVisitor<T, O extends Options, E extends IXWPFM
             // }
             // }
             // //XmlObject[] t =
-            // o.selectPath("declare namespace w='http://schemas.openxmlformats.org/wordprocessingml/2006/main' .//w:t");
+            // o.selectPath("declare namespace w='http://schemas.openxmlformats.org/wordprocessingml/2006/main'
+            // .//w:t");
             // //paragraph.getCTP().get
         }
         else
@@ -496,8 +541,8 @@ public abstract class XWPFDocumentVisitor<T, O extends Options, E extends IXWPFM
             // see https://code.google.com/p/xdocreport/issues/detail?id=239
             return null;
         }
-        XWPFNum num = document.getNumbering().getNum( numID.getVal() );
-        return num;
+        XWPFNumbering numbering = document.getNumbering();
+        return numbering != null ? numbering.getNum( numID.getVal() ) : null;
     }
 
     protected XWPFAbstractNum getXWPFAbstractNum( XWPFNum num )
@@ -509,7 +554,7 @@ public abstract class XWPFDocumentVisitor<T, O extends Options, E extends IXWPFM
 
     /**
      * Returns true if the given paragraph which is empty (none <w:r> run) must generate new line and false otherwise.
-     * 
+     *
      * @param paragraph
      * @param index
      * @return
@@ -610,22 +655,26 @@ public abstract class XWPFDocumentVisitor<T, O extends Options, E extends IXWPFM
                                 boolean instrTextPage = XWPFRunHelper.isInstrTextPage( instrText );
                                 if ( !instrTextPage )
                                 {
-                                	                                	
-                                	 // test if it's <w:r><w:instrText>NUMPAGES</w:instrText></w:r>
-                                	 processingTotalPageCountField = XWPFRunHelper.isInstrTextNumpages( instrText );
-                                	 if(!totalPageFieldUsed){
-                                	 	totalPageFieldUsed = true;
-                                	 }
-                                	                                	
+
+                                    // test if it's <w:r><w:instrText>NUMPAGES</w:instrText></w:r>
+                                    processingTotalPageCountField = XWPFRunHelper.isInstrTextNumpages( instrText );
+                                    if ( !totalPageFieldUsed )
+                                    {
+                                        totalPageFieldUsed = true;
+                                    }
+
                                     // test if it's <w:instrText>HYPERLINK
                                     // "http://code.google.com/p/xdocrepor"</w:instrText>
                                     String instrTextHyperlink = XWPFRunHelper.getInstrTextHyperlink( instrText );
                                     if ( instrTextHyperlink != null )
                                     {
                                         // test if it's <w:instrText>HYPERLINK \l _Toc29586</w:instrText>
-                                        if (instrTextHyperlink.startsWith("\\l ")) {
-                                            url = "#" + instrTextHyperlink.substring(3);
-                                        } else {
+                                        if ( instrTextHyperlink.startsWith( "\\l " ) )
+                                        {
+                                            url = "#" + instrTextHyperlink.substring( 3 );
+                                        }
+                                        else
+                                        {
                                             url = instrTextHyperlink;
                                         }
                                     }
@@ -771,7 +820,7 @@ public abstract class XWPFDocumentVisitor<T, O extends Options, E extends IXWPFM
     {
         CTR ctr = run.getCTR();
         CTRPr rPr = ctr.getRPr();
-        boolean hasTexStyles = hasTextStyles(rPr);
+        boolean hasTexStyles = hasTextStyles( rPr );
         StringBuilder text = new StringBuilder();
 
         // Loop for each element of <w:run text, tab, image etc
@@ -795,14 +844,14 @@ public abstract class XWPFDocumentVisitor<T, O extends Options, E extends IXWPFM
                 }
                 else
                 {
-                	if(hasTexStyles)
-                	{
-                		text.append(ctText.getStringValue());
-                	}
-                	else
-                	{
-                		visitText( ctText, pageNumber, paragraphContainer );
-                	}                    
+                    if ( hasTexStyles )
+                    {
+                        text.append( ctText.getStringValue() );
+                    }
+                    else
+                    {
+                        visitText( ctText, pageNumber, paragraphContainer );
+                    }
                 }
             }
             else if ( o instanceof CTPTab )
@@ -840,27 +889,30 @@ public abstract class XWPFDocumentVisitor<T, O extends Options, E extends IXWPFM
                 visitDrawing( (CTDrawing) o, paragraphContainer );
             }
         }
-        if(hasTexStyles && StringUtils.isNotEmpty(text.toString()))
+        if ( hasTexStyles && StringUtils.isNotEmpty( text.toString() ) )
         {
-        	visitStyleText(run, text.toString(), paragraphContainer, pageNumber);
+            visitStyleText(run, text.toString(), paragraphContainer, pageNumber);
         }
         c.dispose();
     }
 
-    protected boolean hasTextStyles(CTRPr rPr) {
-        return rPr != null && (rPr.getHighlight() != null  || rPr.getStrike() != null
-                || rPr.getDstrike() != null || rPr.getVertAlign() != null );
+    protected boolean hasTextStyles( CTRPr rPr )
+    {
+        return rPr != null && ( rPr.getHighlight() != null || rPr.getStrike() != null || rPr.getDstrike() != null
+            || rPr.getVertAlign() != null );
     }
 
     /**
-     * Text styles handling, fonts, highlighting, background colors, subscript, superscript, strikes (single strikes) etc.
+     * Text styles handling, fonts, highlighting, background colors, subscript, superscript, strikes (single strikes)
+     * etc.
+     * 
      * @param run
      * @param text
      * @throws Exception
      */
     protected void visitStyleText(XWPFRun run, String text, T paragraphContainer, boolean pageNumber) throws Exception
     {
-    	//child should implement
+        // child should implement
     }
 
     protected abstract void visitText( CTText ctText, boolean pageNumber, T paragraphContainer )
@@ -996,9 +1048,9 @@ public abstract class XWPFDocumentVisitor<T, O extends Options, E extends IXWPFM
                         cellIndex = getCellIndex( cellIndex, cell );
                         lastCol = ( cellIndex == nbColumns );
                         List<XWPFTableCell> rowCells = row.getTableCells();
-                        if (!rowCells.contains(cell))
+                        if ( !rowCells.contains( cell ) )
                         {
-                            rowCells.add(cell);
+                            rowCells.add( cell );
                         }
                         vMergedCells = getVMergedCells( cell, rowIndex, cellPtr );
                         if ( vMergedCells == null || vMergedCells.size() > 0 )
@@ -1034,7 +1086,8 @@ public abstract class XWPFDocumentVisitor<T, O extends Options, E extends IXWPFM
         endVisitTableRow( row, tableContainer, firstRow, lastRow, headerRow );
     }
 
-    private boolean isLastRow( boolean lastRowIfNoneVMerge, int rowIndex, int rowsSize, List<XWPFTableCell> vMergedCells )
+    private boolean isLastRow( boolean lastRowIfNoneVMerge, int rowIndex, int rowsSize,
+                               List<XWPFTableCell> vMergedCells )
     {
         if ( vMergedCells == null )
         {
@@ -1070,9 +1123,8 @@ public abstract class XWPFDocumentVisitor<T, O extends Options, E extends IXWPFM
 
     }
 
-    protected void visitCell( XWPFTableCell cell, T tableContainer, boolean firstRow, boolean lastRow,
-                              boolean firstCol, boolean lastCol, int rowIndex, int cellIndex,
-                              List<XWPFTableCell> vMergedCells )
+    protected void visitCell( XWPFTableCell cell, T tableContainer, boolean firstRow, boolean lastRow, boolean firstCol,
+                              boolean lastCol, int rowIndex, int cellIndex, List<XWPFTableCell> vMergedCells )
         throws Exception
     {
         T tableCellContainer =
@@ -1163,7 +1215,7 @@ public abstract class XWPFDocumentVisitor<T, O extends Options, E extends IXWPFM
 
     /**
      * Returns true if word/document.xml is parsing and false otherwise.
-     * 
+     *
      * @return true if word/document.xml is parsing and false otherwise.
      */
     protected boolean isWordDocumentPartParsing()
@@ -1173,6 +1225,7 @@ public abstract class XWPFDocumentVisitor<T, O extends Options, E extends IXWPFM
 
     // ------------------------------ Header/Footer visitor -----------
 
+    @Override
     public void visitHeaderRef( CTHdrFtrRef headerRef, CTSectPr sectPr, E masterPage )
         throws Exception
     {
@@ -1184,6 +1237,7 @@ public abstract class XWPFDocumentVisitor<T, O extends Options, E extends IXWPFM
     protected abstract void visitHeader( XWPFHeader header, CTHdrFtrRef headerRef, CTSectPr sectPr, E masterPage )
         throws Exception;
 
+    @Override
     public void visitFooterRef( CTHdrFtrRef footerRef, CTSectPr sectPr, E masterPage )
         throws Exception
     {
@@ -1197,10 +1251,9 @@ public abstract class XWPFDocumentVisitor<T, O extends Options, E extends IXWPFM
 
     /**
      * Returns the list of {@link IBodyElement} of the given header/footer. We do that because
-     * {@link XWPFHeaderFooter#getBodyElements()} doesn't contains the // <w:sdt><w:sdtContent>
-     * <p
-     * (see JUnit Docx4j_GettingStarted, DocXperT_Output_4_3, Issue222 which defines page number in the <w:sdt. ...
-     * 
+     * {@link XWPFHeaderFooter#getBodyElements()} doesn't contains the // <w:sdt><w:sdtContent> <p (see JUnit
+     * Docx4j_GettingStarted, DocXperT_Output_4_3, Issue222 which defines page number in the <w:sdt. ...
+     *
      * @param part
      * @return
      */
@@ -1214,7 +1267,7 @@ public abstract class XWPFDocumentVisitor<T, O extends Options, E extends IXWPFM
 
     /**
      * Add body elements from the given token source.
-     * 
+     *
      * @param source
      * @param part
      * @param bodyElements
@@ -1254,7 +1307,7 @@ public abstract class XWPFDocumentVisitor<T, O extends Options, E extends IXWPFM
 
     /**
      * Returns the {@link XWPFHeader} of the given header reference.
-     * 
+     *
      * @param headerRef the header reference.
      * @return
      * @throws XmlException
@@ -1282,7 +1335,7 @@ public abstract class XWPFDocumentVisitor<T, O extends Options, E extends IXWPFM
 
     /**
      * Returns the {@link XWPFFooter} of the given footer reference.
-     * 
+     *
      * @param footerRef the footer reference.
      * @return
      * @throws XmlException
@@ -1416,7 +1469,7 @@ public abstract class XWPFDocumentVisitor<T, O extends Options, E extends IXWPFM
 
     /**
      * Returns the picture data of the given image id.
-     * 
+     *
      * @param blipId
      * @return
      */
@@ -1435,7 +1488,7 @@ public abstract class XWPFDocumentVisitor<T, O extends Options, E extends IXWPFM
 
     /**
      * Returns the image extractor and null otherwise.
-     * 
+     *
      * @return
      */
     protected IImageExtractor getImageExtractor()
@@ -1445,7 +1498,7 @@ public abstract class XWPFDocumentVisitor<T, O extends Options, E extends IXWPFM
 
     /**
      * Returns the picture data of the given picture.
-     * 
+     *
      * @param picture
      * @return
      */

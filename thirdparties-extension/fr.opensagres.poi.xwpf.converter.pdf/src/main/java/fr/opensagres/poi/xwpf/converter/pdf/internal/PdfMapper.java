@@ -28,7 +28,9 @@ import static fr.opensagres.poi.xwpf.converter.core.utils.DxaUtil.emu2points;
 
 import java.io.OutputStream;
 import java.math.BigInteger;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.logging.Logger;
 
 import org.apache.poi.xwpf.usermodel.IBodyElement;
@@ -85,6 +87,7 @@ import com.lowagie.text.pdf.draw.VerticalPositionMark;
 import fr.opensagres.poi.xwpf.converter.core.BorderSide;
 import fr.opensagres.poi.xwpf.converter.core.Color;
 import fr.opensagres.poi.xwpf.converter.core.ListItemContext;
+import fr.opensagres.poi.xwpf.converter.core.MultiValueTriplet;
 import fr.opensagres.poi.xwpf.converter.core.ParagraphLineSpacing;
 import fr.opensagres.poi.xwpf.converter.core.TableCellBorder;
 import fr.opensagres.poi.xwpf.converter.core.TableHeight;
@@ -147,6 +150,8 @@ public class PdfMapper
     private Integer expectedPageCount;
 
     private VerticalAlign currentRunVerticalAlign = VerticalAlign.BASELINE;
+
+    private Map<MultiValueTriplet<XWPFPictureData, Long, Long>, Image> imageCache;
 
     public PdfMapper( XWPFDocument document, OutputStream out, PdfOptions options, Integer expectedPageCount )
         throws Exception
@@ -1344,9 +1349,18 @@ public class PdfMapper
         {
             try
             {
-                Image img = Image.getInstance( pictureData.getData() );
-                img.scaleAbsolute( emu2points( x ), emu2points( y ) );
-
+                if ( imageCache == null )
+                {
+                    imageCache = new HashMap<MultiValueTriplet<XWPFPictureData, Long, Long>, Image>();
+                }
+                MultiValueTriplet<XWPFPictureData, Long, Long> key =
+                    new MultiValueTriplet<XWPFPictureData, Long, Long>( pictureData, x, y );
+                Image img = imageCache.get( key );
+                if ( img == null )
+                {
+                    imageCache.put( key, img = Image.getInstance( pictureData.getData() ) );
+                    img.scaleAbsolute( emu2points( x ), emu2points( y ) );
+                }
                 IITextContainer parentOfParentContainer = pdfParentContainer.getITextContainer();
                 if ( parentOfParentContainer != null && parentOfParentContainer instanceof PdfPCell )
                 {

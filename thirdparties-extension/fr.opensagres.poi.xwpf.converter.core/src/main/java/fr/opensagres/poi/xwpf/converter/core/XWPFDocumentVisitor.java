@@ -40,6 +40,7 @@ import org.apache.poi.xwpf.usermodel.BodyElementType;
 import org.apache.poi.xwpf.usermodel.BodyType;
 import org.apache.poi.xwpf.usermodel.IBody;
 import org.apache.poi.xwpf.usermodel.IBodyElement;
+import org.apache.poi.xwpf.usermodel.IRunBody;
 import org.apache.poi.xwpf.usermodel.ISDTContent;
 import org.apache.poi.xwpf.usermodel.ISDTContents;
 import org.apache.poi.xwpf.usermodel.XWPFAbstractNum;
@@ -157,6 +158,14 @@ public abstract class XWPFDocumentVisitor<T, O extends Options, E extends IXWPFM
      * Map of w:numId and ListContext
      */
     private Map<Integer, ListContext> listContextMap;
+
+    private boolean fldCharTypeParsing;
+
+    private boolean pageNumber;
+
+    private String url;
+
+    private List<XmlObject> rListAfterSeparate;
 
     public XWPFDocumentVisitor( XWPFDocument document, O options )
         throws Exception
@@ -603,13 +612,18 @@ public abstract class XWPFDocumentVisitor<T, O extends Options, E extends IXWPFM
     private void visitRuns( XWPFParagraph paragraph, T paragraphContainer )
         throws Exception
     {
-        boolean fldCharTypeParsing = false;
-        boolean pageNumber = false;
-        String url = null;
-        List<XmlObject> rListAfterSeparate = null;
+        visitTokens( paragraph.getCTP(), paragraph, paragraphContainer );
+        process( paragraph, paragraphContainer, pageNumber, url, rListAfterSeparate );
+        fldCharTypeParsing = false;
+        rListAfterSeparate = null;
+        pageNumber = false;
+        url = null;
+    }
 
-        CTP ctp = paragraph.getCTP();
-        XmlCursor c = ctp.newCursor();
+    private void visitTokens( XmlTokenSource tokenSource, XWPFParagraph paragraph, T paragraphContainer )
+        throws Exception
+    {
+        XmlCursor c = tokenSource.newCursor();
         c.selectPath( "child::*" );
         while ( c.toNextSelection() )
         {
@@ -692,8 +706,7 @@ public abstract class XWPFDocumentVisitor<T, O extends Options, E extends IXWPFM
                     }
                     else
                     {
-                        XWPFRun run = new XWPFRun( r, paragraph );
-                        visitRun( run, false, null, paragraphContainer );
+                        visitRun( new XWPFRun( r, (IRunBody) paragraph ), false, null, paragraphContainer );
                     }
                 }
             }
@@ -710,11 +723,6 @@ public abstract class XWPFDocumentVisitor<T, O extends Options, E extends IXWPFM
             }
         }
         c.dispose();
-        process( paragraph, paragraphContainer, pageNumber, url, rListAfterSeparate );
-        fldCharTypeParsing = false;
-        rListAfterSeparate = null;
-        pageNumber = false;
-        url = null;
     }
 
     private void process( XWPFParagraph paragraph, T paragraphContainer, boolean pageNumber, String url,
@@ -802,7 +810,7 @@ public abstract class XWPFDocumentVisitor<T, O extends Options, E extends IXWPFM
         {
             // Smart Tags can be nested many times.
             // This implementation does not preserve the tagging information
-            // buildRunsInOrderFromXml(o);
+            visitTokens( o, paragraph, paragraphContainer );
         }
         else if ( o instanceof CTBookmark )
         {
@@ -891,7 +899,7 @@ public abstract class XWPFDocumentVisitor<T, O extends Options, E extends IXWPFM
         }
         if ( hasTexStyles && StringUtils.isNotEmpty( text.toString() ) )
         {
-            visitStyleText(run, text.toString(), paragraphContainer, pageNumber);
+            visitStyleText( run, text.toString(), paragraphContainer, pageNumber );
         }
         c.dispose();
     }
@@ -905,12 +913,13 @@ public abstract class XWPFDocumentVisitor<T, O extends Options, E extends IXWPFM
     /**
      * Text styles handling, fonts, highlighting, background colors, subscript, superscript, strikes (single strikes)
      * etc.
-     * 
+     *
      * @param run
      * @param text
      * @throws Exception
      */
-    protected void visitStyleText(XWPFRun run, String text, T paragraphContainer, boolean pageNumber) throws Exception
+    protected void visitStyleText( XWPFRun run, String text, T paragraphContainer, boolean pageNumber )
+        throws Exception
     {
         // child should implement
     }

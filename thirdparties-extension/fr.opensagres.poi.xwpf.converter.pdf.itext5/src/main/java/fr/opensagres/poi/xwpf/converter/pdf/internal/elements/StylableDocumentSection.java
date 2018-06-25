@@ -118,7 +118,7 @@ public class StylableDocumentSection
     {
         // force calculate height because it may be zero
         // and nothing will be flushed
-        layoutTable.calculateHeights(  );
+        layoutTable.calculateHeights();
         return layoutTable;
     }
 
@@ -199,7 +199,7 @@ public class StylableDocumentSection
                 float minHeight = 0f;
                 if ( maxHeight < 0.0f )
                 {
-                    maxHeight = layoutTable.calculateHeights(  );
+                    maxHeight = layoutTable.calculateHeights();
                 }
                 float currHeight = 0.0f;
                 while ( Math.abs( maxHeight - minHeight ) > 0.1f )
@@ -438,9 +438,9 @@ public class StylableDocumentSection
         return table;
     }
 
-    public static ColumnText createColumnText()
+    public static StylableColumnText createColumnText()
     {
-        ColumnText text = new ColumnText( null );
+        StylableColumnText text = new StylableColumnText();
         // make iText first line alignment compatible with open office
         text.setAdjustFirstLine( false );
         return text;

@@ -438,9 +438,9 @@ public class StylableDocumentSection
         return table;
     }
 
-    public static ColumnText createColumnText()
+    public static StylableColumnText createColumnText()
     {
-        ColumnText text = new ColumnText( null );
+        StylableColumnText text = new StylableColumnText();
         // make iText first line alignment compatible with open office
         text.setAdjustFirstLine( false );
         return text;

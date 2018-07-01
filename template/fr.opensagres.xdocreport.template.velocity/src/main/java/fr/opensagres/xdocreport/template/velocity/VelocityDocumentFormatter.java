@@ -56,9 +56,9 @@ public class VelocityDocumentFormatter
 
     private static final String END_FOREACH_DIRECTIVE = "#{end}";
 
-    private static final String DOLLAR_TOTKEN = "$";
+    private static final char DOLLAR_TOTKEN = '$';
 
-    private static final String OPEN_BRACKET_TOTKEN = "{";
+    private static final char OPEN_BRACKET_TOTKEN = '{';
 
     private final static int START_WITH_DOLLAR = 1;
 
@@ -92,7 +92,7 @@ public class VelocityDocumentFormatter
             case START_WITH_DOLLAR:
                 return StringUtils.replaceAll( content, DOLLAR_TOTKEN + fieldName, getItemToken() + fieldName );
             case START_WITH_DOLLAR_AND_BRACKET:
-                return StringUtils.replaceAll( content, DOLLAR_TOTKEN + OPEN_BRACKET_TOTKEN + fieldName,
+                return StringUtils.replaceAll( content, "" + DOLLAR_TOTKEN + OPEN_BRACKET_TOTKEN + fieldName,
                                                getItemTokenOpenBracket() + fieldName );
             default:
                 if ( forceAsField )
@@ -107,13 +107,13 @@ public class VelocityDocumentFormatter
     public String getStartLoopDirective( String itemNameList, String listName )
     {
         StringBuilder result = new StringBuilder( START_FOREACH_DIRECTIVE );
-        if ( !itemNameList.startsWith( DOLLAR_TOTKEN ) )
+        if ( itemNameList.charAt(0) != DOLLAR_TOTKEN )
         {
             result.append( DOLLAR_TOTKEN );
         }
         result.append( itemNameList );
         result.append( IN_DIRECTIVE );
-        if ( !listName.startsWith( DOLLAR_TOTKEN ) )
+        if ( listName.charAt(0) !=  DOLLAR_TOTKEN )
         {
             result.append( DOLLAR_TOTKEN );
         }
@@ -144,31 +144,36 @@ public class VelocityDocumentFormatter
         {
             return NO_VELOCITY_FIELD;
         }
-        int dollarIndex = content.indexOf( DOLLAR_TOTKEN );
-        if ( dollarIndex == -1 )
+
+        int currentIndex = -1;
+        int fieldNameIndex;
+        while((fieldNameIndex = content.indexOf(fieldName, currentIndex + 1)) != -1)
         {
-            // Not velocity field
-            return NO_VELOCITY_FIELD;
-        }
-        int fieldNameIndex = content.indexOf( fieldName );
-        if ( fieldNameIndex == -1 )
-        {
-            return NO_VELOCITY_FIELD;
-        }
-        if ( fieldNameIndex == dollarIndex + 1 )
-        {
-            // ex : $name
-            return START_WITH_DOLLAR;
-        }
-        if ( fieldNameIndex == dollarIndex + 2 )
-        {
-            if ( content.charAt( fieldNameIndex - 1 ) == '{' )
+            currentIndex = currentIndex + fieldNameIndex + 1;
+            if( currentIndex == 0 )
             {
-                // ex : ${name}
-                return START_WITH_DOLLAR_AND_BRACKET;
+                //no place for dollar sign
+                continue;
             }
+
+            if( content.charAt(currentIndex - 1) == OPEN_BRACKET_TOTKEN )
+            {
+                if(currentIndex == 1)
+                {
+                    //no place for dollar sign
+                    continue;
+                }
+                if( content.charAt(currentIndex - 2) == DOLLAR_TOTKEN )
+                {
+                    return START_WITH_DOLLAR_AND_BRACKET;
+                }
+            }
+            else if( content.charAt(currentIndex - 1) == DOLLAR_TOTKEN )
+            {
+                return START_WITH_DOLLAR;
+            }
+
         }
-        // Not velocity field
         return NO_VELOCITY_FIELD;
     }
 
@@ -253,7 +258,7 @@ public class VelocityDocumentFormatter
     public String getStartIfDirective( String fieldName, boolean exists )
     {
         StringBuilder directive = new StringBuilder( START_IF_DIRECTIVE );
-        if ( !fieldName.startsWith( DOLLAR_TOTKEN ) )
+        if ( fieldName.charAt(0) != DOLLAR_TOTKEN )
         {
             directive.append( DOLLAR_TOTKEN );
         }
@@ -386,7 +391,7 @@ public class VelocityDocumentFormatter
         String item = insideLoop.substring( 0, indexBeforeIn ).trim();
         // remove $
         // item='d'
-        if ( item.startsWith( DOLLAR_TOTKEN ) )
+        if ( item.charAt(0) == DOLLAR_TOTKEN )
         {
             item = item.substring( 1, item.length() );
         }
@@ -405,7 +410,7 @@ public class VelocityDocumentFormatter
         String sequence = afterIn.substring( 0, endListIndex ).trim();
         // remove $
         // item='d'
-        if ( sequence.startsWith( DOLLAR_TOTKEN ) )
+        if ( sequence.charAt(0) == DOLLAR_TOTKEN )
         {
             sequence = sequence.substring( 1, sequence.length() );
         }
@@ -443,7 +448,7 @@ public class VelocityDocumentFormatter
             fieldName = fieldName.substring( 0, fieldName.length() );
         }
         // fieldNameWithoutDollar='developers.Name'
-        String fieldNameWithoutDollar = fieldName.substring( dollarIndex + DOLLAR_TOTKEN.length(), fieldName.length() );
+        String fieldNameWithoutDollar = fieldName.substring( dollarIndex + 1, fieldName.length() );
         int lastDotIndex = fieldNameWithoutDollar.lastIndexOf( '.' );
         if ( lastDotIndex == -1 )
         {

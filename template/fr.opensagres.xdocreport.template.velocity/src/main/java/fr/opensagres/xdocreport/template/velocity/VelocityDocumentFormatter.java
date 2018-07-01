@@ -144,31 +144,31 @@ public class VelocityDocumentFormatter
         {
             return NO_VELOCITY_FIELD;
         }
-        int dollarIndex = content.indexOf( DOLLAR_TOTKEN );
-        if ( dollarIndex == -1 )
+
+        String tail = content;
+        int dollarIndex = -1;
+        while((dollarIndex = tail.indexOf(DOLLAR_TOTKEN, dollarIndex+1)) != -1)
         {
-            // Not velocity field
-            return NO_VELOCITY_FIELD;
-        }
-        int fieldNameIndex = content.indexOf( fieldName );
-        if ( fieldNameIndex == -1 )
-        {
-            return NO_VELOCITY_FIELD;
-        }
-        if ( fieldNameIndex == dollarIndex + 1 )
-        {
-            // ex : $name
-            return START_WITH_DOLLAR;
-        }
-        if ( fieldNameIndex == dollarIndex + 2 )
-        {
-            if ( content.charAt( fieldNameIndex - 1 ) == '{' )
+            tail = tail.substring(dollarIndex);
+            int fieldNameIndex = tail.indexOf( fieldName );
+            if ( fieldNameIndex == -1 )
             {
-                // ex : ${name}
-                return START_WITH_DOLLAR_AND_BRACKET;
+                return NO_VELOCITY_FIELD;
+            }
+            if ( fieldNameIndex == 1 )
+            {
+                // ex : $name
+                return START_WITH_DOLLAR;
+            }
+            if ( fieldNameIndex == 2 )
+            {
+                if ( tail.charAt( fieldNameIndex - 1 ) == '{' )
+                {
+                    // ex : ${name}
+                    return START_WITH_DOLLAR_AND_BRACKET;
+                }
             }
         }
-        // Not velocity field
         return NO_VELOCITY_FIELD;
     }
 

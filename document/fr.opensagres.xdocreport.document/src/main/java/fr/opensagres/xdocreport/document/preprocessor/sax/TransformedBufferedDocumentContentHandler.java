@@ -24,6 +24,8 @@
  */
 package fr.opensagres.xdocreport.document.preprocessor.sax;
 
+import static java.util.Collections.singletonList;
+
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
@@ -149,7 +151,7 @@ public abstract class TransformedBufferedDocumentContentHandler<Document extends
 
     /**
      * If a row parsing, replace fields name with well script to manage lazy loop for table row.
-     * 
+     *
      * @param content
      * @return
      */
@@ -161,7 +163,7 @@ public abstract class TransformedBufferedDocumentContentHandler<Document extends
 
     /**
      * If a row parsing, replace fields name with well script to manage lazy loop for table row.
-     * 
+     *
      * @param content
      * @return
      */
@@ -237,7 +239,7 @@ public abstract class TransformedBufferedDocumentContentHandler<Document extends
 
     /**
      * Returns the before row token.
-     * 
+     *
      * @return
      */
     protected String getBeforeRowToken()
@@ -251,7 +253,7 @@ public abstract class TransformedBufferedDocumentContentHandler<Document extends
 
     /**
      * Returns the after row token.
-     * 
+     *
      * @return
      */
     protected String getAfterRowToken()
@@ -265,7 +267,7 @@ public abstract class TransformedBufferedDocumentContentHandler<Document extends
 
     /**
      * Returns the before row token.
-     * 
+     *
      * @return
      */
     protected String getBeforeTableCellToken()
@@ -279,7 +281,7 @@ public abstract class TransformedBufferedDocumentContentHandler<Document extends
 
     /**
      * Returns the after row token.
-     * 
+     *
      * @return
      */
     protected String getAfterTableCellToken()
@@ -312,7 +314,7 @@ public abstract class TransformedBufferedDocumentContentHandler<Document extends
 
     /**
      * Returns true if current element is a table and false otherwise.
-     * 
+     *
      * @param uri
      * @param localName
      * @param name
@@ -329,7 +331,7 @@ public abstract class TransformedBufferedDocumentContentHandler<Document extends
 
     /**
      * Returns true if current element is a table row and false otherwise.
-     * 
+     *
      * @param uri
      * @param localName
      * @param name
@@ -362,7 +364,7 @@ public abstract class TransformedBufferedDocumentContentHandler<Document extends
             {
                 beforeElementName = beforeElementName.substring( BEFORE_TOKEN.length(), beforeElementName.length() );
             }
-            BufferedElement elementInfo = super.findParentElementInfo( beforeElementName );
+            BufferedElement elementInfo = super.findParentElementInfo( singletonList( beforeElementName ) );
             if ( elementInfo == null )
             {
                 return false;
@@ -445,7 +447,7 @@ public abstract class TransformedBufferedDocumentContentHandler<Document extends
             {
                 afterElementName = afterElementName.substring( AFTER_TOKEN.length(), afterElementName.length() );
             }
-            BufferedElement elementInfo = super.findParentElementInfo( afterElementName );
+            BufferedElement elementInfo = super.findParentElementInfo( singletonList( afterElementName ) );
             if ( elementInfo == null )
             {
                 return false;
@@ -540,5 +542,6 @@ public abstract class TransformedBufferedDocumentContentHandler<Document extends
         return endNoParse;
     }
 
+    @Override
     protected abstract Document createDocument();
 }

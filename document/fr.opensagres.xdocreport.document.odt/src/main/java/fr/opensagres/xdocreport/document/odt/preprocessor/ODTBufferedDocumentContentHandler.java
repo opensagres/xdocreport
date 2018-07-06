@@ -322,6 +322,7 @@ public class ODTBufferedDocumentContentHandler
                     }
                 }
             }
+            return;
         }
         else if ( annotationHelper.isRangeAnnotation() && !annotationHelper.isTheSameBlock(getElementIndex()) )
         {

@@ -24,6 +24,7 @@
  */
 package fr.opensagres.xdocreport.document.odt.preprocessor;
 
+import static fr.opensagres.xdocreport.document.odt.ODTConstants.ANNOTATION_NAME_ATTR;
 import static fr.opensagres.xdocreport.document.odt.ODTConstants.DRAW_NAME_ATTR;
 import static fr.opensagres.xdocreport.document.odt.ODTConstants.DRAW_NS;
 import static fr.opensagres.xdocreport.document.odt.ODTConstants.HEIGHT_ATTR;
@@ -31,6 +32,8 @@ import static fr.opensagres.xdocreport.document.odt.ODTConstants.HREF_ATTR;
 import static fr.opensagres.xdocreport.document.odt.ODTConstants.SVG_NS;
 import static fr.opensagres.xdocreport.document.odt.ODTConstants.WIDTH_ATTR;
 import static fr.opensagres.xdocreport.document.odt.ODTConstants.XLINK_NS;
+import static fr.opensagres.xdocreport.document.odt.ODTUtils.isAnnotation;
+import static fr.opensagres.xdocreport.document.odt.ODTUtils.isAnnotationEnd;
 import static fr.opensagres.xdocreport.document.odt.ODTUtils.isDrawFrame;
 import static fr.opensagres.xdocreport.document.odt.ODTUtils.isDrawImage;
 import static fr.opensagres.xdocreport.document.odt.ODTUtils.isOfficeAutomaticStyles;
@@ -48,6 +51,7 @@ import fr.opensagres.xdocreport.core.utils.StringUtils;
 import fr.opensagres.xdocreport.document.images.AbstractImageRegistry;
 import fr.opensagres.xdocreport.document.images.IImageRegistry;
 import fr.opensagres.xdocreport.document.images.ImageProviderInfo;
+import fr.opensagres.xdocreport.document.odt.ODTConstants;
 import fr.opensagres.xdocreport.document.preprocessor.sax.BufferedElement;
 import fr.opensagres.xdocreport.document.preprocessor.sax.TransformedBufferedDocumentContentHandler;
 import fr.opensagres.xdocreport.document.textstyling.ITransformResult;
@@ -69,10 +73,13 @@ public class ODTBufferedDocumentContentHandler
 
     private boolean textInputParsing = false;
 
+    private ODTAnnotationParsingHeler annotationHelper;
+
     public ODTBufferedDocumentContentHandler( String entryName, FieldsMetadata fieldsMetadata,
                                               IDocumentFormatter formatter, Map<String, Object> sharedContext )
     {
         super( entryName, fieldsMetadata, formatter, sharedContext );
+        annotationHelper = new ODTAnnotationParsingHeler();
     }
 
     @Override
@@ -87,7 +94,28 @@ public class ODTBufferedDocumentContentHandler
     {
         FieldsMetadata fieldsMetadata = super.getFieldsMetadata();
         IDocumentFormatter formatter = super.getFormatter();
-        if ( isTextInput( uri, localName, name ) )
+        if( annotationHelper.isParsing() )
+        {
+            annotationHelper.setCurrentElement( uri, localName, name );
+            // only text input
+            return false;
+        }
+        else if ( isAnnotationEnd(uri, localName, name) )
+        {
+            String annotationName = attributes.getValue( ODTConstants.ANNOTATION_NS, ANNOTATION_NAME_ATTR );
+            boolean annotationMatch = annotationHelper.resetRangeAnnotation(annotationName, false);
+            if( annotationMatch )
+            {
+                closeRangeAnnotation();
+            }
+            return false;
+        }
+        else if( annotationHelper.isRangeAnnotation() )
+        {
+            // ignore inner content of the annotation
+            return false;
+        }
+        else if ( isTextInput( uri, localName, name ) )
         {
             // Ignore element start text:text-input
             this.textInputParsing = true;
@@ -215,7 +243,6 @@ public class ODTBufferedDocumentContentHandler
         {
             if ( dynamicImageName != null && formatter != null )
             {
-
                 int index = attributes.getIndex( XLINK_NS, HREF_ATTR );
                 if ( index != -1 )
                 {
@@ -232,15 +259,84 @@ public class ODTBufferedDocumentContentHandler
                 }
             }
         }
+        // <office:annotation office:name="__Annotation__49_1708543979">
+        else if ( isAnnotation( uri, localName, name ) )
+        {
+            String annotationName = attributes.getValue( ODTConstants.ANNOTATION_NS, ANNOTATION_NAME_ATTR );
+            annotationHelper.setParsingBegin(annotationName, getElementIndex());
+            return false;
+        }
         return super.doStartElement( uri, localName, name, attributes );
+    }
 
+    private void closeRangeAnnotation()
+    {
+        BufferedElement elementInfo = getCurrentElement().getParent();
+        if( elementInfo != null )
+        {
+            if( annotationHelper.hasBefore() )
+            {
+                String before = formatDirective( annotationHelper.getBefore() );
+                elementInfo.setContentBeforeStartTagElement(before );
+            }
+            if( annotationHelper.hasAfter() )
+            {
+                String after = formatDirective( annotationHelper.getAfter() );
+                elementInfo.setContentAfterEndTagElement( after );
+            }
+        }
+        if( annotationHelper.hasReplacement() )
+        {
+            String replacement = formatDirective( annotationHelper.getReplacement() );
+            getCurrentElement().setInnerText(replacement);
+        }
     }
 
     @Override
     public void doEndElement( String uri, String localName, String name )
         throws SAXException
     {
-        if ( isTextInput( uri, localName, name ) )
+        if ( isAnnotation( uri, localName, name ) )
+        {
+            // ignore element end office:annotation
+            annotationHelper.setParsingEnd();
+            if(!annotationHelper.isRangeAnnotation())
+            {
+                BufferedElement elementInfo = findParentElementInfo( annotationHelper.getParents() );
+                if( elementInfo != null )
+                {
+                    if( annotationHelper.hasBefore() )
+                    {
+                        String before = formatDirective( annotationHelper.getBefore() );
+                        elementInfo.setContentBeforeStartTagElement(before );
+                    }
+                    if( annotationHelper.hasAfter() )
+                    {
+                        String after = formatDirective( annotationHelper.getAfter() );
+                        elementInfo.setContentAfterEndTagElement( after );
+                    }
+                    if( annotationHelper.hasReplacement() )
+                    {
+                        String replacement = formatDirective( annotationHelper.getReplacement() );
+                        getCurrentElement().setInnerText(replacement);
+                    }
+                }
+            }
+        }
+        else if ( annotationHelper.isRangeAnnotation() && !annotationHelper.isTheSameBlock(getElementIndex()) )
+        {
+            annotationHelper.resetRangeAnnotation(null, true);
+            closeRangeAnnotation();
+            // intentionally lack of "else" becouse this is ordinary tag and should be processed
+        }
+        if ( annotationHelper.isParsing()
+                || annotationHelper.isRangeAnnotation()
+                || isAnnotationEnd(uri, localName, name) )
+        {
+            // Ignore end elements from office:annotation to office:annotation-end
+            return;
+        }
+        else if ( isTextInput( uri, localName, name ) )
         {
             // Ignore element end text:text-input
             this.textInputParsing = false;
@@ -292,7 +388,7 @@ public class ODTBufferedDocumentContentHandler
     @Override
     protected void flushCharacters( String characters )
     {
-        if ( textInputParsing )
+        if ( textInputParsing || annotationHelper.isParsing() || annotationHelper.isRangeAnnotation() )
         {
             IDocumentFormatter formatter = getFormatter();
             if ( formatter != null
@@ -302,65 +398,77 @@ public class ODTBufferedDocumentContentHandler
                 characters = StringUtils.xmlUnescape( characters );
             }
             characters = customFormat( characters, formatter );
-            String fieldName = characters;
-            if ( processScriptBefore( fieldName ) )
+
+            if( textInputParsing )
             {
-                return;
-            }
-            if ( processScriptAfter( fieldName ) )
-            {
-                return;
-            }
-            if ( getFormatter() != null )
-            {
-                FieldMetadata fieldAsTextStyling = getFieldAsTextStyling( fieldName );
-                if ( fieldAsTextStyling != null )
+                String fieldName = characters;
+                if ( processScriptBefore( fieldName ) )
                 {
-                    // register parent buffered element
-                    long variableIndex = getVariableIndex();
-                    BufferedElement textPElement = getCurrentElement().findParent( TEXT_P );
-                    if ( textPElement == null )
-                    {
-                        textPElement = getCurrentElement().getParent();
-                    }
-                    String elementId = registerBufferedElement( variableIndex, textPElement );
-
-                    // Transform field name if it is inside a table row.
-                    // See https://code.google.com/p/xdocreport/issues/detail?id=313
-                    String newFieldName = super.processRowIfNeeded( fieldName );
-                    if ( StringUtils.isEmpty( newFieldName ) )
-                    {
-                        newFieldName = fieldName;
-                    }
-
-                    // [#assign
-                    // 1327511861250_id=___TextStylingRegistry.transform(comments_odt,"NoEscape","ODT","1327511861250_id",___context)]
-                    String setVariableDirective =
-                        getFormatter().formatAsCallTextStyling( variableIndex, newFieldName, DocumentKind.ODT.name(),
-                                                                fieldAsTextStyling.getSyntaxKind(),
-                                                                fieldAsTextStyling.isSyntaxWithDirective(), elementId,
-                                                                super.getEntryName() );
-
-                    String textBefore =
-                        getFormatter().formatAsTextStylingField( variableIndex, ITransformResult.TEXT_BEFORE_PROPERTY );
-                    String textBody =
-                        getFormatter().formatAsTextStylingField( variableIndex, ITransformResult.TEXT_BODY_PROPERTY );
-                    String textEnd =
-                        getFormatter().formatAsTextStylingField( variableIndex, ITransformResult.TEXT_END_PROPERTY );
-
-                    textPElement.setContentBeforeStartTagElement( formatDirective( setVariableDirective + textBefore ) );
-                    textPElement.setContentAfterEndTagElement( formatDirective( textEnd ) );
-                    super.flushCharacters( formatDirective( textBody ) );
                     return;
                 }
-                else
+                if ( processScriptAfter( fieldName ) )
                 {
-                    // Simple field.
-                    characters = formatDirective( characters );
+                    return;
                 }
+                if ( getFormatter() != null )
+                {
+                    FieldMetadata fieldAsTextStyling = getFieldAsTextStyling( fieldName );
+                    if ( fieldAsTextStyling != null )
+                    {
+                        // register parent buffered element
+                        long variableIndex = getVariableIndex();
+                        BufferedElement textPElement = getCurrentElement().findParent( TEXT_P );
+                        if ( textPElement == null )
+                        {
+                            textPElement = getCurrentElement().getParent();
+                        }
+                        String elementId = registerBufferedElement( variableIndex, textPElement );
+
+                        // Transform field name if it is inside a table row.
+                        // See https://code.google.com/p/xdocreport/issues/detail?id=313
+                        String newFieldName = super.processRowIfNeeded( fieldName );
+                        if ( StringUtils.isEmpty( newFieldName ) )
+                        {
+                            newFieldName = fieldName;
+                        }
+
+                        // [#assign
+                        // 1327511861250_id=___TextStylingRegistry.transform(comments_odt,"NoEscape","ODT","1327511861250_id",___context)]
+                        String setVariableDirective =
+                            getFormatter().formatAsCallTextStyling( variableIndex, newFieldName, DocumentKind.ODT.name(),
+                                                                    fieldAsTextStyling.getSyntaxKind(),
+                                                                    fieldAsTextStyling.isSyntaxWithDirective(), elementId,
+                                                                    super.getEntryName() );
+
+                        String textBefore =
+                            getFormatter().formatAsTextStylingField( variableIndex, ITransformResult.TEXT_BEFORE_PROPERTY );
+                        String textBody =
+                            getFormatter().formatAsTextStylingField( variableIndex, ITransformResult.TEXT_BODY_PROPERTY );
+                        String textEnd =
+                            getFormatter().formatAsTextStylingField( variableIndex, ITransformResult.TEXT_END_PROPERTY );
+
+                        textPElement.setContentBeforeStartTagElement( formatDirective( setVariableDirective + textBefore ) );
+                        textPElement.setContentAfterEndTagElement( formatDirective( textEnd ) );
+                        super.flushCharacters( formatDirective( textBody ) );
+                        return;
+                    }
+                    else
+                    {
+                        // Simple field.
+                        characters = formatDirective( characters );
+                    }
+                }
+                super.flushCharacters( characters );
+            }
+            else if (annotationHelper.isParsing() )
+            {
+                annotationHelper.append(characters);
             }
         }
-        super.flushCharacters( characters );
+        else
+        {
+            super.flushCharacters( characters );
+        }
     }
 
     private String customFormat( String content, IDocumentFormatter formatter )

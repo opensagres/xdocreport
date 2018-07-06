@@ -24,6 +24,9 @@
  */
 package fr.opensagres.xdocreport.document.odt;
 
+import static fr.opensagres.xdocreport.document.odt.ODTConstants.ANNOTATION_ELT;
+import static fr.opensagres.xdocreport.document.odt.ODTConstants.ANNOTATION_END_ELT;
+import static fr.opensagres.xdocreport.document.odt.ODTConstants.ANNOTATION_NS;
 import static fr.opensagres.xdocreport.document.odt.ODTConstants.DRAW_FRAME_ELT;
 import static fr.opensagres.xdocreport.document.odt.ODTConstants.DRAW_IMAGE_ELT;
 import static fr.opensagres.xdocreport.document.odt.ODTConstants.DRAW_NS;
@@ -51,7 +54,7 @@ public class ODTUtils
 
     /**
      * Returns true if the given document archive is a ODT and false otherwise.
-     * 
+     *
      * @param documentArchive
      * @return
      */
@@ -76,7 +79,7 @@ public class ODTUtils
 
     /**
      * Returns true if element is table:table and false otherwise.
-     * 
+     *
      * @param uri
      * @param localName
      * @param name
@@ -89,7 +92,7 @@ public class ODTUtils
 
     /**
      * Returns true if element is table:table-row and false otherwise.
-     * 
+     *
      * @param uri
      * @param localName
      * @param name
@@ -102,7 +105,7 @@ public class ODTUtils
 
     /**
      * Returns true if element is text:text-input and false otherwise.
-     * 
+     *
      * @param uri
      * @param localName
      * @param name
@@ -115,7 +118,7 @@ public class ODTUtils
 
     /**
      * Returns true if element is draw:frame and false otherwise.
-     * 
+     *
      * @param uri
      * @param localName
      * @param name
@@ -128,7 +131,7 @@ public class ODTUtils
 
     /**
      * Returns true if element is draw:image and false otherwise.
-     * 
+     *
      * @param uri
      * @param localName
      * @param name
@@ -141,7 +144,7 @@ public class ODTUtils
 
     /**
      * Returns true if element is text:a and false otherwise.
-     * 
+     *
      * @param uri
      * @param localName
      * @param name
@@ -153,8 +156,34 @@ public class ODTUtils
     }
 
     /**
+     * Returns true if element is text:annotation and false otherwise.
+     *
+     * @param uri
+     * @param localName
+     * @param name
+     * @return
+     */
+    public static boolean isAnnotation( final String uri, final String localName, final String name )
+    {
+        return ANNOTATION_NS.equals( uri ) && ANNOTATION_ELT.equals( localName );
+    }
+
+    /**
+     * Returns true if element is text:annotation-end and false otherwise.
+     *
+     * @param uri
+     * @param localName
+     * @param name
+     * @return
+     */
+    public static boolean isAnnotationEnd( final String uri, final String localName, final String name )
+    {
+        return ANNOTATION_NS.equals( uri ) && ANNOTATION_END_ELT.equals( localName );
+    }
+
+    /**
      * Returns true if element is office:automatic-styles and false otherwise.
-     * 
+     *
      * @param uri
      * @param localName
      * @param name

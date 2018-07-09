@@ -1022,8 +1022,7 @@ public abstract class XWPFDocumentVisitor<T, O extends Options, E extends IXWPFM
             // <w:tc> <= this tc which is a XWPFTableCell is not included in the row.getTableCells();
 
             firstCol = true;
-            int cellIndex = -1;
-            int cellPtr = 0;
+            int cellIndex = 0;
             CTRow ctRow = row.getCtRow();
             XmlCursor c = ctRow.newCursor();
             c.selectPath( "./*" );
@@ -1034,16 +1033,16 @@ public abstract class XWPFDocumentVisitor<T, O extends Options, E extends IXWPFM
                 {
                     CTTc tc = (CTTc) o;
                     XWPFTableCell cell = row.getTableCell( tc );
-                    cellIndex = getCellIndex( cellIndex, cell );
-                    lastCol = ( cellIndex == nbColumns );
-                    vMergedCells = getVMergedCells( cell, rowIndex, cellPtr );
+                    int nextCellIndex = getCellIndex( cellIndex, cell );
+                    lastCol = ( nextCellIndex == nbColumns );
+                    vMergedCells = getVMergedCells( cell, rowIndex, cellIndex );
                     if ( vMergedCells == null || vMergedCells.size() > 0 )
                     {
                         lastRow = isLastRow( lastRowIfNoneVMerge, rowIndex, rowsSize, vMergedCells );
-                        visitCell( cell, tableContainer, firstRow, lastRow, firstCol, lastCol, rowIndex, cellPtr,
+                        visitCell( cell, tableContainer, firstRow, lastRow, firstCol, lastCol, rowIndex, cellIndex,
                                    vMergedCells );
                     }
-                    cellPtr++;
+                    cellIndex = nextCellIndex;
                     firstCol = false;
                 }
                 else if ( o instanceof CTSdtCell )
@@ -1054,21 +1053,21 @@ public abstract class XWPFDocumentVisitor<T, O extends Options, E extends IXWPFM
                     for ( CTTc ctTc : tcList )
                     {
                         XWPFTableCell cell = new XWPFTableCell( ctTc, row, row.getTable().getBody() );
-                        cellIndex = getCellIndex( cellIndex, cell );
-                        lastCol = ( cellIndex == nbColumns );
+                        int nextCellIndex = getCellIndex( cellIndex, cell );
+                        lastCol = ( nextCellIndex == nbColumns );
                         List<XWPFTableCell> rowCells = row.getTableCells();
                         if ( !rowCells.contains( cell ) )
                         {
                             rowCells.add( cell );
                         }
-                        vMergedCells = getVMergedCells( cell, rowIndex, cellPtr );
+                        vMergedCells = getVMergedCells( cell, rowIndex, cellIndex );
                         if ( vMergedCells == null || vMergedCells.size() > 0 )
                         {
                             lastRow = isLastRow( lastRowIfNoneVMerge, rowIndex, rowsSize, vMergedCells );
-                            visitCell( cell, tableContainer, firstRow, lastRow, firstCol, lastCol, rowIndex, cellPtr,
+                            visitCell( cell, tableContainer, firstRow, lastRow, firstCol, lastCol, rowIndex, cellIndex,
                                        vMergedCells );
                         }
-                        cellPtr++;
+                        cellIndex = nextCellIndex;
                         firstCol = false;
                     }
                 }

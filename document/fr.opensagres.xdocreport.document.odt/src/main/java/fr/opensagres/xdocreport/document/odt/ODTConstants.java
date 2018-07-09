@@ -66,6 +66,22 @@ public class ODTConstants
 
     public static final String OFFICE_AUTOMATIC_STYLES_ELT = "automatic-styles";
 
+    public static final String ANNOTATION_NS = "urn:oasis:names:tc:opendocument:xmlns:office:1.0";
+
+    public static final String ANNOTATION_ELT = "annotation";
+
+    public static final String ANNOTATION_END_ELT = "annotation-end";
+
+    public static final String ANNOTATION_NAME_ATTR = "name";
+
+    public static final String ANNOTATION_CREATOR_ELT = "creator";
+
+    public static final String ANNOTATION_DATE_ELT = "date";
+
+    public static final String ANNOTATION_DC_NS = "http://purl.org/dc/elements/1.1/";
+
+    public static final String PARAGRAPH_ELT = "p";
+
     public static final String SVG_NS = "urn:oasis:names:tc:opendocument:xmlns:svg-compatible:1.0";
 
     public static final String WIDTH_ATTR = "width";

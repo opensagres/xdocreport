@@ -130,22 +130,25 @@ public class BufferedDocumentContentHandler<Document extends BufferedDocument>
         return bufferedDocument.getCurrentElement();
     }
 
-    protected BufferedElement findParentElementInfo( String name )
+    protected BufferedElement findParentElementInfo( List<String> names )
     {
-        return findParentElementInfo( getCurrentElement(), name );
+        return findParentElementInfo( getCurrentElement(), names );
     }
 
-    protected BufferedElement findParentElementInfo( BufferedElement elementInfo, String name )
+    protected BufferedElement findParentElementInfo( BufferedElement elementInfo, List<String> names )
     {
         if ( elementInfo == null )
         {
             return null;
         }
-        if ( elementInfo.match( name ) )
+        for( String name : names )
         {
-            return elementInfo;
+            if ( elementInfo.match( name ) )
+            {
+                return elementInfo;
+            }
         }
-        return findParentElementInfo( elementInfo.getParent(), name );
+        return findParentElementInfo( elementInfo.getParent(), names );
     }
 
     public boolean doStartElement( String uri, String localName, String name, Attributes attributes )
@@ -345,7 +348,7 @@ public class BufferedDocumentContentHandler<Document extends BufferedDocument>
 
     /**
      * Get the SAX {@link AttributesImpl} of teh given attributes to modify attribute values.
-     * 
+     *
      * @param attributes
      * @return
      */

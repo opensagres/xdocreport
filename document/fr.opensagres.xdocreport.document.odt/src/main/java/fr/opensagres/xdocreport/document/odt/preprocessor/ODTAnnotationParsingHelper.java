@@ -317,30 +317,4 @@ public class ODTAnnotationParsingHelper
         this.singeChild = value;
     }
 
-    /**
-     * Check if annotation is single child of tis container.
-     *
-     * @return <code>true</code> if annotation is single child of its container
-     *      <code>false</code> otherwise
-     * @see #setSingleChild(boolean)
-     */
-    public boolean isSingeChild()
-    {
-        return singeChild;
-    }
-
-    /**
-     * Set the index of the annotation element. It is used, to adjust index
-     * when annotation element is placed as a single child of its parrent. In
-     * such case we delete annotation and its parent and adjust index to allow
-     * detect new parent.
-     *  
-     * @param index index of current annotation tag (or its parent in the case
-     *      when annotation is single child of its parrent)
-     */
-    public void setIndex(int index)
-    {
-        this.index = index;
-    }
-
 }

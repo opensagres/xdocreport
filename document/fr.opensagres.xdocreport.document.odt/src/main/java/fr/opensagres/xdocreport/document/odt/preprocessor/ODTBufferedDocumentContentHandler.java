@@ -39,7 +39,6 @@ import static fr.opensagres.xdocreport.document.odt.ODTUtils.isDrawImage;
 import static fr.opensagres.xdocreport.document.odt.ODTUtils.isOfficeAutomaticStyles;
 import static fr.opensagres.xdocreport.document.odt.ODTUtils.isTextA;
 import static fr.opensagres.xdocreport.document.odt.ODTUtils.isTextInput;
-import static java.util.Collections.singletonList;
 
 import java.util.Map;
 
@@ -104,19 +103,7 @@ public class ODTBufferedDocumentContentHandler
         else if ( isAnnotationEnd(uri, localName, name) )
         {
             String annotationName = attributes.getValue( ODTConstants.ANNOTATION_NS, ANNOTATION_NAME_ATTR );
-            boolean annotationMatch = annotationHelper.resetRangeAnnotation(annotationName, false);
-            if( annotationMatch )
-            {
-                closeRangeAnnotation();
-            }
-            return false;
-        }
-        else if( annotationHelper.isRangeAnnotation() )
-        {
-            // parrent tag has more children not only annotation tag, so we treat
-            // it as a real container
-            annotationHelper.setSingleChild(false);
-            // ignore inner content of the annotation
+            annotationHelper.resetRangeAnnotation(annotationName, false);
             return false;
         }
         else if ( isTextInput( uri, localName, name ) )
@@ -266,34 +253,14 @@ public class ODTBufferedDocumentContentHandler
         // <office:annotation office:name="__Annotation__49_1708543979">
         else if ( isAnnotation( uri, localName, name ) )
         {
-            String annotationName = attributes.getValue( ODTConstants.ANNOTATION_NS, ANNOTATION_NAME_ATTR );
-            annotationHelper.setParsingBegin(annotationName, getElementIndex());
+            if ( !annotationHelper.isRangeAnnotation() )
+            {
+                String annotationName = attributes.getValue( ODTConstants.ANNOTATION_NS, ANNOTATION_NAME_ATTR );
+                annotationHelper.setParsingBegin(annotationName, getElementIndex());
+            }
             return false;
         }
         return super.doStartElement( uri, localName, name, attributes );
-    }
-
-    private void closeRangeAnnotation()
-    {
-        BufferedElement elementInfo = getCurrentElement().getParent();
-        if( elementInfo != null )
-        {
-            if( annotationHelper.hasBefore() )
-            {
-                String before = formatDirective( annotationHelper.getBefore() );
-                elementInfo.setContentBeforeStartTagElement(before );
-            }
-            if( annotationHelper.hasAfter() )
-            {
-                String after = formatDirective( annotationHelper.getAfter() );
-                elementInfo.setContentAfterEndTagElement( after );
-            }
-        }
-        if( annotationHelper.hasReplacement() )
-        {
-            String replacement = formatDirective( annotationHelper.getReplacement() );
-            getCurrentElement().setInnerText(replacement);
-        }
     }
 
     @Override
@@ -303,53 +270,57 @@ public class ODTBufferedDocumentContentHandler
         if ( isAnnotation( uri, localName, name ) )
         {
             // ignore element end office:annotation
-            annotationHelper.setParsingEnd();
-            if(!annotationHelper.isRangeAnnotation())
+            if( annotationHelper.isParsing() )
             {
-                BufferedElement elementInfo = findParentElementInfo( annotationHelper.getParents() );
-                if( elementInfo != null )
+                annotationHelper.setParsingEnd();
+                if(annotationHelper.isRangeAnnotation())
                 {
-                    if( annotationHelper.hasBefore() )
+                    BufferedElement container = getCurrentElement().getParent();
+                    if( container != null )
                     {
-                        String before = formatDirective( annotationHelper.getBefore() );
-                        elementInfo.setContentBeforeStartTagElement(before );
+                        if( annotationHelper.hasBefore() )
+                        {
+                            String before = formatDirective( annotationHelper.getBefore() );
+                            container.setContentBeforeStartTagElement(before );
+                        }
+                        if( annotationHelper.hasAfter() )
+                        {
+                            String after = formatDirective( annotationHelper.getAfter() );
+                            container.setContentAfterEndTagElement( after );
+                        }
+                        if( annotationHelper.hasReplacement() )
+                        {
+                            String replacement = formatDirective( annotationHelper.getReplacement() );
+                            container.setInnerText(replacement);
+                        }
                     }
-                    if( annotationHelper.hasAfter() )
+                }
+                else
+                {
+                    BufferedElement elementInfo = findParentElementInfo( annotationHelper.getParents() );
+                    if( elementInfo != null )
                     {
-                        String after = formatDirective( annotationHelper.getAfter() );
-                        elementInfo.setContentAfterEndTagElement( after );
-                    }
-                    if( annotationHelper.hasReplacement() )
-                    {
-                        String replacement = formatDirective( annotationHelper.getReplacement() );
-                        getCurrentElement().setInnerText(replacement);
+                        if( annotationHelper.hasBefore() )
+                        {
+                            String before = formatDirective( annotationHelper.getBefore() );
+                            elementInfo.setContentBeforeStartTagElement(before );
+                        }
+                        if( annotationHelper.hasAfter() )
+                        {
+                            String after = formatDirective( annotationHelper.getAfter() );
+                            elementInfo.setContentAfterEndTagElement( after );
+                        }
+                        if( annotationHelper.hasReplacement() )
+                        {
+                            String replacement = formatDirective( annotationHelper.getReplacement() );
+                            getCurrentElement().setInnerText(replacement);
+                        }
                     }
                 }
             }
             return;
         }
-        else if ( annotationHelper.isRangeAnnotation() && !annotationHelper.isTheSameBlock(getElementIndex()) )
-        {
-            // container of the annotation has only one child, so we should remove it like annotation
-            if(annotationHelper.isSingeChild())
-            {
-                BufferedElement currentElement = getCurrentElement();
-                currentElement.getParent().removeAll(singletonList(currentElement));
-                annotationHelper.setIndex(getElementIndex());
-                // here,
-                return;
-            }
-            // container of the annotation has more children than 1, so we treat it as real container
-            else
-            {
-                annotationHelper.resetRangeAnnotation(null, true);
-                closeRangeAnnotation();
-            }
-            // intentionally lack of "else" becouse this is ordinary tag and should be processed
-        }
-        if ( annotationHelper.isParsing()
-                || annotationHelper.isRangeAnnotation()
-                || isAnnotationEnd(uri, localName, name) )
+        if ( annotationHelper.isParsing() || isAnnotationEnd(uri, localName, name) )
         {
             // Ignore end elements from office:annotation to office:annotation-end
             return;

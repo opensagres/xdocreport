@@ -18,13 +18,12 @@ import fr.opensagres.xdocreport.core.utils.StringUtils;
  *   <li>annotation content is treated as simple unformatted text</li>
  * </ul>
  *
- *
  * <p>Created on 2018-07-06</p>
  *
  * @author <a href="mailto:marcin.golebski@verbis.pl">Marcin Golebski</a>
  * @version $Id$
  */
-public class ODTAnnotationParsingHeler
+public class ODTAnnotationParsingHelper
 {
     private static final String BEFORE_LABEL = "@before";
 
@@ -48,6 +47,8 @@ public class ODTAnnotationParsingHeler
     private String name;
 
     private int index;
+
+    private boolean singeChild;
 
     /**
      * The annotation tag is parsing now.
@@ -93,6 +94,7 @@ public class ODTAnnotationParsingHeler
     public void setParsingBegin( String name, int index )
     {
         this.parsing = true;
+        this.singeChild = true;
         this.content = new StringBuilder();
         this.ignore = false;
         this.before = null;
@@ -300,6 +302,45 @@ public class ODTAnnotationParsingHeler
     public boolean isTheSameBlock(int currentElementIndex)
     {
         return currentElementIndex >= index;
+    }
+
+    /**
+     * Set information, if annotation is single child of its container. In such
+     * sytuation, we should remowe annotation and its container and treat
+     * parent container as real annotation container.
+     *
+     * @param b <code>true</code> if annotation is single child of its container
+     *      <code>false</code> otherwise
+     */
+    public void setSingleChild(boolean value)
+    {
+        this.singeChild = value;
+    }
+
+    /**
+     * Check if annotation is single child of tis container.
+     *
+     * @return <code>true</code> if annotation is single child of its container
+     *      <code>false</code> otherwise
+     * @see #setSingleChild(boolean)
+     */
+    public boolean isSingeChild()
+    {
+        return singeChild;
+    }
+
+    /**
+     * Set the index of the annotation element. It is used, to adjust index
+     * when annotation element is placed as a single child of its parrent. In
+     * such case we delete annotation and its parent and adjust index to allow
+     * detect new parent.
+     *  
+     * @param index index of current annotation tag (or its parent in the case
+     *      when annotation is single child of its parrent)
+     */
+    public void setIndex(int index)
+    {
+        this.index = index;
     }
 
 }

@@ -39,6 +39,7 @@ import static fr.opensagres.xdocreport.document.odt.ODTUtils.isDrawImage;
 import static fr.opensagres.xdocreport.document.odt.ODTUtils.isOfficeAutomaticStyles;
 import static fr.opensagres.xdocreport.document.odt.ODTUtils.isTextA;
 import static fr.opensagres.xdocreport.document.odt.ODTUtils.isTextInput;
+import static java.util.Collections.singletonList;
 
 import java.util.Map;
 
@@ -73,13 +74,13 @@ public class ODTBufferedDocumentContentHandler
 
     private boolean textInputParsing = false;
 
-    private ODTAnnotationParsingHeler annotationHelper;
+    private ODTAnnotationParsingHelper annotationHelper;
 
     public ODTBufferedDocumentContentHandler( String entryName, FieldsMetadata fieldsMetadata,
                                               IDocumentFormatter formatter, Map<String, Object> sharedContext )
     {
         super( entryName, fieldsMetadata, formatter, sharedContext );
-        annotationHelper = new ODTAnnotationParsingHeler();
+        annotationHelper = new ODTAnnotationParsingHelper();
     }
 
     @Override
@@ -112,6 +113,9 @@ public class ODTBufferedDocumentContentHandler
         }
         else if( annotationHelper.isRangeAnnotation() )
         {
+            // parrent tag has more children not only annotation tag, so we treat
+            // it as a real container
+            annotationHelper.setSingleChild(false);
             // ignore inner content of the annotation
             return false;
         }
@@ -326,8 +330,21 @@ public class ODTBufferedDocumentContentHandler
         }
         else if ( annotationHelper.isRangeAnnotation() && !annotationHelper.isTheSameBlock(getElementIndex()) )
         {
-            annotationHelper.resetRangeAnnotation(null, true);
-            closeRangeAnnotation();
+            // container of the annotation has only one child, so we should remove it like annotation
+            if(annotationHelper.isSingeChild())
+            {
+                BufferedElement currentElement = getCurrentElement();
+                currentElement.getParent().removeAll(singletonList(currentElement));
+                annotationHelper.setIndex(getElementIndex());
+                // here,
+                return;
+            }
+            // container of the annotation has more children than 1, so we treat it as real container
+            else
+            {
+                annotationHelper.resetRangeAnnotation(null, true);
+                closeRangeAnnotation();
+            }
             // intentionally lack of "else" becouse this is ordinary tag and should be processed
         }
         if ( annotationHelper.isParsing()

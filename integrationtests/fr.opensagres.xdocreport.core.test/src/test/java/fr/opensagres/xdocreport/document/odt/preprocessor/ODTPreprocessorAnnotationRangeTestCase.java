@@ -121,6 +121,27 @@ public class ODTPreprocessorAnnotationRangeTestCase
             + "</text:p></text:list-item><text:list-item><text:p text:style-name=\"P1\">abc</text:p></text:list-item></text:list>"
             + "</office:text></office:body></office:document-content>";
 
+    private static final String START_STOP_ANNOTATIONS_SINGLE_ELEMENT_XML = "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>"
+            + "<office:document-content xmlns:office=\"urn:oasis:names:tc:opendocument:xmlns:office:1.0\" "
+            + "xmlns:text=\"urn:oasis:names:tc:opendocument:xmlns:text:1.0\" "
+            + "xmlns:table=\"urn:oasis:names:tc:opendocument:xmlns:table:1.0\" "
+            + "xmlns:dc=\"http://purl.org/dc/elements/1.1/\">"
+            + "<office:body><office:text><text:sequence-decls>"
+            + "<text:sequence-decl text:display-outline-level=\"0\" text:name=\"Illustration\"/>"
+            + "<text:sequence-decl text:display-outline-level=\"0\" text:name=\"Table\"/>"
+            + "<text:sequence-decl text:display-outline-level=\"0\" text:name=\"Text\"/>"
+            + "<text:sequence-decl text:display-outline-level=\"0\" text:name=\"Drawing\"/>"
+            + "</text:sequence-decls>"
+            + "<text:p text:style-name=\"Standard\">Lorem <text:span text:style-name=\"T3\">ipsum </text:span>"
+            + "<text:span text:style-name=\"T31\"><office:annotation office:name=\"__Annotation__500_1811748221\">"
+            + "<dc:creator>nieznany</dc:creator><dc:date>2018-07-09T12:39:39.736349396</dc:date>"
+            + "<text:p text:style-name=\"P1\"><text:span text:style-name=\"T7\">test</text:span></text:p>"
+            + "</office:annotation></text:span><text:span text:style-name=\"T3\">donor </text:span>"
+            + "<text:span text:style-name=\"T5\">sit</text:span><text:span text:style-name=\"T3\"> amet,</text:span>"
+            + "<office:annotation-end office:name=\"__Annotation__500_1811748221\"/><text:span text:style-name=\"T3\"> </text:span>"
+            + "<text:span text:style-name=\"T4\"> consectetur</text:span><text:span text:style-name=\"T6\"> adipiscing</text:span></text:p>"
+            + "</office:text></office:body></office:document-content>";
+
     public void testSimpleRangeAnnotation()
             throws Exception
     {
@@ -211,7 +232,7 @@ public class ODTPreprocessorAnnotationRangeTestCase
         	+ "</office:document-content>", writer.toString() );
     }
 
-    public void testRangeeCrosstagAnnotation()
+    public void testRangeCrosstagAnnotation()
             throws Exception
     {
         final ODTPreprocessor preprocessor = new ODTPreprocessor();
@@ -238,6 +259,35 @@ public class ODTPreprocessorAnnotationRangeTestCase
         	+ "<text:list xml:id=\"list8751044298719524852\" text:style-name=\"L1\">"
         	+ "<text:list-item><text:p text:style-name=\"P1\">abc</text:p></text:list-item>"
         	+ "<text:list-item><text:p text:style-name=\"P1\">abc</text:p></text:list-item></text:list>"
+        	+ "</office:text></office:body>"
+        	+ "</office:document-content>", writer.toString() );
+    }
+
+    public void testRangeAnnotationSingleInContainer()
+            throws Exception
+    {
+        final ODTPreprocessor preprocessor = new ODTPreprocessor();
+        final InputStream stream =
+                        IOUtils.toInputStream( START_STOP_ANNOTATIONS_SINGLE_ELEMENT_XML, "UTF-8" );
+        final StringWriter writer = new StringWriter();
+        preprocessor.preprocess( "test", stream, writer, null, null, null );
+
+        assertEquals( "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>"
+        	+ "<office:document-content xmlns:office=\"urn:oasis:names:tc:opendocument:xmlns:office:1.0\" "
+        	+ "xmlns:text=\"urn:oasis:names:tc:opendocument:xmlns:text:1.0\" "
+        	+ "xmlns:table=\"urn:oasis:names:tc:opendocument:xmlns:table:1.0\" "
+        	+ "xmlns:dc=\"http://purl.org/dc/elements/1.1/\"><office:body><office:text>"
+        	+ "<text:sequence-decls><text:sequence-decl text:display-outline-level=\"0\" text:name=\"Illustration\"/>"
+        	+ "<text:sequence-decl text:display-outline-level=\"0\" text:name=\"Table\"/>"
+        	+ "<text:sequence-decl text:display-outline-level=\"0\" text:name=\"Text\"/>"
+        	+ "<text:sequence-decl text:display-outline-level=\"0\" text:name=\"Drawing\"/>"
+        	+ "</text:sequence-decls>"
+
+        	+ "<text:p text:style-name=\"Standard\">Lorem <text:span text:style-name=\"T3\">ipsum </text:span>"
+        	+ "test<text:span text:style-name=\"T3\"> </text:span>"
+        	+ "<text:span text:style-name=\"T4\"> consectetur</text:span>"
+        	+ "<text:span text:style-name=\"T6\"> adipiscing</text:span></text:p>"
+
         	+ "</office:text></office:body>"
         	+ "</office:document-content>", writer.toString() );
     }

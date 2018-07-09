@@ -3,20 +3,20 @@ package fr.opensagres.xdocreport.document.odt.preprocessor;
 import junit.framework.TestCase;
 
 /**
- * JUnit test for {@link ODTAnnotationParsingHeler}.
+ * JUnit test for {@link ODTAnnotationParsingHelper}.
  *
  * <p>Created on 2018-07-06</p>
  *
  * @author <a href="mailto:marcin.golebski@verbis.pl">Marcin Golebski</a>
  * @version $Id$
  */
-public class ODTAnnotationParsingHelerTest extends TestCase
+public class ODTAnnotationParsingHelperTest extends TestCase
 {
-    private ODTAnnotationParsingHeler helper;
+    private ODTAnnotationParsingHelper helper;
 
-    public ODTAnnotationParsingHelerTest()
+    public ODTAnnotationParsingHelperTest()
     {
-        helper = new ODTAnnotationParsingHeler();
+        helper = new ODTAnnotationParsingHelper();
     }
 
     @Override

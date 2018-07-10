@@ -48,28 +48,6 @@ public class VelocityFieldsExtractorTestCase
     }
 
     @Test
-    public void testExtractVariablesWithBraces()
-        throws Exception
-    {
-        Reader reader = new StringReader( "Hello ${name}!" );
-        FieldsExtractor<FieldExtractor> extractor = FieldsExtractor.create();
-        VelocityFieldsExtractor.getInstance().extractFields( reader, "hello", extractor );
-        Assert.assertEquals( 1, extractor.getFields().size() );
-        Assert.assertEquals( "name", extractor.getFields().get( 0 ).getName() );
-    }
-
-    @Test
-    public void testExtractVariablesNullable()
-            throws Exception
-    {
-        Reader reader = new StringReader( "Hello $!name!" );
-        FieldsExtractor<FieldExtractor> extractor = FieldsExtractor.create();
-        VelocityFieldsExtractor.getInstance().extractFields( reader, "hello", extractor );
-        Assert.assertEquals( 1, extractor.getFields().size() );
-        Assert.assertEquals( "name", extractor.getFields().get( 0 ).getName() );
-    }
-
-    @Test
     public void testExtractVariableInList()
         throws Exception
     {

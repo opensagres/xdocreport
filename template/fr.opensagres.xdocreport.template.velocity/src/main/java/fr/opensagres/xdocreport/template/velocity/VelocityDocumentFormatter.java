@@ -31,6 +31,10 @@ import fr.opensagres.xdocreport.template.formatter.DirectivesStack;
 import fr.opensagres.xdocreport.template.formatter.IfDirective;
 import fr.opensagres.xdocreport.template.formatter.LoopDirective;
 
+import java.util.Collections;
+import java.util.EnumSet;
+import java.util.Set;
+
 /**
  * Velocity document formatter used to format fields list with Velocity syntax.
  */
@@ -46,9 +50,7 @@ public class VelocityDocumentFormatter
 
     private static final String DOLLAR_START_BRACKET = "${";
 
-    protected static final String ITEM_TOKEN = "$item_";
-
-    protected static final String ITEM_TOKEN_OPEN_BRACKET = "${item_";
+    protected static final String ITEM_TOKEN = "item_";
 
     private static final String START_FOREACH_DIRECTIVE = "#foreach(";
 
@@ -56,15 +58,7 @@ public class VelocityDocumentFormatter
 
     private static final String END_FOREACH_DIRECTIVE = "#{end}";
 
-    private static final char DOLLAR_TOTKEN = '$';
-
-    private static final char OPEN_BRACKET_TOTKEN = '{';
-
-    private final static int START_WITH_DOLLAR = 1;
-
-    private final static int START_WITH_DOLLAR_AND_BRACKET = 2;
-
-    private final static int NO_VELOCITY_FIELD = 3;
+    private static final char DOLLAR_TOKEN = '$';
 
     private static final String START_IF_DIRECTIVE = "#if(";
 
@@ -86,36 +80,48 @@ public class VelocityDocumentFormatter
 
     public String formatAsFieldItemList( String content, String fieldName, boolean forceAsField )
     {
-        int type = getModelFieldType( content, fieldName );
-        switch ( type )
+        if(forceAsField)
         {
-            case START_WITH_DOLLAR:
-                return StringUtils.replaceAll( content, DOLLAR_TOTKEN + fieldName, getItemToken() + fieldName );
-            case START_WITH_DOLLAR_AND_BRACKET:
-                return StringUtils.replaceAll( content, "" + DOLLAR_TOTKEN + OPEN_BRACKET_TOTKEN + fieldName,
-                                               getItemTokenOpenBracket() + fieldName );
-            default:
-                if ( forceAsField )
-                {
-                    return getItemToken() + content;
-                }
-                break;
+            return getItemToken() + content;
         }
-        return content;
+        Set<ModelFieldType> types = getModelFieldTypes(content, fieldName);
+        if(types.isEmpty())
+        {
+            return content;
+        }
+
+        int typesCount = types.size();
+        String[] searchList = new String[typesCount];
+        String[] replacementList = new String[typesCount];
+
+        int i = 0;
+        for(ModelFieldType type : types)
+        {
+            searchList[i] = type.getPrefix() + fieldName;
+            replacementList[i] = type.getPrefix() + ITEM_TOKEN + fieldName;
+            i++;
+        }
+
+        return StringUtils.replaceEach(content, searchList, replacementList);
+    }
+
+    public String formatAsFieldItemList( String content, String fieldName)
+    {
+        return formatAsFieldItemList(content, fieldName, false);
     }
 
     public String getStartLoopDirective( String itemNameList, String listName )
     {
         StringBuilder result = new StringBuilder( START_FOREACH_DIRECTIVE );
-        if ( itemNameList.charAt(0) != DOLLAR_TOTKEN )
+        if ( itemNameList.charAt(0) != DOLLAR_TOKEN)
         {
-            result.append( DOLLAR_TOTKEN );
+            result.append(DOLLAR_TOKEN);
         }
         result.append( itemNameList );
         result.append( IN_DIRECTIVE );
-        if ( listName.charAt(0) !=  DOLLAR_TOTKEN )
+        if ( listName.charAt(0) != DOLLAR_TOKEN)
         {
-            result.append( DOLLAR_TOTKEN );
+            result.append(DOLLAR_TOKEN);
         }
         result.append( listName );
         result.append( ')' );
@@ -135,57 +141,52 @@ public class VelocityDocumentFormatter
     @Override
     protected boolean isModelField( String content, String fieldName )
     {
-        return getModelFieldType( content, fieldName ) != NO_VELOCITY_FIELD;
+        return !getModelFieldTypes( content, fieldName ).isEmpty();
     }
 
-    private int getModelFieldType( String content, String fieldName )
+    private Set<ModelFieldType> getModelFieldTypes(String content, String fieldName )
     {
         if ( StringUtils.isEmpty( content ) )
         {
-            return NO_VELOCITY_FIELD;
+            return Collections.emptySet();
         }
 
-        int currentIndex = -1;
-        int fieldNameIndex;
-        while((fieldNameIndex = content.indexOf(fieldName, currentIndex + 1)) != -1)
+        int startIndex = 0;
+        EnumSet<ModelFieldType> result = EnumSet.noneOf(ModelFieldType.class);
+        int index = -1;
+        while((index = content.indexOf(fieldName, startIndex)) != -1)
         {
-            currentIndex = currentIndex + fieldNameIndex + 1;
-            if( currentIndex == 0 )
+            final ModelFieldType fieldType = obtainModelFieldType(content, index);
+            if(fieldType != null)
             {
-                //no place for dollar sign
-                continue;
+                result.add(fieldType);
             }
-
-            if( content.charAt(currentIndex - 1) == OPEN_BRACKET_TOTKEN )
-            {
-                if(currentIndex == 1)
-                {
-                    //no place for dollar sign
-                    continue;
-                }
-                if( content.charAt(currentIndex - 2) == DOLLAR_TOTKEN )
-                {
-                    return START_WITH_DOLLAR_AND_BRACKET;
-                }
-            }
-            else if( content.charAt(currentIndex - 1) == DOLLAR_TOTKEN )
-            {
-                return START_WITH_DOLLAR;
-            }
-
+            startIndex = index + fieldName.length();
         }
-        return NO_VELOCITY_FIELD;
+        return result;
+    }
+
+    private ModelFieldType obtainModelFieldType(String content, int index) {
+        for(ModelFieldType type : ModelFieldType.values())
+        {
+            String prefix = type.getPrefix();
+            int prefixLength = prefix.length();
+            if(index >= prefixLength)
+            {
+                String actualPrefix = content.substring(index-prefixLength, index);
+                if(actualPrefix.equals(prefix))
+                {
+                    return type;
+                }
+            }
+        }
+        return null;
     }
 
     @Override
     protected String getItemToken()
     {
         return ITEM_TOKEN;
-    }
-
-    protected String getItemTokenOpenBracket()
-    {
-        return ITEM_TOKEN_OPEN_BRACKET;
     }
 
     public String getFunctionDirective( boolean noescape, boolean encloseInDirective, String key, String methodName,
@@ -236,7 +237,7 @@ public class VelocityDocumentFormatter
         StringBuilder field = new StringBuilder();
         if ( encloseInDirective )
         {
-            field.append( DOLLAR_TOTKEN );
+            field.append(DOLLAR_TOKEN);
         }
         for ( int i = 0; i < fields.length; i++ )
         {
@@ -258,9 +259,9 @@ public class VelocityDocumentFormatter
     public String getStartIfDirective( String fieldName, boolean exists )
     {
         StringBuilder directive = new StringBuilder( START_IF_DIRECTIVE );
-        if ( fieldName.charAt(0) != DOLLAR_TOTKEN )
+        if ( fieldName.charAt(0) != DOLLAR_TOKEN)
         {
-            directive.append( DOLLAR_TOTKEN );
+            directive.append(DOLLAR_TOKEN);
         }
         directive.append( fieldName );
         directive.append( ')' );
@@ -283,7 +284,7 @@ public class VelocityDocumentFormatter
         {
             return false;
         }
-        int dollarIndex = content.indexOf( DOLLAR_TOTKEN );
+        int dollarIndex = content.indexOf(DOLLAR_TOKEN);
         if ( dollarIndex == -1 )
         {
             // Not included to FM directive
@@ -391,7 +392,7 @@ public class VelocityDocumentFormatter
         String item = insideLoop.substring( 0, indexBeforeIn ).trim();
         // remove $
         // item='d'
-        if ( item.charAt(0) == DOLLAR_TOTKEN )
+        if ( item.charAt(0) == DOLLAR_TOKEN)
         {
             item = item.substring( 1, item.length() );
         }
@@ -410,7 +411,7 @@ public class VelocityDocumentFormatter
         String sequence = afterIn.substring( 0, endListIndex ).trim();
         // remove $
         // item='d'
-        if ( sequence.charAt(0) == DOLLAR_TOTKEN )
+        if ( sequence.charAt(0) == DOLLAR_TOKEN)
         {
             sequence = sequence.substring( 1, sequence.length() );
         }
@@ -437,7 +438,7 @@ public class VelocityDocumentFormatter
         {
             return null;
         }
-        int dollarIndex = fieldName.indexOf( DOLLAR_TOTKEN );
+        int dollarIndex = fieldName.indexOf(DOLLAR_TOKEN);
         if ( dollarIndex == -1 )
         {
             return null;

@@ -288,11 +288,6 @@ public class ODTBufferedDocumentContentHandler
                             String after = formatDirective( annotationHelper.getAfter() );
                             container.setContentAfterEndTagElement( after );
                         }
-                        if( annotationHelper.hasReplacement() )
-                        {
-                            String replacement = formatDirective( annotationHelper.getReplacement() );
-                            container.setInnerText(replacement);
-                        }
                     }
                 }
                 else
@@ -310,12 +305,12 @@ public class ODTBufferedDocumentContentHandler
                             String after = formatDirective( annotationHelper.getAfter() );
                             elementInfo.setContentAfterEndTagElement( after );
                         }
-                        if( annotationHelper.hasReplacement() )
-                        {
-                            String replacement = formatDirective( annotationHelper.getReplacement() );
-                            getCurrentElement().setInnerText(replacement);
-                        }
                     }
+                }
+                if( annotationHelper.hasReplacement() )
+                {
+                    String replacement = formatDirective( annotationHelper.getReplacement() );
+                    getCurrentElement().setInnerText(replacement);
                 }
             }
             return;

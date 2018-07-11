@@ -80,13 +80,14 @@ public class VelocityDocumentFormatter
 
     public String formatAsFieldItemList( String content, String fieldName, boolean forceAsField )
     {
-        if(forceAsField)
-        {
-            return getItemToken() + content;
-        }
+
         Set<ModelFieldType> types = getModelFieldTypes(content, fieldName);
         if(types.isEmpty())
         {
+            if(forceAsField)
+            {
+                return DOLLAR_TOKEN + getItemToken() + content;
+            }
             return content;
         }
 

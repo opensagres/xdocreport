@@ -48,8 +48,6 @@ public class ODTAnnotationParsingHelper
 
     private int index;
 
-    private boolean singeChild;
-
     /**
      * The annotation tag is parsing now.
      *
@@ -94,7 +92,6 @@ public class ODTAnnotationParsingHelper
     public void setParsingBegin( String name, int index )
     {
         this.parsing = true;
-        this.singeChild = true;
         this.content = new StringBuilder();
         this.ignore = false;
         this.before = null;
@@ -302,19 +299,6 @@ public class ODTAnnotationParsingHelper
     public boolean isTheSameBlock(int currentElementIndex)
     {
         return currentElementIndex >= index;
-    }
-
-    /**
-     * Set information, if annotation is single child of its container. In such
-     * sytuation, we should remowe annotation and its container and treat
-     * parent container as real annotation container.
-     *
-     * @param b <code>true</code> if annotation is single child of its container
-     *      <code>false</code> otherwise
-     */
-    public void setSingleChild(boolean value)
-    {
-        this.singeChild = value;
     }
 
 }

@@ -34,15 +34,47 @@ public class VelocityTemplateEngineDocumentFormatterTestCase
         throws Exception
     {
         VelocityDocumentFormatter formatter = new VelocityDocumentFormatter();
-        String fieldName = formatter.formatAsFieldItemList( "$cds.reference", "cds.reference", false );
+        String fieldName = formatter.formatAsFieldItemList( "$cds.reference", "cds.reference" );
         assertEquals( "$item_cds.reference", fieldName );
     }
 
     public void testFormatAsFieldItemListEnclosed()
-        throws Exception
+            throws Exception
     {
         VelocityDocumentFormatter formatter = new VelocityDocumentFormatter();
-        String fieldName = formatter.formatAsFieldItemList( "${cds.reference}", "cds.reference", false );
+        String fieldName = formatter.formatAsFieldItemList( "${cds.reference}", "cds.reference"  );
         assertEquals( "${item_cds.reference}", fieldName );
+    }
+
+    public void testFormatAsFieldItemListNullable()
+            throws Exception
+    {
+        VelocityDocumentFormatter formatter = new VelocityDocumentFormatter();
+        String fieldName = formatter.formatAsFieldItemList( "$!cds.reference", "cds.reference" );
+        assertEquals( "$!item_cds.reference", fieldName );
+    }
+
+    public void testFormatAsFieldItemListThree()
+            throws Exception
+    {
+        VelocityDocumentFormatter formatter = new VelocityDocumentFormatter();
+        String fieldName = formatter.formatAsFieldItemList( "$!cds.reference$cds.reference${cds.reference}", "cds.reference" );
+        assertEquals( "$!item_cds.reference$item_cds.reference${item_cds.reference}", fieldName );
+    }
+
+    public void testFormatAsFieldItemListThreeSeparated()
+            throws Exception
+    {
+        VelocityDocumentFormatter formatter = new VelocityDocumentFormatter();
+        String fieldName = formatter.formatAsFieldItemList( "$!cds.reference $cds.reference ${cds.reference}", "cds.reference" );
+        assertEquals( "$!item_cds.reference $item_cds.reference ${item_cds.reference}", fieldName );
+    }
+
+    public void testFormatAsFieldItemListThreeSeparated_and_directive()
+            throws Exception
+    {
+        VelocityDocumentFormatter formatter = new VelocityDocumentFormatter();
+        String fieldName = formatter.formatAsFieldItemList( "Before loop #foreach($d in $cds.reference)$!cds.reference#end $cds.reference ${cds.reference}", "cds.reference" );
+        assertEquals( "Before loop #foreach($d in $item_cds.reference)$!item_cds.reference#end $item_cds.reference ${item_cds.reference}", fieldName );
     }
 }

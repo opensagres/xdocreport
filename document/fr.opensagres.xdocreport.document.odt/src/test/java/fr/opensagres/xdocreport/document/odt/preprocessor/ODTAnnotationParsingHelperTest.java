@@ -140,4 +140,33 @@ public class ODTAnnotationParsingHelperTest extends TestCase
         assertEquals("#end", helper.getAfter());
     }
 
+    public void testIsNotReplacedYet() throws Exception
+    {
+        assertTrue(helper.isNotReplacedYet());
+        helper.setReplacementDone();
+        assertFalse(helper.isNotReplacedYet());
+    }
+
+    public void testIsParsing() throws Exception
+    {
+        helper.setParsingEnd();
+        assertFalse(helper.isParsing());
+        helper.setParsingBegin("test1", 10);
+        assertTrue(helper.isTheSameBlock(11));
+        assertFalse(helper.isTheSameBlock(9));
+        assertTrue(helper.isParsing());
+        helper.setParsingEnd();
+        assertFalse(helper.isParsing());
+        assertTrue(helper.isRangeAnnotation());
+        helper.resetRangeAnnotation("test1_wrongname", false);
+        assertTrue(helper.isRangeAnnotation());
+        helper.resetRangeAnnotation("test1", false);
+        assertFalse(helper.isRangeAnnotation());
+    }
+
+    public void testIsRangeAnnotation() throws Exception
+    {
+        assertFalse(helper.isRangeAnnotation());
+    }
+
 }

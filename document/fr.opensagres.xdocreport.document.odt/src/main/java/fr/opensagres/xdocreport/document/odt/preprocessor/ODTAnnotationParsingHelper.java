@@ -48,6 +48,8 @@ public class ODTAnnotationParsingHelper
 
     private int index;
 
+    private boolean notReplacedYet;
+
     /**
      * The annotation tag is parsing now.
      *
@@ -107,6 +109,7 @@ public class ODTAnnotationParsingHelper
             this.name = null;
         }
         this.index = index;
+        this.notReplacedYet = true;
     }
 
     public void setParsingEnd()
@@ -299,6 +302,27 @@ public class ODTAnnotationParsingHelper
     public boolean isTheSameBlock(int currentElementIndex)
     {
         return currentElementIndex >= index;
+    }
+
+    /**
+     * Check if in case of range annotation replacement has been already done.
+     *
+     * @return <code>true</code> when replacement has been already performed,
+     *      <code>false</code> otherwise
+     */
+    public boolean isNotReplacedYet()
+    {
+        return notReplacedYet;
+    }
+
+    /**
+     * Should be executed, when range annotation replacemen is done. It prevents
+     * unwanted multiple relacement when several containers is present in
+     * annotation range.
+     */
+    public void setReplacementDone()
+    {
+        this.notReplacedYet = false;
     }
 
 }

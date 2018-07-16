@@ -94,7 +94,7 @@ public class ODTBufferedDocumentContentHandler
     {
         FieldsMetadata fieldsMetadata = super.getFieldsMetadata();
         IDocumentFormatter formatter = super.getFormatter();
-        if( annotationHelper.isParsing() )
+        if ( annotationHelper.isParsing() )
         {
             annotationHelper.setCurrentElement( uri, localName, name );
             // only text input
@@ -270,47 +270,30 @@ public class ODTBufferedDocumentContentHandler
         if ( isAnnotation( uri, localName, name ) )
         {
             // ignore element end office:annotation
-            if( annotationHelper.isParsing() )
+            if ( annotationHelper.isParsing() )
             {
                 annotationHelper.setParsingEnd();
-                if(annotationHelper.isRangeAnnotation())
-                {
-                    BufferedElement container = getCurrentElement().getParent();
-                    if( container != null )
-                    {
-                        if( annotationHelper.hasBefore() )
-                        {
-                            String before = formatDirective( annotationHelper.getBefore() );
-                            container.setContentBeforeStartTagElement(before );
-                        }
-                        if( annotationHelper.hasAfter() )
-                        {
-                            String after = formatDirective( annotationHelper.getAfter() );
-                            container.setContentAfterEndTagElement( after );
-                        }
-                    }
-                }
-                else
+                if ( !annotationHelper.isRangeAnnotation() )
                 {
                     BufferedElement elementInfo = findParentElementInfo( annotationHelper.getParents() );
-                    if( elementInfo != null )
+                    if ( elementInfo != null )
                     {
-                        if( annotationHelper.hasBefore() )
+                        if ( annotationHelper.hasBefore() )
                         {
                             String before = formatDirective( annotationHelper.getBefore() );
                             elementInfo.setContentBeforeStartTagElement(before );
                         }
-                        if( annotationHelper.hasAfter() )
+                        if ( annotationHelper.hasAfter() )
                         {
                             String after = formatDirective( annotationHelper.getAfter() );
                             elementInfo.setContentAfterEndTagElement( after );
                         }
                     }
-                }
-                if( annotationHelper.hasReplacement() )
-                {
-                    String replacement = formatDirective( annotationHelper.getReplacement() );
-                    getCurrentElement().setInnerText(replacement);
+                    if ( annotationHelper.hasReplacement() )
+                    {
+                        String replacement = formatDirective( annotationHelper.getReplacement() );
+                        getCurrentElement().setInnerText(replacement);
+                    }
                 }
             }
             return;
@@ -447,6 +430,30 @@ public class ODTBufferedDocumentContentHandler
             else if (annotationHelper.isParsing() )
             {
                 annotationHelper.append(characters);
+            }
+            // range annotation content here
+            else
+            {
+                if( StringUtils.isNotEmpty( characters ) && annotationHelper.isNotReplacedYet() )
+                {
+                    annotationHelper.setReplacementDone();
+                    BufferedElement container = getCurrentElement();
+                    if ( annotationHelper.hasBefore() )
+                    {
+                        String before = formatDirective( annotationHelper.getBefore() );
+                        container.setContentBeforeStartTagElement(before );
+                    }
+                    if ( annotationHelper.hasAfter() )
+                    {
+                        String after = formatDirective( annotationHelper.getAfter() );
+                        container.setContentAfterEndTagElement( after );
+                    }
+                    if ( annotationHelper.hasReplacement() )
+                    {
+                        String replacement = formatDirective( annotationHelper.getReplacement() );
+                        getCurrentElement().setInnerText(replacement);
+                    }
+                }
             }
         }
         else

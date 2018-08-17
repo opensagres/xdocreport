@@ -53,6 +53,12 @@ public class PPTXSlideContentHandler
     {
         return new PPTXSlideDocument( this );
     }
+    
+    @Override
+    protected String getTableTableName()
+    {
+        return null;
+    }
 
     @Override
     protected String getTableCellName()

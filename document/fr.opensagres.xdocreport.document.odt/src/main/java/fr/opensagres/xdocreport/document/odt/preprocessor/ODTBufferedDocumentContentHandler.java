@@ -373,6 +373,12 @@ public class ODTBufferedDocumentContentHandler
     {
         return true;
     }
+    
+    @Override
+    protected String getTableTableName()
+    {
+        return "table:table";
+    }
 
     @Override
     protected String getTableRowName()

@@ -60,6 +60,8 @@ import fr.opensagres.xdocreport.template.formatter.IDocumentFormatter;
 public class DocXBufferedDocumentContentHandler extends
 		TransformedBufferedDocumentContentHandler<DocxBufferedDocument> {
 
+	private static final String W_TBL = "w:tbl";
+	
 	private static final String W_TR = "w:tr";
 
 	private static final String W_TC = "w:tc";
@@ -79,6 +81,11 @@ public class DocXBufferedDocumentContentHandler extends
 	@Override
 	protected DocxBufferedDocument createDocument() {
 		return new DocxBufferedDocument(this);
+	}
+	
+	@Override
+	protected String getTableTableName() {
+		return W_TBL;
 	}
 
 	@Override

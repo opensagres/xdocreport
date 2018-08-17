@@ -236,6 +236,34 @@ public abstract class TransformedBufferedDocumentContentHandler<Document extends
     {
         return directives;
     }
+    
+    /**
+     * Returns the before table token.
+     *
+     * @return
+     */
+    protected String getBeforeTableToken()
+    {
+        if ( fieldsMetadata == null )
+        {
+            return FieldsMetadata.DEFAULT_BEFORE_TABLE_TOKEN;
+        }
+        return fieldsMetadata.getBeforeTableToken();
+    }
+
+    /**
+     * Returns the after table token.
+     *
+     * @return
+     */
+    protected String getAfterTableToken()
+    {
+        if ( fieldsMetadata == null )
+        {
+            return FieldsMetadata.DEFAULT_AFTER_TABLE_TOKEN;
+        }
+        return fieldsMetadata.getAfterTableToken();
+    }
 
     /**
      * Returns the before row token.
@@ -324,6 +352,8 @@ public abstract class TransformedBufferedDocumentContentHandler<Document extends
     {
         return bufferedDocument.isTable( uri, localName, name );
     }
+    
+    protected abstract String getTableTableName();
 
     protected abstract String getTableRowName();
 
@@ -352,7 +382,11 @@ public abstract class TransformedBufferedDocumentContentHandler<Document extends
         String beforeElementName = fieldName.substring( 0, index );
         if ( StringUtils.isNotEmpty( beforeElementName ) )
         {
-            if ( beforeElementName.equals( getBeforeRowToken() ) )
+        	if ( beforeElementName.equals( getBeforeTableToken() ) )
+            {
+                beforeElementName = getTableTableName();
+            }
+        	else if ( beforeElementName.equals( getBeforeRowToken() ) )
             {
                 beforeElementName = getTableRowName();
             }
@@ -387,6 +421,10 @@ public abstract class TransformedBufferedDocumentContentHandler<Document extends
         {
             if ( formatter == null )
             {
+            	if ( fieldName.startsWith( getBeforeTableToken() ) )
+                {
+                    return getBeforeTableToken().length();
+                }
                 if ( fieldName.startsWith( getBeforeRowToken() ) )
                 {
                     return getBeforeRowToken().length();
@@ -397,7 +435,7 @@ public abstract class TransformedBufferedDocumentContentHandler<Document extends
                 }
                 return -1;
             }
-            if ( !( fieldName.startsWith( BEFORE_TOKEN ) || fieldName.startsWith( getBeforeRowToken() ) || fieldName.startsWith( getBeforeTableCellToken() ) ) )
+            if ( !( fieldName.startsWith( BEFORE_TOKEN ) || fieldName.startsWith( getBeforeTableToken() ) || fieldName.startsWith( getBeforeRowToken() ) || fieldName.startsWith( getBeforeTableCellToken() ) ) )
             {
                 return -1;
             }
@@ -407,6 +445,10 @@ public abstract class TransformedBufferedDocumentContentHandler<Document extends
         {
             if ( formatter == null )
             {
+            	if ( fieldName.startsWith( getAfterTableToken() ) )
+                {
+                    return getAfterTableToken().length();
+                }
                 if ( fieldName.startsWith( getAfterRowToken() ) )
                 {
                     return getAfterRowToken().length();
@@ -417,7 +459,7 @@ public abstract class TransformedBufferedDocumentContentHandler<Document extends
                 }
                 return -1;
             }
-            if ( !( fieldName.startsWith( AFTER_TOKEN ) || fieldName.startsWith( getAfterRowToken() ) || fieldName.startsWith( getAfterTableCellToken() ) ) )
+            if ( !( fieldName.startsWith( AFTER_TOKEN ) || fieldName.startsWith( getAfterTableToken() ) || fieldName.startsWith( getAfterRowToken() ) || fieldName.startsWith( getAfterTableCellToken() ) ) )
             {
                 return -1;
             }
@@ -435,7 +477,11 @@ public abstract class TransformedBufferedDocumentContentHandler<Document extends
         String afterElementName = fieldName.substring( 0, index );
         if ( StringUtils.isNotEmpty( afterElementName ) )
         {
-            if ( afterElementName.equals( getAfterRowToken() ) )
+        	if ( afterElementName.equals( getAfterTableToken() ) )
+            {
+                afterElementName = getTableTableName();
+            }
+        	else if ( afterElementName.equals( getAfterRowToken() ) )
             {
                 afterElementName = getTableRowName();
             }

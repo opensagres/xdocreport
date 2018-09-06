@@ -6,11 +6,18 @@
 		<version>2.0.2-SNAPSHOT</version>
 	</parent>
 	<artifactId>fr.opensagres.poi.xwpf.converter.core</artifactId>
+    <repositories>
+        <repository>
+            <id>apache-releases-repo</id>
+            <name>apache releases repo</name>
+            <url>https://repository.apache.org/content/repositories/releases</url>
+        </repository>
+    </repositories>
 	<dependencies>
 		<dependency>
 			<groupId>org.apache.poi</groupId>
 			<artifactId>poi-ooxml</artifactId>
-			<version>3.17</version>
+			<version>4.0.0</version>
 			<exclusions>
 				<!-- this artifact contains a subset of org.apache.poi:ooxml-schemas -->
 				<exclusion>
@@ -22,7 +29,7 @@
 		<dependency>
 			<groupId>org.apache.poi</groupId>
 			<artifactId>ooxml-schemas</artifactId>
-			<version>1.3</version>
+			<version>1.4</version>
 		</dependency>
 	</dependencies>
 </project>

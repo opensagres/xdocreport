@@ -73,13 +73,13 @@ public class ODTBufferedDocumentContentHandler
 
     private boolean textInputParsing = false;
 
-    private ODTAnnotationParsingHeler annotationHelper;
+    private ODTAnnotationParsingHelper annotationHelper;
 
     public ODTBufferedDocumentContentHandler( String entryName, FieldsMetadata fieldsMetadata,
                                               IDocumentFormatter formatter, Map<String, Object> sharedContext )
     {
         super( entryName, fieldsMetadata, formatter, sharedContext );
-        annotationHelper = new ODTAnnotationParsingHeler();
+        annotationHelper = new ODTAnnotationParsingHelper();
     }
 
     @Override
@@ -94,7 +94,7 @@ public class ODTBufferedDocumentContentHandler
     {
         FieldsMetadata fieldsMetadata = super.getFieldsMetadata();
         IDocumentFormatter formatter = super.getFormatter();
-        if( annotationHelper.isParsing() )
+        if ( annotationHelper.isParsing() )
         {
             annotationHelper.setCurrentElement( uri, localName, name );
             // only text input
@@ -103,16 +103,7 @@ public class ODTBufferedDocumentContentHandler
         else if ( isAnnotationEnd(uri, localName, name) )
         {
             String annotationName = attributes.getValue( ODTConstants.ANNOTATION_NS, ANNOTATION_NAME_ATTR );
-            boolean annotationMatch = annotationHelper.resetRangeAnnotation(annotationName, false);
-            if( annotationMatch )
-            {
-                closeRangeAnnotation();
-            }
-            return false;
-        }
-        else if( annotationHelper.isRangeAnnotation() )
-        {
-            // ignore inner content of the annotation
+            annotationHelper.resetRangeAnnotation(annotationName, false);
             return false;
         }
         else if ( isTextInput( uri, localName, name ) )
@@ -262,34 +253,14 @@ public class ODTBufferedDocumentContentHandler
         // <office:annotation office:name="__Annotation__49_1708543979">
         else if ( isAnnotation( uri, localName, name ) )
         {
-            String annotationName = attributes.getValue( ODTConstants.ANNOTATION_NS, ANNOTATION_NAME_ATTR );
-            annotationHelper.setParsingBegin(annotationName, getElementIndex());
+            if ( !annotationHelper.isRangeAnnotation() )
+            {
+                String annotationName = attributes.getValue( ODTConstants.ANNOTATION_NS, ANNOTATION_NAME_ATTR );
+                annotationHelper.setParsingBegin(annotationName, getElementIndex());
+            }
             return false;
         }
         return super.doStartElement( uri, localName, name, attributes );
-    }
-
-    private void closeRangeAnnotation()
-    {
-        BufferedElement elementInfo = getCurrentElement().getParent();
-        if( elementInfo != null )
-        {
-            if( annotationHelper.hasBefore() )
-            {
-                String before = formatDirective( annotationHelper.getBefore() );
-                elementInfo.setContentBeforeStartTagElement(before );
-            }
-            if( annotationHelper.hasAfter() )
-            {
-                String after = formatDirective( annotationHelper.getAfter() );
-                elementInfo.setContentAfterEndTagElement( after );
-            }
-        }
-        if( annotationHelper.hasReplacement() )
-        {
-            String replacement = formatDirective( annotationHelper.getReplacement() );
-            getCurrentElement().setInnerText(replacement);
-        }
     }
 
     @Override
@@ -299,23 +270,26 @@ public class ODTBufferedDocumentContentHandler
         if ( isAnnotation( uri, localName, name ) )
         {
             // ignore element end office:annotation
-            annotationHelper.setParsingEnd();
-            if(!annotationHelper.isRangeAnnotation())
+            if ( annotationHelper.isParsing() )
             {
-                BufferedElement elementInfo = findParentElementInfo( annotationHelper.getParents() );
-                if( elementInfo != null )
+                annotationHelper.setParsingEnd();
+                if ( !annotationHelper.isRangeAnnotation() )
                 {
-                    if( annotationHelper.hasBefore() )
+                    BufferedElement elementInfo = findParentElementInfo( annotationHelper.getParents() );
+                    if ( elementInfo != null )
                     {
-                        String before = formatDirective( annotationHelper.getBefore() );
-                        elementInfo.setContentBeforeStartTagElement(before );
+                        if ( annotationHelper.hasBefore() )
+                        {
+                            String before = formatDirective( annotationHelper.getBefore() );
+                            elementInfo.setContentBeforeStartTagElement(before );
+                        }
+                        if ( annotationHelper.hasAfter() )
+                        {
+                            String after = formatDirective( annotationHelper.getAfter() );
+                            elementInfo.setContentAfterEndTagElement( after );
+                        }
                     }
-                    if( annotationHelper.hasAfter() )
-                    {
-                        String after = formatDirective( annotationHelper.getAfter() );
-                        elementInfo.setContentAfterEndTagElement( after );
-                    }
-                    if( annotationHelper.hasReplacement() )
+                    if ( annotationHelper.hasReplacement() )
                     {
                         String replacement = formatDirective( annotationHelper.getReplacement() );
                         getCurrentElement().setInnerText(replacement);
@@ -324,15 +298,7 @@ public class ODTBufferedDocumentContentHandler
             }
             return;
         }
-        else if ( annotationHelper.isRangeAnnotation() && !annotationHelper.isTheSameBlock(getElementIndex()) )
-        {
-            annotationHelper.resetRangeAnnotation(null, true);
-            closeRangeAnnotation();
-            // intentionally lack of "else" becouse this is ordinary tag and should be processed
-        }
-        if ( annotationHelper.isParsing()
-                || annotationHelper.isRangeAnnotation()
-                || isAnnotationEnd(uri, localName, name) )
+        if ( annotationHelper.isParsing() || isAnnotationEnd(uri, localName, name) )
         {
             // Ignore end elements from office:annotation to office:annotation-end
             return;
@@ -470,6 +436,30 @@ public class ODTBufferedDocumentContentHandler
             else if (annotationHelper.isParsing() )
             {
                 annotationHelper.append(characters);
+            }
+            // range annotation content here
+            else
+            {
+                if( StringUtils.isNotEmpty( characters ) && annotationHelper.isNotReplacedYet() )
+                {
+                    annotationHelper.setReplacementDone();
+                    BufferedElement container = getCurrentElement();
+                    if ( annotationHelper.hasBefore() )
+                    {
+                        String before = formatDirective( annotationHelper.getBefore() );
+                        container.setContentBeforeStartTagElement(before );
+                    }
+                    if ( annotationHelper.hasAfter() )
+                    {
+                        String after = formatDirective( annotationHelper.getAfter() );
+                        container.setContentAfterEndTagElement( after );
+                    }
+                    if ( annotationHelper.hasReplacement() )
+                    {
+                        String replacement = formatDirective( annotationHelper.getReplacement() );
+                        getCurrentElement().setInnerText(replacement);
+                    }
+                }
             }
         }
         else

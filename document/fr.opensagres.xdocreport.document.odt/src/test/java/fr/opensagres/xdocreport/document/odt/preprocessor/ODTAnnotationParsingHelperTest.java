@@ -3,20 +3,20 @@ package fr.opensagres.xdocreport.document.odt.preprocessor;
 import junit.framework.TestCase;
 
 /**
- * JUnit test for {@link ODTAnnotationParsingHeler}.
+ * JUnit test for {@link ODTAnnotationParsingHelper}.
  *
  * <p>Created on 2018-07-06</p>
  *
  * @author <a href="mailto:marcin.golebski@verbis.pl">Marcin Golebski</a>
  * @version $Id$
  */
-public class ODTAnnotationParsingHelerTest extends TestCase
+public class ODTAnnotationParsingHelperTest extends TestCase
 {
-    private ODTAnnotationParsingHeler helper;
+    private ODTAnnotationParsingHelper helper;
 
-    public ODTAnnotationParsingHelerTest()
+    public ODTAnnotationParsingHelperTest()
     {
-        helper = new ODTAnnotationParsingHeler();
+        helper = new ODTAnnotationParsingHelper();
     }
 
     @Override
@@ -138,6 +138,35 @@ public class ODTAnnotationParsingHelerTest extends TestCase
         assertFalse(helper.hasBefore());
         assertTrue(helper.hasAfter());
         assertEquals("#end", helper.getAfter());
+    }
+
+    public void testIsNotReplacedYet() throws Exception
+    {
+        assertTrue(helper.isNotReplacedYet());
+        helper.setReplacementDone();
+        assertFalse(helper.isNotReplacedYet());
+    }
+
+    public void testIsParsing() throws Exception
+    {
+        helper.setParsingEnd();
+        assertFalse(helper.isParsing());
+        helper.setParsingBegin("test1", 10);
+        assertTrue(helper.isTheSameBlock(11));
+        assertFalse(helper.isTheSameBlock(9));
+        assertTrue(helper.isParsing());
+        helper.setParsingEnd();
+        assertFalse(helper.isParsing());
+        assertTrue(helper.isRangeAnnotation());
+        helper.resetRangeAnnotation("test1_wrongname", false);
+        assertTrue(helper.isRangeAnnotation());
+        helper.resetRangeAnnotation("test1", false);
+        assertFalse(helper.isRangeAnnotation());
+    }
+
+    public void testIsRangeAnnotation() throws Exception
+    {
+        assertFalse(helper.isRangeAnnotation());
     }
 
 }

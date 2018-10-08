@@ -18,13 +18,12 @@ import fr.opensagres.xdocreport.core.utils.StringUtils;
  *   <li>annotation content is treated as simple unformatted text</li>
  * </ul>
  *
- *
  * <p>Created on 2018-07-06</p>
  *
  * @author <a href="mailto:marcin.golebski@verbis.pl">Marcin Golebski</a>
  * @version $Id$
  */
-public class ODTAnnotationParsingHeler
+public class ODTAnnotationParsingHelper
 {
     private static final String BEFORE_LABEL = "@before";
 
@@ -48,6 +47,8 @@ public class ODTAnnotationParsingHeler
     private String name;
 
     private int index;
+
+    private boolean notReplacedYet;
 
     /**
      * The annotation tag is parsing now.
@@ -108,6 +109,7 @@ public class ODTAnnotationParsingHeler
             this.name = null;
         }
         this.index = index;
+        this.notReplacedYet = true;
     }
 
     public void setParsingEnd()
@@ -300,6 +302,27 @@ public class ODTAnnotationParsingHeler
     public boolean isTheSameBlock(int currentElementIndex)
     {
         return currentElementIndex >= index;
+    }
+
+    /**
+     * Check if in case of range annotation replacement has been already done.
+     *
+     * @return <code>true</code> when replacement has been already performed,
+     *      <code>false</code> otherwise
+     */
+    public boolean isNotReplacedYet()
+    {
+        return notReplacedYet;
+    }
+
+    /**
+     * Should be executed, when range annotation replacemen is done. It prevents
+     * unwanted multiple relacement when several containers is present in
+     * annotation range.
+     */
+    public void setReplacementDone()
+    {
+        this.notReplacedYet = false;
     }
 
 }

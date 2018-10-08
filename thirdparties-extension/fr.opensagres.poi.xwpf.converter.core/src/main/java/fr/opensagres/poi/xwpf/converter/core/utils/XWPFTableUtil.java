@@ -430,6 +430,11 @@ public class XWPFTableUtil
                 // if w:sz="4" => 1/4 points
                 borderSize = size.floatValue() / 8f;
             }
+            else
+            {
+                // if no border size is set, use 1/4 pt
+                borderSize = .25f;
+            }
             Color borderColor = ColorHelper.getBorderColor( border );
             return new TableCellBorder( borderSize, borderColor, fromTableCell );
         }

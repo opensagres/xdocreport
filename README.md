@@ -1,6 +1,7 @@
 XDocReport
 ==========
 
+
 [![Maven Central](https://img.shields.io/maven-central/v/fr.opensagres.xdocreport/xdocreport.svg)](http://search.maven.org/#search%7Cga%7C1%7Cg%3A%22fr.opensagres.xdocreport%22%20AND%20a%3A%22xdocreport%22)
 [![Build Status](https://secure.travis-ci.org/opensagres/xdocreport.png)](http://travis-ci.org/opensagres/xdocreport)
 

@@ -132,6 +132,15 @@ public class XHTMLMapper
             startElement( HTML_ELEMENT );
             // head start
             startElement( HEAD_ELEMENT );
+            final String charset = options.getCharset();
+            if( charset != null && charset.length() >0  ) {
+                final AttributesImpl ctAttrs = new AttributesImpl();
+                //<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+                ctAttrs.addAttribute(null, "http-equiv", null, null, "Content-Type");
+                ctAttrs.addAttribute(null, "content", null, null, "text/html; charset="+charset);
+                startElement("meta",ctAttrs);
+                endElement("meta");
+            }
             if ( generateStyles )
             {
                 // styles

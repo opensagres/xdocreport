@@ -137,4 +137,14 @@ public class XHTMLOptions
         this.contentHandlerFactory = contentHandlerFactory;
         return this;
     }
+    
+    private String charset = "UTF-8";
+
+    public String getCharset() {
+        return charset;
+    }
+
+    public void setCharset(String charset) {
+        this.charset = charset;
+    }
 }

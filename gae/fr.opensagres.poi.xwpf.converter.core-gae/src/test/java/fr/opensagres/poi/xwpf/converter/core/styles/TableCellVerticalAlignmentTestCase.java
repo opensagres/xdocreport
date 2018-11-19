@@ -39,7 +39,6 @@ import org.junit.Test;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.STVerticalJc;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.STVerticalJc.Enum;
 
-import fr.opensagres.poi.xwpf.converter.core.styles.XWPFStylesDocument;
 
 public class TableCellVerticalAlignmentTestCase
 {

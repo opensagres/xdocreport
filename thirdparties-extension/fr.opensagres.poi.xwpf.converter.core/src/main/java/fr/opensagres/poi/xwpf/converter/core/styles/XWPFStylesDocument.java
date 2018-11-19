@@ -35,7 +35,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.apache.poi.POIXMLDocumentPart;
+import org.apache.poi.ooxml.POIXMLDocumentPart;
 import org.apache.poi.xwpf.usermodel.ParagraphAlignment;
 import org.apache.poi.xwpf.usermodel.UnderlinePatterns;
 import org.apache.poi.xwpf.usermodel.VerticalAlign;
@@ -973,9 +973,9 @@ public class XWPFStylesDocument
      * @param cell
      * @return
      */
-    public TableHeight getTableRowHeight( CTTrPr trPr )
+    public TableHeight getTableRowHeight( CTTrPr cell )
     {
-        return TableRowHeightValueProvider.INSTANCE.getValue( trPr );
+        return TableRowHeightValueProvider.INSTANCE.getValue( cell );
     }
 
     public Float getTableRowMarginTop( XWPFTableRow row )

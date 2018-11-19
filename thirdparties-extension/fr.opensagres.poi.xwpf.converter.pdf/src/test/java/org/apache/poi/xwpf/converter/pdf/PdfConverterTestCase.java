@@ -29,6 +29,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 
+import org.apache.poi.openxml4j.util.ZipSecureFile;
 import org.apache.poi.xwpf.converter.core.AbstractXWPFPOIConverterTest;
 import org.apache.poi.xwpf.usermodel.XWPFDocument;
 
@@ -46,6 +47,8 @@ public class PdfConverterTestCase
         String fileOutName = root + "/" + fileInName + ".pdf";
 
         long startTime = System.currentTimeMillis();
+
+        ZipSecureFile.setMinInflateRatio(0);
 
         XWPFDocument document = new XWPFDocument( AbstractXWPFPOIConverterTest.class.getResourceAsStream( fileInName ) );
 

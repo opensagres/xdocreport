@@ -894,7 +894,14 @@ public abstract class XWPFDocumentVisitor<T, O extends Options, E extends IXWPFM
             }
             else if ( o instanceof CTDrawing )
             {
+                //Picture - DrawingML Compatible
                 visitDrawing( (CTDrawing) o, paragraphContainer );
+            }
+            else if (o instanceof org.openxmlformats.schemas.wordprocessingml.x2006.main.CTPicture)
+            {
+                //Picture - VML Compatible
+                org.openxmlformats.schemas.wordprocessingml.x2006.main.CTPicture picture = (org.openxmlformats.schemas.wordprocessingml.x2006.main.CTPicture) o;
+                visitVmlPicture(picture, paragraphContainer);
             }
         }
         if ( hasTexStyles && StringUtils.isNotEmpty( text.toString() ) )
@@ -1465,7 +1472,7 @@ public abstract class XWPFDocumentVisitor<T, O extends Options, E extends IXWPFM
                                 }
                             }
                         }
-                        // visit the picture.
+                        // visit the picture. DrawingML Compatible
                         visitPicture( picture, offsetX, relativeFromH, offsetY, relativeFromV, wrapText,
                                       parentContainer );
                     }
@@ -1521,4 +1528,8 @@ public abstract class XWPFDocumentVisitor<T, O extends Options, E extends IXWPFM
                                           T parentContainer )
         throws Exception;
 
+
+    protected abstract void visitVmlPicture(org.openxmlformats.schemas.wordprocessingml.x2006.main.CTPicture picture,
+                                            T pdfParentContainer)
+            throws Exception;
 }

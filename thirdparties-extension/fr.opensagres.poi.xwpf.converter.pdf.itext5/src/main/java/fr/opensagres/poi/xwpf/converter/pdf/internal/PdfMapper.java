@@ -33,6 +33,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.logging.Logger;
 
+import com.microsoft.schemas.vml.CTImageData;
+import com.microsoft.schemas.vml.CTShape;
+import fr.opensagres.poi.xwpf.converter.core.*;
 import org.apache.poi.xwpf.usermodel.IBodyElement;
 import org.apache.poi.xwpf.usermodel.ParagraphAlignment;
 import org.apache.poi.xwpf.usermodel.UnderlinePatterns;
@@ -46,6 +49,8 @@ import org.apache.poi.xwpf.usermodel.XWPFSDT;
 import org.apache.poi.xwpf.usermodel.XWPFTable;
 import org.apache.poi.xwpf.usermodel.XWPFTableCell;
 import org.apache.poi.xwpf.usermodel.XWPFTableRow;
+import org.apache.xmlbeans.XmlCursor;
+import org.apache.xmlbeans.XmlObject;
 import org.openxmlformats.schemas.drawingml.x2006.main.CTPositiveSize2D;
 import org.openxmlformats.schemas.drawingml.x2006.picture.CTPicture;
 import org.openxmlformats.schemas.drawingml.x2006.wordprocessingDrawing.STRelFromH;
@@ -84,15 +89,6 @@ import com.itextpdf.text.pdf.draw.DottedLineSeparator;
 import com.itextpdf.text.pdf.draw.LineSeparator;
 import com.itextpdf.text.pdf.draw.VerticalPositionMark;
 
-import fr.opensagres.poi.xwpf.converter.core.BorderSide;
-import fr.opensagres.poi.xwpf.converter.core.Color;
-import fr.opensagres.poi.xwpf.converter.core.ListItemContext;
-import fr.opensagres.poi.xwpf.converter.core.MultiValueTriplet;
-import fr.opensagres.poi.xwpf.converter.core.ParagraphLineSpacing;
-import fr.opensagres.poi.xwpf.converter.core.TableCellBorder;
-import fr.opensagres.poi.xwpf.converter.core.TableHeight;
-import fr.opensagres.poi.xwpf.converter.core.TableWidth;
-import fr.opensagres.poi.xwpf.converter.core.XWPFDocumentVisitor;
 import fr.opensagres.poi.xwpf.converter.core.styles.paragraph.ParagraphIndentationHangingValueProvider;
 import fr.opensagres.poi.xwpf.converter.core.styles.paragraph.ParagraphIndentationLeftValueProvider;
 import fr.opensagres.poi.xwpf.converter.core.utils.DxaUtil;
@@ -1293,6 +1289,54 @@ public class PdfMapper
         ExtendedPdfPTable pdfPTable = (ExtendedPdfPTable) tableContainer;
         ExtendedPdfPCell pdfPCell = (ExtendedPdfPCell) tableCellContainer;
         pdfPTable.addCell( pdfPCell );
+    }
+
+    protected void visitVmlPicture(org.openxmlformats.schemas.wordprocessingml.x2006.main.CTPicture picture,
+                                   IITextContainer pdfParentContainer)
+            throws Exception {
+        XmlCursor pictureCur = picture.newCursor();
+        pictureCur.selectPath("./*");
+        while (pictureCur.toNextSelection()) {
+            XmlObject obj = pictureCur.getObject();
+            if (obj instanceof CTShape) {
+                CTShape shape = (CTShape) obj;
+
+                List<CTImageData> imagedataList = shape.getImagedataList();
+                for (CTImageData imageData : imagedataList) {
+                    XWPFPictureData pictureData = getPictureDataByID(imageData.getId2());
+                    visitVmlPicture(pictureData, shape.getStyle(), pdfParentContainer);
+                }
+            }
+        }
+        pictureCur.dispose();
+    }
+
+    protected void visitVmlPicture(
+            XWPFPictureData pictureData, String style, IITextContainer pdfParentContainer) {
+        if (pictureData == null) {
+            return;
+        }
+
+        try {
+            Image img = Image.getInstance(pictureData.getData());
+            ImageShapeStyle imageStyle = ImageShapeStyle.parse(style);
+            img.scaleAbsolute(imageStyle.getWidth(), imageStyle.getHeight());
+            IITextContainer parentOfParentContainer = pdfParentContainer.getITextContainer();
+            if (parentOfParentContainer != null && parentOfParentContainer instanceof PdfPCell) {
+                pdfParentContainer.addElement(img);
+            } else {
+                float chunkOffsetX = 0.0F;
+                float chunkOffsetY = 0.0F;
+                if (pdfParentContainer instanceof Paragraph) {
+                    Paragraph paragraph = (Paragraph) pdfParentContainer;
+                    paragraph.setSpacingBefore(paragraph.getSpacingBefore() + 5.0F);
+                }
+
+                pdfParentContainer.addElement(new Chunk(img, chunkOffsetX, chunkOffsetY, false));
+            }
+        } catch (Exception ex) {
+            LOGGER.severe(ex.getMessage());
+        }
     }
 
     @Override

@@ -606,6 +606,12 @@ public class XHTMLMapper
         }
     }
 
+    @Override
+    protected void visitVmlPicture(org.openxmlformats.schemas.wordprocessingml.x2006.main.CTPicture picture,
+                                   Object pdfParentContainer) throws Exception {
+       //TODO: Add VML support if requited for XHTML
+    }
+
     public void setActiveMasterPage( XHTMLMasterPage masterPage )
     {
         if ( pageDiv )

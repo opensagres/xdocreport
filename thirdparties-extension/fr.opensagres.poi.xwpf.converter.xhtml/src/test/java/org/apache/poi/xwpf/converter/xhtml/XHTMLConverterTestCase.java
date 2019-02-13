@@ -30,6 +30,7 @@ import java.io.IOException;
 import java.io.OutputStream;
 
 import fr.opensagres.poi.xwpf.converter.core.ImageManager;
+import org.apache.poi.openxml4j.util.ZipSecureFile;
 import org.apache.poi.xwpf.converter.core.AbstractXWPFPOIConverterTest;
 import org.apache.poi.xwpf.usermodel.XWPFDocument;
 
@@ -53,6 +54,7 @@ public class XHTMLConverterTestCase
 
         long startTime = System.currentTimeMillis();
 
+        ZipSecureFile.setMinInflateRatio(0);
         XWPFDocument document = new XWPFDocument( AbstractXWPFPOIConverterTest.class.getResourceAsStream( fileInName ) );
 
         XHTMLOptions options = XHTMLOptions.create().indent( 4 );

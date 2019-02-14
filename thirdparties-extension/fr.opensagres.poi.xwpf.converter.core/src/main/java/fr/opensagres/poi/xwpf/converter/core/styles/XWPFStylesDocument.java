@@ -35,7 +35,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.apache.poi.POIXMLDocumentPart;
+import org.apache.poi.ooxml.POIXMLDocumentPart;
 import org.apache.poi.xwpf.usermodel.ParagraphAlignment;
 import org.apache.poi.xwpf.usermodel.UnderlinePatterns;
 import org.apache.poi.xwpf.usermodel.VerticalAlign;
@@ -1098,7 +1098,7 @@ public class XWPFStylesDocument
 
     /**
      * Returns the table cell borders with conflicts.
-     * 
+     *
      * @param cell
      * @param borderSide
      * @return
@@ -1400,7 +1400,7 @@ public class XWPFStylesDocument
      * stop locations which occur after all custom tab stops in the current paragraph have been surpassed. If this
      * element is omitted, then automatic tab stops should be generated at 720 twentieths of a point (0.5") intervals
      * across the displayed page. [Example: Consider a WordprocessingML document
-     * 
+     *
      * @return
      */
     public float getDefaultTabStop()
@@ -1451,7 +1451,7 @@ public class XWPFStylesDocument
         }
         return null;
     }
-    
+
 	private static abstract class DocumentVisitor {
 		protected abstract boolean acceptRelationshipType(String relationshipType);
 
@@ -1519,23 +1519,23 @@ public class XWPFStylesDocument
 
     private static class SettingsDocumentVisitor extends DocumentVisitor {
 		private XWPFSettings result = null;
-		
+
 		@Override
 		protected boolean acceptRelationshipType(String relationshipType) {
 			return XWPFRelation.SETTINGS.getRelation().equals(relationshipType);
 		}
-		
+
 		@Override
 		protected boolean visitDocumentPart(String relationshipType, POIXMLDocumentPart p) {
 			result = (XWPFSettings)p;
 			return true;
 		}
-		
+
 		XWPFSettings getResult() {
 			return result;
 		}
     }
-    
+
     private static XWPFSettings getSettings( XWPFDocument document )
     {
     	final SettingsDocumentVisitor visitor = new SettingsDocumentVisitor();
@@ -1551,7 +1551,7 @@ public class XWPFStylesDocument
     private static class ThemeDocumentVisitor extends DocumentVisitor {
 
     	private final List<ThemeDocument> themeDocuments = new ArrayList<ThemeDocument>();
-    	
+
 		@Override
 		protected boolean acceptRelationshipType(String relationshipType) {
 			return "http://schemas.openxmlformats.org/officeDocument/2006/relationships/theme".equals( relationshipType );
@@ -1570,13 +1570,13 @@ public class XWPFStylesDocument
 			}
 			return false;
 		}
-		
+
 		List<ThemeDocument> getThemeDocuments() {
 			return themeDocuments;
 		}
-    	
+
     }
-    
+
     private static List<ThemeDocument> getThemeDocuments( XWPFDocument document )
     {
     	final ThemeDocumentVisitor visitor = new ThemeDocumentVisitor();
@@ -1587,7 +1587,7 @@ public class XWPFStylesDocument
     private static class FontsDocumentVisitor extends DocumentVisitor {
 
     	private final List<FontsDocument> fontsDocuments = new ArrayList<FontsDocument>();
-    	
+
 		@Override
 		protected boolean acceptRelationshipType(String relationshipType) {
 			return XWPFRelation.FONT_TABLE.getRelation().equals( relationshipType );
@@ -1611,7 +1611,7 @@ public class XWPFStylesDocument
 			return fontsDocuments;
 		}
     }
-    
+
     private static List<FontsDocument> getFontsDocument( XWPFDocument document )
     {
     	final FontsDocumentVisitor visitor = new FontsDocumentVisitor();

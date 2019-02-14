@@ -96,11 +96,11 @@ public class ConverterTest
         				mavenBundle("org.slf4j", "slf4j-api", "1.6.1"),
 
         				mavenBundle("org.slf4j", "slf4j-simple", "1.6.1").noStart(),
-                        
-                        wrappedBundle( mavenBundle( "org.apache.poi", "poi", "3.8" ) ),
-                        wrappedBundle( mavenBundle( "org.apache.poi", "poi-ooxml", "3.8" ) ).exports("org.apache.poi.openxml4j.opc","org.apache.poi.xwpf.usermodel"),
+
+                        wrappedBundle( mavenBundle( "org.apache.poi", "poi", "4.0.1" ) ),
+                        wrappedBundle( mavenBundle( "org.apache.poi", "poi-ooxml", "4.0.1" ) ).exports("org.apache.poi.ooxml","org.apache.poi.openxml4j.opc","org.apache.poi.xwpf.usermodel"),
                         wrappedBundle( mavenBundle( "org.apache.servicemix.bundles", "org.apache.servicemix.bundles.xmlbeans", "2.4.0_5" ) ),
-                        wrappedBundle( mavenBundle( "org.apache.poi", "ooxml-schemas", "1.3" ) ),
+                        wrappedBundle( mavenBundle( "org.apache.poi", "ooxml-schemas", "1.4" ) ),
                         wrappedBundle( mavenBundle( "org.odftoolkit", "odfdom-java", "0.8.7" ) ),
                         wrappedBundle( mavenBundle( "com.lowagie", "itext", "2.1.7" ) )
 

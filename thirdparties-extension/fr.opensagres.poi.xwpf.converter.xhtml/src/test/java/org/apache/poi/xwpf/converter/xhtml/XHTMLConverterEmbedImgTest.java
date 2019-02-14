@@ -31,6 +31,7 @@ public class XHTMLConverterEmbedImgTest extends AbstractXWPFPOIConverterTest {
 
         long startTime = System.currentTimeMillis();
 
+        //Adjust the minInflateRatio otherwise the file triggers a false positive for a zip bomb
         ZipSecureFile.setMinInflateRatio(0);
         XWPFDocument document = new XWPFDocument( AbstractXWPFPOIConverterTest.class.getResourceAsStream( fileInName ) );
 

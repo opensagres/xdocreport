@@ -63,6 +63,8 @@ public class StylableParagraph
 
     private Color listItemFontColor;
 
+    private boolean defaultLeading = true;
+
     public StylableParagraph( StylableDocument ownerDocument, IITextContainer parent )
     {
         super();
@@ -244,6 +246,7 @@ public class StylableParagraph
     {
         super.setLeading( fixedLeading, multipliedLeading );
         this.originMultipliedLeading = multipliedLeading;
+        this.defaultLeading = false;
     }
 
     @Override
@@ -276,4 +279,10 @@ public class StylableParagraph
         }
     }
 
+    public void adjustLeading( Font font ){
+        if ( font != null ){
+            super.setLeading(font.getSize());
+            this.defaultLeading = false;
+        }
+    }
 }

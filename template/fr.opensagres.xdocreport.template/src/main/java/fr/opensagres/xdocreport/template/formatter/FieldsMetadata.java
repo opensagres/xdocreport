@@ -268,6 +268,9 @@ public class FieldsMetadata
     public FieldMetadata addField( String fieldName, Boolean listType, String imageName, String syntaxKind,
                                    Boolean syntaxWithDirective )
     {
+        if(fieldName == null) {
+            throw new IllegalArgumentException("Argument 'fieldName' can not be null");
+        }
         // Test if it exists fields with the given name
         FieldMetadata exsitingField = getFieldAsImage( fieldName );
         if ( exsitingField == null )

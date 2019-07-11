@@ -153,6 +153,186 @@ public class DocxPreprocessorTextStylingWithFreemarker
              + "[#noescape]${___NoEscape0.textEnd}[/#noescape]"
              + "</w:document>", writer.toString() );
     }
+
+    @Test
+    public void test2InstrTextWith2MD()
+        throws Exception
+    {
+        DocxPreprocessor preprocessor = new DocxPreprocessor();
+        InputStream stream =
+                        IOUtils.toInputStream( "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>\n" +
+                                "<w:document xmlns:wpc=\"http://schemas.microsoft.com/office/word/2010/wordprocessingCanvas\" xmlns:mo=\"http://schemas.microsoft.com/office/mac/office/2008/main\" xmlns:mc=\"http://schemas.openxmlformats.org/markup-compatibility/2006\" xmlns:mv=\"urn:schemas-microsoft-com:mac:vml\" xmlns:o=\"urn:schemas-microsoft-com:office:office\" xmlns:r=\"http://schemas.openxmlformats.org/officeDocument/2006/relationships\" xmlns:m=\"http://schemas.openxmlformats.org/officeDocument/2006/math\" xmlns:v=\"urn:schemas-microsoft-com:vml\" xmlns:wp14=\"http://schemas.microsoft.com/office/word/2010/wordprocessingDrawing\" xmlns:wp=\"http://schemas.openxmlformats.org/drawingml/2006/wordprocessingDrawing\" xmlns:w10=\"urn:schemas-microsoft-com:office:word\" xmlns:w=\"http://schemas.openxmlformats.org/wordprocessingml/2006/main\" xmlns:w14=\"http://schemas.microsoft.com/office/word/2010/wordml\" xmlns:w15=\"http://schemas.microsoft.com/office/word/2012/wordml\" xmlns:wpg=\"http://schemas.microsoft.com/office/word/2010/wordprocessingGroup\" xmlns:wpi=\"http://schemas.microsoft.com/office/word/2010/wordprocessingInk\" xmlns:wne=\"http://schemas.microsoft.com/office/word/2006/wordml\" xmlns:wps=\"http://schemas.microsoft.com/office/word/2010/wordprocessingShape\" mc:Ignorable=\"w14 w15 wp14\">\n" +
+                                "    <w:body>\n" +
+                                "        <w:p w14:paraId=\"1EFB801B\" w14:textId=\"77777777\" w:rsidR=\"00187DBF\" w:rsidRDefault=\"00187DBF\">\n" +
+                                "            <w:pPr>\n" +
+                                "                <w:rPr>\n" +
+                                "                    <w:lang w:val=\"en-US\"/>\n" +
+                                "                </w:rPr>\n" +
+                                "            </w:pPr>\n" +
+                                "            <w:r>\n" +
+                                "                <w:rPr>\n" +
+                                "                    <w:lang w:val=\"en-US\"/>\n" +
+                                "                </w:rPr>\n" +
+                                "                <w:fldChar w:fldCharType=\"begin\"/>\n" +
+                                "            </w:r>\n" +
+                                "            <w:r>\n" +
+                                "                <w:rPr>\n" +
+                                "                    <w:lang w:val=\"en-US\"/>\n" +
+                                "                </w:rPr>\n" +
+                                "                <w:instrText xml:space=\"preserve\"> </w:instrText>\n" +
+                                "            </w:r>\n" +
+                                "            <w:r w:rsidR=\"00DD1465\">\n" +
+                                "                <w:rPr>\n" +
+                                "                    <w:lang w:val=\"en-US\"/>\n" +
+                                "                </w:rPr>\n" +
+                                "                <w:instrText>MERGEFIELD ${field1}</w:instrText>\n" +
+                                "            </w:r>\n" +
+                                "            <w:r>\n" +
+                                "                <w:rPr>\n" +
+                                "                    <w:lang w:val=\"en-US\"/>\n" +
+                                "                </w:rPr>\n" +
+                                "                <w:instrText xml:space=\"preserve\"> \\* MERGEFORMAT </w:instrText>\n" +
+                                "            </w:r>\n" +
+                                "            <w:r>\n" +
+                                "                <w:rPr>\n" +
+                                "                    <w:lang w:val=\"en-US\"/>\n" +
+                                "                </w:rPr>\n" +
+                                "                <w:fldChar w:fldCharType=\"separate\"/>\n" +
+                                "            </w:r>\n" +
+                                "            <w:r w:rsidR=\"00DD1465\">\n" +
+                                "                <w:rPr>\n" +
+                                "                    <w:noProof/>\n" +
+                                "                    <w:lang w:val=\"en-US\"/>\n" +
+                                "                </w:rPr>\n" +
+                                "                <w:t>«${field1}»</w:t>\n" +
+                                "            </w:r>\n" +
+                                "            <w:r>\n" +
+                                "                <w:rPr>\n" +
+                                "                    <w:lang w:val=\"en-US\"/>\n" +
+                                "                </w:rPr>\n" +
+                                "                <w:fldChar w:fldCharType=\"end\"/>\n" +
+                                "            </w:r>\n" +
+                                "        </w:p>\n" +
+                                "        <w:p w14:paraId=\"316E5D55\" w14:textId=\"77777777\" w:rsidR=\"00DD1465\" w:rsidRDefault=\"00DD1465\">\n" +
+                                "            <w:pPr>\n" +
+                                "                <w:rPr>\n" +
+                                "                    <w:lang w:val=\"en-US\"/>\n" +
+                                "                </w:rPr>\n" +
+                                "            </w:pPr>\n" +
+                                "        </w:p>\n" +
+                                "        <w:p w14:paraId=\"71FF5154\" w14:textId=\"77777777\" w:rsidR=\"00DD1465\" w:rsidRDefault=\"00DD1465\" w:rsidP=\"00DD1465\">\n" +
+                                "            <w:pPr>\n" +
+                                "                <w:rPr>\n" +
+                                "                    <w:lang w:val=\"en-US\"/>\n" +
+                                "                </w:rPr>\n" +
+                                "            </w:pPr>\n" +
+                                "            <w:r>\n" +
+                                "                <w:rPr>\n" +
+                                "                    <w:lang w:val=\"en-US\"/>\n" +
+                                "                </w:rPr>\n" +
+                                "                <w:fldChar w:fldCharType=\"begin\"/>\n" +
+                                "            </w:r>\n" +
+                                "            <w:r>\n" +
+                                "                <w:rPr>\n" +
+                                "                    <w:lang w:val=\"en-US\"/>\n" +
+                                "                </w:rPr>\n" +
+                                "                <w:instrText xml:space=\"preserve\"> </w:instrText>\n" +
+                                "            </w:r>\n" +
+                                "            <w:r>\n" +
+                                "                <w:rPr>\n" +
+                                "                    <w:lang w:val=\"en-US\"/>\n" +
+                                "                </w:rPr>\n" +
+                                "                <w:instrText>MERGEFIELD ${field2</w:instrText>\n" +
+                                "            </w:r>\n" +
+                                "            <w:r>\n" +
+                                "                <w:rPr>\n" +
+                                "                    <w:lang w:val=\"en-US\"/>\n" +
+                                "                </w:rPr>\n" +
+                                "                <w:instrText xml:space=\"preserve\">} \\* MERGEFORMAT </w:instrText>\n" +
+                                "            </w:r>\n" +
+                                "            <w:r>\n" +
+                                "                <w:rPr>\n" +
+                                "                    <w:lang w:val=\"en-US\"/>\n" +
+                                "                </w:rPr>\n" +
+                                "                <w:fldChar w:fldCharType=\"separate\"/>\n" +
+                                "            </w:r>\n" +
+                                "            <w:r>\n" +
+                                "                <w:rPr>\n" +
+                                "                    <w:noProof/>\n" +
+                                "                    <w:lang w:val=\"en-US\"/>\n" +
+                                "                </w:rPr>\n" +
+                                "                <w:t>«${field2}»</w:t>\n" +
+                                "            </w:r>\n" +
+                                "            <w:r>\n" +
+                                "                <w:rPr>\n" +
+                                "                    <w:lang w:val=\"en-US\"/>\n" +
+                                "                </w:rPr>\n" +
+                                "                <w:fldChar w:fldCharType=\"end\"/>\n" +
+                                "            </w:r>\n" +
+                                "        </w:p>\n" +
+                                "    </w:body>\n" +
+                                "</w:document>"  );
+
+        StringWriter writer = new StringWriter();
+        FieldsMetadata metadata = new FieldsMetadata();
+        metadata.addFieldAsTextStyling( "field1", SyntaxKind.Html );
+        metadata.addFieldAsTextStyling( "field2", SyntaxKind.Html );
+        IDocumentFormatter formatter = new FreemarkerDocumentFormatter();
+
+        preprocessor.preprocess( "word/document.xml", stream, writer, metadata, formatter, new HashMap<String, Object>() );
+
+        Assert.assertEquals( "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?><w:document xmlns:wpc=\"http://schemas.microsoft.com/office/word/2010/wordprocessingCanvas\" xmlns:mo=\"http://schemas.microsoft.com/office/mac/office/2008/main\" xmlns:mc=\"http://schemas.openxmlformats.org/markup-compatibility/2006\" xmlns:mv=\"urn:schemas-microsoft-com:mac:vml\" xmlns:o=\"urn:schemas-microsoft-com:office:office\" xmlns:r=\"http://schemas.openxmlformats.org/officeDocument/2006/relationships\" xmlns:m=\"http://schemas.openxmlformats.org/officeDocument/2006/math\" xmlns:v=\"urn:schemas-microsoft-com:vml\" xmlns:wp14=\"http://schemas.microsoft.com/office/word/2010/wordprocessingDrawing\" xmlns:wp=\"http://schemas.openxmlformats.org/drawingml/2006/wordprocessingDrawing\" xmlns:w10=\"urn:schemas-microsoft-com:office:word\" xmlns:w=\"http://schemas.openxmlformats.org/wordprocessingml/2006/main\" xmlns:w14=\"http://schemas.microsoft.com/office/word/2010/wordml\" xmlns:w15=\"http://schemas.microsoft.com/office/word/2012/wordml\" xmlns:wpg=\"http://schemas.microsoft.com/office/word/2010/wordprocessingGroup\" xmlns:wpi=\"http://schemas.microsoft.com/office/word/2010/wordprocessingInk\" xmlns:wne=\"http://schemas.microsoft.com/office/word/2006/wordml\" xmlns:wps=\"http://schemas.microsoft.com/office/word/2010/wordprocessingShape\" mc:Ignorable=\"w14 w15 wp14\">\n" +
+                "    <w:body>\n" +
+                "        [#assign ___NoEscape0=___TextStylingRegistry.transform(field1,\"Html\",false,\"DOCX\",\"0_elementId\",___context,\"word/document.xml\")] [#noescape]${___NoEscape0.textBefore}[/#noescape]<w:p w14:paraId=\"1EFB801B\" w14:textId=\"77777777\" w:rsidR=\"00187DBF\" w:rsidRDefault=\"00187DBF\">\n" +
+                "            <w:pPr>\n" +
+                "                <w:rPr>\n" +
+                "                    <w:lang w:val=\"en-US\"/>\n" +
+                "                </w:rPr>\n" +
+                "            </w:pPr>\n" +
+                "            \n" +
+                "            \n" +
+                "            \n" +
+                "            \n" +
+                "            \n" +
+                "            <w:r w:rsidR=\"00DD1465\">\n" +
+                "                <w:rPr>\n" +
+                "                    <w:noProof/>\n" +
+                "                    <w:lang w:val=\"en-US\"/>\n" +
+                "                </w:rPr>\n" +
+                "                <w:t>[#noescape]${___NoEscape0.textBody}[/#noescape]</w:t>\n" +
+                "            </w:r>\n" +
+                "            \n" +
+                "        </w:p>[#noescape]${___NoEscape0.textEnd}[/#noescape]\n" +
+                "        <w:p w14:paraId=\"316E5D55\" w14:textId=\"77777777\" w:rsidR=\"00DD1465\" w:rsidRDefault=\"00DD1465\">\n" +
+                "            <w:pPr>\n" +
+                "                <w:rPr>\n" +
+                "                    <w:lang w:val=\"en-US\"/>\n" +
+                "                </w:rPr>\n" +
+                "            </w:pPr>\n" +
+                "        </w:p>\n" +
+                "        [#assign ___NoEscape1=___TextStylingRegistry.transform(field2,\"Html\",false,\"DOCX\",\"1_elementId\",___context,\"word/document.xml\")] [#noescape]${___NoEscape1.textBefore}[/#noescape][#assign ___NoEscape2=___TextStylingRegistry.transform(field2,\"Html\",false,\"DOCX\",\"2_elementId\",___context,\"word/document.xml\")] [#noescape]${___NoEscape2.textBefore}[/#noescape]<w:p w14:paraId=\"71FF5154\" w14:textId=\"77777777\" w:rsidR=\"00DD1465\" w:rsidRDefault=\"00DD1465\" w:rsidP=\"00DD1465\">\n" +
+                "            <w:pPr>\n" +
+                "                <w:rPr>\n" +
+                "                    <w:lang w:val=\"en-US\"/>\n" +
+                "                </w:rPr>\n" +
+                "            </w:pPr>\n" +
+                "            \n" +
+                "            \n" +
+                "            \n" +
+                "            \n" +
+                "            \n" +
+                "            <w:r>\n" +
+                "                <w:rPr>\n" +
+                "                    <w:noProof/>\n" +
+                "                    <w:lang w:val=\"en-US\"/>\n" +
+                "                </w:rPr>\n" +
+                "                <w:t>[#noescape]${___NoEscape1.textBody}[/#noescape]</w:t>\n" +
+                "            </w:r>\n" +
+                "            \n" +
+                "        </w:p>[#noescape]${___NoEscape1.textEnd}[/#noescape][#noescape]${___NoEscape2.textEnd}[/#noescape]\n" +
+                "    </w:body>\n" +
+                "</w:document>", writer.toString() );
+    }
     
     @Test
     public void textStylingWithSimpleField()

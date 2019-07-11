@@ -28,6 +28,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
+import fr.opensagres.xdocreport.template.formatter.FieldMetadata;
 import org.xml.sax.Attributes;
 
 import fr.opensagres.xdocreport.document.preprocessor.sax.BufferedElement;
@@ -170,9 +171,25 @@ public class PBufferedRegion
                     }
                     if ( rMerged.size() > 0 )
                     {
+                        /**************************/
+//                        RBufferedRegion firstR = rMerged.get( 0 );
+//                        firstR.setInstrText( mergedInstrText.toString(), firstR.getFieldAsTextStyling() );
+//                        fieldName = firstR.getFieldName();
+
                         RBufferedRegion firstR = rMerged.get( 0 );
-                        firstR.setInstrText( mergedInstrText.toString(), firstR.getFieldAsTextStyling() );
-                        fieldName = firstR.getFieldName();
+                        FieldMetadata fieldAsTextStyling = null;
+
+                        for (RBufferedRegion _region : rMerged) {
+                            fieldAsTextStyling = _region.getFieldAsTextStyling();
+                            if (fieldAsTextStyling != null) {
+                                firstR = _region;
+                                fieldName = _region.getFieldName();
+                                break;
+                            }
+                        }
+                        firstR.setInstrText( mergedInstrText.toString(), fieldAsTextStyling );
+                        /**************************/
+
                         if ( fieldName != null )
                         {
 

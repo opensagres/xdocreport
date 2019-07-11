@@ -4,3 +4,5 @@
 .classpath
 /target
 /.repository/
+*.iml
+.idea

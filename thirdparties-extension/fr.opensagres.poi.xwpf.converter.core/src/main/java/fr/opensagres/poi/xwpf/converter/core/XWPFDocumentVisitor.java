@@ -765,7 +765,7 @@ public abstract class XWPFDocumentVisitor<T, O extends Options, E extends IXWPFM
             for ( CTR r : link.getRList() )
             {
                 XWPFRun run = new XWPFHyperlinkRun( link, r, paragraph );
-                visitRun( run, false, href != null ? href : "#" + anchor, paragraphContainer );
+                visitRun( run, false, href != null ? href : (anchor!=null)?("#" + anchor):null, paragraphContainer );
             }
         }
         else if ( o instanceof CTSdtRun )

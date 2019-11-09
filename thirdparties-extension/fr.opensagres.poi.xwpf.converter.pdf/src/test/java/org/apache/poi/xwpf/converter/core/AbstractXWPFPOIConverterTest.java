@@ -528,6 +528,13 @@ public abstract class AbstractXWPFPOIConverterTest
     {
         doGenerate( "TestSuperscriptSubscript.docx" );
     }
+    
+    @Test
+    public void TestHeaderFooterWithHyperlinkAndImage()
+            throws IOException
+    {
+        doGenerate( "TestHeaderFooterWithHyperlinkAndImage.docx" );
+    }
 
     protected abstract void doGenerate( String fileName )
         throws IOException;

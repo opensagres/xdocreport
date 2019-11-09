@@ -530,19 +530,13 @@ public abstract class AbstractXWPFPOIConverterTest
     }
     
     @Test
-    public void TestHeaderWithHyperlink()
+    public void TestHeaderFooterWithHyperlinkAndImage()
             throws IOException
     {
-        doGenerate( "TestHeaderWithHyperlink.docx" );
+        doGenerate( "TestHeaderFooterWithHyperlinkAndImage.docx" );
     }
     
-    @Test
-    public void TestHeaderWithImage()
-            throws IOException
-    {
-        doGenerate( "TestHeaderWithImage.docx" );
-    }
-    protected abstract void doGenerate( String fileName )
+   protected abstract void doGenerate( String fileName )
         throws IOException;
 
 }

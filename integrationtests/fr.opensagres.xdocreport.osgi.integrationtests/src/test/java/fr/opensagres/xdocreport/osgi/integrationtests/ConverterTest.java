@@ -102,7 +102,7 @@ public class ConverterTest
                         wrappedBundle( mavenBundle( "org.apache.servicemix.bundles", "org.apache.servicemix.bundles.xmlbeans", "2.4.0_5" ) ),
                         wrappedBundle( mavenBundle( "org.apache.poi", "ooxml-schemas", "1.4" ) ),
                         wrappedBundle( mavenBundle( "org.odftoolkit", "odfdom-java", "0.8.7" ) ),
-                        wrappedBundle( mavenBundle( "com.lowagie", "itext", "2.1.7" ) )
+                        wrappedBundle( mavenBundle( "com.github.librepdf", "openpdf", "1.3.11" ) )
 
 //                        new Customizer()
 //                        {

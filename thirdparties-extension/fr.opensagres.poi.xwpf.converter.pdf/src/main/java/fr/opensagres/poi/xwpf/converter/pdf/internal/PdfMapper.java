@@ -820,10 +820,10 @@ public class PdfMapper
                 paragraph = (Paragraph) ( (StylableAnchor) pdfParagraphContainer ).getITextContainer();
             }
             currentRunX = paragraph.getFirstLineIndent();
-            List<Chunk> chunks = paragraph.getChunks();
-            for ( Chunk chunk : chunks )
+            List<Element> chunks = paragraph.getChunks();
+            for ( Element chunk : chunks )
             {
-                currentRunX += chunk.getWidthPoint();
+                currentRunX += ((Chunk) chunk).getWidthPoint();
             }
         }
         else

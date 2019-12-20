@@ -32,6 +32,10 @@
 		<module>fr.opensagres.xdocreport.itext5.extension</module>
 		<module>fr.opensagres.poi.xwpf.converter.pdf.itext5</module>
 		<module>fr.opensagres.odfdom.converter.pdf.itext5</module>
+		
+		<!-- OpenPDF Extension for PDF -->
+		<module>fr.opensagres.xdocreport.openpdf.extension</module>
+		<module>fr.opensagres.poi.xwpf.converter.pdf.openpdf</module>
 	</modules>
 	
 </project>

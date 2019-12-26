@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2011-2015 The XDocReport Team <xdocreport@googlegroups.com>
+ * Copyright (C) 2011-2012 The XDocReport Team <xdocreport@googlegroups.com>
  *
  * All rights reserved.
  *
@@ -26,8 +26,6 @@ package fr.opensagres.xdocreport.document.odt.textstyling;
 
 import java.text.DecimalFormat;
 import java.text.DecimalFormatSymbols;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 import fr.opensagres.xdocreport.document.textstyling.properties.ContainerProperties;
 import fr.opensagres.xdocreport.document.textstyling.properties.ContainerProperties.ContainerType;
@@ -35,15 +33,13 @@ import fr.opensagres.xdocreport.document.textstyling.properties.TextAlignment;
 
 /**
  * Default implementation : - uses OOo default styles for headers - uses default but renamed styles for others
- * 
+ *
  * @author <a href="mailto:tdelprat@nuxeo.com">Tiry</a>
  */
 public class ODTDefaultStylesGenerator
-    implements IODTStylesGenerator
+        implements IODTStylesGenerator
 {
     protected static final String HEADER_PREFIX = "Heading_20_";
-    
-    protected static final Pattern HEADER_PATTERN = Pattern.compile(HEADER_PREFIX + "(\\d+).*");
 
     protected static final String[] BULLET_CHARS = { "\u2022", "\u25e6", "\u25aa" };
 
@@ -156,9 +152,9 @@ public class ODTDefaultStylesGenerator
         region.append( generateStyle( BOLD_STYLE_NAME, "fo:font-weight=\"bold\"" ) );
         region.append( generateStyle( ITALIC_STYLE_NAME, "fo:font-style=\"italic\"" ) );
         region.append( generateStyle( UNDERLINE_STYLE_NAME,
-                                      "style:text-underline-style=\"solid\" style:text-underline-width=\"auto\" style:text-underline-color=\"font-color\"" ) );
+                "style:text-underline-style=\"solid\" style:text-underline-width=\"auto\" style:text-underline-color=\"font-color\"" ) );
         region.append( generateStyle( STRIKE_STYLE_NAME,
-                                      "style:text-line-through-style=\"solid\" style:text-underline-style=\"none\"" ) );
+                "style:text-line-through-style=\"solid\" style:text-underline-style=\"none\"" ) );
         region.append( generateStyle( SUBSCRIPT_STYLE_NAME, "style:text-position=\"sub\"" ) );
         region.append( generateStyle( SUPERSCRIPT_STYLE_NAME, "style:text-position=\"super\"" ) );
         return region.toString();
@@ -288,17 +284,15 @@ public class ODTDefaultStylesGenerator
 
     public int getHeaderStyleNameLevel( String styleName )
     {
-        if ( styleName == null ) {
-            return -1;
+        if ( styleName != null && styleName.startsWith( HEADER_PREFIX ) )
+        {
+            String headerIdx = styleName.substring( 11 );
+            return Integer.parseInt( headerIdx );
         }
-
-        Matcher matcher = HEADER_PATTERN.matcher(styleName);
-        if ( !matcher.find() )
+        else
         {
             return -1;
         }
-        String headerIdx = matcher.group(1);
-        return Integer.parseInt( headerIdx );
     }
 
     public String getOLStyleName()
@@ -363,7 +357,7 @@ public class ODTDefaultStylesGenerator
     private String generateStylePageBreak( boolean pageBreakBefore )
     {
         String styleName =
-            pageBreakBefore ? PAGE_BREAK_BEFORE_PARAGRAPH_STYLE_NAME : PAGE_BREAK_AFTER_PARAGRAPH_STYLE_NAME;
+                pageBreakBefore ? PAGE_BREAK_BEFORE_PARAGRAPH_STYLE_NAME : PAGE_BREAK_AFTER_PARAGRAPH_STYLE_NAME;
         StringBuilder style = new StringBuilder();
         style.append( "<style:style style:name=\"" );
         style.append( styleName );
@@ -414,17 +408,17 @@ public class ODTDefaultStylesGenerator
         setPropertiesKind( ODTStyleProperties.TEXT );
         if ( properties.isBold() )
         {
-            startStyleIfNeeded(properties.getType(), properties.getStyleName());
+            startStyleIfNeeded( properties.getType() );
             dynamicStyles.append( "fo:font-weight=\"bold\" " );
         }
         if ( properties.isItalic() )
         {
-            startStyleIfNeeded(properties.getType(), properties.getStyleName());
+            startStyleIfNeeded( properties.getType() );
             dynamicStyles.append( "fo:font-style=\"italic\" " );
         }
         if ( properties.isUnderline() )
         {
-            startStyleIfNeeded(properties.getType(), properties.getStyleName());
+            startStyleIfNeeded( properties.getType() );
             dynamicStyles.append( "style:text-underline-style=\"solid\" style:text-underline-width=\"auto\" style:text-underline-color=\"font-color\" " );
             if ( properties.isStrike() )
             {
@@ -435,19 +429,23 @@ public class ODTDefaultStylesGenerator
         {
             if ( properties.isStrike() )
             {
-                startStyleIfNeeded(properties.getType(), properties.getStyleName());
+                startStyleIfNeeded( properties.getType() );
                 dynamicStyles.append( "style:text-underline-style=\"none\" style:text-line-through-style=\"solid\" " );
             }
         }
         if ( properties.isSubscript() )
         {
-            startStyleIfNeeded(properties.getType(), properties.getStyleName());
+            startStyleIfNeeded( properties.getType() );
             dynamicStyles.append( "style:text-position=\"sub\" " );
         }
         if ( properties.isSuperscript() )
         {
-            startStyleIfNeeded(properties.getType(), properties.getStyleName());
+            startStyleIfNeeded( properties.getType() );
             dynamicStyles.append( "style:text-position=\"super\" " );
+        }
+        if (properties.getBackgroundColor() != null){
+            startStyleIfNeeded(properties.getType());
+            dynamicStyles.append( "fo:background-color=\""+ properties.getBackgroundColor()+ "\" ");
         }
 
         // <style:paragraph-properties fo:text-align="center" style:justify-single-word="false" />
@@ -458,27 +456,24 @@ public class ODTDefaultStylesGenerator
             switch ( textAlignment )
             {
                 case Center:
-                    startStyleIfNeeded(properties.getType(), properties.getStyleName());
+                    startStyleIfNeeded( properties.getType() );
                     dynamicStyles.append( "fo:text-align=\"center\" style:justify-single-word=\"false\" " );
                     break;
                 case Justify:
-                    startStyleIfNeeded(properties.getType(), properties.getStyleName());
+                    startStyleIfNeeded( properties.getType() );
                     dynamicStyles.append( "fo:text-align=\"justify\" " );
                     break;
                 case Left:
-                    startStyleIfNeeded(properties.getType(), properties.getStyleName());
+                    startStyleIfNeeded( properties.getType() );
                     dynamicStyles.append( "fo:text-align=\"left\" " );
                     break;
                 case Right:
-                    startStyleIfNeeded(properties.getType(), properties.getStyleName());
+                    startStyleIfNeeded( properties.getType() );
                     dynamicStyles.append( "fo:text-align=\"right\" " );
                     break;
             }
         }
         endStyleIfNeeded();
-        if (styleName == null && properties.getStyleName() != null) {
-            styleName = properties.getStyleName();
-        }
         return styleName;
     }
 
@@ -488,7 +483,8 @@ public class ODTDefaultStylesGenerator
         this.hasPropertiesKind = false;
     }
 
-    private void startStyleIfNeeded(ContainerType type, String baseStyleName)    {
+    private void startStyleIfNeeded( ContainerType type )
+    {
         if ( this.styleName == null )
         {
 
@@ -502,18 +498,14 @@ public class ODTDefaultStylesGenerator
             }
             dynamicStyles.append( "<style:style style:name=\"" );
             dynamicStyles.append( styleName );
-            if (baseStyleName != null) {
-                dynamicStyles.append("\" style:parent-style-name=\"");
-                dynamicStyles.append(baseStyleName);
-            }
-            if (ContainerType.PARAGRAPH.equals(type))            {
+            if ( ContainerType.PARAGRAPH.equals( type ) )
+            {
                 dynamicStyles.append( "\" style:family=\"paragraph\">" );
             }
             else
             {
                 dynamicStyles.append( "\" style:family=\"text\">" );
             }
-            
         }
         if ( !this.hasPropertiesKind )
         {

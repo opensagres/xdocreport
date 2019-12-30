@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2011-2012 The XDocReport Team <xdocreport@googlegroups.com>
+ * Copyright (C) 2011-2015 The XDocReport Team <xdocreport@googlegroups.com>
  *
  * All rights reserved.
  *
@@ -51,11 +51,13 @@ public abstract class ContainerProperties
 
     private boolean superscript;
 
+    private String backgroundColor;
+
     private TextAlignment textAlignment;
 
-    private final ContainerType type;
+    private String styleName;
 
-    private String   backgroundColor;
+    private final ContainerType type;
 
     public ContainerProperties( ContainerType type )
     {
@@ -157,6 +159,14 @@ public abstract class ContainerProperties
         this.textAlignment = textAlignment;
     }
 
+    public String getStyleName() {
+        return styleName;
+    }
+
+    public void setStyleName(String styleName) {
+        this.styleName = styleName;
+    }
+
     public String getBackgroundColor() {
         return backgroundColor;
     }
@@ -164,5 +174,4 @@ public abstract class ContainerProperties
     public void setBackgroundColor(String backgroundColor) {
         this.backgroundColor = backgroundColor;
     }
-
 }

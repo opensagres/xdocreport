@@ -35,14 +35,14 @@ import fr.opensagres.xdocreport.document.textstyling.properties.TextAlignment;
 
 /**
  * Default implementation : - uses OOo default styles for headers - uses default but renamed styles for others
- * 
+ *
  * @author <a href="mailto:tdelprat@nuxeo.com">Tiry</a>
  */
 public class ODTDefaultStylesGenerator
-    implements IODTStylesGenerator
+        implements IODTStylesGenerator
 {
     protected static final String HEADER_PREFIX = "Heading_20_";
-    
+
     protected static final Pattern HEADER_PATTERN = Pattern.compile(HEADER_PREFIX + "(\\d+).*");
 
     protected static final String[] BULLET_CHARS = { "\u2022", "\u25e6", "\u25aa" };
@@ -156,9 +156,9 @@ public class ODTDefaultStylesGenerator
         region.append( generateStyle( BOLD_STYLE_NAME, "fo:font-weight=\"bold\"" ) );
         region.append( generateStyle( ITALIC_STYLE_NAME, "fo:font-style=\"italic\"" ) );
         region.append( generateStyle( UNDERLINE_STYLE_NAME,
-                                      "style:text-underline-style=\"solid\" style:text-underline-width=\"auto\" style:text-underline-color=\"font-color\"" ) );
+                "style:text-underline-style=\"solid\" style:text-underline-width=\"auto\" style:text-underline-color=\"font-color\"" ) );
         region.append( generateStyle( STRIKE_STYLE_NAME,
-                                      "style:text-line-through-style=\"solid\" style:text-underline-style=\"none\"" ) );
+                "style:text-line-through-style=\"solid\" style:text-underline-style=\"none\"" ) );
         region.append( generateStyle( SUBSCRIPT_STYLE_NAME, "style:text-position=\"sub\"" ) );
         region.append( generateStyle( SUPERSCRIPT_STYLE_NAME, "style:text-position=\"super\"" ) );
         return region.toString();
@@ -363,7 +363,7 @@ public class ODTDefaultStylesGenerator
     private String generateStylePageBreak( boolean pageBreakBefore )
     {
         String styleName =
-            pageBreakBefore ? PAGE_BREAK_BEFORE_PARAGRAPH_STYLE_NAME : PAGE_BREAK_AFTER_PARAGRAPH_STYLE_NAME;
+                pageBreakBefore ? PAGE_BREAK_BEFORE_PARAGRAPH_STYLE_NAME : PAGE_BREAK_AFTER_PARAGRAPH_STYLE_NAME;
         StringBuilder style = new StringBuilder();
         style.append( "<style:style style:name=\"" );
         style.append( styleName );
@@ -449,6 +449,10 @@ public class ODTDefaultStylesGenerator
             startStyleIfNeeded(properties.getType(), properties.getStyleName());
             dynamicStyles.append( "style:text-position=\"super\" " );
         }
+        if (properties.getBackgroundColor() != null){
+            startStyleIfNeeded(properties.getType(), properties.getStyleName());
+            dynamicStyles.append( "fo:background-color=\""+ properties.getBackgroundColor()+ "\" ");
+        }
 
         // <style:paragraph-properties fo:text-align="center" style:justify-single-word="false" />
         setPropertiesKind( ODTStyleProperties.PARAGRAPH );
@@ -513,7 +517,7 @@ public class ODTDefaultStylesGenerator
             {
                 dynamicStyles.append( "\" style:family=\"text\">" );
             }
-            
+
         }
         if ( !this.hasPropertiesKind )
         {

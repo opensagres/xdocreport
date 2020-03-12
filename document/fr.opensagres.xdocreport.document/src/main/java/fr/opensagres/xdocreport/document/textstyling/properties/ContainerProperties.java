@@ -51,6 +51,8 @@ public abstract class ContainerProperties
 
     private boolean superscript;
 
+    private String backgroundColor;
+
     private TextAlignment textAlignment;
 
     private String styleName;
@@ -165,4 +167,11 @@ public abstract class ContainerProperties
         this.styleName = styleName;
     }
 
+    public String getBackgroundColor() {
+        return backgroundColor;
+    }
+
+    public void setBackgroundColor(String backgroundColor) {
+        this.backgroundColor = backgroundColor;
+    }
 }

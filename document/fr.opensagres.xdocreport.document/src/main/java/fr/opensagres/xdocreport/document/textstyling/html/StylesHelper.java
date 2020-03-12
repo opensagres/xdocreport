@@ -78,7 +78,7 @@ public class StylesHelper
 
     /**
      * Create {@link ParagraphProperties} from inline style.
-     * 
+     *
      * @param style
      * @return
      */
@@ -96,7 +96,7 @@ public class StylesHelper
 
     /**
      * Create {@link HeaderProperties} from inline style.
-     * 
+     *
      * @param style
      * @return
      */
@@ -114,7 +114,7 @@ public class StylesHelper
 
     /**
      * Create {@link ListItemProperties} from inline style.
-     * 
+     *
      * @param style
      * @return
      */
@@ -132,7 +132,7 @@ public class StylesHelper
 
     /**
      * Create {@link ListProperties} from inline style.
-     * 
+     *
      * @param style
      * @return
      */
@@ -150,7 +150,7 @@ public class StylesHelper
 
     /**
      * Create {@link SpanProperties} from inline style.
-     * 
+     *
      * @param style
      * @return
      */
@@ -268,6 +268,13 @@ public class StylesHelper
         if (styleName != null) {
             properties.setStyleName(styleName);
         }
+
+        // background-color
+        String backgroundColor = stylesMap.get("background-color");
+        if(backgroundColor != null) {
+            properties.setBackgroundColor(backgroundColor);
+        }
+
     }
 
     public static TableProperties createTableProperties( Attributes attributes )

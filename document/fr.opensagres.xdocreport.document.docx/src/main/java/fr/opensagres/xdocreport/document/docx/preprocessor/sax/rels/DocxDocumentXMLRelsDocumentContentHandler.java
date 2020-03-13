@@ -204,7 +204,7 @@ public class DocxDocumentXMLRelsDocumentContentHandler
     private void generateScriptsForDynamicImages( StringBuilder script )
     {
 
-        String startIf = formatter.getStartIfDirective( TemplateContextHelper.IMAGE_REGISTRY_KEY );
+        String startIf = formatter.getStartIfDirectiveIfExists( TemplateContextHelper.IMAGE_REGISTRY_KEY );
         script.append( startIf );
 
         String listInfos =
@@ -265,7 +265,7 @@ public class DocxDocumentXMLRelsDocumentContentHandler
         // be "word/document.xml").
         String registryKey =
             HyperlinkUtils.getHyperlinkRegistryKey( HyperlinkUtils.getEntryNameWithoutRels( entryName ) );
-        String startIf = formatter.getStartIfDirective( registryKey );
+        String startIf = formatter.getStartIfDirectiveIfExists( registryKey );
         script.append( startIf );
 
         String listInfos = formatter.formatAsSimpleField( false, registryKey, "Hyperlinks" );

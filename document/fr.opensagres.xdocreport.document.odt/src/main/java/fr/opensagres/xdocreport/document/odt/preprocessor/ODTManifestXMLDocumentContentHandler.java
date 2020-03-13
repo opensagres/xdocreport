@@ -55,7 +55,7 @@ public class ODTManifestXMLDocumentContentHandler
         {
             StringBuilder script = new StringBuilder();
 
-            String startIf = formatter.getStartIfDirective( TemplateContextHelper.IMAGE_REGISTRY_KEY );
+            String startIf = formatter.getStartIfDirectiveIfExists( TemplateContextHelper.IMAGE_REGISTRY_KEY );
             script.append( startIf );
 
             // 1) Generate script for dynamic images

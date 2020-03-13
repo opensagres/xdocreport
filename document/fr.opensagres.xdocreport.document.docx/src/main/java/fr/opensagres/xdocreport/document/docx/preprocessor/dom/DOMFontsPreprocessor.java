@@ -81,7 +81,7 @@ public class DOMFontsPreprocessor
                     String set = formatter.getSetDirective( FONT_SIZE_TWO_KEY, FONT_SIZE_KEY_MULT_BY_2 );
 
                     StringBuilder setWithIf = new StringBuilder();
-                    setWithIf.append( formatter.getStartIfDirective( FONT_SIZE_KEY ) );
+                    setWithIf.append( formatter.getStartIfDirectiveIfExists( FONT_SIZE_KEY ) );
                     setWithIf.append( set );
                     setWithIf.append( formatter.getEndIfDirective( FONT_SIZE_KEY ) );
 

@@ -177,6 +177,11 @@ public abstract class AbstractDocumentFormatter
 
     public String getStartIfDirective( String fieldName )
     {
+        return getStartIfDirective( fieldName, false );
+    }
+
+    public String getStartIfDirectiveIfExists(String fieldName )
+    {
         return getStartIfDirective( fieldName, true );
     }
 }

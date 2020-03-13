@@ -167,7 +167,7 @@ public class DocxNumberingDocumentContentHandler
 
         StringBuilder script = new StringBuilder();
         // Start if
-        String startIf = formatter.getStartIfDirective( DocxContextHelper.NUMBERING_REGISTRY_KEY );
+        String startIf = formatter.getStartIfDirectiveIfExists( DocxContextHelper.NUMBERING_REGISTRY_KEY );
         script.append( startIf );
 
         String listInfos =
@@ -206,7 +206,7 @@ public class DocxNumberingDocumentContentHandler
 
         StringBuilder script = new StringBuilder();
         // Start if
-        String startIf = formatter.getStartIfDirective( DocxContextHelper.NUMBERING_REGISTRY_KEY );
+        String startIf = formatter.getStartIfDirectiveIfExists( DocxContextHelper.NUMBERING_REGISTRY_KEY );
         script.append( startIf );
 
         String listInfos =

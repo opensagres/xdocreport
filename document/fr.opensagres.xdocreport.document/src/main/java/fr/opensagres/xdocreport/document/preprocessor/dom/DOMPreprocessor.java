@@ -139,7 +139,7 @@ public abstract class DOMPreprocessor
     {
 
         StringBuilder value = new StringBuilder();
-        value.append( formatter.getStartIfDirective( contextIfKey ) );       
+        value.append( formatter.getStartIfDirectiveIfExists( contextIfKey ) );
         value.append( formatter.formatAsSimpleField( true, contextValueKey ) );
         value.append( formatter.getElseDirective() );
         value.append( element.getAttribute( attrName ) );

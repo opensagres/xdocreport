@@ -45,6 +45,8 @@ public interface IDocumentFormatter
 
     String getStartIfDirective( String fieldName );
 
+    String getStartIfDirectiveIfExists( String fieldName );
+
     String getStartIfDirective( String fieldName, boolean exists );
     
     String getEndIfDirective( String fieldName );

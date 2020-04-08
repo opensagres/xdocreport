@@ -25,6 +25,7 @@
 package fr.opensagres.xdocreport.itext.extension;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import com.lowagie.text.Chunk;
 import com.lowagie.text.MarkedSection;
@@ -88,7 +89,7 @@ public class ExtendedSection
         return section;
     }
 
-    public static Paragraph constructTitle( IParagraphFactory factory, Paragraph ancestorTitle, ArrayList numbers,
+    public static Paragraph constructTitle( IParagraphFactory factory, Paragraph ancestorTitle, List<Integer> numbers,
                                             int numberDepth, int numberStyle, PdfPCell cell )
     {
         if ( ancestorTitle != null && cell != null )
@@ -114,7 +115,7 @@ public class ExtendedSection
      * @return a Paragraph object
      * @since iText 2.0.8
      */
-    public static Paragraph ancestorConstructTitle( IParagraphFactory factory, Paragraph title, ArrayList numbers,
+    public static Paragraph ancestorConstructTitle( IParagraphFactory factory, Paragraph title, List<Integer> numbers,
                                                     int numberDepth, int numberStyle )
     {
         if ( title == null )

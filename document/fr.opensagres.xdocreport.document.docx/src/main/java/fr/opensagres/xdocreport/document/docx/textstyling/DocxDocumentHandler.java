@@ -24,9 +24,6 @@
  */
 package fr.opensagres.xdocreport.document.docx.textstyling;
 
-import java.io.IOException;
-import java.util.Stack;
-
 import fr.opensagres.xdocreport.core.utils.StringUtils;
 import fr.opensagres.xdocreport.document.docx.preprocessor.DefaultStyle;
 import fr.opensagres.xdocreport.document.docx.preprocessor.sax.hyperlinks.HyperlinkRegistry;
@@ -35,6 +32,7 @@ import fr.opensagres.xdocreport.document.docx.preprocessor.sax.numbering.Numberi
 import fr.opensagres.xdocreport.document.docx.template.DocxContextHelper;
 import fr.opensagres.xdocreport.document.preprocessor.sax.BufferedElement;
 import fr.opensagres.xdocreport.document.textstyling.AbstractDocumentHandler;
+import fr.opensagres.xdocreport.document.textstyling.properties.Color;
 import fr.opensagres.xdocreport.document.textstyling.properties.ContainerProperties;
 import fr.opensagres.xdocreport.document.textstyling.properties.HeaderProperties;
 import fr.opensagres.xdocreport.document.textstyling.properties.ListItemProperties;
@@ -46,6 +44,9 @@ import fr.opensagres.xdocreport.document.textstyling.properties.TableProperties;
 import fr.opensagres.xdocreport.document.textstyling.properties.TableRowProperties;
 import fr.opensagres.xdocreport.document.textstyling.properties.TextAlignment;
 import fr.opensagres.xdocreport.template.IContext;
+
+import java.io.IOException;
+import java.util.Stack;
 
 /**
  * Document handler implementation to build docx fragment content.
@@ -61,11 +62,11 @@ public class DocxDocumentHandler
     private boolean underlining;
 
     private boolean striking;
-    
+
     private boolean subscripting;
 
     private boolean superscripting;
-    
+
     private Stack<ContainerProperties> paragraphsStack;
 
     private Stack<SpanProperties> spansStack;
@@ -231,10 +232,11 @@ public class DocxDocumentHandler
             boolean strike = striking;
             boolean subscript = subscripting;
             boolean superscript = superscripting;
+            Color color = null;
             SpanProperties properties = getCurrentSpanProperties();
             if ( properties != null )
             {
-                // ovveride properties declared in the span.
+                // override properties declared in the span.
                 if ( !bold )
                 {
                     bold = properties.isBold();
@@ -255,21 +257,22 @@ public class DocxDocumentHandler
                 {
                 	subscript = properties.isSubscript();
                 }
-                if ( !superscript)
+                if ( !superscript )
                 {
                 	superscript = properties.isSuperscript();
                 }
+                color = properties.getColor();
             }
             super.write( "<w:r>" );
             // w:RP
-            processRunProperties( false, bold, italic, underline, strike, subscript, superscript );
+            processRunProperties( false, bold, italic, underline, strike, subscript, superscript, color );
             // w:br
             for ( int i = 0; i < addLineBreak; i++ )
             {
                 super.write( "<w:br/>" );
             }
             addLineBreak = 0;
-            if(!content.isEmpty()) 
+            if ( !content.isEmpty() )
             {
 	            // w:t
 	            super.write( "<w:t xml:space=\"preserve\" >" );
@@ -281,10 +284,10 @@ public class DocxDocumentHandler
     }
 
     private void processRunProperties( boolean isInsidePPr, boolean bold, boolean italics, boolean underline,
-                                       boolean strike, boolean subscript, boolean superscript )
-        throws IOException
+                                       boolean strike, boolean subscript, boolean superscript, Color color )
+                    throws IOException
     {
-        if ( bold || italics || underline || strike || subscript || superscript  )
+        if ( bold || italics || underline || strike || subscript || superscript || color != null )
         {
             if ( isInsidePPr )
             {
@@ -307,11 +310,17 @@ public class DocxDocumentHandler
             {
                 super.write( "<w:strike />" );
             }
-            if (subscript) {
-            	super.write( "<w:vertAlign w:val=\"subscript\"/>" );
+            if ( subscript )
+            {
+                super.write( "<w:vertAlign w:val=\"subscript\"/>" );
             }
-            if (superscript) {
-            	super.write( "<w:vertAlign w:val=\"superscript\"/>" );
+            if ( superscript )
+            {
+                super.write( "<w:vertAlign w:val=\"superscript\"/>" );
+            }
+            if ( color != null )
+            {
+                super.write( "<w:color w:val=\"" + DocxColorGenerator.generate( color ) + "\"/>" );
             }
             super.write( "</w:rPr>" );
         }
@@ -340,10 +349,13 @@ public class DocxDocumentHandler
     private void internalStartParagraph( ContainerProperties properties )
         throws IOException
     {
-        if (properties != null && properties.getStyleName() != null) {
-            internalStartParagraph(properties, properties.getStyleName(), false);
-        } else {
-            internalStartParagraph(properties, null, false);
+        if ( properties != null && properties.getStyleName() != null )
+        {
+            internalStartParagraph( properties, properties.getStyleName(), false );
+        }
+        else
+        {
+            internalStartParagraph( properties, null, false );
         }
     }
 
@@ -408,7 +420,7 @@ public class DocxDocumentHandler
 
     /**
      * Generate wpPr docx element.
-     * 
+     *
      * @param properties
      * @param pStyle
      * @param isList
@@ -473,7 +485,8 @@ public class DocxDocumentHandler
             }
             // rPPr
             processRunProperties( true, properties.isBold(), properties.isItalic(), properties.isUnderline(),
-                                  properties.isStrike(), properties.isSubscript(), properties.isSuperscript() );
+                                  properties.isStrike(), properties.isSubscript(), properties.isSuperscript(),
+                                  properties.getColor() );
         }
 
         endPPrIfNeeded();
@@ -563,7 +576,7 @@ public class DocxDocumentHandler
     protected void doStartOrderedList( ListProperties properties )
         throws IOException
     {
-    	if(this.addLineBreak>0) 
+    	if(this.addLineBreak>0)
     	{
     		handleString("");
     	}
@@ -583,7 +596,7 @@ public class DocxDocumentHandler
     protected void doStartUnorderedList( ListProperties properties )
         throws IOException
     {
-    	if(this.addLineBreak>0) 
+    	if(this.addLineBreak>0)
     	{
     		handleString("");
     	}

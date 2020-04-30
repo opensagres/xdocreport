@@ -53,6 +53,8 @@ public abstract class ContainerProperties
 
     private TextAlignment textAlignment;
 
+    private Color color;
+
     private String styleName;
 
     private final ContainerType type;
@@ -157,12 +159,76 @@ public abstract class ContainerProperties
         this.textAlignment = textAlignment;
     }
 
-    public String getStyleName() {
+    public String getStyleName()
+    {
         return styleName;
     }
 
-    public void setStyleName(String styleName) {
+    public void setStyleName( String styleName )
+    {
         this.styleName = styleName;
     }
 
+    public Color getColor()
+    {
+        return color;
+    }
+
+    public void setColor( Color color )
+    {
+        this.color = color;
+    }
+
+    @Override
+    public boolean equals( Object o )
+    {
+        if ( this == o )
+            return true;
+        if ( o == null || getClass() != o.getClass() )
+            return false;
+
+        ContainerProperties that = (ContainerProperties) o;
+
+        if ( isPageBreakBefore() != that.isPageBreakBefore() )
+            return false;
+        if ( isPageBreakAfter() != that.isPageBreakAfter() )
+            return false;
+        if ( isBold() != that.isBold() )
+            return false;
+        if ( isItalic() != that.isItalic() )
+            return false;
+        if ( isUnderline() != that.isUnderline() )
+            return false;
+        if ( isStrike() != that.isStrike() )
+            return false;
+        if ( isSubscript() != that.isSubscript() )
+            return false;
+        if ( isSuperscript() != that.isSuperscript() )
+            return false;
+        if ( getTextAlignment() != that.getTextAlignment() )
+            return false;
+        if ( getColor() != null ? !getColor().equals( that.getColor() ) : that.getColor() != null )
+            return false;
+        if ( getStyleName() != null ? !getStyleName().equals( that.getStyleName() ) : that.getStyleName() != null )
+            return false;
+        return getType() == that.getType();
+    }
+
+    @Override
+    public int hashCode()
+    {
+        int result = ( isPageBreakBefore() ? 1 : 0 );
+        result = 31 * result + ( isPageBreakAfter() ? 1 : 0 );
+        result = 31 * result + ( isBold() ? 1 : 0 );
+        result = 31 * result + ( isItalic() ? 1 : 0 );
+        result = 31 * result + ( isUnderline() ? 1 : 0 );
+        result = 31 * result + ( isStrike() ? 1 : 0 );
+        result = 31 * result + ( isSubscript() ? 1 : 0 );
+        result = 31 * result + ( isSuperscript() ? 1 : 0 );
+        result = 31 * result + ( getTextAlignment() != null ? getTextAlignment().hashCode() : 0 );
+        result = 31 * result + ( getColor() != null ? getColor().hashCode() : 0 );
+        result = 31 * result + ( getStyleName() != null ? getStyleName().hashCode() : 0 );
+        result = 31 * result + ( getType() != null ? getType().hashCode() : 0 );
+        return result;
+    }
 }

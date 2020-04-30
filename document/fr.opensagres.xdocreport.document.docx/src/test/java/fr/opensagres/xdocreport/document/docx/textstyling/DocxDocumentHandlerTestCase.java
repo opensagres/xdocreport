@@ -24,10 +24,6 @@
  */
 package fr.opensagres.xdocreport.document.docx.textstyling;
 
-import junit.framework.Assert;
-
-import org.junit.Test;
-
 import fr.opensagres.xdocreport.document.docx.preprocessor.DefaultStyle;
 import fr.opensagres.xdocreport.document.docx.preprocessor.sax.hyperlinks.HyperlinkInfo;
 import fr.opensagres.xdocreport.document.docx.preprocessor.sax.hyperlinks.HyperlinkRegistry;
@@ -37,13 +33,15 @@ import fr.opensagres.xdocreport.document.textstyling.IDocumentHandler;
 import fr.opensagres.xdocreport.document.textstyling.ITextStylingTransformer;
 import fr.opensagres.xdocreport.document.textstyling.html.HTMLTextStylingTransformer;
 import fr.opensagres.xdocreport.template.IContext;
+import junit.framework.Assert;
+import org.junit.Test;
 
 public class DocxDocumentHandlerTestCase
 {
 
     @Test
     public void testSpecialCharacter()
-        throws Exception
+                    throws Exception
     {
         IContext context = new MockContext();
         BufferedElement parent = null;
@@ -53,14 +51,33 @@ public class DocxDocumentHandlerTestCase
         formatter.transform( "&auml; &uuml; &eacute;", handler );
 
         Assert.assertEquals( "", handler.getTextBefore() );
-        Assert.assertEquals( "<w:r><w:t xml:space=\"preserve\" >ä </w:t></w:r><w:r><w:t xml:space=\"preserve\" >ü </w:t></w:r><w:r><w:t xml:space=\"preserve\" >é</w:t></w:r>",
-                             handler.getTextBody() );
+        Assert.assertEquals(
+                        "<w:r><w:t xml:space=\"preserve\" >ä </w:t></w:r><w:r><w:t xml:space=\"preserve\" >ü </w:t></w:r><w:r><w:t xml:space=\"preserve\" >é</w:t></w:r>",
+                        handler.getTextBody() );
+        Assert.assertEquals( "", handler.getTextEnd() );
+    }
+
+    @Test
+    public void testStyleColor()
+                    throws Exception
+    {
+        IContext context = new MockContext();
+        BufferedElement parent = null;
+
+        ITextStylingTransformer formatter = HTMLTextStylingTransformer.INSTANCE;
+        IDocumentHandler handler = new DocxDocumentHandler( parent, context, "word/document.xml" );
+        formatter.transform( "<span style=\"color: rgb(255, 0, 0);\">Test</span>", handler );
+
+        Assert.assertEquals( "", handler.getTextBefore() );
+        Assert.assertEquals(
+                        "<w:r><w:rPr><w:color w:val=\"FF0000\"/></w:rPr><w:t xml:space=\"preserve\" >Test</w:t></w:r>",
+                        handler.getTextBody() );
         Assert.assertEquals( "", handler.getTextEnd() );
     }
 
     @Test
     public void testSpecialCharacterAmp()
-        throws Exception
+                    throws Exception
     {
         IContext context = new MockContext();
         BufferedElement parent = null;

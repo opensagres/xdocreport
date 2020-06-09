@@ -25,6 +25,7 @@
 package fr.opensagres.xdocreport.document.textstyling;
 
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 
 import fr.opensagres.xdocreport.core.io.IOUtils;
 import fr.opensagres.xdocreport.core.utils.StringUtils;
@@ -60,7 +61,7 @@ public class Style
         String content = "";
         try
         {
-            content = IOUtils.toString( clazz.getResourceAsStream( id + ".xml" ) );
+            content = IOUtils.toString( clazz.getResourceAsStream( id + ".xml" ), StandardCharsets.UTF_8.name() );
             content = StringUtils.replaceEach( content, searchList, replacementList );
         }
         catch ( IOException e )

@@ -222,10 +222,9 @@ public class StylableParagraph
         // add space if this paragraph is empty
         // otherwise its height will be zero
         boolean empty = true;
-        ArrayList<Element> elements = getChunks();
-        for ( Element element : elements )
+        ArrayList<Chunk> chunks = getChunks();
+        for ( Chunk chunk : chunks )
         {
-            Chunk chunk = (Chunk)element;
             if ( chunk.getImage() == null && chunk.getContent() != null && chunk.getContent().length() > 0 )
             {
                 empty = false;
@@ -243,11 +242,10 @@ public class StylableParagraph
     {
         // add space if last chunk is a bookmark
         // otherwise the bookmark will disappear from pdf
-        ArrayList<Element> elements = getChunks();
-        if ( elements.size() > 0 )
+        ArrayList<Chunk> chunks = getChunks();
+        if ( chunks.size() > 0 )
         {
-
-            Chunk lastChunk = (Chunk) elements.get( elements.size() - 1 );
+            Chunk lastChunk = chunks.get( chunks.size() - 1 );
             String localDestination = null;
             if ( lastChunk.getAttributes() != null )
             {
@@ -291,10 +289,9 @@ public class StylableParagraph
             // again this may be inaccurate if fonts with different size are used in this paragraph
             float itextdescender = -font.getBaseFont().getFontDescriptor( BaseFont.DESCENT, size ); // negative
             float textRise = itextdescender + getTotalLeading() - font.getSize() * multiplier;
-            ArrayList<Element> elements = getChunks();
-            for ( Element element : elements )
+            ArrayList<Chunk> chunks = getChunks();
+            for ( Chunk chunk : chunks )
             {
-                Chunk chunk = (Chunk)element;
                 Font f = chunk.getFont();
                 if ( f != null )
                 {
@@ -326,10 +323,9 @@ public class StylableParagraph
         Map<String, Integer> countMap = new LinkedHashMap<String, Integer>();
         Font mostUsedFont = null;
         int mostUsedCount = -1;
-        ArrayList<Element> elements = getChunks();
-        for ( Element element : elements )
+        ArrayList<Chunk> chunks = getChunks();
+        for ( Chunk chunk : chunks )
         {
-            Chunk chunk = (Chunk) element;
             Font font = chunk.getFont();
             int count = 0;
             String text = chunk.getContent();

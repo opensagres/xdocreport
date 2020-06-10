@@ -28,7 +28,6 @@ import static fr.opensagres.poi.xwpf.converter.core.utils.DxaUtil.emu2points;
 
 import java.io.OutputStream;
 import java.math.BigInteger;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -821,10 +820,10 @@ public class PdfMapper
                 paragraph = (Paragraph) ( (StylableAnchor) pdfParagraphContainer ).getITextContainer();
             }
             currentRunX = paragraph.getFirstLineIndent();
-            ArrayList<Element> elements = paragraph.getChunks();
-            for ( Element element : elements )
+            List<Chunk> chunks = paragraph.getChunks();
+            for ( Chunk chunk : chunks )
             {
-                currentRunX += ((Chunk)element).getWidthPoint();
+                currentRunX += chunk.getWidthPoint();
             }
         }
         else

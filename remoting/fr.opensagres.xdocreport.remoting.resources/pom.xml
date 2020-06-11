@@ -6,4 +6,22 @@
     <version>2.0.3-SNAPSHOT</version>
   </parent>
   <artifactId>fr.opensagres.xdocreport.remoting.resources</artifactId>
+  <dependencies>
+    <dependency>
+      <groupId>jakarta.xml.bind</groupId>
+      <artifactId>jakarta.xml.bind-api</artifactId>
+      <version>2.3.3</version>
+    </dependency>
+    <dependency>
+      <groupId>jakarta.xml.ws</groupId>
+      <artifactId>jakarta.xml.ws-api</artifactId>
+      <version>2.3.3</version>
+    </dependency>
+    <dependency>
+      <groupId>jakarta.jws</groupId>
+      <artifactId>jakarta.jws-api</artifactId>
+      <version>2.1.0</version>
+    </dependency>
+  </dependencies>
 </project>
+

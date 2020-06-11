@@ -47,7 +47,7 @@ public class StylesHelperTest
         SpanProperties expectedSpanProperties = new SpanProperties();
 
         Assert.assertEquals( expectedSpanProperties, StylesHelper.createSpanProperties( "color: rgb(2303, 0, 0);" ) );
-        Assert.assertEquals( expectedSpanProperties, StylesHelper.createSpanProperties( "color: #123456;" ) );
+        Assert.assertEquals( expectedSpanProperties, StylesHelper.createSpanProperties( "color: #1234567;" ) );
         Assert.assertEquals( expectedSpanProperties, StylesHelper.createSpanProperties( "color: invalid;" ) );
     }
 }

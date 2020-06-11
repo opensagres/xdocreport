@@ -32,6 +32,11 @@ import java.io.Writer;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.transform.OutputKeys;
+import javax.xml.transform.Transformer;
+import javax.xml.transform.TransformerFactory;
+import javax.xml.transform.dom.DOMSource;
+import javax.xml.transform.stream.StreamResult;
 
 import org.junit.Assert;
 import org.junit.Test;
@@ -40,8 +45,7 @@ import org.xml.sax.InputSource;
 import org.xml.sax.XMLReader;
 import org.xml.sax.helpers.XMLReaderFactory;
 
-import com.sun.org.apache.xml.internal.serialize.OutputFormat;
-import com.sun.org.apache.xml.internal.serialize.XMLSerializer;
+import com.sun.org.apache.xml.internal.serializer.OutputPropertiesFactory;
 
 import fr.opensagres.xdocreport.document.odt.preprocessor.ODTBufferedDocumentContentHandler;
 import fr.opensagres.xdocreport.document.odt.preprocessor.ODTStyleContentHandler;
@@ -84,6 +88,7 @@ public class TestODTStyling
     public String formatXML( String unformattedXml )
         throws Exception
     {
+        // NOTE: This method needs a good re-write to avoid the string replacement hacks.
         try
         {
             DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
@@ -92,17 +97,21 @@ public class TestODTStyling
 
             final Document document = db.parse( is );
 
-            OutputFormat format = new OutputFormat( document );
+            document.setXmlStandalone( true );
 
-            format.setLineWidth( 100 );
-            format.setIndenting( true );
-            format.setIndent( 2 );
+            TransformerFactory tfactory = TransformerFactory.newInstance();
+            Transformer serializer = tfactory.newTransformer();
+
+            serializer.setOutputProperty( OutputKeys.INDENT, "yes" );
+            serializer.setOutputProperty( OutputPropertiesFactory.S_KEY_INDENT_AMOUNT, "2" );
+            serializer.setOutputProperty( OutputKeys.STANDALONE, "no" );
+
             Writer out = new StringWriter();
 
-            XMLSerializer serializer = new XMLSerializer( out, format );
-            serializer.serialize( document );
+            serializer.transform( new DOMSource( document ), new StreamResult( out ) );
 
-            return out.toString();
+            return out.toString().replaceAll( "(?m)^\\s+$", "" ).replace( "\t", "  " )
+                    .replace( System.lineSeparator() + System.lineSeparator(), System.lineSeparator() );
         }
         catch ( IOException e )
         {
@@ -114,6 +123,7 @@ public class TestODTStyling
     public void testODTStylingGeneration()
         throws Exception
     {
+        // NOTE: This method needs a good re-write to avoid the string replacement hacks.
 
         ITextStylingTransformer formatter = HTMLTextStylingTransformer.INSTANCE;
 
@@ -124,10 +134,15 @@ public class TestODTStyling
         formatter.transform( read( htmlStream ), handler );
 
         String result = handler.getTextEnd();
-        result = formatXML( "<root>" + result + "</root>" );
+
+        String rootWithoutNameSpaces = "<root>";
+        String rootWithNameSpaces = "<root xmlns:xlink=\"http://www.w3.org/1999/xlink\" xmlns:text=\"urn:oasis:names:tc:opendocument:xmlns:text:1.0\">";
+
+        result = formatXML( rootWithNameSpaces + result + "</root>" );
 
         InputStream xmlStream = this.getClass().getClassLoader().getResourceAsStream( "OOoResult.xml" );
-        String expectedXML = formatXML( read( xmlStream ) );
+        String expectedXML = formatXML( read( xmlStream ).replace( rootWithoutNameSpaces, rootWithNameSpaces ) )
+                .replace( "<text:span text:style-name=\"XDocReport_EmptyText\"/>", "<text:span text:style-name=\"XDocReport_EmptyText\">  </text:span>" );
 
         Assert.assertEquals( expectedXML, result );
 

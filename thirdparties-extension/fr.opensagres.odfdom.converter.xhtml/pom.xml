@@ -2,20 +2,26 @@
   <modelVersion>4.0.0</modelVersion>
   <artifactId>fr.opensagres.odfdom.converter.xhtml</artifactId>
   <parent>
-		<groupId>fr.opensagres.xdocreport</groupId>
-		<artifactId>thirdparties-extension</artifactId>
-		<version>2.0.3-SNAPSHOT</version>
-	</parent>
+    <groupId>fr.opensagres.xdocreport</groupId>
+    <artifactId>thirdparties-extension</artifactId>
+    <version>2.0.3-SNAPSHOT</version>
+  </parent>
   <dependencies>
-  	<dependency>
-  		<groupId>fr.opensagres.xdocreport</groupId>
-  		<artifactId>fr.opensagres.odfdom.converter.core</artifactId>
-  		<version>2.0.3-SNAPSHOT</version>
-  	</dependency>
-      <dependency>
-          <groupId>fr.opensagres.xdocreport</groupId>
-          <artifactId>fr.opensagres.xdocreport.core</artifactId>
-          <version>2.0.3-SNAPSHOT</version>
-      </dependency>
+    <dependency>
+      <groupId>fr.opensagres.xdocreport</groupId>
+      <artifactId>fr.opensagres.odfdom.converter.core</artifactId>
+      <version>2.0.3-SNAPSHOT</version>
+    </dependency>
+    <dependency>
+        <groupId>fr.opensagres.xdocreport</groupId>
+        <artifactId>fr.opensagres.xdocreport.core</artifactId>
+        <version>2.0.3-SNAPSHOT</version>
+    </dependency>
+    <dependency>
+      <groupId>javax.activation</groupId>
+      <artifactId>activation</artifactId>
+      <version>1.1.1</version>
+    </dependency>
   </dependencies>
 </project>
+

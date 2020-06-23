@@ -24,23 +24,13 @@
  */
 package fr.opensagres.xdocreport.document.textstyling.html;
 
+import fr.opensagres.xdocreport.core.utils.StringUtils;
+import fr.opensagres.xdocreport.document.textstyling.properties.*;
+import org.xml.sax.Attributes;
+
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
-
-import org.xml.sax.Attributes;
-
-import fr.opensagres.xdocreport.core.utils.StringUtils;
-import fr.opensagres.xdocreport.document.textstyling.properties.ContainerProperties;
-import fr.opensagres.xdocreport.document.textstyling.properties.HeaderProperties;
-import fr.opensagres.xdocreport.document.textstyling.properties.ListItemProperties;
-import fr.opensagres.xdocreport.document.textstyling.properties.ListProperties;
-import fr.opensagres.xdocreport.document.textstyling.properties.ParagraphProperties;
-import fr.opensagres.xdocreport.document.textstyling.properties.SpanProperties;
-import fr.opensagres.xdocreport.document.textstyling.properties.TableCellProperties;
-import fr.opensagres.xdocreport.document.textstyling.properties.TableProperties;
-import fr.opensagres.xdocreport.document.textstyling.properties.TableRowProperties;
-import fr.opensagres.xdocreport.document.textstyling.properties.TextAlignment;
 
 /**
  * Styles Helper.
@@ -263,10 +253,19 @@ public class StylesHelper
             }
 
         }
+
+        // color
+        String color = stylesMap.get( "color" );
+        if ( color != null )
+        {
+            properties.setColor( HTMLColorParser.parse( color ) );
+        }
+
         // style
-        String styleName = stylesMap.get("name");
-        if (styleName != null) {
-            properties.setStyleName(styleName);
+        String styleName = stylesMap.get( "name" );
+        if ( styleName != null )
+        {
+            properties.setStyleName( styleName );
         }
     }
 

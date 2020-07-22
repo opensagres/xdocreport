@@ -53,7 +53,7 @@ public class VelocityTemplateEngineDiscovery
 
     /**
      * Returns the {@link Properties} used to initialize Velocity Engine.
-     * 
+     *
      * @return
      */
     private synchronized Properties getVelocityEngineProperties( Properties velocityDefaultProperties )
@@ -80,6 +80,14 @@ public class VelocityTemplateEngineDiscovery
                                                   XDocReportEntryResourceLoader.class.getName() );
             velocityEngineProperties.setProperty( "report.resource.loader.cache", "true" );
             velocityEngineProperties.setProperty( "report.resource.loader.modificationCheckInterval", "1" );
+	        velocityEngineProperties.setProperty( "introspector.conversion_handler.class","none" );
+	        velocityEngineProperties.setProperty( "parser.space_gobbling","bc" );
+	        velocityEngineProperties.setProperty( "directive.if.empty_check","false" );
+	        velocityEngineProperties.setProperty( "parser.allow_hyphen_in_identifiers","true" );
+	        velocityEngineProperties.setProperty( "velocimacro.enable_bc_mode","true" );
+	        velocityEngineProperties.setProperty( "event_handler.invalid_references.quiet","true" );
+	        velocityEngineProperties.setProperty( "event_handler.invalid_references.null","true" );
+	        velocityEngineProperties.setProperty( "event_handler.invalid_references.tested","true" );
 
             // Disable log for Velocity to avoid to generate velocity.log (by
             // default)
@@ -102,7 +110,7 @@ public class VelocityTemplateEngineDiscovery
 
     /**
      * Reads 'velocity.properties' from classpath
-     * 
+     *
      * @return <code>Properties</code> loaded or <code>null</code> if is not found
      */
     private synchronized Properties getVelocityDefaultProperties()

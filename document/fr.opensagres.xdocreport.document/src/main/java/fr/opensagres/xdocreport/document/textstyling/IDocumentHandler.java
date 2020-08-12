@@ -26,14 +26,8 @@ package fr.opensagres.xdocreport.document.textstyling;
 
 import java.io.IOException;
 
-import fr.opensagres.xdocreport.document.textstyling.properties.HeaderProperties;
-import fr.opensagres.xdocreport.document.textstyling.properties.ListItemProperties;
-import fr.opensagres.xdocreport.document.textstyling.properties.ListProperties;
-import fr.opensagres.xdocreport.document.textstyling.properties.ParagraphProperties;
-import fr.opensagres.xdocreport.document.textstyling.properties.SpanProperties;
-import fr.opensagres.xdocreport.document.textstyling.properties.TableCellProperties;
+import fr.opensagres.xdocreport.document.textstyling.properties.ContainerProperties;
 import fr.opensagres.xdocreport.document.textstyling.properties.TableProperties;
-import fr.opensagres.xdocreport.document.textstyling.properties.TableRowProperties;
 
 /**
  * Handler to build a document.
@@ -62,7 +56,7 @@ public interface IDocumentHandler
     /**
      * Start paragraph.
      */
-    void startParagraph( ParagraphProperties properties )
+    void startParagraph( ContainerProperties properties )
         throws IOException;
 
     /**
@@ -148,7 +142,7 @@ public interface IDocumentHandler
      * 
      * @param properties
      */
-    void startOrderedList( ListProperties properties )
+    void startOrderedList( ContainerProperties properties )
         throws IOException;
 
     /**
@@ -162,7 +156,7 @@ public interface IDocumentHandler
      * 
      * @param properties
      */
-    void startUnorderedList( ListProperties properties )
+    void startUnorderedList( ContainerProperties properties )
         throws IOException;
 
     /**
@@ -174,7 +168,7 @@ public interface IDocumentHandler
     /**
      * Start list item.
      */
-    void startListItem( ListItemProperties properties )
+    void startListItem( ContainerProperties properties )
         throws IOException;
 
     /**
@@ -186,7 +180,7 @@ public interface IDocumentHandler
     /**
      * Start span item.
      */
-    void startSpan( SpanProperties properties )
+    void startSpan( ContainerProperties properties )
         throws IOException;
 
     /**
@@ -209,7 +203,7 @@ public interface IDocumentHandler
      * @param level
      * @throws IOException
      */
-    void startHeading( int level, HeaderProperties properties )
+    void startHeading( int level, ContainerProperties properties )
         throws IOException;
 
     /**
@@ -243,7 +237,7 @@ public interface IDocumentHandler
      * @param properties  table row properties.
        @throws IOException
      */
-    void startTableRow (TableRowProperties properties )
+    void startTableRow ( ContainerProperties properties )
         throws IOException;
 
     /**
@@ -260,7 +254,7 @@ public interface IDocumentHandler
      * @param properties table cell propertie.
      * @throws IOException
      */
-    void startTableCell( TableCellProperties properties )
+    void startTableCell( ContainerProperties properties )
         throws IOException;
 
     /**

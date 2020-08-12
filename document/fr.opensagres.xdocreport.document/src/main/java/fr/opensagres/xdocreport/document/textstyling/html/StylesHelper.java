@@ -67,90 +67,19 @@ public class StylesHelper
     }
 
     /**
-     * Create {@link ParagraphProperties} from inline style.
+     * Create {@link ContainerProperties} from inline style.
      * 
      * @param style
+     * @param type
      * @return
      */
-    public static ParagraphProperties createParagraphProperties( String style )
+    public static ContainerProperties createProperties( String style, ContainerType type )
     {
         Map<String, String> stylesMap = StylesHelper.parse( style );
         if ( !stylesMap.isEmpty() )
         {
-            ParagraphProperties properties = new ParagraphProperties();
+            ContainerProperties properties = new ContainerProperties( type );
             processContainerproperties(properties, stylesMap);
-            return properties;
-        }
-        return null;
-    }
-
-    /**
-     * Create {@link HeaderProperties} from inline style.
-     * 
-     * @param style
-     * @return
-     */
-    public static HeaderProperties createHeaderProperties( String style )
-    {
-        Map<String, String> stylesMap = StylesHelper.parse( style );
-        if ( !stylesMap.isEmpty() )
-        {
-            HeaderProperties properties = new HeaderProperties();
-            processContainerproperties( properties, stylesMap );
-            return properties;
-        }
-        return null;
-    }
-
-    /**
-     * Create {@link ListItemProperties} from inline style.
-     * 
-     * @param style
-     * @return
-     */
-    public static ListItemProperties createListItemProperties( String style )
-    {
-        Map<String, String> stylesMap = StylesHelper.parse( style );
-        if ( !stylesMap.isEmpty() )
-        {
-            ListItemProperties properties = new ListItemProperties();
-            processContainerproperties( properties, stylesMap );
-            return properties;
-        }
-        return null;
-    }
-
-    /**
-     * Create {@link ListProperties} from inline style.
-     * 
-     * @param style
-     * @return
-     */
-    public static ListProperties createListProperties( String style )
-    {
-        Map<String, String> stylesMap = StylesHelper.parse( style );
-        if ( !stylesMap.isEmpty() )
-        {
-            ListProperties properties = new ListProperties();
-            processContainerproperties( properties, stylesMap );
-            return properties;
-        }
-        return null;
-    }
-
-    /**
-     * Create {@link SpanProperties} from inline style.
-     * 
-     * @param style
-     * @return
-     */
-    public static SpanProperties createSpanProperties( String style )
-    {
-        Map<String, String> stylesMap = StylesHelper.parse( style );
-        if ( !stylesMap.isEmpty() )
-        {
-            SpanProperties properties = new SpanProperties();
-            processContainerproperties( properties, stylesMap );
             return properties;
         }
         return null;
@@ -272,18 +201,6 @@ public class StylesHelper
     public static TableProperties createTableProperties( Attributes attributes )
     {
         TableProperties properties = new TableProperties();
-        return properties;
-    }
-
-    public static TableRowProperties createTableRowProperties( Attributes attributes )
-    {
-        TableRowProperties properties = new TableRowProperties();
-        return properties;
-    }
-
-    public static TableCellProperties createTableCellProperties( Attributes attributes )
-    {
-        TableCellProperties properties = new TableCellProperties();
         return properties;
     }
 }

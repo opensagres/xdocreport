@@ -45,6 +45,17 @@ public class FileImageProviderTestCase
     }
 
     @Test
+    public void loadSVGWithoutUsingImageSize()
+        throws Exception
+    {
+        IImageProvider imageProvider =
+            new FileImageProvider( new File( "src/test/resources/fr/opensagres/xdocreport/document/images/svg.svg" ) );
+        Assert.assertEquals( ImageFormat.svg, imageProvider.getImageFormat() );
+        Assert.assertNull( imageProvider.getWidth(null) );
+        Assert.assertNull( imageProvider.getHeight(null) );
+    }
+
+    @Test
     public void loadPNGAndUseImageSize()
         throws Exception
     {

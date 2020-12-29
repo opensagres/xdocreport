@@ -31,6 +31,7 @@ import com.lowagie.text.Table;
 import com.lowagie.text.pdf.PdfPCell;
 import com.lowagie.text.pdf.PdfPRow;
 import com.lowagie.text.pdf.PdfPTable;
+import com.lowagie.text.pdf.PdfWriter;
 
 public class ExtendedPdfPTable
     extends PdfPTable
@@ -151,6 +152,10 @@ public class ExtendedPdfPTable
         if ( aboveRow == null )
             return false;
         PdfPCell aboveCell = (PdfPCell) aboveRow.getCells()[currCol];
+        if (aboveCell == null) {
+            aboveCell = getCellAboveWithColspan(aboveRow, currCol);
+        }
+
         while ( ( aboveCell == null ) && ( row > 0 ) )
         {
             aboveRow = (PdfPRow) rows.get( --row );
@@ -194,7 +199,62 @@ public class ExtendedPdfPTable
     public void addCell( PdfPCell cell )
     {
         this.empty = false;
-        super.addCell( cell );
+        // direct copy from parent
+        // the entire idea of coping is to call our skipColsWithRowspanAbove (which is private in parent class)
+        rowCompleted = false;
+        PdfPCell ncell = new PdfPCell(cell);
+
+        int colspan = ncell.getColspan();
+        colspan = Math.max(colspan, 1);
+        colspan = Math.min(colspan, currentRow.length - currentRowIdx);
+        ncell.setColspan(colspan);
+
+        if (colspan != 1)
+            isColspan = true;
+        int rdir = ncell.getRunDirection();
+        if (rdir == PdfWriter.RUN_DIRECTION_DEFAULT)
+            ncell.setRunDirection(runDirection);
+
+        skipColsWithRowspanAbove();
+
+        boolean cellAdded = false;
+        if (currentRowIdx < currentRow.length) {
+            currentRow[currentRowIdx] = ncell;
+            currentRowIdx += colspan;
+            cellAdded = true;
+        }
+
+        skipColsWithRowspanAbove();
+
+        if (currentRowIdx >= currentRow.length) {
+            int numCols = getNumberOfColumns();
+            if (runDirection == PdfWriter.RUN_DIRECTION_RTL) {
+                PdfPCell rtlRow[] = new PdfPCell[numCols];
+                int rev = currentRow.length;
+                for (int k = 0; k < currentRow.length; ++k) {
+                    PdfPCell rcell = currentRow[k];
+                    int cspan = rcell.getColspan();
+                    rev -= cspan;
+                    rtlRow[rev] = rcell;
+                    k += cspan - 1;
+                }
+                currentRow = rtlRow;
+            }
+            PdfPRow row = new PdfPRow(currentRow);
+            if (totalWidth > 0) {
+                row.setWidths(absoluteWidths);
+                totalHeight += row.getMaxHeights();
+            }
+            rows.add(row);
+            currentRow = new PdfPCell[numCols];
+            currentRowIdx = 0;
+            rowCompleted = true;
+        }
+
+        if (!cellAdded) {
+            currentRow[currentRowIdx] = ncell;
+            currentRowIdx += colspan;
+        }
     }
 
     @Override
@@ -216,6 +276,85 @@ public class ExtendedPdfPTable
     {
         this.empty = false;
         super.addCell( text );
+    }
+
+    /**
+     * Add last row to rows if not already present.
+     * For corner cases, when last row cell was not added (because is of vMerged in row above).
+     * @Example:
+     * <w:tbl>
+     *     <w:tr>       <w:tc><w:tcPr><w:gridSpan w:val="4"/></w:tcPr></w:tc>   <w:tc><w:tcPr><w:gridSpan w:val="2"/></w:tcPr></w:tc></w:tr>
+     *     <w:tr>		<w:tc><w:tcPr><w:gridSpan w:val="4"/></w:tcPr></w:tc>   <w:tc><w:tcPr><w:gridSpan w:val="2"/><w:vMerge w:val="restart"/></w:tcPr></w:tc></w:tr>
+     *     <w:tr>		<w:tc><w:tcPr><w:gridSpan w:val="4"/></w:tcPr></w:tc>   <w:tc><w:tcPr><w:gridSpan w:val="2"/><w:vMerge/></w:tcPr></w:tc></w:tr>
+     *     <w:tr>       <w:tc><w:tcPr><w:gridSpan w:val="2"/></w:tcPr></w:tc>   <w:tc><w:tcPr><w:gridSpan w:val="2"/></w:tcPr></w:tc>   <w:tc><w:tcPr><w:gridSpan w:val="2"/></w:tcPr></w:tc></w:tr>
+     *     <w:tr>       <w:tc/><w:tc/><w:tc/><w:tc/><w:tc/><w:tc/> </w:tr>
+     * </w:tbl>
+     * rowIndex = 2 is not added via addCell
+     *
+     */
+    public void finishRow()
+    {
+        if (rowCompleted) {
+            return; //finished ok
+        }
+        //not using PdfTable.completeRow as it will add default cols (with borders, margins etc)
+        processRowTail();
+    }
+
+    /**
+     * Based on PdfTable.addCell  if (this.currentRowIdx >= this.currentRow.length) block
+     */
+    private void processRowTail()
+    {
+        int numCols = getNumberOfColumns();
+        if (runDirection == PdfWriter.RUN_DIRECTION_RTL) {
+            PdfPCell rtlRow[] = new PdfPCell[numCols];
+            int rev = currentRow.length;
+            for (int k = 0; k < currentRow.length; ++k) {
+                PdfPCell rcell = currentRow[k];
+                int cspan = rcell.getColspan();
+                rev -= cspan;
+                rtlRow[rev] = rcell;
+                k += cspan - 1;
+            }
+            currentRow = rtlRow;
+        }
+        PdfPRow row = new PdfPRow(currentRow);
+        if (totalWidth > 0) {
+            row.setWidths(absoluteWidths);
+            totalHeight += row.getMaxHeights();
+        }
+        rows.add(row);
+        currentRow = new PdfPCell[numCols];
+        currentRowIdx = 0;
+        rowCompleted = true;
+    }
+
+    /**
+     * When updating the row index, cells with rowspan should be taken into account.
+     * This is what happens in this method.
+     * @since	2.1.6
+     * @direct copy from PdfTable.class
+     */
+    private void skipColsWithRowspanAbove() {
+        int direction = 1;
+        if (runDirection == PdfWriter.RUN_DIRECTION_RTL)
+            direction = -1;
+        while (rowSpanAbove(rows.size(), currentRowIdx))
+            currentRowIdx += direction;
+    }
+
+    private PdfPCell getCellAboveWithColspan(PdfPRow aboveRow, int indexFrom) {
+        int colCursor = indexFrom - 1;
+        while (colCursor >= 0) {
+            PdfPCell cell = (PdfPCell)aboveRow.getCells()[colCursor];
+            if (cell != null) {
+                //there's a cell 'across', check if it is colspanned to cover index
+                return (cell.getColspan() + colCursor >= indexFrom) ? cell : null;
+            }
+            colCursor--;
+        }
+        return null;
     }
 
     public boolean isEmpty()

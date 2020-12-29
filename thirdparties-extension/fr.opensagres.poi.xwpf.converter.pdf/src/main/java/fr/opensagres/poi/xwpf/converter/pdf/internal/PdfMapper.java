@@ -1150,6 +1150,14 @@ public class PdfMapper
         super.startVisitTableRow( row, tableContainer, rowIndex, headerRow );
     }
 
+
+    @Override
+    protected void endVisitTableRow(XWPFTableRow row, IITextContainer tableContainer, boolean firstRow, boolean lastRow,
+                                    boolean headerRow ) throws Exception {
+        ExtendedPdfPTable pdfPTable = (ExtendedPdfPTable) tableContainer;
+        pdfPTable.finishRow();
+    }
+
     // ------------------------- Table Cell
 
     @Override

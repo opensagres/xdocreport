@@ -1168,7 +1168,7 @@ public abstract class XWPFDocumentVisitor<T, O extends Options, E extends IXWPFM
                 for ( int i = rowIndex + 1; i < table.getRows().size(); i++ )
                 {
                     row = table.getRow( i );
-                    c = row.getCell( cellIndex );
+                    c = getCellByLogicalIndex( row, cellIndex );
                     if ( c == null )
                     {
                         break;
@@ -1192,6 +1192,35 @@ public abstract class XWPFDocumentVisitor<T, O extends Options, E extends IXWPFM
             }
         }
         return vMergedCells;
+    }
+
+    /**
+     * Get cell, which applies to logical (spanned) structure
+     * @param row row
+     * @param cellIndex logical index
+     * @Example: <tc><w:tcPr> <w:gridSpan w:val="2"/> </w:tcPr></tc><tc/>
+     *      index = 0 return <tc><w:tcPr> <w:gridSpan w:val="2"/> </w:tcPr></tc>
+     *      index = 1 return <tc><w:tcPr> <w:gridSpan w:val="2"/> </w:tcPr></tc>
+     *      index = 2 return <tc/>
+     * @return
+     */
+    private XWPFTableCell getCellByLogicalIndex(XWPFTableRow row, int cellIndex) {
+        int index = -1;
+        for (XWPFTableCell cell : row.getTableCells()) {
+            BigInteger gridSpan = stylesDocument.getTableCellGridSpan( cell.getCTTc().getTcPr() );
+            if ( gridSpan != null )
+            {
+                index = index + gridSpan.intValue();
+            }
+            else
+            {
+                index++;
+            }
+            if (index >= cellIndex) {
+                return cell;
+            }
+        }
+        return null;
     }
 
     protected void visitTableCellBody( XWPFTableCell cell, List<XWPFTableCell> vMergeCells, T tableCellContainer )

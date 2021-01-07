@@ -476,7 +476,7 @@ public class FastPdfMapper
             }
             if ( singleUnderlined )
             {
-                textChunk.setUnderline( 1, -2 );
+                textChunk.setUnderline( 0.1F, -2 );
             }
         }
 

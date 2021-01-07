@@ -56,6 +56,8 @@ public abstract class ContainerProperties
     private String styleName;
 
     private final ContainerType type;
+    
+    private String   backgroundColor;
 
     public ContainerProperties( ContainerType type )
     {
@@ -164,5 +166,15 @@ public abstract class ContainerProperties
     public void setStyleName(String styleName) {
         this.styleName = styleName;
     }
+    
+    
+	public String getBackgroundColor() {
+		return backgroundColor;
+	}
+
+	public void setBackgroundColor(String backgroundColor) {
+		this.backgroundColor = backgroundColor;
+	}
+    
 
 }

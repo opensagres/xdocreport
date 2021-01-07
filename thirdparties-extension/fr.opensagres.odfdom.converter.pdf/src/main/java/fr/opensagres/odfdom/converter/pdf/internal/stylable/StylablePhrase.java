@@ -88,9 +88,10 @@ public class StylablePhrase
     public Element getElement()
     {
         boolean empty = true;
-        ArrayList<Chunk> chunks = getChunks();
-        for ( Chunk chunk : chunks )
+        ArrayList chunks = getChunks();
+        for ( Object elem : chunks )
         {
+            Chunk chunk = (Chunk)elem;
             if ( chunk.getImage() == null && chunk.getContent() != null && chunk.getContent().length() > 0 )
             {
                 empty = false;

@@ -89,7 +89,7 @@ public class StylableAnchor
     public Element getElement()
     {
         // underline font if not explicitly set
-        ArrayList<Chunk> chunks = getChunks();
+        ArrayList chunks = getChunks();
         for ( Object elem : chunks )
         {
             Chunk chunk = (Chunk)elem;

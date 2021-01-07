@@ -55,9 +55,9 @@ public class ExtendedSection
         if ( computedTitle == null )
         {
             bookmarkTitleParagraph =
-                ExtendedSection.ancestorConstructTitle( getParagraphFactory(), title, numbers, numberDepth, numberStyle );
+                ExtendedSection.ancestorConstructTitle( getParagraphFactory(), title, (ArrayList)numbers, numberDepth, numberStyle );
             computedTitle =
-                ExtendedSection.constructTitle( getParagraphFactory(), bookmarkTitleParagraph, numbers, numberDepth,
+                ExtendedSection.constructTitle( getParagraphFactory(), bookmarkTitleParagraph, (ArrayList)numbers, numberDepth,
                                                 numberStyle, cell );
         }
         return computedTitle;

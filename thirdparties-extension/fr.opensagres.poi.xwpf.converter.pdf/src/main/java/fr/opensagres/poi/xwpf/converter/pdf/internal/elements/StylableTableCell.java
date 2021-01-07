@@ -52,7 +52,7 @@ public class StylableTableCell
         getColumn().setAdjustFirstLine( false );
         // make a room for borders
         setUseBorderPadding( true );
-        setPadding( 0 );
+    //    setPadding( 0 );
     }
 
     public StylableTableCell( StylableDocument ownerDocument, IITextContainer parent, ExtendedPdfPTable table )

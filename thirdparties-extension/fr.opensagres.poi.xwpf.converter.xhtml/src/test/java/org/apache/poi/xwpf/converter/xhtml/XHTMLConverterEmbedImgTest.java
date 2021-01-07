@@ -27,7 +27,7 @@ package org.apache.poi.xwpf.converter.xhtml;
 import fr.opensagres.poi.xwpf.converter.xhtml.Base64EmbedImgManager;
 import fr.opensagres.poi.xwpf.converter.xhtml.XHTMLConverter;
 import fr.opensagres.poi.xwpf.converter.xhtml.XHTMLOptions;
-import org.apache.poi.openxml4j.util.ZipSecureFile;
+//import org.apache.poi.openxml4j.util.ZipSecureFile;
 import org.apache.poi.xwpf.converter.core.AbstractXWPFPOIConverterTest;
 import org.apache.poi.xwpf.usermodel.XWPFDocument;
 

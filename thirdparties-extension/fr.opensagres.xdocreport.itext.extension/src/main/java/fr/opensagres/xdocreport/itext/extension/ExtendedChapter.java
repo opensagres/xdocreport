@@ -30,6 +30,7 @@ import com.lowagie.text.Paragraph;
 import com.lowagie.text.Rectangle;
 import com.lowagie.text.Section;
 import com.lowagie.text.pdf.PdfPCell;
+import java.util.ArrayList;
 
 public class ExtendedChapter
     extends Chapter
@@ -68,9 +69,9 @@ public class ExtendedChapter
         if ( computedTitle == null )
         {
             bookmarkTitleParagraph =
-                ExtendedSection.ancestorConstructTitle( getParagraphFactory(), title, numbers, numberDepth, numberStyle );
+                ExtendedSection.ancestorConstructTitle( getParagraphFactory(), title,  (ArrayList)numbers, numberDepth, numberStyle );
             computedTitle =
-                ExtendedSection.constructTitle( getParagraphFactory(), bookmarkTitleParagraph, numbers, numberDepth,
+                ExtendedSection.constructTitle( getParagraphFactory(), bookmarkTitleParagraph, (ArrayList) numbers, numberDepth,
                                                 numberStyle, cell );
         }
         return computedTitle;

@@ -276,7 +276,14 @@ public abstract class AbstractXWPFPOIConverterTest
     {
         doGenerate( "Issue434.docx" );
     }
-    
+
+    @Test
+    public void Issue457()
+            throws IOException
+    {
+        doGenerate( "Issue457.docx" );
+    }
+
     @Test
     public void Issue52()
         throws IOException

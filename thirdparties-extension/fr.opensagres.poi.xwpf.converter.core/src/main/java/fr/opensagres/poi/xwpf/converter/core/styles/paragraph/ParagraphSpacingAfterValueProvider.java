@@ -76,6 +76,9 @@ public class ParagraphSpacingAfterValueProvider
 
     @Override
     protected boolean isValid(Float value) {
+        if (value == null) {
+            return false;
+        }
         //if value == 0 ms-word considers it invalid and overrides with other styles provided
         return value > 0;
     }

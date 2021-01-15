@@ -82,7 +82,7 @@ public abstract class AbstractValueProvider<Value, XWPFElement>
 
         // 2) Search value from the linked style
         Object result = getValueFromStyleIds( element, stylesDocument, defaultValue );
-        if ( result != null )
+        if ( result != null && isStyleValueValid(result))
         {
             return getValueOrNull( result );
         }
@@ -100,13 +100,13 @@ public abstract class AbstractValueProvider<Value, XWPFElement>
                 // w:type="firstRow">, <w:tblStylePr w:type="lastRow">, etc
                 TableCellInfo cellInfo = stylesDocument.getTableCellInfo( cell );
                 result = getValueFromTableStyleId( element, stylesDocument, tableStyleID, cellInfo );
-                if ( result != null )
+                if ( result != null && isStyleValueValid(result))
                 {
                     return getValueOrNull( result );
                 }
                 // no styles founded, search from the <w:style w:type="table" w:styleId="XXXX">
                 result = getValueFromStyleId( element, stylesDocument, tableStyleID, defaultValue );
-                if ( result != null )
+                if ( result != null && isStyleValueValid(result))
                 {
                     return getValueOrNull( result );
                 }
@@ -242,7 +242,7 @@ public abstract class AbstractValueProvider<Value, XWPFElement>
         if ( tblStylePr != null )
         {
             value = getValueFromTableStyle( tblStylePr, stylesDocument );
-            if ( value != null )
+            if ( value != null && isStyleValueValid(value))
             {
                 // Value is computed, cache it and return it.
                 stylesDocument.setValue( key, value );
@@ -333,7 +333,7 @@ public abstract class AbstractValueProvider<Value, XWPFElement>
 
         // try to compute value
         Object value = getValueFromStyle( style, stylesDocument );
-        if ( value != null )
+        if ( value != null && isStyleValueValid(value))
         {
             // Value is computed, cache it and return it.
             stylesDocument.setValue( key, value );
@@ -417,7 +417,7 @@ public abstract class AbstractValueProvider<Value, XWPFElement>
             return null;
         }
         Value value = getValueFromDocDefaultsStyle( docDefaults, stylesDocument );
-        if ( value != null )
+        if ( value != null && isValid(value))
         {
             return value;
         }
@@ -436,4 +436,23 @@ public abstract class AbstractValueProvider<Value, XWPFElement>
      */
     protected abstract XWPFTableCell getParentTableCell( XWPFElement element );
 
+    /**
+     * If value is considered invalid, than null should be returned instead.
+     *
+     * @param value calculated value
+     * @return
+     */
+    protected boolean isValid( Value value ) {
+        return true;
+    }
+
+    /**
+     * If value is considered invalid, than null should be returned instead.
+     *
+     * @param value calculated value
+     * @return
+     */
+    protected boolean isStyleValueValid( Object value ) {
+        return isValid(getValueOrNull(value));
+    }
 }

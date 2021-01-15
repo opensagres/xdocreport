@@ -42,10 +42,10 @@ public class ParagraphSpacingAfterValueProvider
     @Override
     protected Float getDefaultValue( XWPFParagraph paragraph, XWPFStylesDocument stylesDocument )
     {
-        if ( paragraph.getPartType() == BodyType.TABLECELL )
+       /* if ( paragraph.getPartType() == BodyType.TABLECELL )
         {
             return null;
-        }
+        }*/
         return super.getDefaultValue( paragraph, stylesDocument );
     }
 
@@ -72,6 +72,12 @@ public class ParagraphSpacingAfterValueProvider
             return 10f;
         }
         return null;
+    }
+
+    @Override
+    protected boolean isValid(Float value) {
+        //if value == 0 ms-word considers it invalid and overrides with other styles provided
+        return value > 0;
     }
 
 }

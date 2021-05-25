@@ -338,7 +338,8 @@ public class BufferedElement implements IBufferedRegion {
 	public BufferedElement findChildAt(BufferedElement element, String name,
 			int index) {
 		List<BufferedElement> elements = findChildren(element, name);
-		if (index < elements.size()) {
+		// Check for wrong index
+		if (index >= 0 && index < elements.size()) {
 			return elements.get(index);
 		}
 		return null;

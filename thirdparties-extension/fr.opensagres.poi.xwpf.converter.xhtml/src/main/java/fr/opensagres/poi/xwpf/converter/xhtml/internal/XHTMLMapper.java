@@ -371,6 +371,10 @@ public class XHTMLMapper
 			endElement(SPAN_ELEMENT);
 			return;
 		}
+    	else if(currentParagraph != null && tabs != null)
+    	{
+            characters(TAB_CHAR_SEQUENCE);
+        }
     }
 
     @Override

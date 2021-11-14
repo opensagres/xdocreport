@@ -30,6 +30,8 @@
 				<configuration>
 					<source>1.6</source>
 					<target>1.6</target>
+						<fork>true</fork>
+						<useIncrementalCompilation>true</useIncrementalCompilation>
 				</configuration>
 			</plugin>
 			<plugin>
@@ -186,6 +188,10 @@
 				<plugin>
 					<artifactId>maven-compiler-plugin</artifactId>
 					<version>3.1</version>
+					<configuration>
+						<fork>true</fork>
+						<useIncrementalCompilation>true</useIncrementalCompilation>
+					</configuration>
 				</plugin>
 				<plugin>
 					<artifactId>maven-release-plugin</artifactId>

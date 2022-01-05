@@ -24,7 +24,7 @@
  */
 package fr.opensagres.poi.xwpf.converter.core.styles.paragraph;
 
-import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTPPr;
+import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTPPrBase;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTTabs;
 
 public class ParagraphTabsValueProvider
@@ -34,7 +34,7 @@ public class ParagraphTabsValueProvider
     public static final ParagraphTabsValueProvider INSTANCE = new ParagraphTabsValueProvider();
 
     @Override
-    public CTTabs getValue( CTPPr ppr )
+    public CTTabs getValue( CTPPrBase ppr )
     {
         if ( ppr == null )
         {

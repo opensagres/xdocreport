@@ -25,11 +25,20 @@
 package fr.opensagres.poi.xwpf.converter.core.utils;
 
 
+import java.math.BigInteger;
+
+import org.apache.xmlbeans.SimpleValue;
+import org.apache.xmlbeans.StringEnumAbstractBase;
+import org.openxmlformats.schemas.officeDocument.x2006.sharedTypes.STOnOff;
+import org.openxmlformats.schemas.officeDocument.x2006.sharedTypes.STOnOff1;
+import org.openxmlformats.schemas.officeDocument.x2006.sharedTypes.STTwipsMeasure;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTOnOff;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTSectPr;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTSectType;
-import org.openxmlformats.schemas.wordprocessingml.x2006.main.STOnOff;
+import org.openxmlformats.schemas.wordprocessingml.x2006.main.STHpsMeasure;
+import org.openxmlformats.schemas.wordprocessingml.x2006.main.STMeasurementOrPercent;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.STSectionMark;
+import org.openxmlformats.schemas.wordprocessingml.x2006.main.STSignedTwipsMeasure;
 
 import fr.opensagres.poi.xwpf.converter.core.Color;
 import fr.opensagres.poi.xwpf.converter.core.PageOrientation;
@@ -100,16 +109,43 @@ public class XWPFUtils
         {
             return false;
         }
-        if ( !onoff.isSetVal() )
+        if ( !onoff.isSetVal() ) {
             return true;
-        if ( onoff.getVal() == STOnOff.ON )
-            return true;
-        if ( onoff.getVal() == STOnOff.TRUE )
-            return true;
-        if ( onoff.getVal() == STOnOff.X_1 )
-            // sometimes bold, italic are with w="1". Ex : <w:i w:val="1" />
-            // see https://code.google.com/p/xdocreport/issues/detail?id=315
-            return true;
-        return false;
+        }
+        return isOn(onoff.xgetVal());
+    }   
+
+    public static boolean isOn( STOnOff onoff )
+    {
+        if ( onoff == null || onoff.getObjectValue() == null ) {
+            return false;
+        }
+        Object value = onoff.getObjectValue();
+        if (value instanceof Boolean) {
+        	return ((Boolean) value).booleanValue();
+        } else {
+        	return STOnOff1.INT_ON == ((STOnOff1) onoff).getEnumValue().intValue();
+        }
     }
+
+    public static float floatValue( STTwipsMeasure dxa )
+    {
+    	return ((SimpleValue) dxa).getFloatValue();
+    }
+
+    public static float floatValue( STSignedTwipsMeasure dxa )
+    {
+    	return ((SimpleValue) dxa).getFloatValue();        
+    }
+
+    public static float floatValue( STMeasurementOrPercent dxa )
+    {
+    	return ((SimpleValue) dxa).getFloatValue();        
+    }
+
+    public static BigInteger bigIntegerValue( STHpsMeasure dxa )
+    {
+    	return ((SimpleValue) dxa).getBigIntegerValue();        
+    }
+    
 }

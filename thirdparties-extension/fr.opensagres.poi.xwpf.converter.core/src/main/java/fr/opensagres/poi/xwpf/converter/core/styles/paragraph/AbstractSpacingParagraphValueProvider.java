@@ -26,8 +26,7 @@ package fr.opensagres.poi.xwpf.converter.core.styles.paragraph;
 
 import org.apache.poi.xwpf.usermodel.BodyType;
 import org.apache.poi.xwpf.usermodel.XWPFParagraph;
-import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTDocDefaults;
-import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTPPr;
+import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTPPrBase;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTSpacing;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.STTblStyleOverrideType.Enum;
 
@@ -38,7 +37,7 @@ public abstract class AbstractSpacingParagraphValueProvider<Value>
 {
 
     @Override
-    public Value getValue( CTPPr ppr )
+    public Value getValue( CTPPrBase ppr )
     {
         CTSpacing spacing = getSpacing( ppr );
         if ( spacing == null )
@@ -48,7 +47,7 @@ public abstract class AbstractSpacingParagraphValueProvider<Value>
         return getValue( spacing );
     }
 
-    public CTSpacing getSpacing( CTPPr ppr )
+    public CTSpacing getSpacing( CTPPrBase ppr )
     {
         if ( ppr == null )
         {

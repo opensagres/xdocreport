@@ -55,6 +55,7 @@ import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTFont;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTNumPr;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTP;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTPPr;
+import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTPPrBase;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTR;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTRPr;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTRow;
@@ -150,6 +151,7 @@ import fr.opensagres.poi.xwpf.converter.core.styles.table.row.TableRowMarginRigh
 import fr.opensagres.poi.xwpf.converter.core.styles.table.row.TableRowMarginTopValueProvider;
 import fr.opensagres.poi.xwpf.converter.core.utils.DxaUtil;
 import fr.opensagres.poi.xwpf.converter.core.utils.StringUtils;
+import fr.opensagres.poi.xwpf.converter.core.utils.XWPFUtils;
 
 public class XWPFStylesDocument
 {
@@ -270,11 +272,9 @@ public class XWPFStylesDocument
         List<CTStyle> s = styles.getStyleList();
         for ( CTStyle style : s )
         {
-            org.openxmlformats.schemas.wordprocessingml.x2006.main.STOnOff.Enum isDefault = style.getDefault();
             org.openxmlformats.schemas.wordprocessingml.x2006.main.STStyleType.Enum type = style.getType();
 
-            boolean isDefaultStyle =
-                ( isDefault != null && isDefault.intValue() == org.openxmlformats.schemas.wordprocessingml.x2006.main.STOnOff.INT_X_1 );
+            boolean isDefaultStyle = XWPFUtils.isOn(style.xgetDefault());
             if ( isDefaultStyle )
             {
                 // default
@@ -341,7 +341,7 @@ public class XWPFStylesDocument
         return ParagraphSpacingBeforeValueProvider.INSTANCE.getValue( docxParagraph, this );
     }
 
-    public Float getSpacingBefore( CTPPr pPr )
+    public Float getSpacingBefore( CTPPrBase pPr )
     {
         return ParagraphSpacingBeforeValueProvider.INSTANCE.getValue( pPr );
     }
@@ -358,7 +358,7 @@ public class XWPFStylesDocument
         return ParagraphSpacingAfterValueProvider.INSTANCE.getValue( docxParagraph, this );
     }
 
-    public Float getSpacingAfter( CTPPr pPr )
+    public Float getSpacingAfter( CTPPrBase pPr )
     {
         return ParagraphSpacingAfterValueProvider.INSTANCE.getValue( pPr );
     }
@@ -375,7 +375,7 @@ public class XWPFStylesDocument
         return ParagraphIndentationLeftValueProvider.INSTANCE.getValue( paragraph, this );
     }
 
-    public Float getIndentationLeft( CTPPr pPr )
+    public Float getIndentationLeft( CTPPrBase pPr )
     {
         return ParagraphIndentationLeftValueProvider.INSTANCE.getValue( pPr );
     }
@@ -392,7 +392,7 @@ public class XWPFStylesDocument
         return ParagraphIndentationRightValueProvider.INSTANCE.getValue( paragraph, this );
     }
 
-    public Float getIndentationRight( CTPPr pPr )
+    public Float getIndentationRight( CTPPrBase pPr )
     {
         return ParagraphIndentationRightValueProvider.INSTANCE.getValue( pPr );
     }
@@ -409,7 +409,7 @@ public class XWPFStylesDocument
         return ParagraphIndentationFirstLineValueProvider.INSTANCE.getValue( paragraph, this );
     }
 
-    public Float getIndentationFirstLine( CTPPr pPr )
+    public Float getIndentationFirstLine( CTPPrBase pPr )
     {
         return ParagraphIndentationFirstLineValueProvider.INSTANCE.getValue( pPr );
     }
@@ -426,7 +426,7 @@ public class XWPFStylesDocument
         return ParagraphIndentationHangingValueProvider.INSTANCE.getValue( paragraph, this );
     }
 
-    public Float getIndentationHanging( CTPPr pPr )
+    public Float getIndentationHanging( CTPPrBase pPr )
     {
         return ParagraphIndentationHangingValueProvider.INSTANCE.getValue( pPr );
     }
@@ -443,7 +443,7 @@ public class XWPFStylesDocument
         return ParagraphBackgroundColorValueProvider.INSTANCE.getValue( paragraph, this );
     }
 
-    public Color getBackgroundColor( CTPPr pPr )
+    public Color getBackgroundColor( CTPPrBase pPr )
     {
         return ParagraphBackgroundColorValueProvider.INSTANCE.getValue( pPr );
     }
@@ -457,7 +457,7 @@ public class XWPFStylesDocument
         return ParagraphAlignmentValueProvider.INSTANCE.getValue( paragraph, this );
     }
 
-    public ParagraphAlignment getParagraphAlignment( CTPPr pPr )
+    public ParagraphAlignment getParagraphAlignment( CTPPrBase pPr )
     {
         return ParagraphAlignmentValueProvider.INSTANCE.getValue( pPr );
     }
@@ -1415,7 +1415,7 @@ public class XWPFStylesDocument
                 {
                     if ( !value.isNil() )
                     {
-                        this.defaultTabStop = DxaUtil.dxa2points( value.getVal() );
+                        this.defaultTabStop = DxaUtil.dxa2points( value.xgetVal() );
                     }
 
                 }

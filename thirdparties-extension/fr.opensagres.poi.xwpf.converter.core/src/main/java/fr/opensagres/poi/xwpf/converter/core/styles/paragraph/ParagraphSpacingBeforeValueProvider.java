@@ -24,8 +24,7 @@
  */
 package fr.opensagres.poi.xwpf.converter.core.styles.paragraph;
 
-import java.math.BigInteger;
-
+import org.openxmlformats.schemas.officeDocument.x2006.sharedTypes.STTwipsMeasure;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTSpacing;
 
 import fr.opensagres.poi.xwpf.converter.core.utils.DxaUtil;
@@ -39,7 +38,7 @@ public class ParagraphSpacingBeforeValueProvider
     @Override
     protected Float getValue( CTSpacing spacing )
     {
-        BigInteger before = spacing.getBefore();
+    	STTwipsMeasure before = spacing.xgetBefore();
         if ( before != null )
         {
             return DxaUtil.dxa2points( before );

@@ -24,7 +24,7 @@
  */
 package fr.opensagres.poi.xwpf.converter.core.styles.paragraph;
 
-import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTPPr;
+import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTPPrBase;
 
 import fr.opensagres.poi.xwpf.converter.core.Color;
 import fr.opensagres.poi.xwpf.converter.core.utils.ColorHelper;
@@ -36,7 +36,7 @@ public class ParagraphBackgroundColorValueProvider
     public static final ParagraphBackgroundColorValueProvider INSTANCE = new ParagraphBackgroundColorValueProvider();
 
     @Override
-    public Color getValue( CTPPr ppr )
+    public Color getValue( CTPPrBase ppr )
     {
         if ( ppr == null )
         {

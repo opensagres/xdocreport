@@ -50,20 +50,20 @@ public class RunFontStyleStrikeValueProvider
 
     private static Boolean isStrike( CTRPr pr )
     {
-        if ( pr == null || !pr.isSetStrike() )
+        if ( pr == null || pr.sizeOfStrikeArray() == 0 )
         {
             return null;
         }
-        return XWPFUtils.isCTOnOff( pr.getStrike() );
+        return XWPFUtils.isCTOnOff( pr.getStrikeArray(0) );
     }
 
     private static Boolean isStrike( CTParaRPr pr )
     {
-        if ( pr == null || !pr.isSetStrike() )
+        if ( pr == null || pr.sizeOfStrikeArray() == 0 )
         {
             return null;
         }
-        return XWPFUtils.isCTOnOff( pr.getStrike() );
+        return XWPFUtils.isCTOnOff( pr.getStrikeArray(0) );
     }
 
 }

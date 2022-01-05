@@ -26,6 +26,10 @@ package fr.opensagres.poi.xwpf.converter.core.utils;
 
 import java.math.BigInteger;
 
+import org.apache.xmlbeans.SimpleValue;
+import org.openxmlformats.schemas.officeDocument.x2006.sharedTypes.STTwipsMeasure;
+import org.openxmlformats.schemas.wordprocessingml.x2006.main.STSignedTwipsMeasure;
+
 /**
  * @author pascalleclercq cf.
  *         http://startbigthinksmall.wordpress.com/2010/01/04/points-inches-and-emus-measuring-units-in-office-open-xml/
@@ -63,6 +67,16 @@ public class DxaUtil
         return (float) (dxa.doubleValue() / 20);
     }
 
+    public static float dxa2points( STTwipsMeasure dxa )
+    {
+    	return dxa2points(XWPFUtils.floatValue(dxa));
+    }
+
+    public static float dxa2points( STSignedTwipsMeasure dxa )
+    {
+    	return dxa2points(XWPFUtils.floatValue(dxa));        
+    }
+    
     public static float dxa2inch( float dxa )
     {
         return dxa2points( dxa ) / 72;

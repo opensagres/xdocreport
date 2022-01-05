@@ -30,10 +30,6 @@ import java.io.Writer;
 
 import org.apache.poi.xwpf.usermodel.XWPFDocument;
 
-import fr.opensagres.poi.xwpf.converter.core.IXWPFConverter;
-import fr.opensagres.poi.xwpf.converter.core.Options;
-import fr.opensagres.poi.xwpf.converter.core.XWPFConverterException;
-
 public abstract class AbstractXWPFConverter<T extends Options>
     implements IXWPFConverter<T>
 {

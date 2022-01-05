@@ -24,7 +24,7 @@
  */
 package fr.opensagres.poi.xwpf.converter.pdf.internal.elements;
 
-import java.math.BigInteger;
+import org.openxmlformats.schemas.officeDocument.x2006.sharedTypes.STTwipsMeasure;
 
 import com.lowagie.text.Table;
 import com.lowagie.text.pdf.PdfContentByte;
@@ -52,7 +52,7 @@ public class StylableHeaderFooter
 
     private Float totalHeight;
 
-    public StylableHeaderFooter( StylableDocument ownerDocument, BigInteger dxaY, boolean header )
+    public StylableHeaderFooter( StylableDocument ownerDocument, STTwipsMeasure dxaY, boolean header )
     {
         super( ownerDocument, null, 1 );
         this.ownerDocument = ownerDocument;

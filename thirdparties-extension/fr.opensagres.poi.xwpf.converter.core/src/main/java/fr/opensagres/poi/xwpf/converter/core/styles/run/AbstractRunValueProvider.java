@@ -103,9 +103,9 @@ public abstract class AbstractRunValueProvider<Value>
         XWPFParagraph paragraph = run.getParagraph();
         List<String> styleIDs = StylesHelper.getStyleIDs( paragraph );
         CTRPr rPr = getRPr( run );
-        if ( rPr != null )
+        if ( rPr != null && rPr.sizeOfRStyleArray() > 0 )
         {
-            CTString style = rPr.getRStyle();
+            CTString style = rPr.getRStyleArray(0);
             if ( style != null )
             {
                 if ( styleIDs == null )

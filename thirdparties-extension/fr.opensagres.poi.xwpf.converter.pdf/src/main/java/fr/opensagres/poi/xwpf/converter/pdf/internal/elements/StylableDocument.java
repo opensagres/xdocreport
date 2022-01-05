@@ -324,7 +324,7 @@ public class StylableDocument
     {
         // Set page size
         CTPageSz pageSize = sectPr.getPgSz();
-        Rectangle pdfPageSize = new Rectangle( dxa2points( pageSize.getW() ), dxa2points( pageSize.getH() ) );
+        Rectangle pdfPageSize = new Rectangle( dxa2points( pageSize.xgetW() ), dxa2points( pageSize.xgetH() ) );
         super.setPageSize( pdfPageSize );
 
         // Orientation
@@ -346,8 +346,8 @@ public class StylableDocument
         CTPageMar pageMar = sectPr.getPgMar();
         if ( pageMar != null )
         {
-            super.setOriginalMargins( dxa2points( pageMar.getLeft() ), dxa2points( pageMar.getRight() ),
-                                      dxa2points( pageMar.getTop() ), dxa2points( pageMar.getBottom() ) );
+            super.setOriginalMargins( dxa2points( pageMar.xgetLeft() ), dxa2points( pageMar.xgetRight() ),
+                                      dxa2points( pageMar.xgetTop() ), dxa2points( pageMar.xgetBottom() ) );
         }
 
         // see http://officeopenxml.com/WPSectionPgNumType.php

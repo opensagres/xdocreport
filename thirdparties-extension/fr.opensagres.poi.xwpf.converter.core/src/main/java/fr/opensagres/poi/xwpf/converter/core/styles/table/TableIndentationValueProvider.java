@@ -24,8 +24,6 @@
  */
 package fr.opensagres.poi.xwpf.converter.core.styles.table;
 
-import java.math.BigInteger;
-
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTTblPr;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTTblPrBase;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTTblWidth;

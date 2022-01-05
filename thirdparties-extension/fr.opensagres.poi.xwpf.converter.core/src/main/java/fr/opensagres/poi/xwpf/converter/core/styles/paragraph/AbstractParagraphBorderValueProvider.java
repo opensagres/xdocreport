@@ -26,14 +26,14 @@ package fr.opensagres.poi.xwpf.converter.core.styles.paragraph;
 
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTBorder;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTPBdr;
-import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTPPr;
+import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTPPrBase;
 
 public abstract class AbstractParagraphBorderValueProvider
     extends AbstractParagraphValueProvider<CTBorder>
 {
 
     @Override
-    public CTBorder getValue( CTPPr ppr )
+    public CTBorder getValue( CTPPrBase ppr )
     {
         if ( ppr == null )
         {

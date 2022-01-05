@@ -56,9 +56,9 @@ public class ColorHelper
 
     public static Color getColor( CTRPr rPr )
     {
-        if ( rPr != null )
+        if ( rPr != null && rPr.sizeOfColorArray() > 0 )
         {
-            CTColor ctColor = rPr.getColor();
+            CTColor ctColor = rPr.getColorArray(0);
             if ( ctColor != null )
             {
                 STHexColor color = ctColor.xgetVal();
@@ -75,9 +75,9 @@ public class ColorHelper
 
     public static Color getColor( CTParaRPr rPr )
     {
-        if ( rPr != null )
+        if ( rPr != null && rPr.sizeOfColorArray() > 0 )
         {
-            CTColor ctColor = rPr.getColor();
+            CTColor ctColor = rPr.getColorArray(0);
             if ( ctColor != null )
             {
                 STHexColor color = ctColor.xgetVal();

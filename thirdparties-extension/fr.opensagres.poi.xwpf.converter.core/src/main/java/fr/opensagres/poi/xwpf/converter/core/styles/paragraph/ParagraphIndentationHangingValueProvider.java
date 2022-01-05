@@ -24,8 +24,7 @@
  */
 package fr.opensagres.poi.xwpf.converter.core.styles.paragraph;
 
-import java.math.BigInteger;
-
+import org.openxmlformats.schemas.officeDocument.x2006.sharedTypes.STTwipsMeasure;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTInd;
 
 import fr.opensagres.poi.xwpf.converter.core.utils.DxaUtil;
@@ -39,7 +38,7 @@ public class ParagraphIndentationHangingValueProvider
     @Override
     public Float getValue( CTInd ind )
     {
-        BigInteger hanging = ind.getHanging();
+    	STTwipsMeasure hanging = ind.xgetHanging();
         if ( hanging != null )
         {
             return DxaUtil.dxa2points( hanging );

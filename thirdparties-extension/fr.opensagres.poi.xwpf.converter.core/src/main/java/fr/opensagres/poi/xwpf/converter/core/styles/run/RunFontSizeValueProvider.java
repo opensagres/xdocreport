@@ -30,6 +30,7 @@ import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTDocDefaults;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTRPr;
 
 import fr.opensagres.poi.xwpf.converter.core.styles.XWPFStylesDocument;
+import fr.opensagres.poi.xwpf.converter.core.utils.XWPFUtils;
 
 public class RunFontSizeValueProvider
     extends AbstractRunValueProvider<Float>
@@ -40,7 +41,7 @@ public class RunFontSizeValueProvider
     @Override
     public Float getValue( CTRPr pr, XWPFStylesDocument stylesDocument )
     {
-        return ( pr != null && pr.isSetSz() ) ? pr.getSz().getVal().divide( new BigInteger( "2" ) ).floatValue() : null;
+        return ( pr != null && pr.sizeOfSzArray() > 0 ) ? XWPFUtils.bigIntegerValue(pr.getSzArray(0).xgetVal()).divide( new BigInteger( "2" ) ).floatValue() : null;
     }
     
     @Override
@@ -52,7 +53,7 @@ public class RunFontSizeValueProvider
             if (docDefaults.isSetRPrDefault())
             {
                 CTRPr rpr = docDefaults.getRPrDefault().getRPr();
-                if (rpr == null || rpr.getSz() == null)
+                if (rpr == null || rpr.sizeOfSzArray() == 0)
                 {
                     result = 10f;
                 }

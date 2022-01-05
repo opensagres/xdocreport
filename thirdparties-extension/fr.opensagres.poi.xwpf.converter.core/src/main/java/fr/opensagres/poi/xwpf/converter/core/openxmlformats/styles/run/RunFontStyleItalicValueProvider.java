@@ -50,20 +50,20 @@ public class RunFontStyleItalicValueProvider
 
     private static Boolean isItalic( CTRPr pr )
     {
-        if ( pr == null || !pr.isSetI() )
+        if ( pr == null || pr.sizeOfIArray() == 0 )
         {
             return null;
         }
-        return XWPFUtils.isCTOnOff( pr.getI() );
+        return XWPFUtils.isCTOnOff( pr.getIArray(0) );
     }
 
     private static Boolean isItalic( CTParaRPr pr )
     {
-        if ( pr == null || !pr.isSetI() )
+        if ( pr == null || pr.sizeOfIArray() == 0 )
         {
             return null;
         }
-        return XWPFUtils.isCTOnOff( pr.getI() );
+        return XWPFUtils.isCTOnOff( pr.getIArray(0) );
     }
 
 }

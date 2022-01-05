@@ -38,9 +38,9 @@ import static fr.opensagres.poi.xwpf.converter.xhtml.internal.styles.CSSStylePro
 import static fr.opensagres.poi.xwpf.converter.xhtml.internal.styles.CSSStylePropertyConstants.FONT_WEIGHT;
 import static fr.opensagres.poi.xwpf.converter.xhtml.internal.styles.CSSStylePropertyConstants.FONT_WEIGHT_BOLD;
 import static fr.opensagres.poi.xwpf.converter.xhtml.internal.styles.CSSStylePropertyConstants.HEIGHT;
+import static fr.opensagres.poi.xwpf.converter.xhtml.internal.styles.CSSStylePropertyConstants.MARGIN_BOTTOM;
 import static fr.opensagres.poi.xwpf.converter.xhtml.internal.styles.CSSStylePropertyConstants.MARGIN_LEFT;
 import static fr.opensagres.poi.xwpf.converter.xhtml.internal.styles.CSSStylePropertyConstants.MARGIN_RIGHT;
-import static fr.opensagres.poi.xwpf.converter.xhtml.internal.styles.CSSStylePropertyConstants.MARGIN_BOTTOM;
 import static fr.opensagres.poi.xwpf.converter.xhtml.internal.styles.CSSStylePropertyConstants.MARGIN_TOP;
 import static fr.opensagres.poi.xwpf.converter.xhtml.internal.styles.CSSStylePropertyConstants.MIN_HEIGHT;
 import static fr.opensagres.poi.xwpf.converter.xhtml.internal.styles.CSSStylePropertyConstants.TEXT_ALIGN;
@@ -62,6 +62,7 @@ import org.apache.poi.xwpf.usermodel.UnderlinePatterns;
 import org.apache.poi.xwpf.usermodel.XWPFDocument;
 import org.apache.xmlbeans.XmlException;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTPPr;
+import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTPPrBase;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTRPr;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTStyle;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTTblPrBase;
@@ -141,7 +142,7 @@ public class CSSStylesDocument
      * @param pPr
      * @param defaultStyle
      */
-    private void visitStyle( String className, CTPPr pPr, boolean defaultStyle )
+    private void visitStyle( String className, CTPPrBase pPr, boolean defaultStyle )
     {
         CSSStyle style = createCSSStyle( pPr, className );
         if ( style != null )
@@ -150,12 +151,12 @@ public class CSSStylesDocument
         }
     }
 
-    public CSSStyle createCSSStyle( CTPPr pPr )
+    public CSSStyle createCSSStyle( CTPPrBase pPr )
     {
         return createCSSStyle( pPr, null );
     }
 
-    public CSSStyle createCSSStyle( CTPPr pPr, String className )
+    public CSSStyle createCSSStyle( CTPPrBase pPr, String className )
     {
         if ( pPr != null )
         {

@@ -35,11 +35,11 @@ public class RunVerticalAlignValueProvider extends AbstractRunValueProvider<Vert
 
     @Override
     public VerticalAlign getValue(CTRPr rpr, XWPFStylesDocument stylesDocument) {
-        if (rpr == null) {
+        if (rpr == null || rpr.sizeOfVertAlignArray() == 0) {
             return VerticalAlign.BASELINE;
         }
 
-        CTVerticalAlignRun vertAlign = rpr.getVertAlign();
+        CTVerticalAlignRun vertAlign = rpr.getVertAlignArray(0);
         if (vertAlign == null) {
             return VerticalAlign.BASELINE;
         }

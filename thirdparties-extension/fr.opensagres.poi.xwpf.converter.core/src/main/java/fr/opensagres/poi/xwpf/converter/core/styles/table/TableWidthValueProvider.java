@@ -24,12 +24,9 @@
  */
 package fr.opensagres.poi.xwpf.converter.core.styles.table;
 
-import static fr.opensagres.poi.xwpf.converter.core.utils.DxaUtil.dxa2points;
-
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTTblPr;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTTblPrBase;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTTblWidth;
-import org.openxmlformats.schemas.wordprocessingml.x2006.main.STTblWidth;
 
 import fr.opensagres.poi.xwpf.converter.core.TableWidth;
 import fr.opensagres.poi.xwpf.converter.core.utils.XWPFTableUtil;

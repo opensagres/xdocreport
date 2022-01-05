@@ -24,10 +24,9 @@
  */
 package fr.opensagres.poi.xwpf.converter.core.styles.paragraph;
 
-import java.math.BigInteger;
-
 import org.apache.poi.xwpf.usermodel.BodyType;
 import org.apache.poi.xwpf.usermodel.XWPFParagraph;
+import org.openxmlformats.schemas.officeDocument.x2006.sharedTypes.STTwipsMeasure;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTSpacing;
 
 import fr.opensagres.poi.xwpf.converter.core.styles.XWPFStylesDocument;
@@ -52,7 +51,7 @@ public class ParagraphSpacingAfterValueProvider
     @Override
     protected Float getValue( CTSpacing spacing )
     {
-        BigInteger after = spacing.getAfter();
+    	STTwipsMeasure after = spacing.xgetAfter();
         if ( after != null )
         {
 

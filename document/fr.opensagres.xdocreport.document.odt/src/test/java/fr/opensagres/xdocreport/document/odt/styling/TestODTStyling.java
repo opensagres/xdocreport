@@ -24,6 +24,8 @@
  */
 package fr.opensagres.xdocreport.document.odt.styling;
 
+import static org.junit.Assert.assertThat;
+
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.StringReader;
@@ -44,6 +46,7 @@ import org.w3c.dom.Document;
 import org.xml.sax.InputSource;
 import org.xml.sax.XMLReader;
 import org.xml.sax.helpers.XMLReaderFactory;
+import org.xmlunit.matchers.CompareMatcher;
 
 import com.sun.org.apache.xml.internal.serializer.OutputPropertiesFactory;
 
@@ -109,8 +112,8 @@ public class TestODTStyling
             Writer out = new StringWriter();
 
             serializer.transform( new DOMSource( document ), new StreamResult( out ) );
-
-            return out.toString().replaceAll( "(?m)^\\s+$", "" ).replace( "\t", "  " )
+            return out.toString()
+            		.replaceAll( "(?m)^\\s+$", "" ).replace( "\t", "  " )
                     .replace( System.lineSeparator() + System.lineSeparator(), System.lineSeparator() );
         }
         catch ( IOException e )
@@ -186,15 +189,14 @@ public class TestODTStyling
 
         BufferedDocument document = contentHandler.getBufferedDocument();
         String result = document.toString();
-
+        
         result = formatXML( result );
 
         InputStream xmlStream =
             this.getClass().getClassLoader().getResourceAsStream( "odtstyles_withDefaultHeaders.xml" );
         String expectedXML = formatXML( read( xmlStream ) );
 
-        Assert.assertEquals( expectedXML, result );
-
+        assertThat(result, CompareMatcher.isIdenticalTo(expectedXML).ignoreWhitespace());
         // check override protection
 
         xmlReader = XMLReaderFactory.createXMLReader();

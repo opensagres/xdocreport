@@ -24,6 +24,8 @@
  */
 package fr.opensagres.xdocreport.document.odt.textstyling;
 
+import static org.junit.Assert.assertThat;
+
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.StringReader;
@@ -44,6 +46,7 @@ import org.w3c.dom.Document;
 import org.xml.sax.InputSource;
 import org.xml.sax.XMLReader;
 import org.xml.sax.helpers.XMLReaderFactory;
+import org.xmlunit.matchers.CompareMatcher;
 
 import com.sun.org.apache.xml.internal.serializer.OutputPropertiesFactory;
 
@@ -191,7 +194,8 @@ public class TestODTStyling
             this.getClass().getClassLoader().getResourceAsStream( "odtstyles_withDefaultHeaders.xml" );
         String expectedXML = formatXML( read( xmlStream ) );
 
-        Assert.assertEquals( expectedXML, result );
+        assertThat(result, CompareMatcher.isIdenticalTo(expectedXML).ignoreWhitespace());
+       // Assert.assertEquals( expectedXML, result );
 
         // check override protection
 

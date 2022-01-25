@@ -120,6 +120,14 @@ public class ListItemContext
         {
             return RomanNumberFactory.getUpperCaseString( number );
         }
+        else if ( STNumberFormat.DECIMAL_ZERO.equals( numFmt ) )
+        {
+            return number < 10 ? "0" + number : String.valueOf( number );
+        }
+        else if ( STNumberFormat.NONE.equals( numFmt ) )
+        {
+            return "";
+        }
         return String.valueOf( number );
     }
 

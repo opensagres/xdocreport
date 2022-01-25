@@ -281,10 +281,10 @@
 		</dependency>
 	</dependencies>
 	<issueManagement>
-		<system>Google Code</system>
-		<url>http://code.google.com/p/xdocreport/issues/list</url>
+		<system>GitHub</system>
+		<url>https://github.com/opensagres/xdocreport/issues</url>
 	</issueManagement>
-	<url>http://code.google.com/p/xdocreport/</url>
+	<url>https://github.com/opensagres/xdocreport/</url>
 	<name>XDocReport</name>
 	<ciManagement>
 		<system>Jenkins</system>

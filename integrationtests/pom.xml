@@ -45,6 +45,6 @@
 	</build>
 	<modules>
 		 <module>fr.opensagres.xdocreport.core.test</module> 
-		 <module>fr.opensagres.xdocreport.osgi.integrationtests</module>
+		 <!-- <module>fr.opensagres.xdocreport.osgi.integrationtests</module>  -->
 	</modules>
 </project>

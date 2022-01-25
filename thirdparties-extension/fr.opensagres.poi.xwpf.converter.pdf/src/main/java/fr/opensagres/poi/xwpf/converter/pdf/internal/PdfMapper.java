@@ -775,7 +775,7 @@ public class PdfMapper
         }
         // end chunk
         Font chunkFont = getFont( font, fontAsian, fontComplex, currentGroup );
-        Chunk chunk = createTextChunk( textContent.isEmpty() ? " " : sbuf.toString(), pageNumber, chunkFont,
+        Chunk chunk = createTextChunk( sbuf.toString(), pageNumber, chunkFont,
                                        underlinePatterns, backgroundColor );
         parent.addElement( chunk );
     }

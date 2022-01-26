@@ -81,21 +81,6 @@ public class VelocityTemplateEngineDiscovery
             velocityEngineProperties.setProperty( "report.resource.loader.cache", "true" );
             velocityEngineProperties.setProperty( "report.resource.loader.modificationCheckInterval", "1" );
 
-            // Disable log for Velocity to avoid to generate velocity.log (by
-            // default)
-            try
-            {
-                if ( Class.forName( "org.apache.velocity.runtime.log.NullLogChute" ) != null )
-                {
-                    // Don't crash Velocity if NullLogChute doesn't exist
-                    velocityEngineProperties.setProperty( RuntimeConstants.RUNTIME_LOG_LOGSYSTEM_CLASS,
-                                                          "org.apache.velocity.runtime.log.NullLogChute" );
-                }
-            }
-            catch ( Throwable e )
-            {
-                // Do nothing
-            }
         }
         return velocityEngineProperties;
     }

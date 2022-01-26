@@ -27,6 +27,7 @@ package fr.opensagres.xdocreport.template.velocity.internal;
 import java.util.Collection;
 
 import org.apache.velocity.app.event.implement.EscapeXmlReference;
+import org.apache.velocity.context.Context;
 import org.apache.velocity.runtime.RuntimeServices;
 
 import fr.opensagres.xdocreport.core.utils.StringUtils;
@@ -80,14 +81,14 @@ public class XDocReportEscapeReference
     }
 
     @Override
-    public Object referenceInsert( String reference, Object value )
+    public Object referenceInsert(Context context, String reference, Object value)
     {
         if ( reference != null && ( reference.startsWith( NO_ESCAPE ) || reference.startsWith( NO_ESCAPE_FCT ) ) )
         {
             // Emulate [#noescape] directive of Freemarker.
             return value;
         }
-        return super.referenceInsert( reference, value );
+        return super.referenceInsert(context, reference, value );
     }
 
 }

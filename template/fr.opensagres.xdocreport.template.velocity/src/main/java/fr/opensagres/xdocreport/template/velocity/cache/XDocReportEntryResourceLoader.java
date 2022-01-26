@@ -25,8 +25,10 @@
 package fr.opensagres.xdocreport.template.velocity.cache;
 
 import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.Reader;
+import java.io.UnsupportedEncodingException;
 
-import org.apache.commons.collections.ExtendedProperties;
 import org.apache.velocity.exception.ResourceNotFoundException;
 import org.apache.velocity.runtime.RuntimeServices;
 import org.apache.velocity.runtime.resource.Resource;
@@ -38,6 +40,7 @@ import fr.opensagres.xdocreport.template.ITemplateEngine;
 import fr.opensagres.xdocreport.template.cache.ITemplateCacheInfoProvider;
 import fr.opensagres.xdocreport.template.utils.TemplateUtils;
 import fr.opensagres.xdocreport.template.velocity.VelocityConstants;
+import org.apache.velocity.util.ExtProperties;
 
 /**
  * Velocity resource loader {@link ResourceLoader} implementation used to cache entry name of {@link XDocArchive} which
@@ -51,21 +54,20 @@ public class XDocReportEntryResourceLoader
     private ITemplateEngine templateEngine = null;
 
     @Override
-    public void commonInit( RuntimeServices rs, ExtendedProperties configuration )
+    public void commonInit(RuntimeServices rs, ExtProperties configuration )
     {
         super.commonInit( rs, configuration );
         this.templateEngine = (ITemplateEngine) rs.getProperty( VELOCITY_TEMPLATE_ENGINE_KEY );
     }
 
     @Override
-    public void init( ExtendedProperties configuration )
+    public void init( ExtProperties configuration )
     {
         // Do nothing
     }
 
     @Override
-    public InputStream getResourceStream( String source )
-        throws ResourceNotFoundException
+    public Reader getResourceReader(String source, String encoding) throws ResourceNotFoundException
     {
         IEntryInfo cacheInfo =
             TemplateUtils.getTemplateCacheInfo( templateEngine.getTemplateCacheInfoProvider(), source );
@@ -74,7 +76,7 @@ public class XDocReportEntryResourceLoader
             InputStream inputStream = cacheInfo.getInputStream();
             if ( inputStream != null )
             {
-                return inputStream;
+                return new InputStreamReader(inputStream);
             }
         }
         throw new ResourceNotFoundException( "Cannot find input stream for the entry with source=" + source );

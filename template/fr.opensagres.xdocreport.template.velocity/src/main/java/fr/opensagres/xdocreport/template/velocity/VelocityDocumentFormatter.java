@@ -393,7 +393,7 @@ public class VelocityDocumentFormatter
         String item = insideLoop.substring( 0, indexBeforeIn ).trim();
         // remove $
         // item='d'
-        if ( item.charAt(0) == DOLLAR_TOKEN)
+        if ( item.length() > 0 && item.charAt(0) == DOLLAR_TOKEN)
         {
             item = item.substring( 1, item.length() );
         }

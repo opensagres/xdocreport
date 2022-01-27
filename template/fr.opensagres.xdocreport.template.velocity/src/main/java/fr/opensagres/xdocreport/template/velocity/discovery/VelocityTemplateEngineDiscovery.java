@@ -56,7 +56,6 @@ public class VelocityTemplateEngineDiscovery
      */
     private synchronized Properties getVelocityEngineProperties( Properties velocityDefaultProperties, Properties xDocReportDefaultProperties )
     {
-
         Properties velocityEngineProperties = new Properties();
 
         if ( velocityDefaultProperties != null )
@@ -128,7 +127,7 @@ public class VelocityTemplateEngineDiscovery
             }
             catch ( IOException e )
             {
-                return null;
+
             }
         }
         return null;
@@ -154,7 +153,7 @@ public class VelocityTemplateEngineDiscovery
             }
             catch ( IOException e )
             {
-                return null;
+
             }
         }
         return null;

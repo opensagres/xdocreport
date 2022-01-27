@@ -28,9 +28,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.Properties;
 
-import org.apache.velocity.runtime.RuntimeConstants;
-
-import fr.opensagres.xdocreport.core.utils.Assert;
 import fr.opensagres.xdocreport.template.ITemplateEngine;
 import fr.opensagres.xdocreport.template.TemplateEngineKind;
 import fr.opensagres.xdocreport.template.discovery.ITemplateEngineDiscovery;
@@ -48,7 +45,8 @@ public class VelocityTemplateEngineDiscovery
     public ITemplateEngine createTemplateEngine()
     {
         Properties velocityDefaultProperties = getVelocityDefaultProperties();
-        return new VelocityTemplateEngine( getVelocityEngineProperties( velocityDefaultProperties ) );
+        Properties xDocReportDefaultProperties = getXDocReportDefaultProperties();
+        return new VelocityTemplateEngine( getVelocityEngineProperties( velocityDefaultProperties, xDocReportDefaultProperties ) );
     }
 
     /**
@@ -56,14 +54,13 @@ public class VelocityTemplateEngineDiscovery
      * 
      * @return
      */
-    private synchronized Properties getVelocityEngineProperties( Properties velocityDefaultProperties )
+    private synchronized Properties getVelocityEngineProperties( Properties velocityDefaultProperties, Properties xDocReportDefaultProperties )
     {
-
         Properties velocityEngineProperties = new Properties();
 
         if ( velocityDefaultProperties != null )
         {
-            // Use custom velocity.properties or default xdocreport-velocity.properties.
+            // Use custom velocity.properties.
             velocityEngineProperties.putAll( velocityDefaultProperties );
         }
 
@@ -101,6 +98,12 @@ public class VelocityTemplateEngineDiscovery
         // When using an invalid reference handler, also include tested references
         velocityEngineProperties.setProperty( "event_handler.invalid_references.tested", "true" );
 
+        if ( xDocReportDefaultProperties != null )
+        {
+            // Use custom xdocreport-velocity.properties.
+            velocityEngineProperties.putAll( xDocReportDefaultProperties );
+        }
+
         return velocityEngineProperties;
     }
 
@@ -111,15 +114,9 @@ public class VelocityTemplateEngineDiscovery
      */
     private synchronized Properties getVelocityDefaultProperties()
     {
-
         ClassLoader classLoader = this.getClass().getClassLoader();
         // try to load custom velocity.properties.
         InputStream is = classLoader.getResourceAsStream( "velocity.properties" );
-        if ( is == null )
-        {
-            // custom velocity properties cannot be loaded, load xdocreport-velocity.properties
-            is = classLoader.getResourceAsStream( "xdocreport-velocity.properties" );
-        }
         if ( is != null )
         {
             try
@@ -130,7 +127,33 @@ public class VelocityTemplateEngineDiscovery
             }
             catch ( IOException e )
             {
-                return null;
+
+            }
+        }
+        return null;
+    }
+
+    /**
+     * Reads 'velocity.properties' from classpath
+     * 
+     * @return <code>Properties</code> loaded or <code>null</code> if is not found
+     */
+    private synchronized Properties getXDocReportDefaultProperties()
+    {
+        ClassLoader classLoader = this.getClass().getClassLoader();
+        // try to load xdocreport-velocity.properties
+        InputStream is = classLoader.getResourceAsStream( "xdocreport-velocity.properties" );
+        if ( is != null )
+        {
+            try
+            {
+                Properties p = new Properties();
+                p.load( is );
+                return p;
+            }
+            catch ( IOException e )
+            {
+
             }
         }
         return null;

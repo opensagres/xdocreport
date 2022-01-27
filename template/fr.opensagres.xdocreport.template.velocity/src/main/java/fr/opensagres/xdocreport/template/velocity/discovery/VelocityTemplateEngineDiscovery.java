@@ -80,8 +80,27 @@ public class VelocityTemplateEngineDiscovery
                                                   XDocReportEntryResourceLoader.class.getName() );
             velocityEngineProperties.setProperty( "report.resource.loader.cache", "true" );
             velocityEngineProperties.setProperty( "report.resource.loader.modificationCheckInterval", "1" );
-
         }
+
+        // Set properties to maximize backward compatibility of previous XDoxReports Velocity 1 templates with Velocity 2:
+
+        // No automatic conversion of methods arguments
+        velocityEngineProperties.setProperty( "introspector.conversion_handler.class", "none" );
+        // Use backward compatible space gobbling
+        velocityEngineProperties.setProperty( "parser.space_gobbling", "bc" );
+        // Have #if($foo) only returns false if $foo is false or null
+        velocityEngineProperties.setProperty( "directive.if.empty_check", "false" );
+        // Allow '-' in identifiers
+        velocityEngineProperties.setProperty( "parser.allow_hyphen_in_identifiers", "true" );
+        // Enable backward compatibility mode for Velocimacros
+        velocityEngineProperties.setProperty( "velocimacro.enable_bc_mode", "true" );
+        // When using an invalid reference handler, also include quiet references
+        velocityEngineProperties.setProperty( "event_handler.invalid_references.quiet", "true" );
+        // When using an invalid reference handler, also include null references
+        velocityEngineProperties.setProperty( "event_handler.invalid_references.null", "true" );
+        // When using an invalid reference handler, also include tested references
+        velocityEngineProperties.setProperty( "event_handler.invalid_references.tested", "true" );
+
         return velocityEngineProperties;
     }
 

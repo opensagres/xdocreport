@@ -263,7 +263,7 @@
 		<module>integrationtests</module>
 		<module>sandbox</module>
 		<module>remoting</module>
- 		<module>gae</module>
+ 		<!-- <module>gae</module> -->
 		<module>uberjar</module>
 	</modules>
 	<dependencies>

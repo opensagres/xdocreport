@@ -53,7 +53,7 @@ public abstract class AbstractRunValueProvider<Value>
                 return value;
             }
             // from run style
-            value = getValueFromStyle( rPr.getRStyle(), document );
+            value = rPr.sizeOfRStyleArray() > 0 ? getValueFromStyle( rPr.getRStyleArray(0), document ) : null;
             if ( value != null )
             {
                 return value;

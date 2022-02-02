@@ -27,6 +27,7 @@ package fr.opensagres.poi.xwpf.converter.core.openxmlformats.styles.paragraph;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTDocDefaults;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTP;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTPPr;
+import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTPPrBase;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTPPrDefault;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTString;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTStyle;
@@ -35,7 +36,6 @@ import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTTblPr;
 
 import fr.opensagres.poi.xwpf.converter.core.openxmlformats.styles.ValueProviderHelper;
 import fr.opensagres.poi.xwpf.converter.core.styles.XWPFStylesDocument;
-import fr.opensagres.poi.xwpf.converter.core.utils.StringUtils;
 
 public abstract class AbstractParagraphValueProvider<Value>
 {
@@ -102,7 +102,7 @@ public abstract class AbstractParagraphValueProvider<Value>
         return getValue( getCTPPr( docDefaults ), document );
     }
 
-    public CTPPr getCTPPr( CTDocDefaults docDefaults )
+    public CTPPrBase getCTPPr( CTDocDefaults docDefaults )
     {
         CTPPrDefault prDefault = docDefaults.getPPrDefault();
         if ( prDefault == null )
@@ -155,5 +155,5 @@ public abstract class AbstractParagraphValueProvider<Value>
         return null;
     }
 
-    public abstract Value getValue( CTPPr pPr, XWPFStylesDocument document );
+    public abstract Value getValue( CTPPrBase pPr, XWPFStylesDocument document );
 }

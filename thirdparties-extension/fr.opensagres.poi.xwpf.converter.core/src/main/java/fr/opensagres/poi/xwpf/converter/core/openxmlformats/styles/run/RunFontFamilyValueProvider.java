@@ -54,11 +54,11 @@ public abstract class RunFontFamilyValueProvider
 
     private CTFonts getRFonts( CTRPr ppr )
     {
-        if ( ppr == null )
+        if ( ppr == null || ppr.sizeOfRFontsArray() == 0)
         {
             return null;
         }
-        return ppr.getRFonts();
+        return ppr.getRFontsArray(0);
     }
 
     @Override
@@ -74,11 +74,11 @@ public abstract class RunFontFamilyValueProvider
 
     private CTFonts getRFonts( CTParaRPr ppr )
     {
-        if ( ppr == null )
+        if ( ppr == null || ppr.sizeOfRFontsArray() == 0 )
         {
             return null;
         }
-        return ppr.getRFonts();
+        return ppr.getRFontsArray(0);
     }
 
     private String getFontFamily( XWPFStylesDocument stylesDocument, CTFonts fonts )

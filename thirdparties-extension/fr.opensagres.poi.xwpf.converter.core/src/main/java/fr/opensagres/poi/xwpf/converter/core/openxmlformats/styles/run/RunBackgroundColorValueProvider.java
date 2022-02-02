@@ -40,20 +40,20 @@ public class RunBackgroundColorValueProvider
     @Override
     public Color getValue( CTRPr rPr, XWPFStylesDocument stylesDocument )
     {
-        if ( rPr == null )
+        if ( rPr == null || rPr.sizeOfShdArray() == 0 )
         {
             return null;
         }
-        return ColorHelper.getFillColor( rPr.getShd() );
+        return ColorHelper.getFillColor( rPr.getShdArray(0) );
     }
 
     @Override
     public Color getValue( CTParaRPr rPr, XWPFStylesDocument stylesDocument )
     {
-        if ( rPr == null )
+        if ( rPr == null || rPr.sizeOfShdArray() == 0 )
         {
             return null;
         }
-        return ColorHelper.getFillColor( rPr.getShd() );
+        return ColorHelper.getFillColor( rPr.getShdArray(0) );
     }
 }

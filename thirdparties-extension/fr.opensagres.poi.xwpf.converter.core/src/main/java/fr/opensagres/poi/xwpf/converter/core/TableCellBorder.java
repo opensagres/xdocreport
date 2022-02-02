@@ -24,8 +24,6 @@
  */
 package fr.opensagres.poi.xwpf.converter.core;
 
-import fr.opensagres.poi.xwpf.converter.core.Color;
-
 public class TableCellBorder
 {
 

@@ -3,7 +3,7 @@
 	<parent>
 		<groupId>fr.opensagres.xdocreport</groupId>
 		<artifactId>thirdparties-extension</artifactId>
-		<version>2.0.3-SNAPSHOT</version>
+		<version>2.0.4-SNAPSHOT</version>
 	</parent>
 	<artifactId>fr.opensagres.xdocreport.openpdf.extension</artifactId>
 	<dependencies>
@@ -47,7 +47,7 @@
 		<dependency>
 			<artifactId>bcprov-jdk14</artifactId>
 			<groupId>org.bouncycastle</groupId>
-			<version>1.38</version>
+			<version>1.67</version>
 			<optional>true</optional>
 		</dependency>
 	</dependencies>

@@ -24,9 +24,8 @@
  */
 package fr.opensagres.poi.xwpf.converter.core.styles.paragraph;
 
-import java.math.BigInteger;
-
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTInd;
+import org.openxmlformats.schemas.wordprocessingml.x2006.main.STSignedTwipsMeasure;
 
 import fr.opensagres.poi.xwpf.converter.core.utils.DxaUtil;
 
@@ -39,7 +38,7 @@ public class ParagraphIndentationRightValueProvider
     @Override
     public Float getValue( CTInd ind )
     {
-        BigInteger right = ind.getRight();
+    	STSignedTwipsMeasure right = ind.xgetRight();
         if ( right != null )
         {
             return DxaUtil.dxa2points( right );

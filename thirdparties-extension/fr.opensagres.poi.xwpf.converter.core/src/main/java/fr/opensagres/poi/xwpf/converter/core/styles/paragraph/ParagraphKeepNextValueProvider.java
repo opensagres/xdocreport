@@ -24,7 +24,7 @@
  */
 package fr.opensagres.poi.xwpf.converter.core.styles.paragraph;
 
-import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTPPr;
+import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTPPrBase;
 
 import fr.opensagres.poi.xwpf.converter.core.utils.XWPFUtils;
 
@@ -35,7 +35,7 @@ public class ParagraphKeepNextValueProvider
     public static final ParagraphKeepNextValueProvider INSTANCE = new ParagraphKeepNextValueProvider();
 
     @Override
-    public Boolean getValue( CTPPr ppr )
+    public Boolean getValue( CTPPrBase ppr )
     {
         if ( ppr == null )
         {

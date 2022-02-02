@@ -375,7 +375,7 @@ public class VelocityDocumentFormatter
         // insideLoop='developers as d]'
         String insideLoop =
             startLoopDirective.substring( START_FOREACH_DIRECTIVE.length(), startLoopDirective.length() );
-        int indexBeforeIn = insideLoop.indexOf( " " );
+        int indexBeforeIn = insideLoop.indexOf( IN_DIRECTIVE );
         if ( indexBeforeIn == -1 )
         {
             return 0;
@@ -383,11 +383,6 @@ public class VelocityDocumentFormatter
 
         // afterItem=' in $developers]'
         String afterItem = insideLoop.substring( indexBeforeIn, insideLoop.length() );
-        int indexAfterIn = afterItem.indexOf( IN_DIRECTIVE );
-        if ( indexAfterIn == -1 )
-        {
-            return 0;
-        }
 
         // item='$d'
         String item = insideLoop.substring( 0, indexBeforeIn ).trim();

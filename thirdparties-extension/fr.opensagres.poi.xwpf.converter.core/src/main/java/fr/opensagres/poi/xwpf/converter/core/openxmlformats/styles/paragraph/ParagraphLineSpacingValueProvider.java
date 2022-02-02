@@ -24,14 +24,14 @@
  */
 package fr.opensagres.poi.xwpf.converter.core.openxmlformats.styles.paragraph;
 
-import java.math.BigInteger;
-
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTSpacing;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.STLineSpacingRule;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.STLineSpacingRule.Enum;
+import org.openxmlformats.schemas.wordprocessingml.x2006.main.STSignedTwipsMeasure;
 
 import fr.opensagres.poi.xwpf.converter.core.ParagraphLineSpacing;
 import fr.opensagres.poi.xwpf.converter.core.utils.DxaUtil;
+import fr.opensagres.poi.xwpf.converter.core.utils.XWPFUtils;
 
 /**
  * <p>
@@ -77,7 +77,7 @@ public class ParagraphLineSpacingValueProvider
         Float lineHeight = null;
         Float lineMultiple = null;
 
-        BigInteger line = spacing.getLine();
+        STSignedTwipsMeasure line = spacing.xgetLine();
         if ( line == null )
         {
             return null;
@@ -95,7 +95,7 @@ public class ParagraphLineSpacingValueProvider
         {
             // The lineRule attribute value of auto specifies that the value of the line attribute is to be
             // interpreted in 240ths of a single line height
-            lineMultiple = line.floatValue() / LINE_SPACING_FACTOR;
+            lineMultiple = XWPFUtils.floatValue(line) / LINE_SPACING_FACTOR;
         }
         else
         {

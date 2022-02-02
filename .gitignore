@@ -2,5 +2,6 @@
 .project
 .settings
 .classpath
+/.idea
 /target
 /.repository/

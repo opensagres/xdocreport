@@ -273,6 +273,12 @@ public abstract class AbstractODFDOMConverterTest
         doGenerate( "TestImages.odt" );
     }
 
-    protected abstract void doGenerate( String fileInName )
+    @Test
+     public void TestDisplayNone()
+         throws Exception
+     {
+         doGenerate( "test-display-none.odt" );
+     }
+     protected abstract void doGenerate( String fileInName )
         throws Exception;
 }

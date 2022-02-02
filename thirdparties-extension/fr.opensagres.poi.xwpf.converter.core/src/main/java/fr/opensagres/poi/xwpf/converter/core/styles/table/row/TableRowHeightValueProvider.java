@@ -24,18 +24,12 @@
  */
 package fr.opensagres.poi.xwpf.converter.core.styles.table.row;
 
-import static fr.opensagres.poi.xwpf.converter.core.utils.DxaUtil.dxa2points;
-
-import java.math.BigInteger;
-
+import org.openxmlformats.schemas.officeDocument.x2006.sharedTypes.STTwipsMeasure;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTHeight;
-import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTTblWidth;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTTrPr;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.STHeightRule;
-import org.openxmlformats.schemas.wordprocessingml.x2006.main.STTblWidth;
 
 import fr.opensagres.poi.xwpf.converter.core.TableHeight;
-import fr.opensagres.poi.xwpf.converter.core.TableWidth;
 import fr.opensagres.poi.xwpf.converter.core.utils.DxaUtil;
 
 public class TableRowHeightValueProvider
@@ -80,7 +74,7 @@ public class TableRowHeightValueProvider
             }
         }
         // val -- Specifies the row's height, in twentieths of a point.
-        BigInteger value = trHeight.getVal();
+        STTwipsMeasure value = trHeight.xgetVal();
         float height = DxaUtil.dxa2points( value );
         return new TableHeight( height, minimum );
     }

@@ -25,7 +25,7 @@
 package fr.opensagres.poi.xwpf.converter.core.styles.paragraph;
 
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTNumPr;
-import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTPPr;
+import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTPPrBase;
 
 public class ParagraphNumPrValueProvider
     extends AbstractParagraphValueProvider<CTNumPr>
@@ -34,7 +34,7 @@ public class ParagraphNumPrValueProvider
     public static final ParagraphNumPrValueProvider INSTANCE = new ParagraphNumPrValueProvider();
 
     @Override
-    public CTNumPr getValue( CTPPr ppr )
+    public CTNumPr getValue( CTPPrBase ppr )
     {
         if ( ppr == null )
         {

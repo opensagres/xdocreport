@@ -66,11 +66,11 @@ public class RunTextHighlightingValueProvider
     @Override
     public Color getValue( CTRPr rPr, XWPFStylesDocument stylesDocument )
     {
-        if ( rPr == null )
+        if ( rPr == null || rPr.sizeOfHighlightArray() == 0 )
         {
             return null;
         }
-        CTHighlight highlight = rPr.getHighlight();
+        CTHighlight highlight = rPr.getHighlightArray(0);
         if ( highlight == null )
         {
             return null;

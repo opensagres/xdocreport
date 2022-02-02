@@ -39,8 +39,8 @@ public class RunUnderlineValueProvider
     @Override
     public UnderlinePatterns getValue( CTRPr rPr, XWPFStylesDocument stylesDocument)
     {
-        if (rPr != null && rPr.isSetU()) {
-            CTUnderline u = rPr.getU();
+        if (rPr != null && rPr.sizeOfUArray() > 0) {
+            CTUnderline u = rPr.getUArray(0);
             return u.isSetVal() ? UnderlinePatterns.valueOf(u.getVal().intValue()) : null;
         } else {
             return null;

@@ -30,8 +30,8 @@ package fr.opensagres.xdocreport.core.document;
 public enum ImageFormat
 {
 
-    bmp( "bmp" ), jpg( "jpeg" ), jpeg( "jpeg" ), jpe( "jpeg" ), jfif( "jpeg" ), gif( "gif" ), tif( "tiff" ), tiff(
-        "tiff" ), png( "png" );
+    bmp( "bmp" ), jpg( "jpeg" ), jpeg( "jpeg" ), jpe( "jpeg" ), jfif( "jpeg" ), gif( "gif" ), svg( "svg" ),
+    tif( "tiff" ), tiff( "tiff" ), png( "png" );
 
     private final String type;
 

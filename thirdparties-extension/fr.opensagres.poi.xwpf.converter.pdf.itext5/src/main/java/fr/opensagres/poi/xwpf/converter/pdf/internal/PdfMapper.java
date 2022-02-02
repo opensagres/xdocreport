@@ -33,9 +33,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.logging.Logger;
 
-import com.microsoft.schemas.vml.CTImageData;
-import com.microsoft.schemas.vml.CTShape;
-import fr.opensagres.poi.xwpf.converter.core.*;
 import org.apache.poi.xwpf.usermodel.IBodyElement;
 import org.apache.poi.xwpf.usermodel.ParagraphAlignment;
 import org.apache.poi.xwpf.usermodel.UnderlinePatterns;
@@ -56,12 +53,13 @@ import org.openxmlformats.schemas.drawingml.x2006.picture.CTPicture;
 import org.openxmlformats.schemas.drawingml.x2006.wordprocessingDrawing.STRelFromH;
 import org.openxmlformats.schemas.drawingml.x2006.wordprocessingDrawing.STRelFromV;
 import org.openxmlformats.schemas.drawingml.x2006.wordprocessingDrawing.STWrapText;
+import org.openxmlformats.schemas.officeDocument.x2006.sharedTypes.STTwipsMeasure;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTBookmark;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTBorder;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTBr;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTHdrFtrRef;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTLvl;
-import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTPPr;
+import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTPPrBase;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTPTab;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTRPr;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTSectPr;
@@ -88,7 +86,19 @@ import com.itextpdf.text.pdf.PdfPTable;
 import com.itextpdf.text.pdf.draw.DottedLineSeparator;
 import com.itextpdf.text.pdf.draw.LineSeparator;
 import com.itextpdf.text.pdf.draw.VerticalPositionMark;
+import com.microsoft.schemas.vml.CTImageData;
+import com.microsoft.schemas.vml.CTShape;
 
+import fr.opensagres.poi.xwpf.converter.core.BorderSide;
+import fr.opensagres.poi.xwpf.converter.core.Color;
+import fr.opensagres.poi.xwpf.converter.core.ImageShapeStyle;
+import fr.opensagres.poi.xwpf.converter.core.ListItemContext;
+import fr.opensagres.poi.xwpf.converter.core.MultiValueTriplet;
+import fr.opensagres.poi.xwpf.converter.core.ParagraphLineSpacing;
+import fr.opensagres.poi.xwpf.converter.core.TableCellBorder;
+import fr.opensagres.poi.xwpf.converter.core.TableHeight;
+import fr.opensagres.poi.xwpf.converter.core.TableWidth;
+import fr.opensagres.poi.xwpf.converter.core.XWPFDocumentVisitor;
 import fr.opensagres.poi.xwpf.converter.core.styles.paragraph.ParagraphIndentationHangingValueProvider;
 import fr.opensagres.poi.xwpf.converter.core.styles.paragraph.ParagraphIndentationLeftValueProvider;
 import fr.opensagres.poi.xwpf.converter.core.utils.DxaUtil;
@@ -200,8 +210,8 @@ public class PdfMapper
                                 StylableMasterPage masterPage )
         throws Exception
     {
-        BigInteger headerY = sectPr.getPgMar() != null ? sectPr.getPgMar().getHeader() : null;
-        this.currentPageWidth = sectPr.getPgMar() != null ? DxaUtil.dxa2points( sectPr.getPgSz().getW() ) : null;
+    	STTwipsMeasure headerY = sectPr.getPgMar() != null ? sectPr.getPgMar().xgetHeader() : null;
+        this.currentPageWidth = sectPr.getPgMar() != null ? DxaUtil.dxa2points( sectPr.getPgSz().xgetW() ) : null;
         this.pdfHeader = new StylableHeaderFooter( pdfDocument, headerY, true );
         // List<IBodyElement> bodyElements = header.getBodyElements();
         List<IBodyElement> bodyElements = super.getBodyElements( header );
@@ -217,8 +227,8 @@ public class PdfMapper
                                 StylableMasterPage masterPage )
         throws Exception
     {
-        BigInteger footerY = sectPr.getPgMar() != null ? sectPr.getPgMar().getFooter() : null;
-        this.currentPageWidth = sectPr.getPgMar() != null ? DxaUtil.dxa2points( sectPr.getPgSz().getW() ) : null;
+    	STTwipsMeasure footerY = sectPr.getPgMar() != null ? sectPr.getPgMar().xgetFooter() : null;
+        this.currentPageWidth = sectPr.getPgMar() != null ? DxaUtil.dxa2points( sectPr.getPgSz().xgetW() ) : null;
         this.pdfFooter = new StylableHeaderFooter( pdfDocument, footerY, false );
         List<IBodyElement> bodyElements = super.getBodyElements( footer );
         StylableTableCell tableCell = getHeaderFooterTableCell( pdfFooter, bodyElements );
@@ -366,7 +376,7 @@ public class PdfMapper
         if ( itemContext != null )
         {
             CTLvl lvl = itemContext.getLvl();
-            CTPPr lvlPPr = lvl.getPPr();
+            CTPPrBase lvlPPr = lvl.getPPr();
             if ( lvlPPr != null )
             {
                 if ( ParagraphIndentationLeftValueProvider.INSTANCE.getValue( docxParagraph.getCTP().getPPr() ) == null )
@@ -810,7 +820,7 @@ public class PdfMapper
             if ( tabStop != null )
             {
 
-                float lastX = DxaUtil.dxa2points( tabStop.getPos().floatValue() );
+                float lastX = DxaUtil.dxa2points( tabStop.xgetPos() );
                 if ( lastX > currentRunX )
                 {
                     tabPosition = lastX;
@@ -940,7 +950,7 @@ public class PdfMapper
         if ( tabStop.getVal().equals( STTabJc.LEFT ) )
         {
 
-            if ( currentRunX < DxaUtil.dxa2points( tabStop.getPos().floatValue() ) )
+            if ( currentRunX < DxaUtil.dxa2points( tabStop.xgetPos() ) )
             {
                 return true;
             }
@@ -950,7 +960,7 @@ public class PdfMapper
             if ( isWordDocumentPartParsing() )
             {
                 if ( pdfDocument.getWidthLimit()
-                    - ( currentRunX + DxaUtil.dxa2points( tabStop.getPos().floatValue() ) ) <= 0 )
+                    - ( currentRunX + DxaUtil.dxa2points( tabStop.xgetPos() ) ) <= 0 )
                 {
                     return true;
                 }
@@ -962,7 +972,7 @@ public class PdfMapper
                     return true;
                 }
                 if ( currentPageWidth.floatValue()
-                    - ( currentRunX + DxaUtil.dxa2points( tabStop.getPos().floatValue() ) ) <= 0 )
+                    - ( currentRunX + DxaUtil.dxa2points( tabStop.xgetPos() ) ) <= 0 )
                 {
                     return true;
                 }

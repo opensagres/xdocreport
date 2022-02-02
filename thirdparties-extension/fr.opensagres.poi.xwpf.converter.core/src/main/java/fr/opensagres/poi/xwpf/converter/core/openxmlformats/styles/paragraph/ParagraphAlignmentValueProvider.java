@@ -25,7 +25,7 @@
 package fr.opensagres.poi.xwpf.converter.core.openxmlformats.styles.paragraph;
 
 import org.apache.poi.xwpf.usermodel.ParagraphAlignment;
-import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTPPr;
+import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTPPrBase;
 
 import fr.opensagres.poi.xwpf.converter.core.styles.XWPFStylesDocument;
 
@@ -36,7 +36,7 @@ public class ParagraphAlignmentValueProvider
     public static final ParagraphAlignmentValueProvider INSTANCE = new ParagraphAlignmentValueProvider();
 
     @Override
-    public ParagraphAlignment getValue( CTPPr pPr, XWPFStylesDocument document )
+    public ParagraphAlignment getValue( CTPPrBase pPr, XWPFStylesDocument document )
     {
         return pPr == null || !pPr.isSetJc() ? null : ParagraphAlignment.valueOf( pPr.getJc().getVal().intValue() );
     }

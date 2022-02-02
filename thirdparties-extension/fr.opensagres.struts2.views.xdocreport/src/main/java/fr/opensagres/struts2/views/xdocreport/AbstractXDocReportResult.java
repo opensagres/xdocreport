@@ -24,6 +24,9 @@
  */
 package fr.opensagres.struts2.views.xdocreport;
 
+import static fr.opensagres.struts2.views.xdocreport.ActionInvocationUtils.getRequest;
+import static fr.opensagres.struts2.views.xdocreport.ActionInvocationUtils.getResponse;
+import static fr.opensagres.struts2.views.xdocreport.ActionInvocationUtils.getServletContext;
 import static fr.opensagres.xdocreport.core.utils.StringUtils.FALSE;
 import static fr.opensagres.xdocreport.core.utils.StringUtils.TRUE;
 import static fr.opensagres.xdocreport.core.utils.StringUtils.asBoolean;
@@ -44,7 +47,6 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.apache.commons.lang3.StringUtils;
 import org.apache.struts2.result.StrutsResultSupport;
 
 import com.opensymphony.xwork2.ActionInvocation;
@@ -56,6 +58,9 @@ import fr.opensagres.xdocreport.converter.MimeMapping;
 import fr.opensagres.xdocreport.converter.Options;
 import fr.opensagres.xdocreport.converter.OptionsHelper;
 import fr.opensagres.xdocreport.converter.XDocConverterException;
+import fr.opensagres.xdocreport.core.XDocReportException;
+import fr.opensagres.xdocreport.core.logging.LogUtils;
+import fr.opensagres.xdocreport.core.utils.StringUtils;
 import fr.opensagres.xdocreport.document.IXDocReport;
 import fr.opensagres.xdocreport.document.registry.XDocReportRegistry;
 import fr.opensagres.xdocreport.document.web.WEBURIResolver;

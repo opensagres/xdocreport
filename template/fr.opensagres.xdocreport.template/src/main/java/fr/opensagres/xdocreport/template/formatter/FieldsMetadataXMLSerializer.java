@@ -82,6 +82,7 @@ public class FieldsMetadataXMLSerializer
         XMLReader saxReader = XMLReaderFactory.createXMLReader();
         FieldsMetadataContentHandler myContentHandler = new FieldsMetadataContentHandler();
         saxReader.setContentHandler( myContentHandler );
+        
         saxReader.parse( new InputSource( input ) );
         return myContentHandler.getFieldsMetadata();
     }

@@ -37,19 +37,6 @@ public class FieldsMetadataXMLSerializerTestCase
     private static final String LF = System.getProperty( "line.separator" );
 
     @Test
-    public void testLoadXMFromReader()
-        throws Exception
-    {
-        StringReader reader = new StringReader( "<fields><field name='developers.Name' list='true' /></fields>" );
-        FieldsMetadata fieldsMetadata = FieldsMetadataXMLSerializer.getInstance().load( reader );
-
-        Assert.assertEquals( 1, fieldsMetadata.getFields().size() );
-        Assert.assertEquals( "developers.Name", fieldsMetadata.getFields().get( 0 ).getFieldName() );
-        Assert.assertTrue( fieldsMetadata.getFields().get( 0 ).isListType() );
-
-    }
-
-    @Test
     public void testLoadXMFromInputStream()
         throws Exception
     {

@@ -120,14 +120,35 @@
 		<dependency>
 			<groupId>org.eclipse.jetty</groupId>
 			<artifactId>jetty-servlet</artifactId>
-			<version>9.2.15.v20160210</version>
+			<version>9.4.41.v20210516</version>
 			<scope>test</scope>
 		</dependency>
+        
+        <dependency>
+            <groupId>org.eclipse.jetty</groupId>
+            <artifactId>jetty-util</artifactId>
+            <version>9.4.41.v20210516</version>
+            <scope>test</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>org.eclipse.jetty</groupId>
+            <artifactId>jetty-io</artifactId>
+            <version>9.4.41.v20210516</version>
+            <scope>test</scope>
+        </dependency>
+                
+        <dependency>
+            <groupId>org.eclipse.jetty</groupId>
+            <artifactId>jetty-http</artifactId>
+            <version>9.4.41.v20210516</version>
+            <scope>test</scope>
+        </dependency>
 
 		<dependency>
 			<groupId>org.eclipse.jetty</groupId>
 			<artifactId>jetty-webapp</artifactId>
-			<version>9.2.15.v20160210</version>
+			<version>9.4.41.v20210516</version>
 			<scope>test</scope>
 		</dependency>
 		<dependency>

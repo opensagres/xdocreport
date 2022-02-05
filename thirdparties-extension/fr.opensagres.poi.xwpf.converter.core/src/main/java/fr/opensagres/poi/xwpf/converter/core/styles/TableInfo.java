@@ -101,7 +101,7 @@ public class TableInfo
 
         boolean firstCol = true;
         boolean lastCol = false;
-        int cellIndex = 0;
+        int cellIndex = -1;
         CTRow ctRow = row.getCtRow();
         XmlCursor c = ctRow.newCursor();
         c.selectPath( "./*" );

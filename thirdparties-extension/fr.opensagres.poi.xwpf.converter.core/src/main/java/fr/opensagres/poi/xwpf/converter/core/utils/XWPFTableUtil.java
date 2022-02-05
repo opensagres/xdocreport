@@ -413,10 +413,13 @@ public class XWPFTableUtil
     {
         if ( border != null )
         {
-            boolean noBorder = ( STBorder.NONE == border.getVal() || STBorder.NIL == border.getVal() );
+            if ( STBorder.NONE == border.getVal() && fromTableCell ) {
+                return null;
+            }
+            boolean noBorder = ( STBorder.NIL == border.getVal() );
             if ( noBorder )
             {
-                return new TableCellBorder( !noBorder, fromTableCell );
+                return new TableCellBorder( false, fromTableCell );
             }
             Float borderSize = null;
             BigInteger size = border.getSz();

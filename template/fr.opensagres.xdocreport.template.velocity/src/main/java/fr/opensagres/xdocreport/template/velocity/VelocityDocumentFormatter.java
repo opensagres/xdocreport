@@ -528,4 +528,8 @@ public class VelocityDocumentFormatter
         newContent.append( END_DEFINE_DIRECTIVE );
         return newContent.toString();
     }
+    
+    public boolean isInstruction(String tagContent) {
+        return tagContent.contains( START_IF_DIRECTIVE ) || tagContent.contains( START_SET_DIRECTIVE ) || tagContent.contains( START_FOREACH_DIRECTIVE );
+    }
 }

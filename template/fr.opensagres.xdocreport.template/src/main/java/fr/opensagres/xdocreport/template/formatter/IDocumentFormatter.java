@@ -90,4 +90,6 @@ public interface IDocumentFormatter
     String getEndNoParse();
 
     String getDefineDirective( String name, String value );
+    
+    boolean isInstruction( String tagContent );
 }

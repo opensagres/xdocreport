@@ -471,10 +471,9 @@ public class VelocityDocumentFormatter
                                            String entryName )
     {
         StringBuilder newContent = new StringBuilder( START_SET_DIRECTIVE );
-        newContent.append(VAR_SYNTAX_WITH_DIRECTIVE);
+        newContent.append( VAR_SYNTAX_WITH_DIRECTIVE );
         newContent.append( EQUALS );
         newContent.append( syntaxWithDirective );
-        newContent.append( END_SET_DIRECTIVE );
         newContent.append( END_SET_DIRECTIVE );
         newContent.append( START_SET_DIRECTIVE );
         newContent.append( formatAsSimpleField( true, getVariableName( variableIndex ) ) );

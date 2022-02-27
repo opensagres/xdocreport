@@ -49,4 +49,20 @@ public class FreemarkerTemplateEngineDocumentFormatterTestCase
         String textStylingCall = formatter.formatAsCallTextStyling(0,"textHtml","documentKind","Html",true,"0_elementId","content.xml");
         assertEquals( "[#assign ___NoEscape0=___TextStylingRegistry.transform(textHtml,\"Html\",true,\"documentKind\",\"0_elementId\",___context,\"content.xml\")]", textStylingCall);
     }  
+    
+    /**
+     * Checks if tagContent is instruction
+     * @throws Exception 
+     */
+    public void testIsInstruction()
+            throws Exception
+    {
+        FreemarkerDocumentFormatter formatter = new FreemarkerDocumentFormatter();
+        boolean isInstruction = formatter.isInstruction("[#list d as cds.reference]");
+        assertTrue(isInstruction);
+        isInstruction = formatter.isInstruction("[#if d == \"freemarker\"]");
+        assertTrue(isInstruction);
+        isInstruction = formatter.isInstruction("d");
+        assertFalse(isInstruction);
+    } 
 }

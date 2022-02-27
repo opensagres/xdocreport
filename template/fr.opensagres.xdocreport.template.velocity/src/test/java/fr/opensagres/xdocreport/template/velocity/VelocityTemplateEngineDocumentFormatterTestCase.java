@@ -89,4 +89,22 @@ public class VelocityTemplateEngineDocumentFormatterTestCase
         String textStylingCall = formatter.formatAsCallTextStyling(0,"textHtml","documentKind","Html",true,"0_elementId","content.xml");
         assertEquals( "#set($syntax_with_directive=true)#set($___NoEscape0=${___TextStylingRegistry.transform($textHtml,\"Html\",$syntax_with_directive,\"documentKind\",\"0_elementId\",$___context,\"content.xml\")})", textStylingCall);
     }  
+    
+    /**
+     * Checks if tagContent is instruction
+     * @throws Exception 
+     */
+    public void testIsInstruction()
+            throws Exception
+    {
+        VelocityDocumentFormatter formatter = new VelocityDocumentFormatter();
+        boolean isInstruction = formatter.isInstruction("#set( $a = \"Velocity\" )");
+        assertTrue(isInstruction);
+        isInstruction = formatter.isInstruction("#foreach( $d in $cds.reference )");
+        assertTrue(isInstruction);
+        isInstruction = formatter.isInstruction("#if( $d == 1 )");
+        assertTrue(isInstruction);
+        isInstruction = formatter.isInstruction("$d");
+        assertFalse(isInstruction);
+    } 
 }

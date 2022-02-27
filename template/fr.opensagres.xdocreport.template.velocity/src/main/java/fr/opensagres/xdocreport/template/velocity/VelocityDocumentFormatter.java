@@ -77,6 +77,8 @@ public class VelocityDocumentFormatter
     private static final Object CLOSE_DEFINE_DIRECTIVE = ")";
 
     private static final Object END_DEFINE_DIRECTIVE = "#{end}";
+    
+    private static final String VAR_SYNTAX_WITH_DIRECTIVE = DOLLAR_TOKEN+"syntax_with_directive";
 
     public String formatAsFieldItemList( String content, String fieldName, boolean forceAsField )
     {
@@ -469,15 +471,20 @@ public class VelocityDocumentFormatter
                                            String entryName )
     {
         StringBuilder newContent = new StringBuilder( START_SET_DIRECTIVE );
+        newContent.append( VAR_SYNTAX_WITH_DIRECTIVE );
+        newContent.append( EQUALS );
+        newContent.append( syntaxWithDirective );
+        newContent.append( END_SET_DIRECTIVE );
+        newContent.append( START_SET_DIRECTIVE );
         newContent.append( formatAsSimpleField( true, getVariableName( variableIndex ) ) );
         newContent.append( EQUALS );
         newContent.append( getFunctionDirective( TemplateContextHelper.TEXT_STYLING_REGISTRY_KEY,
                                                  TemplateContextHelper.TRANSFORM_METHOD, fieldName, "\"" + syntaxKind
                                                      + "\"",
-                                                 syntaxWithDirective ? StringUtils.TRUE : StringUtils.FALSE, "\""
+                                                 VAR_SYNTAX_WITH_DIRECTIVE, "\""
                                                      + documentKind + "\"", "\"" + elementId + "\"", "$"
                                                      + TemplateContextHelper.CONTEXT_KEY, "\"" + entryName + "\"" ) );
-        newContent.append( END_SET_DIRECTIVE );
+        newContent.append( END_SET_DIRECTIVE );       
         return newContent.toString();
     }
 
@@ -527,5 +534,9 @@ public class VelocityDocumentFormatter
         newContent.append( value );
         newContent.append( END_DEFINE_DIRECTIVE );
         return newContent.toString();
+    }
+    
+    public boolean isInstruction(String tagContent) {
+        return tagContent.contains( START_IF_DIRECTIVE ) || tagContent.contains( START_SET_DIRECTIVE ) || tagContent.contains( START_FOREACH_DIRECTIVE );
     }
 }

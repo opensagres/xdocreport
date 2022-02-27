@@ -535,7 +535,7 @@ public abstract class TransformedBufferedDocumentContentHandler<Document extends
 
     public FieldMetadata getFieldAsTextStyling( String content )
     {
-        if ( formatter != null && fieldsMetadata != null )
+        if ( formatter != null && fieldsMetadata != null && !formatter.isInstruction(content))
         {
         	return fieldsMetadata.getFieldAsTextStyling(content);
         }

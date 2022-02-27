@@ -91,5 +91,11 @@ public interface IDocumentFormatter
 
     String getDefineDirective( String name, String value );
     
+    /**
+     * Returns true if an instruction tag is included and false otherwise.
+     * 
+     * @param tagContent
+     * @return 
+     */
     boolean isInstruction( String tagContent );
 }

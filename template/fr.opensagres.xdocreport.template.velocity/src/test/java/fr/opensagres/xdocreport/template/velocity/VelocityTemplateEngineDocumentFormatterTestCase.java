@@ -77,4 +77,16 @@ public class VelocityTemplateEngineDocumentFormatterTestCase
         String fieldName = formatter.formatAsFieldItemList( "Before loop #foreach($d in $cds.reference)$!cds.reference#end $cds.reference ${cds.reference}", "cds.reference" );
         assertEquals( "Before loop #foreach($d in $item_cds.reference)$!item_cds.reference#end $item_cds.reference ${item_cds.reference}", fieldName );
     }
+    
+    /**
+     * Checks if syntaxWithDirective is passed as boolean
+     * @throws Exception 
+     */
+    public void testFormatAsCallTextStylingIsSyntaxWithDirectiveBoolean()
+            throws Exception
+    {
+        VelocityDocumentFormatter formatter = new VelocityDocumentFormatter();
+        String textStylingCall = formatter.formatAsCallTextStyling(0,"textHtml","documentKind","Html",true,"0_elementId","content.xml");
+        assertEquals( "#set($syntax_with_directive=true)#set($___NoEscape0=${___TextStylingRegistry.transform($textHtml,\"Html\",$syntax_with_directive,\"documentKind\",\"0_elementId\",$___context,\"content.xml\")})", textStylingCall);
+    }  
 }

@@ -37,4 +37,16 @@ public class FreemarkerTemplateEngineDocumentFormatterTestCase
         String fieldName = formatter.formatAsFieldItemList( "${cds.reference}", "cds.reference", false );
         assertEquals( "${item_cds.reference}", fieldName );
     }
+    
+    /**
+     * Checks if syntaxWithDirective is passed as boolean
+     * @throws Exception 
+     */
+    public void testFormatAsCallTextStylingIsSyntaxWithDirectiveBoolean()
+            throws Exception
+    {
+        FreemarkerDocumentFormatter formatter = new FreemarkerDocumentFormatter();
+        String textStylingCall = formatter.formatAsCallTextStyling(0,"textHtml","documentKind","Html",true,"0_elementId","content.xml");
+        assertEquals( "[#assign ___NoEscape0=___TextStylingRegistry.transform(textHtml,\"Html\",true,\"documentKind\",\"0_elementId\",___context,\"content.xml\")]", textStylingCall);
+    }  
 }

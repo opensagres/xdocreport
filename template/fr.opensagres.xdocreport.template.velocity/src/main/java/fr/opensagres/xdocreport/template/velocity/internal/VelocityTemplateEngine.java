@@ -144,7 +144,7 @@ public class VelocityTemplateEngine
         super.setConfiguration( configuration );
         if ( configuration != null && configuration.escapeXML() )
         {
-            velocityEngineProperties.setProperty( "eventhandler.referenceinsertion.class",
+            velocityEngineProperties.setProperty( "event_handler.reference_insertion.class",
                                                   XDocReportEscapeReference.class.getName() );
         }
 

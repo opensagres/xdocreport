@@ -96,7 +96,13 @@ public abstract class JDKServiceLoader
     {
         try
         {
-            return JDK_SERVICE_LOADER.lookupProvidersFromJDK( providerClass, lookupClassLoader( classLoaderObject ) );
+            ClassLoader[] classLoaders = lookupClassLoader( classLoaderObject );
+            Iterator<T> providers = JDK_SERVICE_LOADER.lookupProvidersFromJDK( providerClass, classLoaders[0] );
+            if ( classLoaders.length > 1 )
+            {
+                providers = new IteratorPair<>(providers, JDK_SERVICE_LOADER.lookupProvidersFromJDK( providerClass, classLoaders[1] ) );
+            }
+            return providers;
         }
         catch ( Exception e )
         {
@@ -107,7 +113,7 @@ public abstract class JDKServiceLoader
     protected abstract <T> Iterator<T> lookupProvidersFromJDK( Class<T> providerClass, ClassLoader loader )
         throws Exception;
 
-    private static ClassLoader lookupClassLoader( Object classLoaderObject ) {
+    private static ClassLoader[] lookupClassLoader( Object classLoaderObject ) {
         if ( System.getSecurityManager() != null )
         {
             return AccessController.doPrivileged( new LookupClassLoaderAction( classLoaderObject ) );
@@ -118,21 +124,28 @@ public abstract class JDKServiceLoader
         }
     }
 
-    private static ClassLoader lookupClassLoaderInternal( Object classLoaderObject )
+    private static ClassLoader[] lookupClassLoaderInternal( Object classLoaderObject )
     {
         // Use thread context class loader by default
-        ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
+        ClassLoader contextClassLoader = Thread.currentThread().getContextClassLoader();
+        ClassLoader classClassLoader;
         // If not found, use specified object class loader
-        if ( classLoader == null && classLoaderObject != null )
+        if ( classLoaderObject != null )
         {
-            classLoader = classLoaderObject.getClass().getClassLoader();
+            classClassLoader = classLoaderObject.getClass().getClassLoader();
         }
-        // If not found, use current class class loader
-        if (classLoader == null)
+        else
         {
-            classLoader = JDKServiceLoader.class.getClassLoader();
+            classClassLoader = JDKServiceLoader.class.getClassLoader();
         }
-        return classLoader;
+        if ( contextClassLoader == null || contextClassLoader.equals( classClassLoader ) )
+        {
+            return new ClassLoader[] { classClassLoader };
+        }
+        else
+        {
+            return new ClassLoader[] { contextClassLoader, classClassLoader };
+        }
     }
 
     private static class JDK5ServiceLoader
@@ -183,17 +196,17 @@ public abstract class JDKServiceLoader
     }
 
     private static class LookupClassLoaderAction
-        implements PrivilegedAction<ClassLoader>
+        implements PrivilegedAction<ClassLoader[]>
     {
         private Object classLoaderObject;
         
-        LookupClassLoaderAction(Object object)
+        LookupClassLoaderAction( Object object )
         {
             classLoaderObject = object;
         }
 
         @Override
-        public ClassLoader run()
+        public ClassLoader[] run()
         {
             try
             {
@@ -204,5 +217,49 @@ public abstract class JDKServiceLoader
                 return null;
             }
         }
+    }
+
+    private static class IteratorPair<T>
+        implements Iterator<T>
+    {
+        private Iterator<T> iterator;
+        private Iterator<T> secondIterator;
+        
+        IteratorPair( Iterator<T> firstIterator, Iterator<T> secondIterator )
+        {
+            iterator = firstIterator;
+            this.secondIterator = secondIterator;
+        }
+
+        @Override
+        public boolean hasNext()
+        {
+            boolean result = iterator.hasNext();
+            if ( !result && secondIterator != null )
+            {
+                iterator = secondIterator;
+                secondIterator = null;
+                result = iterator.hasNext();
+            }
+            return result;
+        }
+
+        @Override
+        public T next()
+        {
+            if ( secondIterator != null && !iterator.hasNext() )
+            {
+                iterator = secondIterator;
+                secondIterator = null;
+            }
+            return iterator.next();
+        }
+
+        @Override
+        public void remove()
+        {
+            throw new UnsupportedOperationException();
+        }
+    
     }
 }

@@ -61,8 +61,7 @@ public abstract class AbstractRegistry<Discovery extends IBaseDiscovery>
             onStartInitialization();
             // getClass().getClassLoader() to work under OSGi context
 
-            Iterator<Discovery> discoveries =
-                JDKServiceLoader.lookupProviders( registryType, getClass().getClassLoader() );
+            Iterator<Discovery> discoveries = JDKServiceLoader.lookupProviders( registryType, this );
             if ( LOGGER.isLoggable( Level.FINE ) )
             {
                 LOGGER.fine( "discoveries found ? " + discoveries.hasNext() );

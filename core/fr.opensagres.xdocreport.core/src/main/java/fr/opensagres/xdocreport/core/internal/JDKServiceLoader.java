@@ -25,6 +25,8 @@
 package fr.opensagres.xdocreport.core.internal;
 
 import java.lang.reflect.Method;
+import java.security.AccessController;
+import java.security.PrivilegedAction;
 import java.util.Iterator;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -37,13 +39,13 @@ import fr.opensagres.xdocreport.core.logging.LogUtils;
  * <li><b>java.util.ServiceLoader</b> if XDocReport works on Java6. For example :
  * <p>
  * <code>Iterator<Discovery> discoveries =
-                ServiceLoader.load( registryType, getClass().getClassLoader() ).iterator();</code>
+                ServiceLoader.load( registryType, this ).iterator();</code>
  * </p>
  * </li>
  * <li><b>javax.imageio.spi.ServiceRegistry</b> if XDocReport works on Java5. For example :
  * <p>
  * <code>Iterator<Discovery> discoveries =
-                ServiceRegistry.lookupProviders( registryType, getClass().getClassLoader() );</code>
+                ServiceRegistry.lookupProviders( registryType, this );</code>
  * </p>
  * </li>
  * </ul>
@@ -90,11 +92,11 @@ public abstract class JDKServiceLoader
         }
     }
 
-    public static <T> Iterator<T> lookupProviders( Class<T> providerClass, ClassLoader loader )
+    public static <T> Iterator<T> lookupProviders( Class<T> providerClass, Object classLoaderObject )
     {
         try
         {
-            return JDK_SERVICE_LOADER.lookupProvidersFromJDK( providerClass, loader );
+            return JDK_SERVICE_LOADER.lookupProvidersFromJDK( providerClass, lookupClassLoader( classLoaderObject ) );
         }
         catch ( Exception e )
         {
@@ -104,6 +106,34 @@ public abstract class JDKServiceLoader
 
     protected abstract <T> Iterator<T> lookupProvidersFromJDK( Class<T> providerClass, ClassLoader loader )
         throws Exception;
+
+    private static ClassLoader lookupClassLoader( Object classLoaderObject ) {
+        if ( System.getSecurityManager() != null )
+        {
+            return AccessController.doPrivileged( new LookupClassLoaderAction( classLoaderObject ) );
+        }
+        else
+        {
+            return lookupClassLoaderInternal( classLoaderObject );
+        }
+    }
+
+    private static ClassLoader lookupClassLoaderInternal( Object classLoaderObject )
+    {
+        // Use thread context class loader by default
+        ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
+        // If not found, use specified object class loader
+        if ( classLoader == null && classLoaderObject != null )
+        {
+            classLoader = classLoaderObject.getClass().getClassLoader();
+        }
+        // If not found, use current class class loader
+        if (classLoader == null)
+        {
+            classLoader = JDKServiceLoader.class.getClassLoader();
+        }
+        return classLoader;
+    }
 
     private static class JDK5ServiceLoader
         extends JDKServiceLoader
@@ -149,6 +179,30 @@ public abstract class JDKServiceLoader
             Object serviceLoader = loadMethod.invoke( null, providerClass, loader );
             return (Iterator<T>) iteratorMethod.invoke( serviceLoader );
 
+        }
+    }
+
+    private static class LookupClassLoaderAction
+        implements PrivilegedAction<ClassLoader>
+    {
+        private Object classLoaderObject;
+        
+        LookupClassLoaderAction(Object object)
+        {
+            classLoaderObject = object;
+        }
+
+        @Override
+        public ClassLoader run()
+        {
+            try
+            {
+                return lookupClassLoaderInternal(classLoaderObject);
+            }
+            catch ( Exception e )
+            {
+                return null;
+            }
         }
     }
 }

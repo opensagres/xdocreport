@@ -35,6 +35,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import fr.opensagres.poi.xwpf.converter.core.styles.paragraph.*;
+import fr.opensagres.poi.xwpf.converter.core.styles.table.*;
 import org.apache.poi.POIXMLDocumentPart;
 import org.apache.poi.xwpf.usermodel.ParagraphAlignment;
 import org.apache.poi.xwpf.usermodel.UnderlinePatterns;
@@ -49,34 +51,8 @@ import org.apache.poi.xwpf.usermodel.XWPFTableCell;
 import org.apache.poi.xwpf.usermodel.XWPFTableRow;
 import org.apache.xmlbeans.XmlException;
 import org.openxmlformats.schemas.drawingml.x2006.main.ThemeDocument;
-import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTBorder;
-import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTDocDefaults;
-import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTFont;
-import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTNumPr;
-import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTP;
-import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTPPr;
-import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTR;
-import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTRPr;
-import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTRow;
-import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTSettings;
-import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTString;
-import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTStyle;
-import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTStyles;
-import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTTabs;
-import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTTbl;
-import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTTblPr;
-import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTTblPrBase;
-import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTTblPrEx;
-import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTTblStylePr;
-import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTTc;
-import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTTcPr;
-import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTTextDirection;
-import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTTrPr;
-import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTTwipsMeasure;
-import org.openxmlformats.schemas.wordprocessingml.x2006.main.FontsDocument;
-import org.openxmlformats.schemas.wordprocessingml.x2006.main.STMerge;
+import org.openxmlformats.schemas.wordprocessingml.x2006.main.*;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.STVerticalJc.Enum;
-import org.openxmlformats.schemas.wordprocessingml.x2006.main.SettingsDocument;
 
 import fr.opensagres.poi.xwpf.converter.core.BorderSide;
 import fr.opensagres.poi.xwpf.converter.core.Color;
@@ -85,21 +61,6 @@ import fr.opensagres.poi.xwpf.converter.core.TableCellBorder;
 import fr.opensagres.poi.xwpf.converter.core.TableHeight;
 import fr.opensagres.poi.xwpf.converter.core.TableWidth;
 import fr.opensagres.poi.xwpf.converter.core.openxmlformats.IOpenXMLFormatsPartProvider;
-import fr.opensagres.poi.xwpf.converter.core.styles.paragraph.ParagraphAlignmentValueProvider;
-import fr.opensagres.poi.xwpf.converter.core.styles.paragraph.ParagraphBackgroundColorValueProvider;
-import fr.opensagres.poi.xwpf.converter.core.styles.paragraph.ParagraphBorderBottomValueProvider;
-import fr.opensagres.poi.xwpf.converter.core.styles.paragraph.ParagraphBorderLeftValueProvider;
-import fr.opensagres.poi.xwpf.converter.core.styles.paragraph.ParagraphBorderRightValueProvider;
-import fr.opensagres.poi.xwpf.converter.core.styles.paragraph.ParagraphBorderTopValueProvider;
-import fr.opensagres.poi.xwpf.converter.core.styles.paragraph.ParagraphIndentationFirstLineValueProvider;
-import fr.opensagres.poi.xwpf.converter.core.styles.paragraph.ParagraphIndentationHangingValueProvider;
-import fr.opensagres.poi.xwpf.converter.core.styles.paragraph.ParagraphIndentationLeftValueProvider;
-import fr.opensagres.poi.xwpf.converter.core.styles.paragraph.ParagraphIndentationRightValueProvider;
-import fr.opensagres.poi.xwpf.converter.core.styles.paragraph.ParagraphLineSpacingValueProvider;
-import fr.opensagres.poi.xwpf.converter.core.styles.paragraph.ParagraphNumPrValueProvider;
-import fr.opensagres.poi.xwpf.converter.core.styles.paragraph.ParagraphSpacingAfterValueProvider;
-import fr.opensagres.poi.xwpf.converter.core.styles.paragraph.ParagraphSpacingBeforeValueProvider;
-import fr.opensagres.poi.xwpf.converter.core.styles.paragraph.ParagraphTabsValueProvider;
 import fr.opensagres.poi.xwpf.converter.core.styles.run.RunBackgroundColorValueProvider;
 import fr.opensagres.poi.xwpf.converter.core.styles.run.RunFontColorValueProvider;
 import fr.opensagres.poi.xwpf.converter.core.styles.run.RunFontFamilyAsciiValueProvider;
@@ -112,19 +73,6 @@ import fr.opensagres.poi.xwpf.converter.core.styles.run.RunFontStyleStrikeValueP
 import fr.opensagres.poi.xwpf.converter.core.styles.run.RunTextHighlightingValueProvider;
 import fr.opensagres.poi.xwpf.converter.core.styles.run.RunUnderlineValueProvider;
 import fr.opensagres.poi.xwpf.converter.core.styles.run.RunVerticalAlignValueProvider;
-import fr.opensagres.poi.xwpf.converter.core.styles.table.TableAlignmentValueProvider;
-import fr.opensagres.poi.xwpf.converter.core.styles.table.TableBorderBottomValueProvider;
-import fr.opensagres.poi.xwpf.converter.core.styles.table.TableBorderInsideHValueProvider;
-import fr.opensagres.poi.xwpf.converter.core.styles.table.TableBorderInsideVValueProvider;
-import fr.opensagres.poi.xwpf.converter.core.styles.table.TableBorderLeftValueProvider;
-import fr.opensagres.poi.xwpf.converter.core.styles.table.TableBorderRightValueProvider;
-import fr.opensagres.poi.xwpf.converter.core.styles.table.TableBorderTopValueProvider;
-import fr.opensagres.poi.xwpf.converter.core.styles.table.TableIndentationValueProvider;
-import fr.opensagres.poi.xwpf.converter.core.styles.table.TableMarginBottomValueProvider;
-import fr.opensagres.poi.xwpf.converter.core.styles.table.TableMarginLeftValueProvider;
-import fr.opensagres.poi.xwpf.converter.core.styles.table.TableMarginRightValueProvider;
-import fr.opensagres.poi.xwpf.converter.core.styles.table.TableMarginTopValueProvider;
-import fr.opensagres.poi.xwpf.converter.core.styles.table.TableWidthValueProvider;
 import fr.opensagres.poi.xwpf.converter.core.styles.table.cell.TableCellBackgroundColorValueProvider;
 import fr.opensagres.poi.xwpf.converter.core.styles.table.cell.TableCellBorderBottomValueProvider;
 import fr.opensagres.poi.xwpf.converter.core.styles.table.cell.TableCellBorderInsideHValueProvider;
@@ -446,6 +394,11 @@ public class XWPFStylesDocument
     public Color getBackgroundColor( CTPPr pPr )
     {
         return ParagraphBackgroundColorValueProvider.INSTANCE.getValue( pPr );
+    }
+
+    /*enabling bidirectional support*/
+    public CTOnOff getParagraphRunDirection(XWPFParagraph docxParagraph) {
+        return ParagraphRunDirectionProvider.INSTANCE.getValue( docxParagraph, this );
     }
 
     /**
@@ -790,6 +743,13 @@ public class XWPFStylesDocument
     {
         return TableAlignmentValueProvider.INSTANCE.getValue( table, this );
     }
+
+    /*enabling bidirectional support*/
+    public CTOnOff getTableRunDirection(XWPFTable table )
+    {
+        return TableRunDirectionValueProvider.INSTANCE.getValue( table, this );
+    }
+
 
     public ParagraphAlignment getTableAlignment( CTTblPr tblPr )
     {
@@ -1452,7 +1412,8 @@ public class XWPFStylesDocument
         return null;
     }
 
-	private static abstract class DocumentVisitor {
+
+    private static abstract class DocumentVisitor {
 		protected abstract boolean acceptRelationshipType(String relationshipType);
 
 		protected abstract boolean visitDocumentPart(String relationshipType, POIXMLDocumentPart p);

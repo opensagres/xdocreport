@@ -33,9 +33,11 @@ import java.util.List;
 import java.util.Map;
 import java.util.logging.Logger;
 
+import com.lowagie.text.pdf.PdfWriter;
 import com.microsoft.schemas.vml.CTImageData;
 import com.microsoft.schemas.vml.CTShape;
 import fr.opensagres.poi.xwpf.converter.core.*;
+import fr.opensagres.poi.xwpf.converter.core.utils.XWPFUtils;
 import org.apache.poi.xwpf.usermodel.IBodyElement;
 import org.apache.poi.xwpf.usermodel.ParagraphAlignment;
 import org.apache.poi.xwpf.usermodel.UnderlinePatterns;
@@ -57,23 +59,7 @@ import org.openxmlformats.schemas.drawingml.x2006.picture.CTPicture;
 import org.openxmlformats.schemas.drawingml.x2006.wordprocessingDrawing.STRelFromH;
 import org.openxmlformats.schemas.drawingml.x2006.wordprocessingDrawing.STRelFromV;
 import org.openxmlformats.schemas.drawingml.x2006.wordprocessingDrawing.STWrapText;
-import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTBookmark;
-import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTBorder;
-import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTBr;
-import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTHdrFtrRef;
-import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTLvl;
-import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTPPr;
-import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTPTab;
-import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTRPr;
-import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTSectPr;
-import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTTabStop;
-import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTTabs;
-import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTText;
-import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTTextDirection;
-import org.openxmlformats.schemas.wordprocessingml.x2006.main.STTabJc;
-import org.openxmlformats.schemas.wordprocessingml.x2006.main.STTabTlc;
-import org.openxmlformats.schemas.wordprocessingml.x2006.main.STTextDirection;
-import org.openxmlformats.schemas.wordprocessingml.x2006.main.STVerticalJc;
+import org.openxmlformats.schemas.wordprocessingml.x2006.main.*;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.STVerticalJc.Enum;
 
 import com.lowagie.text.Chunk;
@@ -322,13 +308,24 @@ public class PdfMapper
 
         }
 
+        /*enabling bidirectional support-> paragraph direction*/
+        CTOnOff bidi = stylesDocument.getParagraphRunDirection(docxParagraph);
+        if(isRTLLayoutSet(bidi)){
+            pdfParagraph.setRunDirection(PdfWriter.RUN_DIRECTION_RTL);
+        }else{
+            pdfParagraph.setRunDirection(PdfWriter.RUN_DIRECTION_LTR);
+        }
         // text-align
         ParagraphAlignment alignment = stylesDocument.getParagraphAlignment( docxParagraph );
         if ( alignment != null )
         {
             switch ( alignment )
             {
+                /* please refer -> https://docs.microsoft.com/en-us/globalization/input/text-justification*/
                 case LEFT:
+                case LOW_KASHIDA:
+                case MEDIUM_KASHIDA:
+                case HIGH_KASHIDA:
                     pdfParagraph.setAlignment( Element.ALIGN_LEFT );
                     break;
                 case RIGHT:
@@ -343,6 +340,9 @@ public class PdfMapper
                 default:
                     break;
             }
+        }else{
+            //enabling bidirectional support -> if by default Alignment of Paragraph is Undefined, set it to left
+            pdfParagraph.setAlignment( Element.ALIGN_LEFT );
         }
 
         // background-color
@@ -436,6 +436,10 @@ public class PdfMapper
             pdfParagraph.setListItemText( itemContext.getText() );
         }
         return pdfParagraph;
+    }
+
+    private boolean isRTLLayoutSet(CTOnOff bidiProperty){
+       return XWPFUtils.isCTOnOff(bidiProperty);
     }
 
     @Override
@@ -1078,6 +1082,7 @@ public class PdfMapper
         throws DocumentException
     {
         // 2) Compute tableWith
+        boolean isRightToLeftTable = false;
         TableWidth tableWidth = stylesDocument.getTableWidth( table );
         StylableTable pdfPTable = pdfDocument.createTable( pdfParentContainer, colWidths.length );
         pdfPTable.setTotalWidth( colWidths );
@@ -1093,6 +1098,13 @@ public class PdfMapper
             }
         }
         pdfPTable.setLockedWidth( true );
+
+        //enabling bidirectional support -> Table layout/run direction(based on layout)
+        CTOnOff bidiVisual = stylesDocument.getTableRunDirection(table);
+        if(isRTLLayoutSet(bidiVisual)){
+                isRightToLeftTable = true;
+                pdfPTable.setRunDirection(PdfWriter.RUN_DIRECTION_RTL);
+        }
 
         // Table alignment
         ParagraphAlignment alignment = stylesDocument.getTableAlignment( table );
@@ -1115,13 +1127,22 @@ public class PdfMapper
                 default:
                     break;
             }
+        }else{
+            if(isRightToLeftTable){
+                pdfPTable.setHorizontalAlignment(Element.ALIGN_RIGHT);
+            }else{
+                pdfPTable.setHorizontalAlignment(Element.ALIGN_LEFT);
+            }
         }
 
         // Table indentation
         Float indentation = stylesDocument.getTableIndentation( table );
-        if ( indentation != null )
-        {
-            pdfPTable.setPaddingLeft( indentation );
+        if ( indentation != null ) {
+            if (isRightToLeftTable) {
+                pdfPTable.setPaddingRight(indentation);
+            } else {
+                pdfPTable.setPaddingLeft(indentation);
+            }
         }
         return pdfPTable;
     }
@@ -1130,7 +1151,7 @@ public class PdfMapper
     protected void endVisitTable( XWPFTable table, IITextContainer pdfParentContainer,
                                   IITextContainer pdfTableContainer )
         throws Exception
-    {
+    {   //StylableDocument --> PdfPtable
         pdfParentContainer.addElement( ( (ExtendedPdfPTable) pdfTableContainer ).getElement() );
 
     }

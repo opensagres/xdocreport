@@ -78,6 +78,8 @@ public class StyleParagraphProperties
     private Float paddingTop;
 
     private Float textIndent;
+    
+    private String writingMode;
 
     public StyleParagraphProperties()
     {
@@ -184,6 +186,9 @@ public class StyleParagraphProperties
         if ( paragraphProperties.getTextIndent() != null )
         {
             textIndent = paragraphProperties.getTextIndent();
+        }
+        if(paragraphProperties.getWritingMode() != null){
+            writingMode = paragraphProperties.getWritingMode();
         }
     }
 
@@ -416,4 +421,14 @@ public class StyleParagraphProperties
     {
         this.textIndent = textIndent;
     }
+    
+    public String getWritingMode()
+    {
+        return writingMode;
+    }
+
+    public void setWritingMode( String writingMode )
+    {
+        this.writingMode = writingMode;
+    } 
 }

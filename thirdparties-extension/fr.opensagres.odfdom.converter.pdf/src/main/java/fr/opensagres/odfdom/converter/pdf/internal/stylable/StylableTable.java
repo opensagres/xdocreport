@@ -26,6 +26,7 @@ package fr.opensagres.odfdom.converter.pdf.internal.stylable;
 
 import com.lowagie.text.Element;
 
+import com.lowagie.text.pdf.PdfWriter;
 import fr.opensagres.odfdom.converter.pdf.internal.styles.Style;
 import fr.opensagres.odfdom.converter.pdf.internal.styles.StyleTableProperties;
 import fr.opensagres.odfdom.converter.pdf.internal.styles.StyleTableRowProperties;
@@ -131,7 +132,7 @@ public class StylableTable
 
             // alignment
             int alignment = tableProperties.getAlignment();
-            if ( alignment != Element.ALIGN_UNDEFINED )
+            if (alignment != Element.ALIGN_UNDEFINED && style.getFamilyName().equals("table"))
             {
                 super.setHorizontalAlignment( alignment );
             }
@@ -168,6 +169,14 @@ public class StylableTable
             if ( mayBreakBetweenRows != null )
             {
                 super.setKeepTogether( !mayBreakBetweenRows );
+            }
+
+            // Support for writing mode i.e. LTR OR RTL
+            String writingMode = tableProperties.getWritingMode();
+            if ( writingMode != null && writingMode.equals("rl-tb"))
+            {
+                // RTL
+                super.setRunDirection(PdfWriter.RUN_DIRECTION_RTL);
             }
         }
         StyleTableRowProperties tableRowProperties = style.getTableRowProperties();

@@ -65,18 +65,18 @@ public class VelocityTemplateEngineDiscovery
         }
 
         // check if XDocReportEntryResourceLoader is defined?
-        boolean hasReportLoaderDefined = velocityEngineProperties.containsKey( "report.resource.loader.class" );
+        boolean hasReportLoaderDefined = velocityEngineProperties.containsKey( "resource.loader.report.class" );
         if ( !hasReportLoaderDefined )
         {
-            // report.resource.loader.class is not defined, defines it.
+            // resource.loader.report.class is not defined, defines it.
 
             // Initialize properties to use XDocReportEntryResourceLoader to
             // load template from entry name of XDocArchive.
-            velocityEngineProperties.setProperty( "resource.loader", "file, class, jar ,report" );
-            velocityEngineProperties.setProperty( "report.resource.loader.class",
+            velocityEngineProperties.setProperty( "resource.loaders", "file, class, jar ,report" );
+            velocityEngineProperties.setProperty( "resource.loader.report.class",
                                                   XDocReportEntryResourceLoader.class.getName() );
-            velocityEngineProperties.setProperty( "report.resource.loader.cache", "true" );
-            velocityEngineProperties.setProperty( "report.resource.loader.modificationCheckInterval", "1" );
+            velocityEngineProperties.setProperty( "resource.loader.report.cache", "true" );
+            velocityEngineProperties.setProperty( "resource.loader.file.modification_check_interval", "1" );
         }
 
         // Set properties to maximize backward compatibility of previous XDoxReports Velocity 1 templates with Velocity 2:

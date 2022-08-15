@@ -41,7 +41,7 @@
 		<dependency>
 			<artifactId>bcmail-jdk14</artifactId>
 			<groupId>org.bouncycastle</groupId>
-			<version>1.38</version>
+			<version>1.70</version>
 			<optional>true</optional>
 		</dependency>
 		<dependency>

@@ -45,6 +45,8 @@ public abstract class AbstractImageProvider
 
     private Float heightFromImageInfo;
 
+    private Float[] fittedImageDimensions;
+
     private boolean useImageSize;
 
     private boolean resize;
@@ -187,6 +189,11 @@ public abstract class AbstractImageProvider
     private Float[] getDimensions(Float defaultWidth, Float defaultHeight)
         throws IOException
     {
+        if ( fittedImageDimensions != null )
+        {
+            return fittedImageDimensions;
+        }
+
         float realImageHeight = getImageInfo().getHeight();
         float realImageWidth = getImageInfo().getWidth();
         float scale = Math.min(defaultWidth / realImageWidth, defaultHeight / realImageHeight);
@@ -194,7 +201,8 @@ public abstract class AbstractImageProvider
         float finalImageHeight = realImageHeight * scale;
         float finalImageWidth = realImageWidth * scale;
 
-        return new Float[]{finalImageWidth, finalImageHeight};
+        fittedImageDimensions = new Float[]{finalImageWidth, finalImageHeight};
+        return fittedImageDimensions;
     }
 
     /*

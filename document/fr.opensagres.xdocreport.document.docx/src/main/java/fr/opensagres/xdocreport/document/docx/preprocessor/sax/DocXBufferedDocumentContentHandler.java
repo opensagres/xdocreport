@@ -184,6 +184,10 @@ public class DocXBufferedDocumentContentHandler extends
 				// <wp:extent
 				// cx="${imageRegistry.getWidth(___imageInfo, '1262380', '1352550')}"
 				// cy="${imageRegistry.getHeight(___imageInfo, '1262380', '1352550')}" />
+				// "cx" and "cy" attributes can also be modified as follows
+				// <wp:extent
+				// cx="${imageRegistry.getWidth(___imageInfo, '1262380')}"
+				// cy="${imageRegistry.getHeight(___imageInfo, '1352550')}" />
 				String newCX = null;
 				String newCY = null;
 				String oldCX = null;
@@ -197,17 +201,27 @@ public class DocXBufferedDocumentContentHandler extends
 					oldCY = attributes.getValue(cyIndex);
 				}
 
+				// get the parameters for the get width and height methods
+				String[] parameters = null;
+				if (oldCX != null && oldCY != null) {
+					parameters = new String[]{IImageRegistry.IMAGE_INFO, "'" + oldCX + "'", "'" + oldCY + "'"};
+				} else if (oldCX != null) {
+					parameters = new String[]{IImageRegistry.IMAGE_INFO, "'" + oldCX + "'"};
+				} else if (oldCY != null) {
+					parameters = new String[]{IImageRegistry.IMAGE_INFO, "'" + oldCY + "'"};
+				}
+
 				if (oldCX != null) {
 					newCX = formatter.getFunctionDirective(
 							TemplateContextHelper.IMAGE_REGISTRY_KEY,
 							IImageRegistry.GET_WIDTH_METHOD,
-							IImageRegistry.IMAGE_INFO, "'" + oldCX + "'", "'" + oldCY + "'");
+							parameters);
 				}
 				if (oldCY != null) {
 					newCY = formatter.getFunctionDirective(
 							TemplateContextHelper.IMAGE_REGISTRY_KEY,
 							IImageRegistry.GET_HEIGHT_METHOD,
-							IImageRegistry.IMAGE_INFO, "'" + oldCX + "'", "'" + oldCY + "'");
+							parameters);
 				}
 
 				if (newCX != null || newCY != null) {

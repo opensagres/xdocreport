@@ -255,6 +255,12 @@ public abstract class AbstractImageRegistry
 
     protected abstract String getPath( ImageProviderInfo info );
 
+    public String getWidth( ImageProviderInfo info, String defaultWidth )
+        throws IOException
+    {
+        return getWidth(info, defaultWidth, null);
+    }
+
     public String getWidth( ImageProviderInfo info, String defaultWidth, String defaultHeight )
         throws IOException
     {
@@ -269,6 +275,12 @@ public abstract class AbstractImageRegistry
             return getSize( width );
         }
         return defaultWidth;
+    }
+
+    public String getHeight( ImageProviderInfo info, String defaultHeight )
+        throws IOException
+    {
+        return getHeight(info, null, defaultHeight);
     }
 
     public String getHeight( ImageProviderInfo info, String defaultWidth, String defaultHeight )

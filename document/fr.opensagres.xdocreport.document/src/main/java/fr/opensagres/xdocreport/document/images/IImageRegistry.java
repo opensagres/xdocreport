@@ -83,10 +83,11 @@ public interface IImageRegistry
      * 
      * @param imageProvider
      * @param defaultWidth
+     * @param defaultHeight
      * @return
      * @throws IOException
      */
-    String getWidth( ImageProviderInfo info, String defaultWidth )
+    String getWidth( ImageProviderInfo info, String defaultWidth, String defaultHeight )
         throws IOException;
 
     /**
@@ -94,9 +95,10 @@ public interface IImageRegistry
      * 
      * @param imageProvider
      * @param defaultWidth
+     * @param defaultHeight
      * @return
      * @throws IOException
      */
-    String getHeight( ImageProviderInfo info, String defaultHeight )
+    String getHeight( ImageProviderInfo info, String defaultWidth, String defaultHeight )
         throws IOException;
 }

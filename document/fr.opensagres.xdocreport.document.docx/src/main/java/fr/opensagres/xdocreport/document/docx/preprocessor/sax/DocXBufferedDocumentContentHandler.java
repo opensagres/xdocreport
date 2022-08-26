@@ -182,26 +182,34 @@ public class DocXBufferedDocumentContentHandler extends
 				// modify "cx" and "cy" attribute with image script (Velocity,
 				// Freemarker)
 				// <wp:extent
-				// cx="${imageRegistry.getWidth(___imageInfo, '1262380')}"
-				// cy="${imageRegistry.getHeight(___imageInfo, '1352550')}" />
+				// cx="${imageRegistry.getWidth(___imageInfo, '1262380', '1352550')}"
+				// cy="${imageRegistry.getHeight(___imageInfo, '1262380', '1352550')}" />
 				String newCX = null;
 				String newCY = null;
+				String oldCX = null;
+				String oldCY = null;
 				int cxIndex = attributes.getIndex(CX_ATTR);
 				if (cxIndex != -1) {
-					String oldCX = attributes.getValue(cxIndex);
-					newCX = formatter.getFunctionDirective(
-							TemplateContextHelper.IMAGE_REGISTRY_KEY,
-							IImageRegistry.GET_WIDTH_METHOD,
-							IImageRegistry.IMAGE_INFO, "'" + oldCX + "'");
+					oldCX = attributes.getValue(cxIndex);
 				}
 				int cyIndex = attributes.getIndex(CY_ATTR);
 				if (cyIndex != -1) {
-					String oldCY = attributes.getValue(cyIndex);
+					oldCY = attributes.getValue(cyIndex);
+				}
+
+				if (oldCX != null) {
+					newCX = formatter.getFunctionDirective(
+							TemplateContextHelper.IMAGE_REGISTRY_KEY,
+							IImageRegistry.GET_WIDTH_METHOD,
+							IImageRegistry.IMAGE_INFO, "'" + oldCX + "'", "'" + oldCY + "'");
+				}
+				if (oldCY != null) {
 					newCY = formatter.getFunctionDirective(
 							TemplateContextHelper.IMAGE_REGISTRY_KEY,
 							IImageRegistry.GET_HEIGHT_METHOD,
-							IImageRegistry.IMAGE_INFO, "'" + oldCY + "'");
+							IImageRegistry.IMAGE_INFO, "'" + oldCX + "'", "'" + oldCY + "'");
 				}
+
 				if (newCX != null || newCY != null) {
 					AttributesImpl attr = toAttributesImpl(attributes);
 					if (newCX != null) {

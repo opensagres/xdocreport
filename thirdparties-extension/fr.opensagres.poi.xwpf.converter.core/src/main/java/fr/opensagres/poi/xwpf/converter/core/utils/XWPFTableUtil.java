@@ -267,7 +267,11 @@ public class XWPFTableUtil
 
     public static CTTblWidth getWidth( XWPFTableCell cell )
     {
-        return cell.getCTTc().getTcPr().getTcW();
+        CTTcPr tcPr = cell.getCTTc().getTcPr();
+        if (tcPr == null) {
+            return null;
+        }
+        return tcPr.getTcW();
     }
 
     private static Collection<Float> computeColWidths( XWPFTableRow row )
@@ -320,10 +324,10 @@ public class XWPFTableUtil
     {
         float width = 0;
         boolean percentUnit = false;
-        CTTcPr tblPr = cell.getCTTc().getTcPr();
-        if ( tblPr.isSetTcW() )
+        CTTcPr tcPr = cell.getCTTc().getTcPr();
+        if ( tcPr != null && tcPr.isSetTcW() )
         {
-            CTTblWidth tblWidth = tblPr.getTcW();
+            CTTblWidth tblWidth = tcPr.getTcW();
             return getTableWidth( tblWidth );
         }
         return new TableWidth( width, percentUnit );

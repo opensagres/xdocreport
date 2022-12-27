@@ -13,3 +13,6 @@ updates:
       - dependency-name: org.apache.cxf:*
         versions:
         - "> 3, < 4"
+      - dependency-name: org.eclipse.jetty:*
+        versions:
+        - " < 11"

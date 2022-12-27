@@ -10,6 +10,6 @@ updates:
     schedule:
       interval: "weekly"
     ignore:
-      - dependency-name: "org.apache.cxf:*"
+      - dependency-name: org.apache.cxf:*
         versions:
         - "> 3, < 4"

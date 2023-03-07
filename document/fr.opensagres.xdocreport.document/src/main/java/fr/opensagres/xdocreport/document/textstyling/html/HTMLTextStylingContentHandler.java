@@ -39,7 +39,8 @@ import fr.opensagres.xdocreport.document.textstyling.properties.TableProperties;
  * SAX content handler used to parse HTML content and call the right method of {@link IDocumentHandler} according the
  * HTML content.
  */
-public class HTMLTextStylingContentHandler extends DefaultHandler
+public class HTMLTextStylingContentHandler
+        extends DefaultHandler
 {
 
     private static final String STYLE_ATTR = "style";
@@ -129,7 +130,8 @@ public class HTMLTextStylingContentHandler extends DefaultHandler
     }
 
     @Override
-    public void startDocument() throws SAXException
+    public void startDocument()
+            throws SAXException
     {
         super.startDocument();
         try
@@ -143,7 +145,8 @@ public class HTMLTextStylingContentHandler extends DefaultHandler
     }
 
     @Override
-    public void endDocument() throws SAXException
+    public void endDocument()
+            throws SAXException
     {
         super.endDocument();
         try
@@ -157,7 +160,8 @@ public class HTMLTextStylingContentHandler extends DefaultHandler
     }
 
     @Override
-    public void startElement( String uri, String localName, String name, Attributes attributes ) throws SAXException
+    public void startElement( String uri, String localName, String name, Attributes attributes )
+            throws SAXException
     {
         ignoreCharacters = false;
         try
@@ -309,7 +313,8 @@ public class HTMLTextStylingContentHandler extends DefaultHandler
     }
 
     @Override
-    public void endElement( String uri, String localName, String name ) throws SAXException
+    public void endElement( String uri, String localName, String name )
+            throws SAXException
     {
         ignoreCharacters = false;
         try
@@ -436,7 +441,8 @@ public class HTMLTextStylingContentHandler extends DefaultHandler
     }
 
     @Override
-    public void characters( char[] ch, int start, int length ) throws SAXException
+    public void characters( char[] ch, int start, int length )
+            throws SAXException
     {
         if ( !ignoreCharacters )
         {
@@ -459,7 +465,8 @@ public class HTMLTextStylingContentHandler extends DefaultHandler
         super.characters( ch, start, length );
     }
 
-    private void startList( boolean ordered, ContainerProperties properties ) throws IOException
+    private void startList( boolean ordered, ContainerProperties properties )
+            throws IOException
     {
         ignoreCharacters = true;
         if ( ordered )
@@ -472,7 +479,8 @@ public class HTMLTextStylingContentHandler extends DefaultHandler
         }
     }
 
-    private void endList( boolean ordered ) throws IOException
+    private void endList( boolean ordered )
+            throws IOException
     {
         if ( ordered )
         {

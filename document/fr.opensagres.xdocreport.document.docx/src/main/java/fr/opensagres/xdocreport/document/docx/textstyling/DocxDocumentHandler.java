@@ -564,10 +564,14 @@ public class DocxDocumentHandler
             List<ContainerProperties> propertiesList = new ArrayList<ContainerProperties>(paragraphsStack);
             propertiesList.addAll( spansStack );
             ContainerProperties result = null;
-            for(ContainerProperties properties : propertiesList) {
-                if (result == null) {
+            for (ContainerProperties properties : propertiesList)
+            {
+                if (result == null)
+                {
                     result = properties;
-                } else {
+                }
+                else
+                {
                     result = ContainerProperties.combine( result, properties );
                 }
             }

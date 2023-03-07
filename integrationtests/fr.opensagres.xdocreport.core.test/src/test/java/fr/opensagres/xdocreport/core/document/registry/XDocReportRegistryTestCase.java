@@ -290,7 +290,7 @@ public class XDocReportRegistryTestCase
 
             // Sleep with 1sec to wait that Velocity cache refresh.
             // TODO : I don't know how manage that better
-            // "report.resource.loader.modificationCheckInterval" (please see
+            // "report.resource.loader.modification_check_interval" (please see
             // VelocityTemplayteEngine) can accept
             // ONLY second interval to refresh cache???
             // Thread.sleep(1000);

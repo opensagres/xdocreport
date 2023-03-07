@@ -39,12 +39,12 @@ public class RunUnderlineValueProvider
     @Override
     public UnderlinePatterns getValue( CTRPr rPr, XWPFStylesDocument stylesDocument )
     {
-        return ( rPr != null && rPr.isSetU() ) ? UnderlinePatterns.valueOf( rPr.getU().getVal().intValue() ) : null;
+        return ( rPr != null && rPr.sizeOfUArray() > 0 ) ? UnderlinePatterns.valueOf( rPr.getUArray(0).getVal().intValue() ) : null;
     }
 
     @Override
     public UnderlinePatterns getValue( CTParaRPr rPr, XWPFStylesDocument stylesDocument )
     {
-        return ( rPr != null && rPr.isSetU() ) ? UnderlinePatterns.valueOf( rPr.getU().getVal().intValue() ) : null;
+        return ( rPr != null && rPr.sizeOfUArray() > 0 ) ? UnderlinePatterns.valueOf( rPr.getUArray(0).getVal().intValue() ) : null;
     }
 }

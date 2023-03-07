@@ -25,7 +25,26 @@
 package fr.opensagres.poi.xwpf.converter.xhtml.internal;
 
 import static fr.opensagres.poi.xwpf.converter.core.utils.DxaUtil.emu2points;
-import static fr.opensagres.poi.xwpf.converter.xhtml.internal.XHTMLConstants.*;
+import static fr.opensagres.poi.xwpf.converter.xhtml.internal.XHTMLConstants.A_ELEMENT;
+import static fr.opensagres.poi.xwpf.converter.xhtml.internal.XHTMLConstants.BODY_ELEMENT;
+import static fr.opensagres.poi.xwpf.converter.xhtml.internal.XHTMLConstants.BR_ELEMENT;
+import static fr.opensagres.poi.xwpf.converter.xhtml.internal.XHTMLConstants.CLASS_ATTR;
+import static fr.opensagres.poi.xwpf.converter.xhtml.internal.XHTMLConstants.COLSPAN_ATTR;
+import static fr.opensagres.poi.xwpf.converter.xhtml.internal.XHTMLConstants.DIV_ELEMENT;
+import static fr.opensagres.poi.xwpf.converter.xhtml.internal.XHTMLConstants.HEAD_ELEMENT;
+import static fr.opensagres.poi.xwpf.converter.xhtml.internal.XHTMLConstants.HREF_ATTR;
+import static fr.opensagres.poi.xwpf.converter.xhtml.internal.XHTMLConstants.HTML_ELEMENT;
+import static fr.opensagres.poi.xwpf.converter.xhtml.internal.XHTMLConstants.ID_ATTR;
+import static fr.opensagres.poi.xwpf.converter.xhtml.internal.XHTMLConstants.IMG_ELEMENT;
+import static fr.opensagres.poi.xwpf.converter.xhtml.internal.XHTMLConstants.P_ELEMENT;
+import static fr.opensagres.poi.xwpf.converter.xhtml.internal.XHTMLConstants.ROWSPAN_ATTR;
+import static fr.opensagres.poi.xwpf.converter.xhtml.internal.XHTMLConstants.SPAN_ELEMENT;
+import static fr.opensagres.poi.xwpf.converter.xhtml.internal.XHTMLConstants.SRC_ATTR;
+import static fr.opensagres.poi.xwpf.converter.xhtml.internal.XHTMLConstants.STYLE_ATTR;
+import static fr.opensagres.poi.xwpf.converter.xhtml.internal.XHTMLConstants.TABLE_ELEMENT;
+import static fr.opensagres.poi.xwpf.converter.xhtml.internal.XHTMLConstants.TD_ELEMENT;
+import static fr.opensagres.poi.xwpf.converter.xhtml.internal.XHTMLConstants.TH_ELEMENT;
+import static fr.opensagres.poi.xwpf.converter.xhtml.internal.XHTMLConstants.TR_ELEMENT;
 import static fr.opensagres.poi.xwpf.converter.xhtml.internal.styles.CSSStylePropertyConstants.HEIGHT;
 import static fr.opensagres.poi.xwpf.converter.xhtml.internal.styles.CSSStylePropertyConstants.MARGIN_BOTTOM;
 import static fr.opensagres.poi.xwpf.converter.xhtml.internal.styles.CSSStylePropertyConstants.MARGIN_LEFT;
@@ -37,11 +56,22 @@ import java.io.IOException;
 import java.math.BigInteger;
 import java.util.List;
 
-import org.apache.poi.xwpf.usermodel.*;
+import org.apache.poi.xwpf.usermodel.XWPFDocument;
+import org.apache.poi.xwpf.usermodel.XWPFFooter;
+import org.apache.poi.xwpf.usermodel.XWPFHeader;
+import org.apache.poi.xwpf.usermodel.XWPFParagraph;
+import org.apache.poi.xwpf.usermodel.XWPFPictureData;
+import org.apache.poi.xwpf.usermodel.XWPFRun;
+import org.apache.poi.xwpf.usermodel.XWPFSDT;
+import org.apache.poi.xwpf.usermodel.XWPFTable;
+import org.apache.poi.xwpf.usermodel.XWPFTableCell;
+import org.apache.poi.xwpf.usermodel.XWPFTableRow;
 import org.apache.xmlbeans.XmlException;
 import org.openxmlformats.schemas.drawingml.x2006.main.CTPositiveSize2D;
 import org.openxmlformats.schemas.drawingml.x2006.picture.CTPicture;
 import org.openxmlformats.schemas.drawingml.x2006.wordprocessingDrawing.STRelFromH.Enum;
+import org.openxmlformats.schemas.officeDocument.x2006.sharedTypes.STTwipsMeasure;
+import org.openxmlformats.schemas.officeDocument.x2006.sharedTypes.STVerticalAlignRun;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTBookmark;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTBr;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTHdrFtrRef;
@@ -55,7 +85,7 @@ import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTTabs;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTTblPr;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTTcPr;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTText;
-import org.openxmlformats.schemas.wordprocessingml.x2006.main.STVerticalAlignRun;
+import org.openxmlformats.schemas.wordprocessingml.x2006.main.STSignedTwipsMeasure;
 import org.xml.sax.Attributes;
 import org.xml.sax.ContentHandler;
 import org.xml.sax.SAXException;
@@ -324,10 +354,10 @@ public class XHTMLMapper
         	Color color = RunTextHighlightingValueProvider.INSTANCE.getValue(rPr, getStylesDocument());
         	if(color != null) cssStyle.addProperty(CSSStylePropertyConstants.BACKGROUND_COLOR, StringUtils.toHexString(color));
         	if(Boolean.TRUE.equals(RunFontStyleStrikeValueProvider.INSTANCE.getValue(rPr, getStylesDocument())) ||
-        			rPr.getDstrike() != null)
+        			rPr.sizeOfDstrikeArray() > 0)
         		cssStyle.addProperty("text-decoration", "line-through");
-        	if(rPr.getVertAlign() != null) {
-        		int align = rPr.getVertAlign().getVal().intValue();
+        	if(rPr.sizeOfVertAlignArray() > 0) {
+        		int align = rPr.getVertAlignArray(0).getVal().intValue();
         		if(STVerticalAlignRun.INT_SUPERSCRIPT == align) {
         			cssStyle.addProperty("vertical-align", "super");
         		}
@@ -371,6 +401,10 @@ public class XHTMLMapper
 			endElement(SPAN_ELEMENT);
 			return;
 		}
+    	else if(currentParagraph != null && tabs != null)
+    	{
+            characters(TAB_CHAR_SEQUENCE);
+        }
     }
 
     @Override
@@ -632,7 +666,7 @@ public class XHTMLMapper
         if ( pageSize != null )
         {
             // Width
-            BigInteger width = pageSize.getW();
+        	STTwipsMeasure width = pageSize.xgetW();
             if ( width != null )
             {
                 style.addProperty( WIDTH, getStylesDocument().getValueAsPoint( DxaUtil.dxa2points( width ) ) );
@@ -643,28 +677,28 @@ public class XHTMLMapper
         if ( pageMargin != null )
         {
             // margin bottom
-            BigInteger marginBottom = pageMargin.getBottom();
+        	STSignedTwipsMeasure marginBottom = pageMargin.xgetBottom();
             if ( marginBottom != null )
             {
                 float marginBottomPt = DxaUtil.dxa2points( marginBottom );
                 style.addProperty( MARGIN_BOTTOM, getStylesDocument().getValueAsPoint( marginBottomPt ) );
             }
             // margin top
-            BigInteger marginTop = pageMargin.getTop();
+            STSignedTwipsMeasure marginTop = pageMargin.xgetTop();
             if ( marginTop != null )
             {
                 float marginTopPt = DxaUtil.dxa2points( marginTop );
                 style.addProperty( MARGIN_TOP, getStylesDocument().getValueAsPoint( marginTopPt ) );
             }
             // margin left
-            BigInteger marginLeft = pageMargin.getLeft();
+            STTwipsMeasure marginLeft = pageMargin.xgetLeft();
             if ( marginLeft != null )
             {
                 float marginLeftPt = DxaUtil.dxa2points( marginLeft );
                 style.addProperty( MARGIN_LEFT, getStylesDocument().getValueAsPoint( marginLeftPt ) );
             }
             // margin right
-            BigInteger marginRight = pageMargin.getRight();
+            STTwipsMeasure marginRight = pageMargin.xgetRight();
             if ( marginRight != null )
             {
                 float marginRightPt = DxaUtil.dxa2points( marginRight );

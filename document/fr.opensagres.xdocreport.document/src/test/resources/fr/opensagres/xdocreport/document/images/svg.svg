@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:cc="http://creativecommons.org/ns#" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:svg="http://www.w3.org/2000/svg" xmlns="http://www.w3.org/2000/svg" xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd" xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape" id="svg2" sodipodi:docname="svgdemo1.svg" viewBox="0 0 240.00001 160" version="1.1" inkscape:version="0.48.3.1 r9886">
+  <defs id="defs9"/>
+  <sodipodi:namedview id="namedview14" bordercolor="#666666" inkscape:pageshadow="2" guidetolerance="10" pagecolor="#ffffff" gridtolerance="10" inkscape:window-maximized="0" inkscape:zoom="0.22424933" objecttolerance="10" borderopacity="1" inkscape:current-layer="svg2" inkscape:cx="342.0606" inkscape:cy="-346.20001" inkscape:window-y="0" inkscape:window-x="0" inkscape:window-width="1364" showgrid="false" inkscape:pageopacity="0" inkscape:window-height="766" fit-margin-top="0" fit-margin-left="0" fit-margin-right="0" fit-margin-bottom="0"/>
+  <rect id="rect6" style="fill:#ff0000" height="100" width="240" y="30" x="0"/>
+  <circle id="circle8" sodipodi:rx="80" sodipodi:ry="80" style="fill:#ff0000" cy="100" sodipodi:cy="100" cx="150" r="80" sodipodi:cx="150" transform="translate(-30,-20)"/>
+  <text id="text10" y="105" x="120" font-size="60" style="font-size:60px;text-anchor:middle;fill:#ffffff">SVG</text>
+  <metadata id="metadata12">
+    <rdf:RDF>
+      <cc:Work>
+        <dc:format>image/svg+xml</dc:format>
+        <dc:type rdf:resource="http://purl.org/dc/dcmitype/StillImage"/>
+        <cc:license rdf:resource="http://creativecommons.org/licenses/publicdomain/"/>
+        <dc:publisher>
+          <cc:Agent rdf:about="http://openclipart.org/">
+            <dc:title>Openclipart</dc:title>
+          </cc:Agent>
+        </dc:publisher>
+      </cc:Work>
+      <cc:License rdf:about="http://creativecommons.org/licenses/publicdomain/">
+        <cc:permits rdf:resource="http://creativecommons.org/ns#Reproduction"/>
+        <cc:permits rdf:resource="http://creativecommons.org/ns#Distribution"/>
+        <cc:permits rdf:resource="http://creativecommons.org/ns#DerivativeWorks"/>
+      </cc:License>
+    </rdf:RDF>
+  </metadata>
+</svg>

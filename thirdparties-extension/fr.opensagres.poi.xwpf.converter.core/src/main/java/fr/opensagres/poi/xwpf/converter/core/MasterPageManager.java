@@ -211,7 +211,7 @@ public class MasterPageManager
         for ( CTHdrFtrRef reference : sectPr.getHeaderReferenceList() )
         {
             STHdrFtr type = reference.xgetType();
-            int typeValue = type == null ? STHdrFtr.INT_DEFAULT : type.enumValue().intValue();
+            int typeValue = type == null ? STHdrFtr.INT_DEFAULT : type.getEnumValue().intValue();
             if ( typeValue != STHdrFtr.INT_FIRST || titlePage )
             {
                 masterPage.setType( typeValue );
@@ -223,7 +223,7 @@ public class MasterPageManager
         for ( CTHdrFtrRef reference : sectPr.getFooterReferenceList() )
         {
             STHdrFtr type = reference.xgetType();
-            int typeValue = type == null ? STHdrFtr.INT_DEFAULT : type.enumValue().intValue();
+            int typeValue = type == null ? STHdrFtr.INT_DEFAULT : type.getEnumValue().intValue();
             if ( typeValue != STHdrFtr.INT_FIRST || titlePage )
             {
                 masterPage.setType( typeValue );

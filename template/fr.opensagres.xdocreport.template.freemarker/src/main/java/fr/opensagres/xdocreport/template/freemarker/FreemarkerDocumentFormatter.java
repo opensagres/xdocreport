@@ -574,4 +574,8 @@ public class FreemarkerDocumentFormatter
         newContent.append( END_ASSIGN_DIRECTIVE );
         return newContent.toString();
     }
+    
+    public boolean isInstruction(String tagContent) {
+        return tagContent.contains( START_LIST_DIRECTIVE ) || tagContent.contains( START_IF_DIRECTIVE );
+    }
 }

@@ -68,7 +68,7 @@ public class ListContext
         ListItemContext parent = null;
         for ( int i = level; i >= 0; i-- )
         {
-            parent = listItemByLevel.get( level );
+            parent = listItemByLevel.get( /*level*/i );
             if ( parent != null )
             {
                 return parent;

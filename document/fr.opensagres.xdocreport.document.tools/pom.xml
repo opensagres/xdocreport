@@ -3,7 +3,7 @@
 	<parent>
 		<groupId>fr.opensagres.xdocreport</groupId>
 		<artifactId>document</artifactId>
-		<version>2.0.3-SNAPSHOT</version>
+		<version>2.0.6-SNAPSHOT</version>
 	</parent>
 
 	<artifactId>fr.opensagres.xdocreport.document.tools</artifactId>
@@ -34,45 +34,45 @@
 		<dependency>
 			<groupId>fr.opensagres.xdocreport</groupId>
 			<artifactId>fr.opensagres.xdocreport.document</artifactId>
-			<version>2.0.3-SNAPSHOT</version>
+			<version>2.0.6-SNAPSHOT</version>
 		</dependency>
 		<dependency>
 			<groupId>fr.opensagres.xdocreport</groupId>
 			<artifactId>fr.opensagres.xdocreport.document.docx</artifactId>
-			<version>2.0.3-SNAPSHOT</version>
+			<version>2.0.6-SNAPSHOT</version>
 		</dependency>
 		<dependency>
 			<groupId>fr.opensagres.xdocreport</groupId>
 			<artifactId>fr.opensagres.xdocreport.document.odt</artifactId>
-			<version>2.0.3-SNAPSHOT</version>
+			<version>2.0.6-SNAPSHOT</version>
 		</dependency>
 		<dependency>
 			<groupId>fr.opensagres.xdocreport</groupId>
 			<artifactId>fr.opensagres.xdocreport.template.freemarker</artifactId>
-			<version>2.0.3-SNAPSHOT</version>
+			<version>2.0.6-SNAPSHOT</version>
 		</dependency>
 		<dependency>
 			<groupId>fr.opensagres.xdocreport</groupId>
 			<artifactId>fr.opensagres.xdocreport.template.velocity</artifactId>
-			<version>2.0.3-SNAPSHOT</version>
+			<version>2.0.6-SNAPSHOT</version>
 		</dependency>
 
 		<dependency>
 			<groupId>fr.opensagres.xdocreport</groupId>
 			<artifactId>fr.opensagres.xdocreport.remoting.resources.services.client</artifactId>
-			<version>2.0.3-SNAPSHOT</version>
+			<version>2.0.6-SNAPSHOT</version>
 		</dependency>
 		<dependency>
 			<groupId>fr.opensagres.xdocreport</groupId>
 			<artifactId>fr.opensagres.xdocreport.remoting.resources.services.server</artifactId>
-			<version>2.0.3-SNAPSHOT</version>
+			<version>2.0.6-SNAPSHOT</version>
 			<scope>test</scope>
 		</dependency>
 		<dependency>
 			<groupId>fr.opensagres.xdocreport</groupId>
 			<artifactId>fr.opensagres.xdocreport.openoffice.macro</artifactId>
 			<type>oxt</type>
-			<version>2.0.3-SNAPSHOT</version>
+			<version>2.0.6-SNAPSHOT</version>
 		</dependency>
 
 		<!-- Use JAX-WS CXF implementation -->
@@ -106,34 +106,44 @@
 		<dependency>
 			<groupId>com.fasterxml.jackson.dataformat</groupId>
 			<artifactId>jackson-dataformat-xml</artifactId>
-			<version>2.6.2</version>
+			<version>2.7.8</version>
 		</dependency>
 
 		<!-- Jetty is extremely convenient for testing REST and WS -->
 		<dependency>
 			<groupId>org.eclipse.jetty</groupId>
-			<artifactId>jetty-server</artifactId>
-			<version>9.2.15.v20160210</version>
-			<scope>test</scope>
-		</dependency>
-
-		<dependency>
-			<groupId>org.eclipse.jetty</groupId>
-			<artifactId>jetty-servlet</artifactId>
-			<version>9.2.15.v20160210</version>
-			<scope>test</scope>
-		</dependency>
-
-		<dependency>
-			<groupId>org.eclipse.jetty</groupId>
 			<artifactId>jetty-webapp</artifactId>
-			<version>9.2.15.v20160210</version>
+			<version>9.4.44.v20210927</version>
 			<scope>test</scope>
 		</dependency>
+        <dependency>
+            <groupId>org.eclipse.jetty</groupId>
+            <artifactId>jetty-util</artifactId>
+            <version>9.4.44.v20210927</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.eclipse.jetty</groupId>
+            <artifactId>jetty-server</artifactId>
+            <version>9.4.44.v20210927</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.eclipse.jetty</groupId>
+            <artifactId>jetty-http</artifactId>
+            <version>9.4.44.v20210927</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.eclipse.jetty</groupId>
+            <artifactId>jetty-io</artifactId>
+            <version>9.4.44.v20210927</version>
+            <scope>test</scope>
+        </dependency>
 		<dependency>
 			<groupId>ch.qos.logback</groupId>
 			<artifactId>logback-classic</artifactId>
-			<version>1.1.8</version>
+			<version>1.2.10</version>
 		</dependency>
 	</dependencies>
 </project>

@@ -239,7 +239,7 @@ public abstract class MergefieldBufferedRegion
 
     public BufferedElement getTRegion(int index)
     {
-    	return super.findChildAt( "w:t", index );       
+    	return super.findChildAt( "w:t", index );
     }
 
 }

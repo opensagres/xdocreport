@@ -91,9 +91,9 @@ public abstract class AbstractParagraphRunValueProvider<Value>
     {
         List<String> styleIDs = StylesHelper.getStyleIDs( paragraph );
         CTParaRPr rPr = getCTParaRPr( paragraph );
-        if ( rPr != null )
+        if ( rPr != null && rPr.sizeOfRStyleArray() > 0 )
         {
-            CTString style = rPr.getRStyle();
+            CTString style = rPr.getRStyleArray(0);
             if ( style != null )
             {
                 if ( styleIDs == null )

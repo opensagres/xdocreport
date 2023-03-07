@@ -27,7 +27,7 @@ package fr.opensagres.poi.xwpf.converter.core.styles.paragraph;
 import org.apache.poi.xwpf.usermodel.BodyType;
 import org.apache.poi.xwpf.usermodel.XWPFParagraph;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTInd;
-import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTPPr;
+import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTPPrBase;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.STTblStyleOverrideType.Enum;
 
 import fr.opensagres.poi.xwpf.converter.core.styles.XWPFStylesDocument;
@@ -36,7 +36,7 @@ public abstract class AbstractIndentationParagraphValueProvider<Value>
     extends AbstractParagraphValueProvider<Value>
 {
     @Override
-    public Value getValue( CTPPr ppr )
+    public Value getValue( CTPPrBase ppr )
     {
         CTInd ind = getInd( ppr );
         if ( ind == null )
@@ -46,7 +46,7 @@ public abstract class AbstractIndentationParagraphValueProvider<Value>
         return getValue( ind );
     }
 
-    public CTInd getInd( CTPPr pr )
+    public CTInd getInd( CTPPrBase pr )
     {
         if ( pr == null )
         {

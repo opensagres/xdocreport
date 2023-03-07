@@ -43,11 +43,11 @@ public class RunFontStyleBoldValueProvider
 
     private static Boolean isBold( CTRPr pr )
     {
-        if ( pr == null || !pr.isSetB() )
+        if ( pr == null || pr.sizeOfBArray() == 0)
         {
             return null;
         }
-        return XWPFUtils.isCTOnOff( pr.getB() );
+        return XWPFUtils.isCTOnOff( pr.getBArray(0) );
     }
 
 }

@@ -283,6 +283,11 @@ public class ElementVisitorForIText
     @Override
     public void visit( TextSectionElement ele )
     {
+        // Fix don't create PDF element if display=none
+        final String textDisplayAttribute = ele.getTextDisplayAttribute();
+        if (textDisplayAttribute != null && textDisplayAttribute.contains("none")) {
+            return;
+        }
         StylableDocumentSection documentSection =
             document.createDocumentSection( currentContainer, !parseOfficeTextElement );
         applyStyles( ele, documentSection );

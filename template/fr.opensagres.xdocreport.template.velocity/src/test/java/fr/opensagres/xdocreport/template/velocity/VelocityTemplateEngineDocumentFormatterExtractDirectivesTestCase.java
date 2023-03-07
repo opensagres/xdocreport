@@ -105,6 +105,28 @@ public class VelocityTemplateEngineDocumentFormatterExtractDirectivesTestCase
         assertEquals( 0, directives.size() );
     }
 
+    public void test5()
+        throws Exception
+    {
+        VelocityDocumentFormatter formatter = new VelocityDocumentFormatter();
+        String content = "xxxx#foreach( $d in $developers )";
+
+        DirectivesStack directives = new DirectivesStack();
+        int nbDirective = formatter.extractListDirectiveInfo( content, directives );
+
+        assertEquals( 1, nbDirective );
+        assertEquals( 1, directives.size() );
+        LoopDirective directive = (LoopDirective) directives.get( 0 );
+        assertEquals( "developers", directive.getSequence() );
+        assertEquals( "d", directive.getItem() );
+
+        content = "#{end}";
+        nbDirective = formatter.extractListDirectiveInfo( content, directives );
+
+        assertEquals( -1, nbDirective );
+        assertEquals( 0, directives.size() );
+    }
+
     public void testIf1()
         throws Exception
     {

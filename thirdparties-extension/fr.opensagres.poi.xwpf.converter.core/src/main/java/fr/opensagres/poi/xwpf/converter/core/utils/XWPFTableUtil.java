@@ -36,12 +36,12 @@ import org.apache.poi.xwpf.usermodel.XWPFTableCell;
 import org.apache.poi.xwpf.usermodel.XWPFTableRow;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTBorder;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTDecimalNumber;
-import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTShortHexNumber;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTTbl;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTTblBorders;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTTblCellMar;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTTblGrid;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTTblGridCol;
+import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTTblLook;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTTblPr;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTTblWidth;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTTcPr;
@@ -86,13 +86,11 @@ public class XWPFTableUtil
         List<CTTblGridCol> cols = getGridColList( grid );
         int nbColumns = cols.size();
         float[] colWidths = new float[nbColumns];
-        float colWidth = -1;
         int nbColumnsToIgnoreBefore = 0;
         for ( int i = nbColumnsToIgnoreBefore; i < colWidths.length; i++ )
         {
             CTTblGridCol tblGridCol = cols.get( i );
-            colWidth = tblGridCol.getW().floatValue();
-            colWidths[i] = dxa2points( colWidth );
+            colWidths[i] = dxa2points( tblGridCol.xgetW() );
         }
         return colWidths;
     }
@@ -158,12 +156,10 @@ public class XWPFTableUtil
             // nbCols computed is equals to number of grid colList
             // columns width can be computed by using the grid colList
             colWidths = new float[nbColumns];
-            float colWidth = -1;
             for ( int i = nbColumnsToIgnoreBefore; i < colWidths.length; i++ )
             {
                 CTTblGridCol tblGridCol = cols.get( i );
-                colWidth = tblGridCol.getW().floatValue();
-                colWidths[i] = dxa2points( colWidth );
+                colWidths[i] = dxa2points( tblGridCol.xgetW() );
             }
         }
         return colWidths;
@@ -184,7 +180,7 @@ public class XWPFTableUtil
         List<CTTblGridCol> cols = grid.getGridColList();
         for ( CTTblGridCol col : cols )
         {
-            if ( col.getW().floatValue() >= 0 )
+            if ( XWPFUtils.floatValue(col.xgetW()) >= 0 )
             {
                 newCols.add( col );
             }
@@ -271,7 +267,11 @@ public class XWPFTableUtil
 
     public static CTTblWidth getWidth( XWPFTableCell cell )
     {
-        return cell.getCTTc().getTcPr().getTcW();
+        CTTcPr tcPr = cell.getCTTc().getTcPr();
+        if (tcPr == null) {
+            return null;
+        }
+        return tcPr.getTcW();
     }
 
     private static Collection<Float> computeColWidths( XWPFTableRow row )
@@ -324,10 +324,10 @@ public class XWPFTableUtil
     {
         float width = 0;
         boolean percentUnit = false;
-        CTTcPr tblPr = cell.getCTTc().getTcPr();
-        if ( tblPr.isSetTcW() )
+        CTTcPr tcPr = cell.getCTTc().getTcPr();
+        if ( tcPr != null && tcPr.isSetTcW() )
         {
-            CTTblWidth tblWidth = tblPr.getTcW();
+            CTTblWidth tblWidth = tcPr.getTcW();
             return getTableWidth( tblWidth );
         }
         return new TableWidth( width, percentUnit );
@@ -366,7 +366,7 @@ public class XWPFTableUtil
     {
         try
         {
-            return tblWidth.getW().floatValue();
+            return XWPFUtils.floatValue(tblWidth.xgetW());
         }
         catch ( Throwable e )
         {
@@ -417,10 +417,13 @@ public class XWPFTableUtil
     {
         if ( border != null )
         {
-            boolean noBorder = ( STBorder.NONE == border.getVal() || STBorder.NIL == border.getVal() );
+            if ( STBorder.NONE == border.getVal() && fromTableCell ) {
+                return null;
+            }
+            boolean noBorder = ( STBorder.NIL == border.getVal() );
             if ( noBorder )
             {
-                return new TableCellBorder( !noBorder, fromTableCell );
+                return new TableCellBorder( false, fromTableCell );
             }
             Float borderSize = null;
             BigInteger size = border.getSz();
@@ -458,7 +461,7 @@ public class XWPFTableUtil
         return null;
     }
 
-    public static CTShortHexNumber getTblLook( XWPFTable table )
+    public static CTTblLook getTblLook( XWPFTable table )
     {
         CTTblPr tblPr = getTblPr( table );
         if ( tblPr != null )
@@ -472,7 +475,7 @@ public class XWPFTableUtil
     public static int getTblLookVal( XWPFTable table )
     {
         int tblLook = DEFAULT_TBLLOOK;
-        CTShortHexNumber hexNumber = getTblLook( table );
+        CTTblLook hexNumber = getTblLook( table );
         if ( hexNumber != null && !hexNumber.isNil() )
         {
             // CTShortHexNumber#getVal() returns byte[] and not byte, use attr value ???

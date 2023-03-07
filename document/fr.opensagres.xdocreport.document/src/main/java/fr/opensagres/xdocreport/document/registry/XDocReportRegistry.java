@@ -52,7 +52,7 @@ import fr.opensagres.xdocreport.template.TemplateEngineKind;
 import fr.opensagres.xdocreport.template.cache.ITemplateCacheInfoProvider;
 
 /**
- * Registry for loading and cahing {@link IXDocReport} instances.
+ * Registry for loading and caching {@link IXDocReport} instances.
  */
 public class XDocReportRegistry
     extends AbstractRegistry<IXDocReportFactoryDiscovery>

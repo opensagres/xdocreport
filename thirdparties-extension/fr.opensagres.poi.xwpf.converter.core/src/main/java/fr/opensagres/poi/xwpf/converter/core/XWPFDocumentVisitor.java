@@ -88,6 +88,7 @@ import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTNumPr;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTOnOff;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTP;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTPPr;
+import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTPPrBase;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTPTab;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTR;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTRPr;
@@ -112,7 +113,6 @@ import org.openxmlformats.schemas.wordprocessingml.x2006.main.HdrDocument;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.STBrType;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.STFldCharType;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.STMerge;
-import org.openxmlformats.schemas.wordprocessingml.x2006.main.STOnOff;
 import org.xml.sax.SAXException;
 
 import fr.opensagres.poi.xwpf.converter.core.styles.XWPFStylesDocument;
@@ -120,6 +120,7 @@ import fr.opensagres.poi.xwpf.converter.core.utils.DxaUtil;
 import fr.opensagres.poi.xwpf.converter.core.utils.StringUtils;
 import fr.opensagres.poi.xwpf.converter.core.utils.XWPFRunHelper;
 import fr.opensagres.poi.xwpf.converter.core.utils.XWPFTableUtil;
+import fr.opensagres.poi.xwpf.converter.core.utils.XWPFUtils;
 
 /**
  * Visitor to visit elements from entry word/document.xml, word/header*.xml, word/footer*.xml
@@ -440,7 +441,7 @@ public abstract class XWPFDocumentVisitor<T, O extends Options, E extends IXWPFM
                      * </w:abstractNum>
                      */
                     CTStyle style = stylesDocument.getStyle( styleId );
-                    CTPPr ppr = style.getPPr();
+                    CTPPrBase ppr = style.getPPr();
                     if ( ppr == null )
                     {
                         return null;
@@ -531,7 +532,7 @@ public abstract class XWPFDocumentVisitor<T, O extends Options, E extends IXWPFM
             {
                 CTOnOff pageBreak = ppr.getPageBreakBefore();
                 if ( pageBreak != null
-                    && ( pageBreak.getVal() == null || pageBreak.getVal().intValue() == STOnOff.INT_TRUE ) )
+                    && ( pageBreak.xgetVal() == null || XWPFUtils.isOn(pageBreak.xgetVal())) )
                 {
                     pageBreak();
                 }
@@ -913,8 +914,8 @@ public abstract class XWPFDocumentVisitor<T, O extends Options, E extends IXWPFM
 
     protected boolean hasTextStyles( CTRPr rPr )
     {
-        return rPr != null && ( rPr.getHighlight() != null || rPr.getStrike() != null || rPr.getDstrike() != null
-            || rPr.getVertAlign() != null );
+        return rPr != null && ( rPr.sizeOfHighlightArray() > 0 || rPr.sizeOfStrikeArray() > 0 || rPr.sizeOfDstrikeArray() > 0
+            || rPr.sizeOfVertAlignArray() > 0 );
     }
 
     /**
@@ -1168,7 +1169,7 @@ public abstract class XWPFDocumentVisitor<T, O extends Options, E extends IXWPFM
                 for ( int i = rowIndex + 1; i < table.getRows().size(); i++ )
                 {
                     row = table.getRow( i );
-                    c = row.getCell( cellIndex );
+                    c = getCellByLogicalIndex( row, cellIndex );
                     if ( c == null )
                     {
                         break;
@@ -1192,6 +1193,35 @@ public abstract class XWPFDocumentVisitor<T, O extends Options, E extends IXWPFM
             }
         }
         return vMergedCells;
+    }
+
+    /**
+     * Get cell, which applies to logical (spanned) structure
+     * @param row row
+     * @param cellIndex logical index
+     * @Example: <tc><w:tcPr> <w:gridSpan w:val="2"/> </w:tcPr></tc><tc/>
+     *      index = 0 return <tc><w:tcPr> <w:gridSpan w:val="2"/> </w:tcPr></tc>
+     *      index = 1 return <tc><w:tcPr> <w:gridSpan w:val="2"/> </w:tcPr></tc>
+     *      index = 2 return <tc/>
+     * @return
+     */
+    private XWPFTableCell getCellByLogicalIndex(XWPFTableRow row, int cellIndex) {
+        int index = -1;
+        for (XWPFTableCell cell : row.getTableCells()) {
+            BigInteger gridSpan = stylesDocument.getTableCellGridSpan( cell.getCTTc().getTcPr() );
+            if ( gridSpan != null )
+            {
+                index = index + gridSpan.intValue();
+            }
+            else
+            {
+                index++;
+            }
+            if (index >= cellIndex) {
+                return cell;
+            }
+        }
+        return null;
     }
 
     protected void visitTableCellBody( XWPFTableCell cell, List<XWPFTableCell> vMergeCells, T tableCellContainer )

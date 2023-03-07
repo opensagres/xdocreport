@@ -345,6 +345,10 @@ public class SimpleImageInfo implements IImageInfo {
             if (b1 == 0x38 && b2 == 0x42) {
                 return checkPsd();
             }
+            else
+            if (b1 == '<' && (b2 == '?' || b2 == 's')) {
+                return checkSvg();
+            }
             else {
                 return false;
             }
@@ -610,6 +614,10 @@ public class SimpleImageInfo implements IImageInfo {
                 skip(size - 2);
             }
         }
+    }
+
+    private boolean checkSvg() throws IOException {
+        throw new RuntimeException("Retrieving dimension of svg file is not yet supported.");
     }
 
     private boolean checkPcx() throws IOException {

@@ -226,10 +226,9 @@ public class StylableDocumentSection
                     }
                 }
                 // populate table with last height
-                if ( currHeight != maxHeight )
-                {
-                    fillTable( maxHeight );
-                }
+                fillTable(maxHeight+0.1f); // Give our content a little more room than itext
+                // says it requires as this prevents a bug due to rounding errors when later
+                // itext claims it can't fit in content of said size
             }
             else
             {

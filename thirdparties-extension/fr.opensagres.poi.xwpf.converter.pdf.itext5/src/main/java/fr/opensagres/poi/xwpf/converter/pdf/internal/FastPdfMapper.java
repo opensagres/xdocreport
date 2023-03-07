@@ -27,7 +27,6 @@ package fr.opensagres.poi.xwpf.converter.pdf.internal;
 import static fr.opensagres.poi.xwpf.converter.core.utils.DxaUtil.emu2points;
 
 import java.io.OutputStream;
-import java.math.BigInteger;
 import java.util.List;
 import java.util.logging.Logger;
 
@@ -38,6 +37,7 @@ import org.openxmlformats.schemas.drawingml.x2006.picture.CTPicture;
 import org.openxmlformats.schemas.drawingml.x2006.wordprocessingDrawing.STRelFromH;
 import org.openxmlformats.schemas.drawingml.x2006.wordprocessingDrawing.STRelFromV;
 import org.openxmlformats.schemas.drawingml.x2006.wordprocessingDrawing.STWrapText;
+import org.openxmlformats.schemas.officeDocument.x2006.sharedTypes.STTwipsMeasure;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTBookmark;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTBr;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTHdrFtr;
@@ -567,8 +567,8 @@ public class FastPdfMapper
                                 StylableMasterPage masterPage )
         throws Exception
     {
-        BigInteger headerY = sectPr.getPgMar() != null ? sectPr.getPgMar().getHeader() : null;
-        this.currentPageWidth = sectPr.getPgMar() != null ? DxaUtil.dxa2points( sectPr.getPgSz().getW() ) : null;
+    	STTwipsMeasure headerY = sectPr.getPgMar() != null ? sectPr.getPgMar().xgetHeader() : null;
+        this.currentPageWidth = sectPr.getPgMar() != null ? DxaUtil.dxa2points( sectPr.getPgSz().xgetW() ) : null;
         StylableHeaderFooter pdfHeader = new StylableHeaderFooter( pdfDocument, headerY, false );
         StylableTableCell tableCell = pdfHeader.getTableCell();
         visitBodyElements( currentHeader, tableCell );
@@ -581,8 +581,8 @@ public class FastPdfMapper
                                 StylableMasterPage masterPage )
         throws Exception
     {
-        BigInteger footerY = sectPr.getPgMar() != null ? sectPr.getPgMar().getFooter() : null;
-        this.currentPageWidth = sectPr.getPgMar() != null ? DxaUtil.dxa2points( sectPr.getPgSz().getW() ) : null;
+    	STTwipsMeasure footerY = sectPr.getPgMar() != null ? sectPr.getPgMar().xgetFooter() : null;
+        this.currentPageWidth = sectPr.getPgMar() != null ? DxaUtil.dxa2points( sectPr.getPgSz().xgetW() ) : null;
         StylableHeaderFooter pdfFooter = new StylableHeaderFooter( pdfDocument, footerY, false );
         StylableTableCell tableCell = pdfFooter.getTableCell();
         visitBodyElements( currentFooter, tableCell );

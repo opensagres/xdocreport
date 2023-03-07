@@ -29,7 +29,7 @@ import java.util.List;
 import org.apache.poi.xwpf.usermodel.XWPFParagraph;
 import org.apache.poi.xwpf.usermodel.XWPFTableCell;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTDocDefaults;
-import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTPPr;
+import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTPPrBase;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTPPrDefault;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTStyle;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTTblStylePr;
@@ -43,22 +43,22 @@ public abstract class AbstractParagraphValueProvider<Value>
     extends AbstractValueProvider<Value, XWPFParagraph>
 {
 
-    public CTPPr getCTPPr( XWPFParagraph paragraph )
+    public CTPPrBase getCTPPr( XWPFParagraph paragraph )
     {
         return paragraph.getCTP().getPPr();
     }
 
-    public CTPPr getCTPPr( CTStyle style )
+    public CTPPrBase getCTPPr( CTStyle style )
     {
         return style.getPPr();
     }
 
-    public CTPPr getCTPPr( CTTblStylePr tblStylePr )
+    public CTPPrBase getCTPPr( CTTblStylePr tblStylePr )
     {
         return tblStylePr.getPPr();
     }
 
-    public CTPPr getCTPPr( CTDocDefaults docDefaults )
+    public CTPPrBase getCTPPr( CTDocDefaults docDefaults )
     {
         CTPPrDefault prDefault = docDefaults.getPPrDefault();
         if ( prDefault == null )
@@ -92,7 +92,7 @@ public abstract class AbstractParagraphValueProvider<Value>
         return getValue( getCTPPr( docDefaults ) );
     }
 
-    public abstract Value getValue( CTPPr ppr );
+    public abstract Value getValue( CTPPrBase ppr );
 
     @Override
     protected String[] getStyleID( XWPFParagraph paragraph )

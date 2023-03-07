@@ -3,14 +3,14 @@
 	<parent>
 		<groupId>fr.opensagres.xdocreport</groupId>
 		<artifactId>thirdparties-extension</artifactId>
-		<version>2.0.3-SNAPSHOT</version>
+		<version>2.0.6-SNAPSHOT</version>
 	</parent>
 	<artifactId>fr.opensagres.xdocreport.itext5.extension</artifactId>
 	<dependencies>
 		<dependency>
 			<groupId>com.itextpdf</groupId>
 			<artifactId>itextpdf</artifactId>
-			<version>5.5.7</version>
+			<version>5.5.12</version>
 			<scope>provided</scope>
 		</dependency>
 		<dependency>

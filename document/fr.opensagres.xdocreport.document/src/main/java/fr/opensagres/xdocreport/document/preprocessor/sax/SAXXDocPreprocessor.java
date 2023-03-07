@@ -56,6 +56,10 @@ public abstract class SAXXDocPreprocessor
         try
         {
             XMLReader xmlReader = XMLReaderFactory.createXMLReader();
+            //To avoid xxe security issue
+            xmlReader.setFeature("http://apache.org/xml/features/nonvalidating/load-external-dtd", false);
+            xmlReader.setFeature("http://xml.org/sax/features/external-general-entities", false);
+            xmlReader.setFeature("http://xml.org/sax/features/external-parameter-entities", false);
             BufferedDocumentContentHandler<?> contentHandler =
                 createBufferedDocumentContentHandler( entryName, fieldsMetadata, formatter, sharedContext );
             xmlReader.setContentHandler( contentHandler );

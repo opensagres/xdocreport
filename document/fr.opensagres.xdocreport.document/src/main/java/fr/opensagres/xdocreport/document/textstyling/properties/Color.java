@@ -35,7 +35,7 @@ public class Color
 
     private final int blue;
 
-    public Color( int red, int green, int blue )
+    public Color(final int red, final int green, final int blue )
     {
         this.red = checkColor( red );
         this.green = checkColor( green );
@@ -57,7 +57,7 @@ public class Color
         return blue;
     }
 
-    private int checkColor( int color )
+    private int checkColor(final int color )
     {
         if ( color >= 0 && color < 256 )
         {
@@ -67,14 +67,14 @@ public class Color
     }
 
     @Override
-    public boolean equals( Object o )
+    public boolean equals(final Object o )
     {
         if ( this == o )
             return true;
         if ( o == null || getClass() != o.getClass() )
             return false;
 
-        Color color = (Color) o;
+        final Color color = (Color) o;
 
         if ( getRed() != color.getRed() )
             return false;
@@ -93,5 +93,14 @@ public class Color
         result = 31 * result + getGreen();
         result = 31 * result + getBlue();
         return result;
+    }
+
+    @Override
+    public String toString() {
+        return "Color{"
+                + "red=" + red
+                + ", green=" + green
+                + ", blue=" + blue
+                + '}';
     }
 }

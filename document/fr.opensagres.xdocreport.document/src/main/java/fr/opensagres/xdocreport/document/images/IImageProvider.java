@@ -56,11 +56,22 @@ public interface IImageProvider
      * Returns the width image with pixel unit.
      * 
      * @param defaultWidth as pixel
+     * @param defaultHeight as pixel
+     * @return
+     * @throws IOException
+     */
+    Float getWidth(Float defaultWidth, Float defaultHeight)
+        throws IOException;
+
+    /**
+     * Returns the width image with pixel unit.
+     *
+     * @param defaultWidth as pixel
      * @return
      * @throws IOException
      */
     Float getWidth(Float defaultWidth)
-        throws IOException;
+            throws IOException;
 
     /**
      * Set the width image with pixel unit.
@@ -71,13 +82,24 @@ public interface IImageProvider
 
     /**
      * Returns the height image with pixel unit.
-     * 
+     *
+     * @param defaultWidth as pixel
+     * @param defaultHeight as pixel
+     * @return
+     * @throws IOException
+     */
+    Float getHeight(Float defaultWidth, Float defaultHeight)
+        throws IOException;
+
+    /**
+     * Returns the height image with pixel unit.
+     *
      * @param defaultHeight as pixel
      * @return
      * @throws IOException
      */
     Float getHeight(Float defaultHeight)
-        throws IOException;
+            throws IOException;
 
     /**
      * Set the height image with pixel unit.

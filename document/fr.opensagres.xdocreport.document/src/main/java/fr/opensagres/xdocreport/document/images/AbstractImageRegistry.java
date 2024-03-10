@@ -258,12 +258,18 @@ public abstract class AbstractImageRegistry
     public String getWidth( ImageProviderInfo info, String defaultWidth )
         throws IOException
     {
+        return getWidth(info, defaultWidth, null);
+    }
+
+    public String getWidth( ImageProviderInfo info, String defaultWidth, String defaultHeight )
+        throws IOException
+    {
         if ( info.isKeepImageTemplate() )
         {
             return defaultWidth;
         }
         IImageProvider imageProvider = info.getImageProvider();
-        Float width = imageProvider.getWidth(getSize(defaultWidth));
+        Float width = imageProvider.getWidth(getSize(defaultWidth), getSize(defaultHeight));
         if ( width != null )
         {
             return getSize( width );
@@ -274,12 +280,18 @@ public abstract class AbstractImageRegistry
     public String getHeight( ImageProviderInfo info, String defaultHeight )
         throws IOException
     {
+        return getHeight(info, null, defaultHeight);
+    }
+
+    public String getHeight( ImageProviderInfo info, String defaultWidth, String defaultHeight )
+        throws IOException
+    {
         if ( info.isKeepImageTemplate() )
         {
             return defaultHeight;
         }
         IImageProvider imageProvider = info.getImageProvider();
-        Float height = imageProvider.getHeight(getSize(defaultHeight));
+        Float height = imageProvider.getHeight(getSize(defaultWidth), getSize(defaultHeight));
         if ( height != null )
         {
             return getSize( height );

@@ -550,6 +550,7 @@ public class PdfMapper
 
         StylableParagraph pdfParagraph = (StylableParagraph) pdfParagraphContainer;
         pdfParagraph.adjustMultipliedLeading( currentRunFontAscii );
+        pdfParagraph.adjustLeading(currentRunFontAscii);
 
         // addd symbol list item chunk if needed.
         String listItemText = pdfParagraph.getListItemText();

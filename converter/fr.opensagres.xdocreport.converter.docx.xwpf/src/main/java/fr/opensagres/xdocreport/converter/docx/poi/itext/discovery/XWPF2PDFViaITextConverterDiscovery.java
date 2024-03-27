@@ -26,6 +26,7 @@ package fr.opensagres.xdocreport.converter.docx.poi.itext.discovery;
 
 import fr.opensagres.xdocreport.converter.ConverterTypeTo;
 import fr.opensagres.xdocreport.converter.ConverterTypeVia;
+import fr.opensagres.xdocreport.converter.ConverterTypeWith;
 import fr.opensagres.xdocreport.converter.IConverter;
 import fr.opensagres.xdocreport.converter.discovery.IConverterDiscovery;
 import fr.opensagres.xdocreport.converter.docx.poi.itext.XWPF2PDFViaITextConverter;
@@ -58,6 +59,10 @@ public class XWPF2PDFViaITextConverterDiscovery
     public String getVia()
     {
         return ConverterTypeVia.XWPF.name();
+    }
+    
+    public String getWith() {
+        return ConverterTypeWith.ITEXT2.name();
     }
 
     public IConverter getConverter()

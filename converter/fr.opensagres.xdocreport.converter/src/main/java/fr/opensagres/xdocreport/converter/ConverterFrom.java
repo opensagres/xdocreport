@@ -59,7 +59,7 @@ public class ConverterFrom
         return convertersTo.get( to );
     }
 
-    public void addConverter( String to, String via, IConverter converter )
+    public void addConverter( String to, String via, String with, IConverter converter )
     {
         ConverterTo converterTo = getConverterTo( to );
         if ( converterTo == null )
@@ -67,6 +67,6 @@ public class ConverterFrom
             converterTo = new ConverterTo( to );
             convertersTo.put( to, converterTo );
         }
-        converterTo.addConverter( via, converter );
+        converterTo.addConverter( via, with, converter );
     }
 }

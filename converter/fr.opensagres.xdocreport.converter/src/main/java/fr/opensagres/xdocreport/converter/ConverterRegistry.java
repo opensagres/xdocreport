@@ -65,25 +65,25 @@ public class ConverterRegistry
     public IConverter findConverter( Options options )
         throws XDocConverterException
     {
-        return findConverter( options.getFrom(), options.getTo(), options.getVia() );
+        return findConverter( options.getFrom(), options.getTo(), options.getVia(), options.getWith() );
     }
 
-    public IConverter findConverter( String from, String to, String via )
+    public IConverter findConverter( String from, String to, String via, String with )
         throws XDocConverterException
     {
-        return internalFindConverter( from, to, via, true );
+        return internalFindConverter( from, to, via, with, true );
     }
 
     public IConverter getConverter( Options options )
     {
-        return getConverter( options.getFrom(), options.getTo(), options.getVia() );
+        return getConverter( options.getFrom(), options.getTo(), options.getVia(), options.getWith() );
     }
 
-    public IConverter getConverter( String from, String to, String via )
+    public IConverter getConverter( String from, String to, String via, String with )
     {
         try
         {
-            return internalFindConverter( from, to, via, false );
+            return internalFindConverter( from, to, via, with, false );
         }
         catch ( XDocConverterException e )
         {
@@ -107,7 +107,7 @@ public class ConverterRegistry
         return converters.keySet();
     }
 
-    private IConverter internalFindConverter( String from, String to, String via, boolean throwError )
+    private IConverter internalFindConverter( String from, String to, String via, String with, boolean throwError )
         throws XDocConverterException
     {
         initializeIfNeeded();
@@ -135,7 +135,7 @@ public class ConverterRegistry
         }
         if ( via == null )
         {
-            IConverter converter = toConverters.getDefaultConverter();
+            IConverter converter = toConverters.getDefaultConverter(with);
             if ( throwError && converter == null )
             {
                 if ( throwError )
@@ -148,12 +148,39 @@ public class ConverterRegistry
             return converter;
         }
 
-        IConverter converter = toConverters.getConverter( via );
-        if ( converter == null )
+        ConverterVia converterVia = toConverters.getConverter( via );
+        if ( converterVia == null )
         {
             if ( throwError )
             {
                 String msg = String.format( "Cannot find converters via %s for to=%s for from=%s", via, to, from );
+                LOGGER.severe( msg );
+                throw new XDocConverterException( msg );
+            }
+            return null;
+        }
+        
+        if ( with == null )
+        {
+            IConverter converter = converterVia.getDefaultConverter();
+            if ( throwError && converter == null )
+            {
+                if ( throwError )
+                {
+                    String msg = String.format( "Cannot find converters for to=%s for from=%s", to, from );
+                    LOGGER.severe( msg );
+                    throw new XDocConverterException( msg );
+                }
+            }
+            return converter;
+        }
+        
+        IConverter converter = converterVia.getConverter(with);
+        if ( converter == null )
+        {
+            if ( throwError )
+            {
+                String msg = String.format( "Cannot find converters with %s for via=%s for to=%s for from=%s", with, via, to, from );
                 LOGGER.severe( msg );
                 throw new XDocConverterException( msg );
             }
@@ -173,6 +200,7 @@ public class ConverterRegistry
         String from = discovery.getFrom();
         String to = discovery.getTo();
         String via = discovery.getVia();
+        String with = discovery.getWith();
         IConverter converter = discovery.getConverter();
         ConverterFrom converterFrom = converters.get( from );
         if ( converterFrom == null )
@@ -180,7 +208,7 @@ public class ConverterRegistry
             converterFrom = new ConverterFrom( from );
             converters.put( converterFrom.getFrom(), converterFrom );
         }
-        converterFrom.addConverter( to, via, converter );
+        converterFrom.addConverter( to, via, with, converter );
         return true;
     }
 }

@@ -65,4 +65,8 @@ public class Docx2PDFViaDocx4jConverterDiscovery
         return Docx2PDFViaDocx4jConverter.getInstance();
     }
 
+    public String getWith() {
+        return null;
+    }
+
 }

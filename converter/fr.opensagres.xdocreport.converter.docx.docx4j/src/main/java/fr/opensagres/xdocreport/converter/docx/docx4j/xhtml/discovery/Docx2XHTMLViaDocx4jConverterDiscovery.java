@@ -59,6 +59,10 @@ public class Docx2XHTMLViaDocx4jConverterDiscovery
     {
         return ConverterTypeVia.DOCX4J.name();
     }
+    
+    public String getWith() {
+        return null;
+    }
 
     public IConverter getConverter()
     {

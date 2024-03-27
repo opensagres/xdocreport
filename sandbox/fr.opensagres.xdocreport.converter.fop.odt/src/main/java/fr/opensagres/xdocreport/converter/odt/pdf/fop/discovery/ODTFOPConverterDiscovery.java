@@ -60,6 +60,10 @@ public class ODTFOPConverterDiscovery
         return ConverterTypeVia.FOP.name();
     }
 
+    public String getWith() {
+        return null;
+    }
+
     public IConverter getConverter()
     {
         return ODTFOPConverter.getInstance();

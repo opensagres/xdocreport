@@ -36,12 +36,12 @@ public class ConverterTo
 
     private final String to;
 
-    private final Map<String, IConverter> converters;
+    private final Map<String, ConverterVia> converters;
 
     public ConverterTo( String to )
     {
         this.to = to;
-        this.converters = new HashMap<String, IConverter>();
+        this.converters = new HashMap<String, ConverterVia>();
     }
 
     public String getTo()
@@ -49,12 +49,12 @@ public class ConverterTo
         return to;
     }
 
-    public Collection<IConverter> getConvertersTo()
+    public Collection<ConverterVia> getConvertersVia()
     {
         return converters.values();
     }
 
-    public IConverter getConverter( String via )
+    public ConverterVia getConverter( String via )
     {
         return converters.get( via );
     }
@@ -62,13 +62,26 @@ public class ConverterTo
     /**
      * Returns the default converter or the first converter if none default converter.
      * 
+     * @param with
      * @return
      */
-    public IConverter getDefaultConverter()
+    public IConverter getDefaultConverter( String with )
     {
-        IConverter defaultConverter = null;
-        for ( IConverter converter : getConvertersTo() )
+        if ( with != null )
         {
+            for ( ConverterVia converterVia : getConvertersVia() )
+            {
+                IConverter converter = converterVia.getConverter( with );
+                if ( converter != null )
+                {
+                    return converter;
+                }
+            }
+        }
+        IConverter defaultConverter = null;
+        for ( ConverterVia converterVia : getConvertersVia() )
+        {
+            IConverter converter = converterVia.getDefaultConverter();
             if ( converter.isDefault() )
             {
                 return converter;
@@ -80,10 +93,22 @@ public class ConverterTo
         }
         return defaultConverter;
     }
-
-    public void addConverter( String via, IConverter converter )
+    
+    public ConverterVia getConverterVia( String via )
     {
-        converters.put( via, converter );
+        return converters.get( via );
+    }
+    
+    public void addConverter( String via, String with, IConverter converter )
+    {
+        ConverterVia converterVia = getConverterVia( via );
+        if ( converterVia == null )
+        {
+            converterVia = new ConverterVia( via );
+            converters.put( via, converterVia );
+        }
+        converterVia.addConverter( with, converter );
+     //   converters.put( via, converter );
     }
 
     public Collection<String> getVias()

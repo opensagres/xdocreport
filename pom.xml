@@ -177,6 +177,9 @@
 				<plugin>
 					<artifactId>maven-surefire-plugin</artifactId>
 					<version>2.14</version>
+					<configuration>
+						<argLine>--add-opens java.base/java.util=ALL-UNNAMED --add-opens java.base/java.lang=ALL-UNNAMED --add-opens java.base/java.net=ALL-UNNAMED</argLine>
+					</configuration>
 				</plugin>
 				<plugin>
 					<groupId>org.apache.felix</groupId>

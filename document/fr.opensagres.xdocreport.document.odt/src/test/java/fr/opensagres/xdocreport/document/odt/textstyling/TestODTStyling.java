@@ -24,22 +24,13 @@
  */
 package fr.opensagres.xdocreport.document.odt.textstyling;
 
-import static org.junit.Assert.assertThat;
-
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.StringReader;
-import java.io.StringWriter;
-import java.io.Writer;
-
-import javax.xml.parsers.DocumentBuilder;
-import javax.xml.parsers.DocumentBuilderFactory;
-import javax.xml.transform.OutputKeys;
-import javax.xml.transform.Transformer;
-import javax.xml.transform.TransformerFactory;
-import javax.xml.transform.dom.DOMSource;
-import javax.xml.transform.stream.StreamResult;
-
+import fr.opensagres.xdocreport.document.odt.preprocessor.ODTBufferedDocumentContentHandler;
+import fr.opensagres.xdocreport.document.odt.preprocessor.ODTStyleContentHandler;
+import fr.opensagres.xdocreport.document.preprocessor.sax.BufferedDocument;
+import fr.opensagres.xdocreport.document.preprocessor.sax.BufferedDocumentContentHandler;
+import fr.opensagres.xdocreport.document.textstyling.IDocumentHandler;
+import fr.opensagres.xdocreport.document.textstyling.ITextStylingTransformer;
+import fr.opensagres.xdocreport.document.textstyling.html.HTMLTextStylingTransformer;
 import org.junit.Assert;
 import org.junit.Test;
 import org.w3c.dom.Document;
@@ -48,15 +39,20 @@ import org.xml.sax.XMLReader;
 import org.xml.sax.helpers.XMLReaderFactory;
 import org.xmlunit.matchers.CompareMatcher;
 
-import com.sun.org.apache.xml.internal.serializer.OutputPropertiesFactory;
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.transform.OutputKeys;
+import javax.xml.transform.Transformer;
+import javax.xml.transform.TransformerFactory;
+import javax.xml.transform.dom.DOMSource;
+import javax.xml.transform.stream.StreamResult;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.StringReader;
+import java.io.StringWriter;
+import java.io.Writer;
 
-import fr.opensagres.xdocreport.document.odt.preprocessor.ODTBufferedDocumentContentHandler;
-import fr.opensagres.xdocreport.document.odt.preprocessor.ODTStyleContentHandler;
-import fr.opensagres.xdocreport.document.preprocessor.sax.BufferedDocument;
-import fr.opensagres.xdocreport.document.preprocessor.sax.BufferedDocumentContentHandler;
-import fr.opensagres.xdocreport.document.textstyling.IDocumentHandler;
-import fr.opensagres.xdocreport.document.textstyling.ITextStylingTransformer;
-import fr.opensagres.xdocreport.document.textstyling.html.HTMLTextStylingTransformer;
+import static org.junit.Assert.assertThat;
 
 /**
  * Check ODT Styling generation by comparing generated result against the expected XML
@@ -104,7 +100,7 @@ public class TestODTStyling
             Transformer serializer = tfactory.newTransformer();
 
             serializer.setOutputProperty( OutputKeys.INDENT, "yes" );
-            serializer.setOutputProperty( OutputPropertiesFactory.S_KEY_INDENT_AMOUNT, "2" );
+            serializer.setOutputProperty( "{http:// xml. apache. org/ xalan}indent-amount", "2" );
             serializer.setOutputProperty( OutputKeys.STANDALONE, "no" );
 
             Writer out = new StringWriter();

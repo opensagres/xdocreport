@@ -184,38 +184,38 @@ public class ExtendedPdfPTable
     }
 
     @Override
-    public void addCell( Image image )
+    public PdfPCell addCell( Image image )
     {
         this.empty = false;
-        super.addCell( image );
+        return super.addCell( image );
     }
 
     @Override
-    public void addCell( PdfPCell cell )
+    public PdfPCell addCell( PdfPCell cell )
     {
         this.empty = false;
-        super.addCell( cell );
+        return super.addCell( cell );
     }
 
     @Override
-    public void addCell( PdfPTable table )
+    public PdfPCell addCell( PdfPTable table )
     {
         this.empty = false;
-        super.addCell( table );
+        return super.addCell( table );
     }
 
     @Override
-    public void addCell( Phrase phrase )
+    public PdfPCell addCell( Phrase phrase )
     {
         this.empty = false;
-        super.addCell( phrase );
+        return super.addCell( phrase );
     }
 
     @Override
-    public void addCell( String text )
+    public PdfPCell addCell( String text )
     {
         this.empty = false;
-        super.addCell( text );
+        return super.addCell( text );
     }
 
     public boolean isEmpty()

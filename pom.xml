@@ -21,6 +21,7 @@
 		<osgi-version-qualifier>${maven.build.timestamp}</osgi-version-qualifier>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<maven.build.timestamp.format>yyyyMMddHHmm</maven.build.timestamp.format>
+		<maven.compiler.release>8</maven.compiler.release>
 	</properties>
 	<build>
 		<defaultGoal>install</defaultGoal>
@@ -28,8 +29,8 @@
 			<plugin>
 				<artifactId>maven-compiler-plugin</artifactId>
 				<configuration>
-					<source>1.7</source>
-					<target>1.7</target>
+					<source>1.8</source>
+					<target>1.8</target>
 				</configuration>
 			</plugin>
 			<plugin>

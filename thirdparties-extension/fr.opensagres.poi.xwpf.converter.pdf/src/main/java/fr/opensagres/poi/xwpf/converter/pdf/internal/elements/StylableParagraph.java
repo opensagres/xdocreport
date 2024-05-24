@@ -63,12 +63,15 @@ public class StylableParagraph
 
     private Color listItemFontColor;
 
+    private boolean defaultLeading = true;
+
     public StylableParagraph( StylableDocument ownerDocument, IITextContainer parent )
     {
         super();
         this.ownerDocument = ownerDocument;
         this.parent = parent;
         this.originMultipliedLeading = null;
+        this.defaultLeading = false;
     }
 
     public StylableParagraph( StylableDocument ownerDocument, Paragraph title, IITextContainer parent )
@@ -76,6 +79,7 @@ public class StylableParagraph
         super( title );
         this.ownerDocument = ownerDocument;
         this.parent = parent;
+        this.defaultLeading = false;
     }
 
     // FIXME check with Angelo the purpose of this method....
@@ -273,6 +277,13 @@ public class StylableParagraph
             float margin = font.getBaseFont().getFontDescriptor( BaseFont.AWT_LEADING, size );
             float multiplier = ( ascender + descender + margin ) / size;
             super.setMultipliedLeading( originMultipliedLeading * multiplier );
+        }
+    }
+
+    public void adjustLeading( Font font ){
+        if ( font != null ){
+            super.setLeading(font.getSize());
+            this.defaultLeading = false;
         }
     }
 

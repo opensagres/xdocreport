@@ -24,7 +24,7 @@
  */
 package fr.opensagres.xdocreport.service.ws;
 
-import javax.jws.WebService;
+import jakarta.jws.WebService;
 
 import fr.opensagres.xdocreport.document.internal.XDocReportServiceImpl;
 

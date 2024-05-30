@@ -31,7 +31,7 @@ import java.io.Writer;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
-import javax.activation.MimetypesFileTypeMap;
+import jakarta.activation.MimetypesFileTypeMap;
 
 import fr.opensagres.xdocreport.core.utils.Base64Utility;
 import org.odftoolkit.odfdom.doc.OdfDocument;

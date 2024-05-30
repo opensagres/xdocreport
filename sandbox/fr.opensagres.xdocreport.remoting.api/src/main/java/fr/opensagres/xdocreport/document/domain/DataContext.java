@@ -24,7 +24,7 @@
  */
 package fr.opensagres.xdocreport.document.domain;
 
-import javax.xml.bind.annotation.XmlRootElement;
+import jakarta.xml.bind.annotation.XmlRootElement;
 
 @XmlRootElement
 public class DataContext

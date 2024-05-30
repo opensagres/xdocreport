@@ -10,17 +10,17 @@
     <dependency>
       <groupId>jakarta.xml.bind</groupId>
       <artifactId>jakarta.xml.bind-api</artifactId>
-      <version>2.3.3</version>
+      <version>3.0.1</version>
     </dependency>
     <dependency>
       <groupId>jakarta.xml.ws</groupId>
       <artifactId>jakarta.xml.ws-api</artifactId>
-      <version>2.3.3</version>
+      <version>3.0.1</version>
     </dependency>
     <dependency>
       <groupId>jakarta.jws</groupId>
       <artifactId>jakarta.jws-api</artifactId>
-      <version>2.1.0</version>
+      <version>3.0.0</version>
     </dependency>
   </dependencies>
 </project>

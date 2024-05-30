@@ -24,8 +24,8 @@
  */
 package fr.opensagres.xdocreport.remoting.converter;
 
-import javax.activation.DataSource;
-import javax.ws.rs.core.Response;
+import jakarta.activation.DataSource;
+import jakarta.ws.rs.core.Response;
 
 /**
  * Document converter REST Web Service API.

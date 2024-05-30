@@ -1851,7 +1851,7 @@ public class JSONObject
             Package objectPackage = object.getClass().getPackage();
             String objectPackageName = objectPackage != null ? objectPackage.getName() : "";
             if ( objectPackageName.startsWith( "java." ) || objectPackageName.startsWith( "javax." )
-                || object.getClass().getClassLoader() == null )
+                || objectPackageName.startsWith( "jakarta." ) || object.getClass().getClassLoader() == null )
             {
                 return object.toString();
             }

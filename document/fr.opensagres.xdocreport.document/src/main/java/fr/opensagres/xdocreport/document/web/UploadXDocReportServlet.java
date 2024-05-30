@@ -29,15 +29,15 @@ import java.io.InputStream;
 import java.util.Iterator;
 import java.util.List;
 
-import javax.servlet.ServletException;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
+import jakarta.servlet.ServletException;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 
-import org.apache.commons.fileupload.FileItem;
-import org.apache.commons.fileupload.FileItemFactory;
-import org.apache.commons.fileupload.FileUploadException;
-import org.apache.commons.fileupload.disk.DiskFileItemFactory;
-import org.apache.commons.fileupload.servlet.ServletFileUpload;
+import org.apache.commons.fileupload2.core.DiskFileItem;
+import org.apache.commons.fileupload2.core.DiskFileItemFactory;
+import org.apache.commons.fileupload2.core.FileItem;
+import org.apache.commons.fileupload2.core.FileUploadException;
+import org.apache.commons.fileupload2.jakarta.servlet5.JakartaServletFileUpload;
 
 import fr.opensagres.xdocreport.core.XDocReportException;
 import fr.opensagres.xdocreport.document.IXDocReport;
@@ -70,26 +70,25 @@ public class UploadXDocReportServlet
     protected void doUpload( HttpServletRequest request, HttpServletResponse response )
         throws ServletException, IOException
     {
-        boolean isMultipart = ServletFileUpload.isMultipartContent( request );
+        boolean isMultipart = JakartaServletFileUpload.isMultipartContent( request );
 
         if ( isMultipart )
         {
 
             // Create a factory for disk-based file items
-            FileItemFactory factory = new DiskFileItemFactory();
+            DiskFileItemFactory factory = DiskFileItemFactory.builder().get();
 
             // Create a new file upload handler
-            ServletFileUpload upload = new ServletFileUpload( factory );
+            JakartaServletFileUpload<DiskFileItem, DiskFileItemFactory> upload = new JakartaServletFileUpload<>( factory );
 
             // Parse the request
             try
             {
-                @SuppressWarnings( "unchecked" )
-                List<FileItem> items = upload.parseRequest( request );
-                for ( Iterator<FileItem> iterator = items.iterator(); iterator.hasNext(); )
+                List<DiskFileItem> items = upload.parseRequest( request );
+                for ( Iterator<DiskFileItem> iterator = items.iterator(); iterator.hasNext(); )
                 {
 
-                    FileItem fileItem = (FileItem) iterator.next();
+                    DiskFileItem fileItem = iterator.next();
 
                     if ( "uploadfile".equals( fileItem.getFieldName() ) )
                     {
@@ -126,7 +125,7 @@ public class UploadXDocReportServlet
         // Do Nothing
     }
 
-    protected String generateReportId( FileItem fileItem, HttpServletRequest request )
+    protected String generateReportId( FileItem<?> fileItem, HttpServletRequest request )
     {
         String reportId = fileItem.getName();
         // test if report id has slash (when document is uploaded with IE,

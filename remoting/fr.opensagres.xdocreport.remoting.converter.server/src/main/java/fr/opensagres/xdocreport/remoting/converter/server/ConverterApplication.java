@@ -27,7 +27,7 @@ package fr.opensagres.xdocreport.remoting.converter.server;
 import java.util.HashSet;
 import java.util.Set;
 
-import javax.ws.rs.core.Application;
+import jakarta.ws.rs.core.Application;
 
 /**
  * JAX-RS Application to register the {@link ConverterServiceImpl}.

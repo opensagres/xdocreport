@@ -28,7 +28,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import javax.ws.rs.core.Application;
+import jakarta.ws.rs.core.Application;
 
 import fr.opensagres.xdocreport.remoting.resources.services.ResourcesService;
 import fr.opensagres.xdocreport.remoting.resources.services.ResourcesServicesRegistry;
@@ -48,7 +48,7 @@ public class JAXRSResourcesApplication
     public Set<Class<?>> getClasses()
     {
         HashSet<Class<?>> set = new HashSet<Class<?>>();
-        set.add(com.fasterxml.jackson.jaxrs.json.JacksonJaxbJsonProvider.class);
+        set.add(com.fasterxml.jackson.jakarta.rs.json.JacksonXmlBindJsonProvider.class);
         return set;
     }
 

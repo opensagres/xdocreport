@@ -24,7 +24,7 @@
  */
 package fr.opensagres.xdocreport.document.web.dispatcher;
 
-import javax.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletRequest;
 
 import fr.opensagres.xdocreport.document.IXDocReport;
 import fr.opensagres.xdocreport.document.dispatcher.IXDocReportController;

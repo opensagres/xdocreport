@@ -10,7 +10,7 @@
 		<dependency>
 			<groupId>org.apache.cxf</groupId>
 			<artifactId>cxf-rt-frontend-jaxrs</artifactId>
-			<version>3.1.9</version>
+			<version>4.0.4</version>
 			<scope>provided</scope>
 		</dependency>
 		<dependency>
@@ -26,9 +26,14 @@
 		</dependency>
 
 		<dependency>
-			<groupId>javax.activation</groupId>
-			<artifactId>activation</artifactId>
-			<version>1.1.1</version>
+			<groupId>jakarta.activation</groupId>
+			<artifactId>jakarta.activation-api</artifactId>
+			<version>2.0.1</version>
+		</dependency>
+		<dependency>
+			<groupId>com.sun.activation</groupId>
+			<artifactId>jakarta.activation</artifactId>
+			<version>2.0.1</version>
 		</dependency>
 
 		<dependency>
@@ -63,13 +68,13 @@
         <dependency>
             <groupId>org.eclipse.jetty</groupId>
             <artifactId>jetty-webapp</artifactId>
-            <version>9.4.34.v20201102</version>
+					  <version>11.0.21</version>
             <scope>test</scope>
         </dependency>
 		<dependency>
 			<groupId>org.apache.cxf</groupId>
 			<artifactId>cxf-rt-transports-http-jetty</artifactId>
-			<version>3.1.9</version>
+			<version>4.0.4</version>
 			<scope>test</scope>
 		</dependency>
 
@@ -90,7 +95,7 @@
 		<dependency>
 			<groupId>jakarta.xml.bind</groupId>
 			<artifactId>jakarta.xml.bind-api</artifactId>
-			<version>2.3.3</version>
+			<version>3.0.1</version>
 			<scope>test</scope>
 		</dependency>
 

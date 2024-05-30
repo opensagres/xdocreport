@@ -26,7 +26,7 @@ package fr.opensagres.xdocreport.remoting.javaclient;
 
 import java.util.List;
 
-import javax.ws.rs.core.MediaType;
+import jakarta.ws.rs.core.MediaType;
 
 import org.apache.cxf.jaxrs.client.WebClient;
 

@@ -26,7 +26,7 @@
 		<dependency>
 			<groupId>com.itextpdf</groupId>
 			<artifactId>itext-pdfa</artifactId>
-			<version>5.5.7</version>
+			<version>5.5.13.4</version>
 			<scope>provided</scope>
 		</dependency>
 	</dependencies>

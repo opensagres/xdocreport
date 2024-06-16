@@ -148,7 +148,7 @@ public class DocxPreprocessorImageWithFreemarkerTestCase
                           + "<wp:inline distT=\"0\" distB=\"0\" distL=\"0\" distR=\"0\">"
                           
                           // + "<wp:extent cx=\"266700\" cy=\"285750\"/>"
-                          + "<wp:extent cx=\"${___ImageRegistry.getWidth(___imageInfo,'266700')}\" cy=\"${___ImageRegistry.getHeight(___imageInfo,'285750')}\"/>"
+                          + "<wp:extent cx=\"${___ImageRegistry.getWidth(___imageInfo,'266700','285750')}\" cy=\"${___ImageRegistry.getHeight(___imageInfo,'266700','285750')}\"/>"
                           
                           + "<wp:effectExtent l=\"19050\" t=\"0\" r=\"0\" b=\"0\"/>"
                           + "<wp:docPr id=\"1\" name=\"Image 0\" descr=\"template.png\"/>"
@@ -171,7 +171,7 @@ public class DocxPreprocessorImageWithFreemarkerTestCase
                           + "<a:xfrm>"
                           + "<a:off x=\"0\" y=\"0\"/>"
                           // + "<a:ext cx=\"266700\" cy=\"285750\"/>"
-                          + "<a:ext cx=\"${___ImageRegistry.getWidth(___imageInfo,'266700')}\" cy=\"${___ImageRegistry.getHeight(___imageInfo,'285750')}\"/>"
+                          + "<a:ext cx=\"${___ImageRegistry.getWidth(___imageInfo,'266700','285750')}\" cy=\"${___ImageRegistry.getHeight(___imageInfo,'266700','285750')}\"/>"
                           + "</a:xfrm>"
                           + "<a:prstGeom prst=\"rect\">"
                           + "<a:avLst/>"
@@ -590,7 +590,7 @@ public class DocxPreprocessorImageWithFreemarkerTestCase
                           + "<w:drawing>"
                           + "<wp:inline distT=\"0\" distB=\"0\" distL=\"0\" distR=\"0\">"
                           // + "<wp:extent cx=\"266700\" cy=\"285750\"/>"
-                          + "<wp:extent cx=\"${___ImageRegistry.getWidth(___imageInfo,'266700')}\" cy=\"${___ImageRegistry.getHeight(___imageInfo,'285750')}\"/>"
+                          + "<wp:extent cx=\"${___ImageRegistry.getWidth(___imageInfo,'266700','285750')}\" cy=\"${___ImageRegistry.getHeight(___imageInfo,'266700','285750')}\"/>"
                           
                           + "<wp:effectExtent l=\"19050\" t=\"0\" r=\"0\" b=\"0\"/>"
                           + "<wp:docPr id=\"1\" name=\"Image 0\" descr=\"template.png\"/>"
@@ -614,7 +614,7 @@ public class DocxPreprocessorImageWithFreemarkerTestCase
                           + "<a:xfrm>"
                           + "<a:off x=\"0\" y=\"0\"/>"
                           // + "<a:ext cx=\"266700\" cy=\"285750\"/>"
-                          + "<a:ext cx=\"${___ImageRegistry.getWidth(___imageInfo,'266700')}\" cy=\"${___ImageRegistry.getHeight(___imageInfo,'285750')}\"/>"
+                          + "<a:ext cx=\"${___ImageRegistry.getWidth(___imageInfo,'266700','285750')}\" cy=\"${___ImageRegistry.getHeight(___imageInfo,'266700','285750')}\"/>"
                           + "</a:xfrm>"
                           + "<a:prstGeom prst=\"rect\">"
                           + "<a:avLst/>"

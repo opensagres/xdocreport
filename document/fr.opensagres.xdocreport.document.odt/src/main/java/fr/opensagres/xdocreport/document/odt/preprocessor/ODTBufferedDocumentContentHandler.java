@@ -195,24 +195,44 @@ public class ODTBufferedDocumentContentHandler
                         //
                         String newWith = null;
                         String newHeight = null;
+                        String defaultWidth = null;
+                        String defaultHeight = null;
                         int widthIndex = attributes.getIndex( SVG_NS, WIDTH_ATTR );
                         if ( widthIndex != -1 )
                         {
-                            String defaultWidth = attributes.getValue( widthIndex );
-                            newWith =
-                                formatter.getFunctionDirective( TemplateContextHelper.IMAGE_REGISTRY_KEY,
-                                                                IImageRegistry.GET_WIDTH_METHOD,
-                                                                IImageRegistry.IMAGE_INFO, "'" + defaultWidth + "'" );
+                            defaultWidth = attributes.getValue( widthIndex );
                         }
                         int heightIndex = attributes.getIndex( SVG_NS, HEIGHT_ATTR );
                         if ( heightIndex != -1 )
                         {
-                            String defaultHeight = attributes.getValue( heightIndex );
+                            defaultHeight = attributes.getValue( heightIndex );
+                        }
+
+                        // get the parameters for the get width and height methods
+                        String[] parameters = null;
+                        if (defaultWidth != null && defaultHeight != null) {
+                            parameters = new String[]{IImageRegistry.IMAGE_INFO, "'" + defaultWidth + "'", "'" + defaultHeight + "'"};
+                        } else if (defaultWidth != null) {
+                            parameters = new String[]{IImageRegistry.IMAGE_INFO, "'" + defaultWidth + "'"};
+                        } else if (defaultHeight != null) {
+                            parameters = new String[]{IImageRegistry.IMAGE_INFO, "'" + defaultHeight + "'"};
+                        }
+
+                        if ( defaultWidth != null )
+                        {
+                            newWith =
+                                formatter.getFunctionDirective( TemplateContextHelper.IMAGE_REGISTRY_KEY,
+                                                                IImageRegistry.GET_WIDTH_METHOD,
+                                                                parameters );
+                        }
+                        if ( defaultHeight != null )
+                        {
                             newHeight =
                                 formatter.getFunctionDirective( TemplateContextHelper.IMAGE_REGISTRY_KEY,
                                                                 IImageRegistry.GET_HEIGHT_METHOD,
-                                                                IImageRegistry.IMAGE_INFO, "'" + defaultHeight + "'" );
+                                                                parameters );
                         }
+
                         if ( newWith != null || newHeight != null )
                         {
                             AttributesImpl attr = toAttributesImpl( attributes );

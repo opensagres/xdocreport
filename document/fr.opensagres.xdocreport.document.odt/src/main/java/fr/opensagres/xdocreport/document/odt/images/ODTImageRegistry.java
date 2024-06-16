@@ -82,7 +82,7 @@ public class ODTImageRegistry
     	
     	//TODO parse string containing unit information like "0.582cm"
     	try{
-    		float sizeAsPixel = Float.parseFloat(sizeAsDxa);
+    		float sizeAsPixel = Float.parseFloat(sizeAsDxa.split(POINT_UNIT)[0]);
     		sizeAsPixel = (sizeAsPixel /  0.75f) ;
             return Float.valueOf(sizeAsPixel);
     	}catch(NumberFormatException e){

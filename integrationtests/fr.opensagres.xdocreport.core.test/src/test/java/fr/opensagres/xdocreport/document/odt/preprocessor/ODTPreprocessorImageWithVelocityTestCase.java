@@ -110,9 +110,9 @@ public class ODTPreprocessorImageWithVelocityTestCase
                           
                           + "<draw:frame draw:style-name=\"fr1\" draw:name=\"logo\" text:anchor-type=\"paragraph\" svg:x=\"69.96pt\" svg:y=\"18.31pt\" "
                           // + "svg:width=\"21pt\" "
-                          + "svg:width=\"${___ImageRegistry.getWidth($___imageInfo,'21pt')}\" "
+                          + "svg:width=\"${___ImageRegistry.getWidth($___imageInfo,'21pt','22.51pt')}\" "
                           // + "svg:height=\"22.51pt\" "
-                          + "svg:height=\"${___ImageRegistry.getHeight($___imageInfo,'22.51pt')}\" " + "draw:z-index=\"0\">"
+                          + "svg:height=\"${___ImageRegistry.getHeight($___imageInfo,'21pt','22.51pt')}\" " + "draw:z-index=\"0\">"
                           + "<draw:image "
 
                           + "xlink:href=\"${___ImageRegistry.getPath($___imageInfo,'Pictures/100000000000001C0000001EE8812A78.png')}\" "
@@ -246,9 +246,9 @@ public class ODTPreprocessorImageWithVelocityTestCase
                         
             + "<draw:frame draw:style-name=\"fr1\" draw:name=\"developers.Photo\" text:anchor-type=\"paragraph\" "
             // + "svg:width=\"21pt\" "
-            + "svg:width=\"${___ImageRegistry.getWidth($___imageInfo,'21pt')}\" "
+            + "svg:width=\"${___ImageRegistry.getWidth($___imageInfo,'21pt','22.51pt')}\" "
             // + "svg:height=\"22.51pt\" "
-            + "svg:height=\"${___ImageRegistry.getHeight($___imageInfo,'22.51pt')}\" " + "draw:z-index=\"0\">"
+            + "svg:height=\"${___ImageRegistry.getHeight($___imageInfo,'21pt','22.51pt')}\" " + "draw:z-index=\"0\">"
             + "<draw:image "
 
             + "xlink:href=\"${___ImageRegistry.getPath($___imageInfo,'Pictures/100000000000001C0000001EE8812A78.png')}\" "

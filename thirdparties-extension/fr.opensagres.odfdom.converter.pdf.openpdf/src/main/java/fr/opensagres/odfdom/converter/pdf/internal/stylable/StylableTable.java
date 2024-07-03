@@ -33,6 +33,7 @@ import fr.opensagres.odfdom.converter.pdf.internal.styles.StyleTableRowPropertie
 import fr.opensagres.xdocreport.openpdf.extension.ExtendedPdfPTable;
 
 import java.util.Arrays;
+import java.util.stream.IntStream;
 
 public class StylableTable
     extends ExtendedPdfPTable
@@ -90,8 +91,8 @@ public class StylableTable
         int colSpan = cell.getColspan();
 
         // skip all the cell places already spanned from above
-        while (spansFromAbove[spansFromAboveIdx] > 0){
-            if (spansFromAboveIdx < getNumberOfColumns()) {
+        do {
+            if (spansFromAboveIdx < getNumberOfColumns() && spansFromAbove[spansFromAboveIdx] > 0) {
                 spansFromAbove[spansFromAboveIdx]--;
                 spansFromAboveIdx++;
             }
@@ -101,6 +102,7 @@ public class StylableTable
                 beginTableRow(currentRowStyle);
             }
         }
+        while (spansFromAbove[spansFromAboveIdx] > 0);
 
         for (int col = 0; col < colSpan; col++){
             if (spansFromAbove[spansFromAboveIdx] > 0){
@@ -114,7 +116,10 @@ public class StylableTable
     }
 
     private boolean reachedEndOfRow(){
-        return spansFromAboveIdx == getNumberOfColumns();
+        return spansFromAboveIdx == getNumberOfColumns()
+            // we might reach end of row by not yet reaching getNumberOfColumns() with spansFromAboveIdx, but in that
+            // case all the remaining columns in the row have to be spanned from above
+            ||  IntStream.range(spansFromAboveIdx, getNumberOfColumns()).noneMatch(idx -> spansFromAbove[idx] == 0);
     }
 
     public void beginTableRow( Style currentRowStyle )

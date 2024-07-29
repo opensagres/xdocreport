@@ -60,6 +60,10 @@ public class DocxXSLFOConverterDiscovery
         return ConverterTypeVia.XSL.name();
     }
 
+    public String getWith() {
+        return null;
+    }
+
     public IConverter getConverter()
     {
         return DocxXSLFOConverter.getInstance();

@@ -60,6 +60,10 @@ public class DocxFOPConverterDiscovery
         return ConverterTypeVia.FOP.name();
     }
 
+    public String getWith() {
+        return null;
+    }
+
     public IConverter getConverter()
     {
         return DocxFOPConverter.getInstance();

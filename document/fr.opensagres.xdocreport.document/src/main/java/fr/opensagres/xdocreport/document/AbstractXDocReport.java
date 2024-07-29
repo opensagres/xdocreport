@@ -661,7 +661,7 @@ public abstract class AbstractXDocReport
     public IConverter getConverter( Options options )
         throws XDocConverterException
     {
-        return ConverterRegistry.getRegistry().findConverter( getKind(), options.getTo(), options.getVia() );
+        return ConverterRegistry.getRegistry().findConverter( getKind(), options.getTo(), options.getVia(), options.getWith() );
     }
 
     public void convert( Map<String, Object> contextMap, Options options, OutputStream out )

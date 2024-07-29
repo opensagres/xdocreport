@@ -36,6 +36,8 @@ public interface IConverterDiscovery
     String getTo();
 
     String getVia();
+    
+    String getWith();
 
     IConverter getConverter();
 

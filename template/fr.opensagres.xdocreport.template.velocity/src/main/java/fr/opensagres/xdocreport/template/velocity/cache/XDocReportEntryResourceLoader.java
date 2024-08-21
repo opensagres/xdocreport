@@ -28,6 +28,7 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.Reader;
 import java.io.UnsupportedEncodingException;
+import java.nio.charset.Charset;
 
 import org.apache.velocity.exception.ResourceNotFoundException;
 import org.apache.velocity.runtime.RuntimeServices;
@@ -76,7 +77,7 @@ public class XDocReportEntryResourceLoader
             InputStream inputStream = cacheInfo.getInputStream();
             if ( inputStream != null )
             {
-                return new InputStreamReader(inputStream);
+                return encoding != null ? new InputStreamReader(inputStream, Charset.forName(encoding)) : new InputStreamReader(inputStream);
             }
         }
         throw new ResourceNotFoundException( "Cannot find input stream for the entry with source=" + source );

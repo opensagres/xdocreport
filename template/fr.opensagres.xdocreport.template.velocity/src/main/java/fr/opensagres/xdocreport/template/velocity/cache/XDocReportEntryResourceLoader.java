@@ -77,7 +77,7 @@ public class XDocReportEntryResourceLoader
             InputStream inputStream = cacheInfo.getInputStream();
             if ( inputStream != null )
             {
-                return new InputStreamReader(inputStream, Charset.forName(encoding));
+                return encoding != null ? new InputStreamReader(inputStream, Charset.forName(encoding)) : new InputStreamReader(inputStream);
             }
         }
         throw new ResourceNotFoundException( "Cannot find input stream for the entry with source=" + source );

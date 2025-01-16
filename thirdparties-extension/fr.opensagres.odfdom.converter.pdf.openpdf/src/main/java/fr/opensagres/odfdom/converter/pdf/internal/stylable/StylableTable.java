@@ -26,10 +26,14 @@ package fr.opensagres.odfdom.converter.pdf.internal.stylable;
 
 import com.lowagie.text.Element;
 
+import com.lowagie.text.pdf.PdfPCell;
 import fr.opensagres.odfdom.converter.pdf.internal.styles.Style;
 import fr.opensagres.odfdom.converter.pdf.internal.styles.StyleTableProperties;
 import fr.opensagres.odfdom.converter.pdf.internal.styles.StyleTableRowProperties;
 import fr.opensagres.xdocreport.openpdf.extension.ExtendedPdfPTable;
+
+import java.util.Arrays;
+import java.util.stream.IntStream;
 
 public class StylableTable
     extends ExtendedPdfPTable
@@ -45,6 +49,10 @@ public class StylableTable
 
     private boolean inTableRow;
 
+    // keeps an indication of how many rows are already occupied (by row- or col-spans from the rows above)
+    private int[] spansFromAbove;
+    private int spansFromAboveIdx;
+
     private Style currentRowStyle;
 
     public StylableTable( StylableDocument ownerDocument, IStylableContainer parent, int numColumns )
@@ -57,6 +65,10 @@ public class StylableTable
         super.setSplitLate( false );
         this.ownerDocument = ownerDocument;
         this.parent = parent;
+
+        this.spansFromAbove = new int[numColumns];
+        Arrays.fill(spansFromAbove, 0);
+        this.spansFromAboveIdx = 0;
     }
 
     public Style getCurrentRowStyle()
@@ -74,10 +86,47 @@ public class StylableTable
         inTableHeaderRows = false;
     }
 
+    private void fitCellIntoSpansFromAbove(PdfPCell cell) {
+        int rowSpan = cell.getRowspan();
+        int colSpan = cell.getColspan();
+
+        // skip all the cell places already spanned from above
+        do {
+            if (spansFromAboveIdx < getNumberOfColumns() && spansFromAbove[spansFromAboveIdx] > 0) {
+                spansFromAbove[spansFromAboveIdx]--;
+                spansFromAboveIdx++;
+            }
+            if (spansFromAboveIdx >= getNumberOfColumns()) {
+                // we have no more place in the current row; finish it up, and start a new one
+                endTableRow();
+                beginTableRow(currentRowStyle);
+            }
+        }
+        while (spansFromAbove[spansFromAboveIdx] > 0);
+
+        for (int col = 0; col < colSpan; col++){
+            if (spansFromAbove[spansFromAboveIdx] > 0){
+                break; // this is an error situation. cell spans over a cell that already has been spanned from above
+            }
+            else {
+                spansFromAbove[spansFromAboveIdx] = rowSpan - 1;
+            }
+            spansFromAboveIdx++;
+        }
+    }
+
+    private boolean reachedEndOfRow(){
+        return spansFromAboveIdx == getNumberOfColumns()
+            // we might reach end of row by not yet reaching getNumberOfColumns() with spansFromAboveIdx, but in that
+            // case all the remaining columns in the row have to be spanned from above
+            ||  IntStream.range(spansFromAboveIdx, getNumberOfColumns()).noneMatch(idx -> spansFromAbove[idx] == 0);
+    }
+
     public void beginTableRow( Style currentRowStyle )
     {
         // beginTableRow/addElement/endTableRow protects before too many/too less cells in a row than declared
         inTableRow = true;
+        spansFromAboveIdx = 0;
         this.currentRowStyle = currentRowStyle;
         if ( inTableHeaderRows )
         {
@@ -89,7 +138,7 @@ public class StylableTable
     public void endTableRow()
     {
         // fill row with empty cells if necessary
-        while ( currentRowIdx != 0 )
+        while ( ! reachedEndOfRow()  )
         {
             StylableTableCell cell = new StylableTableCell( ownerDocument, this );
             if ( currentRowStyle != null )
@@ -107,9 +156,12 @@ public class StylableTable
     {
         if ( inTableRow )
         {
+            if (element instanceof PdfPCell){
+                fitCellIntoSpansFromAbove ((PdfPCell) element);
+            }
             super.addElement( element );
         }
-        if ( currentRowIdx == 0 )
+        if ( reachedEndOfRow() )
         {
             // row fully filled, end row
             endTableRow();

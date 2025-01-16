@@ -26,7 +26,7 @@ package fr.opensagres.xdocreport.remoting.resources.services.server.web;
 
 import java.io.File;
 
-import javax.servlet.ServletContext;
+import jakarta.servlet.ServletContext;
 
 public class WebAppHelper
 {

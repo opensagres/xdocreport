@@ -32,11 +32,13 @@
 
 package fr.opensagres.xdocreport.remoting.resources.domain;
 
+import java.io.Closeable;
+import java.io.IOException;
 import java.io.InputStream;
 
-import javax.xml.bind.annotation.XmlAccessType;
-import javax.xml.bind.annotation.XmlAccessorType;
-import javax.xml.bind.annotation.XmlType;
+import jakarta.xml.bind.annotation.XmlAccessType;
+import jakarta.xml.bind.annotation.XmlAccessorType;
+import jakarta.xml.bind.annotation.XmlType;
 
 
 /**
@@ -70,7 +72,7 @@ import javax.xml.bind.annotation.XmlType;
     "mimeType",
     "resourceId"
 })
-public class LargeBinaryData {
+public class LargeBinaryData implements Closeable {
 
 	private static final String DEFAULT_MIMETYPE = "application/octet-stream";
     protected InputStream content;
@@ -191,4 +193,8 @@ public class LargeBinaryData {
         this.resourceId = value;
     }
 
+    @Override
+    public void close() throws IOException {
+        content.close();
+    }
 }

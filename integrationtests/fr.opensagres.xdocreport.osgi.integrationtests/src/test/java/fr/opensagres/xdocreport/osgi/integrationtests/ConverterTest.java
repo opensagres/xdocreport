@@ -97,7 +97,7 @@ public class ConverterTest
 
         				mavenBundle("org.slf4j", "slf4j-simple", "1.6.1").noStart(),
 
-                        wrappedBundle( mavenBundle( "javax.activation", "activation", "1.1.1" ) ),
+                        wrappedBundle( mavenBundle( "jakarta.activation", "jakarta.activation-api", "2.0.1" ) ),
                         wrappedBundle( mavenBundle( "org.apache.poi", "poi", "5.2.0" ) ),
                         wrappedBundle( mavenBundle( "org.apache.poi", "poi-ooxml", "5.2.0" ) ).exports("org.apache.poi.ooxml","org.apache.poi.openxml4j.opc","org.apache.poi.xwpf.usermodel"),
                         wrappedBundle( mavenBundle( "org.apache.servicemix.bundles", "org.apache.servicemix.bundles.xmlbeans", "2.4.0_5" ) ),

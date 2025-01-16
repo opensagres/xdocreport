@@ -24,16 +24,11 @@
  */
 package fr.opensagres.odfdom.converter.pdf.internal.stylable;
 
-import java.util.ArrayList;
-import java.util.LinkedHashMap;
-import java.util.Map;
-
 import com.lowagie.text.Chunk;
 import com.lowagie.text.Element;
 import com.lowagie.text.Font;
 import com.lowagie.text.Paragraph;
 import com.lowagie.text.pdf.BaseFont;
-
 import fr.opensagres.odfdom.converter.core.utils.ODFUtils;
 import fr.opensagres.odfdom.converter.pdf.internal.styles.Style;
 import fr.opensagres.odfdom.converter.pdf.internal.styles.StyleBreak;
@@ -41,6 +36,10 @@ import fr.opensagres.odfdom.converter.pdf.internal.styles.StyleLineHeight;
 import fr.opensagres.odfdom.converter.pdf.internal.styles.StyleParagraphProperties;
 import fr.opensagres.odfdom.converter.pdf.internal.styles.StyleTextProperties;
 import fr.opensagres.xdocreport.openpdf.extension.ExtendedParagraph;
+
+import java.util.ArrayList;
+import java.util.LinkedHashMap;
+import java.util.Map;
 
 /**
  * fixes for paragraph pdf conversion by Leszek Piotrowicz <leszekp@safe-mail.net>
@@ -249,9 +248,9 @@ public class StylableParagraph
 
             Chunk lastChunk = (Chunk) elements.get( elements.size() - 1 );
             String localDestination = null;
-            if ( lastChunk.getAttributes() != null )
+            if ( lastChunk.getChunkAttributes() != null )
             {
-                localDestination = (String) lastChunk.getAttributes().get( Chunk.LOCALDESTINATION );
+                localDestination = (String) lastChunk.getChunkAttributes().get( Chunk.LOCALDESTINATION );
             }
             if ( localDestination != null )
             {

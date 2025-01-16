@@ -26,9 +26,9 @@ package fr.opensagres.xdocreport.remoting.resources.services.server.web;
 
 import java.io.File;
 
-import javax.servlet.ServletContext;
-import javax.servlet.ServletContextEvent;
-import javax.servlet.ServletContextListener;
+import jakarta.servlet.ServletContext;
+import jakarta.servlet.ServletContextEvent;
+import jakarta.servlet.ServletContextListener;
 
 import fr.opensagres.xdocreport.remoting.resources.services.ResourcesServicesRegistry;
 import fr.opensagres.xdocreport.remoting.resources.services.server.file.FileResourcesService;

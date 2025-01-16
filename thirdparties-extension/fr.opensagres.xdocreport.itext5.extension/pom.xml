@@ -3,20 +3,20 @@
 	<parent>
 		<groupId>fr.opensagres.xdocreport</groupId>
 		<artifactId>thirdparties-extension</artifactId>
-		<version>2.0.6-SNAPSHOT</version>
+		<version>2.1.1-SNAPSHOT</version>
 	</parent>
 	<artifactId>fr.opensagres.xdocreport.itext5.extension</artifactId>
 	<dependencies>
 		<dependency>
 			<groupId>com.itextpdf</groupId>
 			<artifactId>itextpdf</artifactId>
-			<version>5.5.12</version>
+			<version>5.5.13.3</version>
 			<scope>provided</scope>
 		</dependency>
 		<dependency>
 			<groupId>com.itextpdf</groupId>
 			<artifactId>itext-pdfa</artifactId>
-			<version>5.5.7</version>
+			<version>5.5.13.4</version>
 			<scope>provided</scope>
 		</dependency>
 	</dependencies>

@@ -24,9 +24,9 @@
  */
 package fr.opensagres.xdocreport.remoting.resources.services.client.jaxws;
 
-import javax.servlet.ServletConfig;
-import javax.servlet.ServletException;
-import javax.xml.ws.Endpoint;
+import jakarta.servlet.ServletConfig;
+import jakarta.servlet.ServletException;
+import jakarta.xml.ws.Endpoint;
 
 import org.apache.cxf.transport.servlet.CXFNonSpringServlet;
 
@@ -48,7 +48,7 @@ public class MockCXFNonSpringServlet
     {
         super.init( sc );
         String address = "/resources";
-        Endpoint e= javax.xml.ws.Endpoint.publish( address,
+        Endpoint e= jakarta.xml.ws.Endpoint.publish( address,
                                        new JAXWSResourcesServiceImpl(
                                                                       new MockResourcesService(
                                                                                                 JAXWSResourcesServiceClientTestCase.resourcesDir ) ) );

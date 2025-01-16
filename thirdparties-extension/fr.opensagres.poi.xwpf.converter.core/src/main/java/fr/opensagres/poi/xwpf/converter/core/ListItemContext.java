@@ -143,6 +143,10 @@ public class ListItemContext
 
     public String getText()
     {
+        if (lvl == null || lvl.getLvlText() == null) {
+            return "";
+        }
+
         String text = lvl.getLvlText().getVal();
 
         CTNumFmt numFmt = lvl.getNumFmt();

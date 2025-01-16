@@ -34,14 +34,10 @@ import java.io.InputStream;
 import java.io.PrintStream;
 import java.io.Writer;
 
-import javax.ws.rs.RuntimeType;
-import javax.ws.rs.client.Client;
-import javax.ws.rs.client.ClientBuilder;
-import javax.ws.rs.core.Configuration;
+import jakarta.ws.rs.client.Client;
+import jakarta.ws.rs.client.ClientBuilder;
 
-import org.apache.cxf.jaxrs.impl.ConfigurationImpl;
-
-import com.fasterxml.jackson.jaxrs.json.JacksonJaxbJsonProvider;
+import com.fasterxml.jackson.jakarta.rs.json.JacksonXmlBindJsonProvider;
 
 import fr.opensagres.xdocreport.core.io.IOUtils;
 import fr.opensagres.xdocreport.core.utils.StringUtils;
@@ -154,7 +150,7 @@ public class Main
     {
         String resources = null;
       Client client =  ClientBuilder.newBuilder()
-    		  .register(JacksonJaxbJsonProvider.class)
+    		  .register(JacksonXmlBindJsonProvider.class)
     		  .register(LargeBinaryDataMessageBodyReader.class)
     		  .register(LargeBinaryDataMessageBodyWriter.class)
     		  .build();
@@ -323,8 +319,9 @@ public class Main
         if ( resources.indexOf( ";" ) == -1 )
         {
 
-            LargeBinaryData data = client.downloadLarge( resources );
-            binaryDataContentToFile( new File( out ), data );
+            try ( LargeBinaryData data = client.downloadLarge( resources ) ) {
+                binaryDataContentToFile( new File( out ), data );
+            }
         }
         else
         {
@@ -345,8 +342,9 @@ public class Main
         }
         if ( resources.indexOf( ";" ) == -1 )
         {
-            LargeBinaryData data = createLargeBinaryDataFromFile( resources, new File( out ) );
-            client.uploadLarge( data );
+            try ( LargeBinaryData data = createLargeBinaryDataFromFile( resources, new File( out ) ) ) {
+                client.uploadLarge(data);
+            }
 
         }
         else

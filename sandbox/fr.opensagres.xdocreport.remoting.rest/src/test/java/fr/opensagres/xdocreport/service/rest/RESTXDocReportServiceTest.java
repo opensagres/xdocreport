@@ -35,9 +35,9 @@ import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Collection;
 
-import javax.ws.rs.core.Application;
-import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.Response;
+import jakarta.ws.rs.core.Application;
+import jakarta.ws.rs.core.MediaType;
+import jakarta.ws.rs.core.Response;
 
 import org.apache.cxf.jaxrs.client.WebClient;
 import org.apache.cxf.jaxrs.servlet.CXFNonSpringJaxrsServlet;

@@ -24,7 +24,7 @@
  */
 package fr.opensagres.xdocreport.remoting.resources.services.client.jaxrs;
 
-import javax.ws.rs.client.Client;
+import jakarta.ws.rs.client.Client;
 
 import fr.opensagres.xdocreport.remoting.resources.services.jaxrs.JAXRSResourcesService;
 

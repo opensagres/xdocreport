@@ -26,7 +26,7 @@ package fr.opensagres.xdocreport.remoting.resources.services.server.jaxws;
 
 import java.util.List;
 
-import javax.jws.WebService;
+import jakarta.jws.WebService;
 
 import fr.opensagres.xdocreport.remoting.resources.domain.BinaryData;
 import fr.opensagres.xdocreport.remoting.resources.domain.Filter;

@@ -45,6 +45,8 @@ public abstract class AbstractImageProvider
 
     private Float heightFromImageInfo;
 
+    private Float[] fittedImageDimensions;
+
     private boolean useImageSize;
 
     private boolean resize;
@@ -80,11 +82,28 @@ public abstract class AbstractImageProvider
 
     /*
      * (non-Javadoc)
-     * @see fr.opensagres.xdocreport.document.images.IImageProvider#getWidth()
+     * @see fr.opensagres.xdocreport.document.images.IImageProvider#getWidth(java.lang.Float)
      */
     public Float getWidth(Float defaultWidth)
         throws IOException
     {
+        return getWidth(defaultWidth, null);
+    }
+
+    /*
+     * (non-Javadoc)
+     * @see fr.opensagres.xdocreport.document.images.IImageProvider#getWidth(java.lang.Float, java.lang.Float)
+     */
+    public Float getWidth(Float defaultWidth, Float defaultHeight)
+        throws IOException
+    {
+        // check if user wants to resize the image in order to fit template
+        // replacement image aspect ratio is always kept intact
+        if ( height == null && width == null && defaultWidth != null
+                && defaultHeight != null && !isUseImageSize() && isResize() )
+        {
+            return getDimensions(defaultWidth, defaultHeight)[0];
+        }
         if ( width != null )
         {
             return width;
@@ -112,11 +131,28 @@ public abstract class AbstractImageProvider
 
     /*
      * (non-Javadoc)
-     * @see fr.opensagres.xdocreport.document.images.IImageProvider#getHeight()
+     * @see fr.opensagres.xdocreport.document.images.IImageProvider#getHeight(java.lang.Float)
      */
     public Float getHeight(Float defaultHeight)
         throws IOException
     {
+        return getHeight(null, defaultHeight);
+    }
+
+    /*
+     * (non-Javadoc)
+     * @see fr.opensagres.xdocreport.document.images.IImageProvider#getHeight(java.lang.Float, java.lang.Float)
+     */
+    public Float getHeight(Float defaultWidth, Float defaultHeight)
+        throws IOException
+    {
+        // check if user wants to resize the image in order to fit template
+        // replacement image aspect ratio is always kept intact
+        if ( height == null && width == null && defaultWidth != null
+                && defaultHeight != null && !isUseImageSize() && isResize() )
+        {
+            return getDimensions(defaultWidth, defaultHeight)[1];
+        }
         if ( height != null )
         {
             return height;
@@ -140,6 +176,33 @@ public abstract class AbstractImageProvider
             return heightFromImageInfo;
         }
         return heightFromImageInfo = new Float( getImageInfo().getHeight() );
+    }
+
+    /**
+     * Compute the new dimensions of the replacement image in order to fit the template.
+     *
+     * @param defaultWidth template width
+     * @param defaultHeight template height
+     * @return new dimensions of the image
+     * @throws IOException
+     */
+    private Float[] getDimensions(Float defaultWidth, Float defaultHeight)
+        throws IOException
+    {
+        if ( fittedImageDimensions != null )
+        {
+            return fittedImageDimensions;
+        }
+
+        float realImageHeight = getImageInfo().getHeight();
+        float realImageWidth = getImageInfo().getWidth();
+        float scale = Math.min(defaultWidth / realImageWidth, defaultHeight / realImageHeight);
+
+        float finalImageHeight = realImageHeight * scale;
+        float finalImageWidth = realImageWidth * scale;
+
+        fittedImageDimensions = new Float[]{finalImageWidth, finalImageHeight};
+        return fittedImageDimensions;
     }
 
     /*

@@ -575,6 +575,7 @@ public abstract class AbstractXDocReport
     }
 
     protected void doPostprocessIfNeeded( XDocArchive outputArchive )
+    throws Exception
     {
         // Empty default impl to avoid breaking compat
     }

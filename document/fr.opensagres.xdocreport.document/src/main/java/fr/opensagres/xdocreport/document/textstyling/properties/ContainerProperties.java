@@ -27,14 +27,8 @@ package fr.opensagres.xdocreport.document.textstyling.properties;
 /**
  * Container properties.
  */
-public abstract class ContainerProperties
+public class ContainerProperties
 {
-
-    public enum ContainerType
-    {
-        SPAN, PARAGRAPH, LIST, LIST_ITEM, HEADER
-    }
-
     private boolean pageBreakBefore;
 
     private boolean pageBreakAfter;
@@ -177,6 +171,26 @@ public abstract class ContainerProperties
     public void setColor( Color color )
     {
         this.color = color;
+    }
+
+    public static ContainerProperties combine( ContainerProperties p1, ContainerProperties p2 )
+    {
+        ContainerProperties result = new ContainerProperties(
+                p1.getType() == p2.getType() ? p1.getType() : ContainerType.COMBINED );
+
+         result.pageBreakBefore = p1.pageBreakBefore || p2.pageBreakBefore;
+         result.pageBreakAfter = p1.pageBreakAfter || p2.pageBreakAfter;
+         result.bold = p1.bold || p2.bold;
+         result.italic = p1.italic || p2.italic;
+         result.underline = p1.underline || p2.underline;
+         result.strike = p1.strike || p2.strike;
+         result.subscript = p1.subscript || p2.subscript;
+         result.superscript = p1.superscript || p2.superscript;
+         result.textAlignment = p2.textAlignment == null ? p1.textAlignment : p2.textAlignment;
+         result.color = p2.color == null ? p1.color : p2.color;
+         result.styleName = p2.styleName == null ? p1.styleName : p2.styleName;
+
+         return result;
     }
 
     @Override

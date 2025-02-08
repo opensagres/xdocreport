@@ -28,6 +28,10 @@ package fr.opensagres.xdocreport.document.textstyling.properties;
  * Table cell properties.
  */
 public class TableCellProperties
-{
+        extends ContainerProperties {
+
+    public TableCellProperties() {
+        super(ContainerType.PARAGRAPH);
+    }
 
 }

@@ -117,6 +117,8 @@ public class HTMLTextStylingContentHandler
 
     private static final String TD_ELT = "td";
 
+    private static final String TH_ELT = "th";
+
     private final IDocumentHandler documentHandler;
 
     // current a href + content parsing
@@ -297,7 +299,15 @@ public class HTMLTextStylingContentHandler
                 // <td>
                 TableCellProperties properties = StylesHelper.createTableCellProperties( attributes );
                 documentHandler.startTableCell( properties );
+			}
+            else if (TH_ELT.equals(name))
+            {
+                // <th>
+                TableCellProperties properties = StylesHelper.createTableCellProperties(attributes);
+                documentHandler.startTableCell(properties);
+                documentHandler.startBold();
             }
+
         }
         catch ( IOException e )
         {
@@ -424,6 +434,12 @@ public class HTMLTextStylingContentHandler
             else if ( TD_ELT.equals( name ) )
             {
                 // </td>
+                documentHandler.endTableCell();
+			}
+            else if (TH_ELT.equals(name))
+            {
+                // </th>
+                documentHandler.endBold();
                 documentHandler.endTableCell();
             }
         }

@@ -116,6 +116,8 @@ public class HTMLTextStylingContentHandler
     private static final String TR_ELT = "tr";
 
     private static final String TD_ELT = "td";
+    
+	private static final String TH_ELT = "th";
 
     private final IDocumentHandler documentHandler;
 
@@ -297,7 +299,15 @@ public class HTMLTextStylingContentHandler
                 // <td>
                 TableCellProperties properties = StylesHelper.createTableCellProperties( attributes );
                 documentHandler.startTableCell( properties );
-            }
+			}
+            else if (TH_ELT.equals(name))
+            {
+				// <th>
+				TableCellProperties properties = StylesHelper.createTableCellProperties(attributes);
+				documentHandler.startTableCell(properties);
+				documentHandler.startBold();
+			}
+
         }
         catch ( IOException e )
         {
@@ -425,6 +435,12 @@ public class HTMLTextStylingContentHandler
             {
                 // </td>
                 documentHandler.endTableCell();
+			}
+            else if (TH_ELT.equals(name))
+			{
+				// </th>
+				documentHandler.endBold();
+				documentHandler.endTableCell();
             }
         }
         catch ( IOException e )

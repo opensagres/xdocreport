@@ -257,6 +257,11 @@ public class ODTDocumentHandler
         throws IOException
     {
 
+        if ( insideHeader )
+        {
+            return;
+        }
+
         if ( ( paragraphWasInserted && paragraphsStack.isEmpty() ) || closeHeader )
         {
             internalStartParagraph( false, (String) null );

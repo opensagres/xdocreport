@@ -197,6 +197,16 @@ public class FreemarkerTemplateEngine
         {
         }
         this.freemarkerConfiguration.setLocalizedLookup( false );
+        
+        // Security fix: Block dangerous class instantiation via ?new operator to prevent SSTI attacks
+        try
+        {
+            this.freemarkerConfiguration.setSetting( Configuration.NEW_BUILTIN_CLASS_RESOLVER_KEY, "safer" );
+        }
+        catch ( TemplateException e )
+        {
+            // Ignore configuration errors to maintain compatibility
+        }
     }
 
     public void extractFields( Reader reader, String entryName, FieldsExtractor extractor )

@@ -197,6 +197,21 @@ public class FreemarkerTemplateEngine
         {
         }
         this.freemarkerConfiguration.setLocalizedLookup( false );
+        
+        // Security fix: Block dangerous class instantiation via ?new operator to prevent SSTI attacks
+        // 
+        // This setting prevents Server-Side Template Injection (SSTI) attacks where malicious users
+        // By setting NEW_BUILTIN_CLASS_RESOLVER_KEY to "safer", FreeMarker will block instantiation
+        // of dangerous classes while still allowing legitimate template operations.
+        try
+        {
+            this.freemarkerConfiguration.setSetting( Configuration.NEW_BUILTIN_CLASS_RESOLVER_KEY, "safer" );
+        }
+        catch ( Exception e )
+        {
+            // Ignore configuration errors to maintain compatibility with older FreeMarker versions
+            // that might not support this security setting
+        }
     }
 
     public void extractFields( Reader reader, String entryName, FieldsExtractor extractor )

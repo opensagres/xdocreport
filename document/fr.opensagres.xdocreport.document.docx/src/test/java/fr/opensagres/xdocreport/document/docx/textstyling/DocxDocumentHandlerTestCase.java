@@ -245,6 +245,22 @@ public class DocxDocumentHandlerTestCase
     }
 
     @Test
+    public void testBoldAndItalicSpan()
+            throws Exception
+    {
+        IContext context = new MockContext();
+
+        ITextStylingTransformer formatter = HTMLTextStylingTransformer.INSTANCE;
+        IDocumentHandler handler = new DocxDocumentHandler( null, context, "word/document.xml" );
+        formatter.transform( "<span style=\"font-weight:bold;\"><span style=\"font-style: italic;\">text</span></span>", handler );
+
+        Assert.assertEquals( "", handler.getTextBefore() );
+        Assert.assertEquals( "<w:r><w:rPr><w:b /><w:i /></w:rPr><w:t xml:space=\"preserve\" >text</w:t></w:r>",
+                handler.getTextBody() );
+        Assert.assertEquals( "", handler.getTextEnd() );
+    }
+
+    @Test
     public void testHyperlinkByUsingXDocReport_HyperlinkStyle()
         throws Exception
     {

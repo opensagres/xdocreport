@@ -775,7 +775,7 @@ public class ODTDocumentHandlerTestCase
 
         Assert.assertEquals( "", handler.getTextBefore() );
         Assert.assertEquals( "", handler.getTextBody() );
-        Assert.assertEquals( "<text:h text:style-name=\"Heading_20_1\" text:outline-level=\"1\">Title1</text:h><text:p><text:span text:style-name=\"XDocReport_EmptyText\" >text</text:span><text:p><text:span text:style-name=\"XDocReport_EmptyText\" >paragraph</text:span></text:p></text:p>",
+        Assert.assertEquals( "<text:h text:style-name=\"Heading_20_1\" text:outline-level=\"1\">Title1</text:h><text:p><text:span text:style-name=\"XDocReport_EmptyText\" >text</text:span></text:p><text:p><text:span text:style-name=\"XDocReport_EmptyText\" >paragraph</text:span></text:p>",
                              handler.getTextEnd() );
     }
 
@@ -1057,7 +1057,7 @@ public class ODTDocumentHandlerTestCase
 
     @Test
     public void testTable()
-        throws Exception
+            throws Exception
     {
         IContext context = new MockContext();
         BufferedElement parent = null;
@@ -1075,10 +1075,36 @@ public class ODTDocumentHandlerTestCase
         Assert.assertEquals( "", handler.getTextBody() );
         Assert.assertEquals( "<table:table>"
             + "<table:table-column table:number-columns-repeated=\"2\" ></table:table-column>"
-            + "<table:table-row><table:table-cell><text:p><text:span text:style-name=\"XDocReport_EmptyText\" >A</text:span></text:p></table:table-cell><table:table-cell><text:p><text:span text:style-name=\"XDocReport_EmptyText\" >B</text:span></text:p></table:table-cell></table:table-row>"
-            + "<table:table-row><table:table-cell><text:p><text:span text:style-name=\"XDocReport_EmptyText\" >C</text:span></text:p></table:table-cell><table:table-cell><text:p><text:span text:style-name=\"XDocReport_EmptyText\" >D</text:span></text:p></table:table-cell></table:table-row>"
-            + "<table:table-row><table:table-cell><text:p><text:span text:style-name=\"XDocReport_EmptyText\" >E</text:span></text:p></table:table-cell><table:table-cell><text:p><text:span text:style-name=\"XDocReport_EmptyText\" >F</text:span></text:p></table:table-cell></table:table-row>"
-            + "</table:table>",
+                + "<table:table-row><table:table-cell><text:p><text:span text:style-name=\"XDocReport_EmptyText\" >A</text:span></text:p></table:table-cell><table:table-cell><text:p><text:span text:style-name=\"XDocReport_EmptyText\" >B</text:span></text:p></table:table-cell></table:table-row>"
+                + "<table:table-row><table:table-cell><text:p><text:span text:style-name=\"XDocReport_EmptyText\" >C</text:span></text:p></table:table-cell><table:table-cell><text:p><text:span text:style-name=\"XDocReport_EmptyText\" >D</text:span></text:p></table:table-cell></table:table-row>"
+                + "<table:table-row><table:table-cell><text:p><text:span text:style-name=\"XDocReport_EmptyText\" >E</text:span></text:p></table:table-cell><table:table-cell><text:p><text:span text:style-name=\"XDocReport_EmptyText\" >F</text:span></text:p></table:table-cell></table:table-row>"
+                + "</table:table>",
                              handler.getTextEnd() );
+    }
+
+    @Test
+    public void testStyledTable()
+            throws Exception {
+        IContext context = new MockContext();
+        BufferedElement parent = null;
+
+        ITextStylingTransformer formatter = HTMLTextStylingTransformer.INSTANCE;
+        IDocumentHandler handler = new ODTDocumentHandler(parent, context, "content.xml");
+        formatter.transform("<table><tbody>"
+                + "<tr><td style='name:Standard'>A</td><td>B</td></tr>"
+                + "<tr><td style='name:Standard'>C</td><td>D</td></tr>"
+                + "<tr><td style='name:Standard'>E</td><td>F</td></tr>"
+                + "</tbody></table>",
+                handler);
+
+        Assert.assertEquals("", handler.getTextBefore());
+        Assert.assertEquals("", handler.getTextBody());
+        Assert.assertEquals("<table:table>"
+                + "<table:table-column table:number-columns-repeated=\"2\" ></table:table-column>"
+                + "<table:table-row><table:table-cell><text:p text:style-name=\"Standard\"><text:span text:style-name=\"XDocReport_EmptyText\" >A</text:span></text:p></table:table-cell><table:table-cell><text:p><text:span text:style-name=\"XDocReport_EmptyText\" >B</text:span></text:p></table:table-cell></table:table-row>"
+                + "<table:table-row><table:table-cell><text:p text:style-name=\"Standard\"><text:span text:style-name=\"XDocReport_EmptyText\" >C</text:span></text:p></table:table-cell><table:table-cell><text:p><text:span text:style-name=\"XDocReport_EmptyText\" >D</text:span></text:p></table:table-cell></table:table-row>"
+                + "<table:table-row><table:table-cell><text:p text:style-name=\"Standard\"><text:span text:style-name=\"XDocReport_EmptyText\" >E</text:span></text:p></table:table-cell><table:table-cell><text:p><text:span text:style-name=\"XDocReport_EmptyText\" >F</text:span></text:p></table:table-cell></table:table-row>"
+                + "</table:table>",
+                handler.getTextEnd());
     }
 }

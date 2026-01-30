@@ -7,9 +7,9 @@ on:
   workflow_dispatch:
     
   push:
-    branches: [ master ]
+    branches: [ 2.0.x ]
   pull_request:
-    branches: [ master ]
+    branches: [ 2.0.x ]
 
 jobs:
   build:

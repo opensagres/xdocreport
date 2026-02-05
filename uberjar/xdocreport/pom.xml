@@ -7,6 +7,7 @@
 		<relativePath>..</relativePath>
 	</parent>
 	<artifactId>xdocreport</artifactId>
+	<name>Uberjar XDocreport</name>
 	<dependencies>
 		<!-- Document ODT -->
 		<dependency>

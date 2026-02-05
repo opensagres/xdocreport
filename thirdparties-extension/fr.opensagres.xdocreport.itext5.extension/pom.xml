@@ -6,6 +6,7 @@
 		<version>2.1.3-SNAPSHOT</version>
 	</parent>
 	<artifactId>fr.opensagres.xdocreport.itext5.extension</artifactId>
+	<name>iText5 extension</name>
 	<dependencies>
 		<dependency>
 			<groupId>com.itextpdf</groupId>

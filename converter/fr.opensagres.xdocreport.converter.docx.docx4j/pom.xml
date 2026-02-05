@@ -6,8 +6,8 @@
 		<version>2.1.3-SNAPSHOT</version>
 	</parent>
 	<artifactId>fr.opensagres.xdocreport.converter.docx.docx4j</artifactId>
+	<name>Converter docx</name>
 	<dependencies>
-
 		<dependency>
 			<groupId>fr.opensagres.xdocreport</groupId>
 			<artifactId>fr.opensagres.xdocreport.converter</artifactId>

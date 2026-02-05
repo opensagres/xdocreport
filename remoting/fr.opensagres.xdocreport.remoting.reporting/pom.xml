@@ -6,8 +6,8 @@
     <version>2.1.3-SNAPSHOT</version>
   </parent>
   <artifactId>fr.opensagres.xdocreport.remoting.reporting</artifactId>
+  <name>Remoting reporting module</name>
   <dependencies>
- 
     <dependency>
       <groupId>fr.opensagres.xdocreport</groupId>
       <artifactId>fr.opensagres.xdocreport.document</artifactId>

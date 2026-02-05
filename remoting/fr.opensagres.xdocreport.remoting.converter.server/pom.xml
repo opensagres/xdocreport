@@ -6,6 +6,7 @@
 		<version>2.1.3-SNAPSHOT</version>
 	</parent>
 	<artifactId>fr.opensagres.xdocreport.remoting.converter.server</artifactId>
+	<name>Remoting converter server</name>
 	<dependencies>
 		<dependency>
 			<groupId>org.apache.cxf</groupId>

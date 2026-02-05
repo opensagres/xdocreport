@@ -7,8 +7,8 @@
 	</parent>
 
 	<artifactId>fr.opensagres.xdocreport.document.tools</artifactId>
+	<name>Document tools module</name>
 	<build>
-
 		<plugins>
 			<plugin>
 				<artifactId>maven-assembly-plugin</artifactId>

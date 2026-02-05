@@ -6,6 +6,7 @@
 		<version>2.1.3-SNAPSHOT</version>
 	</parent>
   <artifactId>fr.opensagres.xdocreport.remoting.api</artifactId>
+  <name>Remoting API</name>
   <dependencies>
 
     <!-- API (non transitive depdendencies) -->

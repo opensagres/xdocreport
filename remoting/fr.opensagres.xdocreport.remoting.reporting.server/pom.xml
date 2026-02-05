@@ -6,6 +6,7 @@
 		<version>2.0.7-SNAPSHOT</version>
 	</parent>
 	<artifactId>fr.opensagres.xdocreport.remoting.reporting.server</artifactId>
+	<name>Remoting reporting server</name>
 	<dependencies>
 		<dependency>
 			<groupId>org.apache.cxf</groupId>

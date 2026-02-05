@@ -6,6 +6,7 @@
     <version>2.0.7-SNAPSHOT</version>
   </parent>
   <artifactId>fr.opensagres.poi.xwpf.converter.pdf.itext5</artifactId>
+  <name>Converter pdf iText5</name>
   <dependencies>
 		<dependency>
 			<groupId>fr.opensagres.xdocreport</groupId>

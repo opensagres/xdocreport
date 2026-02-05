@@ -6,6 +6,7 @@
     <version>2.0.7-SNAPSHOT</version>
   </parent>
   <artifactId>fr.opensagres.xdocreport.openoffice.tools</artifactId>
+  <name>Openoffice tools</name>
   <build>
     <finalName>${artifactId}</finalName>
     <directory>dist</directory>

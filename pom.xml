@@ -2,7 +2,6 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>fr.opensagres.xdocreport</groupId>
 	<artifactId>xdocreport-parent</artifactId>
-	<name>Root module</name>
 	<version>2.1.3-SNAPSHOT</version>
 	<packaging>pom</packaging>
 	<description>XDocReport means XML Document reporting. It's Java API to merge XML document created with MS Office (docx) or OpenOffice (odt), LibreOffice (odt) with a Java model to generate report and convert it if you need to another format (PDF, XHTML...).</description>

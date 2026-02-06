@@ -19,7 +19,7 @@ jobs:
         with:
           java-version: '8'
           distribution: 'temurin'
-          server-id: sonatype-nexus-staging
+          server-id: central
           server-username: MAVEN_USERNAME
           server-password: MAVEN_PASSWORD
           gpg-private-key: ${{ secrets.MAVEN_GPG_PRIVATE_KEY }}

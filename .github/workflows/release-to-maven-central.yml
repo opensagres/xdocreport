@@ -2,15 +2,20 @@ name: Release to maven central
 on:
   workflow_dispatch:
     inputs:
-      releaseversion:
-        description: 'Release version'
+      releaseVersion:
+        description: "Default version to use when preparing a release."
         required: true
-        default: '2.0.7'
+        default: "X.Y.Z"
+      developmentVersion:
+        description: "Default version to use for new local working copy."
+        required: true
+        default: "X.Y.Z-SNAPSHOT"
+
 jobs:
   publish:
     runs-on: ubuntu-latest
     steps:
-      - run: echo "Will start a Maven Central upload with version ${{ github.event.inputs.releaseversion }}"
+      - run: echo "Release the project and upload to Maven Central"
 
       - uses: actions/checkout@v3
 
@@ -25,12 +30,15 @@ jobs:
           gpg-private-key: ${{ secrets.MAVEN_GPG_PRIVATE_KEY }}
           gpg-passphrase: MAVEN_GPG_PASSPHRASE
 
-      - name: Set projects Maven version to GitHub Action GUI set version
-        run: mvn versions:set "-DnewVersion=${{ github.event.inputs.releaseversion }}"
-
-      - name: Publish package
-        run: mvn --batch-mode clean deploy -DskipTests=true
+      - name: Release project and publish to Maven Central
         env:
           MAVEN_USERNAME: ${{ secrets.OSS_SONATYPE_USERNAME }}
           MAVEN_PASSWORD: ${{ secrets.OSS_SONATYPE_PASSWORD }}
           MAVEN_GPG_PASSPHRASE: ${{ secrets.MAVEN_GPG_PASSPHRASE }}
+        shell: bash
+        run: |
+          mvn --batch-mode \
+            -DdryRun=true \
+            -DpushChanges=false \
+            release:prepare \
+            release:perform

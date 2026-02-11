@@ -6,6 +6,7 @@
 		<version>2.0.7-SNAPSHOT</version>
 	</parent>
 	<artifactId>fr.opensagres.poi.xwpf.converter.xhtml</artifactId>
+	<name>XWPF to XHTML converter module</name>
 	<dependencies>
 		<dependency>
 			<groupId>fr.opensagres.xdocreport</groupId>

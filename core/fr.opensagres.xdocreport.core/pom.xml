@@ -6,6 +6,7 @@
 		<version>2.0.7-SNAPSHOT</version>
 	</parent>
 	<artifactId>fr.opensagres.xdocreport.core</artifactId>
+	<name>Core module</name>
 	<dependencies>
 		<dependency>
 			<groupId>log4j</groupId>

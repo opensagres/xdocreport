@@ -6,6 +6,7 @@
 		<version>2.0.7-SNAPSHOT</version>
 	</parent>
 	<artifactId>fr.opensagres.xdocreport.itext.extension</artifactId>
+	<name>iText extension</name>
 	<dependencies>
 		<dependency>
 			<groupId>com.lowagie</groupId>

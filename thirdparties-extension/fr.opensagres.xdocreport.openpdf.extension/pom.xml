@@ -6,6 +6,7 @@
 		<version>2.0.7-SNAPSHOT</version>
 	</parent>
 	<artifactId>fr.opensagres.xdocreport.openpdf.extension</artifactId>
+	<name>Openpdf extension</name>
 	<dependencies>
 		<dependency>
 			<groupId>com.github.librepdf</groupId>

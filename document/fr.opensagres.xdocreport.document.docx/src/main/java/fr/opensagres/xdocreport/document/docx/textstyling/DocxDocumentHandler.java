@@ -34,18 +34,13 @@ import fr.opensagres.xdocreport.document.preprocessor.sax.BufferedElement;
 import fr.opensagres.xdocreport.document.textstyling.AbstractDocumentHandler;
 import fr.opensagres.xdocreport.document.textstyling.properties.Color;
 import fr.opensagres.xdocreport.document.textstyling.properties.ContainerProperties;
-import fr.opensagres.xdocreport.document.textstyling.properties.HeaderProperties;
-import fr.opensagres.xdocreport.document.textstyling.properties.ListItemProperties;
-import fr.opensagres.xdocreport.document.textstyling.properties.ListProperties;
-import fr.opensagres.xdocreport.document.textstyling.properties.ParagraphProperties;
-import fr.opensagres.xdocreport.document.textstyling.properties.SpanProperties;
-import fr.opensagres.xdocreport.document.textstyling.properties.TableCellProperties;
 import fr.opensagres.xdocreport.document.textstyling.properties.TableProperties;
-import fr.opensagres.xdocreport.document.textstyling.properties.TableRowProperties;
 import fr.opensagres.xdocreport.document.textstyling.properties.TextAlignment;
 import fr.opensagres.xdocreport.template.IContext;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Stack;
 
 /**
@@ -69,7 +64,7 @@ public class DocxDocumentHandler
 
     private Stack<ContainerProperties> paragraphsStack;
 
-    private Stack<SpanProperties> spansStack;
+    private Stack<ContainerProperties> spansStack;
 
     private HyperlinkRegistry hyperlinkRegistry;
 
@@ -108,7 +103,7 @@ public class DocxDocumentHandler
         this.subscripting = false;
         this.superscripting = false;
         this.paragraphsStack = new Stack<ContainerProperties>();
-        this.spansStack = new Stack<SpanProperties>();
+        this.spansStack = new Stack<ContainerProperties>();
         this.addLineBreak = 0;
     }
 
@@ -233,7 +228,7 @@ public class DocxDocumentHandler
             boolean subscript = subscripting;
             boolean superscript = superscripting;
             Color color = null;
-            SpanProperties properties = getCurrentSpanProperties();
+            ContainerProperties properties = getCurrentProperties();
             if ( properties != null )
             {
                 // override properties declared in the span.
@@ -359,7 +354,7 @@ public class DocxDocumentHandler
         }
     }
 
-    public void startParagraph( ParagraphProperties properties )
+    public void startParagraph( ContainerProperties properties )
         throws IOException
     {
         processPageBreakBefore( properties );
@@ -410,7 +405,7 @@ public class DocxDocumentHandler
         processPageBreakAfter( paragraphsStack.pop() );
     }
 
-    public void startListItem( ListItemProperties properties )
+    public void startListItem( ContainerProperties properties )
         throws IOException
     {
         // Close current paragraph
@@ -517,7 +512,7 @@ public class DocxDocumentHandler
         // endParagraph();
     }
 
-    public void startHeading( int level, HeaderProperties properties )
+    public void startHeading( int level, ContainerProperties properties )
         throws IOException
     {
         // Close current paragraph
@@ -543,7 +538,7 @@ public class DocxDocumentHandler
         insideHeader = false;
     }
 
-    public void startSpan( SpanProperties properties )
+    public void startSpan( ContainerProperties properties )
         throws IOException
     {
         spansStack.push( properties );
@@ -557,11 +552,30 @@ public class DocxDocumentHandler
         // super.write( "</w:r>" );
     }
 
-    private SpanProperties getCurrentSpanProperties()
+    /**
+     * Collects all active span properties
+     * @return
+     */
+    private ContainerProperties getCurrentProperties()
     {
         if ( !spansStack.isEmpty() )
         {
-            return spansStack.peek();
+            // block elements first, then inline elements
+            List<ContainerProperties> propertiesList = new ArrayList<ContainerProperties>(paragraphsStack);
+            propertiesList.addAll( spansStack );
+            ContainerProperties result = null;
+            for (ContainerProperties properties : propertiesList)
+            {
+                if (result == null)
+                {
+                    result = properties;
+                }
+                else
+                {
+                    result = ContainerProperties.combine( result, properties );
+                }
+            }
+            return result;
         }
         return null;
     }
@@ -573,7 +587,7 @@ public class DocxDocumentHandler
     }
 
     @Override
-    protected void doStartOrderedList( ListProperties properties )
+    protected void doStartOrderedList( ContainerProperties properties )
         throws IOException
     {
     	if(this.addLineBreak>0)
@@ -593,7 +607,7 @@ public class DocxDocumentHandler
     }
 
     @Override
-    protected void doStartUnorderedList( ListProperties properties )
+    protected void doStartUnorderedList( ContainerProperties properties )
         throws IOException
     {
     	if(this.addLineBreak>0)
@@ -767,7 +781,7 @@ public class DocxDocumentHandler
         super.write( "<w:p/>" );
     }
 
-    public void doStartTableRow( TableRowProperties properties )
+    public void doStartTableRow( ContainerProperties properties )
         throws IOException
     {
         super.write( "<w:tr>" );
@@ -779,7 +793,7 @@ public class DocxDocumentHandler
         super.write( "</w:tr>" );
     }
 
-    public void doStartTableCell( TableCellProperties properties )
+    public void doStartTableCell( ContainerProperties properties )
         throws IOException
     {
         super.write( "<w:tc>" );

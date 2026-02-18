@@ -297,7 +297,7 @@ public class HTMLTextStylingContentHandler
             else if ( TD_ELT.equals( name ) )
             {
                 // <td>
-                TableCellProperties properties = StylesHelper.createTableCellProperties( attributes );
+                TableCellProperties properties = StylesHelper.createTableCellProperties(attributes.getValue(STYLE_ATTR));
                 documentHandler.startTableCell( properties );
 			}
             else if (TH_ELT.equals(name))

@@ -69,6 +69,8 @@ public class DocxDocumentHandler
 
     private Stack<ContainerProperties> paragraphsStack;
 
+    private Stack<Boolean> tableStack;
+
     private Stack<SpanProperties> spansStack;
 
     private HyperlinkRegistry hyperlinkRegistry;
@@ -110,6 +112,7 @@ public class DocxDocumentHandler
         this.paragraphsStack = new Stack<ContainerProperties>();
         this.spansStack = new Stack<SpanProperties>();
         this.addLineBreak = 0;
+        this.tableStack = new Stack<Boolean>();
     }
 
     public void endDocument()
@@ -329,10 +332,8 @@ public class DocxDocumentHandler
     private void startParagraphIfNeeded()
         throws IOException
     {
-
-        if ( paragraphWasInserted && paragraphsStack.isEmpty() )
-        {
-            internalStartParagraph( null );
+        if (((paragraphWasInserted || !tableStack.isEmpty()) && paragraphsStack.isEmpty())) {
+            internalStartParagraph(null);
         }
     }
 
@@ -748,6 +749,8 @@ public class DocxDocumentHandler
         // w:tblGrid
         // that's here temp writer is used.
         pushTempWriter();
+        //Control if inside table
+        tableStack.push(true);
     }
 
     public void doEndTable( TableProperties properties )
@@ -764,7 +767,8 @@ public class DocxDocumentHandler
         popTempWriter( startTable.toString() );
         super.write( "</w:tbl>" );
         // if table is inside a table cell, a paragraph is required.
-        super.write( "<w:p/>" );
+        super.write("<w:p/>");
+        tableStack.pop();
     }
 
     public void doStartTableRow( TableRowProperties properties )
@@ -786,14 +790,16 @@ public class DocxDocumentHandler
         /*
          * super.write( "<w:tcPr>" ); super.write( "<w:tcW w:w=\"0\" w:type=\"auto\" />" ); super.write( "</w:tcPr>" );
          */
-        internalStartParagraph( null );
+        if (properties != null) {
+            internalStartParagraph(properties);
+        }
 
     }
 
     public void doEndTableCell()
-        throws IOException
+            throws IOException
     {
-        endParagraph();
+        endParagraphIfNeeded();
         super.write( "</w:tc>" );
     }
 

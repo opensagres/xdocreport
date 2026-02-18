@@ -28,6 +28,7 @@ import java.util.Collection;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
+
 public class BasicXDocReportDispatcher<T extends IXDocReportController>
     extends AbstractXDocReportDispatcher<T>
 {
@@ -46,22 +47,17 @@ public class BasicXDocReportDispatcher<T extends IXDocReportController>
 
     public void register( String reportId, T controller )
     {
-
-        controllersMap.put( reportId, controller );
+        controllersMap.put(reportId, controller);
     }
 
-    public void unregister( T controller )
+    public void unregister( final T controller )
     {
-        controllersMap.remove( controller );
+        controllersMap.values().remove(controller);
     }
 
     public void unregister( String reportId )
     {
-        T controller = controllersMap.get( reportId );
-        if ( controller != null )
-        {
-            unregister( controller );
-        }
+        controllersMap.remove( reportId );
     }
 
     public Collection<T> getControllers()

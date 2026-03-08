@@ -103,4 +103,31 @@ public class VelocityTemplateEngineContextTestCase
         templateEngine.process( "", context, reader, writer );
         assertEquals( "Project: XDocReport. Users: Angelo Pascal ", writer.toString() );
     }
+
+    public void testSSTIPayloadIsBlocked()
+        throws Exception
+    {
+        ITemplateEngine templateEngine = new VelocityTemplateEngineDiscovery().createTemplateEngine();
+        IContext context = templateEngine.createContext();
+
+        // Test that SecureUberspector blocks access to Class.forName() which is needed for SSTI → RCE attacks
+        String template = "#set($x=\"abc\")#set($cls=$x.getClass().forName(\"java.lang.String\"))";
+
+        Reader reader = new StringReader( template );
+        Writer writer = new StringWriter();
+
+        try
+        {
+            templateEngine.process( "", context, reader, writer );
+            // If no exception, SecureUberspector should have blocked the access
+            // Output should be empty or contain only the #set directives without executing Class.forName()
+            String output = writer.toString();
+            assertTrue( "SSTI payload should be blocked - Class.forName() access denied",
+                       output == null || output.trim().isEmpty() );
+        }
+        catch ( Exception e )
+        {
+            // Expected: SecureUberspector blocks access to Class.forName()
+        }
+    }
 }

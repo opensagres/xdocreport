@@ -98,6 +98,23 @@ public class VelocityTemplateEngineDiscovery
         // When using an invalid reference handler, also include tested references
         velocityEngineProperties.setProperty( "event_handler.invalid_references.tested", "true" );
 
+        // Security: enable SecureUberspector by default to mitigate SSTI → RCE attacks,
+        // while still allowing applications to override this in their own properties.
+        if ( !velocityEngineProperties.containsKey( "runtime.introspector.uberspect" ) )
+        {
+            velocityEngineProperties.setProperty( "runtime.introspector.uberspect",
+                                                  "org.apache.velocity.util.introspection.SecureUberspector" );
+        }
+        if ( !velocityEngineProperties.containsKey( "introspector.restrict.packages" ) )
+        {
+            velocityEngineProperties.setProperty( "introspector.restrict.packages", "java.lang.reflect" );
+        }
+        if ( !velocityEngineProperties.containsKey( "introspector.restrict.classes" ) )
+        {
+            velocityEngineProperties.setProperty( "introspector.restrict.classes",
+                                                  "java.lang.Class, java.lang.ClassLoader, java.lang.Compiler, java.lang.InheritableThreadLocal, java.lang.Package, java.lang.Process, java.lang.Runtime, java.lang.RuntimePermission, java.lang.SecurityManager, java.lang.System, java.lang.Thread, java.lang.ThreadGroup, java.lang.ThreadLocal" );
+        }
+
         if ( xDocReportDefaultProperties != null )
         {
             // Use custom xdocreport-velocity.properties.

@@ -350,7 +350,8 @@ public class ExtendedPdfPTable
             PdfPCell cell = (PdfPCell)aboveRow.getCells()[colCursor];
             if (cell != null) {
                 //there's a cell 'across', check if it is colspanned to cover index
-                return (cell.getColspan() + colCursor >= indexFrom) ? cell : null;
+                // zero-based coverage: [colCursor, colCursor + colspan - 1]
+                return (cell.getColspan() + colCursor > indexFrom) ? cell : null;
             }
             colCursor--;
         }

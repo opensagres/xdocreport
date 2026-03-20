@@ -60,7 +60,8 @@ public class TableCellWidthValueProvider
         boolean percentUnit = ( STTblWidth.INT_PCT == tblWidth.getType().intValue() );
         if ( percentUnit )
         {
-            width = width / 100f;
+            // OOXML pct width is expressed in fiftieths of a percent.
+            width = width / 50f;
         }
         else
         {

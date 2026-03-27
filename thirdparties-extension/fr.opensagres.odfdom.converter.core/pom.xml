@@ -11,7 +11,7 @@
 		<dependency>
 			<groupId>org.odftoolkit</groupId>
 			<artifactId>odfdom-java</artifactId>
-			<version>0.8.7</version>
+			<version>0.13.0</version>
 		</dependency>
 	</dependencies>
 </project>

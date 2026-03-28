@@ -86,23 +86,28 @@ public class StylableTable
         inTableHeaderRows = false;
     }
 
-    private void fitCellIntoSpansFromAbove(PdfPCell cell) {
-        int rowSpan = cell.getRowspan();
-        int colSpan = cell.getColspan();
 
-        // skip all the cell places already spanned from above
+    private void skipSpannedFromAbove(){
+        // skips all the cell places already spanned from above
         do {
             if (spansFromAboveIdx < getNumberOfColumns() && spansFromAbove[spansFromAboveIdx] > 0) {
                 spansFromAbove[spansFromAboveIdx]--;
                 spansFromAboveIdx++;
             }
             if (spansFromAboveIdx >= getNumberOfColumns()) {
-                // we have no more place in the current row; finish it up, and start a new one
+                // we have no more place in the current row; finish it up,
                 endTableRow();
-                beginTableRow(currentRowStyle);
             }
         }
-        while (spansFromAbove[spansFromAboveIdx] > 0);
+        while (!reachedEndOfRow() && spansFromAbove[spansFromAboveIdx] > 0);
+    }
+
+    private void fitCellIntoSpansFromAbove(PdfPCell cell) {
+        int rowSpan = cell.getRowspan();
+        int colSpan = cell.getColspan();
+
+        // skip all the cell places already spanned from above
+        skipSpannedFromAbove();
 
         for (int col = 0; col < colSpan; col++){
             if (spansFromAbove[spansFromAboveIdx] > 0){
@@ -113,6 +118,9 @@ public class StylableTable
             }
             spansFromAboveIdx++;
         }
+
+        // skip all the cell places already spanned from above
+        skipSpannedFromAbove();
     }
 
     private boolean reachedEndOfRow(){

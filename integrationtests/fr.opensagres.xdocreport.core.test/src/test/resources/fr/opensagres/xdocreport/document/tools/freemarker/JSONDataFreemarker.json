@@ -1,6 +1,0 @@
-{project: {name: "XDocReport"},
- developpers: [
- 	{name: "Angelo", lastName: "ZERR"},
- 	{name: "Pascal", lastName: "Leclerq"},
- ]	
-}

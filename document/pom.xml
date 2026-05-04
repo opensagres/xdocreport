@@ -12,24 +12,9 @@
 	</parent>
 	<packaging>pom</packaging>
 	<modules>
-	
-		<!-- API XDocReport Document-->		
+		<!-- API XDocReport Document -->
 		<module>fr.opensagres.xdocreport.document</module>
-		
-		<!-- XDocReport MS Word Document implementation -->
-		<module>fr.opensagres.xdocreport.document.docx</module>
-		<module>fr.opensagres.xdocreport.document.pptx</module>
-		
-		<!-- XDocReport Open Office implementation -->
+		<!-- XDocReport Open Office ODT (streaming) implementation -->
 		<module>fr.opensagres.xdocreport.document.odt</module>
-		<module>fr.opensagres.xdocreport.document.ods</module>
-		<module>fr.opensagres.xdocreport.document.odp</module>
-		
-		<!-- XDocReport Document Tools -->
-		<module>fr.opensagres.xdocreport.document.tools</module>
-		
-		<!-- Wiki Text Styling  -->
-		<module>fr.opensagres.xdocreport.document.textstyling.wiki</module>
-								
 	</modules>
 </project>

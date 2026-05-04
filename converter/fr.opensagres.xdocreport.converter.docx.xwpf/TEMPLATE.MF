@@ -1,8 +1,0 @@
-Fragment-Host: fr.opensagres.xdocreport.converter
-Import-Package: fr.opensagres.poi.xwpf.converter.core,
- fr.opensagres.poi.xwpf.converter.pdf,
- fr.opensagres.poi.xwpf.converter.xhtml,
- org.apache.poi.xwpf.usermodel,
- fr.opensagres.xdocreport.core.utils
-DynamicImport-Package: *
-

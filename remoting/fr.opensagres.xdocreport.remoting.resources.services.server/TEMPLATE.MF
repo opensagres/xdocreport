@@ -1,2 +1,0 @@
-Import-Package: *,com.fasterxml.jackson.jakarta.rs
-Bundle-Activator: fr.opensagres.xdocreport.remoting.resources.services.server.jaxrs.internal.Activator

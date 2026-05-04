@@ -12,9 +12,5 @@
 	<modules>
 		<!-- XDocReport Converter API -->
 		<module>fr.opensagres.xdocreport.converter</module>
-		<!-- XDocReport Converter Default implementation -->
-		<module>fr.opensagres.xdocreport.converter.docx.xwpf</module>
-		<module>fr.opensagres.xdocreport.converter.odt.odfdom</module>
-		<module>fr.opensagres.xdocreport.converter.docx.docx4j</module>		
 	</modules>
 </project>

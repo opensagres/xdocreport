@@ -1,6 +1,0 @@
-Fragment-Host: fr.opensagres.xdocreport.converter
-Import-Package: org.docx4j.convert.out.pdf.viaXSLFO,
- org.docx4j.openpackaging.packages,
- org.docx4j.convert.out.html,
- fr.opensagres.xdocreport.core.utils
-

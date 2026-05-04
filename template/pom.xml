@@ -13,7 +13,6 @@
 		<module>fr.opensagres.xdocreport.template</module>
 		<!-- XDocReport Template implementation -->
 		<module>fr.opensagres.xdocreport.template.freemarker</module>
-		<module>fr.opensagres.xdocreport.template.velocity</module>
 	</modules>
 	<dependencies>
 		<dependency>

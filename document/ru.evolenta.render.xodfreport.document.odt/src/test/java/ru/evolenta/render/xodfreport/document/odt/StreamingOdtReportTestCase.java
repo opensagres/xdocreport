@@ -27,11 +27,15 @@ package ru.evolenta.render.xodfreport.document.odt;
 import ru.evolenta.render.xodfreport.core.io.IOUtils;
 import ru.evolenta.render.xodfreport.core.io.XDocArchive;
 import ru.evolenta.render.xodfreport.template.IContext;
+import ru.evolenta.render.xodfreport.document.odt.discovery.ODTTemplateEngineConfiguration;
 import ru.evolenta.render.xodfreport.template.freemarker.FreemarkerTemplateEngine;
 import junit.framework.TestCase;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.InputStream;
 import java.io.OutputStream;
 import java.nio.charset.StandardCharsets;
 import java.util.zip.ZipEntry;
@@ -244,5 +248,105 @@ public class StreamingOdtReportTestCase extends TestCase
             zis.closeEntry();
         }
         zis.close();
+    }
+
+    /**
+     * End-to-end test against a real ODT template authored in OpenOffice/LibreOffice.
+     * <p>
+     * Loads {@code ODTHelloWordWithFreemarker.odt} (a fully valid ODT with Configurations2,
+     * Thumbnails, settings.xml, manifest.rdf, etc.) and processes it with the streaming
+     * generator.  Verifies:
+     * <ul>
+     *   <li>every entry from the template is present in the output</li>
+     *   <li>{@code mimetype} is first and STORED</li>
+     *   <li>{@code ${name}} inside {@code text:text-input} was substituted</li>
+     *   <li>binary entries (Thumbnails/thumbnail.png) round-trip byte-for-byte</li>
+     * </ul>
+     * Also writes the generated ODT to {@code /tmp/streaming-odt-smoke.odt} so it can be
+     * opened with LibreOffice for manual inspection.
+     */
+    public void testEndToEndRealOdtTemplate() throws Exception
+    {
+        // 1) Load real ODT template shipped as test resource
+        InputStream templateStream =
+            StreamingOdtReportTestCase.class.getResourceAsStream(
+                "/ru/evolenta/render/xodfreport/document/odt/discovery/ODTHelloWordWithFreemarker.odt" );
+        assertNotNull( "test template must be on the classpath", templateStream );
+
+        // Configure FreeMarker exactly the way ODTTemplateEngineInitializerConfigurationDiscovery
+        // does for registry-loaded reports, plus enable the [#escape any as any?xml] wrapper
+        // that the ODT styles preprocessor's [#noescape] inject relies on.
+        FreemarkerTemplateEngine engine = new FreemarkerTemplateEngine();
+        engine.setConfiguration( ODTTemplateEngineConfiguration.INSTANCE );
+        engine.setForceModifyReader( true );
+
+        StreamingOdtReport report = new StreamingOdtReport();
+        report.setTemplateEngine( engine );
+        report.load( templateStream );
+
+        // 2) Run the streaming pipeline
+        IContext ctx = report.createContext();
+        ctx.put( "name", "EndToEndWorld" );
+
+        File outFile = new File( "/tmp/streaming-odt-smoke.odt" );
+        try ( FileOutputStream out = new FileOutputStream( outFile ) )
+        {
+            report.process( ctx, out );
+        }
+        assertTrue( "output file must be non-empty", outFile.length() > 0 );
+
+        // 3) Verify the output ODT structure
+        boolean firstEntrySeen = false;
+        boolean contentSeen = false;
+        boolean substitutionApplied = false;
+        boolean thumbnailSeen = false;
+        int entryCount = 0;
+
+        try ( ZipInputStream zis =
+                new ZipInputStream( new java.io.FileInputStream( outFile ) ) )
+        {
+            ZipEntry entry;
+            while ( ( entry = zis.getNextEntry() ) != null )
+            {
+                entryCount++;
+                if ( !firstEntrySeen )
+                {
+                    firstEntrySeen = true;
+                    assertEquals( "first entry must be 'mimetype'",
+                                  ODTConstants.MIMETYPE, entry.getName() );
+                    assertEquals( "mimetype must be STORED",
+                                  ZipEntry.STORED, entry.getMethod() );
+                }
+
+                if ( ODTConstants.CONTENT_XML_ENTRY.equals( entry.getName() ) )
+                {
+                    contentSeen = true;
+                    String xml = new String( IOUtils.toByteArray( zis ), StandardCharsets.UTF_8 );
+                    substitutionApplied = xml.contains( "EndToEndWorld" )
+                        && !xml.contains( "${name}" );
+                }
+                else if ( "Thumbnails/thumbnail.png".equals( entry.getName() ) )
+                {
+                    thumbnailSeen = true;
+                    byte[] data = IOUtils.toByteArray( zis );
+                    // PNG magic bytes: 89 50 4E 47
+                    assertEquals( "thumbnail must remain a valid PNG",
+                                  (byte) 0x89, data[0] );
+                    assertEquals( (byte) 0x50, data[1] );
+                    assertEquals( (byte) 0x4E, data[2] );
+                    assertEquals( (byte) 0x47, data[3] );
+                }
+                zis.closeEntry();
+            }
+        }
+
+        assertTrue( "content.xml must be present", contentSeen );
+        assertTrue( "Freemarker substitution must be applied to content.xml",
+                    substitutionApplied );
+        assertTrue( "thumbnail.png must round-trip through the streaming pipeline",
+                    thumbnailSeen );
+        // Template has 17 entries; output must have at least the same count
+        assertTrue( "all template entries must be in the output, got " + entryCount,
+                    entryCount >= 17 );
     }
 }

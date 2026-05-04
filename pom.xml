@@ -4,12 +4,7 @@
 	<artifactId>xodfreport-parent</artifactId>
 	<version>2.2.1-SNAPSHOT</version>
 	<packaging>pom</packaging>
-	<description>XDocReport means XML Document reporting. It's Java API to merge XML document created with MS Office (docx) or OpenOffice (odt), LibreOffice (odt) with a Java model to generate report and convert it if you need to another format (PDF, XHTML...).</description>
-	<parent>
-		<groupId>org.sonatype.oss</groupId>
-		<artifactId>oss-parent</artifactId>
-		<version>9</version>
-	</parent>
+	<description>Streaming ODT report generator on top of FreeMarker. A focused fork of XDocReport reduced to ODT + FreeMarker only, with a streaming process() path that does not allocate a per-request copy of the preprocessed archive.</description>
 
 	<licenses>
 		<license>
@@ -25,15 +20,6 @@
 	<build>
 		<defaultGoal>install</defaultGoal>
 		<plugins>
-                       <plugin>
-                             <groupId>org.sonatype.central</groupId>
-                             <artifactId>central-publishing-maven-plugin</artifactId>
-                             <version>0.9.0</version>
-                             <extensions>true</extensions>
-                             <configuration>
-                                  <publishingServerId>central</publishingServerId>
-                             </configuration>
-                        </plugin>
 			<plugin>
 				<artifactId>maven-compiler-plugin</artifactId>
 				<configuration>
@@ -179,49 +165,10 @@
 		</pluginManagement>
 	</build>
 
-	<developers>
-		<developer>
-			<id>angelozerr</id>
-			<name>Angelo Zerr</name>
-			<email>angelo.zerr@gmail.com</email>
-			<roles>
-				<role>architect</role>
-				<role>developper</role>
-			</roles>
-			<timezone>+1</timezone>
-		</developer>
-		<developer>
-			<id>pascalleclercq</id>
-			<name>Pascal Leclercq</name>
-			<email>pascal.leclercq@gmail.com</email>
-			<roles>
-				<role>developper</role>
-			</roles>
-			<timezone>+1</timezone>
-		</developer>
-		<developer>
-			<id>aminebousta</id>
-			<name>Amine Bousta</name>
-			<email>abousta@gmail.com</email>
-			<roles>
-				<role>developper</role>
-			</roles>
-			<timezone>+1</timezone>
-		</developer>
-		<developer>
-			<id>tiry</id>
-			<name>Thierry Delprat</name>
-			<email>tdelprat@nuxeo.com</email>
-			<roles>
-				<role>developper</role>
-			</roles>
-			<timezone>+1</timezone>
-		</developer>
-	</developers>
 	<scm>
-		<connection>scm:git:git@github.com:opensagres/xdocreport.git</connection>
-		<developerConnection>scm:git:git@github.com:opensagres/xdocreport.git</developerConnection>
-		<url>https://github.com/opensagres/xdocreport/</url>
+		<connection>scm:git:git@github.com:SergeyLizin/xodtreport.git</connection>
+		<developerConnection>scm:git:git@github.com:SergeyLizin/xodtreport.git</developerConnection>
+		<url>https://github.com/SergeyLizin/xodtreport/</url>
 		<tag>HEAD</tag>
 	</scm>
 	<modules>
@@ -240,23 +187,12 @@
 	</dependencies>
 	<issueManagement>
 		<system>GitHub</system>
-		<url>https://github.com/opensagres/xdocreport/issues</url>
+		<url>https://github.com/SergeyLizin/xodtreport/issues</url>
 	</issueManagement>
-	<url>https://github.com/opensagres/xdocreport/</url>
-	<name>XDocReport</name>
+	<url>https://github.com/SergeyLizin/xodtreport</url>
+	<name>xodfreport</name>
 	<ciManagement>
-		<system>Jenkins</system>
-		<url>https://opensagres.ci.cloudbees.com/job/xdocreport/</url>
-		<notifiers>
-			<notifier>
-				<address>pascal.leclercq@gmail.com</address>
-			</notifier>
-			<notifier>
-				<address>angelo.zerr@gmail.com</address>
-			</notifier>
-			<notifier>
-				<address>tdelprat@nuxeo.com</address>
-			</notifier>
-		</notifiers>
+		<system>GitHub Actions</system>
+		<url>https://github.com/SergeyLizin/xodtreport/actions</url>
 	</ciManagement>
 </project>

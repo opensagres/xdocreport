@@ -3,7 +3,7 @@
 	
 	<artifactId>document</artifactId>
 	
-	<name>XDocReport Document Component</name>
+	<name>xodfreport document</name>
 	<parent>
 		<groupId>ru.evolenta.render.xodfreport</groupId>
 		<artifactId>xodfreport-parent</artifactId>
@@ -12,9 +12,9 @@
 	</parent>
 	<packaging>pom</packaging>
 	<modules>
-		<!-- API XDocReport Document -->
+		<!-- Document framework -->
 		<module>ru.evolenta.render.xodfreport.document</module>
-		<!-- XDocReport Open Office ODT (streaming) implementation -->
+		<!-- Streaming ODT implementation -->
 		<module>ru.evolenta.render.xodfreport.document.odt</module>
 	</modules>
 </project>

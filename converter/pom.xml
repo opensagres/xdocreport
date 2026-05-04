@@ -1,7 +1,7 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 	<artifactId>converter</artifactId>
-	<name>XDocReport Converter implementation</name>
+	<name>xodfreport converter API</name>
 	<parent>
 		<groupId>ru.evolenta.render.xodfreport</groupId>
 		<artifactId>xodfreport-parent</artifactId>
@@ -10,7 +10,7 @@
 	</parent>
 	<packaging>pom</packaging>
 	<modules>
-		<!-- XDocReport Converter API -->
+		<!-- Converter API -->
 		<module>ru.evolenta.render.xodfreport.converter</module>
 	</modules>
 </project>

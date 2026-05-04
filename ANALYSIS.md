@@ -95,3 +95,61 @@
 | Альтернативы Java + ODT + Freemarker | **только XDocReport** (JODReports заброшен с 2011) |
 
 **Заключение.** XDocReport — единственная живая Java-библиотека на стыке ODT и Freemarker, но её внутренности оптимизированы под мультиформатность и in-memory обработку, а не под поток. Если ваша цель — узкий ODT-only с настоящим streaming, выгоднее не форкать XDocReport, а переиспользовать только Freemarker-формирователь (`FreemarkerDocumentFormatter` и квадратно-скобочный синтаксис) и идею SAX-распознавания `@before-row`/`@after-row`, переписав ядро архива и препроцессор поверх StAX и `ZipInputStream`/`ZipOutputStream`. Объём работы — порядка нескольких тысяч строк, что меньше, чем стоимость поддержки форка с вырезанием DOCX/PPTX/Velocity. Альтернативы вне Java (Relatorio, Carbone) реальны только при готовности уйти от Freemarker и in-process модели.
+
+---
+
+## Implementation status (post-refactor)
+
+Анализ выше — это **before**-состояние, описывавшее upstream XDocReport. Ниже — что реально получилось в этом репозитории.
+
+### 1. Прагматичный путь, не «с нуля»
+
+Решение: не переписывать ядро архива поверх StAX. Вместо этого: **точечно убрать самую дорогую операцию** в горячем пути — `outputArchive = preprocessedArchive.createCopy()` — и переиспользовать всю существующую SAX-инфраструктуру препроцессинга.
+
+Это даёт >80% выигрыша по памяти (одна копия архива вместо двух-трёх) при объёме работы ~250 LOC, а не 5–8 тысяч.
+
+### 2. Что добавлено
+
+**`StreamingOdtReport extends ODTReport`** — единственный новый класс (~250 LOC) в `document/.../document.odt/.../odt/StreamingOdtReport.java`. Override `process(IContext, String, OutputStream)`:
+
+1. Делает `preprocess()` (идемпотентно, кеширует preprocessedArchive один раз на инстанс отчёта).
+2. Открывает `ZipOutputStream` прямо поверх каллерского `OutputStream`.
+3. Пишет `mimetype` STORED (как требует ODF §2.2.1).
+4. Для XML-entries (`content.xml`/`styles.xml`/`META-INF/manifest.xml`) — `engine.process(reportId, entryName, preprocessedArchive, NonClosingWriter(zos), context)`. FreeMarker читает прямо из preprocessed-архива, пишет прямо в ZipOutputStream.
+5. Для остальных entries — `IOUtils.copy(preprocessedArchive.getEntryInputStream(name), zos)`.
+6. `zos.finish()` (НЕ `close()`, чтобы не закрыть каллерский поток).
+
+`NonClosingWriter` — `OutputStreamWriter`, у которого `close()` делает только `flush()`. Нужен потому что `AbstractTemplateEngine.process()` в `finally` закрывает writer; без обёртки это закрыло бы общий ZipOutputStream после первого entry.
+
+**Ограничение:** документы с динамическими image-полями (`FieldsMetadata.hasFieldsAsImage()=true`) прозрачно проваливаются на старый buffered путь `super.process(...)`. Image-постпроцессинг пишет новые файлы в outputArchive, что несовместимо со streaming.
+
+### 3. Что вычищено из репозитория
+
+| Было | Стало | LOC удалено |
+|------|------:|------------:|
+| Java-файлов | 253 | −1700 |
+| Java main LOC | ~32 000 | **−181 000+** (снято за два прохода чисток) |
+| Maven-агрегаторов верхнего уровня | 4 (`core`, `template`, `converter`, `document`) | −6 |
+| Листовых модулей | 6 | −19+ |
+
+Удалены целиком: `gae/`, `integrationtests/`, `remoting/`, `sandbox/`, `thirdparties-extension/`, `tools/`, `uberjar/`, `document.docx/.pptx/.ods/.odp/.tools/.textstyling.wiki`, `template.velocity`, `converter.docx.*`, `converter.odt.odfdom`.
+
+Удалены пакеты внутри оставшихся модулей: `document.web/.dump/.json/.sql/.dispatcher/.preprocessor.dom`, `internal/osgi/Activator` × 3 (core/template/document), сиротские `XDocReport.java`/`Generator.java`, методы `dump()`/`getDumper()` в `IXDocReport`/`AbstractXDocReport`, OSGi-обвязка (Felix bundle plugin, TEMPLATE.MF, build.properties × 6, m2e-профиль), зависимости `commons-fileupload2-*` и `jakarta.servlet-api` (нужны были только сервлетам).
+
+### 4. Смена namespace
+
+`fr.opensagres.xdocreport.*` → `ru.evolenta.render.xodfreport.*`. Покрывает: package-декларации Java, импорты, `Class.forName(...)` в `LogUtils`/`AbstractFieldsMetadataClassSerializer`, Maven groupId, имена директорий модулей и source-trees, файлы `META-INF/services/*` (и имена, и содержимое — критично, иначе `ServiceLoader` не находит провайдеров).
+
+### 5. Что НЕ сделано (из анализа)
+
+* StAX-препроцессор — нет. Препроцессинг по-прежнему через старый SAX-каркас (`BufferedDocument`/`TableRowBufferedRegion`/`TransformedBufferedDocumentContentHandler`). Streaming работает только в фазе генерации, не препроцессинга. Шаблон всё ещё разворачивается в память один раз при `load()`.
+* Полностью потоковое чтение zip из `InputStream` — нет, `XDocArchive.readZip(InputStream)` тот же.
+* `forceModifyReader=true` + escape-config не выставляются автоматически при ручном создании `StreamingOdtReport` — пользователь должен сам сконфигурировать `FreemarkerTemplateEngine` (как делает SPI `ODTTemplateEngineInitializerConfigurationDiscovery` для registry-пути). См. quick-start в README.
+
+### 6. Тестовое покрытие
+
+`StreamingOdtReportTestCase` — 6 тестов:
+* 5 на синтетическом 4-entry ODT (ZIP-валидность, mimetype-first-STORED, FreeMarker-substitution, идемпотентность повторных `process()`)
+* 1 end-to-end на реальном LibreOffice-сохранённом ODT (17 entries: Configurations2, Thumbnails/thumbnail.png, manifest.rdf, settings.xml, meta.xml). Проверяет round-trip байтов бинарных entries, отсутствие сырого `${name}` в выводе, валидность ZIP через `unzip -t`, наличие всех 17 entries.
+
+Reactor: `mvn clean install` за ~15 секунд, 78/78 зелёных.

@@ -44,45 +44,36 @@ import ru.evolenta.render.xodfreport.template.ITemplateEngine;
 import ru.evolenta.render.xodfreport.template.formatter.FieldsMetadata;
 
 /**
- * XML Document reporting used to load XML document (odt, docx...) and generate reporting by merging it with Java data
- * model by using a template engine {@link ITemplateEngine}.
- * <p>
- * To generate reporting, here steps to follow :
+ * Loads an ODT template and merges it with a Java model via a FreeMarker
+ * {@link ITemplateEngine} to produce a generated ODT document.
+ *
+ * <p>Typical usage:
  * <ol>
- * <li><b>Create an XML Document</b> (docx with MS Word, odt with Open Office) by writing your fields with syntax wich
- * depends on template engine :
- * <ul>
- * <li>with Freemarker : you can write Hello ${name}! in your docx, odt document.</li>
- * <li>with Velocity : you can write Hello $name! in your docx, odt document.</li>
- * </ul>
- * <li><b>Create an instance of {@link IXDocReport}</b> switch the type of the document:
- * <ul>
- * <li>for docx : <code>IXDocReport report = new ru.evolenta.render.xodfreport.document.docx.DocXReport();</code></li>
- * <li>for odt : <code>IXDocReport report = new ru.evolenta.render.xodfreport.document.odt.ODTReport();</code></li>
- * </ul>
- * </li> </li>
- * <li><b>Initialize template engine</b> by using {@link IXDocReport#setTemplateEngine(ITemplateEngine)} to set the
- * template engine (Velocity, Freemarker..) to use :
- * <ul>
- * <li>for freemarker :
- * <code>report.setTemplateEngine(net.sourceforge.rtf.template.freemarker.FreemarkerTemplateEngine.DEFAULT);</code></li>
- * <li>for velocity :
- * <code>report.setTemplateEngine(net.sourceforge.rtf.template.velocity.VelocityTemplateEngine.DEFAULT);</code></li>
- * </ul>
- * </li>
- * <li><b>Load XML Document</b> (odt, docx) by using {@link IXDocReport#load(InputStream)}.</li>
- * <li><b>Prepare your Java model</b> by calling {@link IXDocReport#createContext()} and put your Java model with
- * {@link IContext#put(String, Object)}. For instance :
- * <p>
- * <code>IContext context = report.createContext();
- * context.put("name", "word");</code></li>
- * </p>
- * </li> <li><b>Merge the docx, odt document with Java model</b> by calling
- * {@link IXDocReport#process(IContext, OutputStream)}. For instance :
- * <p>
- * <code>report.process(context, new FileOutputStream(new File("myfile.odt")));</code>
- * </p>
- * This method call will generate myfile.odt file wich will contains Hello word!</li> </ol> </p>
+ * <li>Author the template in OpenOffice / LibreOffice Writer; insert
+ *     fields as Input Fields ({@code Ctrl+F2}) using FreeMarker syntax,
+ *     e.g. {@code ${name}} or {@code [#list users as u] ... [/#list]}.</li>
+ * <li>Construct {@link ru.evolenta.render.xodfreport.document.odt.ODTReport}
+ *     (or {@link ru.evolenta.render.xodfreport.document.odt.StreamingOdtReport}
+ *     for the streaming output path).</li>
+ * <li>Configure the engine and {@link #setTemplateEngine(ITemplateEngine) attach it}:
+ *     <pre>
+ *     FreemarkerTemplateEngine engine = new FreemarkerTemplateEngine();
+ *     engine.setConfiguration( ODTTemplateEngineConfiguration.INSTANCE );
+ *     engine.setForceModifyReader( true );  // wraps each entry in [#escape any as any?xml]
+ *     report.setTemplateEngine( engine );
+ *     </pre></li>
+ * <li>{@link #load(InputStream) Load} the template ODT.</li>
+ * <li>{@link #createContext() Build a context}, populate it with your model:
+ *     <pre>
+ *     IContext context = report.createContext();
+ *     context.put( "name", "world" );
+ *     </pre></li>
+ * <li>{@link #process(IContext, OutputStream) Process} the report into an
+ *     output stream:
+ *     <pre>
+ *     report.process( context, new FileOutputStream( "report.odt" ) );
+ *     </pre></li>
+ * </ol>
  */
 public interface IXDocReport
     extends Serializable

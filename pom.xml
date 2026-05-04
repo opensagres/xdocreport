@@ -19,9 +19,7 @@
 		</license>
 	</licenses>
 	<properties>
-		<osgi-version-qualifier>${maven.build.timestamp}</osgi-version-qualifier>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-		<maven.build.timestamp.format>yyyyMMddHHmm</maven.build.timestamp.format>
 		<maven.compiler.release>17</maven.compiler.release>
 	</properties>
 	<build>
@@ -50,42 +48,6 @@
 					<!-- It's better to use "target" folder as basedir for tests... -->
 					<basedir>${project.build.directory}</basedir>
 					<redirectTestOutputToFile>true</redirectTestOutputToFile>
-				</configuration>
-			</plugin>
-			<plugin>
-				<artifactId>maven-jar-plugin</artifactId>
-				<configuration>
-					<archive>
-						<manifestFile>${project.build.outputDirectory}/META-INF/MANIFEST.MF</manifestFile>
-						<manifest>
-							<addDefaultImplementationEntries>true</addDefaultImplementationEntries>
-							<addDefaultSpecificationEntries>true</addDefaultSpecificationEntries>
-						</manifest>
-					</archive>
-				</configuration>
-			</plugin>
-			<plugin>
-				<groupId>org.apache.felix</groupId>
-				<artifactId>maven-bundle-plugin</artifactId>
-				<extensions>true</extensions>
-				<executions>
-					<execution>
-						<id>bundle-manifest</id>
-						<phase>process-classes</phase>
-						<goals>
-							<goal>manifest</goal>
-						</goals>
-					</execution>
-				</executions>
-				<configuration>
-					<!-- <unpackBundle>true</unpackBundle> -->
-					<instructions>
-						<_include>TEMPLATE.MF</_include>
-						<_snapshot>${osgi-version-qualifier}</_snapshot>
-						<_nouses>true</_nouses>
-						<Bundle-SymbolicName>${project.artifactId}</Bundle-SymbolicName>
-						<Bundle-RequiredExecutionEnvironment>JavaSE-17</Bundle-RequiredExecutionEnvironment>
-					</instructions>
 				</configuration>
 			</plugin>
 			<plugin>
@@ -193,11 +155,6 @@
 					</configuration>
 				</plugin>
 				<plugin>
-					<groupId>org.apache.felix</groupId>
-					<artifactId>maven-bundle-plugin</artifactId>
-					<version>5.1.9</version>
-				</plugin>
-				<plugin>
 					<artifactId>maven-compiler-plugin</artifactId>
 					<version>3.1</version>
 				</plugin>
@@ -280,12 +237,6 @@
 			<version>4.13.1</version>
 			<scope>test</scope>
 		</dependency>
-		<dependency>
-			<groupId>org.osgi</groupId>
-			<artifactId>org.osgi.core</artifactId>
-			<version>4.2.0</version>
-			<scope>provided</scope>
-		</dependency>
 	</dependencies>
 	<issueManagement>
 		<system>GitHub</system>
@@ -308,30 +259,4 @@
 			</notifier>
 		</notifiers>
 	</ciManagement>
-	<profiles>
-		<profile>
-			<activation>
-				<property>
-					<name>m2e.version</name>
-				</property>
-			</activation>
-			<properties>
-				<osgi-version-qualifier>qualifier</osgi-version-qualifier>
-			</properties>
-			<build>
-				<pluginManagement>
-					<plugins>
-						<plugin>
-							<groupId>org.apache.felix</groupId>
-							<artifactId>maven-bundle-plugin</artifactId>
-							<configuration>
-								<!-- PDE does not honour custom manifest location -->
-								<manifestLocation>META-INF</manifestLocation>
-							</configuration>
-						</plugin>
-					</plugins>
-				</pluginManagement>
-			</build>
-		</profile>
-	</profiles>
 </project>

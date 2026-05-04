@@ -1,2 +1,0 @@
-Bundle-Activator: fr.opensagres.xdocreport.converter.internal.osgi.Activator
-

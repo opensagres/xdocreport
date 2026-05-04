@@ -1,4 +1,0 @@
-Fragment-Host: fr.opensagres.xdocreport.document
-Export-Package: fr.opensagres.xdocreport.document.odt,
- fr.opensagres.xdocreport.document.odt.discovery,
- fr.opensagres.xdocreport.document.odt.preprocessor

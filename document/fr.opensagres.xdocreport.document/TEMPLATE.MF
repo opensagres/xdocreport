@@ -1,2 +1,0 @@
-Export-Package: fr.opensagres.xdocreport.document.*
-Bundle-Activator: fr.opensagres.xdocreport.document.internal.osgi.Activator

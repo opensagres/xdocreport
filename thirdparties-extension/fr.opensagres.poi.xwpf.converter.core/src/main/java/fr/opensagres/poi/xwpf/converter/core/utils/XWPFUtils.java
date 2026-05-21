@@ -130,22 +130,57 @@ public class XWPFUtils
 
     public static float floatValue( STTwipsMeasure dxa )
     {
-    	return ((SimpleValue) dxa).getFloatValue();
+        if (dxa == null) return 0.0f;
+        try {
+            return ((SimpleValue) dxa).getFloatValue();
+        } catch (Exception e) {
+            return parseSafeFloat(dxa);
+        }
     }
 
     public static float floatValue( STSignedTwipsMeasure dxa )
     {
-    	return ((SimpleValue) dxa).getFloatValue();        
+        if (dxa == null) return 0.0f;
+        try {
+            return ((SimpleValue) dxa).getFloatValue();
+        } catch (Exception e) {
+            return parseSafeFloat(dxa);
+        }
     }
 
     public static float floatValue( STMeasurementOrPercent dxa )
     {
-    	return ((SimpleValue) dxa).getFloatValue();        
+        if (dxa == null) return 0.0f;
+        try {
+            return ((SimpleValue) dxa).getFloatValue();
+        } catch (Exception e) {
+            return parseSafeFloat(dxa);
+        }
     }
 
     public static BigInteger bigIntegerValue( STHpsMeasure dxa )
     {
     	return ((SimpleValue) dxa).getBigIntegerValue();        
     }
+
+    private static float parseSafeFloat(Object dxaObj) {
+        try {
+            String str = ((SimpleValue) dxaObj).getStringValue();
+            if (str != null) {
+                str = str.trim();
+                if (str.endsWith("%")) {
+                    return Float.parseFloat(str.substring(0, str.length() - 1)) / 100.0f;
+                }
+                if ("auto".equalsIgnoreCase(str)) {
+                    return 0.0f;
+                }
+                return Float.parseFloat(str);
+            }
+        } catch (Exception e) {
+            // Ignore and fall back to 0.0f
+        }
+        return 0.0f;
+    }
     
 }
+

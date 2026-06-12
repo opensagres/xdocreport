@@ -51,6 +51,16 @@ public class ColorHelper
         }
         STHexColor hexColor = shd.xgetFill();
         Object val = shd.xgetVal();
+        // When w:fill="auto" and w:val="solid", the actual fill color
+        // is specified by w:color (per OOXML spec).
+        if ( hexColor != null && AUTO.equals( hexColor.getStringValue() ) )
+        {
+            STHexColor colorAttr = shd.xgetColor();
+            if ( colorAttr != null && !AUTO.equals( colorAttr.getStringValue() ) )
+            {
+                hexColor = colorAttr;
+            }
+        }
         return getColor( hexColor, val, true );
     }
 

@@ -32,9 +32,11 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 
+import javax.xml.XMLConstants;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.parsers.SAXParserFactory;
 import javax.xml.transform.Transformer;
 import javax.xml.transform.TransformerException;
 import javax.xml.transform.TransformerFactory;
@@ -53,10 +55,52 @@ import fr.opensagres.xdocreport.core.io.IOUtils;
 public class DOMUtils
 {
 
+    private static final String DISALLOW_DOCTYPE_DECL = "http://apache.org/xml/features/disallow-doctype-decl";
+
+    private static final String LOAD_EXTERNAL_DTD = "http://apache.org/xml/features/nonvalidating/load-external-dtd";
+
+    private static final String EXTERNAL_GENERAL_ENTITIES = "http://xml.org/sax/features/external-general-entities";
+
+    private static final String EXTERNAL_PARAMETER_ENTITIES = "http://xml.org/sax/features/external-parameter-entities";
+
+    /**
+     * Returns a {@link DocumentBuilderFactory} hardened against XXE: DOCTYPE declarations are
+     * rejected and external entities/DTDs are not resolved (CVE-2025-65482).
+     */
+    public static DocumentBuilderFactory newSecureDocumentBuilderFactory()
+        throws ParserConfigurationException
+    {
+        DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
+        factory.setFeature( DISALLOW_DOCTYPE_DECL, true );
+        factory.setFeature( EXTERNAL_GENERAL_ENTITIES, false );
+        factory.setFeature( EXTERNAL_PARAMETER_ENTITIES, false );
+        factory.setFeature( LOAD_EXTERNAL_DTD, false );
+        factory.setFeature( XMLConstants.FEATURE_SECURE_PROCESSING, true );
+        factory.setXIncludeAware( false );
+        factory.setExpandEntityReferences( false );
+        return factory;
+    }
+
+    /**
+     * Returns a {@link SAXParserFactory} hardened against XXE: DOCTYPE declarations are rejected
+     * and external entities/DTDs are not resolved (CVE-2025-65482).
+     */
+    public static SAXParserFactory newSecureSAXParserFactory()
+        throws ParserConfigurationException, SAXException
+    {
+        SAXParserFactory factory = SAXParserFactory.newInstance();
+        factory.setFeature( DISALLOW_DOCTYPE_DECL, true );
+        factory.setFeature( EXTERNAL_GENERAL_ENTITIES, false );
+        factory.setFeature( EXTERNAL_PARAMETER_ENTITIES, false );
+        factory.setFeature( LOAD_EXTERNAL_DTD, false );
+        factory.setFeature( XMLConstants.FEATURE_SECURE_PROCESSING, true );
+        return factory;
+    }
+
     public static Document load( InputStream stream )
         throws ParserConfigurationException, SAXException, IOException
     {
-        DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
+        DocumentBuilderFactory factory = newSecureDocumentBuilderFactory();
         factory.setNamespaceAware( true );
         DocumentBuilder builder = factory.newDocumentBuilder();
         return builder.parse( stream );
@@ -65,7 +109,7 @@ public class DOMUtils
     public static Document load( String xml )
         throws ParserConfigurationException, SAXException, IOException
     {
-        DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
+        DocumentBuilderFactory factory = newSecureDocumentBuilderFactory();
         factory.setNamespaceAware( true );
         DocumentBuilder builder = factory.newDocumentBuilder();
         return builder.parse( IOUtils.toInputStream( xml, EncodingConstants.UTF_8.name() ) );

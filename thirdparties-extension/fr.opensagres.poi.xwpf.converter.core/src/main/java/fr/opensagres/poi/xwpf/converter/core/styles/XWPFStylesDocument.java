@@ -24,61 +24,6 @@
  */
 package fr.opensagres.poi.xwpf.converter.core.styles;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
-import java.math.BigInteger;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
-import org.apache.poi.ooxml.POIXMLDocumentPart;
-import org.apache.poi.xwpf.usermodel.ParagraphAlignment;
-import org.apache.poi.xwpf.usermodel.UnderlinePatterns;
-import org.apache.poi.xwpf.usermodel.VerticalAlign;
-import org.apache.poi.xwpf.usermodel.XWPFDocument;
-import org.apache.poi.xwpf.usermodel.XWPFParagraph;
-import org.apache.poi.xwpf.usermodel.XWPFRelation;
-import org.apache.poi.xwpf.usermodel.XWPFRun;
-import org.apache.poi.xwpf.usermodel.XWPFSettings;
-import org.apache.poi.xwpf.usermodel.XWPFTable;
-import org.apache.poi.xwpf.usermodel.XWPFTableCell;
-import org.apache.poi.xwpf.usermodel.XWPFTableRow;
-import org.apache.xmlbeans.XmlException;
-import org.openxmlformats.schemas.drawingml.x2006.main.ThemeDocument;
-import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTBorder;
-import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTDocDefaults;
-import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTFont;
-import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTNumPr;
-import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTP;
-import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTPPr;
-import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTPPrBase;
-import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTR;
-import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTRPr;
-import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTRow;
-import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTSettings;
-import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTString;
-import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTStyle;
-import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTStyles;
-import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTTabs;
-import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTTbl;
-import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTTblPr;
-import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTTblPrBase;
-import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTTblPrEx;
-import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTTblStylePr;
-import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTTc;
-import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTTcPr;
-import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTTextDirection;
-import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTTrPr;
-import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTTwipsMeasure;
-import org.openxmlformats.schemas.wordprocessingml.x2006.main.FontsDocument;
-import org.openxmlformats.schemas.wordprocessingml.x2006.main.STMerge;
-import org.openxmlformats.schemas.wordprocessingml.x2006.main.STVerticalJc.Enum;
-import org.openxmlformats.schemas.wordprocessingml.x2006.main.SettingsDocument;
-
 import fr.opensagres.poi.xwpf.converter.core.BorderSide;
 import fr.opensagres.poi.xwpf.converter.core.Color;
 import fr.opensagres.poi.xwpf.converter.core.ParagraphLineSpacing;
@@ -98,6 +43,7 @@ import fr.opensagres.poi.xwpf.converter.core.styles.paragraph.ParagraphIndentati
 import fr.opensagres.poi.xwpf.converter.core.styles.paragraph.ParagraphIndentationRightValueProvider;
 import fr.opensagres.poi.xwpf.converter.core.styles.paragraph.ParagraphLineSpacingValueProvider;
 import fr.opensagres.poi.xwpf.converter.core.styles.paragraph.ParagraphNumPrValueProvider;
+import fr.opensagres.poi.xwpf.converter.core.styles.paragraph.ParagraphRunDirectionProvider;
 import fr.opensagres.poi.xwpf.converter.core.styles.paragraph.ParagraphSpacingAfterValueProvider;
 import fr.opensagres.poi.xwpf.converter.core.styles.paragraph.ParagraphSpacingBeforeValueProvider;
 import fr.opensagres.poi.xwpf.converter.core.styles.paragraph.ParagraphTabsValueProvider;
@@ -125,6 +71,7 @@ import fr.opensagres.poi.xwpf.converter.core.styles.table.TableMarginBottomValue
 import fr.opensagres.poi.xwpf.converter.core.styles.table.TableMarginLeftValueProvider;
 import fr.opensagres.poi.xwpf.converter.core.styles.table.TableMarginRightValueProvider;
 import fr.opensagres.poi.xwpf.converter.core.styles.table.TableMarginTopValueProvider;
+import fr.opensagres.poi.xwpf.converter.core.styles.table.TableRunDirectionValueProvider;
 import fr.opensagres.poi.xwpf.converter.core.styles.table.TableWidthValueProvider;
 import fr.opensagres.poi.xwpf.converter.core.styles.table.cell.TableCellBackgroundColorValueProvider;
 import fr.opensagres.poi.xwpf.converter.core.styles.table.cell.TableCellBorderBottomValueProvider;
@@ -152,6 +99,61 @@ import fr.opensagres.poi.xwpf.converter.core.styles.table.row.TableRowMarginTopV
 import fr.opensagres.poi.xwpf.converter.core.utils.DxaUtil;
 import fr.opensagres.poi.xwpf.converter.core.utils.StringUtils;
 import fr.opensagres.poi.xwpf.converter.core.utils.XWPFUtils;
+import org.apache.poi.ooxml.POIXMLDocumentPart;
+import org.apache.poi.xwpf.usermodel.ParagraphAlignment;
+import org.apache.poi.xwpf.usermodel.UnderlinePatterns;
+import org.apache.poi.xwpf.usermodel.VerticalAlign;
+import org.apache.poi.xwpf.usermodel.XWPFDocument;
+import org.apache.poi.xwpf.usermodel.XWPFParagraph;
+import org.apache.poi.xwpf.usermodel.XWPFRelation;
+import org.apache.poi.xwpf.usermodel.XWPFRun;
+import org.apache.poi.xwpf.usermodel.XWPFSettings;
+import org.apache.poi.xwpf.usermodel.XWPFTable;
+import org.apache.poi.xwpf.usermodel.XWPFTableCell;
+import org.apache.poi.xwpf.usermodel.XWPFTableRow;
+import org.apache.xmlbeans.XmlException;
+import org.openxmlformats.schemas.drawingml.x2006.main.ThemeDocument;
+import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTBorder;
+import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTDocDefaults;
+import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTFont;
+import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTNumPr;
+import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTOnOff;
+import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTP;
+import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTPPr;
+import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTPPrBase;
+import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTR;
+import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTRPr;
+import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTRow;
+import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTSettings;
+import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTString;
+import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTStyle;
+import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTStyles;
+import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTTabs;
+import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTTbl;
+import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTTblPr;
+import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTTblPrBase;
+import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTTblPrEx;
+import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTTblStylePr;
+import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTTc;
+import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTTcPr;
+import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTTextDirection;
+import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTTrPr;
+import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTTwipsMeasure;
+import org.openxmlformats.schemas.wordprocessingml.x2006.main.FontsDocument;
+import org.openxmlformats.schemas.wordprocessingml.x2006.main.STMerge;
+import org.openxmlformats.schemas.wordprocessingml.x2006.main.STVerticalJc.Enum;
+import org.openxmlformats.schemas.wordprocessingml.x2006.main.SettingsDocument;
+
+import java.io.IOException;
+import java.io.InputStream;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
+import java.math.BigInteger;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 public class XWPFStylesDocument
 {
@@ -446,6 +448,11 @@ public class XWPFStylesDocument
     public Color getBackgroundColor( CTPPrBase pPr )
     {
         return ParagraphBackgroundColorValueProvider.INSTANCE.getValue( pPr );
+    }
+
+    /*enabling bidirectional support*/
+    public CTOnOff getParagraphRunDirection(XWPFParagraph docxParagraph) {
+        return ParagraphRunDirectionProvider.INSTANCE.getValue( docxParagraph, this );
     }
 
     /**
@@ -784,6 +791,12 @@ public class XWPFStylesDocument
     {
         return fr.opensagres.poi.xwpf.converter.core.openxmlformats.styles.table.TableWidthValueProvider.INSTANCE.getValue( table,
                                                                                                                          this );
+    }
+
+    /*enabling bidirectional support*/
+    public CTOnOff getTableRunDirection(XWPFTable table )
+    {
+        return TableRunDirectionValueProvider.INSTANCE.getValue( table, this );
     }
 
     public ParagraphAlignment getTableAlignment( XWPFTable table )

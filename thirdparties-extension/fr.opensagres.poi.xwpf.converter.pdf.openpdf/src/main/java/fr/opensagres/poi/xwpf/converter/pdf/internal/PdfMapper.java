@@ -24,16 +24,51 @@
  */
 package fr.opensagres.poi.xwpf.converter.pdf.internal;
 
-import static fr.opensagres.poi.xwpf.converter.core.utils.DxaUtil.emu2points;
-
-import java.io.OutputStream;
-import java.math.BigInteger;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.logging.Logger;
-
+import com.lowagie.text.Chunk;
+import com.lowagie.text.DocumentException;
+import com.lowagie.text.Element;
+import com.lowagie.text.Font;
+import com.lowagie.text.Image;
+import com.lowagie.text.Paragraph;
+import com.lowagie.text.Rectangle;
+import com.lowagie.text.pdf.PdfPCell;
+import com.lowagie.text.pdf.PdfPTable;
+import com.lowagie.text.pdf.PdfWriter;
+import com.lowagie.text.pdf.draw.DottedLineSeparator;
+import com.lowagie.text.pdf.draw.LineSeparator;
+import com.lowagie.text.pdf.draw.VerticalPositionMark;
+import com.microsoft.schemas.vml.CTImageData;
+import com.microsoft.schemas.vml.CTShape;
+import fr.opensagres.poi.xwpf.converter.core.BorderSide;
+import fr.opensagres.poi.xwpf.converter.core.Color;
+import fr.opensagres.poi.xwpf.converter.core.ImageShapeStyle;
+import fr.opensagres.poi.xwpf.converter.core.ListItemContext;
+import fr.opensagres.poi.xwpf.converter.core.MultiValueTriplet;
+import fr.opensagres.poi.xwpf.converter.core.ParagraphLineSpacing;
+import fr.opensagres.poi.xwpf.converter.core.TableCellBorder;
+import fr.opensagres.poi.xwpf.converter.core.TableHeight;
+import fr.opensagres.poi.xwpf.converter.core.TableWidth;
+import fr.opensagres.poi.xwpf.converter.core.XWPFDocumentVisitor;
+import fr.opensagres.poi.xwpf.converter.core.styles.paragraph.ParagraphIndentationHangingValueProvider;
+import fr.opensagres.poi.xwpf.converter.core.styles.paragraph.ParagraphIndentationLeftValueProvider;
+import fr.opensagres.poi.xwpf.converter.core.utils.DxaUtil;
+import fr.opensagres.poi.xwpf.converter.core.utils.StringUtils;
+import fr.opensagres.poi.xwpf.converter.core.utils.XWPFUtils;
+import fr.opensagres.poi.xwpf.converter.pdf.PdfOptions;
+import fr.opensagres.poi.xwpf.converter.pdf.internal.elements.StylableAnchor;
+import fr.opensagres.poi.xwpf.converter.pdf.internal.elements.StylableDocument;
+import fr.opensagres.poi.xwpf.converter.pdf.internal.elements.StylableHeaderFooter;
+import fr.opensagres.poi.xwpf.converter.pdf.internal.elements.StylableMasterPage;
+import fr.opensagres.poi.xwpf.converter.pdf.internal.elements.StylableParagraph;
+import fr.opensagres.poi.xwpf.converter.pdf.internal.elements.StylableTable;
+import fr.opensagres.poi.xwpf.converter.pdf.internal.elements.StylableTableCell;
+import fr.opensagres.xdocreport.openpdf.extension.ExtendedChunk;
+import fr.opensagres.xdocreport.openpdf.extension.ExtendedImage;
+import fr.opensagres.xdocreport.openpdf.extension.ExtendedParagraph;
+import fr.opensagres.xdocreport.openpdf.extension.ExtendedPdfPCell;
+import fr.opensagres.xdocreport.openpdf.extension.ExtendedPdfPTable;
+import fr.opensagres.xdocreport.openpdf.extension.IITextContainer;
+import fr.opensagres.xdocreport.openpdf.extension.font.FontGroup;
 import org.apache.poi.xwpf.usermodel.IBodyElement;
 import org.apache.poi.xwpf.usermodel.ParagraphAlignment;
 import org.apache.poi.xwpf.usermodel.UnderlinePatterns;
@@ -61,6 +96,7 @@ import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTBorder;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTBr;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTHdrFtrRef;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTLvl;
+import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTOnOff;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTPPrBase;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTPTab;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTRPr;
@@ -75,50 +111,15 @@ import org.openxmlformats.schemas.wordprocessingml.x2006.main.STTextDirection;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.STVerticalJc;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.STVerticalJc.Enum;
 
-import com.lowagie.text.Chunk;
-import com.lowagie.text.DocumentException;
-import com.lowagie.text.Element;
-import com.lowagie.text.Font;
-import com.lowagie.text.Image;
-import com.lowagie.text.Paragraph;
-import com.lowagie.text.Rectangle;
-import com.lowagie.text.pdf.PdfPCell;
-import com.lowagie.text.pdf.PdfPTable;
-import com.lowagie.text.pdf.draw.DottedLineSeparator;
-import com.lowagie.text.pdf.draw.LineSeparator;
-import com.lowagie.text.pdf.draw.VerticalPositionMark;
-import com.microsoft.schemas.vml.CTImageData;
-import com.microsoft.schemas.vml.CTShape;
+import java.io.OutputStream;
+import java.math.BigInteger;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.logging.Logger;
 
-import fr.opensagres.poi.xwpf.converter.core.BorderSide;
-import fr.opensagres.poi.xwpf.converter.core.Color;
-import fr.opensagres.poi.xwpf.converter.core.ImageShapeStyle;
-import fr.opensagres.poi.xwpf.converter.core.ListItemContext;
-import fr.opensagres.poi.xwpf.converter.core.MultiValueTriplet;
-import fr.opensagres.poi.xwpf.converter.core.ParagraphLineSpacing;
-import fr.opensagres.poi.xwpf.converter.core.TableCellBorder;
-import fr.opensagres.poi.xwpf.converter.core.TableHeight;
-import fr.opensagres.poi.xwpf.converter.core.TableWidth;
-import fr.opensagres.poi.xwpf.converter.core.XWPFDocumentVisitor;
-import fr.opensagres.poi.xwpf.converter.core.styles.paragraph.ParagraphIndentationHangingValueProvider;
-import fr.opensagres.poi.xwpf.converter.core.styles.paragraph.ParagraphIndentationLeftValueProvider;
-import fr.opensagres.poi.xwpf.converter.core.utils.DxaUtil;
-import fr.opensagres.poi.xwpf.converter.core.utils.StringUtils;
-import fr.opensagres.poi.xwpf.converter.pdf.PdfOptions;
-import fr.opensagres.poi.xwpf.converter.pdf.internal.elements.StylableAnchor;
-import fr.opensagres.poi.xwpf.converter.pdf.internal.elements.StylableDocument;
-import fr.opensagres.poi.xwpf.converter.pdf.internal.elements.StylableHeaderFooter;
-import fr.opensagres.poi.xwpf.converter.pdf.internal.elements.StylableMasterPage;
-import fr.opensagres.poi.xwpf.converter.pdf.internal.elements.StylableParagraph;
-import fr.opensagres.poi.xwpf.converter.pdf.internal.elements.StylableTable;
-import fr.opensagres.poi.xwpf.converter.pdf.internal.elements.StylableTableCell;
-import fr.opensagres.xdocreport.openpdf.extension.ExtendedChunk;
-import fr.opensagres.xdocreport.openpdf.extension.ExtendedImage;
-import fr.opensagres.xdocreport.openpdf.extension.ExtendedParagraph;
-import fr.opensagres.xdocreport.openpdf.extension.ExtendedPdfPCell;
-import fr.opensagres.xdocreport.openpdf.extension.ExtendedPdfPTable;
-import fr.opensagres.xdocreport.openpdf.extension.IITextContainer;
-import fr.opensagres.xdocreport.openpdf.extension.font.FontGroup;
+import static fr.opensagres.poi.xwpf.converter.core.utils.DxaUtil.emu2points;
 
 public class PdfMapper
     extends XWPFDocumentVisitor<IITextContainer, PdfOptions, StylableMasterPage>
@@ -333,13 +334,25 @@ public class PdfMapper
 
         }
 
+        /*enabling bidirectional support -> paragraph direction*/
+        CTOnOff bidi = stylesDocument.getParagraphRunDirection(docxParagraph);
+        if(isRTLLayoutSet(bidi)){
+            pdfParagraph.setRunDirection(PdfWriter.RUN_DIRECTION_RTL);
+        }else{
+            pdfParagraph.setRunDirection(PdfWriter.RUN_DIRECTION_LTR);
+        }
+
         // text-align
         ParagraphAlignment alignment = stylesDocument.getParagraphAlignment( docxParagraph );
         if ( alignment != null )
         {
             switch ( alignment )
             {
+                /* please refer -> https://docs.microsoft.com/en-us/globalization/input/text-justification*/
                 case LEFT:
+                case LOW_KASHIDA:
+                case MEDIUM_KASHIDA:
+                case HIGH_KASHIDA:
                     pdfParagraph.setAlignment( Element.ALIGN_LEFT );
                     break;
                 case RIGHT:
@@ -354,6 +367,9 @@ public class PdfMapper
                 default:
                     break;
             }
+        } else {
+            /*enabling bidirectional support -> if by default Alignment of Paragraph is Undefined, set it to left*/
+            pdfParagraph.setAlignment(Element.ALIGN_LEFT);
         }
 
         // background-color
@@ -447,6 +463,10 @@ public class PdfMapper
             pdfParagraph.setListItemText( itemContext.getText() );
         }
         return pdfParagraph;
+    }
+
+    private boolean isRTLLayoutSet(CTOnOff bidiProperty){
+        return XWPFUtils.isCTOnOff(bidiProperty);
     }
 
     @Override
@@ -1105,6 +1125,14 @@ public class PdfMapper
         }
         pdfPTable.setLockedWidth( true );
 
+        boolean isRightToLeftTable = false;
+        /*enabling bidirectional support -> Table layout/run direction(based on layout)*/
+        CTOnOff bidiVisual = stylesDocument.getTableRunDirection(table);
+        if(isRTLLayoutSet(bidiVisual)){
+            isRightToLeftTable = true;
+            pdfPTable.setRunDirection(PdfWriter.RUN_DIRECTION_RTL);
+        }
+
         // Table alignment
         ParagraphAlignment alignment = stylesDocument.getTableAlignment( table );
         if ( alignment != null )
@@ -1126,13 +1154,23 @@ public class PdfMapper
                 default:
                     break;
             }
+        } else {
+            if (isRightToLeftTable) {
+                pdfPTable.setHorizontalAlignment(Element.ALIGN_RIGHT);
+            } else {
+                pdfPTable.setHorizontalAlignment(Element.ALIGN_LEFT);
+            }
         }
 
         // Table indentation
         Float indentation = stylesDocument.getTableIndentation( table );
         if ( indentation != null )
         {
-            pdfPTable.setPaddingLeft( indentation );
+            if (isRightToLeftTable) {
+                pdfPTable.setPaddingRight(indentation);
+            } else {
+                pdfPTable.setPaddingLeft(indentation);
+            }
         }
         return pdfPTable;
     }

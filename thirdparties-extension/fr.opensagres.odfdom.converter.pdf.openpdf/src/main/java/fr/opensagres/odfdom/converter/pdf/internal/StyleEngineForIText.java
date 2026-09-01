@@ -738,6 +738,12 @@ public class StyleEngineForIText
             }
         }
 
+        // writing-mode
+        String writingMode = ele.getStyleWritingModeAttribute();
+        if ( StringUtils.isNotEmpty( writingMode ) ){
+            paragraphProperties.setWritingMode( writingMode );
+        }
+
         super.visit( ele );
     }
 
@@ -1132,6 +1138,12 @@ public class StyleEngineForIText
         if ( mayBreakBetweenRows != null )
         {
             tableProperties.setMayBreakBetweenRows( mayBreakBetweenRows );
+        }
+
+        // writing-mode
+        String writingMode = ele.getStyleWritingModeAttribute();
+        if ( StringUtils.isNotEmpty( writingMode ) ){
+            tableProperties.setWritingMode( writingMode );
         }
 
         super.visit( ele );

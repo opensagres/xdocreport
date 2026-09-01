@@ -29,6 +29,7 @@ import com.lowagie.text.Element;
 import com.lowagie.text.Font;
 import com.lowagie.text.Paragraph;
 import com.lowagie.text.pdf.BaseFont;
+import com.lowagie.text.pdf.PdfWriter;
 import fr.opensagres.odfdom.converter.core.utils.ODFUtils;
 import fr.opensagres.odfdom.converter.pdf.internal.styles.Style;
 import fr.opensagres.odfdom.converter.pdf.internal.styles.StyleBreak;
@@ -145,6 +146,19 @@ public class StylableParagraph
             if ( keepTogether != null )
             {
                 super.setKeepTogether( keepTogether );
+            }
+
+            // Support for writing mode i.e. LTR OR RTL
+            String writingMode = paragraphProperties.getWritingMode();
+            if (writingMode != null && writingMode.equals("rl-tb"))
+            {
+                // RTL
+                super.setRunDirection(PdfWriter.RUN_DIRECTION_RTL);
+            }
+            else
+            {
+                // LTR
+                super.setRunDirection(PdfWriter.RUN_DIRECTION_LTR);
             }
         }
     }

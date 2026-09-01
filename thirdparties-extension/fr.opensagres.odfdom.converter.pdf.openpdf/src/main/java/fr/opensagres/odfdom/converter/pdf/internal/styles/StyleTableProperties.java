@@ -48,6 +48,8 @@ public class StyleTableProperties
 
     private Float width;
 
+    private String writingMode;
+
     public StyleTableProperties()
     {
     }
@@ -97,6 +99,10 @@ public class StyleTableProperties
         if ( tableProperties.getWidth() != null )
         {
             width = tableProperties.getWidth();
+        }
+        if ( tableProperties.getWritingMode() != null )
+        {
+            writingMode = tableProperties.getWritingMode();
         }
     }
 
@@ -188,5 +194,13 @@ public class StyleTableProperties
     public void setWidth( Float width )
     {
         this.width = width;
+    }
+
+    public String getWritingMode() {
+        return writingMode;
+    }
+
+    public void setWritingMode(String writingMode) {
+        this.writingMode = writingMode;
     }
 }

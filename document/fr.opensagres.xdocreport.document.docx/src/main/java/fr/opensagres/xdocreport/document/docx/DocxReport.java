@@ -42,7 +42,6 @@ import java.util.Set;
 
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.parsers.SAXParser;
-import javax.xml.parsers.SAXParserFactory;
 
 import org.xml.sax.SAXException;
 
@@ -53,6 +52,7 @@ import fr.opensagres.xdocreport.core.io.IEntryOutputStreamProvider;
 import fr.opensagres.xdocreport.core.io.IEntryReaderProvider;
 import fr.opensagres.xdocreport.core.io.IEntryWriterProvider;
 import fr.opensagres.xdocreport.core.io.XDocArchive;
+import fr.opensagres.xdocreport.core.utils.DOMUtils;
 import fr.opensagres.xdocreport.document.AbstractXDocReport;
 import fr.opensagres.xdocreport.document.docx.images.DocxImageRegistry;
 import fr.opensagres.xdocreport.document.docx.preprocessor.DefaultStyle;
@@ -162,7 +162,7 @@ public class DocxReport
             try
             {
                 HyperlinkContentHandler contentHandler = new HyperlinkContentHandler();
-                SAXParser saxParser = SAXParserFactory.newInstance().newSAXParser();
+                SAXParser saxParser = DOMUtils.newSecureSAXParserFactory().newSAXParser();
 				saxParser.parse(preprocessedArchive.getEntryInputStream(relsEntryName), contentHandler);
                 if ( contentHandler.getHyperlinks() != null )
                 {

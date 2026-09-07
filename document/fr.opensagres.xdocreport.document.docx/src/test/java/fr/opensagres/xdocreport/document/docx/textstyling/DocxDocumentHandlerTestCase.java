@@ -749,6 +749,32 @@ public class DocxDocumentHandlerTestCase
     }
 
     @Test
+    public void testStyledTable()
+            throws Exception {
+        IContext context = new MockContext();
+        BufferedElement parent = null;
+
+        ITextStylingTransformer formatter = HTMLTextStylingTransformer.INSTANCE;
+        IDocumentHandler handler = new DocxDocumentHandler(parent, context, "word/document.xml");
+        formatter.transform("<table><tbody>"
+                + "<tr><td style='name:Standard'>A</td><td>B</td></tr>"
+                + "<tr><td style='name:Standard'>C</td><td>D</td></tr>"
+                + "<tr><td style='name:Standard'>E</td><td>F</td></tr>"
+                + "</tbody></table>",
+                handler);
+
+        Assert.assertEquals("", handler.getTextBefore());
+        Assert.assertEquals("", handler.getTextBody());
+        Assert.assertEquals("<w:tbl>"
+                + "<w:tblGrid><w:gridCol w:w=\"2994\" /><w:gridCol w:w=\"2994\" /></w:tblGrid>"
+                + "<w:tr><w:tc><w:p><w:pPr><w:pStyle w:val=\"Standard\" /></w:pPr><w:r><w:t xml:space=\"preserve\" >A</w:t></w:r></w:p></w:tc><w:tc><w:p><w:r><w:t xml:space=\"preserve\" >B</w:t></w:r></w:p></w:tc></w:tr>"
+                + "<w:tr><w:tc><w:p><w:pPr><w:pStyle w:val=\"Standard\" /></w:pPr><w:r><w:t xml:space=\"preserve\" >C</w:t></w:r></w:p></w:tc><w:tc><w:p><w:r><w:t xml:space=\"preserve\" >D</w:t></w:r></w:p></w:tc></w:tr>"
+                + "<w:tr><w:tc><w:p><w:pPr><w:pStyle w:val=\"Standard\" /></w:pPr><w:r><w:t xml:space=\"preserve\" >E</w:t></w:r></w:p></w:tc><w:tc><w:p><w:r><w:t xml:space=\"preserve\" >F</w:t></w:r></w:p></w:tc></w:tr>"
+                + "</w:tbl><w:p/>",
+                handler.getTextEnd());
+    }
+
+    @Test
     public void testAll()
         throws Exception
     {

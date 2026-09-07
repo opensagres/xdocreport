@@ -163,8 +163,8 @@ public abstract class AbstractDocumentHandler
         throws IOException
     {
         TableProperties tableProperties = this.tablesStack.peek();
-        tableProperties.setColumnCount( tableProperties.getColumnCount() + 1 );
-        doStartTableCell( properties );
+        tableProperties.setColumnCount(tableProperties.getColumnCount() + 1);
+        doStartTableCell(properties);
     }
 
     public final void endTableCell()
@@ -334,5 +334,5 @@ public abstract class AbstractDocumentHandler
         throws IOException;
 
     protected abstract void doEndTableCell()
-        throws IOException;
+            throws IOException;
 }

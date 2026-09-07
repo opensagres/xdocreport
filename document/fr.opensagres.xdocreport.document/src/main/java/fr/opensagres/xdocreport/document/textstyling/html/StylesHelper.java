@@ -281,9 +281,14 @@ public class StylesHelper
         return properties;
     }
 
-    public static TableCellProperties createTableCellProperties( Attributes attributes )
-    {
-        TableCellProperties properties = new TableCellProperties();
-        return properties;
+    public static TableCellProperties createTableCellProperties(String style) {
+        Map<String, String> stylesMap = StylesHelper.parse(style);
+
+        if (!stylesMap.isEmpty()) {
+            TableCellProperties properties = new TableCellProperties();
+            processContainerproperties(properties, stylesMap);
+            return properties;
+        }
+        return null;
     }
 }

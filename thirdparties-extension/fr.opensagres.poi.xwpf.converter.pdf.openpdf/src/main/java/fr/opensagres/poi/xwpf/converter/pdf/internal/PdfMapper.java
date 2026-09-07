@@ -1411,6 +1411,8 @@ public class PdfMapper
             IITextContainer parentOfParentContainer = pdfParentContainer.getITextContainer();
             if (parentOfParentContainer != null && parentOfParentContainer instanceof PdfPCell) {
                 pdfParentContainer.addElement(img);
+            } else if (imageStyle.isAbsolutePosition()) {
+                pdfParentContainer.addElement(createFloatingVmlChunk(img, imageStyle, pdfParentContainer));
             } else {
                 float chunkOffsetX = 0.0F;
                 float chunkOffsetY = 0.0F;
@@ -1424,6 +1426,25 @@ public class PdfMapper
         } catch (Exception ex) {
             LOGGER.severe(ex.getMessage());
         }
+    }
+
+    /**
+     * Creates the chunk which draws a floating (<code>position:absolute</code>) VML shape. Word draws such a shape
+     * outside of the text flow, at the margin-left/margin-top offset of its anchor, so the shape must neither shift the
+     * text of the anchor paragraph to the right nor push the following paragraphs down.
+     * <p>
+     * iText computes the leading of a line from <code>image height + chunk y offset</code>, so the chunk gets a y
+     * offset of <code>-height</code> in order to consume no leading at all. Such an offset would draw the image below
+     * the baseline, so the wanted position is restored at drawing time with an {@link ExtendedImage}, whose offset is
+     * ignored by the layout.
+     */
+    private Chunk createFloatingVmlChunk( Image img, ImageShapeStyle imageStyle, IITextContainer pdfParentContainer )
+    {
+        // margin-top is relative to the top of the anchor paragraph while the image is drawn from the baseline of the
+        // line which holds it, hence the leading of that line is added back.
+        float anchorToBaseline = pdfParentContainer instanceof Paragraph ? ( (Paragraph) pdfParentContainer ).getLeading() : 0;
+        ExtendedImage floatingImg = new ExtendedImage( img, anchorToBaseline - imageStyle.getMarginTop() );
+        return new Chunk( floatingImg, imageStyle.getMarginLeft(), -img.getScaledHeight(), false );
     }
 
     @Override

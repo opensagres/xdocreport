@@ -25,6 +25,8 @@
 package fr.opensagres.xdocreport.core.internal;
 
 import java.lang.reflect.Method;
+import java.security.AccessController;
+import java.security.PrivilegedAction;
 import java.util.Iterator;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -37,13 +39,13 @@ import fr.opensagres.xdocreport.core.logging.LogUtils;
  * <li><b>java.util.ServiceLoader</b> if XDocReport works on Java6. For example :
  * <p>
  * <code>Iterator<Discovery> discoveries =
-                ServiceLoader.load( registryType, getClass().getClassLoader() ).iterator();</code>
+                ServiceLoader.load( registryType, this ).iterator();</code>
  * </p>
  * </li>
  * <li><b>javax.imageio.spi.ServiceRegistry</b> if XDocReport works on Java5. For example :
  * <p>
  * <code>Iterator<Discovery> discoveries =
-                ServiceRegistry.lookupProviders( registryType, getClass().getClassLoader() );</code>
+                ServiceRegistry.lookupProviders( registryType, this );</code>
  * </p>
  * </li>
  * </ul>
@@ -90,11 +92,17 @@ public abstract class JDKServiceLoader
         }
     }
 
-    public static <T> Iterator<T> lookupProviders( Class<T> providerClass, ClassLoader loader )
+    public static <T> Iterator<T> lookupProviders( Class<T> providerClass, Object classLoaderObject )
     {
         try
         {
-            return JDK_SERVICE_LOADER.lookupProvidersFromJDK( providerClass, loader );
+            ClassLoader[] classLoaders = lookupClassLoader( classLoaderObject );
+            Iterator<T> providers = JDK_SERVICE_LOADER.lookupProvidersFromJDK( providerClass, classLoaders[0] );
+            if ( classLoaders.length > 1 )
+            {
+                providers = new IteratorPair<>(providers, JDK_SERVICE_LOADER.lookupProvidersFromJDK( providerClass, classLoaders[1] ) );
+            }
+            return providers;
         }
         catch ( Exception e )
         {
@@ -104,6 +112,41 @@ public abstract class JDKServiceLoader
 
     protected abstract <T> Iterator<T> lookupProvidersFromJDK( Class<T> providerClass, ClassLoader loader )
         throws Exception;
+
+    private static ClassLoader[] lookupClassLoader( Object classLoaderObject ) {
+        if ( System.getSecurityManager() != null )
+        {
+            return AccessController.doPrivileged( new LookupClassLoaderAction( classLoaderObject ) );
+        }
+        else
+        {
+            return lookupClassLoaderInternal( classLoaderObject );
+        }
+    }
+
+    private static ClassLoader[] lookupClassLoaderInternal( Object classLoaderObject )
+    {
+        // Use thread context class loader by default
+        ClassLoader contextClassLoader = Thread.currentThread().getContextClassLoader();
+        ClassLoader classClassLoader;
+        // If not found, use specified object class loader
+        if ( classLoaderObject != null )
+        {
+            classClassLoader = classLoaderObject.getClass().getClassLoader();
+        }
+        else
+        {
+            classClassLoader = JDKServiceLoader.class.getClassLoader();
+        }
+        if ( contextClassLoader == null || contextClassLoader.equals( classClassLoader ) )
+        {
+            return new ClassLoader[] { classClassLoader };
+        }
+        else
+        {
+            return new ClassLoader[] { contextClassLoader, classClassLoader };
+        }
+    }
 
     private static class JDK5ServiceLoader
         extends JDKServiceLoader
@@ -150,5 +193,73 @@ public abstract class JDKServiceLoader
             return (Iterator<T>) iteratorMethod.invoke( serviceLoader );
 
         }
+    }
+
+    private static class LookupClassLoaderAction
+        implements PrivilegedAction<ClassLoader[]>
+    {
+        private Object classLoaderObject;
+        
+        LookupClassLoaderAction( Object object )
+        {
+            classLoaderObject = object;
+        }
+
+        @Override
+        public ClassLoader[] run()
+        {
+            try
+            {
+                return lookupClassLoaderInternal(classLoaderObject);
+            }
+            catch ( Exception e )
+            {
+                return null;
+            }
+        }
+    }
+
+    private static class IteratorPair<T>
+        implements Iterator<T>
+    {
+        private Iterator<T> iterator;
+        private Iterator<T> secondIterator;
+        
+        IteratorPair( Iterator<T> firstIterator, Iterator<T> secondIterator )
+        {
+            iterator = firstIterator;
+            this.secondIterator = secondIterator;
+        }
+
+        @Override
+        public boolean hasNext()
+        {
+            boolean result = iterator.hasNext();
+            if ( !result && secondIterator != null )
+            {
+                iterator = secondIterator;
+                secondIterator = null;
+                result = iterator.hasNext();
+            }
+            return result;
+        }
+
+        @Override
+        public T next()
+        {
+            if ( secondIterator != null && !iterator.hasNext() )
+            {
+                iterator = secondIterator;
+                secondIterator = null;
+            }
+            return iterator.next();
+        }
+
+        @Override
+        public void remove()
+        {
+            throw new UnsupportedOperationException();
+        }
+    
     }
 }

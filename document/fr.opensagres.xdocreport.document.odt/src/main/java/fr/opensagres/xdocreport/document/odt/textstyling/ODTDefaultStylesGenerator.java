@@ -30,7 +30,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import fr.opensagres.xdocreport.document.textstyling.properties.ContainerProperties;
-import fr.opensagres.xdocreport.document.textstyling.properties.ContainerProperties.ContainerType;
+import fr.opensagres.xdocreport.document.textstyling.properties.ContainerType;
 import fr.opensagres.xdocreport.document.textstyling.properties.TextAlignment;
 
 /**

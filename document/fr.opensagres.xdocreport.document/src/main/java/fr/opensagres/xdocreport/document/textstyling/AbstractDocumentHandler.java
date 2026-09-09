@@ -30,10 +30,8 @@ import java.io.Writer;
 import java.util.Stack;
 
 import fr.opensagres.xdocreport.document.preprocessor.sax.BufferedElement;
-import fr.opensagres.xdocreport.document.textstyling.properties.ListProperties;
-import fr.opensagres.xdocreport.document.textstyling.properties.TableCellProperties;
+import fr.opensagres.xdocreport.document.textstyling.properties.ContainerProperties;
 import fr.opensagres.xdocreport.document.textstyling.properties.TableProperties;
-import fr.opensagres.xdocreport.document.textstyling.properties.TableRowProperties;
 import fr.opensagres.xdocreport.template.IContext;
 
 /**
@@ -80,7 +78,7 @@ public abstract class AbstractDocumentHandler
         getCurrentWriter().write( s );
     }
 
-    public final void startOrderedList( ListProperties properties )
+    public final void startOrderedList( ContainerProperties properties )
         throws IOException
     {
         listStack.push( true );
@@ -94,7 +92,7 @@ public abstract class AbstractDocumentHandler
         doEndOrderedList();
     }
 
-    public final void startUnorderedList( ListProperties properties )
+    public final void startUnorderedList( ContainerProperties properties )
         throws IOException
     {
         listStack.push( false );
@@ -144,7 +142,7 @@ public abstract class AbstractDocumentHandler
         doEndTable( properties );
     }
 
-    public final void startTableRow( TableRowProperties properties )
+    public final void startTableRow( ContainerProperties properties )
         throws IOException
     {
         TableProperties tableProperties = this.tablesStack.peek();
@@ -159,7 +157,7 @@ public abstract class AbstractDocumentHandler
         doEndTableRow();
     }
 
-    public final void startTableCell( TableCellProperties properties )
+    public final void startTableCell( ContainerProperties properties )
         throws IOException
     {
         TableProperties tableProperties = this.tablesStack.peek();
@@ -306,10 +304,10 @@ public abstract class AbstractDocumentHandler
         return result.toString();
     }
 
-    protected abstract void doStartUnorderedList( ListProperties properties )
+    protected abstract void doStartUnorderedList( ContainerProperties properties )
         throws IOException;
 
-    protected abstract void doStartOrderedList( ListProperties properties )
+    protected abstract void doStartOrderedList( ContainerProperties properties )
         throws IOException;
 
     protected abstract void doEndUnorderedList()
@@ -324,13 +322,13 @@ public abstract class AbstractDocumentHandler
     protected abstract void doEndTable( TableProperties properties )
         throws IOException;
 
-    protected abstract void doStartTableRow( TableRowProperties properties )
+    protected abstract void doStartTableRow( ContainerProperties properties )
         throws IOException;
 
     protected abstract void doEndTableRow()
         throws IOException;
 
-    protected abstract void doStartTableCell( TableCellProperties properties )
+    protected abstract void doStartTableCell( ContainerProperties properties )
         throws IOException;
 
     protected abstract void doEndTableCell()

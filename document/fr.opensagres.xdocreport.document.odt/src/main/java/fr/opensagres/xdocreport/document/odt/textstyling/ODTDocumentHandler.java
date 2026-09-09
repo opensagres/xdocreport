@@ -33,15 +33,8 @@ import fr.opensagres.xdocreport.core.utils.StringUtils;
 import fr.opensagres.xdocreport.document.odt.template.ODTContextHelper;
 import fr.opensagres.xdocreport.document.preprocessor.sax.BufferedElement;
 import fr.opensagres.xdocreport.document.textstyling.AbstractDocumentHandler;
-import fr.opensagres.xdocreport.document.textstyling.IDocumentHandler.TextLocation;
-import fr.opensagres.xdocreport.document.textstyling.properties.HeaderProperties;
-import fr.opensagres.xdocreport.document.textstyling.properties.ListItemProperties;
-import fr.opensagres.xdocreport.document.textstyling.properties.ListProperties;
-import fr.opensagres.xdocreport.document.textstyling.properties.ParagraphProperties;
-import fr.opensagres.xdocreport.document.textstyling.properties.SpanProperties;
-import fr.opensagres.xdocreport.document.textstyling.properties.TableCellProperties;
+import fr.opensagres.xdocreport.document.textstyling.properties.ContainerProperties;
 import fr.opensagres.xdocreport.document.textstyling.properties.TableProperties;
-import fr.opensagres.xdocreport.document.textstyling.properties.TableRowProperties;
 import fr.opensagres.xdocreport.template.IContext;
 
 public class ODTDocumentHandler
@@ -263,7 +256,7 @@ public class ODTDocumentHandler
         }
     }
 
-    public void startParagraph( ParagraphProperties properties )
+    public void startParagraph( ContainerProperties properties )
         throws IOException
     {
         if ( paragraphsStack.isEmpty() || !paragraphsStack.peek() )
@@ -283,7 +276,7 @@ public class ODTDocumentHandler
         // }
     }
 
-    private void internalStartParagraph( boolean containerIsList, ParagraphProperties properties )
+    private void internalStartParagraph( boolean containerIsList, ContainerProperties properties )
         throws IOException
     {
         String styleName = null;
@@ -350,7 +343,7 @@ public class ODTDocumentHandler
         }
     }
 
-    public void startHeading( int level, HeaderProperties properties )
+    public void startHeading( int level, ContainerProperties properties )
         throws IOException
     {
         endParagraphIfNeeded();
@@ -371,7 +364,7 @@ public class ODTDocumentHandler
     }
 
     @Override
-    protected void doStartOrderedList( ListProperties properties )
+    protected void doStartOrderedList( ContainerProperties properties )
         throws IOException
     {
         internalStartList( styleGen.getOLStyleName() );
@@ -385,7 +378,7 @@ public class ODTDocumentHandler
     }
 
     @Override
-    protected void doStartUnorderedList( ListProperties properties )
+    protected void doStartUnorderedList( ContainerProperties properties )
         throws IOException
     {
         internalStartList( styleGen.getULStyleName() );
@@ -440,7 +433,7 @@ public class ODTDocumentHandler
         }
     }
 
-    public void startListItem( ListItemProperties properties )
+    public void startListItem( ContainerProperties properties )
         throws IOException
     {
         if ( itemStyle != null )
@@ -470,7 +463,7 @@ public class ODTDocumentHandler
         super.write( "</text:list-item>" );
     }
 
-    public void startSpan( SpanProperties properties )
+    public void startSpan( ContainerProperties properties )
         throws IOException
     {
         internalStartSpan( styleGen.getTextStyleName( properties ), true );
@@ -532,7 +525,7 @@ public class ODTDocumentHandler
         super.write( "</table:table>" );
     }
 
-    protected void doStartTableRow( TableRowProperties properties )
+    protected void doStartTableRow( ContainerProperties properties )
         throws IOException
     {
         super.write( "<table:table-row>" );
@@ -544,7 +537,7 @@ public class ODTDocumentHandler
         super.write( "</table:table-row>" );
     }
 
-    protected void doStartTableCell( TableCellProperties properties )
+    protected void doStartTableCell( ContainerProperties properties )
         throws IOException
     {
         super.write( "<table:table-cell>" );

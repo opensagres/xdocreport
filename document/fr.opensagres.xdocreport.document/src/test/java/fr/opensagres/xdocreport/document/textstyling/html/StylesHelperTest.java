@@ -25,7 +25,8 @@
 package fr.opensagres.xdocreport.document.textstyling.html;
 
 import fr.opensagres.xdocreport.document.textstyling.properties.Color;
-import fr.opensagres.xdocreport.document.textstyling.properties.SpanProperties;
+import fr.opensagres.xdocreport.document.textstyling.properties.ContainerProperties;
+import fr.opensagres.xdocreport.document.textstyling.properties.ContainerType;
 import junit.framework.Assert;
 import org.junit.Test;
 
@@ -35,19 +36,25 @@ public class StylesHelperTest
     @Test
     public void createSpanPropertiesColor()
     {
-        SpanProperties expectedSpanProperties = new SpanProperties();
+        ContainerProperties expectedSpanProperties = new ContainerProperties( ContainerType.SPAN );
         expectedSpanProperties.setColor( new Color( 230, 0, 0 ) );
 
-        Assert.assertEquals( expectedSpanProperties, StylesHelper.createSpanProperties( "color: rgb(230, 0, 0);" ) );
+        Assert.assertEquals( expectedSpanProperties,
+                StylesHelper.createProperties( "color: rgb(230, 0, 0);", ContainerType.SPAN ) );
+        Assert.assertEquals( expectedSpanProperties,
+                StylesHelper.createProperties( "color: #E60000;", ContainerType.SPAN ) );
     }
 
     @Test
     public void createSpanPropertiesColorInvalid()
     {
-        SpanProperties expectedSpanProperties = new SpanProperties();
+        ContainerProperties expectedSpanProperties = new ContainerProperties( ContainerType.SPAN );
 
-        Assert.assertEquals( expectedSpanProperties, StylesHelper.createSpanProperties( "color: rgb(2303, 0, 0);" ) );
-        Assert.assertEquals( expectedSpanProperties, StylesHelper.createSpanProperties( "color: #1234567;" ) );
-        Assert.assertEquals( expectedSpanProperties, StylesHelper.createSpanProperties( "color: invalid;" ) );
+        Assert.assertEquals( expectedSpanProperties,
+                StylesHelper.createProperties( "color: rgb(2303, 0, 0);", ContainerType.SPAN ) );
+        Assert.assertEquals( expectedSpanProperties,
+                StylesHelper.createProperties( "color: #1234567;", ContainerType.SPAN ) );
+        Assert.assertEquals( expectedSpanProperties,
+                StylesHelper.createProperties( "color: invalid;", ContainerType.SPAN ) );
     }
 }

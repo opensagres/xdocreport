@@ -27,14 +27,8 @@ package fr.opensagres.xdocreport.document.textstyling.wiki.gwiki;
 import java.io.IOException;
 
 import fr.opensagres.xdocreport.document.textstyling.AbstractDocumentHandler;
-import fr.opensagres.xdocreport.document.textstyling.properties.HeaderProperties;
-import fr.opensagres.xdocreport.document.textstyling.properties.ListItemProperties;
-import fr.opensagres.xdocreport.document.textstyling.properties.ListProperties;
-import fr.opensagres.xdocreport.document.textstyling.properties.ParagraphProperties;
-import fr.opensagres.xdocreport.document.textstyling.properties.SpanProperties;
-import fr.opensagres.xdocreport.document.textstyling.properties.TableCellProperties;
+import fr.opensagres.xdocreport.document.textstyling.properties.ContainerProperties;
 import fr.opensagres.xdocreport.document.textstyling.properties.TableProperties;
-import fr.opensagres.xdocreport.document.textstyling.properties.TableRowProperties;
 
 /**
  * Basic Document handler implementation to build html fragment content.
@@ -136,7 +130,7 @@ public class HTMLDocumentHandler
         super.write( "</sup>" );
     }
 
-    public void startListItem( ListItemProperties properties )
+    public void startListItem( ContainerProperties properties )
         throws IOException
     {
         super.write( "<li>" );
@@ -149,7 +143,7 @@ public class HTMLDocumentHandler
     }
 
     @Override
-    protected void doStartOrderedList( ListProperties properties )
+    protected void doStartOrderedList( ContainerProperties properties )
         throws IOException
     {
         super.write( "<ol>" );
@@ -163,7 +157,7 @@ public class HTMLDocumentHandler
     }
 
     @Override
-    protected void doStartUnorderedList( ListProperties properties )
+    protected void doStartUnorderedList( ContainerProperties properties )
         throws IOException
     {
         super.write( "<ul>" );
@@ -176,7 +170,7 @@ public class HTMLDocumentHandler
         super.write( "</ul>" );
     }
 
-    public void startParagraph( ParagraphProperties properties )
+    public void startParagraph( ContainerProperties properties )
         throws IOException
     {
         super.write( "<p>" );
@@ -188,7 +182,7 @@ public class HTMLDocumentHandler
         super.write( "</p>" );
     }
 
-    public void startSpan( SpanProperties properties )
+    public void startSpan( ContainerProperties properties )
         throws IOException
     {
         super.write( "<span>" );
@@ -200,7 +194,7 @@ public class HTMLDocumentHandler
         super.write( "</span>" );
     }
 
-    public void startHeading( int level, HeaderProperties properties )
+    public void startHeading( int level, ContainerProperties properties )
         throws IOException
     {
         super.write( "<h" );
@@ -255,7 +249,7 @@ public class HTMLDocumentHandler
         super.write( "</table>" );
     }
 
-    protected void doStartTableRow( TableRowProperties properties )
+    protected void doStartTableRow( ContainerProperties properties )
         throws IOException
     {
         super.write( "<tr>" );
@@ -267,7 +261,7 @@ public class HTMLDocumentHandler
         super.write( "</tr>" );
     }
 
-    protected void doStartTableCell( TableCellProperties properties )
+    protected void doStartTableCell( ContainerProperties properties )
         throws IOException
     {
         super.write( "<td>" );

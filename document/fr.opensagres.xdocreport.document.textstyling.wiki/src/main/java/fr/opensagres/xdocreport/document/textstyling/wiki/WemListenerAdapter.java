@@ -28,6 +28,7 @@ import java.io.IOException;
 import java.util.List;
 import java.util.logging.Logger;
 
+import fr.opensagres.xdocreport.document.textstyling.properties.ContainerProperties;
 import org.wikimodel.wem.EmptyWemListener;
 import org.wikimodel.wem.IWemConstants;
 import org.wikimodel.wem.WikiFormat;
@@ -37,9 +38,6 @@ import org.wikimodel.wem.WikiStyle;
 
 import fr.opensagres.xdocreport.core.logging.LogUtils;
 import fr.opensagres.xdocreport.document.textstyling.IDocumentHandler;
-import fr.opensagres.xdocreport.document.textstyling.properties.ListItemProperties;
-import fr.opensagres.xdocreport.document.textstyling.properties.ListProperties;
-import fr.opensagres.xdocreport.document.textstyling.properties.ParagraphProperties;
 
 /**
  * Wiki Event Model Adaptor to call methods of {@link IDocumentHandler}.
@@ -136,7 +134,7 @@ public class WemListenerAdapter
     {
         try
         {
-            ListProperties properties = null;
+            ContainerProperties properties = null;
             if ( ordered )
             {
                 documentHandler.startOrderedList( properties );
@@ -157,7 +155,7 @@ public class WemListenerAdapter
     {
         try
         {
-            ListItemProperties properties = null;
+            ContainerProperties properties = null;
             documentHandler.startListItem( properties );
         }
         catch ( IOException e )
@@ -230,7 +228,7 @@ public class WemListenerAdapter
     {
         try
         {
-            ParagraphProperties properties = null;
+            ContainerProperties properties = null;
             documentHandler.startParagraph( properties );
         }
         catch ( IOException e )

@@ -24,11 +24,13 @@
  */
 package fr.opensagres.xdocreport.document.tools;
 
+import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.StringWriter;
 
 import fr.opensagres.xdocreport.core.io.IOUtils;
-import fr.opensagres.xdocreport.document.tools.internal.StringBuilderOutputStream;
 
 public abstract class AbstractDataProvider
     implements IDataProvider
@@ -57,9 +59,11 @@ public abstract class AbstractDataProvider
     public String getDataAsString()
         throws IOException
     {
-        StringBuilderOutputStream writer = new StringBuilderOutputStream();
-        IOUtils.copy( getData(), writer );
-        return writer.toString();
+        StringWriter sw = new StringWriter();
+        // force utf-8 encoding
+        BufferedReader br = new BufferedReader( new InputStreamReader( getData(), "UTF-8" ) );
+        IOUtils.copy( br, sw );
+        return sw.toString();
     }
 
 }

@@ -153,13 +153,37 @@ public class XWPFTableUtil
             int nbColumnsToIgnoreAfter = getNbColumnsToIgnore( firstRow, false );
             int nbColumns = cols.size() - nbColumnsToIgnoreBefore - nbColumnsToIgnoreAfter;
 
-            // nbCols computed is equals to number of grid colList
-            // columns width can be computed by using the grid colList
+            // First compute grid-based total width to use as reference
             colWidths = new float[nbColumns];
+            float totalGridWidth = 0;
             for ( int i = nbColumnsToIgnoreBefore; i < colWidths.length; i++ )
             {
                 CTTblGridCol tblGridCol = cols.get( i );
                 colWidths[i] = dxa2points( tblGridCol.xgetW() );
+                totalGridWidth += colWidths[i];
+            }
+
+            // When cells define percentage widths (w:type="pct"), use those for column
+            // proportions instead of grid column widths. Grid columns are always in twips
+            // and may not reflect the intended percentage-based layout.
+            float[] cellBasedWidths = computeColWidthsFromCells( firstRow, nbColumns );
+            if ( cellBasedWidths != null )
+            {
+                // Scale cell percentage proportions to match the grid total width,
+                // so the table occupies the correct overall width with correct proportions.
+                float totalCellWidth = 0;
+                for ( float w : cellBasedWidths )
+                {
+                    totalCellWidth += w;
+                }
+                if ( totalCellWidth > 0 && totalGridWidth > 0 )
+                {
+                    for ( int i = 0; i < cellBasedWidths.length; i++ )
+                    {
+                        cellBasedWidths[i] = cellBasedWidths[i] / totalCellWidth * totalGridWidth;
+                    }
+                }
+                colWidths = cellBasedWidths;
             }
         }
         return colWidths;
@@ -272,6 +296,52 @@ public class XWPFTableUtil
             return null;
         }
         return tcPr.getTcW();
+    }
+
+    /**
+     * Computes column widths from the first row's cell widths.
+     * Returns null if cells don't define percentage widths.
+     * When cells use percentage widths (w:type="pct"), those percentages provide
+     * the correct column proportions, overriding potentially inaccurate grid column values.
+     */
+    private static float[] computeColWidthsFromCells( XWPFTableRow firstRow, int nbColumns )
+    {
+        if ( firstRow == null )
+        {
+            return null;
+        }
+        List<XWPFTableCell> cells = firstRow.getTableCells();
+        float[] colWidths = new float[nbColumns];
+        int colIndex = 0;
+        boolean hasPercentageWidth = false;
+
+        for ( XWPFTableCell cell : cells )
+        {
+            TableWidth tableCellWidth = getTableWidth( cell );
+            if ( tableCellWidth == null || tableCellWidth.width <= 0 )
+            {
+                return null; // Cell doesn't define a usable width, fall back to grid
+            }
+            if ( tableCellWidth.percentUnit )
+            {
+                hasPercentageWidth = true;
+            }
+            int gridSpan = 1;
+            CTDecimalNumber gridSpanNum = getGridSpan( cell );
+            if ( gridSpanNum != null )
+            {
+                gridSpan = gridSpanNum.getVal().intValue();
+            }
+            float widthPerCol = tableCellWidth.width / gridSpan;
+            for ( int i = 0; i < gridSpan && colIndex < nbColumns; i++ )
+            {
+                colWidths[colIndex++] = widthPerCol;
+            }
+        }
+
+        // Only use cell-based widths when cells use percentage units.
+        // Grid columns (dxa) are reliable for absolute width tables.
+        return hasPercentageWidth ? colWidths : null;
     }
 
     private static Collection<Float> computeColWidths( XWPFTableRow row )

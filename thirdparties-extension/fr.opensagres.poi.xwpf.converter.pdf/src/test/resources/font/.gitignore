@@ -1,0 +1,3 @@
+# Chinese fonts are not committed due to size (~40MB).
+# Download simfang.ttf, simhei.ttf, simkai.ttf, simsun.ttf manually to run CJK tests.
+*.ttf

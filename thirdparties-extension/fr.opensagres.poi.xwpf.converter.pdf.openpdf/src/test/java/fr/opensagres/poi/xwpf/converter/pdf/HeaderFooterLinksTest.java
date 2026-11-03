@@ -230,20 +230,6 @@ public class HeaderFooterLinksTest
         }
     }
 
-    private static void moveReferences( CTSectPr from, CTSectPr to )
-    {
-        while ( from.sizeOfHeaderReferenceArray() > 0 )
-        {
-            to.addNewHeaderReference().set( from.getHeaderReferenceArray( 0 ) );
-            from.removeHeaderReference( 0 );
-        }
-        while ( from.sizeOfFooterReferenceArray() > 0 )
-        {
-            to.addNewFooterReference().set( from.getFooterReferenceArray( 0 ) );
-            from.removeFooterReference( 0 );
-        }
-    }
-
     private static void configurePage( CTSectPr sectPr )
     {
         sectPr.addNewPgSz().setW( BigInteger.valueOf( 11906 ) );

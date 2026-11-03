@@ -35,7 +35,9 @@ import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import org.apache.poi.ooxml.POIXMLDocumentPart;
 import org.apache.poi.openxml4j.opc.PackagePart;
+import org.apache.poi.openxml4j.opc.PackageRelationship;
 import org.apache.poi.xwpf.usermodel.BodyElementType;
 import org.apache.poi.xwpf.usermodel.BodyType;
 import org.apache.poi.xwpf.usermodel.IBody;
@@ -54,6 +56,7 @@ import org.apache.poi.xwpf.usermodel.XWPFNum;
 import org.apache.poi.xwpf.usermodel.XWPFNumbering;
 import org.apache.poi.xwpf.usermodel.XWPFParagraph;
 import org.apache.poi.xwpf.usermodel.XWPFPictureData;
+import org.apache.poi.xwpf.usermodel.XWPFRelation;
 import org.apache.poi.xwpf.usermodel.XWPFRun;
 import org.apache.poi.xwpf.usermodel.XWPFSDT;
 import org.apache.poi.xwpf.usermodel.XWPFStyle;
@@ -748,6 +751,29 @@ public abstract class XWPFDocumentVisitor<T, O extends Options, E extends IXWPFM
         }
     }
 
+    /**
+     * Returns the target of the hyperlink relationship {@code hyperlinkId}, looked up in the part which owns the
+     * paragraph (document, header or footer), because relationship ids are only unique inside one part.
+     *
+     * @return the target or null if the part has no hyperlink relationship with this id.
+     */
+    private String getHyperlinkURL( XWPFParagraph paragraph, String hyperlinkId )
+        throws Exception
+    {
+        POIXMLDocumentPart part = paragraph.getPart();
+        if ( part == null )
+        {
+            XWPFHyperlink hyperlink = document.getHyperlinkByID( hyperlinkId );
+            return hyperlink != null ? hyperlink.getURL() : null;
+        }
+        PackageRelationship rel = part.getPackagePart().getRelationships().getRelationshipByID( hyperlinkId );
+        if ( rel == null || !XWPFRelation.HYPERLINK.getRelation().equals( rel.getRelationshipType() ) )
+        {
+            return null;
+        }
+        return rel.getTargetURI().toString();
+    }
+
     private void visitRun( XWPFParagraph paragraph, XmlObject o, T paragraphContainer )
         throws Exception
     {
@@ -760,8 +786,7 @@ public abstract class XWPFDocumentVisitor<T, O extends Options, E extends IXWPFM
             String hyperlinkId = link.getId();
             if ( StringUtils.isNotEmpty( hyperlinkId ) )
             {
-                XWPFHyperlink hyperlink = document.getHyperlinkByID( hyperlinkId );
-                href = hyperlink != null ? hyperlink.getURL() : null;
+                href = getHyperlinkURL( paragraph, hyperlinkId );
             }
             for ( CTR r : link.getRList() )
             {

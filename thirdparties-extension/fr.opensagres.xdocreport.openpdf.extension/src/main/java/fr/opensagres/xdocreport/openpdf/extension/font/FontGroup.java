@@ -32,23 +32,28 @@ public enum FontGroup
 
     public static FontGroup getUnicodeGroup( char ch, Font font, Font fontAsian, Font fontComplex )
     {
+        return getUnicodeGroup( (int) ch, font, fontAsian, fontComplex );
+    }
+
+    public static FontGroup getUnicodeGroup( int codePoint, Font font, Font fontAsian, Font fontComplex )
+    {
         if ( font != null && font.getBaseFont() != null )
         {
-            if ( font.getBaseFont().charExists( ch ) )
+            if ( font.getBaseFont().charExists( codePoint ) )
             {
                 return WESTERN;
             }
         }
         if ( fontAsian != null && fontAsian.getBaseFont() != null )
         {
-            if ( fontAsian.getBaseFont().charExists( ch ) )
+            if ( fontAsian.getBaseFont().charExists( codePoint ) )
             {
                 return ASIAN;
             }
         }
         if ( fontComplex != null && fontComplex.getBaseFont() != null )
         {
-            if ( fontComplex.getBaseFont().charExists( ch ) )
+            if ( fontComplex.getBaseFont().charExists( codePoint ) )
             {
                 return COMPLEX;
             }

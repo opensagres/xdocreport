@@ -772,14 +772,14 @@ public class PdfMapper
     {
         StringBuilder sbuf = new StringBuilder();
         FontGroup currentGroup = FontGroup.WESTERN;
-        for ( int i = 0; i < textContent.length(); i++ )
+        for ( int i = 0; i < textContent.length(); )
         {
-            char ch = textContent.charAt( i );
-            FontGroup group = FontGroup.getUnicodeGroup( ch, font, fontAsian, fontComplex );
+            int codePoint = textContent.codePointAt( i );
+            FontGroup group = FontGroup.getUnicodeGroup( codePoint, font, fontAsian, fontComplex );
             if ( sbuf.length() == 0 || currentGroup.equals( group ) )
             {
                 // continue current chunk
-                sbuf.append( ch );
+                sbuf.appendCodePoint( codePoint );
             }
             else
             {
@@ -790,9 +790,10 @@ public class PdfMapper
                 parent.addElement( chunk );
                 // start new chunk
                 sbuf.setLength( 0 );
-                sbuf.append( ch );
+                sbuf.appendCodePoint( codePoint );
             }
             currentGroup = group;
+            i += Character.charCount( codePoint );
         }
         // end chunk
         Font chunkFont = getFont( font, fontAsian, fontComplex, currentGroup );

@@ -130,14 +130,14 @@ public class StylableChunk
             }
         }
         FontGroup currentGroup = FontGroup.WESTERN;
-        for ( int i = 0; i < textContent.length(); i++ )
+        for ( int i = 0; i < textContent.length(); )
         {
-            char ch = textContent.charAt( i );
-            FontGroup group = FontGroup.getUnicodeGroup( ch, font, fontAsian, fontComplex );
+            int codePoint = textContent.codePointAt( i );
+            FontGroup group = FontGroup.getUnicodeGroup( codePoint, font, fontAsian, fontComplex );
             if ( sbuf.length() == 0 || currentGroup.equals( group ) )
             {
                 // continue current chunk
-                sbuf.append( ch );
+                sbuf.appendCodePoint( codePoint );
             }
             else
             {
@@ -146,9 +146,10 @@ public class StylableChunk
                 list.add( chunk );
                 // start new chunk
                 sbuf.setLength( 0 );
-                sbuf.append( ch );
+                sbuf.appendCodePoint( codePoint );
             }
             currentGroup = group;
+            i += Character.charCount( codePoint );
         }
         // end chunk
         StylableChunk chunk = ownerDocument.createChunk( parent, sbuf.toString(), currentGroup );

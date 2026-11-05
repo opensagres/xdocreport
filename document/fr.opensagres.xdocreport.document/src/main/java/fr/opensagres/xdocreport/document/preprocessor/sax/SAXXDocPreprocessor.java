@@ -57,6 +57,7 @@ public abstract class SAXXDocPreprocessor
         {
             XMLReader xmlReader = XMLReaderFactory.createXMLReader();
             //To avoid xxe security issue
+            xmlReader.setFeature("http://apache.org/xml/features/disallow-doctype-decl", true);
             xmlReader.setFeature("http://apache.org/xml/features/nonvalidating/load-external-dtd", false);
             xmlReader.setFeature("http://xml.org/sax/features/external-general-entities", false);
             xmlReader.setFeature("http://xml.org/sax/features/external-parameter-entities", false);

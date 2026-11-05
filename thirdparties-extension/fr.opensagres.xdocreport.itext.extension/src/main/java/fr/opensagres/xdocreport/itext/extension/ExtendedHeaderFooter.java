@@ -25,6 +25,7 @@
 package fr.opensagres.xdocreport.itext.extension;
 
 import com.lowagie.text.Document;
+import com.lowagie.text.pdf.PdfContentByte;
 import com.lowagie.text.pdf.PdfPageEventHelper;
 import com.lowagie.text.pdf.PdfWriter;
 
@@ -43,14 +44,29 @@ public class ExtendedHeaderFooter
         this.document = document;
     }
 
+    private IMasterPageHeaderFooter pageHeader;
+
+    private float pageHeaderX;
+
+    private float pageHeaderY;
+
+    private IMasterPageHeaderFooter pageFooter;
+
+    private float pageFooterX;
+
+    private float pageFooterY;
+
     /**
-     * Adds a header/footer to every page
-     * 
-     * @see com.itextpdf.text.pdf.PdfPageEventHelper#onEndPage(com.itextpdf.text.pdf.PdfWriter,
-     *      com.itextpdf.text.Document)
+     * Determines the header/footer and the position of the page which is starting. They are drawn in
+     * {@link #onEndPage(PdfWriter, Document)}: OpenPDF calls onStartPage for the page that follows the last one when
+     * the document is closed, and links of a header/footer drawn on this phantom page would create annotations for a
+     * page which does not exist.
      */
     public void onStartPage( PdfWriter writer, Document doc )
     {
+        pageHeader = null;
+        pageFooter = null;
+
         if ( masterPage == null )
         {
             masterPage = document.getDefaultMasterPage();
@@ -59,29 +75,48 @@ public class ExtendedHeaderFooter
         if ( masterPage != null )
         {
             // Master page is defined
+            pageHeader = masterPage.getHeader();
+            pageFooter = masterPage.getFooter();
 
-            IMasterPageHeaderFooter header = masterPage.getHeader();
-            IMasterPageHeaderFooter footer = masterPage.getFooter();
-
-            // Add header
-            if ( header != null )
+            // compute upper-left corner coordinates
+            if ( pageHeader != null )
             {
-                // compute upper-left corner coordinates
-                float x = document.getOriginMarginLeft();
-                float y = getHeaderY( header );
-
-                header.writeSelectedRows( 0, -1, x, y, writer.getDirectContentUnder() );
+                pageHeaderX = document.getOriginMarginLeft();
+                pageHeaderY = getHeaderY( pageHeader );
+            }
+            if ( pageFooter != null )
+            {
+                pageFooterX = document.getOriginMarginLeft();
+                pageFooterY = getFooterY( pageFooter );
             }
 
-            // Add footer
-            if ( footer != null )
+            if ( pageHeader != null || pageFooter != null )
             {
-                // compute upper-left corner coordinates
-                float x = document.getOriginMarginLeft();
-                float y = getFooterY( footer );
-
-                footer.writeSelectedRows( 0, -1, x, y, writer.getDirectContentUnder() );
+                // A page with a header/footer is not empty, even when its body is
+                PdfContentByte under = writer.getDirectContentUnder();
+                under.saveState();
+                under.restoreState();
             }
+        }
+    }
+
+    /**
+     * Adds the header/footer captured by {@link #onStartPage(PdfWriter, Document)} to the page which is ending.
+     */
+    public void onEndPage( PdfWriter writer, Document doc )
+    {
+        IMasterPageHeaderFooter header = pageHeader;
+        IMasterPageHeaderFooter footer = pageFooter;
+        pageHeader = null;
+        pageFooter = null;
+
+        if ( header != null )
+        {
+            header.writeSelectedRows( 0, -1, pageHeaderX, pageHeaderY, writer.getDirectContentUnder() );
+        }
+        if ( footer != null )
+        {
+            footer.writeSelectedRows( 0, -1, pageFooterX, pageFooterY, writer.getDirectContentUnder() );
         }
     }
 
